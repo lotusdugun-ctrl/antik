@@ -1,0 +1,280 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import {
+  ArrowRight,
+  Compass,
+  MapPin,
+  Navigation,
+  Route as RouteIcon,
+  Search,
+  Sparkles,
+} from "lucide-react";
+import { SiteCard } from "@/components/SiteCard";
+import { useI18n } from "@/lib/i18n";
+import { useProgress } from "@/lib/progress";
+import {
+  distanceKm,
+  getSite,
+  heroImage,
+  regions,
+  siteOfTheDay,
+  sites,
+  coverImage,
+} from "@/lib/sites";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Antik Türkiye — Türkiye'nin Antik Kent Rehberi" },
+      {
+        name: "description",
+        content:
+          "Türkiye'deki antik kentleri harita üzerinde keşfet, tarihçelerini oku, ziyaretlerini kaydet ve mini oyunlarla öğren.",
+      },
+      { property: "og:title", content: "Antik Türkiye — Türkiye'nin Antik Kent Rehberi" },
+      {
+        property: "og:description",
+        content: "Efes'ten Göbeklitepe'ye: interaktif harita, detaylı rehber ve ziyaret günlüğü.",
+      },
+    ],
+  }),
+  component: Index,
+});
+
+function SectionTitle({ title, action, to }: { title: string; action?: string; to?: string }) {
+  return (
+    <div className="mb-4 flex items-end justify-between gap-4">
+      <h2 className="font-display text-xl font-semibold sm:text-2xl">{title}</h2>
+      {action && to && (
+        <Link
+          to={to}
+          className="flex shrink-0 items-center gap-1 text-sm font-medium text-primary hover:underline"
+        >
+          {action}
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+function Index() {
+  const { t, L } = useI18n();
+  const navigate = useNavigate();
+  const { state } = useProgress();
+  const [query, setQuery] = useState("");
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [geoError, setGeoError] = useState(false);
+  const [daily, setDaily] = useState(() => siteOfTheDay());
+
+  useEffect(() => setDaily(siteOfTheDay()), []);
+
+  const popular = useMemo(
+    () => [...sites].sort((a, b) => b.popularity - a.popularity).slice(0, 8),
+    [],
+  );
+  const recent = state.recent.map(getSite).filter(Boolean).slice(0, 4);
+  const nearby = useMemo(() => {
+    if (!coords) return [];
+    return [...sites]
+      .map((site) => ({ site, d: distanceKm(coords.lat, coords.lng, site.lat, site.lng) }))
+      .sort((a, b) => a.d - b.d)
+      .slice(0, 4);
+  }, [coords]);
+
+  function locate() {
+    if (!navigator.geolocation) return setGeoError(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => setGeoError(true),
+      { timeout: 8000 },
+    );
+  }
+
+  function submitSearch(e: React.FormEvent) {
+    e.preventDefault();
+    navigate({ to: "/kentler", search: { q: query || undefined } });
+  }
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="relative">
+        <div className="relative h-[68vh] min-h-[440px] w-full overflow-hidden">
+          <img
+            src={heroImage}
+            alt="Efes Antik Kenti Celsus Kütüphanesi"
+            width={1920}
+            height={1088}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 hero-scrim" />
+          <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-7xl px-4 pb-10 sm:px-6">
+            <p className="fade-up mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+              <Sparkles className="h-3.5 w-3.5" />
+              {sites.length} {t("cities")} · 7 {t("regions")}
+            </p>
+            <h1 className="fade-up max-w-3xl font-display text-4xl font-semibold leading-[1.05] text-white sm:text-6xl">
+              {t("tagline")}
+            </h1>
+            <form onSubmit={submitSearch} className="fade-up mt-6 flex max-w-xl gap-2">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t("search_placeholder")}
+                  aria-label={t("search_placeholder")}
+                  className="h-12 w-full rounded-full border border-border bg-card/95 pl-10 pr-4 text-sm text-foreground shadow-lg outline-none backdrop-blur placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
+                />
+              </div>
+              <button
+                type="submit"
+                className="h-12 shrink-0 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+              >
+                {t("nav_explore")}
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl space-y-14 px-4 py-12 sm:px-6">
+        {/* Daily pick */}
+        <section>
+          <SectionTitle title={t("daily_pick")} />
+          <Link
+            to="/kent/$slug"
+            params={{ slug: daily.slug }}
+            className="group grid overflow-hidden rounded-3xl surface-panel md:grid-cols-2"
+          >
+            <div className="relative aspect-[16/10] overflow-hidden md:aspect-auto">
+              <img
+                src={coverImage(daily)}
+                alt={L(daily.name)}
+                loading="lazy"
+                width={1200}
+                height={800}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            </div>
+            <div className="flex flex-col justify-center gap-3 p-6 sm:p-8">
+              <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                <Compass className="h-3.5 w-3.5" /> {t("daily_pick")}
+              </span>
+              <h3 className="font-display text-3xl font-semibold">{L(daily.name)}</h3>
+              <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5" /> {L(daily.province)} · {L(daily.era)}
+              </p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{L(daily.summary)}</p>
+              <span className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+                {t("detail_page")} <ArrowRight className="h-4 w-4" />
+              </span>
+            </div>
+          </Link>
+        </section>
+
+        {/* Route builder */}
+        <section>
+          <div className="relative overflow-hidden rounded-3xl surface-panel p-6 sm:p-8">
+            <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-primary/10 blur-2xl" />
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="min-w-0">
+                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                  <RouteIcon className="h-3.5 w-3.5" /> {t("route_title")}
+                </p>
+                <h3 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
+                  {t("route_sub")}
+                </h3>
+              </div>
+              <Link
+                to="/rota"
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+              >
+                {t("route_build")} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Recently viewed */}
+        {recent.length > 0 && (
+          <section>
+            <SectionTitle title={t("recent")} />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {recent.map((site) => (site ? <SiteCard key={site.slug} site={site} /> : null))}
+            </div>
+          </section>
+        )}
+
+        {/* Nearby */}
+        <section>
+          <SectionTitle title={t("nearby")} />
+          {nearby.length === 0 ? (
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl surface-panel p-6">
+              <p className="text-sm text-muted-foreground">
+                {geoError ? t("nearby_denied") : t("nearby_hint")}
+              </p>
+              <button
+                onClick={locate}
+                className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground"
+              >
+                <Navigation className="h-4 w-4" />
+                {t("nearby_enable")}
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {nearby.map(({ site, d }) => (
+                <SiteCard key={site.slug} site={site} distance={d} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Regions */}
+        <section>
+          <SectionTitle title={t("quick_regions")} action={t("view_all")} to="/bolgeler" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {regions.map((region) => (
+              <Link
+                key={region.id}
+                to="/bolge/$id"
+                params={{ id: region.id }}
+                className="group relative aspect-[5/3] overflow-hidden rounded-2xl border border-border lift"
+              >
+                <img
+                  src={region.image}
+                  alt={L(region.name)}
+                  loading="lazy"
+                  width={1200}
+                  height={800}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 hero-scrim" />
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <h3 className="font-display text-lg font-semibold text-white">
+                    {L(region.name)}
+                  </h3>
+                  <p className="text-xs text-white/75">
+                    {sites.filter((s) => s.region === region.id).length} {t("cities")}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Popular */}
+        <section>
+          <SectionTitle title={t("popular")} action={t("view_all")} to="/kentler" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {popular.map((site) => (
+              <SiteCard key={site.slug} site={site} />
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
