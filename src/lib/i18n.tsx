@@ -1,9 +1,25 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 
 export type Lang = "tr" | "en";
 export type Localized = { tr: string; en: string };
 
-const STORAGE_KEY = "antik-tr-lang";
+export const LANGS: Lang[] = ["tr", "en"];
+
+/**
+ * Turkish is the default and carries no search param, so every Turkish URL
+ * stays exactly what it was. English lives at `?lang=en` — a real, crawlable
+ * address, which is the whole point: the language used to be a client-side
+ * toggle, so the English half of the site was rendered only after hydration
+ * and had no URL for a search engine or a shared link to point at.
+ *
+ * Typed as the literal rather than `Lang` so that `next === DEFAULT_LANG`
+ * narrows the other branch to `"en"` — the search schema only ever holds that.
+ */
+export const DEFAULT_LANG = "tr" satisfies Lang;
+
+export function parseLang(value: unknown): Lang {
+  return value === "en" ? "en" : "tr";
+}
 
 const dict = {
   appName: { tr: "Antik Türkiye", en: "Ancient Türkiye" },
@@ -152,7 +168,13 @@ const dict = {
     tr: "Rota, en yakın kent algoritmasıyla üretilir; mesafeler ve süreler gerçek araç rotasına göre hesaplanır.",
     en: "The route is auto-generated using a nearest-city algorithm; distances and times use real driving routes.",
   },
+  route_crow_note: {
+    tr: "Yol servisine ulaşılamadı: mesafeler kuş uçuşu, süreler 60 km/s üzerinden kaba tahmindir. Gerçek sürüş bundan uzun sürer.",
+    en: "The routing service was unreachable: distances are straight-line and times a rough 60 km/h estimate. Real driving takes longer.",
+  },
   route_est_time: { tr: "Tahmini araç süresi", en: "Estimated driving time" },
+  route_rough_time: { tr: "Kaba süre tahmini", en: "Rough time estimate" },
+  route_crow_distance: { tr: "Kuş uçuşu mesafe", en: "Straight-line distance" },
   route_min: { tr: "dk", en: "min" },
   route_driving: { tr: "Araç", en: "Driving" },
   route_loading: { tr: "En yakın kentler hesaplanıyor…", en: "Finding the nearest cities…" },
@@ -186,9 +208,86 @@ const dict = {
     tr: "Uygulama çevrimdışı kullanım için hazır. Ana ekranına ekleyebilirsin.",
     en: "The app is ready for offline use. You can add it to your home screen.",
   },
+
+  // ——— Page titles and descriptions ———
+  // These are read outside React, by each route's `head()`, so that the tab
+  // title and the meta description match the language the page renders in.
+  seo_home_title: {
+    tr: "Antik Türkiye — Türkiye'nin Antik Kent Rehberi",
+    en: "Ancient Türkiye — A Guide to the Ancient Cities of Türkiye",
+  },
+  seo_home_desc: {
+    tr: "Türkiye'deki antik kentleri harita üzerinde keşfet, tarihçelerini oku, ziyaretlerini kaydet ve mini oyunlarla öğren.",
+    en: "Explore the ancient cities of Türkiye on a map, read their histories, log your visits and learn through mini games.",
+  },
+  seo_explore_title: {
+    tr: "Antik Kentler — Filtrele ve Keşfet | Antik Türkiye",
+    en: "Ancient Cities — Filter and Explore | Ancient Türkiye",
+  },
+  seo_explore_desc: {
+    tr: "Bölge, il, uygarlık ve UNESCO durumuna göre Türkiye'deki antik kentleri filtrele; liste veya harita görünümünde keşfet.",
+    en: "Filter the ancient cities of Türkiye by region, province, civilisation and UNESCO status; browse them as a list or on the map.",
+  },
+  seo_map_title: {
+    tr: "Antik Kent Haritası — Türkiye | Antik Türkiye",
+    en: "Map of Ancient Cities — Türkiye | Ancient Türkiye",
+  },
+  seo_map_desc: {
+    tr: "Türkiye'deki tüm antik kentleri interaktif harita üzerinde gör; iğneye tıklayıp bilgi kartını aç ve ziyaretini kaydet.",
+    en: "See every ancient city in Türkiye on an interactive map; open a pin for its card and log your visit.",
+  },
+  seo_regions_title: {
+    tr: "Bölgeler — Türkiye Antik Kentleri | Antik Türkiye",
+    en: "Regions — Ancient Cities of Türkiye | Ancient Türkiye",
+  },
+  seo_regions_desc: {
+    tr: "Ege'den Doğu Anadolu'ya yedi bölgedeki antik kentleri keşfet, bölge bazlı ilerlemeni ve tamamlanma yüzdeni gör.",
+    en: "Explore the ancient cities of all seven regions, from the Aegean to Eastern Anatolia, and track your progress in each.",
+  },
+  seo_route_title: {
+    tr: "Rota Oluşturucu — Antik Kent Güzergâhı | Antik Türkiye",
+    en: "Route Builder — Plan an Ancient City Trip | Ancient Türkiye",
+  },
+  seo_route_desc: {
+    tr: "Başlangıç kentini seç, gezi süreni belirle; gerçek araç mesafeleriyle en yakın antik kentlerden güzergâhını oluştur.",
+    en: "Pick a starting city and a trip length, and build an itinerary of the nearest ancient cities using real driving distances.",
+  },
+  seo_games_title: {
+    tr: "Mini Oyunlar — Antik Kentleri Öğren | Antik Türkiye",
+    en: "Mini Games — Learn the Ancient Cities | Ancient Türkiye",
+  },
+  seo_games_desc: {
+    tr: "Fotoğrafı tahmin et, kim bu, doğru/yanlış, haritada bul ve yapıyı tanı oyunlarıyla antik kentleri öğren, XP kazan.",
+    en: "Guess the photo, name the figure, true or false, find it on the map and name the structure — learn the ancient cities and earn XP.",
+  },
+  seo_profile_title: {
+    tr: "Profilim — İlerleme, Rozetler ve Favoriler | Antik Türkiye",
+    en: "My Profile — Progress, Badges and Favourites | Ancient Türkiye",
+  },
+  seo_profile_desc: {
+    tr: "Gezdiğin antik kentler, favorilerin, bölge bazlı ilerlemen, XP seviyen ve kazandığın başarı rozetleri.",
+    en: "The ancient cities you have visited, your favourites, regional progress, XP level and the badges you have earned.",
+  },
+  seo_city_suffix: {
+    tr: "Antik Kenti — Tarihçe, Ziyaret Bilgileri",
+    en: "Ancient City — History and Visitor Information",
+  },
+  seo_region_suffix: {
+    tr: "Bölgesi Antik Kentleri",
+    en: "Region — Ancient Cities",
+  },
+  seo_not_found: { tr: "Sayfa bulunamadı", en: "Page not found" },
 } satisfies Record<string, Localized>;
 
 export type TKey = keyof typeof dict;
+
+/**
+ * Translation outside React, for `head()` and anything else that runs before
+ * (or without) a component tree.
+ */
+export function translate(key: TKey, lang: Lang): string {
+  return dict[key][lang];
+}
 
 type Ctx = {
   lang: Lang;
@@ -199,25 +298,25 @@ type Ctx = {
 
 const LangContext = createContext<Ctx | null>(null);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("tr");
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "tr" || stored === "en") setLangState(stored);
-    else if (navigator.language && !navigator.language.startsWith("tr")) setLangState("en");
-  }, []);
-
-  const setLang = useCallback((l: Lang) => {
-    setLangState(l);
-    window.localStorage.setItem(STORAGE_KEY, l);
-    document.documentElement.lang = l;
-  }, []);
-
+/**
+ * The language comes from the URL, which is what lets the server render the
+ * page in the right one. `setLang` is supplied by the root route and navigates
+ * rather than mutating state, so switching language changes the address.
+ */
+export function LanguageProvider({
+  lang,
+  setLang,
+  children,
+}: {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  children: ReactNode;
+}) {
   const t = useCallback((key: TKey) => dict[key][lang], [lang]);
   const L = useCallback((value: Localized) => value[lang], [lang]);
+  const value = useMemo(() => ({ lang, setLang, t, L }), [lang, setLang, t, L]);
 
-  return <LangContext.Provider value={{ lang, setLang, t, L }}>{children}</LangContext.Provider>;
+  return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
 }
 
 export function useI18n() {

@@ -19,8 +19,10 @@ import type { Localized } from "@/lib/i18n";
 export type VisitEntry = {
   slug: string;
   date: string;
-  note?: string;
-  photo?: string;
+  // Explicitly `| undefined`: clearing a note or a photo is a real edit, so
+  // callers need to be able to pass the absence, not just omit the key.
+  note?: string | undefined;
+  photo?: string | undefined;
 };
 
 export type ProgressState = {

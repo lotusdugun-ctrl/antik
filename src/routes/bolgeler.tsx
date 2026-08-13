@@ -1,24 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useI18n } from "@/lib/i18n";
+import { Photo } from "@/components/Photo";
+import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
+import { seoTags } from "@/lib/seo";
 import { regions, regionCoverImage, sites } from "@/lib/sites";
 
 export const Route = createFileRoute("/bolgeler")({
-  head: () => ({
-    meta: [
-      { title: "Bölgeler — Türkiye Antik Kentleri | Antik Türkiye" },
-      {
-        name: "description",
-        content:
-          "Ege'den Doğu Anadolu'ya yedi bölgedeki antik kentleri keşfet, bölge bazlı ilerlemeni ve tamamlanma yüzdeni gör.",
-      },
-      { property: "og:title", content: "Bölgeler — Türkiye Antik Kentleri" },
-      {
-        property: "og:description",
-        content: "Yedi bölgedeki antik kentler ve bölge bazlı ziyaret ilerlemesi.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang(match.search.lang);
+    return seoTags({
+      lang,
+      pathname: "/bolgeler",
+      title: translate("seo_regions_title", lang),
+      description: translate("seo_regions_desc", lang),
+    });
+  },
   component: RegionsPage,
 });
 
@@ -46,12 +42,11 @@ function RegionsPage() {
               className="group overflow-hidden rounded-2xl surface-panel lift"
             >
               <div className="relative aspect-[16/9] overflow-hidden">
-                <img
+                <Photo
                   src={regionCoverImage(region.id)}
                   alt={L(region.name)}
-                  loading="lazy"
-                  width={1200}
-                  height={800}
+                  sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                  fallbackWidth={500}
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 hero-scrim" />

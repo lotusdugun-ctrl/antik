@@ -494,7 +494,7 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
       en: "A 15th-century fortress built by the Knights of St John, now home to a museum of underwater archaeology.",
     },
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg/500px-Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg",
   },
   "Bodrum Castle": {
     blurb: {
@@ -502,7 +502,7 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
       en: "A fortress built by the Knights of St John, now a museum of underwater archaeology.",
     },
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg/500px-Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg",
   },
   "Yanartaş (Khimaira)": {
     blurb: {
@@ -1704,6 +1704,600 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
     blurb: {
       tr: "Tell Atchana'da Tunç Çağı'na tarihlenen konut kalıntıları.",
       en: "Bronze Age house remains at Tell Atchana.",
+    },
+  },
+  "Agora Sütunları": {
+    blurb: {
+      tr: "Agorayı çevreleyen revakların ve kamu yapılarının sütun kalıntıları.",
+      en: "Column remains of the stoas and public buildings surrounding the agora.",
+    },
+  },
+  "Amasya Kalesi": {
+    blurb: {
+      tr: "Yeşilırmak'a hâkim kayalık üzerinde, Pontus dönemine uzanan surlarıyla kale.",
+      en: "A fortress on the rock above the Yeşilırmak river, with walls dating to the Pontic period.",
+    },
+  },
+  "Amisos Tümülüsleri": {
+    blurb: {
+      tr: "Amisos Tepesi'ndeki Pontus dönemi kral mezar höyükleri.",
+      en: "Pontic-period royal burial mounds on Amisos Hill.",
+    },
+  },
+  "Ana Tapınak": {
+    blurb: {
+      tr: "Kentin baş tanrısına adanmış ana kült yapısı.",
+      en: "The main cult building dedicated to the city's chief deity.",
+    },
+  },
+  "Anıt Mezar": {
+    blurb: {
+      tr: "Önemli bir kişi ya da hanedan için dikilen görkemli mezar yapısı.",
+      en: "A monumental tomb erected for an important person or dynasty.",
+    },
+  },
+  "Anıt Mezarlar": {
+    blurb: {
+      tr: "Kentin önde gelenlerine adanan görkemli mezar anıtları.",
+      en: "Monumental tomb monuments dedicated to the city's leading figures.",
+    },
+  },
+  "Antik Liman": {
+    blurb: {
+      tr: "Kentin deniz ticaretine hizmet eden tarihî liman kalıntıları.",
+      en: "The remains of the historic harbour that served the city's sea trade.",
+    },
+  },
+  "Antik Surlar": {
+    blurb: {
+      tr: "Kenti çevreleyen ve dönem dönem yenilenen savunma duvarları.",
+      en: "The defensive walls encircling the city, rebuilt over the centuries.",
+    },
+  },
+  "Antik Tiyatro Kalıntıları": {
+    blurb: {
+      tr: "Yamaçta kurulu antik tiyatronun günümüze ulaşan kalıntıları.",
+      en: "Remains of the hillside ancient theatre.",
+    },
+  },
+  "Asur Yazıtları": {
+    blurb: {
+      tr: "Asur krallarının seferlerini ve fetihlerini anlatan çivi yazılı metinler.",
+      en: "Cuneiform texts recounting the campaigns and conquests of the Assyrian kings.",
+    },
+  },
+  "Aşağı Şehir": {
+    blurb: {
+      tr: "Kalenin altında gelişen, konut ve atölyelerin bulunduğu yerleşim bölümü.",
+      en: "The lower settlement beneath the citadel, with houses and workshops.",
+    },
+  },
+  "Aşağı Şehir Kilisesi": {
+    blurb: {
+      tr: "Aşağı şehirdeki erken Hristiyanlık dönemine ait kilise kalıntıları.",
+      en: "Church remains from the early Christian period in the lower city.",
+    },
+  },
+  "Aynalı Mağara": {
+    blurb: {
+      tr: "İçindeki kaya yontmalarıyla dikkat çeken doğal mağara.",
+      en: "A natural cave notable for its rock carvings.",
+    },
+  },
+  "Balat Kilise": {
+    blurb: {
+      tr: "Milet'in Balat Mahallesi'nde bulunan geç dönem kilisesi.",
+      en: "A late-period church in Miletus' Balat quarter.",
+    },
+  },
+  "Buzluk Mağarası": {
+    blurb: {
+      tr: "Yazın bile buz tutan, doğal serinleme görevi gören mağara.",
+      en: "A cave that stays icy even in summer, acting as a natural cooler.",
+    },
+  },
+  "Büyük Kilise": {
+    blurb: {
+      tr: "Kentin ana ibadet yapısı olan geniş kilise.",
+      en: "The large church that served as the city's principal place of worship.",
+    },
+  },
+  "Büyük Saray": {
+    blurb: {
+      tr: "Ortaçağ yöneticilerinin oturduğu görkemli saray kompleksi.",
+      en: "The grand palace complex of the medieval rulers.",
+    },
+  },
+  "Cehennemağzı Mağaraları": {
+    blurb: {
+      tr: "Yunan mitolojisinde Herakles'in Kerberos'u yakaladığına inanılan kutsal mağaralar.",
+      en: "The sacred caves where Herakles was said to have captured Cerberus.",
+    },
+  },
+  "Cimşit Bey Hamamı": {
+    blurb: {
+      tr: "Osmanlı döneminden kalma Palu hamamı.",
+      en: "An Ottoman-era bathhouse at Palu.",
+    },
+  },
+  "Çift Kapı Kabartmaları": {
+    blurb: {
+      tr: "Sam'al kent girişinde çift kapıyı süsleyen kabartmalar.",
+      en: "Reliefs adorning the paired gateway of Sam'al.",
+    },
+  },
+  "Dicle Köprüsü": {
+    blurb: {
+      tr: "Hasankeyf'te Dicle'yi aşan, ayakları günümüze ulaşan tarihî köprü.",
+      en: "The historic Tigris bridge at Hasankeyf, whose piers survive today.",
+    },
+  },
+  "Diogenes Yazıtı": {
+    blurb: {
+      tr: "Sinoplu filozof Diogenes'e ithaf edilen antik yazıt.",
+      en: "An ancient inscription honouring the philosopher Diogenes of Sinope.",
+    },
+  },
+  "Erken Kilise": {
+    blurb: {
+      tr: "Hristiyanlığın ilk dönemlerine tarihlenen kilise kalıntısı.",
+      en: "Church remains dating to the early centuries of Christianity.",
+    },
+  },
+  "Eski Köprü": {
+    blurb: {
+      tr: "Dicle üzerindeki tarihî köprü kalıntıları.",
+      en: "Remains of the historic bridge over the Tigris.",
+    },
+  },
+  "Faustina Kapısı": {
+    blurb: {
+      tr: "Milet'te İmparator Marcus Aurelius'un eşi Faustina'ya adanan anıtsal kapı.",
+      en: "The monumental gate at Miletus dedicated to Faustina, wife of Emperor Marcus Aurelius.",
+    },
+  },
+  "Filyos Kalesi": {
+    blurb: {
+      tr: "Tieion'un Filyos'taki limanını koruyan kale.",
+      en: "The castle guarding Tieion's harbour at Filyos.",
+    },
+  },
+  "Frig Yerleşimi": {
+    blurb: {
+      tr: "Frig dönemine tarihlenen yerleşim kalıntıları.",
+      en: "Settlement remains dating to the Phrygian period.",
+    },
+  },
+  "Harput Kalesi": {
+    blurb: {
+      tr: "Elazığ'a hâkim kayalık üzerinde, Urartu'dan Osmanlı'ya uzanan kale.",
+      en: "The fortress on the rock above Elazığ, spanning Urartu to Ottoman times.",
+    },
+  },
+  "Harput Müzesi": {
+    blurb: {
+      tr: "Harput bölgesinin arkeolojik eserlerinin sergilendiği müze.",
+      en: "The museum displaying archaeological finds from the Harput region.",
+    },
+  },
+  "Hasankeyf Kalesi": {
+    blurb: {
+      tr: "Dicle'nin kıyısında, mağara yerleşimli yüksek kale.",
+      en: "The high citadel above the Tigris, with cave settlements.",
+    },
+  },
+  "Hellenistik Surlar": {
+    blurb: {
+      tr: "Hellenistik dönemde örülen kent savunma duvarları.",
+      en: "City fortification walls built in the Hellenistic period.",
+    },
+  },
+  "Herakles Kutsal Alanı": {
+    blurb: {
+      tr: "Herakles'e adanmış kutsal alan kalıntıları.",
+      en: "Remains of a sacred precinct dedicated to Herakles.",
+    },
+  },
+  "Hilani Sarayı": {
+    blurb: {
+      tr: "Geç Hitit mimarisinin sütunlu kabul salonuyla tanınan saray tipi.",
+      en: "A palace type of Neo-Hittite architecture known for its pillared reception hall.",
+    },
+  },
+  "Hitit Sarayı": {
+    blurb: {
+      tr: "Hitit dönemine tarihlenen saray yapısı.",
+      en: "A palace building dating to the Hittite period.",
+    },
+  },
+  "Hoşap Kalesi": {
+    blurb: {
+      tr: "Van'ın güneyinde Mahmudi Beyliği'nin 17. yüzyılda inşa ettiği görkemli kale.",
+      en: "The magnificent castle built by the Mahmudi principality south of Van in the 17th century.",
+    },
+  },
+  "İç Avlu": {
+    blurb: {
+      tr: "Kalelerde savunmanın en güçlü olduğu iç bölüm.",
+      en: "The innermost courtyard where a fortress's defences were strongest.",
+    },
+  },
+  "İç Kale": {
+    blurb: {
+      tr: "Kentin veya kalenin en korunaklı, yüksek bölümü.",
+      en: "The most protected, elevated part of a city or fortress.",
+    },
+  },
+  "İç Kapı": {
+    blurb: {
+      tr: "Kente girişteki iç savunma kapısı.",
+      en: "The inner defensive gateway of the city.",
+    },
+  },
+  İşlikler: {
+    blurb: {
+      tr: "Üretim ve zanaat faaliyetlerinin sürdüğü atölyeler.",
+      en: "Workshops where craft and production activities took place.",
+    },
+  },
+  Kadifekale: {
+    blurb: {
+      tr: "İzmir'e hâkim tepenin üzerinde, antik Smyrna'nın akropolü.",
+      en: "The acropolis of ancient Smyrna, atop the hill overlooking İzmir.",
+    },
+  },
+  Kale: {
+    blurb: {
+      tr: "Yüksek bir noktada, kenti korumak için kurulan müstahkem yapı.",
+      en: "A fortified stronghold built on high ground to protect the city.",
+    },
+  },
+  "Kale Kapısı": {
+    blurb: {
+      tr: "Kaleye açılan anıtsal giriş kapısı.",
+      en: "The monumental entrance gate of the fortress.",
+    },
+  },
+  "Kaya Sunağı": {
+    blurb: {
+      tr: "Kutsal kaya üzerine oyulmuş sunak.",
+      en: "An altar carved into a sacred rock.",
+    },
+  },
+  "Kaya Yazıtları": {
+    blurb: {
+      tr: "Kayalara işlenmiş kraliyet ve kutsal yazıtlar.",
+      en: "Royal and sacred inscriptions carved into the rock.",
+    },
+  },
+  "Kazı Alanı": {
+    blurb: {
+      tr: "Arkeologların kentteki araştırmalarını sürdürdüğü bölge.",
+      en: "The area where archaeologists continue their research in the city.",
+    },
+  },
+  "Kırsal Villa": {
+    blurb: {
+      tr: "Kentin dışında, tarım arazilerinin içindeki Roma villası.",
+      en: "A Roman villa set in the farmland outside the city.",
+    },
+  },
+  "Kibele Tapınağı": {
+    blurb: {
+      tr: "Ana Tanrıça Kibele'ye adanmış kutsal yapı.",
+      en: "A sacred building dedicated to the Mother Goddess Cybele.",
+    },
+  },
+  Kilise: {
+    blurb: {
+      tr: "Erken Hristiyanlık ve Bizans dönemlerine ait ibadet yapısı.",
+      en: "A place of worship dating to the early Christian and Byzantine periods.",
+    },
+  },
+  "Kral Kitabesi": {
+    blurb: {
+      tr: "Bir kralın şanını ve icraatlarını anlatan yazıt.",
+      en: "An inscription recording the deeds and glory of a king.",
+    },
+  },
+  "Kral Mezarı": {
+    blurb: {
+      tr: "Bir kral için kazılan anıtsal kaya mezarı.",
+      en: "A monumental rock tomb carved for a king.",
+    },
+  },
+  Kuleler: {
+    blurb: {
+      tr: "Sur hattını güçlendiren savunma kuleleri.",
+      en: "Defensive towers strengthening the line of the walls.",
+    },
+  },
+  "Kutsal Alan Kalıntıları": {
+    blurb: {
+      tr: "Tanrılara adanmış kutsal alanların günümüze ulaşan izleri.",
+      en: "Surviving traces of sacred precincts dedicated to the gods.",
+    },
+  },
+  "Kutsal Haç Kilisesi": {
+    blurb: {
+      tr: "Akdamar Adası'nda, 915-921'de Kral I. Gagik için inşa edilen kabartmalı kilise.",
+      en: "The relief-carved church on Akdamar Island, built for King Gagik I in 915–921.",
+    },
+  },
+  "Kutsal Tepe Kabartmaları": {
+    blurb: {
+      tr: "Soğmatar'daki Kutsal Tepe'de tanrıları betimleyen kabartmalar.",
+      en: "Reliefs depicting deities on the Sacred Hill at Soğmatar.",
+    },
+  },
+  "Kutsal Tünel": {
+    blurb: {
+      tr: "Arsameia'da kutsal alana ulaşan, kayaya oyulmuş 158 basamaklı tünel.",
+      en: "A rock-cut tunnel of 158 steps at Arsameia leading to the sacred precinct.",
+    },
+  },
+  "Kuzey Kule": {
+    blurb: {
+      tr: "Kentin kuzey yönündeki savunma kulesi.",
+      en: "The defensive tower on the northern side of the city.",
+    },
+  },
+  Kütüphane: {
+    blurb: {
+      tr: "Antik dünyada tomar arşivlerinin saklandığı ve okunduğu yapı.",
+      en: "A building where scroll archives were kept and read in the ancient world.",
+    },
+  },
+  Liman: {
+    blurb: {
+      tr: "Kentin deniz ticaretine ve filosuna hizmet eden kıyı yapısı.",
+      en: "The coastal installation serving the city's sea trade and fleet.",
+    },
+  },
+  "Mekân Kalıntıları": {
+    blurb: {
+      tr: "Antik kentte günümüze ulaşan çeşitli yapı odalarının izleri.",
+      en: "Traces of various rooms and spaces surviving in the ancient city.",
+    },
+  },
+  Mezarlık: {
+    blurb: {
+      tr: "Kentin dışında konumlanan antik nekropol alanı.",
+      en: "The ancient necropolis located outside the city.",
+    },
+  },
+  "Mitridates Kabartması": {
+    blurb: {
+      tr: "Arsameia'da Kral I. Mitridates ile Herakles'i tasvir eden 6 metrelik kabartma.",
+      en: "The six-metre relief at Arsameia depicting King Mithridates I with Herakles.",
+    },
+  },
+  "Mozaikli Roma Villası": {
+    blurb: {
+      tr: "Taban mozaikleriyle süslü Roma dönemi konutu.",
+      en: "A Roman-period residence adorned with floor mosaics.",
+    },
+  },
+  "Musa Kuyusu": {
+    blurb: {
+      tr: "Halk arasında Hz. Musa'ya atfedilen Soğmatar'daki kuyu.",
+      en: "The well at Soğmatar locally attributed to the Prophet Moses.",
+    },
+  },
+  "Osmanlı Konakları": {
+    blurb: {
+      tr: "Osmanlı döneminden kalma geleneksel şehir konutları.",
+      en: "Traditional urban houses surviving from the Ottoman period.",
+    },
+  },
+  "Palu Kalesi": {
+    blurb: {
+      tr: "Urartu yazıtı taşıyan, Fırat'ın doğusundaki tarihî kale.",
+      en: "The historic fortress east of the Euphrates, bearing a Urartian inscription.",
+    },
+  },
+  "Pers Sarayı": {
+    blurb: {
+      tr: "Pers yönetimi dönemine tarihlenen saray yapısı.",
+      en: "A palace building dating to the period of Persian rule.",
+    },
+  },
+  "Pognon Mağarası": {
+    blurb: {
+      tr: "Soğmatar'da ay tanrısı Sin'e adanmış kutsal mağara.",
+      en: "The sacred cave at Soğmatar dedicated to the moon god Sin.",
+    },
+  },
+  "Pontus Kral Mezarları": {
+    blurb: {
+      tr: "Amasya'da Yeşilırmak vadisini gören kayalara oyulmuş Pontus kral mezarları.",
+      en: "Pontic royal tombs carved into the cliffs overlooking the Yeşilırmak valley at Amasya.",
+    },
+  },
+  "Priapos Kutsal Alanı": {
+    blurb: {
+      tr: "Bereket tanrısı Priapos'a adanmış kutsal alan.",
+      en: "A sacred precinct dedicated to Priapus, god of fertility.",
+    },
+  },
+  Rıhtım: {
+    blurb: {
+      tr: "Gemilerin yanaştığı, taşla örülü liman kenarı.",
+      en: "The stone-built quay where ships moored.",
+    },
+  },
+  "Roma Agorası": {
+    blurb: {
+      tr: "Roma döneminde kentin ticaret ve yönetim merkezi olan meydan.",
+      en: "The square that was the city's commercial and administrative centre in Roman times.",
+    },
+  },
+  "Roma Köprüsü": {
+    blurb: {
+      tr: "Roma döneminde inşa edilen taş köprü kalıntıları.",
+      en: "Remains of a stone bridge built in the Roman period.",
+    },
+  },
+  "Sara Hatun Külliyesi": {
+    blurb: {
+      tr: "Akkoyunlu hükümdarı Uzun Hasan'ın annesi adına Harput'ta yaptırılan külliye.",
+      en: "The Harput complex built in the name of Uzun Hasan's mother, Sara Hatun.",
+    },
+  },
+  "Saray Kalıntıları": {
+    blurb: {
+      tr: "Yöneticilerin oturduğu saray yapılarının kalıntıları.",
+      en: "Remains of the palace buildings where the rulers resided.",
+    },
+  },
+  "Sarıkaya Köşkü": {
+    blurb: {
+      tr: "Hoşap Kalesi'nde kayaya oyulmuş yazlık köşk.",
+      en: "A rock-cut summer mansion within Hoşap Castle.",
+    },
+  },
+  "Sikke Darphanesi": {
+    blurb: {
+      tr: "Kentte para basılan resmî yapı.",
+      en: "The official building where the city minted its coinage.",
+    },
+  },
+  "Silifke Kalesi": {
+    blurb: {
+      tr: "Silifke'ye hâkim tepede, Bizans'tan Karamanoğulları'na uzanan kale.",
+      en: "The castle on the hill above Silifke, spanning Byzantine to Karamanid times.",
+    },
+  },
+  "Sinop Kalesi": {
+    blurb: {
+      tr: "Yarımadanın kuzey kıyısını kuşatan Bizans ve Selçuklu surları.",
+      en: "The Byzantine and Seljuk walls guarding the northern coast of the Sinop peninsula.",
+    },
+  },
+  "Sinop Müzesi": {
+    blurb: {
+      tr: "Sinop ve çevresinin arkeolojik eserlerini sergileyen müze.",
+      en: "The museum displaying archaeological finds from Sinop and its surroundings.",
+    },
+  },
+  "Sokak Dokusu": {
+    blurb: {
+      tr: "Antik kentte günümüze ulaşan yol ve cadde ağı.",
+      en: "The network of streets and roads surviving in the ancient city.",
+    },
+  },
+  Stadion: {
+    blurb: {
+      tr: "Koşu ve atletizm yarışmalarının yapıldığı uzun mekân.",
+      en: "The elongated venue used for foot races and athletic contests.",
+    },
+  },
+  "Su Kemerleri": {
+    blurb: {
+      tr: "Kente su taşıyan Roma dönemi kemerleri.",
+      en: "Roman-era aqueducts that carried water to the city.",
+    },
+  },
+  "Su Sarnıçları": {
+    blurb: {
+      tr: "Yağmur ve kaynak suyunu depolayan yer altı su hazineleri.",
+      en: "Underground reservoirs storing rain and spring water.",
+    },
+  },
+  "Sur Kalıntıları": {
+    blurb: {
+      tr: "Kenti çevreleyen savunma duvarlarının kalan bölümleri.",
+      en: "Remaining sections of the defensive walls around the city.",
+    },
+  },
+  "Sur Kapısı": {
+    blurb: {
+      tr: "Kent surlarındaki anıtsal giriş kapısı.",
+      en: "A monumental gateway in the city walls.",
+    },
+  },
+  Surlar: {
+    blurb: {
+      tr: "Kenti düşmanlara karşı koruyan savunma duvarları.",
+      en: "The fortification walls that protected the city from attack.",
+    },
+  },
+  "Tepe Mezarı Kalıntıları": {
+    blurb: {
+      tr: "Bir tümülüsün içindeki mezar odasının kalıntıları.",
+      en: "Remains of the burial chamber within a tumulus.",
+    },
+  },
+  "Teras Yapıları": {
+    blurb: {
+      tr: "Eğimli arazide destek duvarlarıyla kurulan yapılar.",
+      en: "Buildings erected on sloping ground with retaining terraces.",
+    },
+  },
+  "Tiyatro Kalıntıları": {
+    blurb: {
+      tr: "Antik tiyatronun günümüze ulaşan bölümleri.",
+      en: "The surviving parts of the ancient theatre.",
+    },
+  },
+  "Tünelli Cadde": {
+    blurb: {
+      tr: "Kayaya oyularak yapılmış kapalı geçit.",
+      en: "A covered passageway cut through the rock.",
+    },
+  },
+  "Ulu Cami": {
+    blurb: {
+      tr: "Kentin en büyük camisi; Selçuklu ve beylikler dönemi mimarisini yansıtır.",
+      en: "The city's principal mosque, reflecting Seljuk and beylik-era architecture.",
+    },
+  },
+  "Urartu Yazıtı": {
+    blurb: {
+      tr: "Urartu krallarının kayalara işlediği çivi yazılı kitabe.",
+      en: "A cuneiform inscription carved on rock by the Urartian kings.",
+    },
+  },
+  "Uzun Duvar Kabartmaları": {
+    blurb: {
+      tr: "Karkamış'ın Uzun Duvar'ını süsleyen kabartmalı taş plakalar.",
+      en: "The relief-carved stone slabs adorning Carchemish's Long Wall.",
+    },
+  },
+  "Üst Akropol": {
+    blurb: {
+      tr: "Kentin en yüksek noktasındaki yönetim ve savunma merkezi.",
+      en: "The administrative and defensive centre on the city's highest point.",
+    },
+  },
+  "Yeraltı Galerileri": {
+    blurb: {
+      tr: "Kent surlarından çevreye uzanan gizli yer altı geçitleri.",
+      en: "Secret underground passages leading out from the city walls.",
+    },
+  },
+  "Yeraltı Mezarları": {
+    blurb: {
+      tr: "Kayaya oyulmuş yer altı mezar odaları.",
+      en: "Rock-cut underground burial chambers.",
+    },
+  },
+  "Yeşilırmak Köprüleri": {
+    blurb: {
+      tr: "Amasya'da Yeşilırmak'ı aşan Selçuklu ve Osmanlı köprüleri.",
+      en: "Seljuk and Ottoman bridges spanning the Yeşilırmak at Amasya.",
+    },
+  },
+  "Zeus Lepsinos Tapınağı": {
+    blurb: {
+      tr: "Euromos'ta Zeus'a adanmış, 16 sütunu ayakta kalan tapınak.",
+      en: "The temple of Zeus at Euromos, with 16 columns still standing.",
+    },
+  },
+  "Zeus Sunağı": {
+    blurb: {
+      tr: "Zeus'a adanmış kurban ve adak sunağı.",
+      en: "An altar dedicated to Zeus for sacrifices and offerings.",
     },
   },
 };

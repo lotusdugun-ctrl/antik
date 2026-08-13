@@ -10,6 +10,8 @@ type Props = {
   zoom?: number;
   height?: string;
   path?: [number, number][];
+  /** Overrides the default: cluster when there are many pins and no path. */
+  cluster?: boolean;
 };
 
 function MapSkeleton({ height }: { height: string }) {

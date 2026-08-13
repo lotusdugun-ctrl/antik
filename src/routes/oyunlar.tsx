@@ -1,30 +1,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Check, Gamepad2, RotateCcw, Sparkles, X } from "lucide-react";
-import { useI18n, type TKey } from "@/lib/i18n";
+import { Photo } from "@/components/Photo";
+import { parseLang, translate, useI18n, type TKey } from "@/lib/i18n";
 import { levelFromXp, useProgress, XP_PER_CORRECT } from "@/lib/progress";
-import { coverImage, sites, type Site } from "@/lib/sites";
+import { buildQuestion, type Question, type QuizMode } from "@/lib/quiz";
+import { seoTags } from "@/lib/seo";
 
 export const Route = createFileRoute("/oyunlar")({
-  head: () => ({
-    meta: [
-      { title: "Mini Oyunlar — Antik Kentleri Öğren | Antik Türkiye" },
-      {
-        name: "description",
-        content:
-          "Fotoğrafı tahmin et, kim bu, doğru/yanlış, haritada bul ve yapıyı tanı oyunlarıyla antik kentleri öğren, XP kazan.",
-      },
-      { property: "og:title", content: "Mini Oyunlar — Antik Kentleri Öğren" },
-      {
-        property: "og:description",
-        content: "Eğitici mini oyunlarla Türkiye'nin antik kentlerini öğren ve seviye atla.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang(match.search.lang);
+    return seoTags({
+      lang,
+      pathname: "/oyunlar",
+      title: translate("seo_games_title", lang),
+      description: translate("seo_games_desc", lang),
+    });
+  },
   component: GamesPage,
 });
 
-type Mode = "photo" | "who" | "tf" | "map" | "structure";
+type Mode = QuizMode;
 
 const modes: { id: Mode; title: TKey; desc: TKey }[] = [
   { id: "photo", title: "game_photo", desc: "game_photo_d" },
@@ -34,63 +30,8 @@ const modes: { id: Mode; title: TKey; desc: TKey }[] = [
   { id: "structure", title: "game_structure", desc: "game_structure_d" },
 ];
 
-function shuffle<T>(arr: T[]) {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
-
-type Question = {
-  prompt: string;
-  image?: string;
-  options: string[];
-  answer: string;
-};
-
-function buildQuestion(mode: Mode, L: (v: { tr: string; en: string }) => string): Question {
-  const pool = shuffle(sites);
-  const site = pool[0] as Site;
-  const others = pool.slice(1, 4) as Site[];
-
-  if (mode === "who") {
-    const withFigures = shuffle(sites.filter((s) => s.figures.length > 0));
-    const target = (withFigures[0] ?? site) as Site;
-    const distractors = shuffle(sites.filter((s) => s.slug !== target.slug)).slice(0, 3);
-    return {
-      prompt: `${target.figures[0]} — ?`,
-      options: shuffle([target, ...distractors].map((s) => L(s.name))),
-      answer: L(target.name),
-    };
-  }
-  if (mode === "tf") {
-    const isTrue = Math.random() > 0.5;
-    const wrong = others[0] as Site;
-    return {
-      prompt: `${L(site.name)} · ${isTrue ? L(site.province) : L(wrong.province)}`,
-      options: ["✓", "✗"],
-      answer: isTrue ? "✓" : "✗",
-    };
-  }
-  if (mode === "map") {
-    return {
-      prompt: L(site.name),
-      options: shuffle([site, ...others].map((s) => L(s.province))),
-      answer: L(site.province),
-    };
-  }
-  if (mode === "structure") {
-    const structure = site.structures[0]!;
-    return {
-      prompt: L(structure),
-      options: shuffle([site, ...others].map((s) => L(s.name))),
-      answer: L(site.name),
-    };
-  }
-  return {
-    prompt: L(site.province),
-    image: coverImage(site),
-    options: shuffle([site, ...others].map((s) => L(s.name))),
-    answer: L(site.name),
-  };
-}
+/** How many recent subjects to keep off the board before they can return. */
+const NO_REPEAT_WINDOW = 12;
 
 function GamesPage() {
   const { t, L } = useI18n();
@@ -100,15 +41,23 @@ function GamesPage() {
   const [picked, setPicked] = useState<string | null>(null);
   const [round, setRound] = useState(1);
   const [score, setScore] = useState(0);
+  const [asked, setAsked] = useState<string[]>([]);
 
   const lvl = useMemo(() => levelFromXp(state.xp), [state.xp]);
+
+  function ask(next: Mode, history: string[]) {
+    const q = buildQuestion(next, L, new Set(history));
+    setQuestion(q);
+    setAsked([q.slug, ...history].slice(0, NO_REPEAT_WINDOW));
+  }
 
   function start(next: Mode) {
     setMode(next);
     setRound(1);
     setScore(0);
     setPicked(null);
-    setQuestion(buildQuestion(next, L));
+    setAsked([]);
+    ask(next, []);
   }
 
   function pick(option: string) {
@@ -123,7 +72,7 @@ function GamesPage() {
     if (!mode) return;
     setRound((r) => r + 1);
     setPicked(null);
-    setQuestion(buildQuestion(mode, L));
+    ask(mode, asked);
   }
 
   return (
@@ -182,12 +131,11 @@ function GamesPage() {
             </div>
 
             {question.image && (
-              <img
+              <Photo
                 src={question.image}
                 alt=""
-                loading="lazy"
-                width={1200}
-                height={800}
+                sizes="(min-width: 1024px) 1024px, 100vw"
+                fallbackWidth={960}
                 className="mt-4 h-56 w-full rounded-xl object-cover"
               />
             )}

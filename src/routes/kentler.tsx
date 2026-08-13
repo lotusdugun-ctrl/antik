@@ -3,17 +3,24 @@ import { useMemo } from "react";
 import { LayoutGrid, MapIcon, Search, X } from "lucide-react";
 import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
-import { useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { seoTags } from "@/lib/seo";
 import { allCivilizations, allProvinces, regions, sites, type RegionId } from "@/lib/sites";
 
+/**
+ * Every filter is optional, and declared optional rather than
+ * always-present-but-undefined: the router reads a required key as one the
+ * caller must supply, which would force `<Link to="/kentler">` and every
+ * partial `navigate({ search })` to spell out all seven of them.
+ */
 type SearchParams = {
-  q: string | undefined;
-  region: RegionId | undefined;
-  province: string | undefined;
-  civ: string | undefined;
-  unesco: boolean | undefined;
-  free: boolean | undefined;
-  view: "list" | "map" | undefined;
+  q?: string | undefined;
+  region?: RegionId | undefined;
+  province?: string | undefined;
+  civ?: string | undefined;
+  unesco?: boolean | undefined;
+  free?: boolean | undefined;
+  view?: "list" | "map" | undefined;
 };
 
 export const Route = createFileRoute("/kentler")({
@@ -26,21 +33,15 @@ export const Route = createFileRoute("/kentler")({
     free: search["free"] === true || search["free"] === "true" ? true : undefined,
     view: search["view"] === "map" ? "map" : undefined,
   }),
-  head: () => ({
-    meta: [
-      { title: "Antik Kentler — Filtrele ve Keşfet | Antik Türkiye" },
-      {
-        name: "description",
-        content:
-          "Bölge, il, uygarlık ve UNESCO durumuna göre Türkiye'deki antik kentleri filtrele; liste veya harita görünümünde keşfet.",
-      },
-      { property: "og:title", content: "Antik Kentler — Filtrele ve Keşfet" },
-      {
-        property: "og:description",
-        content: "Türkiye'nin antik kentlerini bölge, il, uygarlık ve UNESCO filtreleriyle bul.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang(match.search.lang);
+    return seoTags({
+      lang,
+      pathname: "/kentler",
+      title: translate("seo_explore_title", lang),
+      description: translate("seo_explore_desc", lang),
+    });
+  },
   component: ExplorePage,
 });
 

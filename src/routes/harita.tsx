@@ -1,25 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteMap } from "@/components/SiteMap";
-import { useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
+import { seoTags } from "@/lib/seo";
 import { sites } from "@/lib/sites";
 
 export const Route = createFileRoute("/harita")({
-  head: () => ({
-    meta: [
-      { title: "Antik Kent Haritası — Türkiye | Antik Türkiye" },
-      {
-        name: "description",
-        content:
-          "Türkiye'deki tüm antik kentleri interaktif harita üzerinde gör; iğneye tıklayıp bilgi kartını aç ve ziyaretini kaydet.",
-      },
-      { property: "og:title", content: "Antik Kent Haritası — Türkiye" },
-      {
-        property: "og:description",
-        content: "Türkiye'nin antik kentleri interaktif harita üzerinde işaretli.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang(match.search.lang);
+    return seoTags({
+      lang,
+      pathname: "/harita",
+      title: translate("seo_map_title", lang),
+      description: translate("seo_map_desc", lang),
+    });
+  },
   component: MapPage,
 });
 

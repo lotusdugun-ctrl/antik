@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Check, Heart, MapPin, Sparkles } from "lucide-react";
+import { Photo } from "@/components/Photo";
 import { coverImage, type Site } from "@/lib/sites";
 import { useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
@@ -24,12 +25,11 @@ export function SiteCard({
     >
       <Link to="/kent/$slug" params={{ slug: site.slug }} className="block">
         <div className="relative aspect-[4/3] overflow-hidden">
-          <img
+          <Photo
             src={coverImage(site)}
             alt={L(site.name)}
-            loading="lazy"
-            width={1200}
-            height={800}
+            sizes="(min-width: 1280px) 300px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            fallbackWidth={330}
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 hero-scrim" />
@@ -54,7 +54,7 @@ export function SiteCard({
             <h3 className="font-display text-lg font-semibold leading-tight text-white">
               {L(site.name)}
             </h3>
-            <p className="mt-0.5 flex items-center gap-1 text-xs text-white/80">
+            <p className="mt-0.5 flex items-center gap-1 text-xs text-white/90">
               <MapPin className="h-3 w-3" />
               {L(site.province)}
               {typeof distance === "number" && <span>· {distance} km</span>}

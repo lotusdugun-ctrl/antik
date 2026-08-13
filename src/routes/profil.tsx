@@ -1,26 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Award, BookOpen, Lock, MapPin, RotateCcw, Trash2, Trophy } from "lucide-react";
+import { Photo } from "@/components/Photo";
 import { SiteCard } from "@/components/SiteCard";
-import { useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { levelFromXp, useProgress } from "@/lib/progress";
+import { seoTags } from "@/lib/seo";
 import { coverImage, getSite, regions, totalSites } from "@/lib/sites";
 
 export const Route = createFileRoute("/profil")({
-  head: () => ({
-    meta: [
-      { title: "Profilim — İlerleme, Rozetler ve Favoriler | Antik Türkiye" },
-      {
-        name: "description",
-        content:
-          "Gezdiğin antik kentler, favorilerin, bölge bazlı ilerlemen, XP seviyen ve kazandığın başarı rozetleri.",
-      },
-      { property: "og:title", content: "Profilim — İlerleme ve Rozetler" },
-      {
-        property: "og:description",
-        content: "Antik kent ziyaretlerini, istatistiklerini ve rozetlerini takip et.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang(match.search.lang);
+    return seoTags({
+      lang,
+      pathname: "/profil",
+      title: translate("seo_profile_title", lang),
+      description: translate("seo_profile_desc", lang),
+      // A personal, device-local page has nothing to offer a search index.
+      noIndex: true,
+    });
+  },
   component: ProfilePage,
 });
 
@@ -142,11 +140,11 @@ function ProfilePage() {
               return (
                 <li key={entry.slug} className="flex gap-4 rounded-2xl surface-panel p-4">
                   <Link to="/kent/$slug" params={{ slug: site.slug }} className="shrink-0">
-                    <img
+                    <Photo
                       src={entry.photo ?? coverImage(site)}
                       alt={L(site.name)}
-                      width={1200}
-                      height={800}
+                      sizes="112px"
+                      fallbackWidth={250}
                       className="h-20 w-28 rounded-xl object-cover"
                     />
                   </Link>

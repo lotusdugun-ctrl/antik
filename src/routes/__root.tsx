@@ -3,17 +3,20 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
+  retainSearchParams,
+  useNavigate,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useCallback, useEffect, type ReactNode } from "react";
 import { toast } from "sonner";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/AppShell";
-import { LanguageProvider, useI18n } from "@/lib/i18n";
+import { DEFAULT_LANG, LanguageProvider, parseLang, useI18n, type Lang } from "@/lib/i18n";
 import { ProgressProvider } from "@/lib/progress";
 import { ThemeProvider } from "@/lib/theme";
 import { Toaster } from "@/components/ui/sonner";
@@ -79,24 +82,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  /**
+   * Language is a search param so that it lives in the URL. Turkish is the
+   * default and stays absent, which keeps every existing Turkish address
+   * unchanged; only English adds `?lang=en`.
+   */
+  validateSearch: (search: Record<string, unknown>): { lang?: "en" | undefined } =>
+    search["lang"] === "en" ? { lang: "en" } : {},
+  // Without this, following any <Link> would silently drop the language.
+  search: { middlewares: [retainSearchParams(["lang"])] },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Antik Türkiye — Türkiye Antik Kent Rehberi" },
-      {
-        name: "description",
-        content:
-          "Türkiye'nin antik kentlerini harita üzerinde keşfet, tarihçelerini öğren, ziyaretlerini kaydet.",
-      },
       { name: "author", content: "Antik Türkiye" },
-      { property: "og:title", content: "Antik Türkiye — Türkiye Antik Kent Rehberi" },
-      {
-        property: "og:description",
-        content: "Türkiye'nin antik kentleri için interaktif harita, rehber ve ziyaret günlüğü.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#f7f4ee" },
       { name: "application-name", content: "Antik Türkiye" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
@@ -125,8 +124,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  // Read straight from router state rather than a hook bound to a match: the
+  // shell renders outside the route components, but it still needs the
+  // language so the server emits the correct <html lang>.
+  const lang = useRouterState({
+    select: (state) => parseLang((state.location.search as { lang?: string }).lang),
+  });
+
   return (
-    <html lang="tr">
+    <html lang={lang}>
       <head>
         <HeadContent />
       </head>
@@ -156,11 +162,31 @@ function PwaRegistration() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const navigate = useNavigate();
+  const lang = parseLang(Route.useSearch().lang);
+
+  // Switching language is a navigation, not a state change, so the address bar
+  // agrees with what is on screen and the page can be shared or bookmarked.
+  const setLang = useCallback(
+    (next: Lang) =>
+      navigate({
+        to: ".",
+        search: (prev: Record<string, unknown>) => {
+          const rest = { ...prev };
+          delete rest["lang"];
+          // Turkish is the default, so it is expressed by the absence of the
+          // param rather than `?lang=tr`.
+          return next === DEFAULT_LANG ? rest : { ...rest, lang: "en" as const };
+        },
+        replace: true,
+      }),
+    [navigate],
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <LanguageProvider>
+        <LanguageProvider lang={lang} setLang={setLang}>
           <ProgressProvider>
             <AppShell>
               {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

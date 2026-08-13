@@ -15,7 +15,9 @@ import { Route as HaritaRouteImport } from './routes/harita'
 import { Route as KentlerRouteImport } from './routes/kentler'
 import { Route as OyunlarRouteImport } from './routes/oyunlar'
 import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RotaRouteImport } from './routes/rota'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as BolgeIdRouteImport } from './routes/bolge.$id'
 import { Route as KentSlugRouteImport } from './routes/kent.$slug'
 
@@ -49,9 +51,19 @@ const ProfilRoute = ProfilRouteImport.update({
   path: '/profil',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RotaRoute = RotaRouteImport.update({
   id: '/rota',
   path: '/rota',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BolgeIdRoute = BolgeIdRouteImport.update({
@@ -72,7 +84,9 @@ export interface FileRoutesByFullPath {
   '/kentler': typeof KentlerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
 }
@@ -83,7 +97,9 @@ export interface FileRoutesByTo {
   '/kentler': typeof KentlerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
 }
@@ -95,7 +111,9 @@ export interface FileRoutesById {
   '/kentler': typeof KentlerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
 }
@@ -108,7 +126,9 @@ export interface FileRouteTypes {
     | '/kentler'
     | '/oyunlar'
     | '/profil'
+    | '/robots.txt'
     | '/rota'
+    | '/sitemap.xml'
     | '/bolge/$id'
     | '/kent/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -119,7 +139,9 @@ export interface FileRouteTypes {
     | '/kentler'
     | '/oyunlar'
     | '/profil'
+    | '/robots.txt'
     | '/rota'
+    | '/sitemap.xml'
     | '/bolge/$id'
     | '/kent/$slug'
   id:
@@ -130,7 +152,9 @@ export interface FileRouteTypes {
     | '/kentler'
     | '/oyunlar'
     | '/profil'
+    | '/robots.txt'
     | '/rota'
+    | '/sitemap.xml'
     | '/bolge/$id'
     | '/kent/$slug'
   fileRoutesById: FileRoutesById
@@ -142,7 +166,9 @@ export interface RootRouteChildren {
   KentlerRoute: typeof KentlerRoute
   OyunlarRoute: typeof OyunlarRoute
   ProfilRoute: typeof ProfilRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   RotaRoute: typeof RotaRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BolgeIdRoute: typeof BolgeIdRoute
   KentSlugRoute: typeof KentSlugRoute
 }
@@ -191,11 +217,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rota': {
       id: '/rota'
       path: '/rota'
       fullPath: '/rota'
       preLoaderRoute: typeof RotaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bolge/$id': {
@@ -222,7 +262,9 @@ const rootRouteChildren: RootRouteChildren = {
   KentlerRoute: KentlerRoute,
   OyunlarRoute: OyunlarRoute,
   ProfilRoute: ProfilRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   RotaRoute: RotaRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   BolgeIdRoute: BolgeIdRoute,
   KentSlugRoute: KentSlugRoute,
 }

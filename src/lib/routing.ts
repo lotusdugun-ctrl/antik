@@ -3,6 +3,18 @@ import { distanceKm, sites } from "@/lib/sites";
 
 type Cell = { km: number; min: number };
 
+const PER_DAY = 3;
+
+/**
+ * How many candidate sites go into the driving matrix. A trip is at most
+ * `days * PER_DAY` stops, but the nearest-neighbour walk needs alternatives to
+ * choose from at every step, so we hand it a few times that many. Keeping the
+ * number small matters: OSRM bills a table request as width x height, and the
+ * public demo server is a shared courtesy service, not infrastructure we own.
+ */
+const CANDIDATE_MULTIPLIER = 3;
+const MIN_CANDIDATES = 12;
+
 async function fetchDrivingMatrix(points: { lat: number; lng: number }[]) {
   const coords = points.map((p) => `${p.lng},${p.lat}`).join(";");
   const url = `https://router.project-osrm.org/table/v1/driving/${coords}?annotations=distance,duration`;
@@ -28,6 +40,11 @@ async function fetchDrivingMatrix(points: { lat: number; lng: number }[]) {
   return cells;
 }
 
+/**
+ * Straight-line stand-in for when OSRM is unreachable. The kilometres are
+ * honest; the durations are left at 0 so the caller can tell this apart from
+ * real driving data instead of presenting a guess as a measurement.
+ */
 function haversineMatrix(points: { lat: number; lng: number }[]) {
   const n = points.length;
   return Array.from({ length: n }, (_, i) =>
@@ -44,23 +61,37 @@ export const buildRouteServerFn = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const { startSlug, days } = data;
     const start = sites.find((s) => s.slug === startSlug) ?? (sites[0] as (typeof sites)[number]);
-    const pool = [...sites.filter((s) => s.slug !== start.slug)];
-    const points = [
-      { lat: start.lat, lng: start.lng },
-      ...pool.map((s) => ({ lat: s.lat, lng: s.lng })),
-    ];
+    const maxSites = Math.max(1, days) * PER_DAY;
 
-    let matrix: Cell[][] | null = null;
+    /*
+     * Shortlist by straight-line distance before asking OSRM anything. The
+     * itinerary never leaves the start's neighbourhood — a nearest-neighbour
+     * walk of nine stops cannot reach a site on the far side of the country —
+     * so routing all 100 sites meant requesting a 100x100 table (10,000 pairs,
+     * measured at ~8.5s against the demo server) to use nine of its rows.
+     */
+    const candidates = [...sites]
+      .filter((s) => s.slug !== start.slug)
+      .map((site) => ({ site, crow: distanceKm(start.lat, start.lng, site.lat, site.lng) }))
+      .sort((a, b) => a.crow - b.crow)
+      .slice(0, Math.max(MIN_CANDIDATES, maxSites * CANDIDATE_MULTIPLIER))
+      .map((c) => c.site);
+
+    const pool = [start, ...candidates];
+    const points = pool.map((s) => ({ lat: s.lat, lng: s.lng }));
+
+    let matrix: Cell[][];
+    let usingDriving: boolean;
     try {
       matrix = await fetchDrivingMatrix(points);
+      usingDriving = true;
     } catch {
       matrix = haversineMatrix(points);
+      usingDriving = false;
     }
 
-    const legKm = (i: number, j: number) => matrix?.[i]?.[j]?.km ?? 0;
+    const legKm = (i: number, j: number) => matrix[i]?.[j]?.km ?? 0;
 
-    const PER_DAY = 3;
-    const maxSites = days * PER_DAY;
     const orderIdx = [0];
     const used = new Set([0]);
     let current = 0;
@@ -82,21 +113,22 @@ export const buildRouteServerFn = createServerFn({ method: "GET" })
       current = best;
     }
 
-    const all = [start, ...pool];
-    const slugs = orderIdx.map((i) => all[i]!.slug);
+    const slugs = orderIdx.map((i) => pool[i]!.slug);
     const legs: Cell[] = [];
     for (let k = 1; k < orderIdx.length; k++) {
       const from = orderIdx[k - 1]!;
       const to = orderIdx[k]!;
-      const cell = matrix?.[from]?.[to] ?? { km: legKm(from, to), min: 0 };
+      const cell = matrix[from]?.[to] ?? { km: legKm(from, to), min: 0 };
       legs.push({
         km: Math.round(cell.km),
+        // No OSRM means no duration to report. 60 km/h is a plain guess, and
+        // `usingDriving: false` is what tells the UI to label it as one.
         min: cell.min > 0 ? cell.min : Math.max(1, Math.round(cell.km)),
       });
     }
 
     return {
-      usingDriving: matrix !== null,
+      usingDriving,
       slugs,
       legs,
       totalKm: legs.reduce((a, l) => a + l.km, 0),

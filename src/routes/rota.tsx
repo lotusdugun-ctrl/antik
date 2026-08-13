@@ -1,31 +1,35 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { ArrowRight, CalendarDays, Car, Clock, MapPin, Route as RouteIcon } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  Car,
+  Clock,
+  MapPin,
+  Route as RouteIcon,
+  TriangleAlert,
+} from "lucide-react";
 import { SiteMap } from "@/components/SiteMap";
-import { useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { buildRouteServerFn } from "@/lib/routing";
+import { seoTags } from "@/lib/seo";
 import { getSite, sites, type Site } from "@/lib/sites";
 
 export const Route = createFileRoute("/rota")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  // Optional, so that linking to /rota without a chosen start is legal.
+  validateSearch: (search: Record<string, unknown>): { start?: string | undefined } => ({
     start: typeof search["start"] === "string" ? search["start"] : undefined,
   }),
-  head: () => ({
-    meta: [
-      { title: "Rota Oluşturucu — Antik Kent Güzergâhı | Antik Türkiye" },
-      {
-        name: "description",
-        content:
-          "Başlangıç kentini seç, gezi süreni belirle; gerçek araç mesafeleriyle en yakın antik kentlerden güzergâhını oluştur.",
-      },
-      { property: "og:title", content: "Rota Oluşturucu" },
-      {
-        property: "og:description",
-        content: "Gerçek araç mesafeleri ve süreleriyle gün gün gezi rotası oluştur.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang(match.search.lang);
+    return seoTags({
+      lang,
+      pathname: "/rota",
+      title: translate("seo_route_title", lang),
+      description: translate("seo_route_desc", lang),
+    });
+  },
   component: RouteBuilderPage,
 });
 
@@ -48,6 +52,7 @@ function RouteBuilderPage() {
     () => (data ? data.slugs.map(getSite).filter((s): s is Site => Boolean(s)) : []),
     [data],
   );
+  const driving = data?.usingDriving ?? false;
   const center: [number, number] =
     ordered.length > 0
       ? [
@@ -114,7 +119,7 @@ function RouteBuilderPage() {
 
         <div className="flex items-end gap-3 sm:flex-col sm:gap-1 sm:text-right">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            {t("route_total")}
+            {driving ? t("route_total") : t("route_crow_distance")}
           </span>
           <span className="font-display text-xl font-semibold text-primary">
             {isLoading ? "…" : `${data?.totalKm ?? 0} ${t("route_km")}`}
@@ -123,17 +128,21 @@ function RouteBuilderPage() {
 
         <div className="flex items-end gap-3 sm:flex-col sm:gap-1 sm:text-right">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            {t("route_est_time")}
+            {driving ? t("route_est_time") : t("route_rough_time")}
           </span>
           <span className="font-display text-xl font-semibold text-primary">
-            {isLoading ? "…" : `${data?.totalMin ?? 0} ${t("route_min")}`}
+            {isLoading ? "…" : `${driving ? "" : "~"}${data?.totalMin ?? 0} ${t("route_min")}`}
           </span>
         </div>
       </div>
 
-      <p className="mb-5 flex items-center gap-1.5 text-xs text-muted-foreground">
-        {data?.usingDriving && <Car className="h-3.5 w-3.5" />}
-        {t("route_auto_note")}
+      <p className="mb-5 flex items-start gap-1.5 text-xs text-muted-foreground">
+        {driving ? (
+          <Car className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        ) : (
+          <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-destructive" />
+        )}
+        {driving ? t("route_auto_note") : t("route_crow_note")}
       </p>
 
       {isLoading && (

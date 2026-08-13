@@ -9,9 +9,11 @@ import {
   Search,
   Sparkles,
 } from "lucide-react";
+import { Photo } from "@/components/Photo";
 import { SiteCard } from "@/components/SiteCard";
-import { useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
+import { seoTags } from "@/lib/seo";
 import {
   distanceKm,
   getSite,
@@ -23,21 +25,15 @@ import {
 } from "@/lib/sites";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Antik Türkiye — Türkiye'nin Antik Kent Rehberi" },
-      {
-        name: "description",
-        content:
-          "Türkiye'deki antik kentleri harita üzerinde keşfet, tarihçelerini oku, ziyaretlerini kaydet ve mini oyunlarla öğren.",
-      },
-      { property: "og:title", content: "Antik Türkiye — Türkiye'nin Antik Kent Rehberi" },
-      {
-        property: "og:description",
-        content: "Efes'ten Göbeklitepe'ye: interaktif harita, detaylı rehber ve ziyaret günlüğü.",
-      },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang(match.search.lang);
+    return seoTags({
+      lang,
+      pathname: "/",
+      title: translate("seo_home_title", lang),
+      description: translate("seo_home_desc", lang),
+    });
+  },
   component: Index,
 });
 
@@ -101,16 +97,20 @@ function Index() {
       {/* Hero */}
       <section className="relative">
         <div className="relative h-[68vh] min-h-[440px] w-full overflow-hidden">
-          <img
+          <Photo
             src={heroImage}
             alt="Efes Antik Kenti Celsus Kütüphanesi"
+            sizes="100vw"
+            fallbackWidth={1280}
             width={1920}
             height={1088}
+            loading="eager"
+            fetchPriority="high"
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 hero-scrim" />
           <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-7xl px-4 pb-10 sm:px-6">
-            <p className="fade-up mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+            <p className="fade-up mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/85">
               <Sparkles className="h-3.5 w-3.5" />
               {sites.length} {t("cities")} · 7 {t("regions")}
             </p>
@@ -149,12 +149,11 @@ function Index() {
             className="group grid overflow-hidden rounded-3xl surface-panel md:grid-cols-2"
           >
             <div className="relative aspect-[16/10] overflow-hidden md:aspect-auto">
-              <img
+              <Photo
                 src={coverImage(daily)}
                 alt={L(daily.name)}
-                loading="lazy"
-                width={1200}
-                height={800}
+                sizes="(min-width: 768px) 50vw, 100vw"
+                fallbackWidth={500}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
@@ -243,12 +242,11 @@ function Index() {
                 params={{ id: region.id }}
                 className="group relative aspect-[5/3] overflow-hidden rounded-2xl border border-border lift"
               >
-                <img
+                <Photo
                   src={region.image}
                   alt={L(region.name)}
-                  loading="lazy"
-                  width={1200}
-                  height={800}
+                  sizes="(min-width: 1280px) 300px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  fallbackWidth={330}
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 hero-scrim" />
@@ -256,7 +254,7 @@ function Index() {
                   <h3 className="font-display text-lg font-semibold text-white">
                     {L(region.name)}
                   </h3>
-                  <p className="text-xs text-white/75">
+                  <p className="text-xs text-white/90">
                     {sites.filter((s) => s.region === region.id).length} {t("cities")}
                   </p>
                 </div>

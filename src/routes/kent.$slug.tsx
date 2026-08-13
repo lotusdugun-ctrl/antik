@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Photo } from "@/components/Photo";
 import { SiteMap } from "@/components/SiteMap";
 import { VisitEditor } from "@/components/VisitEditor";
 import {
@@ -25,10 +26,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
+import { seoTags } from "@/lib/seo";
+import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { structureImage, structureInfo } from "@/lib/structures";
-import { coverImage, galleryImages, getSite, regions } from "@/lib/sites";
+import { coverImage, getSite, regions } from "@/lib/sites";
 
 export const Route = createFileRoute("/kent/$slug")({
   loader: ({ params }) => {
@@ -36,28 +40,32 @@ export const Route = createFileRoute("/kent/$slug")({
     if (!site) throw notFound();
     return {
       slug: site.slug,
-      title: site.name.tr,
-      description: site.summary.tr,
+      name: site.name,
+      summary: site.summary,
       image: coverImage(site),
     };
   },
-  head: ({ loaderData }) => {
+  head: ({ match, loaderData }) => {
+    const lang = parseLang(match.search.lang);
     if (!loaderData) {
-      return { meta: [{ title: "Antik kent bulunamadı" }, { name: "robots", content: "noindex" }] };
+      return seoTags({
+        lang,
+        pathname: match.pathname,
+        title: translate("seo_not_found", lang),
+        description: "",
+        noIndex: true,
+      });
     }
-    const title = `${loaderData.title} Antik Kenti — Tarihçe, Ziyaret Bilgileri`;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: loaderData.description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: loaderData.description },
-        { property: "og:image", content: loaderData.image },
-        { property: "og:image:alt", content: loaderData.title },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: loaderData.image },
-      ],
-    };
+    const name = loaderData.name[lang];
+    return seoTags({
+      lang,
+      pathname: `/kent/${loaderData.slug}`,
+      title: `${name} ${translate("seo_city_suffix", lang)}`,
+      description: loaderData.summary[lang],
+      // Social cards want a large image, not the 330px card thumbnail.
+      image: imageAt(loaderData.image, 1280),
+      imageAlt: name,
+    });
   },
   component: SiteDetail,
 });
@@ -78,6 +86,7 @@ function SiteDetail() {
   const { t, L } = useI18n();
   const { isVisited, isFavorite, toggleVisited, toggleFavorite, pushRecent } = useProgress();
   const site = getSite(slug)!;
+  const detail = getSiteDetail(slug);
   const [activeImage, setActiveImage] = useState(0);
   const [openStructure, setOpenStructure] = useState<string | null>(null);
   const gallery = galleryImages(site);
@@ -101,11 +110,15 @@ function SiteDetail() {
   return (
     <article>
       <div className="relative h-[52vh] min-h-[340px] w-full overflow-hidden">
-        <img
+        <Photo
           src={gallery[activeImage] ?? coverImage(site)}
           alt={L(site.name)}
+          sizes="100vw"
+          fallbackWidth={1280}
           width={1920}
           height={1088}
+          loading="eager"
+          fetchPriority="high"
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 hero-scrim" />
@@ -131,7 +144,7 @@ function SiteDetail() {
           <h1 className="font-display text-4xl font-semibold text-white sm:text-5xl">
             {L(site.name)}
           </h1>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-white/80">
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-white/90">
             <MapPin className="h-4 w-4" /> {L(site.province)} · {L(site.era)}
           </p>
         </div>
@@ -193,12 +206,11 @@ function SiteDetail() {
                   activeImage === i ? "border-primary" : "border-transparent opacity-70"
                 }`}
               >
-                <img
+                <Photo
                   src={img}
                   alt={`${L(site.name)} ${i + 1}`}
-                  loading="lazy"
-                  width={1200}
-                  height={800}
+                  sizes="112px"
+                  fallbackWidth={250}
                   className="h-full w-full object-cover"
                 />
               </button>
@@ -211,37 +223,43 @@ function SiteDetail() {
             <section>
               <h2 className="mb-2 font-display text-xl font-semibold">{t("history")}</h2>
               <p className="text-[15px] leading-relaxed text-muted-foreground">{L(site.summary)}</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                {L(site.history)}
-              </p>
+              {detail && (
+                <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+                  {L(detail.history)}
+                </p>
+              )}
             </section>
 
-            <section>
-              <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
-                <Building2 className="h-5 w-5 text-primary" /> {t("structures")}
-              </h2>
-              <ul className="grid gap-2 sm:grid-cols-2">
-                {site.structures.map((structure) => (
-                  <li key={structure.tr}>
-                    <button
-                      onClick={() => setOpenStructure(structure.tr)}
-                      className="w-full rounded-xl surface-panel px-4 py-3 text-left text-sm font-medium transition-colors hover:border hover:border-primary"
-                    >
-                      {L(structure)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            {detail && detail.structures.length > 0 && (
+              <section>
+                <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+                  <Building2 className="h-5 w-5 text-primary" /> {t("structures")}
+                </h2>
+                <ul className="grid gap-2 sm:grid-cols-2">
+                  {detail.structures.map((structure) => (
+                    <li key={structure.tr}>
+                      <button
+                        onClick={() => setOpenStructure(structure.tr)}
+                        className="w-full rounded-xl surface-panel px-4 py-3 text-left text-sm font-medium transition-colors hover:border hover:border-primary"
+                      >
+                        {L(structure)}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
-            <section className="rounded-2xl border-l-4 border-gold bg-secondary p-5">
-              <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-                <Lightbulb className="h-5 w-5 text-gold" /> {t("did_you_know")}
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-secondary-foreground">
-                {L(site.funFact)}
-              </p>
-            </section>
+            {detail && (
+              <section className="rounded-2xl border-l-4 border-gold bg-secondary p-5">
+                <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+                  <Lightbulb className="h-5 w-5 text-gold" /> {t("did_you_know")}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-secondary-foreground">
+                  {L(detail.funFact)}
+                </p>
+              </section>
+            )}
 
             <section>
               <h2 className="mb-3 font-display text-xl font-semibold">{t("location")}</h2>
@@ -281,11 +299,11 @@ function SiteDetail() {
           {openStructure && (
             <>
               <div className="overflow-hidden rounded-xl">
-                <img
+                <Photo
                   src={structureImage(openStructure, coverImage(site))}
                   alt={openStructure}
-                  width={1200}
-                  height={800}
+                  sizes="(min-width: 640px) 512px, 100vw"
+                  fallbackWidth={500}
                   className="h-52 w-full object-cover"
                 />
               </div>
