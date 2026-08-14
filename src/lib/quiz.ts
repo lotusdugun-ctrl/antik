@@ -18,12 +18,22 @@ export type Question = {
 
 export type Localize = (value: Localized) => string;
 
+/**
+ * Source of randomness, injected rather than reached for.
+ *
+ * The mini games want a different question every time, but the daily challenge
+ * has to hand every player on earth the same five questions — which is only
+ * possible if the whole builder draws from one replaceable stream instead of
+ * calling `Math.random` in five places.
+ */
+export type Rng = () => number;
+
 const OPTION_COUNT = 4;
 
-function shuffle<T>(items: T[]): T[] {
+function shuffle<T>(items: T[], rng: Rng): T[] {
   const out = [...items];
   for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [out[i], out[j]] = [out[j]!, out[i]!];
   }
   return out;
@@ -95,12 +105,13 @@ function pickDistractors(
   pool: Site[],
   target: Site,
   axisOf: (site: Site) => string,
+  rng: Rng,
   count = OPTION_COUNT - 1,
 ): Site[] {
   const answer = axisOf(target);
   const taken = new Set([answer]);
   const chosen: Site[] = [];
-  for (const site of shuffle(pool)) {
+  for (const site of shuffle(pool, rng)) {
     if (chosen.length === count) break;
     const value = axisOf(site);
     if (taken.has(value)) continue;
@@ -110,45 +121,49 @@ function pickDistractors(
   return chosen;
 }
 
-function choose<T>(items: T[]): T {
-  return items[Math.floor(Math.random() * items.length)]!;
+function choose<T>(items: T[], rng: Rng): T {
+  return items[Math.floor(rng() * items.length)]!;
 }
 
 /** Prefers a site the player has not just been asked about. */
-function pickTarget(pool: Site[], recent: ReadonlySet<string>): Site {
+function pickTarget(pool: Site[], recent: ReadonlySet<string>, rng: Rng): Site {
   const fresh = pool.filter((s) => !recent.has(s.slug));
-  return choose(fresh.length > 0 ? fresh : pool);
+  return choose(fresh.length > 0 ? fresh : pool, rng);
 }
 
 export function buildQuestion(
   mode: QuizMode,
   L: Localize,
   recent: ReadonlySet<string> = new Set(),
+  rng: Rng = Math.random,
 ): Question {
   const byName = (site: Site) => L(site.name);
   const byProvince = (site: Site) => L(site.province);
 
   if (mode === "who") {
-    const target = pickTarget(sitesWithUniqueFigure, recent);
-    const figure = choose(target.figures.filter((f) => figureOwners.get(f)?.length === 1));
-    const distractors = pickDistractors(sites, target, byName);
+    const target = pickTarget(sitesWithUniqueFigure, recent, rng);
+    const figure = choose(
+      target.figures.filter((f) => figureOwners.get(f)?.length === 1),
+      rng,
+    );
+    const distractors = pickDistractors(sites, target, byName, rng);
     return {
       mode,
       slug: target.slug,
       prompt: figure,
-      options: shuffle([target, ...distractors].map(byName)),
+      options: shuffle([target, ...distractors].map(byName), rng),
       answer: byName(target),
     };
   }
 
   if (mode === "tf") {
-    const target = pickTarget(sites, recent);
-    const claimTruth = Math.random() < 0.5;
+    const target = pickTarget(sites, recent, rng);
+    const claimTruth = rng() < 0.5;
     // The false variant needs a province that genuinely is not this site's —
     // drawing one at random can land on another site in the same province and
     // produce a true statement marked false.
     const elsewhere = sites.filter((s) => L(s.province) !== byProvince(target));
-    const province = claimTruth || elsewhere.length === 0 ? target : choose(elsewhere);
+    const province = claimTruth || elsewhere.length === 0 ? target : choose(elsewhere, rng);
     const isTrue = byProvince(province) === byProvince(target);
     return {
       mode,
@@ -160,38 +175,38 @@ export function buildQuestion(
   }
 
   if (mode === "map") {
-    const target = pickTarget(sites, recent);
-    const distractors = pickDistractors(sites, target, byProvince);
+    const target = pickTarget(sites, recent, rng);
+    const distractors = pickDistractors(sites, target, byProvince, rng);
     return {
       mode,
       slug: target.slug,
       prompt: byName(target),
-      options: shuffle([target, ...distractors].map(byProvince)),
+      options: shuffle([target, ...distractors].map(byProvince), rng),
       answer: byProvince(target),
     };
   }
 
   if (mode === "structure") {
-    const target = pickTarget(sitesWithUniqueStructure, recent);
-    const structure = choose(structuresOf(target).filter(structureIsUnique));
-    const distractors = pickDistractors(sites, target, byName);
+    const target = pickTarget(sitesWithUniqueStructure, recent, rng);
+    const structure = choose(structuresOf(target).filter(structureIsUnique), rng);
+    const distractors = pickDistractors(sites, target, byName, rng);
     return {
       mode,
       slug: target.slug,
       prompt: L(structure),
-      options: shuffle([target, ...distractors].map(byName)),
+      options: shuffle([target, ...distractors].map(byName), rng),
       answer: byName(target),
     };
   }
 
-  const target = pickTarget(sites, recent);
-  const distractors = pickDistractors(sites, target, byName);
+  const target = pickTarget(sites, recent, rng);
+  const distractors = pickDistractors(sites, target, byName, rng);
   return {
     mode: "photo",
     slug: target.slug,
     prompt: byProvince(target),
     image: coverImage(target),
-    options: shuffle([target, ...distractors].map(byName)),
+    options: shuffle([target, ...distractors].map(byName), rng),
     answer: byName(target),
   };
 }

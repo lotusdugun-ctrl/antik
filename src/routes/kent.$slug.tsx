@@ -12,13 +12,15 @@ import {
   MapPin,
   Navigation,
   Route as RouteIcon,
-  Ticket,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Photo } from "@/components/Photo";
+import { PhotoCredits } from "@/components/PhotoCredits";
 import { SiteMap } from "@/components/SiteMap";
 import { VisitEditor } from "@/components/VisitEditor";
+import { VisitingInfo } from "@/components/VisitingInfo";
 import {
   Dialog,
   DialogContent,
@@ -29,8 +31,9 @@ import {
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
-import { seoTags } from "@/lib/seo";
+import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
 import { galleryImages, getSiteDetail } from "@/lib/site-details";
+import { factsFor } from "@/lib/site-facts";
 import { structureImage, structureInfo } from "@/lib/structures";
 import { coverImage, getSite, regions } from "@/lib/sites";
 
@@ -57,15 +60,42 @@ export const Route = createFileRoute("/kent/$slug")({
       });
     }
     const name = loaderData.name[lang];
-    return seoTags({
+    const image = imageAt(loaderData.image, 1280);
+    const tags = seoTags({
       lang,
       pathname: `/kent/${loaderData.slug}`,
       title: `${name} ${translate("seo_city_suffix", lang)}`,
       description: loaderData.summary[lang],
       // Social cards want a large image, not the 330px card thumbnail.
-      image: imageAt(loaderData.image, 1280),
+      image,
       imageAlt: name,
     });
+
+    // Structured data: without it a search engine has to infer from prose that
+    // this page is about one place, at one coordinate, in one province.
+    const site = getSite(loaderData.slug);
+    const region = site && regions.find((r) => r.id === site.region);
+    const scripts =
+      site && region
+        ? [
+            ...siteTags(site, {
+              lang,
+              description: loaderData.summary[lang],
+              image,
+              regionName: region.name[lang],
+            }),
+            ...breadcrumbTags(
+              [
+                { name: translate("appName", lang), pathname: "/" },
+                { name: translate("nav_explore", lang), pathname: "/kentler" },
+                { name, pathname: `/kent/${site.slug}` },
+              ],
+              lang,
+            ),
+          ]
+        : [];
+
+    return { ...tags, scripts };
   },
   component: SiteDetail,
 });
@@ -91,6 +121,14 @@ function SiteDetail() {
   const [openStructure, setOpenStructure] = useState<string | null>(null);
   const gallery = galleryImages(site);
   const region = regions.find((r) => r.id === site.region)!;
+  const facts = factsFor(slug);
+  // Everything this page can put on screen, so the credit block below covers
+  // the structure dialog's photo too and not just what is currently visible.
+  const shownPhotos = [
+    ...gallery,
+    coverImage(site),
+    ...(detail?.structures ?? []).map((s) => structureInfo[s.tr]?.image),
+  ].filter((url): url is string => typeof url === "string");
 
   useEffect(() => {
     pushRecent(slug);
@@ -261,6 +299,24 @@ function SiteDetail() {
               </section>
             )}
 
+            {facts.length > 0 && (
+              <section>
+                <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+                  <Sparkles className="h-5 w-5 text-gold" /> {t("facts")}
+                </h2>
+                <ul className="space-y-3">
+                  {facts.map((fact) => (
+                    <li
+                      key={fact.tr}
+                      className="rounded-xl surface-panel p-4 text-[15px] leading-relaxed"
+                    >
+                      {L(fact)}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
             <section>
               <h2 className="mb-3 font-display text-xl font-semibold">{t("location")}</h2>
               <SiteMap sites={[site]} center={[site.lat, site.lng]} zoom={12} height="360px" />
@@ -268,14 +324,9 @@ function SiteDetail() {
           </div>
 
           <aside className="space-y-3">
+            <VisitingInfo site={site} />
             <Fact icon={CalendarClock} label={t("era")} value={L(site.era)} />
             <Fact icon={Users} label={t("civilizations")} value={site.civilizations.join(", ")} />
-            <Fact icon={Clock} label={t("hours")} value={L(site.hours)} />
-            <Fact
-              icon={Ticket}
-              label={t("entry_fee")}
-              value={site.fee === 0 ? t("free") : `${site.fee} ₺`}
-            />
             <Fact
               icon={Award}
               label={t("unesco")}
@@ -292,6 +343,8 @@ function SiteDetail() {
             )}
           </aside>
         </div>
+
+        <PhotoCredits urls={shownPhotos} className="mt-10 border-t border-border pt-6" />
       </div>
 
       <Dialog open={openStructure !== null} onOpenChange={(o) => !o && setOpenStructure(null)}>

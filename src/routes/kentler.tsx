@@ -4,7 +4,7 @@ import { LayoutGrid, MapIcon, Search, X } from "lucide-react";
 import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
-import { seoTags } from "@/lib/seo";
+import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 import { allCivilizations, allProvinces, regions, sites, type RegionId } from "@/lib/sites";
 
 /**
@@ -35,12 +35,29 @@ export const Route = createFileRoute("/kentler")({
   }),
   head: ({ match }) => {
     const lang = parseLang(match.search.lang);
-    return seoTags({
-      lang,
-      pathname: "/kentler",
-      title: translate("seo_explore_title", lang),
-      description: translate("seo_explore_desc", lang),
-    });
+    return {
+      ...seoTags({
+        lang,
+        pathname: "/kentler",
+        title: translate("seo_explore_title", lang),
+        description: translate("seo_explore_desc", lang),
+      }),
+      // The unfiltered list, so a crawler reading this page finds all hundred
+      // city URLs even though the visible grid is paged and filterable.
+      scripts: [
+        ...itemListTags(
+          sites.map((site) => ({ name: site.name[lang], pathname: `/kent/${site.slug}` })),
+          { lang, name: translate("seo_explore_title", lang) },
+        ),
+        ...breadcrumbTags(
+          [
+            { name: translate("appName", lang), pathname: "/" },
+            { name: translate("nav_explore", lang), pathname: "/kentler" },
+          ],
+          lang,
+        ),
+      ],
+    };
   },
   component: ExplorePage,
 });

@@ -1,6 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { coverImage, regions, sitePhoto, sites, type Site } from "@/lib/sites";
 import { galleryImages, siteDetails, siteGallery } from "@/lib/site-details";
+import { creditFor, photoCredits } from "@/lib/photo-credits";
+import { factsFor, siteFacts } from "@/lib/site-facts";
+import { structureInfo } from "@/lib/structures";
 import type { Localized } from "@/lib/i18n";
 
 /**
@@ -49,7 +52,9 @@ describe("the site list", () => {
   });
 
   test("both languages are filled in on every displayed field", () => {
-    const fieldsOf = (s: Site): Localized[] => [s.name, s.province, s.era, s.summary, s.hours];
+    // `hours` is deliberately absent on every site: opening times follow the
+    // ministry's seasonal rule rather than being asserted per site.
+    const fieldsOf = (s: Site): Localized[] => [s.name, s.province, s.era, s.summary];
     const gaps = sites.filter((s) => !fieldsOf(s).every(filled));
     expect(gaps.map((s) => s.slug)).toEqual([]);
   });
@@ -85,6 +90,18 @@ describe("the detail records", () => {
     expect(gaps.map(([slug]) => slug)).toEqual([]);
   });
 
+  test("every site has striking facts, written in both languages", () => {
+    const gaps = sites.filter((s) => {
+      const facts = factsFor(s.slug);
+      return facts.length === 0 || !facts.every(filled);
+    });
+    expect(gaps.map((s) => s.slug)).toEqual([]);
+  });
+
+  test("no facts are keyed to a site that does not exist", () => {
+    expect(Object.keys(siteFacts).filter((k) => !slugs.has(k))).toEqual([]);
+  });
+
   test("every record lists structures, each one named in both languages", () => {
     const gaps = Object.entries(siteDetails).filter(
       ([, d]) => d.structures.length === 0 || !d.structures.every(filled),
@@ -114,5 +131,30 @@ describe("photography", () => {
       ([, urls]) => urls && new Set(urls).size !== urls.length,
     );
     expect(dupes.map(([slug]) => slug)).toEqual([]);
+  });
+
+  /**
+   * Most of these photos are CC BY or CC BY-SA, so displaying one without
+   * naming its author and licence breaches the licence. An uncredited photo
+   * renders no caption and looks fine, so only a test catches it.
+   */
+  test("every Commons photo we display has an attribution on file", () => {
+    const remote = [
+      ...Object.values(sitePhoto),
+      ...Object.values(siteGallery).flat(),
+      ...Object.values(structureInfo).map((info) => info?.image),
+    ].filter(
+      (url): url is string => typeof url === "string" && url.includes("upload.wikimedia.org"),
+    );
+
+    const uncredited = remote.filter((url) => !creditFor(url));
+    expect([...new Set(uncredited)]).toEqual([]);
+  });
+
+  test("each credit names both an author and a licence", () => {
+    const blank = Object.entries(photoCredits).filter(
+      ([, c]) => !c.author.trim() || !c.license.trim(),
+    );
+    expect(blank.map(([file]) => file)).toEqual([]);
   });
 });

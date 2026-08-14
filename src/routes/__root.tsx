@@ -16,7 +16,15 @@ import { toast } from "sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/AppShell";
-import { DEFAULT_LANG, LanguageProvider, parseLang, useI18n, type Lang } from "@/lib/i18n";
+import {
+  DEFAULT_LANG,
+  LanguageProvider,
+  parseLang,
+  translate,
+  useI18n,
+  type Lang,
+} from "@/lib/i18n";
+import { websiteTags } from "@/lib/seo";
 import { ProgressProvider } from "@/lib/progress";
 import { ThemeProvider } from "@/lib/theme";
 import { Toaster } from "@/components/ui/sonner";
@@ -91,32 +99,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     search["lang"] === "en" ? { lang: "en" } : {},
   // Without this, following any <Link> would silently drop the language.
   search: { middlewares: [retainSearchParams(["lang"])] },
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "Antik Türkiye" },
-      { name: "theme-color", content: "#f7f4ee" },
-      { name: "application-name", content: "Antik Türkiye" },
-      { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
-      { name: "apple-mobile-web-app-title", content: "Antik Türkiye" },
-      { name: "mobile-web-app-capable", content: "yes" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
-      { rel: "icon", href: "/icons/favicon-32.png", type: "image/png" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap",
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-    ],
-  }),
+  head: ({ match }) => {
+    const lang = parseLang((match.search as { lang?: string }).lang);
+    return {
+      // Site-level identity, emitted once. Per-page structured data (the site
+      // itself, breadcrumbs, list pages) is added by the route that owns it.
+      scripts: websiteTags({
+        lang,
+        name: translate("appName", lang),
+        description: translate("seo_home_desc", lang),
+      }),
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "author", content: "Antik Türkiye" },
+        { name: "theme-color", content: "#f7f4ee" },
+        { name: "application-name", content: "Antik Türkiye" },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+        { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+        { name: "apple-mobile-web-app-title", content: "Antik Türkiye" },
+        { name: "mobile-web-app-capable", content: "yes" },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "manifest", href: "/manifest.webmanifest" },
+        { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
+        { rel: "icon", href: "/icons/favicon-32.png", type: "image/png" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap",
+        },
+        { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      ],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,

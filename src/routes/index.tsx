@@ -2,7 +2,10 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
+  CalendarDays,
   Compass,
+  Flame,
+  Layers,
   MapPin,
   Navigation,
   Route as RouteIcon,
@@ -11,6 +14,7 @@ import {
 } from "lucide-react";
 import { Photo } from "@/components/Photo";
 import { SiteCard } from "@/components/SiteCard";
+import { collections, collectionSites } from "@/lib/collections";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
 import { seoTags } from "@/lib/seo";
@@ -140,6 +144,32 @@ function Index() {
       </section>
 
       <div className="mx-auto max-w-7xl space-y-14 px-4 py-12 sm:px-6">
+        {/* Daily challenge — the reason to come back tomorrow, and the only
+            entry point to it on a phone, where the tab bar is already full. */}
+        <section>
+          <Link
+            to="/gunluk"
+            className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border-l-4 border-gold bg-secondary p-6 transition-transform hover:scale-[1.01] sm:p-8"
+          >
+            <div className="min-w-0">
+              <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                <CalendarDays className="h-3.5 w-3.5" /> {t("daily_title")}
+              </p>
+              <h3 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
+                {t("daily_sub")}
+              </h3>
+              {state.dailyStreak > 1 && (
+                <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-gold">
+                  <Flame className="h-4 w-4" /> {state.dailyStreak} {t("daily_streak")}
+                </p>
+              )}
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
+              {t("daily_play")} <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
+        </section>
+
         {/* Daily pick */}
         <section>
           <SectionTitle title={t("daily_pick")} />
@@ -260,6 +290,44 @@ function Index() {
                 </div>
               </Link>
             ))}
+          </div>
+        </section>
+
+        {/* Collections */}
+        <section>
+          <SectionTitle title={t("collections_title")} action={t("view_all")} to="/koleksiyonlar" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {collections.slice(0, 3).map((collection) => {
+              const first = collectionSites(collection)[0];
+              return (
+                <Link
+                  key={collection.id}
+                  to="/koleksiyon/$id"
+                  params={{ id: collection.id }}
+                  className="group relative aspect-[5/3] overflow-hidden rounded-2xl border border-border lift"
+                >
+                  {first && (
+                    <Photo
+                      src={coverImage(first)}
+                      alt={L(collection.title)}
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      fallbackWidth={500}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  )}
+                  <div className="absolute inset-0 hero-scrim" />
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <h3 className="font-display text-lg font-semibold text-white">
+                      {L(collection.title)}
+                    </h3>
+                    <p className="flex items-center gap-1 text-xs text-white/90">
+                      <Layers className="h-3 w-3" />
+                      {collectionSites(collection).length} {t("collection_sites")}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
 

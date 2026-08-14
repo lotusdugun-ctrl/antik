@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { collections } from "@/lib/collections";
 import { DEFAULT_LANG, LANGS } from "@/lib/i18n";
 import { regions, sites } from "@/lib/sites";
 
@@ -14,7 +15,17 @@ import { regions, sites } from "@/lib/sites";
  */
 
 /** `/profil` is deliberately absent: it is personal and marked noindex. */
-const staticPaths = ["/", "/kentler", "/harita", "/bolgeler", "/rota", "/oyunlar"];
+const staticPaths = [
+  "/",
+  "/kentler",
+  "/harita",
+  "/bolgeler",
+  "/koleksiyonlar",
+  "/rota",
+  "/oyunlar",
+  "/gunluk",
+  "/gorseller",
+];
 
 function escapeXml(value: string): string {
   return value
@@ -53,6 +64,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const entries = [
           ...staticPaths.map((path) => urlEntry(origin, path, path === "/" ? "1.0" : "0.8")),
           ...regions.map((region) => urlEntry(origin, `/bolge/${region.id}`, "0.7")),
+          ...collections.map((c) => urlEntry(origin, `/koleksiyon/${c.id}`, "0.7")),
           ...sites.map((site) => urlEntry(origin, `/kent/${site.slug}`, "0.9")),
         ];
 

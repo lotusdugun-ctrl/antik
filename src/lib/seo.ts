@@ -1,4 +1,5 @@
 import { DEFAULT_LANG, LANGS, type Lang } from "@/lib/i18n";
+import type { Site } from "@/lib/sites";
 
 /**
  * Absolute origin of the deployed site, needed because canonical and hreflang
@@ -87,4 +88,138 @@ export function seoTags(options: {
   }
 
   return { meta, links };
+}
+
+/* ————— Structured data ————— */
+
+type ScriptTag = { type: string; children: string };
+
+/**
+ * One `application/ld+json` block, in the shape a route's `head()` expects.
+ *
+ * `<` is escaped because the payload is inlined into a `<script>` element: an
+ * unescaped `</` inside any string — a site name, a description — would close
+ * the tag early and spill the rest of the JSON into the document.
+ */
+function jsonLd(data: Record<string, unknown>): ScriptTag {
+  return {
+    type: "application/ld+json",
+    children: JSON.stringify(data).replace(/</g, "\\u003c"),
+  };
+}
+
+/** Trail entries are ordered root-first; the last one is the current page. */
+export function breadcrumbTags(
+  trail: readonly { name: string; pathname: string }[],
+  lang: Lang,
+): ScriptTag[] {
+  const origin = siteOrigin();
+  if (!origin || trail.length === 0) return [];
+  return [
+    jsonLd({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: trail.map((crumb, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: crumb.name,
+        item: urlFor(crumb.pathname, lang, origin),
+      })),
+    }),
+  ];
+}
+
+/**
+ * A single ancient site, as `LandmarksOrHistoricalBuildings` — the schema.org
+ * type that actually fits a ruin, and specific enough that a search engine can
+ * place it on a map from the coordinates rather than guessing from the prose.
+ */
+export function siteTags(
+  site: Site,
+  options: { lang: Lang; description: string; image?: string; regionName: string },
+): ScriptTag[] {
+  const origin = siteOrigin();
+  if (!origin) return [];
+  const name = site.name[options.lang];
+
+  return [
+    jsonLd({
+      "@context": "https://schema.org",
+      "@type": ["LandmarksOrHistoricalBuildings", "TouristAttraction"],
+      name,
+      description: options.description,
+      url: urlFor(`/kent/${site.slug}`, options.lang, origin),
+      ...(options.image ? { image: options.image } : {}),
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: site.lat,
+        longitude: site.lng,
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "TR",
+        addressRegion: options.regionName,
+        addressLocality: site.province[options.lang],
+      },
+      isAccessibleForFree: site.fee === 0,
+      touristType: "Cultural",
+      ...(site.unesco === "listed"
+        ? {
+            award: options.lang === "tr" ? "UNESCO Dünya Mirası" : "UNESCO World Heritage Site",
+          }
+        : {}),
+    }),
+  ];
+}
+
+/** An ordered list of sites — used by the city index and the collection pages. */
+export function itemListTags(
+  items: readonly { name: string; pathname: string }[],
+  options: { lang: Lang; name: string; description?: string },
+): ScriptTag[] {
+  const origin = siteOrigin();
+  if (!origin || items.length === 0) return [];
+  return [
+    jsonLd({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: options.name,
+      ...(options.description ? { description: options.description } : {}),
+      numberOfItems: items.length,
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: urlFor(item.pathname, options.lang, origin),
+      })),
+    }),
+  ];
+}
+
+/** Site-wide identity, emitted once from the root route. */
+export function websiteTags(options: {
+  lang: Lang;
+  name: string;
+  description: string;
+}): ScriptTag[] {
+  const origin = siteOrigin();
+  if (!origin) return [];
+  return [
+    jsonLd({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: options.name,
+      description: options.description,
+      url: urlFor("/", options.lang, origin),
+      inLanguage: options.lang === "tr" ? "tr-TR" : "en-US",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${origin}/kentler?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+    }),
+  ];
 }

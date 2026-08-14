@@ -209,6 +209,104 @@ const dict = {
     en: "The app is ready for offline use. You can add it to your home screen.",
   },
 
+  // ——— Visitor information ———
+  // Deliberately worded as a general rule rather than a fact about this site:
+  // the app does not hold verified per-site opening times.
+  visiting: { tr: "Ziyaret bilgileri", en: "Visitor information" },
+  hours_rule: {
+    tr: "Bakanlığın genel ören yeri saatleri",
+    en: "The ministry's standard site hours",
+  },
+  hours_rule_note: {
+    tr: "Bu bir genel kuraldır, bu ören yerine özel doğrulanmış saat değildir. Kazı, tören ve mevsim değişikliklerinde farklılık gösterebilir.",
+    en: "This is the general rule, not a verified opening time for this particular site. Excavations, ceremonies and seasonal changes can all alter it.",
+  },
+  fee_indicative: {
+    tr: "gösterge",
+    en: "indicative",
+  },
+  fee_indicative_note: {
+    tr: "Ücretler her yıl güncellenir. Yola çıkmadan önce resmî tarifeden doğrulayın.",
+    en: "Fees are revised annually. Check the official tariff before you set out.",
+  },
+  museum_card: {
+    tr: "Müzekart, Bakanlığa bağlı ören yerlerinde geçerlidir.",
+    en: "The Müzekart pass is valid at ministry-run sites.",
+  },
+  official_check: { tr: "Resmî bilgi: muze.gov.tr", en: "Official information: muze.gov.tr" },
+
+  // ——— Facts and credits ———
+  facts: { tr: "Çarpıcı bilgiler", en: "Striking facts" },
+  credits: { tr: "Görsel künyeleri", en: "Image credits" },
+  credits_sub: {
+    tr: "Bu sayfadaki fotoğraflar Wikimedia Commons'tan, sahiplerinin belirlediği lisanslarla kullanılıyor.",
+    en: "The photographs on this page come from Wikimedia Commons, used under the licences their authors chose.",
+  },
+  credits_page_sub: {
+    tr: "Sitedeki bütün fotoğraflar Wikimedia Commons'tan alınmıştır. Her birinin fotoğrafçısı, lisansı ve kaynak sayfası aşağıdadır.",
+    en: "Every photograph on this site comes from Wikimedia Commons. Each one's photographer, licence and source page is listed below.",
+  },
+  credits_source: { tr: "Kaynak", en: "Source" },
+  credits_count: { tr: "fotoğraf", en: "photographs" },
+  nav_credits: { tr: "Görsel künyeleri", en: "Image credits" },
+
+  // ——— Collections ———
+  nav_collections: { tr: "Koleksiyonlar", en: "Collections" },
+  collections_title: { tr: "Koleksiyonlar", en: "Collections" },
+  collections_sub: {
+    tr: "Bir temayı takip eden derlemeler: bir hafta sonuna sığan rotalar, ücretsiz ören yerleri, kayıp harikalar.",
+    en: "Curated sets that follow one theme: routes that fit a weekend, sites that cost nothing, lost wonders.",
+  },
+  collection_sites: { tr: "antik kent", en: "sites" },
+  collection_visited: { tr: "gezildi", en: "visited" },
+  collection_back: { tr: "Tüm koleksiyonlar", en: "All collections" },
+
+  // ——— Daily challenge ———
+  nav_daily: { tr: "Günlük", en: "Daily" },
+  daily_title: { tr: "Günün Antik Kenti", en: "Ancient City of the Day" },
+  daily_sub: {
+    tr: "Herkese aynı beş soru, her gün yenisi. Sonucunu tek satırda paylaşabilirsin.",
+    en: "The same five questions for everyone, new every day. Share your result in a single line.",
+  },
+  daily_done_today: {
+    tr: "Bugünün sorularını çözdün. Yarın yenisi gelecek.",
+    en: "You have finished today's questions. New ones arrive tomorrow.",
+  },
+  daily_share: { tr: "Sonucu kopyala", en: "Copy result" },
+  daily_copied: { tr: "Panoya kopyalandı", en: "Copied to clipboard" },
+  daily_streak: { tr: "günlük seri", en: "day streak" },
+  daily_play: { tr: "Bugünü oyna", en: "Play today" },
+  daily_question_of: { tr: "/ 5", en: "/ 5" },
+
+  // ——— Backup ———
+  backup_title: { tr: "Yedekle ve taşı", en: "Back up and transfer" },
+  backup_sub: {
+    tr: "İlerlemen yalnızca bu tarayıcıda saklanıyor. Telefon değiştirmeden veya geçmişi temizlemeden önce yedek al.",
+    en: "Your progress lives only in this browser. Take a backup before you change phones or clear your history.",
+  },
+  backup_export: { tr: "Yedek indir", en: "Download backup" },
+  backup_import: { tr: "Yedekten yükle", en: "Restore backup" },
+  backup_imported: { tr: "İlerleme geri yüklendi.", en: "Progress restored." },
+  backup_invalid: {
+    tr: "Bu dosya okunamadı. Buradan indirilmiş bir yedek dosyası seçtiğinden emin ol.",
+    en: "That file could not be read. Make sure it is a backup downloaded from here.",
+  },
+
+  // ——— Offline ———
+  offline_title: { tr: "Çevrimdışı kullanım", en: "Offline use" },
+  offline_sub: {
+    tr: "Ören yerlerinde çoğu zaman şebeke yoktur. Favorilerindeki kentleri fotoğraflarıyla birlikte önceden indir.",
+    en: "There is usually no signal at a ruin. Download your favourite cities, photographs and all, before you go.",
+  },
+  offline_download: { tr: "Favorilerimi indir", en: "Download my favourites" },
+  offline_working: { tr: "İndiriliyor…", en: "Downloading…" },
+  offline_ready: { tr: "Çevrimdışı hazır", en: "Ready offline" },
+  offline_failed: { tr: "İndirme tamamlanamadı.", en: "The download did not finish." },
+  offline_needs_favorites: {
+    tr: "Önce birkaç kenti favorilerine ekle.",
+    en: "Add a few cities to your favourites first.",
+  },
+
   // ——— Page titles and descriptions ———
   // These are read outside React, by each route's `head()`, so that the tab
   // title and the meta description match the language the page renders in.
@@ -277,6 +375,30 @@ const dict = {
     en: "Region — Ancient Cities",
   },
   seo_not_found: { tr: "Sayfa bulunamadı", en: "Page not found" },
+  seo_credits_title: {
+    tr: "Görsel Künyeleri — Fotoğraf ve Lisanslar | Antik Türkiye",
+    en: "Image Credits — Photographs and Licences | Ancient Türkiye",
+  },
+  seo_credits_desc: {
+    tr: "Sitede kullanılan bütün Wikimedia Commons fotoğraflarının fotoğrafçıları, lisansları ve kaynak sayfaları.",
+    en: "Photographers, licences and source pages for every Wikimedia Commons photograph used on this site.",
+  },
+  seo_collections_title: {
+    tr: "Koleksiyonlar — Temalı Antik Kent Derlemeleri | Antik Türkiye",
+    en: "Collections — Themed Sets of Ancient Cities | Ancient Türkiye",
+  },
+  seo_collections_desc: {
+    tr: "Bir hafta sonuna sığan Likya rotası, ücretsiz ören yerleri, UNESCO listesi ve daha fazlası: temaya göre derlenmiş antik kent listeleri.",
+    en: "A Lycian route that fits a weekend, sites that cost nothing, the UNESCO list and more: ancient cities gathered by theme.",
+  },
+  seo_daily_title: {
+    tr: "Günün Antik Kenti — Günlük Beş Soru | Antik Türkiye",
+    en: "Ancient City of the Day — Five Questions Daily | Ancient Türkiye",
+  },
+  seo_daily_desc: {
+    tr: "Her gün herkese aynı beş soru. Antik kentler hakkında bilgini sına, sonucunu paylaş, serini sürdür.",
+    en: "The same five questions for everyone, every day. Test what you know about the ancient cities, share your result, keep your streak.",
+  },
 } satisfies Record<string, Localized>;
 
 export type TKey = keyof typeof dict;

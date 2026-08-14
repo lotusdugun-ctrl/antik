@@ -36,12 +36,50 @@ export type Site = {
   civilizations: string[];
   era: Localized;
   unesco: UnescoStatus;
-  fee: number; // 0 = free, otherwise TRY
-  hours: Localized;
+  /**
+   * Indicative entry fee in TRY, 0 meaning free. Ministry tariffs are revised
+   * every year, so this is a ballpark for planning, never a quotable price —
+   * the UI has to label it as such and point at `OFFICIAL_INFO_URL`.
+   */
+  fee: number;
+  /**
+   * Site-specific opening hours, and only where they genuinely differ from the
+   * ministry's seasonal rule. Optional because that rule covers almost every
+   * site here: inventing a per-site number to fill the field is how a visitor
+   * ends up at a locked gate.
+   */
+  hours?: Localized;
   summary: Localized;
   figures: string[];
   popularity: number; // 1-10, drives "popular" ordering
 };
+
+/**
+ * Where a visitor goes for the numbers we are deliberately not asserting.
+ * Every screen that shows a fee or an opening time has to link here.
+ */
+export const OFFICIAL_INFO_URL = "https://muze.gov.tr";
+
+/**
+ * The Ministry of Culture and Tourism's seasonal timetable for state-run sites.
+ *
+ * This is a *rule*, not a fact about any one site, and the UI labels it that
+ * way. It replaces a per-site `hours` string that used to be derived from
+ * whether the site charged admission — which meant all hundred sites claimed
+ * the same hours while looking like individually researched opening times.
+ */
+export const MINISTRY_HOURS = {
+  summer: {
+    tr: "Yaz dönemi (1 Nisan – 1 Ekim): 08:30 – 19:00",
+    en: "Summer (1 April – 1 October): 08:30 – 19:00",
+  },
+  summerLabel: { tr: "Yaz", en: "Summer" },
+  winter: {
+    tr: "Kış dönemi (1 Ekim – 1 Nisan): 08:30 – 17:30",
+    en: "Winter (1 October – 1 April): 08:30 – 17:30",
+  },
+  winterLabel: { tr: "Kış", en: "Winter" },
+} satisfies Record<string, Localized>;
 
 export const regions: {
   id: RegionId;
@@ -371,10 +409,6 @@ const s = (
   era: { tr: eraTr, en: eraEn },
   unesco,
   fee,
-  hours: {
-    tr: fee === 0 ? "Her gün, gün doğumu – gün batımı" : "Her gün 08:30 – 19:00 (kışın 17:00)",
-    en: fee === 0 ? "Daily, sunrise – sunset" : "Daily 08:30 – 19:00 (17:00 in winter)",
-  },
   summary: { tr: sumTr, en: sumEn },
   figures,
   popularity,

@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BolgelerRouteImport } from './routes/bolgeler'
+import { Route as GorsellerRouteImport } from './routes/gorseller'
+import { Route as GunlukRouteImport } from './routes/gunluk'
 import { Route as HaritaRouteImport } from './routes/harita'
 import { Route as KentlerRouteImport } from './routes/kentler'
+import { Route as KoleksiyonlarRouteImport } from './routes/koleksiyonlar'
 import { Route as OyunlarRouteImport } from './routes/oyunlar'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
@@ -20,6 +23,7 @@ import { Route as RotaRouteImport } from './routes/rota'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as BolgeIdRouteImport } from './routes/bolge.$id'
 import { Route as KentSlugRouteImport } from './routes/kent.$slug'
+import { Route as KoleksiyonIdRouteImport } from './routes/koleksiyon.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,6 +35,16 @@ const BolgelerRoute = BolgelerRouteImport.update({
   path: '/bolgeler',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GorsellerRoute = GorsellerRouteImport.update({
+  id: '/gorseller',
+  path: '/gorseller',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GunlukRoute = GunlukRouteImport.update({
+  id: '/gunluk',
+  path: '/gunluk',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HaritaRoute = HaritaRouteImport.update({
   id: '/harita',
   path: '/harita',
@@ -39,6 +53,11 @@ const HaritaRoute = HaritaRouteImport.update({
 const KentlerRoute = KentlerRouteImport.update({
   id: '/kentler',
   path: '/kentler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoleksiyonlarRoute = KoleksiyonlarRouteImport.update({
+  id: '/koleksiyonlar',
+  path: '/koleksiyonlar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OyunlarRoute = OyunlarRouteImport.update({
@@ -76,12 +95,20 @@ const KentSlugRoute = KentSlugRouteImport.update({
   path: '/kent/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KoleksiyonIdRoute = KoleksiyonIdRouteImport.update({
+  id: '/koleksiyon/$id',
+  path: '/koleksiyon/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bolgeler': typeof BolgelerRoute
+  '/gorseller': typeof GorsellerRoute
+  '/gunluk': typeof GunlukRoute
   '/harita': typeof HaritaRoute
   '/kentler': typeof KentlerRoute
+  '/koleksiyonlar': typeof KoleksiyonlarRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -89,12 +116,16 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
+  '/koleksiyon/$id': typeof KoleksiyonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bolgeler': typeof BolgelerRoute
+  '/gorseller': typeof GorsellerRoute
+  '/gunluk': typeof GunlukRoute
   '/harita': typeof HaritaRoute
   '/kentler': typeof KentlerRoute
+  '/koleksiyonlar': typeof KoleksiyonlarRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -102,13 +133,17 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
+  '/koleksiyon/$id': typeof KoleksiyonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bolgeler': typeof BolgelerRoute
+  '/gorseller': typeof GorsellerRoute
+  '/gunluk': typeof GunlukRoute
   '/harita': typeof HaritaRoute
   '/kentler': typeof KentlerRoute
+  '/koleksiyonlar': typeof KoleksiyonlarRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -116,14 +151,18 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
+  '/koleksiyon/$id': typeof KoleksiyonIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/bolgeler'
+    | '/gorseller'
+    | '/gunluk'
     | '/harita'
     | '/kentler'
+    | '/koleksiyonlar'
     | '/oyunlar'
     | '/profil'
     | '/robots.txt'
@@ -131,12 +170,16 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/bolge/$id'
     | '/kent/$slug'
+    | '/koleksiyon/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/bolgeler'
+    | '/gorseller'
+    | '/gunluk'
     | '/harita'
     | '/kentler'
+    | '/koleksiyonlar'
     | '/oyunlar'
     | '/profil'
     | '/robots.txt'
@@ -144,12 +187,16 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/bolge/$id'
     | '/kent/$slug'
+    | '/koleksiyon/$id'
   id:
     | '__root__'
     | '/'
     | '/bolgeler'
+    | '/gorseller'
+    | '/gunluk'
     | '/harita'
     | '/kentler'
+    | '/koleksiyonlar'
     | '/oyunlar'
     | '/profil'
     | '/robots.txt'
@@ -157,13 +204,17 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/bolge/$id'
     | '/kent/$slug'
+    | '/koleksiyon/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BolgelerRoute: typeof BolgelerRoute
+  GorsellerRoute: typeof GorsellerRoute
+  GunlukRoute: typeof GunlukRoute
   HaritaRoute: typeof HaritaRoute
   KentlerRoute: typeof KentlerRoute
+  KoleksiyonlarRoute: typeof KoleksiyonlarRoute
   OyunlarRoute: typeof OyunlarRoute
   ProfilRoute: typeof ProfilRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
@@ -171,6 +222,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BolgeIdRoute: typeof BolgeIdRoute
   KentSlugRoute: typeof KentSlugRoute
+  KoleksiyonIdRoute: typeof KoleksiyonIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -189,6 +241,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BolgelerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gorseller': {
+      id: '/gorseller'
+      path: '/gorseller'
+      fullPath: '/gorseller'
+      preLoaderRoute: typeof GorsellerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gunluk': {
+      id: '/gunluk'
+      path: '/gunluk'
+      fullPath: '/gunluk'
+      preLoaderRoute: typeof GunlukRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/harita': {
       id: '/harita'
       path: '/harita'
@@ -201,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/kentler'
       fullPath: '/kentler'
       preLoaderRoute: typeof KentlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/koleksiyonlar': {
+      id: '/koleksiyonlar'
+      path: '/koleksiyonlar'
+      fullPath: '/koleksiyonlar'
+      preLoaderRoute: typeof KoleksiyonlarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/oyunlar': {
@@ -252,14 +325,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KentSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/koleksiyon/$id': {
+      id: '/koleksiyon/$id'
+      path: '/koleksiyon/$id'
+      fullPath: '/koleksiyon/$id'
+      preLoaderRoute: typeof KoleksiyonIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BolgelerRoute: BolgelerRoute,
+  GorsellerRoute: GorsellerRoute,
+  GunlukRoute: GunlukRoute,
   HaritaRoute: HaritaRoute,
   KentlerRoute: KentlerRoute,
+  KoleksiyonlarRoute: KoleksiyonlarRoute,
   OyunlarRoute: OyunlarRoute,
   ProfilRoute: ProfilRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
@@ -267,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BolgeIdRoute: BolgeIdRoute,
   KentSlugRoute: KentSlugRoute,
+  KoleksiyonIdRoute: KoleksiyonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import {
+  CalendarDays,
   Columns3,
   Gamepad2,
   Home,
   Landmark,
+  Layers,
   Map as MapIcon,
   Moon,
   Route as RouteIcon,
@@ -15,12 +17,19 @@ import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
+/**
+ * `desktopOnly` keeps the mobile tab bar at six items. Everything hidden there
+ * is reachable from the home page instead — the daily challenge has its own
+ * card, collections sit under the regions strip.
+ */
 const navItems: { to: string; key: TKey; icon: typeof Home; desktopOnly?: boolean }[] = [
   { to: "/", key: "nav_home", icon: Home },
   { to: "/kentler", key: "nav_explore", icon: Landmark },
   { to: "/harita", key: "nav_map", icon: MapIcon },
   { to: "/bolgeler", key: "nav_regions", icon: Columns3 },
+  { to: "/koleksiyonlar", key: "nav_collections", icon: Layers, desktopOnly: true },
   { to: "/rota", key: "nav_route", icon: RouteIcon, desktopOnly: true },
+  { to: "/gunluk", key: "nav_daily", icon: CalendarDays, desktopOnly: true },
   { to: "/oyunlar", key: "nav_games", icon: Gamepad2 },
   { to: "/profil", key: "nav_profile", icon: User },
 ];
@@ -104,10 +113,15 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main className="flex-1 pb-20 lg:pb-0">{children}</main>
 
-      <footer className="hidden border-t border-border px-6 py-10 lg:block">
+      <footer className="border-t border-border px-6 py-10 pb-24 lg:pb-10">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 text-sm text-muted-foreground">
           <p className="font-display text-base text-foreground">{t("appName")}</p>
-          <p>{t("tagline")}</p>
+          <p className="hidden sm:block">{t("tagline")}</p>
+          {/* Photographs appear on cards, pins and quiz screens with no room
+              for a caption; this is the address their attribution lives at. */}
+          <Link to="/gorseller" className="font-medium hover:text-foreground hover:underline">
+            {t("nav_credits")}
+          </Link>
         </div>
       </footer>
 
