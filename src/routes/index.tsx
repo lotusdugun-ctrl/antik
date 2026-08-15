@@ -1,8 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ArrowRight,
-  Compass,
   Layers,
   MapPin,
   Navigation,
@@ -25,7 +24,6 @@ import {
   museums,
   regionCoverImage,
   regions,
-  siteOfTheDay,
   sites,
   totalSites,
   coverImage,
@@ -68,9 +66,6 @@ function Index() {
   const [query, setQuery] = useState("");
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [geoError, setGeoError] = useState(false);
-  const [daily, setDaily] = useState(() => siteOfTheDay());
-
-  useEffect(() => setDaily(siteOfTheDay()), []);
 
   // All three arrive sorted by popularity from the data layer.
   const topCities = ancientCities.slice(0, 8);
@@ -147,39 +142,6 @@ function Index() {
       </section>
 
       <div className="mx-auto max-w-7xl space-y-14 px-4 py-12 sm:px-6">
-        {/* Daily pick */}
-        <section>
-          <SectionTitle title={t("daily_pick")} />
-          <Link
-            to="/kent/$slug"
-            params={{ slug: daily.slug }}
-            className="group grid overflow-hidden rounded-3xl surface-panel md:grid-cols-2"
-          >
-            <div className="relative aspect-[16/10] overflow-hidden md:aspect-auto">
-              <Photo
-                src={coverImage(daily)}
-                alt={L(daily.name)}
-                sizes="(min-width: 768px) 50vw, 100vw"
-                fallbackWidth={500}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            <div className="flex flex-col justify-center gap-3 p-6 sm:p-8">
-              <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-                <Compass className="h-3.5 w-3.5" /> {t("daily_pick")}
-              </span>
-              <h3 className="font-display text-3xl font-semibold">{L(daily.name)}</h3>
-              <p className="flex items-center gap-1 text-sm text-muted-foreground">
-                <MapPin className="h-3.5 w-3.5" /> {L(daily.province)} · {L(daily.era)}
-              </p>
-              <p className="text-sm leading-relaxed text-muted-foreground">{L(daily.summary)}</p>
-              <span className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
-                {t("detail_page")} <ArrowRight className="h-4 w-4" />
-              </span>
-            </div>
-          </Link>
-        </section>
-
         {/* Route builder */}
         <section>
           <div className="relative overflow-hidden rounded-3xl surface-panel p-6 sm:p-8">

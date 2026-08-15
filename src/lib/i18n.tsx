@@ -49,7 +49,6 @@ const dict = {
    * the name of the unscoped tab: the button said "All".
    */
   search_action: { tr: "Ara", en: "Search" },
-  daily_pick: { tr: "Günün antik kenti", en: "Ancient city of the day" },
   recent: { tr: "Son ziyaret edilenler", en: "Recently viewed" },
   nearby: { tr: "Yakındaki antik kentler", en: "Ancient cities near you" },
   nearby_hint: {

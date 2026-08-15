@@ -1,12 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import {
   ancientCities,
+  CIVILIZATIONS,
   coverImage,
   historicPlaces,
   museums,
   regions,
   sitePhoto,
   sites,
+  WORLD_HERITAGE,
   type Site,
 } from "@/lib/sites";
 import { galleryImages, siteDetails, siteGallery } from "@/lib/site-details";
@@ -89,6 +91,43 @@ describe("the site list", () => {
  * out of all three tabs — reachable only from the unscoped list, which looks
  * exactly like nothing being wrong.
  */
+describe("the claims a visitor could check", () => {
+  test("every UNESCO badge names the inscription it comes from", () => {
+    const listed = sites.filter((s) => s.unesco === "listed").map((s) => s.slug);
+    expect(listed.filter((slug) => !WORLD_HERITAGE[slug])).toEqual([]);
+  });
+
+  test("no site is mapped to an inscription without claiming to be listed", () => {
+    const listed = new Set(sites.filter((s) => s.unesco === "listed").map((s) => s.slug));
+    expect(Object.keys(WORLD_HERITAGE).filter((slug) => !listed.has(slug))).toEqual([]);
+  });
+
+  /**
+   * The vocabulary used to hold "Frig" and "Frigya" as separate options, each
+   * matching a fraction of the sites. A typo looks exactly like a category.
+   */
+  test("every civilization comes from the controlled vocabulary", () => {
+    const known = new Set(CIVILIZATIONS);
+    const unknown = new Set(sites.flatMap((s) => s.civilizations).filter((c) => !known.has(c)));
+    expect([...unknown]).toEqual([]);
+  });
+
+  test("the vocabulary holds no term the data stopped using", () => {
+    const used = new Set(sites.flatMap((s) => s.civilizations));
+    expect(CIVILIZATIONS.filter((c) => !used.has(c))).toEqual([]);
+  });
+
+  /**
+   * Photo coverage is allowed to improve but not to rot: a new batch of sites
+   * added without pictures would otherwise quietly fill the list with regional
+   * artwork that looks like a photograph of somewhere.
+   */
+  test("no more places fall back to the regional artwork than already do", () => {
+    const uncovered = sites.filter((s) => !sitePhoto[s.slug]).map((s) => s.slug);
+    expect(uncovered.length).toBeLessThanOrEqual(9);
+  });
+});
+
 describe("the browse scopes", () => {
   test("no site appears in two tabs at once", () => {
     const seen = new Map<string, string[]>();

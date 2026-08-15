@@ -221,563 +221,374 @@ export const heroImage = heroEphesus;
  * Freely licensed photos (Wikimedia Commons) per site. URL used verbatim;
  * falls back to the region image when a site has no entry.
  */
-export const sitePhoto: Partial<Record<string, string>> = {
-  efes: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Ephesus_-_Celsus_Library.jpg/1280px-Ephesus_-_Celsus_Library.jpg",
-  pergamon:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Acropolis_amphitheatre_of_Pergamon_%282020%29.jpg/1280px-Acropolis_amphitheatre_of_Pergamon_%282020%29.jpg",
-  aphrodisias:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Aphrodisias_-_Tetrapylon_01.jpg/1280px-Aphrodisias_-_Tetrapylon_01.jpg",
-  hierapolis:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Hierapolis%2C_Pamukkale_5.jpg/1280px-Hierapolis%2C_Pamukkale_5.jpg",
-  milet:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Miletus_-_Ancient_Greek_theatre_01.jpg/1280px-Miletus_-_Ancient_Greek_theatre_01.jpg",
-  didyma:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Temple_of_Apollo%2C_Didyma_-_Adyton.jpg/1280px-Temple_of_Apollo%2C_Didyma_-_Adyton.jpg",
-  priene:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Priene_Acropolis.jpg/1280px-Priene_Acropolis.jpg",
-  sardes:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/20230429_Gymnasium_at_Sardis_4.jpg/1280px-20230429_Gymnasium_at_Sardis_4.jpg",
-  laodikeia:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Laodicea_Ancient_City_2026%2C_108.jpg/1280px-Laodicea_Ancient_City_2026%2C_108.jpg",
+/**
+ * Freely licensed photos (Wikimedia Commons) per site, stored as
+ * `<h>/<hh>/<file>|<width>` rather than as full URLs.
+ *
+ * A Commons thumbnail URL writes the file name twice — once as the directory
+ * and once after the `<width>px-` prefix — which cost about 26 KB of pure
+ * duplication in a module every page loads. Names too long for Commons to
+ * repeat come back as `<width>px-thumbnail.jpg` instead, so those few are kept
+ * verbatim and recognised by their leading `https`.
+ */
+const photoRef: Partial<Record<string, string>> = {
+  efes: "c/c3/Ephesus_-_Celsus_Library.jpg|1280",
+  pergamon: "1/12/Acropolis_amphitheatre_of_Pergamon_%282020%29.jpg|1280",
+  aphrodisias: "1/12/Aphrodisias_-_Tetrapylon_01.jpg|1280",
+  hierapolis: "3/33/Hierapolis%2C_Pamukkale_5.jpg|1280",
+  milet: "3/3e/Miletus_-_Ancient_Greek_theatre_01.jpg|1280",
+  didyma: "a/a9/Temple_of_Apollo%2C_Didyma_-_Adyton.jpg|1280",
+  priene: "e/e5/Priene_Acropolis.jpg|1280",
+  sardes: "0/08/20230429_Gymnasium_at_Sardis_4.jpg|1280",
+  laodikeia: "5/5c/Laodicea_Ancient_City_2026%2C_108.jpg|1280",
   halikarnassos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg/500px-Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg",
-  knidos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Dat%C3%A7a-Knidos.jpg/500px-Dat%C3%A7a-Knidos.jpg",
-  patara:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Patara_Ka%C5%9F.jpg/1280px-Patara_Ka%C5%9F.jpg",
+    "5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg|500",
+  knidos: "0/0b/Dat%C3%A7a-Knidos.jpg|500",
+  patara: "9/90/Patara_Ka%C5%9F.jpg|1280",
   xanthos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/The_Roman_theatre%2C_built_in_the_mid-2nd_century_AD%2C_Xanthos%2C_Lycia%2C_Turkey_%288825114404%29.jpg/1280px-The_Roman_theatre%2C_built_in_the_mid-2nd_century_AD%2C_Xanthos%2C_Lycia%2C_Turkey_%288825114404%29.jpg",
-  myra: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Myra_Rock_Tombs.jpg/1280px-Myra_Rock_Tombs.jpg",
-  olympos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Olympos%2C_Lycia%2C_Turkey_%289653957867%29.jpg/1280px-Olympos%2C_Lycia%2C_Turkey_%289653957867%29.jpg",
-  phaselis:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/20180511_153347_phaselis_antik_kenti.jpg/1280px-20180511_153347_phaselis_antik_kenti.jpg",
-  perge:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Columns_in_Perge_03.jpg/1280px-Columns_in_Perge_03.jpg",
-  aspendos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Aspendos_Theatre%2C_Turkey.jpg/1280px-Aspendos_Theatre%2C_Turkey.jpg",
-  side: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Antalya_Side_Apollo.jpg/1280px-Antalya_Side_Apollo.jpg",
-  termessos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/TERMESSOS_Od%C3%A9on_int%C3%A9rieur.jpg/1280px-TERMESSOS_Od%C3%A9on_int%C3%A9rieur.jpg",
-  sagalassos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Sagalassos_-_Nymphaeum.jpg/1280px-Sagalassos_-_Nymphaeum.jpg",
-  troya:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Troy_archaeological_site_-_Turkey_%281%29.jpg/1280px-Troy_archaeological_site_-_Turkey_%281%29.jpg",
-  assos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Assos%2C_Turkey_-_6452161411.jpg/1280px-Assos%2C_Turkey_-_6452161411.jpg",
-  kyzikos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Bandirma_Cyzicus_2874.jpg/1280px-Bandirma_Cyzicus_2874.jpg",
-  nikaia:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Iznik_Wall_at_Sarayi_Gate_099.jpg/1280px-Iznik_Wall_at_Sarayi_Gate_099.jpg",
-  gordion:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Gordion_Citadel_Mound_aerial_overview_2017.jpg/960px-Gordion_Citadel_Mound_aerial_overview_2017.jpg",
+    "6/62/The_Roman_theatre%2C_built_in_the_mid-2nd_century_AD%2C_Xanthos%2C_Lycia%2C_Turkey_%288825114404%29.jpg|1280",
+  myra: "d/db/Myra_Rock_Tombs.jpg|1280",
+  olympos: "7/75/Olympos%2C_Lycia%2C_Turkey_%289653957867%29.jpg|1280",
+  phaselis: "e/e2/20180511_153347_phaselis_antik_kenti.jpg|1280",
+  perge: "e/ef/Columns_in_Perge_03.jpg|1280",
+  aspendos: "a/a1/Aspendos_Theatre%2C_Turkey.jpg|1280",
+  side: "2/2a/Antalya_Side_Apollo.jpg|1280",
+  termessos: "b/b2/TERMESSOS_Od%C3%A9on_int%C3%A9rieur.jpg|1280",
+  sagalassos: "d/db/Sagalassos_-_Nymphaeum.jpg|1280",
+  troya: "5/5d/Troy_archaeological_site_-_Turkey_%281%29.jpg|1280",
+  assos: "6/60/Assos%2C_Turkey_-_6452161411.jpg|1280",
+  kyzikos: "b/be/Bandirma_Cyzicus_2874.jpg|1280",
+  nikaia: "f/f1/Iznik_Wall_at_Sarayi_Gate_099.jpg|1280",
+  gordion: "b/bd/Gordion_Citadel_Mound_aerial_overview_2017.jpg|960",
   catalhoyuk:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/%C3%87atalh%C3%B6y%C3%BCk%2C_7400_BC%2C_Konya%2C_Turkey_-_UNESCO_World_Heritage_Site%2C_02.jpg/1280px-%C3%87atalh%C3%B6y%C3%BCk%2C_7400_BC%2C_Konya%2C_Turkey_-_UNESCO_World_Heritage_Site%2C_02.jpg",
-  kultepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Kultepe_Karum_excavations_%281993%29_06.jpg/1280px-Kultepe_Karum_excavations_%281993%29_06.jpg",
-  tyana:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Tuwanuwa_-_Tyana_-_Kemerhisar.jpg/1280px-Tuwanuwa_-_Tyana_-_Kemerhisar.jpg",
-  hattusa:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Lion_Gate%2C_Hattusa_01.jpg/1280px-Lion_Gate%2C_Hattusa_01.jpg",
-  alacahoyuk:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Sphinx_Gate%2C_Alaca_H%C3%B6y%C3%BCk_01.jpg/1280px-Sphinx_Gate%2C_Alaca_H%C3%B6y%C3%BCk_01.jpg",
-  pompeiopolis:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Soli_Pompeiopolis_20141116_02.jpg/1280px-Soli_Pompeiopolis_20141116_02.jpg",
-  amastris:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/2009_in_Amasra_14.jpg/1280px-2009_in_Amasra_14.jpg",
-  gobeklitepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/G%C3%B6bekli_Tepe%2C_Urfa.jpg/1280px-G%C3%B6bekli_Tepe%2C_Urfa.jpg",
-  nemrut:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/001362_Nemrut_Da%C4%9F%C4%B1_-_T%C3%BCrkei.jpg/1280px-001362_Nemrut_Da%C4%9F%C4%B1_-_T%C3%BCrkei.jpg",
-  zeugma:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg/1280px-Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg",
-  harran:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Harran_Beehive_houses_192b.jpg/1280px-Harran_Beehive_houses_192b.jpg",
-  dara: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Dara_Nekropol_Alan%C4%B1.jpg/1280px-Dara_Nekropol_Alan%C4%B1.jpg",
-  ani: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Ani_Archeological_Site%2C_March_2020_1.jpg/1280px-Ani_Archeological_Site%2C_March_2020_1.jpg",
-  tuspa:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tushpa_11.jpg/1280px-Tushpa_11.jpg",
-  cavustepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Urartian_fort_in_%C3%87avu%C5%9Ftepe.jpg/500px-Urartian_fort_in_%C3%87avu%C5%9Ftepe.jpg",
-  arslantepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Arslantepe_L%C3%B6wentor_Delaporte.jpg/960px-Arslantepe_L%C3%B6wentor_Delaporte.jpg",
-  "karahan-tepe":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Karahan_Tepe_overview.jpg/1280px-Karahan_Tepe_overview.jpg",
-  "nevali-cori":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Nevali_%C3%87ori_kaz%C4%B1_alan%C4%B1_maketi_%282%29.jpg/1280px-Nevali_%C3%87ori_kaz%C4%B1_alan%C4%B1_maketi_%282%29.jpg",
-  "asikli-hoyuk":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Asikli-hoyuk.jpg/1280px-Asikli-hoyuk.jpg",
-  acemhoyuk:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Acemh%C3%B6y%C3%BCk_01.jpg/1280px-Acemh%C3%B6y%C3%BCk_01.jpg",
-  sapinuwa:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Sapinuwa3.jpg/1280px-Sapinuwa3.jpg",
-  midas:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Midas_Monument%2C_Yaz%C4%B1l%C4%B1kaya.jpg/1280px-Midas_Monument%2C_Yaz%C4%B1l%C4%B1kaya.jpg",
-  altintepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Altintepe-apadanaW.jpg/1280px-Altintepe-apadanaW.jpg",
+    "5/5b/%C3%87atalh%C3%B6y%C3%BCk%2C_7400_BC%2C_Konya%2C_Turkey_-_UNESCO_World_Heritage_Site%2C_02.jpg|1280",
+  kultepe: "c/c4/Kultepe_Karum_excavations_%281993%29_06.jpg|1280",
+  tyana: "2/26/Tuwanuwa_-_Tyana_-_Kemerhisar.jpg|1280",
+  hattusa: "5/5c/Lion_Gate%2C_Hattusa_01.jpg|1280",
+  alacahoyuk: "f/f2/Sphinx_Gate%2C_Alaca_H%C3%B6y%C3%BCk_01.jpg|1280",
+  pompeiopolis: "3/3b/Soli_Pompeiopolis_20141116_02.jpg|1280",
+  amastris: "1/14/2009_in_Amasra_14.jpg|1280",
+  gobeklitepe: "d/d5/G%C3%B6bekli_Tepe%2C_Urfa.jpg|1280",
+  nemrut: "2/2e/001362_Nemrut_Da%C4%9F%C4%B1_-_T%C3%BCrkei.jpg|1280",
+  zeugma: "1/12/Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg|1280",
+  harran: "a/a5/Harran_Beehive_houses_192b.jpg|1280",
+  dara: "7/7f/Dara_Nekropol_Alan%C4%B1.jpg|1280",
+  ani: "1/11/Ani_Archeological_Site%2C_March_2020_1.jpg|1280",
+  tuspa: "a/a5/Tushpa_11.jpg|1280",
+  cavustepe: "a/af/Urartian_fort_in_%C3%87avu%C5%9Ftepe.jpg|500",
+  arslantepe: "d/d6/Arslantepe_L%C3%B6wentor_Delaporte.jpg|960",
+  "karahan-tepe": "0/09/Karahan_Tepe_overview.jpg|1280",
+  "nevali-cori": "9/9e/Nevali_%C3%87ori_kaz%C4%B1_alan%C4%B1_maketi_%282%29.jpg|1280",
+  "asikli-hoyuk": "2/24/Asikli-hoyuk.jpg|1280",
+  acemhoyuk: "8/85/Acemh%C3%B6y%C3%BCk_01.jpg|1280",
+  sapinuwa: "f/f3/Sapinuwa3.jpg|1280",
+  midas: "d/d0/Midas_Monument%2C_Yaz%C4%B1l%C4%B1kaya.jpg|1280",
+  altintepe: "1/18/Altintepe-apadanaW.jpg|1280",
   ayanis:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Periodo_urartiano%2C_elmo_a_punta%2C_in_bronzo%2C_dalla_fortezza_di_ayanis.jpg/1280px-Periodo_urartiano%2C_elmo_a_punta%2C_in_bronzo%2C_dalla_fortezza_di_ayanis.jpg",
-  kaunos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Kaunos_Kral_Mezarlar%C4%B1_Dalyan_Ortaca_Mu%C4%9Fla.jpg/1280px-Kaunos_Kral_Mezarlar%C4%B1_Dalyan_Ortaca_Mu%C4%9Fla.jpg",
-  tlos: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Tlos_ruins_Turkey.jpg/1280px-Tlos_ruins_Turkey.jpg",
-  stratonikeia:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Stratonicea-street.jpg/1280px-Stratonicea-street.jpg",
-  labraunda:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Labraunda_South_Terrace_3790_Panorama.jpg/1280px-Labraunda_South_Terrace_3790_Panorama.jpg",
-  magnesia:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Magnesia_on_the_Maeander_Temple_of_Artemis_Ionic_capital.jpg/1280px-Magnesia_on_the_Maeander_Temple_of_Artemis_Ionic_capital.jpg",
-  teos: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Teos%2C_S%C4%B1%C4%9Fac%C4%B1k.jpg/1280px-Teos%2C_S%C4%B1%C4%9Fac%C4%B1k.jpg",
-  klazomenai:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Klazomenai_Archaic_houses_02_%281991%29.jpg/1280px-Klazomenai_Archaic_houses_02_%281991%29.jpg",
-  klaros:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Klaros01.jpg/1280px-Klaros01.jpg",
-  aizanoi:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Aizanoi_ta%C5%9F_kal%C4%B1nt%C4%B1lar_05.jpg/1280px-Aizanoi_ta%C5%9F_kal%C4%B1nt%C4%B1lar_05.jpg",
-  letoon:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Letoon_Temple_Area_2019.jpg/1280px-Letoon_Temple_Area_2019.jpg",
-  limyra:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Limyra_5182.jpg/1280px-Limyra_5182.jpg",
-  arykanda:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Arykanda_from_Prytaneion_4973.jpg/1280px-Arykanda_from_Prytaneion_4973.jpg",
-  anemurium:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Turkey%2C_Anamur_-_Anemurion_01.jpg/1280px-Turkey%2C_Anamur_-_Anemurion_01.jpg",
-  uzuncaburc:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/UzuncaburcZeus.jpg/1280px-UzuncaburcZeus.jpg",
-  karatepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Karatepe_Stadtmauer.JPG/500px-Karatepe_Stadtmauer.JPG",
-  anavarza:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Anavarza_Triumphal_arch_in_Anazarbus_2755.jpg/1280px-Anavarza_Triumphal_arch_in_Anazarbus_2755.jpg",
-  "tell-atchana":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Archaeological_site_of_Alalakh_%28Tell_Atchana%29.JPG/1280px-Archaeological_site_of_Alalakh_%28Tell_Atchana%29.JPG",
-  kibyra:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Kibyra_Theatre_9919.jpg/1280px-Kibyra_Theatre_9919.jpg",
-  "antioch-pisidia":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Antioch_of_Pisidia_2898.jpg/1280px-Antioch_of_Pisidia_2898.jpg",
-  smyrna:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Izmir_Agora.JPG/1280px-Izmir_Agora.JPG",
-  euromos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Euromos_Antik_Kenti_18.jpg/1280px-Euromos_Antik_Kenti_18.jpg",
-  nysa: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Nysa%2C_Anatolia.JPG/1280px-Nysa%2C_Anatolia.JPG",
-  thyatira:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Columns_of_Thiatira.jpg/1280px-Columns_of_Thiatira.jpg",
-  pinara:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Theater_Pinara_T%C3%BCrkei.JPG/1280px-Theater_Pinara_T%C3%BCrkei.JPG",
-  oenoanda:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Oinoanda_1.JPG/500px-Oinoanda_1.JPG",
-  "elaiussa-sebaste":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Elaiussa_Sebaste_Theatre_1302.jpg/1280px-Elaiussa_Sebaste_Theatre_1302.jpg",
-  "seleucia-calycadnum":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Silifke_Kalesi_ve_Silifke_2.jpg/1280px-Silifke_Kalesi_ve_Silifke_2.jpg",
-  "alexandria-troas":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Panorama_alexandriatroas.jpg/1280px-Panorama_alexandriatroas.jpg",
-  parion:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hemidrachme_Parion_Rs.JPG/1280px-Hemidrachme_Parion_Rs.JPG",
-  daskyleion:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Relife_depicting_a_sacrificial_scene.jpg/1280px-Relife_depicting_a_sacrificial_scene.jpg",
-  lampsacus:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Stater_Zeus_Lampsacus_CdM.jpg/1280px-Stater_Zeus_Lampsacus_CdM.jpg",
-  antandros:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Antandros1.jpg/1280px-Antandros1.jpg",
-  pessinus:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Pessinus_Ancient_City_-_2.jpg/1280px-Pessinus_Ancient_City_-_2.jpg",
-  amorium:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Amorion%2C_ausgegrabene_Geb%C3%A4ude_in_der_Unterstadt.jpg/1280px-Amorion%2C_ausgegrabene_Geb%C3%A4ude_in_der_Unterstadt.jpg",
-  "alisar-hoyuk":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Ali%C5%9Far_H%C3%B6y%C3%BCk_01.jpg/1280px-Ali%C5%9Far_H%C3%B6y%C3%BCk_01.jpg",
-  "comana-cappadociae":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Sar-Comana.jpg/1280px-Sar-Comana.jpg",
-  amaseia:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kral_Kaya_Mezarlar%C4%B1%2C_Amasya.jpg/1280px-Kral_Kaya_Mezarlar%C4%B1%2C_Amasya.jpg",
-  sinope:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Sinop-Castle.jpg/1280px-Sinop-Castle.jpg",
-  "heraclia-pontica":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Zonguldak_Cehennem_A%C4%9Fz%C4%B1_Ma%C4%9Faralar%C4%B1.jpg/1280px-Zonguldak_Cehennem_A%C4%9Fz%C4%B1_Ma%C4%9Faralar%C4%B1.jpg",
-  amisos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Amisos_Tepesi%27nde_kuzey_t%C3%BCm%C3%BCl%C3%BCs%C3%BC.JPG/1280px-Amisos_Tepesi%27nde_kuzey_t%C3%BCm%C3%BCl%C3%BCs%C3%BC.JPG",
-  tieion:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Filyos_Tios_%C3%96renyeri.jpg/1280px-Filyos_Tios_%C3%96renyeri.jpg",
+    "7/7d/Periodo_urartiano%2C_elmo_a_punta%2C_in_bronzo%2C_dalla_fortezza_di_ayanis.jpg|1280",
+  kaunos: "a/a5/Kaunos_Kral_Mezarlar%C4%B1_Dalyan_Ortaca_Mu%C4%9Fla.jpg|1280",
+  tlos: "8/84/Tlos_ruins_Turkey.jpg|1280",
+  stratonikeia: "5/5d/Stratonicea-street.jpg|1280",
+  labraunda: "8/81/Labraunda_South_Terrace_3790_Panorama.jpg|1280",
+  magnesia: "2/29/Magnesia_on_the_Maeander_Temple_of_Artemis_Ionic_capital.jpg|1280",
+  teos: "c/c0/Teos%2C_S%C4%B1%C4%9Fac%C4%B1k.jpg|1280",
+  klazomenai: "f/fe/Klazomenai_Archaic_houses_02_%281991%29.jpg|1280",
+  klaros: "1/1b/Klaros01.jpg|1280",
+  aizanoi: "7/7d/Aizanoi_ta%C5%9F_kal%C4%B1nt%C4%B1lar_05.jpg|1280",
+  letoon: "4/4c/Letoon_Temple_Area_2019.jpg|1280",
+  limyra: "a/a2/Limyra_5182.jpg|1280",
+  arykanda: "1/16/Arykanda_from_Prytaneion_4973.jpg|1280",
+  anemurium: "7/70/Turkey%2C_Anamur_-_Anemurion_01.jpg|1280",
+  uzuncaburc: "b/b0/UzuncaburcZeus.jpg|1280",
+  karatepe: "9/9d/Karatepe_Stadtmauer.JPG|500",
+  anavarza: "e/ea/Anavarza_Triumphal_arch_in_Anazarbus_2755.jpg|1280",
+  "tell-atchana": "2/24/Archaeological_site_of_Alalakh_%28Tell_Atchana%29.JPG|1280",
+  kibyra: "9/95/Kibyra_Theatre_9919.jpg|1280",
+  "antioch-pisidia": "b/b2/Antioch_of_Pisidia_2898.jpg|1280",
+  smyrna: "c/c3/Izmir_Agora.JPG|1280",
+  euromos: "1/1a/Euromos_Antik_Kenti_18.jpg|1280",
+  nysa: "5/5c/Nysa%2C_Anatolia.JPG|1280",
+  thyatira: "a/a7/Columns_of_Thiatira.jpg|1280",
+  pinara: "d/da/Theater_Pinara_T%C3%BCrkei.JPG|1280",
+  oenoanda: "7/72/Oinoanda_1.JPG|500",
+  "elaiussa-sebaste": "6/65/Elaiussa_Sebaste_Theatre_1302.jpg|1280",
+  "seleucia-calycadnum": "3/34/Silifke_Kalesi_ve_Silifke_2.jpg|1280",
+  "alexandria-troas": "0/0d/Panorama_alexandriatroas.jpg|1280",
+  parion: "8/81/Hemidrachme_Parion_Rs.JPG|1280",
+  daskyleion: "a/a2/Relife_depicting_a_sacrificial_scene.jpg|1280",
+  lampsacus: "5/56/Stater_Zeus_Lampsacus_CdM.jpg|1280",
+  antandros: "4/4d/Antandros1.jpg|1280",
+  pessinus: "3/3c/Pessinus_Ancient_City_-_2.jpg|1280",
+  amorium: "9/9a/Amorion%2C_ausgegrabene_Geb%C3%A4ude_in_der_Unterstadt.jpg|1280",
+  "alisar-hoyuk": "f/f4/Ali%C5%9Far_H%C3%B6y%C3%BCk_01.jpg|1280",
+  "comana-cappadociae": "3/3e/Sar-Comana.jpg|1280",
+  amaseia: "2/2a/Kral_Kaya_Mezarlar%C4%B1%2C_Amasya.jpg|1280",
+  sinope: "d/d8/Sinop-Castle.jpg|1280",
+  "heraclia-pontica": "6/66/Zonguldak_Cehennem_A%C4%9Fz%C4%B1_Ma%C4%9Faralar%C4%B1.jpg|1280",
+  amisos: "3/3e/Amisos_Tepesi%27nde_kuzey_t%C3%BCm%C3%BCl%C3%BCs%C3%BC.JPG|1280",
+  tieion: "f/fd/Filyos_Tios_%C3%96renyeri.jpg|1280",
   carchemish:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Ankara_Anatolian_Civilizations_Carchemish_orthostats_Long_Wall_Chariot_scene_D_in_2011_07.jpg/1280px-Ankara_Anatolian_Civilizations_Carchemish_orthostats_Long_Wall_Chariot_scene_D_in_2011_07.jpg",
-  "sam-al":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Lion_Zincirli.JPG/1280px-Lion_Zincirli.JPG",
-  arsameia:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Arsameia_%284955068809%29.jpg/1280px-Arsameia_%284955068809%29.jpg",
-  hasankeyf:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Hasankeyf.JPG/1280px-Hasankeyf.JPG",
-  sogmatar:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/So%C4%9Fmatar_from_Urfa_Carvings_in_1997_144.jpg/1280px-So%C4%9Fmatar_from_Urfa_Carvings_in_1997_144.jpg",
-  harput:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Harput_kalesi-Harput-Elaz%C4%B1%C4%9F_-_panoramio.jpg/1280px-Harput_kalesi-Harput-Elaz%C4%B1%C4%9F_-_panoramio.jpg",
-  palu: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Palugesamt.jpg/1280px-Palugesamt.jpg",
-  hosap:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Xwe%C5%9Fav.jpg/1280px-Xwe%C5%9Fav.jpg",
-  ahtamar:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Akhtamar_Island_on_Lake_Van_with_the_Armenian_Cathedral_of_the_Holy_Cross.jpg/960px-Akhtamar_Island_on_Lake_Van_with_the_Armenian_Cathedral_of_the_Holy_Cross.jpg",
-
-  "titus-tuneli":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vespasian-Titus-Tunnel.jpg/1280px-Vespasian-Titus-Tunnel.jpg",
-  karain:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Karain_cave_antalya_museum_turkey_paleolitik.JPG/1280px-Karain_cave_antalya_museum_turkey_paleolitik.JPG",
-  ivriz:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Ivriz_site_of_Neo-Hittite_relief_%281993%29.jpg/1280px-Ivriz_site_of_Neo-Hittite_relief_%281993%29.jpg",
-  eflatunpinar:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Eflatunp%C4%B1nar_Hittite_Water_Monument_1.jpg/1280px-Eflatunp%C4%B1nar_Hittite_Water_Monument_1.jpg",
-  goreme:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/G%C3%B6reme_Open_Air_Museum_01.jpg/1280px-G%C3%B6reme_Open_Air_Museum_01.jpg",
-  derinkuyu:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Derinkuyu_Underground_City_9831_Nevit_Enhancer.jpg/1280px-Derinkuyu_Underground_City_9831_Nevit_Enhancer.jpg",
-  kaymakli:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/A_circular_door_at_Kaymakli_Underground_City.jpg/1280px-A_circular_door_at_Kaymakli_Underground_City.jpg",
-  zelve:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Zelve_Open_Air_Museum_-_2014.10_-_panoramio.jpg/1280px-Zelve_Open_Air_Museum_-_2014.10_-_panoramio.jpg",
-  ihlara:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Ihlara_Valley%2C_Turkey.jpg/1280px-Ihlara_Valley%2C_Turkey.jpg",
-  sumela:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/S%C3%BCmela_monastery_trabzon_-_panoramio.jpg/1280px-S%C3%BCmela_monastery_trabzon_-_panoramio.jpg",
-  kariye:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Chora_Church%2C_Kariye_Camii%2C_Life_of_Mary.jpg/1280px-Chora_Church%2C_Kariye_Camii%2C_Life_of_Mary.jpg",
-  selimiye:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Selimiye_Cami%2C_Mimar_Sinan%27%C4%B1n_Ustal%C4%B1k_Eseri_2015.jpg/1280px-Selimiye_Cami%2C_Mimar_Sinan%27%C4%B1n_Ustal%C4%B1k_Eseri_2015.jpg",
-  divrigi:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Divrigi_complex_DSCF3028.jpg/1280px-Divrigi_complex_DSCF3028.jpg",
-  topkapi:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Istanbul_asv2020-02_img23_Topkap%C4%B1_Palace.jpg/1280px-Istanbul_asv2020-02_img23_Topkap%C4%B1_Palace.jpg",
-  "rumeli-hisari":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Castle_-_Rumelihisari_-_Fort_of_Rumeli_-_panoramio.jpg/1280px-Castle_-_Rumelihisari_-_Fort_of_Rumeli_-_panoramio.jpg",
-  "diyarbakir-surlari":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Diyarbakir_city_walls_DSCF9396.jpg/1280px-Diyarbakir_city_walls_DSCF9396.jpg",
-  safranbolu:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Safranbolu_houses_in_2006_8307b.jpg/1280px-Safranbolu_houses_in_2006_8307b.jpg",
-  cumalikizik:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bursa_Cumal%C4%B1k%C4%B1z%C4%B1k_in_the_snow_2004_0104.jpg/1280px-Bursa_Cumal%C4%B1k%C4%B1z%C4%B1k_in_the_snow_2004_0104.jpg",
-  "mardin-eski-kent":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mardin_panorama_3.png/1280px-Mardin_panorama_3.png",
-  "istanbul-arkeoloji-muzeleri":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Gate_of_Istanbul_Archaeological_Museums.jpg/1280px-Gate_of_Istanbul_Archaeological_Museums.jpg",
+    "3/3d/Ankara_Anatolian_Civilizations_Carchemish_orthostats_Long_Wall_Chariot_scene_D_in_2011_07.jpg|1280",
+  "sam-al": "7/7f/Lion_Zincirli.JPG|1280",
+  arsameia: "9/99/Arsameia_%284955068809%29.jpg|1280",
+  hasankeyf: "8/8f/Hasankeyf.JPG|1280",
+  sogmatar: "3/34/So%C4%9Fmatar_from_Urfa_Carvings_in_1997_144.jpg|1280",
+  harput: "e/ee/Harput_kalesi-Harput-Elaz%C4%B1%C4%9F_-_panoramio.jpg|1280",
+  palu: "a/ab/Palugesamt.jpg|1280",
+  hosap: "a/af/Xwe%C5%9Fav.jpg|1280",
+  ahtamar: "3/37/Akhtamar_Island_on_Lake_Van_with_the_Armenian_Cathedral_of_the_Holy_Cross.jpg|960",
+  "titus-tuneli": "7/76/Vespasian-Titus-Tunnel.jpg|1280",
+  karain: "2/2e/Karain_cave_antalya_museum_turkey_paleolitik.JPG|1280",
+  ivriz: "6/60/Ivriz_site_of_Neo-Hittite_relief_%281993%29.jpg|1280",
+  eflatunpinar: "2/29/Eflatunp%C4%B1nar_Hittite_Water_Monument_1.jpg|1280",
+  goreme: "6/60/G%C3%B6reme_Open_Air_Museum_01.jpg|1280",
+  derinkuyu: "6/6c/Derinkuyu_Underground_City_9831_Nevit_Enhancer.jpg|1280",
+  kaymakli: "0/05/A_circular_door_at_Kaymakli_Underground_City.jpg|1280",
+  zelve: "8/85/Zelve_Open_Air_Museum_-_2014.10_-_panoramio.jpg|1280",
+  ihlara: "5/5d/Ihlara_Valley%2C_Turkey.jpg|1280",
+  sumela: "f/f4/S%C3%BCmela_monastery_trabzon_-_panoramio.jpg|1280",
+  kariye: "0/00/Chora_Church%2C_Kariye_Camii%2C_Life_of_Mary.jpg|1280",
+  selimiye: "a/ae/Selimiye_Cami%2C_Mimar_Sinan%27%C4%B1n_Ustal%C4%B1k_Eseri_2015.jpg|1280",
+  divrigi: "4/42/Divrigi_complex_DSCF3028.jpg|1280",
+  topkapi: "9/96/Istanbul_asv2020-02_img23_Topkap%C4%B1_Palace.jpg|1280",
+  "rumeli-hisari": "3/3a/Castle_-_Rumelihisari_-_Fort_of_Rumeli_-_panoramio.jpg|1280",
+  "diyarbakir-surlari": "a/a3/Diyarbakir_city_walls_DSCF9396.jpg|1280",
+  safranbolu: "9/97/Safranbolu_houses_in_2006_8307b.jpg|1280",
+  cumalikizik: "c/cb/Bursa_Cumal%C4%B1k%C4%B1z%C4%B1k_in_the_snow_2004_0104.jpg|1280",
+  "mardin-eski-kent": "d/d3/Mardin_panorama_3.png|1280",
+  "istanbul-arkeoloji-muzeleri": "a/a7/Gate_of_Istanbul_Archaeological_Museums.jpg|1280",
   "zeugma-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_All_in_2011_1843b.jpg/1280px-Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_All_in_2011_1843b.jpg",
-  "sanliurfa-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/UrfaMuseumG%C3%B6bekli.jpg/1280px-UrfaMuseumG%C3%B6bekli.jpg",
+    "b/b7/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_All_in_2011_1843b.jpg|1280",
+  "sanliurfa-muzesi": "3/3c/UrfaMuseumG%C3%B6bekli.jpg|1280",
   "hatay-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Antakya_Archaeology_Museum_The_jugglers_inv_831_mosiac_sept_2019_5928.jpg/1280px-Antakya_Archaeology_Museum_The_jugglers_inv_831_mosiac_sept_2019_5928.jpg",
-  "efes-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/EfesMuseumEingang.jpg/1280px-EfesMuseumEingang.jpg",
-  "antalya-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Antalya_Archaeology_Museum_09.jpg/1280px-Antalya_Archaeology_Museum_09.jpg",
-  "bodrum-sualti-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Bodrum_Castle_%282017%29.jpg/1280px-Bodrum_Castle_%282017%29.jpg",
-  "troya-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Museum_of_Troy_%2853022400001%29.jpg/1280px-Museum_of_Troy_%2853022400001%29.jpg",
-  "mevlana-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Mevlana_Museum%2C_Konya_07.jpg/1280px-Mevlana_Museum%2C_Konya_07.jpg",
-  ayasofya:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Hagia_Sophia_Mars_2013.jpg/1280px-Hagia_Sophia_Mars_2013.jpg",
-  suleymaniye:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Courtyard_of_the_S%C3%BCleymaniye_Mosque_in_Istanbul%2C_Turkey_004.jpg/1280px-Courtyard_of_the_S%C3%BCleymaniye_Mosque_in_Istanbul%2C_Turkey_004.jpg",
-  "ishak-pasa":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/00_3411_%C4%B0shak_Pa%C5%9Fa_Saray%C4%B1_-_Turkey.jpg/1280px-00_3411_%C4%B0shak_Pa%C5%9Fa_Saray%C4%B1_-_Turkey.jpg",
+    "1/17/Antakya_Archaeology_Museum_The_jugglers_inv_831_mosiac_sept_2019_5928.jpg|1280",
+  "efes-muzesi": "9/92/EfesMuseumEingang.jpg|1280",
+  "antalya-muzesi": "d/d5/Antalya_Archaeology_Museum_09.jpg|1280",
+  "bodrum-sualti-muzesi": "b/bd/Bodrum_Castle_%282017%29.jpg|1280",
+  "troya-muzesi": "6/6c/Museum_of_Troy_%2853022400001%29.jpg|1280",
+  "mevlana-muzesi": "2/20/Mevlana_Museum%2C_Konya_07.jpg|1280",
+  ayasofya: "2/22/Hagia_Sophia_Mars_2013.jpg|1280",
+  suleymaniye: "b/b8/Courtyard_of_the_S%C3%BCleymaniye_Mosque_in_Istanbul%2C_Turkey_004.jpg|1280",
+  "ishak-pasa": "9/93/00_3411_%C4%B0shak_Pa%C5%9Fa_Saray%C4%B1_-_Turkey.jpg|1280",
   "anadolu-medeniyetleri-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg/1280px-Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg",
-
-  // ——— tarihi yerler ve müzeler, ikinci grup ———
-  "turk-islam-eserleri-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Turkish_and_Islamic_Museum_1432_%28cropped%29.jpg/1280px-Turkish_and_Islamic_Museum_1432_%28cropped%29.jpg",
-  "buyuk-saray-mozaikleri":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Mosaic_museum_Istanbul_2007_021.jpg/1280px-Mosaic_museum_Istanbul_2007_021.jpg",
-  "izmir-arkeoloji-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Museo_archeologico_di_izmir%2C_veduta.JPG/1280px-Museo_archeologico_di_izmir%2C_veduta.JPG",
-  "bergama-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Bergama_Museum_009.jpg/1280px-Bergama_Museum_009.jpg",
-  "hierapolis-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hierapolis_Archaeological_Museum_09.jpg/1280px-Hierapolis_Archaeological_Museum_09.jpg",
-  "usak-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/U%C5%9Fak_m%C3%BCzesi_2.jpg/1280px-U%C5%9Fak_m%C3%BCzesi_2.jpg",
-  "side-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Hygieia_Statue_Side_Museum.jpg/1280px-Hygieia_Statue_Side_Museum.jpg",
-  "adana-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Adana_M%C3%BCzesi_%28Milli_Mensucat_Fabrikas%C4%B1%29.jpg/1280px-Adana_M%C3%BCzesi_%28Milli_Mensucat_Fabrikas%C4%B1%29.jpg",
-  "mardin-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Mardin_P1050137_20080426105032.JPG/1280px-Mardin_P1050137_20080426105032.JPG",
-  "van-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Van_Museum_009.jpg/1280px-Van_Museum_009.jpg",
-  "amasya-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Amasya_Museum_03.jpg/1280px-Amasya_Museum_03.jpg",
-  "trabzon-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Trabzon_museum.jpg/1280px-Trabzon_museum.jpg",
-  "corum-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/CorumMuseum1.jpg/1280px-CorumMuseum1.jpg",
-  "karatay-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Konya_Karatay_Ceramics_Museum_exterior_4465.jpg/1280px-Konya_Karatay_Ceramics_Museum_exterior_4465.jpg",
-  "sultanahmet-camii":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Istanbul_%2834223582516%29_%28cropped%29.jpg/1280px-Istanbul_%2834223582516%29_%28cropped%29.jpg",
-  "bursa-ulu-cami":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/71_Bursa_la_Grande_Moschea_%28Edited%29.jpg/1280px-71_Bursa_la_Grande_Moschea_%28Edited%29.jpg",
-  "esrefoglu-cami":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/E%C5%9Frefo%C4%9Flu_Camii%2C_Bey%C5%9Fehir%2C_April_2024_05.jpg/1280px-E%C5%9Frefo%C4%9Flu_Camii%2C_Bey%C5%9Fehir%2C_April_2024_05.jpg",
-  "diyarbakir-ulu-cami":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Great_Mosque%2C_Diyarbakir.jpg/1280px-Great_Mosque%2C_Diyarbakir.jpg",
-  sultanhani:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sultan_Han_%284551085637%29.jpg/1280px-Sultan_Han_%284551085637%29.jpg",
-  sarihan:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/SarihanHof.jpg/1280px-SarihanHof.jpg",
-  "cendere-koprusu":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Portuguese_Bridge_%28Severan_Bridge%292.jpg/1280px-Portuguese_Bridge_%28Severan_Bridge%292.jpg",
-  "malabadi-koprusu":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Malabadibridge.jpg/1280px-Malabadibridge.jpg",
-  "yesil-turbe":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Turkey-1353_%282216628788%29.jpg/1280px-Turkey-1353_%282216628788%29.jpg",
-  "doner-kumbet":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Kayseri_Doner_tomb_2019_1875.jpg/1280px-Kayseri_Doner_tomb_2019_1875.jpg",
-  "bozdogan-kemeri":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Bozdo%C4%A3an_Kemeri_-_panoramio.jpg/1280px-Bozdo%C4%A3an_Kemeri_-_panoramio.jpg",
+    "9/9e/Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg|1280",
+  "turk-islam-eserleri-muzesi": "a/a3/Turkish_and_Islamic_Museum_1432_%28cropped%29.jpg|1280",
+  "buyuk-saray-mozaikleri": "4/41/Mosaic_museum_Istanbul_2007_021.jpg|1280",
+  "izmir-arkeoloji-muzesi": "1/1e/Museo_archeologico_di_izmir%2C_veduta.JPG|1280",
+  "bergama-muzesi": "7/7d/Bergama_Museum_009.jpg|1280",
+  "hierapolis-muzesi": "d/d7/Hierapolis_Archaeological_Museum_09.jpg|1280",
+  "usak-muzesi": "7/75/U%C5%9Fak_m%C3%BCzesi_2.jpg|1280",
+  "side-muzesi": "7/7c/Hygieia_Statue_Side_Museum.jpg|1280",
+  "adana-muzesi": "a/a1/Adana_M%C3%BCzesi_%28Milli_Mensucat_Fabrikas%C4%B1%29.jpg|1280",
+  "mardin-muzesi": "c/c5/Mardin_P1050137_20080426105032.JPG|1280",
+  "van-muzesi": "e/e1/Van_Museum_009.jpg|1280",
+  "amasya-muzesi": "6/6e/Amasya_Museum_03.jpg|1280",
+  "trabzon-muzesi": "c/ca/Trabzon_museum.jpg|1280",
+  "corum-muzesi": "5/52/CorumMuseum1.jpg|1280",
+  "karatay-muzesi": "b/bf/Konya_Karatay_Ceramics_Museum_exterior_4465.jpg|1280",
+  "sultanahmet-camii": "0/03/Istanbul_%2834223582516%29_%28cropped%29.jpg|1280",
+  "bursa-ulu-cami": "1/19/71_Bursa_la_Grande_Moschea_%28Edited%29.jpg|1280",
+  "esrefoglu-cami": "4/47/E%C5%9Frefo%C4%9Flu_Camii%2C_Bey%C5%9Fehir%2C_April_2024_05.jpg|1280",
+  "diyarbakir-ulu-cami": "d/d0/Great_Mosque%2C_Diyarbakir.jpg|1280",
+  sultanhani: "f/ff/Sultan_Han_%284551085637%29.jpg|1280",
+  sarihan: "7/70/SarihanHof.jpg|1280",
+  "cendere-koprusu": "6/62/Portuguese_Bridge_%28Severan_Bridge%292.jpg|1280",
+  "malabadi-koprusu": "8/84/Malabadibridge.jpg|1280",
+  "yesil-turbe": "2/26/Turkey-1353_%282216628788%29.jpg|1280",
+  "doner-kumbet": "0/09/Kayseri_Doner_tomb_2019_1875.jpg|1280",
+  "bozdogan-kemeri": "8/8c/Bozdo%C4%A3an_Kemeri_-_panoramio.jpg|1280",
   "yerebatan-sarnici":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Cisterna_Bas%C3%ADlica%2C_Estambul%2C_Turqu%C3%ADa%2C_2024-09-28%2C_DD_58-60_HDR.jpg/1280px-Cisterna_Bas%C3%ADlica%2C_Estambul%2C_Turqu%C3%ADa%2C_2024-09-28%2C_DD_58-60_HDR.jpg",
-  "dolmabahce-sarayi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Dolmabahce_Istanbul_Turkey.jpg/1280px-Dolmabahce_Istanbul_Turkey.jpg",
-  anitkabir:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/An%C4%B1tkabir%2C_Ankara%2C_Turqu%C3%ADa%2C_2024-10-03%2C_DD_01.jpg/1280px-An%C4%B1tkabir%2C_Ankara%2C_Turqu%C3%ADa%2C_2024-10-03%2C_DD_01.jpg",
-  "galata-kulesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Istanbul_asv2020-02_img48_Galata_Tower.jpg/1280px-Istanbul_asv2020-02_img48_Galata_Tower.jpg",
-  "alanya-kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Alanya_Castle.jpeg/1280px-Alanya_Castle.jpeg",
-  kizkalesi:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Kizkalesi%2C_Erdemli.IMG_3491.jpg/1280px-Kizkalesi%2C_Erdemli.IMG_3491.jpg",
-  odunpazari:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Eskisehir_odunpazar%C4%B1_beyler_sokag%C4%B1.jpg/1280px-Eskisehir_odunpazar%C4%B1_beyler_sokag%C4%B1.jpg",
-  "amasya-yaliboyu-evleri":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Ye%C5%9Fil%C4%B1rmak2.jpg/1280px-Ye%C5%9Fil%C4%B1rmak2.jpg",
-  "mor-gabriel":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Deyrulumur_P1040804_20080425103239.JPG/1280px-Deyrulumur_P1040804_20080425103239.JPG",
-  deyrulzafaran:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mardin_Mor_Hananyo_Monastery_in_2000-2001_114.jpg/1280px-Mardin_Mor_Hananyo_Monastery_in_2000-2001_114.jpg",
-  soganli:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Soganli_Valley_Cappadocia.JPG/1280px-Soganli_Valley_Cappadocia.JPG",
-
-  // ——— üçüncü grup ———
-  "milet-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Milet_m%C3%BCzesi_-_panoramio.jpg/1280px-Milet_m%C3%BCzesi_-_panoramio.jpg",
-  "afrodisias-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Aphrodisias_Archaeological_Museum.jpg/1280px-Aphrodisias_Archaeological_Museum.jpg",
-  "alanya-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Muse_alanya.jpg/1280px-Muse_alanya.jpg",
-  "kayseri-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Kayseri_Archaeology_Museum%2C_Sphinx_Marble.jpg/1280px-Kayseri_Archaeology_Museum%2C_Sphinx_Marble.jpg",
-  "aksaray-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Aksaray_Museum01.jpg/1280px-Aksaray_Museum01.jpg",
-  "kars-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Kars_museum_5774.jpg/1280px-Kars_museum_5774.jpg",
-  "sinop-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Sinop-museum.JPG/1280px-Sinop-museum.JPG",
-  "samsun-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Samsun_M%C3%BCzesi.jpg/1280px-Samsun_M%C3%BCzesi.jpg",
-  "edirne-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Edirne_Museum.jpg/1280px-Edirne_Museum.jpg",
-  "pera-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Fausto_Zonaro_-_Prince_Abd%C3%BCrrahim_Efendi_-_Google_Art_Project.jpg/1280px-Fausto_Zonaro_-_Prince_Abd%C3%BCrrahim_Efendi_-_Google_Art_Project.jpg",
-  okuzini:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Relief_%C3%96k%C3%BCzini.jpg/1280px-Relief_%C3%96k%C3%BCzini.jpg",
-  "maglova-kemeri":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Ma%C4%9Flova_Aquaduct_4.jpg/1280px-Ma%C4%9Flova_Aquaduct_4.jpg",
-  binbirdirek:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Binbirdirek_Sarn%C4%B1c%C4%B1_7.jpg/1280px-Binbirdirek_Sarn%C4%B1c%C4%B1_7.jpg",
-  "serefiye-sarnici":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Theodosius_cistern_08.jpg/1280px-Theodosius_cistern_08.jpg",
-  "halime-hatun-kumbeti":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Halime_hatun_k%C3%BCmbeti.jpg/1280px-Halime_hatun_k%C3%BCmbeti.jpg",
-  gumuskesen:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Milas_G%C3%BCm%C3%BC%C5%9Fkesen_Mausoleum_in_2007_4846.jpg/1280px-Milas_G%C3%BCm%C3%BC%C5%9Fkesen_Mausoleum_in_2007_4846.jpg",
-  agzikarahan:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/A%C4%9Fz%C4%B1karahan_12.jpg/1280px-A%C4%9Fz%C4%B1karahan_12.jpg",
-  uzunkopru:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Uzunk%C3%B6pr%C3%BC_the_Long_Bridge_approach_from_north_6365.jpg/1280px-Uzunk%C3%B6pr%C3%BC_the_Long_Bridge_approach_from_north_6365.jpg",
+    "a/ae/Cisterna_Bas%C3%ADlica%2C_Estambul%2C_Turqu%C3%ADa%2C_2024-09-28%2C_DD_58-60_HDR.jpg|1280",
+  "dolmabahce-sarayi": "8/85/Dolmabahce_Istanbul_Turkey.jpg|1280",
+  anitkabir: "c/c6/An%C4%B1tkabir%2C_Ankara%2C_Turqu%C3%ADa%2C_2024-10-03%2C_DD_01.jpg|1280",
+  "galata-kulesi": "f/f7/Istanbul_asv2020-02_img48_Galata_Tower.jpg|1280",
+  "alanya-kalesi": "e/e3/Alanya_Castle.jpeg|1280",
+  kizkalesi: "4/40/Kizkalesi%2C_Erdemli.IMG_3491.jpg|1280",
+  odunpazari: "b/b5/Eskisehir_odunpazar%C4%B1_beyler_sokag%C4%B1.jpg|1280",
+  "amasya-yaliboyu-evleri": "0/04/Ye%C5%9Fil%C4%B1rmak2.jpg|1280",
+  "mor-gabriel": "4/4f/Deyrulumur_P1040804_20080425103239.JPG|1280",
+  deyrulzafaran: "c/c2/Mardin_Mor_Hananyo_Monastery_in_2000-2001_114.jpg|1280",
+  soganli: "0/02/Soganli_Valley_Cappadocia.JPG|1280",
+  "milet-muzesi": "6/6f/Milet_m%C3%BCzesi_-_panoramio.jpg|1280",
+  "afrodisias-muzesi": "b/b0/Aphrodisias_Archaeological_Museum.jpg|1280",
+  "alanya-muzesi": "5/52/Muse_alanya.jpg|1280",
+  "kayseri-muzesi": "8/83/Kayseri_Archaeology_Museum%2C_Sphinx_Marble.jpg|1280",
+  "aksaray-muzesi": "b/b6/Aksaray_Museum01.jpg|1280",
+  "kars-muzesi": "5/5d/Kars_museum_5774.jpg|1280",
+  "sinop-muzesi": "c/c8/Sinop-museum.JPG|1280",
+  "samsun-muzesi": "7/76/Samsun_M%C3%BCzesi.jpg|1280",
+  "edirne-muzesi": "4/40/Edirne_Museum.jpg|1280",
+  "pera-muzesi": "1/18/Fausto_Zonaro_-_Prince_Abd%C3%BCrrahim_Efendi_-_Google_Art_Project.jpg|1280",
+  okuzini: "a/a6/Relief_%C3%96k%C3%BCzini.jpg|1280",
+  "maglova-kemeri": "8/87/Ma%C4%9Flova_Aquaduct_4.jpg|1280",
+  binbirdirek: "9/95/Binbirdirek_Sarn%C4%B1c%C4%B1_7.jpg|1280",
+  "serefiye-sarnici": "a/ad/Theodosius_cistern_08.jpg|1280",
+  "halime-hatun-kumbeti": "7/73/Halime_hatun_k%C3%BCmbeti.jpg|1280",
+  gumuskesen: "1/19/Milas_G%C3%BCm%C3%BC%C5%9Fkesen_Mausoleum_in_2007_4846.jpg|1280",
+  agzikarahan: "3/3a/A%C4%9Fz%C4%B1karahan_12.jpg|1280",
+  uzunkopru: "9/9f/Uzunk%C3%B6pr%C3%BC_the_Long_Bridge_approach_from_north_6365.jpg|1280",
   "irgandi-koprusu":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg/1280px-Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg",
-  "beylerbeyi-sarayi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Beylerbeyi_Palace_-_Lion_statue.jpg/1280px-Beylerbeyi_Palace_-_Lion_statue.jpg",
-  kubadabad:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kubadabad_general_view.jpg/1280px-Kubadabad_general_view.jpg",
-  "anadolu-hisari":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Anadolu_Hisar%C4%B1_in_2024_%28cropped%29.jpg/1280px-Anadolu_Hisar%C4%B1_in_2024_%28cropped%29.jpg",
+    "c/c1/Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg|1280",
+  "beylerbeyi-sarayi": "8/81/Beylerbeyi_Palace_-_Lion_statue.jpg|1280",
+  kubadabad: "9/9c/Kubadabad_general_view.jpg|1280",
+  "anadolu-hisari": "d/d4/Anadolu_Hisar%C4%B1_in_2024_%28cropped%29.jpg|1280",
   "ankara-kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Ankara_Castle_not_in_I%C3%A7kale_in_1990%27s_or_early_2000%27s_07.jpg/1280px-Ankara_Castle_not_in_I%C3%A7kale_in_1990%27s_or_early_2000%27s_07.jpg",
-  "mamure-kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Anamur_Castle_Main_tower_view_8716_Panorama.jpg/1280px-Anamur_Castle_Main_tower_view_8716_Panorama.jpg",
-  yedikule:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Istanbul_asv2021-11_img61_Yedikule.jpg/1280px-Istanbul_asv2021-11_img61_Yedikule.jpg",
-  alahan:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Alahan_74.jpg/1280px-Alahan_74.jpg",
-  vazelon:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Kloster_Vazelon_Hauptgebaeude_Juli_2014.jpg/1280px-Kloster_Vazelon_Hauptgebaeude_Juli_2014.jpg",
-  "meryem-ana-evi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/House_of_the_Virgin_Mary_%2813951299641%29_%28cropped%29.jpg/1280px-House_of_the_Virgin_Mary_%2813951299641%29_%28cropped%29.jpg",
-  beypazari:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/3X0A6495_Beypazar%C4%B1.jpg/1280px-3X0A6495_Beypazar%C4%B1.jpg",
-  sirince:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/%C5%9Eirince_manzaras%C4%B1.jpg/1280px-%C5%9Eirince_manzaras%C4%B1.jpg",
-  "alaeddin-camii":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Alaedin_Camii.JPG/1280px-Alaedin_Camii.JPG",
-  "uc-serefeli-cami":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/%C3%9C%C3%A7_%C5%9Eerefeli_Mosque_SW_exterior_in_2024_5860.jpg/1280px-%C3%9C%C3%A7_%C5%9Eerefeli_Mosque_SW_exterior_in_2024_5860.jpg",
-  "mahmut-bey-camii":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mahmut_Bey_Mosque_1360.jpg/1280px-Mahmut_Bey_Mosque_1360.jpg",
-  "rustem-pasa-camii":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/R%C3%BCstem_Pasha_Mosque_courtyard_and_porch_in_2003_1826.jpg/1280px-R%C3%BCstem_Pasha_Mosque_courtyard_and_porch_in_2003_1826.jpg",
-  "kiz-kulesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Istanbul_K%C4%B1z_Kulesi_%2854511155871%29_%28cropped%29.jpg/1280px-Istanbul_K%C4%B1z_Kulesi_%2854511155871%29_%28cropped%29.jpg",
-  yesemek:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Yesemekgesamt.jpg/1280px-Yesemekgesamt.jpg",
-  dikilitas:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Theodosius_obelisk_3.jpg/1280px-Theodosius_obelisk_3.jpg",
-  yazilikaya:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Yazilikaya_Kammer_A.jpg/1280px-Yazilikaya_Kammer_A.jpg",
-  smintheion:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Smintheion_2025-08-30_16-18-29.jpg/1280px-Smintheion_2025-08-30_16-18-29.jpg",
-  domuztepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Kahramanmaras_Museum_Domuztepe.jpg/1280px-Kahramanmaras_Museum_Domuztepe.jpg",
-  sillyon:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Sillyon_Small_church_in_2015_5451.jpg/1280px-Sillyon_Small_church_in_2015_5451.jpg",
-  "kutahya-cini-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg/1280px-K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg",
-  "erzurum-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Archaeological_Museum_of_Erzurum_in_2011_8414.jpg/1280px-Archaeological_Museum_of_Erzurum_in_2011_8414.jpg",
+    "b/bb/Ankara_Castle_not_in_I%C3%A7kale_in_1990%27s_or_early_2000%27s_07.jpg|1280",
+  "mamure-kalesi": "4/47/Anamur_Castle_Main_tower_view_8716_Panorama.jpg|1280",
+  yedikule: "2/24/Istanbul_asv2021-11_img61_Yedikule.jpg|1280",
+  alahan: "0/07/Alahan_74.jpg|1280",
+  vazelon: "d/d5/Kloster_Vazelon_Hauptgebaeude_Juli_2014.jpg|1280",
+  "meryem-ana-evi": "3/37/House_of_the_Virgin_Mary_%2813951299641%29_%28cropped%29.jpg|1280",
+  beypazari: "e/ef/3X0A6495_Beypazar%C4%B1.jpg|1280",
+  sirince: "b/b0/%C5%9Eirince_manzaras%C4%B1.jpg|1280",
+  "alaeddin-camii": "a/a5/Alaedin_Camii.JPG|1280",
+  "uc-serefeli-cami": "4/4b/%C3%9C%C3%A7_%C5%9Eerefeli_Mosque_SW_exterior_in_2024_5860.jpg|1280",
+  "mahmut-bey-camii": "5/5e/Mahmut_Bey_Mosque_1360.jpg|1280",
+  "rustem-pasa-camii": "c/cf/R%C3%BCstem_Pasha_Mosque_courtyard_and_porch_in_2003_1826.jpg|1280",
+  "kiz-kulesi": "a/a8/Istanbul_K%C4%B1z_Kulesi_%2854511155871%29_%28cropped%29.jpg|1280",
+  yesemek: "6/69/Yesemekgesamt.jpg|1280",
+  dikilitas: "b/bb/Theodosius_obelisk_3.jpg|1280",
+  yazilikaya: "5/58/Yazilikaya_Kammer_A.jpg|1280",
+  smintheion: "c/ce/Smintheion_2025-08-30_16-18-29.jpg|1280",
+  domuztepe: "3/31/Kahramanmaras_Museum_Domuztepe.jpg|1280",
+  sillyon: "0/09/Sillyon_Small_church_in_2015_5451.jpg|1280",
+  "kutahya-cini-muzesi": "f/ff/K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg|1280",
+  "erzurum-muzesi": "b/ba/Archaeological_Museum_of_Erzurum_in_2011_8414.jpg|1280",
   "diyarbakir-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Standing_Stones%2C_7500_BC%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg/1280px-Standing_Stones%2C_7500_BC%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg",
+    "2/26/Standing_Stones%2C_7500_BC%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg|1280",
   yarimburgaz:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/%C4%B0stanbul_Arkeoloji_M%C3%BCzesi_-_Yar%C4%B1mburgaz_Ma%C4%9Faras%C4%B1_%28Ba%C5%9Fak%C5%9Fehir%29.jpg/1280px-%C4%B0stanbul_Arkeoloji_M%C3%BCzesi_-_Yar%C4%B1mburgaz_Ma%C4%9Faras%C4%B1_%28Ba%C5%9Fak%C5%9Fehir%29.jpg",
-  "justinianus-koprusu":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Sangarius_Bridge%2C_Justinyen_K%C3%B6pr%C3%BCs%C3%BC.JPG/1280px-Sangarius_Bridge%2C_Justinyen_K%C3%B6pr%C3%BCs%C3%BC.JPG",
-  "antalya-kaleici":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/P9271453_Hadrian%27s_Gate.jpg/1280px-P9271453_Hadrian%27s_Gate.jpg",
-  ozkonak:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Entrance_of_%C3%96zkonak_Underground_City.jpg/1280px-Entrance_of_%C3%96zkonak_Underground_City.jpg",
-  aciksaray:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Aciksaray-04-jries.jpg/1280px-Aciksaray-04-jries.jpg",
-  yumuktepe:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Y%C3%BCm%C3%BCktepe%2C_Mersin.JPG/1280px-Y%C3%BCm%C3%BCktepe%2C_Mersin.JPG",
-  "kahramanmaras-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Kahramanmaras_Museum_Statue_Maras_13_Schrift.jpg/1280px-Kahramanmaras_Museum_Statue_Maras_13_Schrift.jpg",
-  "burdur-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Burdur_Museum_3224.jpg/1280px-Burdur_Museum_3224.jpg",
-  "malatya-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Malatya_museum_035.jpg/1280px-Malatya_museum_035.jpg",
-  "tokat-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/G%C3%B6k_Medrese_at_Tokat.jpg/1280px-G%C3%B6k_Medrese_at_Tokat.jpg",
-  "kastamonu-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Kastamonu_Museum_from_Clock_Tower_hill_8771.jpg/1280px-Kastamonu_Museum_from_Clock_Tower_hill_8771.jpg",
+    "c/c2/%C4%B0stanbul_Arkeoloji_M%C3%BCzesi_-_Yar%C4%B1mburgaz_Ma%C4%9Faras%C4%B1_%28Ba%C5%9Fak%C5%9Fehir%29.jpg|1280",
+  "justinianus-koprusu": "0/04/Sangarius_Bridge%2C_Justinyen_K%C3%B6pr%C3%BCs%C3%BC.JPG|1280",
+  "antalya-kaleici": "9/9a/P9271453_Hadrian%27s_Gate.jpg|1280",
+  ozkonak: "3/3e/Entrance_of_%C3%96zkonak_Underground_City.jpg|1280",
+  aciksaray: "7/74/Aciksaray-04-jries.jpg|1280",
+  yumuktepe: "0/06/Y%C3%BCm%C3%BCktepe%2C_Mersin.JPG|1280",
+  "kahramanmaras-muzesi": "0/0f/Kahramanmaras_Museum_Statue_Maras_13_Schrift.jpg|1280",
+  "burdur-muzesi": "1/11/Burdur_Museum_3224.jpg|1280",
+  "malatya-muzesi": "b/bf/Malatya_museum_035.jpg|1280",
+  "tokat-muzesi": "1/1f/G%C3%B6k_Medrese_at_Tokat.jpg|1280",
+  "kastamonu-muzesi": "7/72/Kastamonu_Museum_from_Clock_Tower_hill_8771.jpg|1280",
   "sadberk-hanim-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Istanbul_Sadberk_Han%C4%B1m_Museum_Vessel_Iron_Age_Urartian_3270.jpg/1280px-Istanbul_Sadberk_Han%C4%B1m_Museum_Vessel_Iron_Age_Urartian_3270.jpg",
-  metropolis:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Metropolis%2C_Ionia%2C_Turkey_%2844836850221%29.jpg/1280px-Metropolis%2C_Ionia%2C_Turkey_%2844836850221%29.jpg",
-  blaundos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Blaundos.jpg/1280px-Blaundos.jpg",
-  "herakleia-latmos":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Bafa_Lake_Kapikiri.JPG/1280px-Bafa_Lake_Kapikiri.JPG",
-  alabanda:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Alabanda_Bouleuterion.JPG/1280px-Alabanda_Bouleuterion.JPG",
-  alinda:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Alinda_Agora.JPG/1280px-Alinda_Agora.JPG",
-  iasos:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Iasos_5510.jpg/1280px-Iasos_5510.jpg",
-  rhodiapolis:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Rhodiapolis.JPG/1280px-Rhodiapolis.JPG",
-  andriake:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Andriake_Harbour_area_0312.jpg/1280px-Andriake_Harbour_area_0312.jpg",
-  selge:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Selge_08_04_2015_Theater_von_Selge.jpg/1280px-Selge_08_04_2015_Theater_von_Selge.jpg",
-  lagina:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/The_Sanctuary_of_Hecate_in_Lagina%2C_Caria%2C_Turkey_%2817289438085%29.jpg/1280px-The_Sanctuary_of_Hecate_in_Lagina%2C_Caria%2C_Turkey_%2817289438085%29.jpg",
+    "3/30/Istanbul_Sadberk_Han%C4%B1m_Museum_Vessel_Iron_Age_Urartian_3270.jpg|1280",
+  metropolis: "f/f4/Metropolis%2C_Ionia%2C_Turkey_%2844836850221%29.jpg|1280",
+  blaundos: "5/51/Blaundos.jpg|1280",
+  "herakleia-latmos": "b/b6/Bafa_Lake_Kapikiri.JPG|1280",
+  alabanda: "5/56/Alabanda_Bouleuterion.JPG|1280",
+  alinda: "7/75/Alinda_Agora.JPG|1280",
+  iasos: "b/b9/Iasos_5510.jpg|1280",
+  rhodiapolis: "8/81/Rhodiapolis.JPG|1280",
+  andriake: "6/68/Andriake_Harbour_area_0312.jpg|1280",
+  selge: "e/e7/Selge_08_04_2015_Theater_von_Selge.jpg|1280",
+  lagina: "b/bf/The_Sanctuary_of_Hecate_in_Lagina%2C_Caria%2C_Turkey_%2817289438085%29.jpg|1280",
   "apollon-lairbenos":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/God_Apollo_Lairbenos_with_labrys_%28double_axe%29%2C_from_the_the_scaenae_frons_of_the_Roman_theatre%2C_2nd_century_AD%2C_Hierapolis_Archaeology_Museum%2C_Turkey_%2832286281651%29.jpg/1280px-thumbnail.jpg",
-  panionion:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Panionion.jpg/1280px-Panionion.jpg",
+  panionion: "b/b5/Panionion.jpg|1280",
   hacilar:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Museum_of_Anatolian_Civilizations_Hac%C4%B1lar_Statuette_of_goddess_holding_a_young_leopard_in_2019_10.jpg/1280px-Museum_of_Anatolian_Civilizations_Hac%C4%B1lar_Statuette_of_goddess_holding_a_young_leopard_in_2019_10.jpg",
-  beycesultan:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Beycesultan_20.jpg/1280px-Beycesultan_20.jpg",
-  tilmen:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tilmen1.jpg/1280px-Tilmen1.jpg",
-  cemberlitas:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Column_of_Constantine.jpg/1280px-Column_of_Constantine.jpg",
-  gumusler:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Gumusler_Monastery_Courtyard_1202.jpg/1280px-Gumusler_Monastery_Courtyard_1202.jpg",
-  "aya-irini":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Hagia_Irene%2C_Istanbul_%2852112279404%29_%28cropped%29.jpg/1280px-Hagia_Irene%2C_Istanbul_%2852112279404%29_%28cropped%29.jpg",
-  "aziz-nikolaos":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/St_Nicholas_Church_Demre_024.jpg/1280px-St_Nicholas_Church_Demre_024.jpg",
-  "aziz-petrus":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/ChurchSaintPeterAntakya.jpg/1280px-ChurchSaintPeterAntakya.jpg",
-  "aziz-yuhanna":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Saint-John_in_Ephesus_%286%29.JPG/1280px-Saint-John_in_Ephesus_%286%29.JPG",
-  "afyon-ulu-cami":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Afyonkarahisar_Ulu_Camii_Exterior_1881.jpg/1280px-Afyonkarahisar_Ulu_Camii_Exterior_1881.jpg",
-  "arslanhane-camii":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Ankara_asv2021-10_img29_Kale_and_Arslanhane_Mosque.jpg/1280px-Ankara_asv2021-10_img29_Kale_and_Arslanhane_Mosque.jpg",
+    "b/b6/Museum_of_Anatolian_Civilizations_Hac%C4%B1lar_Statuette_of_goddess_holding_a_young_leopard_in_2019_10.jpg|1280",
+  beycesultan: "5/5d/Beycesultan_20.jpg|1280",
+  tilmen: "b/b1/Tilmen1.jpg|1280",
+  cemberlitas: "e/e1/Column_of_Constantine.jpg|1280",
+  gumusler: "f/f1/Gumusler_Monastery_Courtyard_1202.jpg|1280",
+  "aya-irini": "4/42/Hagia_Irene%2C_Istanbul_%2852112279404%29_%28cropped%29.jpg|1280",
+  "aziz-nikolaos": "6/6b/St_Nicholas_Church_Demre_024.jpg|1280",
+  "aziz-petrus": "2/2e/ChurchSaintPeterAntakya.jpg|1280",
+  "aziz-yuhanna": "f/fb/Saint-John_in_Ephesus_%286%29.JPG|1280",
+  "afyon-ulu-cami": "1/18/Afyonkarahisar_Ulu_Camii_Exterior_1881.jpg|1280",
+  "arslanhane-camii": "d/d3/Ankara_asv2021-10_img29_Kale_and_Arslanhane_Mosque.jpg|1280",
   "yesil-cami":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/GREEN_MOSQUE-YE%C5%9E%C4%B0L_CAM%C4%B0-BURSA_-_panoramio_-_HALUK_COMERTEL.jpg/1280px-GREEN_MOSQUE-YE%C5%9E%C4%B0L_CAM%C4%B0-BURSA_-_panoramio_-_HALUK_COMERTEL.jpg",
-  "cifte-minareli-medrese":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Twin_Minaret_Madrasah_-_%C3%87ifte_Minareli_Medrese_01.jpg/1280px-Twin_Minaret_Madrasah_-_%C3%87ifte_Minareli_Medrese_01.jpg",
-  "gok-medrese":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/G%C3%B6k_medrese_-_Sivas_-_Turquie.jpg/1280px-G%C3%B6k_medrese_-_Sivas_-_Turquie.jpg",
-  "sifaiye-medresesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/%C5%9Eifaiye_Medrese_at_tomb_%28Sivas%29_in_2011_8263.jpg/1280px-%C5%9Eifaiye_Medrese_at_tomb_%28Sivas%29_in_2011_8263.jpg",
-  "gevher-nesibe":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Gevher_Nesibe_Medrese_%28Cifte_Medrese%29_DSCF1179.jpg/1280px-Gevher_Nesibe_Medrese_%28Cifte_Medrese%29_DSCF1179.jpg",
-  "edirne-sarayi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Adalet_kasr%C4%B1.png/1280px-Adalet_kasr%C4%B1.png",
-  "silifke-kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Silifke_castle_exterior_in_2006_2119.jpg/1280px-Silifke_castle_exterior_in_2006_2119.jpg",
-  zerzevan:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Zerzevan_Kalesi_Kilise.jpg/1280px-Zerzevan_Kalesi_Kilise.jpg",
-  "kayseri-sultanhani":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sultanhan%C4%B1_%28Kayseri%29_-1.jpg/1280px-Sultanhan%C4%B1_%28Kayseri%29_-1.jpg",
-  "cinci-hani":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Safranbolu_Cinci_Han_in_2006_8106.jpg/1280px-Safranbolu_Cinci_Han_in_2006_8106.jpg",
-  cobandede:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/%C3%87obandede_K%C3%B6pr%C3%BCs%C3%BC.jpg/1280px-%C3%87obandede_K%C3%B6pr%C3%BCs%C3%BC.jpg",
-  "uc-kumbetler":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Three_tombs_-_%C3%9C%C3%A7_k%C3%BCmbetler_04.jpg/1280px-Three_tombs_-_%C3%9C%C3%A7_k%C3%BCmbetler_04.jpg",
-  birgi:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Birgi_ve_tarihi_ta%C5%9F_evler_9.jpg/1280px-Birgi_ve_tarihi_ta%C5%9F_evler_9.jpg",
-  kula: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Kula_stone_house_2.jpg/1280px-Kula_stone_house_2.jpg",
+    "3/31/GREEN_MOSQUE-YE%C5%9E%C4%B0L_CAM%C4%B0-BURSA_-_panoramio_-_HALUK_COMERTEL.jpg|1280",
+  "cifte-minareli-medrese": "d/d7/Twin_Minaret_Madrasah_-_%C3%87ifte_Minareli_Medrese_01.jpg|1280",
+  "gok-medrese": "3/3a/G%C3%B6k_medrese_-_Sivas_-_Turquie.jpg|1280",
+  "sifaiye-medresesi": "8/87/%C5%9Eifaiye_Medrese_at_tomb_%28Sivas%29_in_2011_8263.jpg|1280",
+  "gevher-nesibe": "d/d9/Gevher_Nesibe_Medrese_%28Cifte_Medrese%29_DSCF1179.jpg|1280",
+  "edirne-sarayi": "d/dc/Adalet_kasr%C4%B1.png|1280",
+  "silifke-kalesi": "2/24/Silifke_castle_exterior_in_2006_2119.jpg|1280",
+  zerzevan: "4/45/Zerzevan_Kalesi_Kilise.jpg|1280",
+  "kayseri-sultanhani": "4/41/Sultanhan%C4%B1_%28Kayseri%29_-1.jpg|1280",
+  "cinci-hani": "e/e3/Safranbolu_Cinci_Han_in_2006_8106.jpg|1280",
+  cobandede: "b/be/%C3%87obandede_K%C3%B6pr%C3%BCs%C3%BC.jpg|1280",
+  "uc-kumbetler": "a/a5/Three_tombs_-_%C3%9C%C3%A7_k%C3%BCmbetler_04.jpg|1280",
+  birgi: "a/ac/Birgi_ve_tarihi_ta%C5%9F_evler_9.jpg|1280",
+  kula: "5/51/Kula_stone_house_2.jpg|1280",
   "yilanli-sutun":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Colonna_serpentina%2C_gi%C3%A0_tripode_in_bronzo_dal_santuario_di_apollo_a_delfi%2C_478_ac._05_base.jpg/1280px-Colonna_serpentina%2C_gi%C3%A0_tripode_in_bronzo_dal_santuario_di_apollo_a_delfi%2C_478_ac._05_base.jpg",
+    "8/87/Colonna_serpentina%2C_gi%C3%A0_tripode_in_bronzo_dal_santuario_di_apollo_a_delfi%2C_478_ac._05_base.jpg|1280",
   "bursa-turk-islam-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bursa_T%C3%BCrk_%C4%B0slam_Eserleri_M%C3%BCzesi_Building_2006_0090.jpg/1280px-Bursa_T%C3%BCrk_%C4%B0slam_Eserleri_M%C3%BCzesi_Building_2006_0090.jpg",
-  "amasra-kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/2009_in_Amasra_01.jpg/1280px-2009_in_Amasra_01.jpg",
-  "sanliurfa-kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Urfa_%28hist._Edessa%29_%2825572197287%29.jpg/1280px-Urfa_%28hist._Edessa%29_%2825572197287%29.jpg",
+    "7/75/Bursa_T%C3%BCrk_%C4%B0slam_Eserleri_M%C3%BCzesi_Building_2006_0090.jpg|1280",
+  "amasra-kalesi": "f/fa/2009_in_Amasra_01.jpg|1280",
+  "sanliurfa-kalesi": "e/e3/Urfa_%28hist._Edessa%29_%2825572197287%29.jpg|1280",
   "karatay-han":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Karatay_Han_%28B%C3%BCnyan%C4%B1%29%2C_Blick_vom_Dach_nach_Norden_mit_Laternenturm.jpg/1280px-Karatay_Han_%28B%C3%BCnyan%C4%B1%29%2C_Blick_vom_Dach_nach_Norden_mit_Laternenturm.jpg",
-  "adana-taskopru":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Adana_banner_Stone_Bridge.jpg/1280px-Adana_banner_Stone_Bridge.jpg",
+    "1/13/Karatay_Han_%28B%C3%BCnyan%C4%B1%29%2C_Blick_vom_Dach_nach_Norden_mit_Laternenturm.jpg|1280",
+  "adana-taskopru": "a/aa/Adana_banner_Stone_Bridge.jpg|1280",
   "osmangazi-turbesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_02.jpg/1280px-Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_02.jpg",
-  "adiyaman-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Museum_Ad%C4%B1yaman_Au%C3%9Fenansicht.jpg/1280px-Museum_Ad%C4%B1yaman_Au%C3%9Fenansicht.jpg",
-  "alara-han":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/The_top_Alara_Han_-_panoramio.jpg/1280px-The_top_Alara_Han_-_panoramio.jpg",
-  kremna:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Kremna_ruins_vista_May_2013.jpg/1280px-Kremna_ruins_vista_May_2013.jpg",
-  "tripolis-meander":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Tripolis_on_the_Meander%2C_Lydia%2C_Turkey_%2819492900512%29.jpg/1280px-Tripolis_on_the_Meander%2C_Lydia%2C_Turkey_%2819492900512%29.jpg",
-  "sivrihisar-ulu-cami":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Sivrihisar_Ulu_Camii_2041.jpg/1280px-Sivrihisar_Ulu_Camii_2041.jpg",
-  "ince-minareli-medrese":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Ince_minare_arka_cephesi_may%C4%B1s_2022.jpg/1280px-Ince_minare_arka_cephesi_may%C4%B1s_2022.jpg",
-  "yildiz-sarayi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Y%C4%B1ld%C4%B1z_palace_and_park_%C5%9Eale_Kiosk_in_2014_8169.jpg/1280px-Y%C4%B1ld%C4%B1z_palace_and_park_%C5%9Eale_Kiosk_in_2014_8169.jpg",
-  "erzurum-kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Erzurum%2C_la_cittadella%2C_02.jpg/1280px-Erzurum%2C_la_cittadella%2C_02.jpg",
-  "aspendos-su-kemeri":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Aspendos_Aqueduct_3313.jpg/1280px-Aspendos_Aqueduct_3313.jpg",
-  goynuk:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/A_view_from_G%C3%B6yn%C3%BCk%2C_Bolu.jpg/1280px-A_view_from_G%C3%B6yn%C3%BCk%2C_Bolu.jpg",
-  "afyon-muzesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Byzantine_capital_with_birds_drinking_%28Afyon_Museum%29.jpg/1280px-Byzantine_capital_with_birds_drinking_%28Afyon_Museum%29.jpg",
-  fildami:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Fildami_sarn%C4%B1c%C4%B13.jpg/1280px-Fildami_sarn%C4%B1c%C4%B13.jpg",
+    "b/ba/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_02.jpg|1280",
+  "adiyaman-muzesi": "b/b2/Museum_Ad%C4%B1yaman_Au%C3%9Fenansicht.jpg|1280",
+  "alara-han": "c/c9/The_top_Alara_Han_-_panoramio.jpg|1280",
+  kremna: "4/47/Kremna_ruins_vista_May_2013.jpg|1280",
+  "tripolis-meander": "c/ce/Tripolis_on_the_Meander%2C_Lydia%2C_Turkey_%2819492900512%29.jpg|1280",
+  "sivrihisar-ulu-cami": "f/fc/Sivrihisar_Ulu_Camii_2041.jpg|1280",
+  "ince-minareli-medrese": "c/ce/Ince_minare_arka_cephesi_may%C4%B1s_2022.jpg|1280",
+  "yildiz-sarayi": "d/db/Y%C4%B1ld%C4%B1z_palace_and_park_%C5%9Eale_Kiosk_in_2014_8169.jpg|1280",
+  "erzurum-kalesi": "a/ac/Erzurum%2C_la_cittadella%2C_02.jpg|1280",
+  "aspendos-su-kemeri": "a/a4/Aspendos_Aqueduct_3313.jpg|1280",
+  goynuk: "e/eb/A_view_from_G%C3%B6yn%C3%BCk%2C_Bolu.jpg|1280",
+  "afyon-muzesi": "f/fc/Byzantine_capital_with_birds_drinking_%28Afyon_Museum%29.jpg|1280",
+  fildami: "a/a7/Fildami_sarn%C4%B1c%C4%B13.jpg|1280",
 };
+
+function expandPhoto(ref: string): string {
+  if (ref.startsWith("https://")) return ref;
+  const [dirs, width] = ref.split("|");
+  const file = dirs!.slice(dirs!.lastIndexOf("/") + 1);
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${dirs}/${width}px-${file}`;
+}
+
+/** Full Commons URLs per site; falls back to the region image when absent. */
+export const sitePhoto: Partial<Record<string, string>> = Object.fromEntries(
+  Object.entries(photoRef).map(([slug, ref]) => [slug, expandPhoto(ref!)]),
+);
+
+/**
+ * The vocabulary drifted as the data grew: "Frig" and "Frigya" both appeared,
+ * so did "Karia" and "Karya", "Troya" and "Truva". Each pair split one concept
+ * into two filter options that each matched a fraction of the sites, and
+ * nothing on screen showed that anything was wrong.
+ *
+ * Rather than rewrite the entries — where the words are also the author's own
+ * — the aliases are folded in at construction, so `sites` always exposes the
+ * canonical spelling and the filter always offers one option per civilisation.
+ */
+const CIVILIZATION_ALIASES: Record<string, string> = {
+  Frigya: "Frig",
+  Karya: "Karia",
+  Truva: "Troya",
+  "Pers (Ahameniş)": "Pers",
+  "Geç Hitit (Aram)": "Geç Hitit",
+  Ermeni: "Ermeni Krallığı",
+  Galatya: "Galat",
+  // Regional and tribal labels for what the filter already calls Greek.
+  "Megara (Yunan)": "Yunan",
+  "Miletos kolonisi": "Yunan",
+  "Klasik dönem": "Yunan",
+  Troas: "Yunan",
+  Dor: "Yunan",
+  Aiol: "Yunan",
+};
+
+/**
+ * Too vague to filter on. Every entry that used one of these also names
+ * something specific, so dropping them costs no information.
+ */
+const CIVILIZATION_DROP = new Set(["Anadolu", "Beylikler"]);
+
+function canonicalCivilizations(input: readonly string[]): string[] {
+  const out: string[] = [];
+  for (const raw of input) {
+    const name = CIVILIZATION_ALIASES[raw] ?? raw;
+    if (CIVILIZATION_DROP.has(name)) continue;
+    if (!out.includes(name)) out.push(name);
+  }
+  return out;
+}
 
 const s = (
   slug: string,
@@ -807,7 +618,7 @@ const s = (
   province: { tr: provTr, en: provEn },
   lat,
   lng,
-  civilizations,
+  civilizations: canonicalCivilizations(civilizations),
   era: { tr: eraTr, en: eraEn },
   unesco,
   fee,
@@ -847,6 +658,7 @@ const h = (input: {
   unesco: "none",
   figures: [],
   ...input,
+  civilizations: canonicalCivilizations(input.civilizations),
 });
 
 export const sites: Site[] = [
@@ -2270,7 +2082,7 @@ export const sites: Site[] = [
     ["Çanak Çömleksiz Neolitik"],
     "MÖ 10. binyıl",
     "10th millennium BC",
-    "listed",
+    "tentative",
     200,
     "Göbeklitepe'nin 'kardeş alanı' olarak bilinen, T biçimli dikilitaşları ve heykelleriyle Şanlıurfa'daki Çanak Çömleksiz Neolitik kutsal alan.",
     "A pre-pottery Neolithic sanctuary in Şanlıurfa, known as Göbekli Tepe's 'sister site' for its T-shaped pillars and sculptures.",
@@ -2812,7 +2624,7 @@ export const sites: Site[] = [
     province: { tr: "Antalya", en: "Antalya" },
     lat: 37.0806,
     lng: 30.5697,
-    civilizations: ["Paleolitik", "Neolitik", "Klasik dönem"],
+    civilizations: ["Paleolitik", "Neolitik", "Yunan"],
     era: { tr: "Yaklaşık 500.000 yıl önce", en: "About 500,000 years ago" },
     unesco: "tentative",
     summary: {
@@ -3259,7 +3071,7 @@ export const sites: Site[] = [
     province: { tr: "Konya", en: "Konya" },
     lat: 37.6789,
     lng: 31.725,
-    civilizations: ["Beylikler", "Eşrefoğulları"],
+    civilizations: ["Eşrefoğulları"],
     era: { tr: "1297-1299", en: "1297–1299" },
     unesco: "listed",
     fee: 0,
@@ -4574,6 +4386,7 @@ export const sites: Site[] = [
     lng: 27.3339,
     civilizations: ["Bizans", "Roma"],
     era: { tr: "MS 1. yüzyıl (temeller)", en: "1st century AD (foundations)" },
+    unesco: "listed",
     summary: {
       tr: "Bülbüldağı'nda, Meryem'in son yıllarını geçirdiğine inanılan taş ev; papalar tarafından ziyaret edilen ve hem Hristiyanların hem Müslümanların geldiği bir hac yeri.",
       en: "A stone house on Bülbüldağı held to be where Mary spent her last years — visited by popes, and a place of pilgrimage for Christians and Muslims alike.",
@@ -4696,7 +4509,6 @@ export const sites: Site[] = [
     lng: 28.97,
     civilizations: ["Osmanlı"],
     era: { tr: "1561-1563", en: "1561–1563" },
-    unesco: "listed",
     fee: 0,
     summary: {
       tr: "Mimar Sinan'ın Eminönü çarşısının üzerine kurduğu cami; iç ve dış yüzeylerini kaplayan İznik çinileri, hiçbir Osmanlı yapısında bu yoğunlukta görülmez.",
@@ -5020,7 +4832,7 @@ export const sites: Site[] = [
     province: { tr: "İstanbul", en: "İstanbul" },
     lat: 41.1697,
     lng: 29.0631,
-    civilizations: ["Anadolu", "Osmanlı", "Roma", "Bizans"],
+    civilizations: ["Osmanlı", "Roma", "Bizans"],
     era: { tr: "1980'de açıldı", en: "Opened 1980" },
     summary: {
       tr: "Türkiye'nin ilk özel müzesi; Büyükdere'deki iki yalıdan biri Anadolu arkeolojisine, diğeri Osmanlı el sanatlarına ayrılmıştır.",
@@ -5867,8 +5679,8 @@ export const sites: Site[] = [
     heritageType: "bridge",
     region: "karadeniz",
     province: { tr: "Çorum", en: "Çorum" },
-    lat: 40.55,
-    lng: 34.9539,
+    lat: 40.9703,
+    lng: 34.8006,
     civilizations: ["Osmanlı"],
     era: { tr: "1489", en: "1489" },
     fee: 0,
@@ -5883,7 +5695,7 @@ export const sites: Site[] = [
     name: { tr: "Kurşunlugerme", en: "Kurşunlugerme Aqueduct" },
     heritageType: "aqueduct",
     region: "marmara",
-    province: { tr: "İstanbul", en: "İstanbul" },
+    province: { tr: "Kırklareli", en: "Kırklareli" },
     lat: 41.5736,
     lng: 27.7653,
     civilizations: ["Roma", "Bizans"],
@@ -6150,6 +5962,161 @@ export function sitesByRegion(region: RegionId) {
   return sites.filter((x) => x.region === region);
 }
 
+/**
+ * The vocabulary the data is allowed to use.
+ *
+ * Kept as a literal rather than derived from `sites`, because the point is to
+ * fail when a new entry invents a spelling: a typo would otherwise appear in
+ * the filter as its own option matching exactly one place, which looks like a
+ * category rather than a mistake. A test asserts the list and the data agree
+ * in both directions.
+ */
+/**
+ * Which UNESCO inscription each `unesco: "listed"` site belongs to.
+ *
+ * Türkiye has twenty-odd inscriptions but far more listed places, because one
+ * inscription covers many: the Historic Areas of Istanbul take in Hagia
+ * Sophia, Topkapı, the cisterns and the Hippodrome monuments alike, and the
+ * Wooden Hypostyle Mosques are five buildings in five provinces. Writing the
+ * inscription down per site turns "is this really World Heritage?" — the
+ * easiest claim on the site to falsify — into something a test can check.
+ *
+ * Checked against Wikidata's mirror of the official list. Two errors it caught:
+ * Karahantepe was marked listed although only Göbekli Tepe is inscribed, and
+ * Rüstem Paşa was marked listed although it stands outside the four core zones
+ * of the Istanbul property.
+ */
+export const WORLD_HERITAGE: Record<string, string> = {
+  efes: "Ephesus",
+  "aziz-yuhanna": "Ephesus",
+  "meryem-ana-evi": "Ephesus",
+  pergamon: "Pergamon and its Multi-Layered Cultural Landscape",
+  aphrodisias: "Aphrodisias",
+  hierapolis: "Hierapolis-Pamukkale",
+  xanthos: "Xanthos-Letoon",
+  letoon: "Xanthos-Letoon",
+  troya: "Troy",
+  gordion: "Gordion",
+  catalhoyuk: "Çatalhöyük",
+  hattusa: "Hattusha: the Hittite Capital",
+  yazilikaya: "Hattusha: the Hittite Capital",
+  gobeklitepe: "Göbekli Tepe",
+  nemrut: "Mount Nemrut",
+  ani: "Ani",
+  arslantepe: "Arslantepe",
+  selimiye: "Selimiye Mosque",
+  divrigi: "Divriği Great Mosque and Hospital",
+  "diyarbakir-surlari": "Diyarbakır Fortress and Hevsel Gardens",
+  safranbolu: "City of Safranbolu",
+  "cinci-hani": "City of Safranbolu",
+  goreme: "Göreme National Park and the Rock Sites of Cappadocia",
+  derinkuyu: "Göreme National Park and the Rock Sites of Cappadocia",
+  kaymakli: "Göreme National Park and the Rock Sites of Cappadocia",
+  zelve: "Göreme National Park and the Rock Sites of Cappadocia",
+  soganli: "Göreme National Park and the Rock Sites of Cappadocia",
+  ayasofya: "Historic Areas of Istanbul",
+  "aya-irini": "Historic Areas of Istanbul",
+  kariye: "Historic Areas of Istanbul",
+  suleymaniye: "Historic Areas of Istanbul",
+  topkapi: "Historic Areas of Istanbul",
+  "sultanahmet-camii": "Historic Areas of Istanbul",
+  "bozdogan-kemeri": "Historic Areas of Istanbul",
+  "yerebatan-sarnici": "Historic Areas of Istanbul",
+  binbirdirek: "Historic Areas of Istanbul",
+  "serefiye-sarnici": "Historic Areas of Istanbul",
+  yedikule: "Historic Areas of Istanbul",
+  dikilitas: "Historic Areas of Istanbul",
+  "yilanli-sutun": "Historic Areas of Istanbul",
+  cemberlitas: "Historic Areas of Istanbul",
+  cumalikizik: "Bursa and Cumalıkızık: the Birth of the Ottoman Empire",
+  "bursa-ulu-cami": "Bursa and Cumalıkızık: the Birth of the Ottoman Empire",
+  "yesil-turbe": "Bursa and Cumalıkızık: the Birth of the Ottoman Empire",
+  "yesil-cami": "Bursa and Cumalıkızık: the Birth of the Ottoman Empire",
+  "osmangazi-turbesi": "Bursa and Cumalıkızık: the Birth of the Ottoman Empire",
+  "esrefoglu-cami": "Wooden Hypostyle Mosques of Medieval Anatolia",
+  "mahmut-bey-camii": "Wooden Hypostyle Mosques of Medieval Anatolia",
+  "sivrihisar-ulu-cami": "Wooden Hypostyle Mosques of Medieval Anatolia",
+  "afyon-ulu-cami": "Wooden Hypostyle Mosques of Medieval Anatolia",
+  "arslanhane-camii": "Wooden Hypostyle Mosques of Medieval Anatolia",
+};
+
+export const CIVILIZATIONS: readonly string[] = [
+  "Abbasi",
+  "Abgar (Osroene)",
+  "Ahi",
+  "Akkoyunlu",
+  "Amik Krallığı",
+  "Amurru",
+  "Artuklu",
+  "Arzawa",
+  "Asur",
+  "Aydınoğulları",
+  "Babil",
+  "Bagratlı",
+  "Bitinya",
+  "Bizans",
+  "Candaroğulları",
+  "Ceneviz",
+  "Cumhuriyet",
+  "Çanak Çömleksiz Neolitik",
+  "Emevi",
+  "Epipaleolitik",
+  "Ermeni Krallığı",
+  "Eşrefoğulları",
+  "Eyyubi",
+  "Fenike",
+  "Frig",
+  "Galat",
+  "Geç Hitit",
+  "Germiyanoğulları",
+  "Haçlı",
+  "Halaf",
+  "Hatti",
+  "Helenistik",
+  "Hitit",
+  "İlhanlı",
+  "İon",
+  "Kalkolitik",
+  "Kapadokya",
+  "Karakoyunlu",
+  "Karamanoğulları",
+  "Karia",
+  "Kommagene",
+  "Lidya",
+  "Likya",
+  "Memlük",
+  "Mengücekli",
+  "Menteşeoğulları",
+  "Mezopotamya",
+  "Mısır",
+  "Miken",
+  "Mitanni",
+  "Neolitik",
+  "Osmanlı",
+  "Paflagonya",
+  "Paleolitik",
+  "Pamfilya",
+  "Pers",
+  "Pisidya",
+  "Pontus",
+  "Rodos",
+  "Roma",
+  "Rum",
+  "Rus",
+  "Saltuklu",
+  "Selçuklu",
+  "Seleukos",
+  "Süryani",
+  "Trabzon İmparatorluğu",
+  "Trak",
+  "Troya",
+  "Tunç Çağı",
+  "Urartu",
+  "Uruk",
+  "Vaspurakan Krallığı",
+  "Yunan",
+];
+
 export function allCivilizations() {
   return Array.from(new Set(sites.flatMap((x) => x.civilizations))).sort((a, b) =>
     a.localeCompare(b, "tr"),
@@ -6170,10 +6137,4 @@ export function distanceKm(aLat: number, aLng: number, bLat: number, bLng: numbe
     Math.sin(dLat / 2) ** 2 +
     Math.cos((aLat * Math.PI) / 180) * Math.cos((bLat * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
   return Math.round(2 * R * Math.asin(Math.sqrt(h)));
-}
-
-/** Deterministic "site of the day" so every visitor sees the same pick. */
-export function siteOfTheDay(date = new Date()) {
-  const dayIndex = Math.floor(date.getTime() / 86_400_000);
-  return sites[dayIndex % sites.length] as Site;
 }

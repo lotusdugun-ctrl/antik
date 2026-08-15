@@ -4340,6 +4340,763 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC0",
     licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
   },
+  "Monnaie_-_Hémidrachme,_Argent,_Parion,_Mysie_-_btv1b8501473w_(1_of_2).jpg": {
+    author: "Parion (Mysie ; atelier monétaire). Atelier monétaire",
+    license: "Public domain",
+  },
+  "Monnaie_-_Hémidrachme,_Argent,_Parion,_Mysie_-_btv1b8501473w_(2_of_2).jpg": {
+    author: "Parion (Mysie ; atelier monétaire). Atelier monétaire",
+    license: "Public domain",
+  },
+  "20131205_Istanbul_031.jpg": {
+    author: "Mark Ahsmann",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "20131205_Istanbul_111.jpg": {
+    author: "Mark Ahsmann",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "20131205_Istanbul_110.jpg": {
+    author: "Mark Ahsmann",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  '"Bow-tie"_diagram_of_components_in_a_directed_network.jpg': {
+    author: "Newman, Mark E. J.",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "(Rock_in_den_Ruinen_2013)_IMGP2509_smial_wp.jpg": {
+    author: "Smial (talk)",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "(Rock_in_den_Ruinen_2013)_IMGP2891_smial_wp.jpg": {
+    author: "Smial (talk)",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "!Качкі_на_Лебядзіным_ставе_(Беларусь,_2020_г.).jpg": {
+    author: "W",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "!Лебядзіны_заказьнік_(Беларусь,_2020_г.).jpg": {
+    author: "W",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "!MQ_DSF9592-EnhancedAnd2more_fused_1.jpg": {
+    author: "Moahim",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "1962_Impala_in_Turkish_wedding.jpg": {
+    author: "Dennis G. Jarvis",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Fehime_Sultan_Yalısı,_Ortaköy.jpg": {
+    author: "Dennis G. Jarvis",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Rumeli_Castle.jpg": {
+    author: "Dennis G. Jarvis",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Alayhan,_April_2024_02.jpg": {
+    author: "Calistemon",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Alayhan,_April_2024_03.jpg": {
+    author: "Calistemon",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Alayhan,_April_2024_01.jpg": {
+    author: "Calistemon",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  '"13_-_Italian_supercar_-_ALFA_ROMEO_4C_exotic_light_dreamcar_-_pure_white.jpg': {
+    author: "Pava, Milan Noebu (original work: CC-BY-3.0)",
+    license: "CC BY-SA 3.0 it",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0/it/deed.en",
+  },
+  '"Agamemnon"_2008_Studiobühne_Siegburg_(bearbeitet).jpg': {
+    author:
+      '"Agamemnon"_2008_Studiobühne_Siegburg.jpg: Schauspielschule Siegburg derivative work: M(e)ister Eiskalt',
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  '"America_at_War"_-_US_Marine_Corps_Raiders_1942_(enhanced).jpg': {
+    author: "Unknown authorUnknown author or not provided",
+    license: "Public domain",
+  },
+  "Döner_Kümbet_033.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Döner_Kümbet_036.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Döner_Kümbet_041.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "20241003_Kuğulu_Parkta_çeşme.jpg": {
+    author: "Basak",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "Anıtkabir,_Ankara,_Turquía,_2024-10-03,_DD_03.jpg": {
+    author: "Diego Delso",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Anıtkabir,_Ankara,_Turquía,_2024-10-03,_DD_02.jpg": {
+    author: "Diego Delso",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Alanya_-_mestská_scenéria.JPG": {
+    author: "Ladislav Luppa",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Alanya_-_mestská_scenéria_(1).JPG": {
+    author: "Ladislav Luppa",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "A_view_from_Alanya_castle_to_Alanya_-_panoramio.jpg": {
+    author: "Haluk Comertel",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "GÖMEÇ_KALESİ_-_kule-kız_kalesi.MERSİN_-_panoramio.jpg": {
+    author: "HALUK COMERTEL",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "KilKızkalesi01.jpg": {
+    author: "Ziegler175",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "KilKızkalesi03.jpg": {
+    author: "Ziegler175",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Turkey,_Istanbul,_Museum_of_Turkish_and_Islamic_Art_(Ibrahim_Pasha_Palace)_(3944731567).jpg": {
+    author: "Dave Proffer",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Türk_ve_İslam_Eserleri_Müzesi_-_panoramio.jpg": {
+    author: "Mister No",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Türk_ve_İslam_Eserleri_Müzesi.jpg": {
+    author: "Cobija",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Büyük_Saray_Mozaikleri_Müzesi_W_(3).jpg": {
+    author: "Canercangul",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Istanbul_Mosaic_Museum_Sector_B_Deer_in_2016_02_1626.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Istanbul_Mosaic_Museum_Sector_B_General_view_in_2017_05_2522.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Izmir_Archeology_Museum.jpg": {
+    author: "User:Quintucket",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Grave_Goods,_Stone_Jewellery,_Boncuklu_Tarla,_Ilisu_Dam,_Mardin_Museum,_Turkey_(2).jpg": {
+    author: "tobeytravels",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Grave_Goods,_Stone_Jewellery,_Boncuklu_Tarla,_Ilisu_Dam,_Mardin_Museum,_Turkey_(1).jpg": {
+    author: "tobeytravels",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mardin_Museum_Exterior_fragments_in_the_open_air_in_2025_1053.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Periodo_urartiano,_due_stele_con_iscrizioni_cuneiforme,_755-730_ac_ca.jpg": {
+    author: "Francesco Bini",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Periodo_urartiano,_frammento_con_iscrizione_cuneiforme,_820-780_ac_ca._01.jpg": {
+    author: "Francesco Bini",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Periodo_urartiano,_frammento_con_iscrizione_cuneiforme,_820-780_ac_ca._02.jpg": {
+    author: "Francesco Bini",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Amasya_Museum_01.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Amasya_Museum_02.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Hacıbaba_-_panoramio_(1).jpg": {
+    author: "abdullah ünlü",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Hacıbaba_-_panoramio_(2).jpg": {
+    author: "abdullah ünlü",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Eşşek_dağının_arkası_-_panoramio.jpg": {
+    author: "abdullah ünlü",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Aphrodisias_2013-03-27o.jpg": {
+    author: "Rabe!",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Aphrodisias_Museum_4354.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kütahya_Ceramics_Museum_tile_8976.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kütahya_Ceramics_Museum_tile_107.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kütahya_Ceramics_Museum_tile_106.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Geyik_parçalayan_aslanlar,_Sinop.JPG": {
+    author: "Basak",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sinop_Arch_Mus_93_098.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sinop_Arch_Mus_93_097.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Genç_Atlet_Heykeli_bilgi_tabelası.jpg": {
+    author: "𐰇𐱅𐰚𐰤",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Fazıl_Ahmet_Paşa_Medresesi_maketi.jpg": {
+    author: "𐰇𐱅𐰚𐰤",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Genç_Atlet_Heykeli_ve_tabelası.jpg": {
+    author: "𐰇𐱅𐰚𐰤",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Decorated_vessels,_Körtik_Tepe,_10,400-9250_BCE,_Diyarbakır_Archaeology_Museum.jpg": {
+    author: "- Ozymandias -",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Decorated_vessels,_10,400-9250_BCE,_Diyarbakır_Archaeology_Museum_(2).jpg": {
+    author: "- Ozymandias -",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Figured_Ritual-Stone_Plaques,_Pre-Pottery_Neolithic,_Körtik_Tepe,_10,400-9250_BCE.jpg": {
+    author: "- Ozymandias -",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "20141231_154016-Hacibayram.jpg": {
+    author: "Kafkasmurat",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Wild_boar,_mural,_6th_millennium_BC,_MACA,_99002.jpg": {
+    author: "Zde",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mağlova_Aquaduct_3.jpg": {
+    author: "Canercangul",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mağlova_Aquaduct_2.jpg": {
+    author: "Canercangul",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mağlova_Aquaduct_5.jpg": {
+    author: "Canercangul",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Binbirdirek_Sarnıcı_10.jpg": {
+    author: "İlaydaozcan",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Binbirdirek_Sarnıcı_5.jpg": {
+    author: "İlaydaozcan",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Canal_proposed_by_Pliny_the_Younger._Reconstruction_attempt_from_1818.jpg": {
+    author: "v. Hammer",
+    license: "Public domain",
+  },
+  "Beş_Köprü_Sakarya_-_panoramio.jpg": {
+    author: "fatihset",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Sangarius_Bridge,_a_430_m_late_Roman_bridge_over_the_river_Sangarius_built_by_the_East_Roman_Emperor_Justinian_I_to_improve_communications_between_the_capital_Constantinople_and_the_eastern_provinces_of_his_empire,_Turkey_(25183970237).jpg":
+    {
+      author: "Carole Raddato from Frankfurt, Germany",
+      license: "CC BY-SA 2.0",
+      licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+    },
+  "Uzun_köprü_(1).jpg": {
+    author: "CeeGee",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Uzun_köprü_(2).jpg": {
+    author: "CeeGee",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Uzun_köprü_(3).jpg": {
+    author: "CeeGee",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "!No_Pasaran!-Konferenz_-_51947633373.jpg": {
+    author: "DIE LINKE",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  '"_14_-_ITALY_-_500_Abarth_TFT_-_Speedometers_dashboards_driving_stand_cockpits_Automobile_gauges.JPG':
+    {
+      author: "Jacapa090",
+      license: "Public domain",
+    },
+  "!No_Pasaran!-Konferenz_-_51948554900.jpg": {
+    author: "DIE LINKE",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Istanbul_asv2021-11_img57_Yedikule.jpg": {
+    author: "A.Savin",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "Istanbul_asv2021-11_img59_Yedikule.jpg": {
+    author: "A.Savin",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "Istanbul_asv2021-11_img60_Yedikule.jpg": {
+    author: "A.Savin",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "Alahan_04.jpg": {
+    author: "Ana al'ain",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Alahan_26.jpg": {
+    author: "Ana al'ain",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Alahan_27.jpg": {
+    author: "Ana al'ain",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "ALAADDİN_CAMİİ_-Konya_-_panoramio.jpg": {
+    author: "HALUK COMERTEL",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Alaattin_Cami_-_panoramio.jpg": {
+    author: "Hüseyin Öcal",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Yesemek_03.jpg": {
+    author: "Orhan Erkılıç",
+    license: "Public domain",
+  },
+  "Yesemek_01.jpg": {
+    author: "Orhan Erkılıç",
+    license: "Public domain",
+  },
+  "Yesemek_02.jpg": {
+    author: "Orhan Erkılıç",
+    license: "Public domain",
+  },
+  "029.Odeon_Ephesos.JPG": {
+    author: "Magdalena Siudy (Freta)",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/",
+  },
+  "20131207_Istanbul_042.jpg": {
+    author: "Mark Ahsmann",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "10800_Hasanlar-Dursunbey-Balıkesir,_Turkey_-_panoramio_(10).jpg": {
+    author: "senol_candir",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Kahramanmaras_Museum_Archäologie.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Kahramanmaras_Museum_Eingang.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Sillyon_Byzantine_building_in_2015_5430.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sillyon_Hellenist_building_in_2015_5431.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Malatya_museum_2000-1750_BC_pot_2026.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Malatya_museum_3300-3000_BC_lock_reconstruction_2036.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Malatya_museum_ancient_swords_and_daggers_2017.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gök_Medrese_closeup.jpg": {
+    author: "Kafka Liz",
+    license: "Public domain",
+  },
+  "Tokat_banner_Tiles.jpg": {
+    author: "Kafka Liz",
+    license: "Public domain",
+  },
+  "Tokat_Gök_Medrese_079.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "BlaundosFachwerk.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Blaundos_-_1.jpg": {
+    author: "Didier Laroche",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Blaundos_Antik_Kenti_-_Uşak_2.jpg": {
+    author: "Hamdigumus",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "Orpheus_Fountain_in_Tripolis,_Turkey.jpg": {
+    author: "Jarekadam",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Mosaic_floor_in_Tripolis_on_the_Meander-2.jpg": {
+    author: "Alexey Komarov",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mosaic_floor_in_Tripolis_on_the_Meander-1.jpg": {
+    author: "Alexey Komarov",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Bafa_Lake_donkey.jpg": {
+    author: "Simone",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Bafa_Gölü_1.JPG": {
+    author: "Elelicht",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Bafa_Gölünde_Kaya_Mezarları.jpg": {
+    author: "Yiğit Can GÜNÖNÜ",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Selge_photo_2003-12-28_01-04_Türkei_099.jpg": {
+    author: "Allie_Caulfield from Germany",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Selge_2003-12-28_01-04_Türkei_100.jpg": {
+    author: "Allie_Caulfield from Germany",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Selge_panorama.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Lagina_Temple_of_Hekate_in_1857_(Newton_1862,_pl_78).jpg": {
+    author: "Thomas Ashburton Picken",
+    license: "Public domain",
+  },
+  "Lagina_Temple_of_Hekate_in_1991_01.jpg": {
+    author: "Mark Landon",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0",
+  },
+  "Lagina_altar_in_1991.jpg": {
+    author: "Mark Landon",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0",
+  },
+  "Hierapolis_Archaeology_Museum,_Turkey_(31595603333).jpg": {
+    author: "Carole Raddato from FRANKFURT, Germany",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Hierapolis_Archaeology_Museum,_Turkey_(31595609673).jpg": {
+    author: "Carole Raddato from FRANKFURT, Germany",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "2013-01-02_Istanbul_88.jpg": {
+    author: "Maksym Kozlenko",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "2016_2013-01-02_Istanbul_22.jpg": {
+    author: "Maksym Kozlenko",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "2016_2013-01-02_Istanbul_26.jpg": {
+    author: "Maksym Kozlenko",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Dam_of_Doyran_in_City_of_Antalya.jpg": {
+    author: "Leyla kılınç",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gumusler_Monastery_Main_apse_1166.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Basilica_st_John.jpg": {
+    author: "Mariusz.stepien",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Saint_John's_Basilica,_Seljuk.jpg": {
+    author: "Hugh Llewelyn",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Basilica_of_St._John_2.jpg": {
+    author: "Satirdan kahraman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Yeşil_Cami_Dış_Görünüş.jpg": {
+    author: "Drmuratkaya",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "GREEN_MOSQUE-YEŞİL_CAMİ-BURSA_-_panoramio.jpg": {
+    author: "Haluk Comertel",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "2015_06_16_Ramadan_Preparations-11_(18894790031).jpg": {
+    author: "AMISOM Public Information",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "Athens,_Former_Medrese_in_the_Ancient_Roman_Agora.JPG": {
+    author: "Palickap",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Celestial_Medresah_-_Gökmedrese,_Sivas.jpg": {
+    author: "R. Iclal Turan",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Gökmedrese_-_Oymalar_(giriş_kapısı_üzeri).jpg": {
+    author: "Buzancar",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sifaiye_Medrese_DSCF1832.jpg": {
+    author: "R Prazeres",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sifaiye_Medrese_DSCF1834.jpg": {
+    author: "R Prazeres",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "2009_in_Amasra_02.jpg": {
+    author: "Gargarapalvin",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0",
+  },
+  "2009_in_Amasra_04.jpg": {
+    author: "Gargarapalvin",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0",
+  },
+  "Balıklıgöl_park_077.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Balıklıgöl_park_076.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Balıklıgöl_park_075.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  '"On_est_vieux_Jamais_versez_Apprendre,_Chaque_Jour_oreille_va_à_l\'école"_(12769114505).jpg': {
+    author: "Toujours Passages",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "'s-hertogenbosch,_complesso_di_case_del_1911,_00.jpg": {
+    author: "Sailko",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "'s-hertogenbosch,_complesso_di_case_del_1911,_03.jpg": {
+    author: "Sailko",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Aegean_Turkey_banner.jpg": {
+    author: "Pamukkale.jpg: CherryX derivative work: Inkey",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Abant_banner.jpg": {
+    author: "Acar54",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "145M_TAKSİM-ESENYURT-BEYKENT_express_otobüsü_-_panoramio.jpg": {
+    author: "buzkozan",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "29_Haziran_2013_Ferit-Ceyla_Odman_Nikah_Kokteyli_-_panoramio_(6).jpg": {
+    author: "ILIE TROHIN",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  '"Cross".jpg': {
+    author: '"Geralt", Pixabay user',
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "2024_Tokyo_Summerland.jpg": {
+    author: "Syced",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "2024_Tokyo_Summerland_2.jpg": {
+    author: "Syced",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "2024_Tokyo_Summerland_3.jpg": {
+    author: "Syced",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
 };
 
 /**
