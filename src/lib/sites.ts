@@ -739,6 +739,44 @@ export const sitePhoto: Partial<Record<string, string>> = {
   birgi:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Birgi_ve_tarihi_ta%C5%9F_evler_9.jpg/1280px-Birgi_ve_tarihi_ta%C5%9F_evler_9.jpg",
   kula: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Kula_stone_house_2.jpg/1280px-Kula_stone_house_2.jpg",
+  "yilanli-sutun":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Colonna_serpentina%2C_gi%C3%A0_tripode_in_bronzo_dal_santuario_di_apollo_a_delfi%2C_478_ac._05_base.jpg/1280px-Colonna_serpentina%2C_gi%C3%A0_tripode_in_bronzo_dal_santuario_di_apollo_a_delfi%2C_478_ac._05_base.jpg",
+  "bursa-turk-islam-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bursa_T%C3%BCrk_%C4%B0slam_Eserleri_M%C3%BCzesi_Building_2006_0090.jpg/1280px-Bursa_T%C3%BCrk_%C4%B0slam_Eserleri_M%C3%BCzesi_Building_2006_0090.jpg",
+  "amasra-kalesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/2009_in_Amasra_01.jpg/1280px-2009_in_Amasra_01.jpg",
+  "sanliurfa-kalesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Urfa_%28hist._Edessa%29_%2825572197287%29.jpg/1280px-Urfa_%28hist._Edessa%29_%2825572197287%29.jpg",
+  "karatay-han":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Karatay_Han_%28B%C3%BCnyan%C4%B1%29%2C_Blick_vom_Dach_nach_Norden_mit_Laternenturm.jpg/1280px-Karatay_Han_%28B%C3%BCnyan%C4%B1%29%2C_Blick_vom_Dach_nach_Norden_mit_Laternenturm.jpg",
+  "adana-taskopru":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Adana_banner_Stone_Bridge.jpg/1280px-Adana_banner_Stone_Bridge.jpg",
+  "osmangazi-turbesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_02.jpg/1280px-Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_02.jpg",
+  "adiyaman-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Museum_Ad%C4%B1yaman_Au%C3%9Fenansicht.jpg/1280px-Museum_Ad%C4%B1yaman_Au%C3%9Fenansicht.jpg",
+  "alara-han":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/The_top_Alara_Han_-_panoramio.jpg/1280px-The_top_Alara_Han_-_panoramio.jpg",
+  kremna:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Kremna_ruins_vista_May_2013.jpg/1280px-Kremna_ruins_vista_May_2013.jpg",
+  "tripolis-meander":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Tripolis_on_the_Meander%2C_Lydia%2C_Turkey_%2819492900512%29.jpg/1280px-Tripolis_on_the_Meander%2C_Lydia%2C_Turkey_%2819492900512%29.jpg",
+  "sivrihisar-ulu-cami":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Sivrihisar_Ulu_Camii_2041.jpg/1280px-Sivrihisar_Ulu_Camii_2041.jpg",
+  "ince-minareli-medrese":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Ince_minare_arka_cephesi_may%C4%B1s_2022.jpg/1280px-Ince_minare_arka_cephesi_may%C4%B1s_2022.jpg",
+  "yildiz-sarayi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Y%C4%B1ld%C4%B1z_palace_and_park_%C5%9Eale_Kiosk_in_2014_8169.jpg/1280px-Y%C4%B1ld%C4%B1z_palace_and_park_%C5%9Eale_Kiosk_in_2014_8169.jpg",
+  "erzurum-kalesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Erzurum%2C_la_cittadella%2C_02.jpg/1280px-Erzurum%2C_la_cittadella%2C_02.jpg",
+  "aspendos-su-kemeri":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Aspendos_Aqueduct_3313.jpg/1280px-Aspendos_Aqueduct_3313.jpg",
+  goynuk:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/A_view_from_G%C3%B6yn%C3%BCk%2C_Bolu.jpg/1280px-A_view_from_G%C3%B6yn%C3%BCk%2C_Bolu.jpg",
+  "afyon-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Byzantine_capital_with_birds_drinking_%28Afyon_Museum%29.jpg/1280px-Byzantine_capital_with_birds_drinking_%28Afyon_Museum%29.jpg",
+  fildami:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Fildami_sarn%C4%B1c%C4%B13.jpg/1280px-Fildami_sarn%C4%B1c%C4%B13.jpg",
 };
 
 const s = (

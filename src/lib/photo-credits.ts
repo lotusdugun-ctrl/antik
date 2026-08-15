@@ -4245,6 +4245,101 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC BY-SA 4.0",
     licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
   },
+  "Colonna_serpentina,_già_tripode_in_bronzo_dal_santuario_di_apollo_a_delfi,_478_ac._05_base.jpg":
+    {
+      author: "Francesco Bini",
+      license: "CC BY-SA 4.0",
+      licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+    },
+  "Bursa_Türk_İslam_Eserleri_Müzesi_Building_2006_0090.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "2009_in_Amasra_01.jpg": {
+    author: "Gargarapalvin",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0",
+  },
+  "Urfa_(hist._Edessa)_(25572197287).jpg": {
+    author: "Herbert Frank from Wien (Vienna), AT",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Karatay_Han_(Bünyanı),_Blick_vom_Dach_nach_Norden_mit_Laternenturm.jpg": {
+    author: "Christian1311",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Adana_banner_Stone_Bridge.jpg": {
+    author: "MUSTAFA TOR",
+    license: "CC BY-SA 2.5",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.5",
+  },
+  "Bursa,_tophane,_tomba_di_osman_gazi,_1863,_interno_02.jpg": {
+    author: "Francesco Bini",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Museum_Adıyaman_Außenansicht.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "The_top_Alara_Han_-_panoramio.jpg": {
+    author: "Tanya Dedyukhina",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Kremna_ruins_vista_May_2013.jpg": {
+    author: "DMTate",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "Tripolis_on_the_Meander,_Lydia,_Turkey_(19492900512).jpg": {
+    author: "Carole Raddato from FRANKFURT, Germany",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Sivrihisar_Ulu_Camii_2041.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Ince_minare_arka_cephesi_mayıs_2022.jpg": {
+    author: "Tahirburhanozen",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Yıldız_palace_and_park_Şale_Kiosk_in_2014_8169.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Erzurum,_la_cittadella,_02.jpg": {
+    author: "Francesco Bini",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Aspendos_Aqueduct_3313.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "A_view_from_Göynük,_Bolu.jpg": {
+    author: "Newsal14",
+    license: "Public domain",
+  },
+  "Byzantine_capital_with_birds_drinking_(Afyon_Museum).jpg": {
+    author: "Mark Landon",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0",
+  },
+  "Fildami_sarnıcı3.jpg": {
+    author: "SemiGranti",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
 };
 
 /**
