@@ -33,12 +33,6 @@ export type ProgressState = {
   gamesPlayed: number;
   correctAnswers: number;
   visits: Record<string, VisitEntry>;
-  /** Last day of the daily challenge that was completed, as YYYY-MM-DD. */
-  dailyDay: string;
-  /** Score on that day, out of `DAILY_QUESTIONS`. */
-  dailyCorrect: number;
-  /** Consecutive days completed, broken by a gap of more than one day. */
-  dailyStreak: number;
 };
 
 const KEY = "antik-tr-progress";
@@ -51,9 +45,6 @@ const empty: ProgressState = {
   gamesPlayed: 0,
   correctAnswers: 0,
   visits: {},
-  dailyDay: "",
-  dailyCorrect: 0,
-  dailyStreak: 0,
 };
 
 /** Version stamp on exported backups, so a future format change can migrate. */
@@ -97,8 +88,6 @@ type Ctx = {
   saveVisit: (slug: string, entry: Partial<VisitEntry>) => void;
   removeVisit: (slug: string) => void;
   visitEntries: () => VisitEntry[];
-  /** Records a finished daily round; a second call on the same day is ignored. */
-  recordDaily: (day: string, correct: number) => void;
   /** The whole store as a backup document, ready to be written to a file. */
   exportBackup: () => string;
   /** Replaces the store from a backup document. Returns false if unreadable. */
@@ -199,25 +188,6 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         Object.values(state.visits)
           .filter((v) => v.slug)
           .sort((a, b) => (b.date || "").localeCompare(a.date || "")),
-      recordDaily: (day, correct) => {
-        if (state.dailyDay === day) return;
-        // The streak continues only from the immediately preceding day; any
-        // longer gap starts over. Compared as dates, not as strings, so that
-        // month and year boundaries behave.
-        const previous = Date.parse(`${state.dailyDay}T00:00:00Z`);
-        const today = Date.parse(`${day}T00:00:00Z`);
-        const consecutive =
-          Number.isFinite(previous) && today - previous === 86_400_000 ? state.dailyStreak + 1 : 1;
-        persist({
-          ...state,
-          dailyDay: day,
-          dailyCorrect: correct,
-          dailyStreak: consecutive,
-          gamesPlayed: state.gamesPlayed + 1,
-          correctAnswers: state.correctAnswers + correct,
-          xp: state.xp + correct * XP_PER_CORRECT,
-        });
-      },
       exportBackup: () =>
         JSON.stringify(
           { kind: BACKUP_KIND, version: BACKUP_VERSION, savedAt: new Date().toISOString(), state },

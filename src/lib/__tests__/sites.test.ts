@@ -1,5 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { coverImage, regions, sitePhoto, sites, type Site } from "@/lib/sites";
+import {
+  ancientCities,
+  coverImage,
+  historicPlaces,
+  museums,
+  regions,
+  sitePhoto,
+  sites,
+  type Site,
+} from "@/lib/sites";
 import { galleryImages, siteDetails, siteGallery } from "@/lib/site-details";
 import { imageAt, srcSetFor } from "@/lib/images";
 import { creditFor, photoCredits } from "@/lib/photo-credits";
@@ -71,6 +80,34 @@ describe("the site list", () => {
 
   test("every site credits at least one civilization", () => {
     expect(sites.filter((s) => s.civilizations.length === 0).map((s) => s.slug)).toEqual([]);
+  });
+});
+
+/**
+ * The three browse tabs are built from three type sets. A heritage type added
+ * to `HeritageType` but to none of the sets would drop every site of that type
+ * out of all three tabs — reachable only from the unscoped list, which looks
+ * exactly like nothing being wrong.
+ */
+describe("the browse scopes", () => {
+  test("no site appears in two tabs at once", () => {
+    const seen = new Map<string, string[]>();
+    const put = (tab: string, list: Site[]) => {
+      for (const site of list) seen.set(site.slug, [...(seen.get(site.slug) ?? []), tab]);
+    };
+    put("antik", ancientCities);
+    put("tarihi", historicPlaces);
+    put("muze", museums);
+    const overlaps = [...seen.entries()].filter(([, tabs]) => tabs.length > 1);
+    expect(overlaps.map(([slug, tabs]) => `${slug}: ${tabs.join(" + ")}`)).toEqual([]);
+  });
+
+  test("every site lands in exactly one tab", () => {
+    const covered = new Set(
+      [...ancientCities, ...historicPlaces, ...museums].map((site) => site.slug),
+    );
+    const orphans = sites.filter((site) => !covered.has(site.slug));
+    expect(orphans.map((s) => `${s.slug} (${s.heritageType})`)).toEqual([]);
   });
 });
 

@@ -3783,6 +3783,255 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC BY-SA 3.0",
     licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
   },
+  "Milet_müzesi_-_panoramio.jpg": {
+    author: "uğur baysan",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Aphrodisias_Archaeological_Museum.jpg": {
+    author: "Bernard Gagnon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Muse_alanya.jpg": {
+    author: "Gmihail at Serbian Wikipedia",
+    license: "CC BY-SA 3.0 rs",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0/rs/deed.en",
+  },
+  "Kayseri_Archaeology_Museum,_Sphinx_Marble.jpg": {
+    author: "Kızılkum wikipedia",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Aksaray_Museum01.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Kars_museum_5774.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sinop-museum.JPG": {
+    author: "Tony f",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Samsun_Müzesi.jpg": {
+    author: "𐰇𐱅𐰚𐰤",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Edirne_Museum.jpg": {
+    author: "Cem Altınel",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Fausto_Zonaro_-_Prince_Abdürrahim_Efendi_-_Google_Art_Project.jpg": {
+    author: "Fausto Zonaro",
+    license: "Public domain",
+  },
+  "Relief_Öküzini.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Mağlova_Aquaduct_4.jpg": {
+    author: "Canercangul",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Binbirdirek_Sarnıcı_7.jpg": {
+    author: "İlaydaozcan",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Theodosius_cistern_08.jpg": {
+    author: "Izabela Miszczak",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Halime_hatun_kümbeti.jpg": {
+    author: "Rotadefterim",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Milas_Gümüşkesen_Mausoleum_in_2007_4846.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Ağzıkarahan_12.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Uzunköprü_the_Long_Bridge_approach_from_north_6365.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Irgandı_köprüsü-Köprülü_çarşı_veya_çarşılı_köprü,_Bursa.jpg": {
+    author: "Haluk CÖMERTEL",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Beylerbeyi_Palace_-_Lion_statue.jpg": {
+    author: "José Luiz",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Kubadabad_general_view.jpg": {
+    author: "Saadet Armağan Güleç Korumaz, Ferruh Yıldız",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Anadolu_Hisarı_in_2024_(cropped).jpg": {
+    author: "flowcomm",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Ankara_Castle_not_in_Içkale_in_1990's_or_early_2000's_07.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Anamur_Castle_Main_tower_view_8716_Panorama.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Istanbul_asv2021-11_img61_Yedikule.jpg": {
+    author: "A.Savin",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "Alahan_74.jpg": {
+    author: "Ana al'ain",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kloster_Vazelon_Hauptgebaeude_Juli_2014.jpg": {
+    author: "Ingo Leonard",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "House_of_the_Virgin_Mary_(13951299641)_(cropped).jpg": {
+    author: "Erik Cleves Kristensen",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "3X0A6495_Beypazarı.jpg": {
+    author: "Gelisimuniversitesi",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Şirince_manzarası.jpg": {
+    author: "Erdall",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Alaedin_Camii.JPG": {
+    author: "Christian Mathis",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Üç_Şerefeli_Mosque_SW_exterior_in_2024_5860.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mahmut_Bey_Mosque_1360.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Rüstem_Pasha_Mosque_courtyard_and_porch_in_2003_1826.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Istanbul_Kız_Kulesi_(54511155871)_(cropped).jpg": {
+    author: "Jorge Franganillo",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Yesemekgesamt.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Theodosius_obelisk_3.jpg": {
+    author: "Dudva",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Yazilikaya_Kammer_A.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Smintheion_2025-08-30_16-18-29.jpg": {
+    author: "Özgür Arda BAYRAM",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kahramanmaras_Museum_Domuztepe.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Sillyon_Small_church_in_2015_5451.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kütahya_Ceramics_Museum_tile_8979.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Archaeological_Museum_of_Erzurum_in_2011_8414.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Standing_Stones,_7500_BC,_Diyarbakır_Archaeology_Museum.jpg": {
+    author: "- Ozymandias -",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "İstanbul_Arkeoloji_Müzesi_-_Yarımburgaz_Mağarası_(Başakşehir).jpg": {
+    author: "VikiPicture",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Sangarius_Bridge,_Justinyen_Köprüsü.JPG": {
+    author: "Acar54",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "P9271453_Hadrian's_Gate.jpg": {
+    author: "Joe Wallace",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Entrance_of_Özkonak_Underground_City.jpg": {
+    author: "Bernard Gagnon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Aciksaray-04-jries.jpg": {
+    author: "Jean & Nathalie",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Yümüktepe,_Mersin.JPG": {
+    author: "Nedim Ardoğa",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
 };
 
 /**

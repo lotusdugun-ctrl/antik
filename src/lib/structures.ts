@@ -1744,7 +1744,7 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Antik Liman": {
     blurb: {
-      tr: "Kentin deniz ticaretine hizmet eden tarihî liman kalıntıları.",
+      tr: "Kentin deniz ticaretine hizmet eden tarihi liman kalıntıları.",
       en: "The remains of the historic harbour that served the city's sea trade.",
     },
   },
@@ -1828,7 +1828,7 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Dicle Köprüsü": {
     blurb: {
-      tr: "Hasankeyf'te Dicle'yi aşan, ayakları günümüze ulaşan tarihî köprü.",
+      tr: "Hasankeyf'te Dicle'yi aşan, ayakları günümüze ulaşan tarihi köprü.",
       en: "The historic Tigris bridge at Hasankeyf, whose piers survive today.",
     },
   },
@@ -1846,7 +1846,7 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Eski Köprü": {
     blurb: {
-      tr: "Dicle üzerindeki tarihî köprü kalıntıları.",
+      tr: "Dicle üzerindeki tarihi köprü kalıntıları.",
       en: "Remains of the historic bridge over the Tigris.",
     },
   },
@@ -2092,7 +2092,7 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Palu Kalesi": {
     blurb: {
-      tr: "Urartu yazıtı taşıyan, Fırat'ın doğusundaki tarihî kale.",
+      tr: "Urartu yazıtı taşıyan, Fırat'ın doğusundaki tarihi kale.",
       en: "The historic fortress east of the Euphrates, bearing a Urartian inscription.",
     },
   },

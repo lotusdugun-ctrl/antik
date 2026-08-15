@@ -478,7 +478,7 @@ export const sitePhoto: Partial<Record<string, string>> = {
   "anadolu-medeniyetleri-muzesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg/1280px-Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg",
 
-  // ——— tarihî yerler ve müzeler, ikinci grup ———
+  // ——— tarihi yerler ve müzeler, ikinci grup ———
   "turk-islam-eserleri-muzesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Turkish_and_Islamic_Museum_1432_%28cropped%29.jpg/1280px-Turkish_and_Islamic_Museum_1432_%28cropped%29.jpg",
   "buyuk-saray-mozaikleri":
@@ -551,6 +551,108 @@ export const sitePhoto: Partial<Record<string, string>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mardin_Mor_Hananyo_Monastery_in_2000-2001_114.jpg/1280px-Mardin_Mor_Hananyo_Monastery_in_2000-2001_114.jpg",
   soganli:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Soganli_Valley_Cappadocia.JPG/1280px-Soganli_Valley_Cappadocia.JPG",
+
+  // ——— üçüncü grup ———
+  "milet-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Milet_m%C3%BCzesi_-_panoramio.jpg/1280px-Milet_m%C3%BCzesi_-_panoramio.jpg",
+  "afrodisias-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Aphrodisias_Archaeological_Museum.jpg/1280px-Aphrodisias_Archaeological_Museum.jpg",
+  "alanya-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Muse_alanya.jpg/1280px-Muse_alanya.jpg",
+  "kayseri-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Kayseri_Archaeology_Museum%2C_Sphinx_Marble.jpg/1280px-Kayseri_Archaeology_Museum%2C_Sphinx_Marble.jpg",
+  "aksaray-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Aksaray_Museum01.jpg/1280px-Aksaray_Museum01.jpg",
+  "kars-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Kars_museum_5774.jpg/1280px-Kars_museum_5774.jpg",
+  "sinop-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Sinop-museum.JPG/1280px-Sinop-museum.JPG",
+  "samsun-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Samsun_M%C3%BCzesi.jpg/1280px-Samsun_M%C3%BCzesi.jpg",
+  "edirne-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Edirne_Museum.jpg/1280px-Edirne_Museum.jpg",
+  "pera-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Fausto_Zonaro_-_Prince_Abd%C3%BCrrahim_Efendi_-_Google_Art_Project.jpg/1280px-Fausto_Zonaro_-_Prince_Abd%C3%BCrrahim_Efendi_-_Google_Art_Project.jpg",
+  okuzini:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Relief_%C3%96k%C3%BCzini.jpg/1280px-Relief_%C3%96k%C3%BCzini.jpg",
+  "maglova-kemeri":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Ma%C4%9Flova_Aquaduct_4.jpg/1280px-Ma%C4%9Flova_Aquaduct_4.jpg",
+  binbirdirek:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Binbirdirek_Sarn%C4%B1c%C4%B1_7.jpg/1280px-Binbirdirek_Sarn%C4%B1c%C4%B1_7.jpg",
+  "serefiye-sarnici":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Theodosius_cistern_08.jpg/1280px-Theodosius_cistern_08.jpg",
+  "halime-hatun-kumbeti":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Halime_hatun_k%C3%BCmbeti.jpg/1280px-Halime_hatun_k%C3%BCmbeti.jpg",
+  gumuskesen:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Milas_G%C3%BCm%C3%BC%C5%9Fkesen_Mausoleum_in_2007_4846.jpg/1280px-Milas_G%C3%BCm%C3%BC%C5%9Fkesen_Mausoleum_in_2007_4846.jpg",
+  agzikarahan:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/A%C4%9Fz%C4%B1karahan_12.jpg/1280px-A%C4%9Fz%C4%B1karahan_12.jpg",
+  uzunkopru:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Uzunk%C3%B6pr%C3%BC_the_Long_Bridge_approach_from_north_6365.jpg/1280px-Uzunk%C3%B6pr%C3%BC_the_Long_Bridge_approach_from_north_6365.jpg",
+  "irgandi-koprusu":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg/1280px-Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg",
+  "beylerbeyi-sarayi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Beylerbeyi_Palace_-_Lion_statue.jpg/1280px-Beylerbeyi_Palace_-_Lion_statue.jpg",
+  kubadabad:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kubadabad_general_view.jpg/1280px-Kubadabad_general_view.jpg",
+  "anadolu-hisari":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Anadolu_Hisar%C4%B1_in_2024_%28cropped%29.jpg/1280px-Anadolu_Hisar%C4%B1_in_2024_%28cropped%29.jpg",
+  "ankara-kalesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Ankara_Castle_not_in_I%C3%A7kale_in_1990%27s_or_early_2000%27s_07.jpg/1280px-Ankara_Castle_not_in_I%C3%A7kale_in_1990%27s_or_early_2000%27s_07.jpg",
+  "mamure-kalesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Anamur_Castle_Main_tower_view_8716_Panorama.jpg/1280px-Anamur_Castle_Main_tower_view_8716_Panorama.jpg",
+  yedikule:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Istanbul_asv2021-11_img61_Yedikule.jpg/1280px-Istanbul_asv2021-11_img61_Yedikule.jpg",
+  alahan:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Alahan_74.jpg/1280px-Alahan_74.jpg",
+  vazelon:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Kloster_Vazelon_Hauptgebaeude_Juli_2014.jpg/1280px-Kloster_Vazelon_Hauptgebaeude_Juli_2014.jpg",
+  "meryem-ana-evi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/House_of_the_Virgin_Mary_%2813951299641%29_%28cropped%29.jpg/1280px-House_of_the_Virgin_Mary_%2813951299641%29_%28cropped%29.jpg",
+  beypazari:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/3X0A6495_Beypazar%C4%B1.jpg/1280px-3X0A6495_Beypazar%C4%B1.jpg",
+  sirince:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/%C5%9Eirince_manzaras%C4%B1.jpg/1280px-%C5%9Eirince_manzaras%C4%B1.jpg",
+  "alaeddin-camii":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Alaedin_Camii.JPG/1280px-Alaedin_Camii.JPG",
+  "uc-serefeli-cami":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/%C3%9C%C3%A7_%C5%9Eerefeli_Mosque_SW_exterior_in_2024_5860.jpg/1280px-%C3%9C%C3%A7_%C5%9Eerefeli_Mosque_SW_exterior_in_2024_5860.jpg",
+  "mahmut-bey-camii":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mahmut_Bey_Mosque_1360.jpg/1280px-Mahmut_Bey_Mosque_1360.jpg",
+  "rustem-pasa-camii":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/R%C3%BCstem_Pasha_Mosque_courtyard_and_porch_in_2003_1826.jpg/1280px-R%C3%BCstem_Pasha_Mosque_courtyard_and_porch_in_2003_1826.jpg",
+  "kiz-kulesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Istanbul_K%C4%B1z_Kulesi_%2854511155871%29_%28cropped%29.jpg/1280px-Istanbul_K%C4%B1z_Kulesi_%2854511155871%29_%28cropped%29.jpg",
+  yesemek:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Yesemekgesamt.jpg/1280px-Yesemekgesamt.jpg",
+  dikilitas:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Theodosius_obelisk_3.jpg/1280px-Theodosius_obelisk_3.jpg",
+  yazilikaya:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Yazilikaya_Kammer_A.jpg/1280px-Yazilikaya_Kammer_A.jpg",
+  smintheion:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Smintheion_2025-08-30_16-18-29.jpg/1280px-Smintheion_2025-08-30_16-18-29.jpg",
+  domuztepe:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Kahramanmaras_Museum_Domuztepe.jpg/1280px-Kahramanmaras_Museum_Domuztepe.jpg",
+  sillyon:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Sillyon_Small_church_in_2015_5451.jpg/1280px-Sillyon_Small_church_in_2015_5451.jpg",
+  "kutahya-cini-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg/1280px-K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg",
+  "erzurum-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Archaeological_Museum_of_Erzurum_in_2011_8414.jpg/1280px-Archaeological_Museum_of_Erzurum_in_2011_8414.jpg",
+  "diyarbakir-muzesi":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Standing_Stones%2C_7500_BC%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg/1280px-Standing_Stones%2C_7500_BC%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg",
+  yarimburgaz:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/%C4%B0stanbul_Arkeoloji_M%C3%BCzesi_-_Yar%C4%B1mburgaz_Ma%C4%9Faras%C4%B1_%28Ba%C5%9Fak%C5%9Fehir%29.jpg/1280px-%C4%B0stanbul_Arkeoloji_M%C3%BCzesi_-_Yar%C4%B1mburgaz_Ma%C4%9Faras%C4%B1_%28Ba%C5%9Fak%C5%9Fehir%29.jpg",
+  "justinianus-koprusu":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Sangarius_Bridge%2C_Justinyen_K%C3%B6pr%C3%BCs%C3%BC.JPG/1280px-Sangarius_Bridge%2C_Justinyen_K%C3%B6pr%C3%BCs%C3%BC.JPG",
+  "antalya-kaleici":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/P9271453_Hadrian%27s_Gate.jpg/1280px-P9271453_Hadrian%27s_Gate.jpg",
+  ozkonak:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Entrance_of_%C3%96zkonak_Underground_City.jpg/1280px-Entrance_of_%C3%96zkonak_Underground_City.jpg",
+  aciksaray:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Aciksaray-04-jries.jpg/1280px-Aciksaray-04-jries.jpg",
+  yumuktepe:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Y%C3%BCm%C3%BCktepe%2C_Mersin.JPG/1280px-Y%C3%BCm%C3%BCktepe%2C_Mersin.JPG",
 };
 
 const s = (
@@ -1850,7 +1952,7 @@ export const sites: Site[] = [
     "1st millennium BC – 20th century AD",
     "none",
     0,
-    "Dicle'nin ikiye böldüğü, on bin yıllık mağara yerleşimli tarihî kent.",
+    "Dicle'nin ikiye böldüğü, on bin yıllık mağara yerleşimli tarihi kent.",
     "A historic town split by the Tigris, with cave settlements ten thousand years old.",
     [],
     6,
@@ -1967,7 +2069,7 @@ export const sites: Site[] = [
     "2nd millennium BC – today",
     "none",
     0,
-    "Elazığ'ın üzerinde yükselen, Urartu'dan Osmanlı'ya uzanan tarihî höyük ve kale kenti.",
+    "Elazığ'ın üzerinde yükselen, Urartu'dan Osmanlı'ya uzanan tarihi höyük ve kale kenti.",
     "A historic mound and castle town rising above Elazığ, spanning Urartu to Ottoman times.",
     [],
     7,
@@ -1986,7 +2088,7 @@ export const sites: Site[] = [
     "9th century BC – today",
     "none",
     0,
-    "Urartu yazıtlı kalesiyle Fırat'ın doğusundaki tarihî ilçe.",
+    "Urartu yazıtlı kalesiyle Fırat'ın doğusundaki tarihi ilçe.",
     "A historic town east of the Euphrates with a castle bearing Urartian inscriptions.",
     ["Menua"],
     3,
@@ -2908,7 +3010,7 @@ export const sites: Site[] = [
     popularity: 8,
   }),
 
-  // ————— Tarihî kent dokuları —————
+  // ————— Tarihi kent dokuları —————
   h({
     slug: "safranbolu",
     name: { tr: "Safranbolu", en: "Safranbolu" },
@@ -3748,6 +3850,923 @@ export const sites: Site[] = [
     figures: ["Celâleddin Karatay"],
     popularity: 7,
   }),
+
+  // ————— Üçüncü grup: her türden birkaç yer daha —————
+  // The thin categories were thin because they were added last, not because
+  // Türkiye is short of caravanserais, cisterns or tomb towers. A "Bridge"
+  // filter that returns two results reads as a broken filter.
+  h({
+    slug: "milet-muzesi",
+    name: { tr: "Milet Müzesi", en: "Miletus Museum" },
+    heritageType: "museum",
+    region: "ege",
+    province: { tr: "Aydın", en: "Aydın" },
+    lat: 37.5289,
+    lng: 27.2794,
+    civilizations: ["İon", "Roma", "Bizans", "Menteşeoğulları"],
+    era: { tr: "1973'te açıldı", en: "Opened 1973" },
+    summary: {
+      tr: "Milet, Didyma ve Priene kazılarının buluntularını toplayan müze; Menderes ovasında dört limanı dolan bir kentin ne bıraktığını tek salonda anlatır.",
+      en: "Gathering the finds of Miletus, Didyma and Priene, it lays out in one hall what a city whose four harbours silted up managed to leave behind.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "afrodisias-muzesi",
+    name: { tr: "Afrodisias Müzesi", en: "Aphrodisias Museum" },
+    heritageType: "museum",
+    region: "ege",
+    province: { tr: "Aydın", en: "Aydın" },
+    lat: 37.7092,
+    lng: 28.7239,
+    civilizations: ["Karia", "Roma"],
+    era: { tr: "1979'da açıldı", en: "Opened 1979" },
+    summary: {
+      tr: "Kentin heykeltıraş okulunun ürünlerini kazı alanının kenarında sergileyen müze; Sebasteion kabartmaları için ayrı bir salon ayrılmıştır.",
+      en: "Set at the edge of the excavation, it shows the output of the city's school of sculptors, with a hall of its own given to the Sebasteion reliefs.",
+    },
+    popularity: 7,
+  }),
+  h({
+    slug: "kutahya-cini-muzesi",
+    name: { tr: "Kütahya Çini Müzesi", en: "Kütahya Tile Museum" },
+    heritageType: "museum",
+    region: "ege",
+    province: { tr: "Kütahya", en: "Kütahya" },
+    lat: 39.4239,
+    lng: 29.9856,
+    civilizations: ["Osmanlı", "Germiyanoğulları"],
+    era: { tr: "1999'da açıldı", en: "Opened 1999" },
+    summary: {
+      tr: "II. Yakup Bey İmareti'nde kurulu müze, İznik'in gerilemesinden sonra Osmanlı çiniciliğini sürdüren Kütahya atölyelerinin dört yüz yılını izler.",
+      en: "Housed in the imaret of Yakup Bey II, it follows four centuries of the Kütahya workshops that carried Ottoman tilemaking on after İznik declined.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "alanya-muzesi",
+    name: { tr: "Alanya Müzesi", en: "Alanya Museum" },
+    heritageType: "museum",
+    region: "akdeniz",
+    province: { tr: "Antalya", en: "Antalya" },
+    lat: 36.5433,
+    lng: 31.9847,
+    civilizations: ["Roma", "Bizans", "Selçuklu", "Osmanlı"],
+    era: { tr: "1967'de açıldı", en: "Opened 1967" },
+    summary: {
+      tr: "Kentin Roma ve Selçuklu katmanlarını bir arada gösteren müze; bahçesindeki lahitler ve tunç Herakles heykelciği koleksiyonun bilinen parçalarıdır.",
+      en: "Showing the town's Roman and Seljuk layers together, with the sarcophagi in its garden and a bronze Herakles statuette as its best known pieces.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "kayseri-muzesi",
+    name: { tr: "Kayseri Arkeoloji Müzesi", en: "Kayseri Archaeology Museum" },
+    heritageType: "museum",
+    region: "ic-anadolu",
+    province: { tr: "Kayseri", en: "Kayseri" },
+    lat: 38.7183,
+    lng: 35.4869,
+    civilizations: ["Hitit", "Asur", "Roma", "Bizans"],
+    era: { tr: "1969'da açıldı", en: "Opened 1969" },
+    summary: {
+      tr: "Kültepe-Kaniş kazısının buluntularını barındıran müze; Asur tüccarlarının çivi yazılı tabletleri ve zarfları burada sergilenir.",
+      en: "Holding the finds of the Kültepe-Kanesh excavation, including the cuneiform tablets and clay envelopes of the Assyrian merchants.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "aksaray-muzesi",
+    name: { tr: "Aksaray Müzesi", en: "Aksaray Museum" },
+    heritageType: "museum",
+    region: "ic-anadolu",
+    province: { tr: "Aksaray", en: "Aksaray" },
+    lat: 38.3714,
+    lng: 34.0269,
+    civilizations: ["Neolitik", "Hitit", "Roma", "Bizans", "Selçuklu"],
+    era: { tr: "2011'de taşındı", en: "Moved 2011" },
+    summary: {
+      tr: "Aşıklı Höyük'ün Neolitik buluntularından Ihlara'nın Bizans mezar buluntularına uzanan koleksiyon; Anadolu'nun az bilinen mumyaları da buradadır.",
+      en: "A collection running from the Neolithic levels of Aşıklı Höyük to the Byzantine burials of the Ihlara valley, and one of Anatolia's lesser known sets of mummies.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "erzurum-muzesi",
+    name: { tr: "Erzurum Müzesi", en: "Erzurum Museum" },
+    heritageType: "museum",
+    region: "dogu",
+    province: { tr: "Erzurum", en: "Erzurum" },
+    lat: 39.9042,
+    lng: 41.2694,
+    civilizations: ["Urartu", "Roma", "Selçuklu", "Osmanlı"],
+    era: { tr: "1967'de açıldı", en: "Opened 1967" },
+    summary: {
+      tr: "Doğu Anadolu'nun Erken Tunç Çağı ve Urartu buluntularını toplayan müze; Karaz kültürünün siyah açkılı çanak çömleği koleksiyonun çekirdeğidir.",
+      en: "Gathering the Early Bronze Age and Urartian finds of eastern Anatolia, with the black burnished pottery of the Karaz culture at its core.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "kars-muzesi",
+    name: { tr: "Kars Müzesi", en: "Kars Museum" },
+    heritageType: "museum",
+    region: "dogu",
+    province: { tr: "Kars", en: "Kars" },
+    lat: 40.6039,
+    lng: 43.0958,
+    civilizations: ["Urartu", "Roma", "Bizans", "Selçuklu", "Rus"],
+    era: { tr: "1959'da kuruldu", en: "Founded 1959" },
+    summary: {
+      tr: "Ani kazılarının buluntularını barındıran müze; bahçesindeki Rus dönemi buhar makineleri ve kilise çanları kentin son iki yüzyılını anlatır.",
+      en: "Holding the finds from the Ani excavations, its garden of Russian-era steam engines and church bells telling the city's last two centuries.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "sinop-muzesi",
+    name: { tr: "Sinop Müzesi", en: "Sinop Museum" },
+    heritageType: "museum",
+    region: "karadeniz",
+    province: { tr: "Sinop", en: "Sinop" },
+    lat: 42.0272,
+    lng: 35.1531,
+    civilizations: ["Roma", "Bizans", "Pontus", "Osmanlı"],
+    era: { tr: "1941'de kuruldu", en: "Founded 1941" },
+    summary: {
+      tr: "Serapis Tapınağı'nın kalıntıları müzenin bahçesinde yerinde korunur; koleksiyon Karadeniz'in liman kenti Sinope'nin ticaretini anlatır.",
+      en: "The remains of the Serapis temple are kept in place in its garden, and the collection tells the trade of Sinope, the Black Sea's port city.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "samsun-muzesi",
+    name: { tr: "Samsun Müzesi", en: "Samsun Museum" },
+    heritageType: "museum",
+    region: "karadeniz",
+    province: { tr: "Samsun", en: "Samsun" },
+    lat: 41.2892,
+    lng: 36.3339,
+    civilizations: ["Hitit", "Roma", "Bizans", "Pontus"],
+    era: { tr: "1980'de açıldı", en: "Opened 1980" },
+    summary: {
+      tr: "Amisos tümülüsünden çıkarılan Helenistik altın hazinesiyle tanınan müze; İkiztepe kazısının Erken Tunç buluntuları da burada.",
+      en: "Known for the Hellenistic gold hoard lifted from the Amisos tumulus, and holding the Early Bronze Age finds of the İkiztepe excavation.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "diyarbakir-muzesi",
+    name: { tr: "Diyarbakır Müzesi", en: "Diyarbakır Museum" },
+    heritageType: "museum",
+    region: "guneydogu",
+    province: { tr: "Diyarbakır", en: "Diyarbakır" },
+    lat: 37.9186,
+    lng: 40.2311,
+    civilizations: ["Asur", "Roma", "Bizans", "Artuklu", "Akkoyunlu"],
+    era: { tr: "1934'te kuruldu", en: "Founded 1934" },
+    summary: {
+      tr: "Yukarı Dicle havzasının kazılarını toplayan müze; Çayönü'nün Neolitik buluntuları ve Artuklu dönemi maden işçiliği koleksiyonun ağırlığıdır.",
+      en: "Gathering the excavations of the upper Tigris basin, weighted towards the Neolithic finds of Çayönü and Artuqid metalwork.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "adiyaman-muzesi",
+    name: { tr: "Adıyaman Müzesi", en: "Adıyaman Museum" },
+    heritageType: "museum",
+    region: "guneydogu",
+    province: { tr: "Adıyaman", en: "Adıyaman" },
+    lat: 37.7639,
+    lng: 38.2769,
+    civilizations: ["Kommagene", "Roma", "Bizans"],
+    era: { tr: "1982'de açıldı", en: "Opened 1982" },
+    summary: {
+      tr: "Nemrut Dağı ve Arsameia kazılarının buluntularını, Atatürk Barajı suları altında kalan kentlerden kurtarılan mozaiklerle birlikte sergiler.",
+      en: "Shows the finds of Mount Nemrut and Arsameia alongside the mosaics rescued from the towns that went under the waters of the Atatürk dam.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "edirne-muzesi",
+    name: { tr: "Edirne Müzesi", en: "Edirne Museum" },
+    heritageType: "museum",
+    region: "marmara",
+    province: { tr: "Edirne", en: "Edirne" },
+    lat: 41.6772,
+    lng: 26.5589,
+    civilizations: ["Trak", "Roma", "Bizans", "Osmanlı"],
+    era: { tr: "1971'de açıldı", en: "Opened 1971" },
+    summary: {
+      tr: "Trakya'nın dolmen ve tümülüslerinden çıkan buluntularla Osmanlı başkenti Edirne'nin etnografyasını aynı çatı altında toplar.",
+      en: "Brings the finds of the Thracian dolmens and tumuli together under one roof with the ethnography of Edirne, the Ottoman capital.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "pera-muzesi",
+    name: { tr: "Pera Müzesi", en: "Pera Museum" },
+    heritageType: "museum",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0322,
+    lng: 28.9747,
+    civilizations: ["Osmanlı"],
+    era: { tr: "2005'te açıldı", en: "Opened 2005" },
+    summary: {
+      tr: "Oryantalist resim koleksiyonuyla tanınan özel müze; Osman Hamdi Bey'in 'Kaplumbağa Terbiyecisi' tablosu burada sergileniyor.",
+      en: "A private museum known for its Orientalist painting collection, and the home of Osman Hamdi Bey's 'The Tortoise Trainer'.",
+    },
+    figures: ["Osman Hamdi Bey"],
+    popularity: 7,
+  }),
+  h({
+    slug: "yarimburgaz",
+    name: { tr: "Yarımburgaz Mağarası", en: "Yarımburgaz Cave" },
+    heritageType: "cave",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0619,
+    lng: 28.7581,
+    civilizations: ["Paleolitik", "Bizans"],
+    era: { tr: "Alt Paleolitik", en: "Lower Palaeolithic" },
+    summary: {
+      tr: "Trakya'nın en uzun mağaralarından biri; Alt Paleolitik tabakaları Marmara çevresindeki en eski insan izlerini, üst katmanları ise Bizans dönemi kilisesini barındırır.",
+      en: "One of Thrace's longest caves: its Lower Palaeolithic layers hold the oldest human traces around the Sea of Marmara, its upper ones a Byzantine church.",
+    },
+    popularity: 4,
+  }),
+  h({
+    slug: "okuzini",
+    name: { tr: "Öküzini Mağarası", en: "Öküzini Cave" },
+    heritageType: "cave",
+    region: "akdeniz",
+    province: { tr: "Antalya", en: "Antalya" },
+    lat: 37.0817,
+    lng: 30.5697,
+    civilizations: ["Paleolitik", "Epipaleolitik"],
+    era: { tr: "Üst Paleolitik", en: "Upper Palaeolithic" },
+    summary: {
+      tr: "Karain'in hemen yanındaki mağara, buzul çağının sonundan Neolitik'e geçişi kesintisiz bir tabaka dizisiyle belgeleyen ender yerlerden biridir.",
+      en: "Next door to Karain, the cave is one of the few places where the passage from the end of the ice age to the Neolithic is recorded in an unbroken sequence of layers.",
+    },
+    popularity: 4,
+  }),
+  h({
+    slug: "maglova-kemeri",
+    name: { tr: "Mağlova Kemeri", en: "Mağlova Aqueduct" },
+    heritageType: "aqueduct",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.1417,
+    lng: 28.8464,
+    civilizations: ["Osmanlı"],
+    era: { tr: "1554-1563", en: "1554–1563" },
+    fee: 0,
+    summary: {
+      tr: "Mimar Sinan'ın Kırkçeşme su yolları için Alibey Deresi üzerine kurduğu iki katlı kemer; su mühendisliğiyle anıt mimarisini aynı yapıda birleştirir.",
+      en: "The two-tier aqueduct Sinan threw across the Alibey stream for the Kırkçeşme water system, joining hydraulic engineering to monumental architecture in one structure.",
+    },
+    figures: ["Mimar Sinan"],
+    popularity: 6,
+  }),
+  h({
+    slug: "binbirdirek",
+    name: { tr: "Binbirdirek Sarnıcı", en: "Binbirdirek Cistern" },
+    heritageType: "cistern",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0067,
+    lng: 28.9722,
+    civilizations: ["Bizans", "Roma"],
+    era: { tr: "MS 4. yüzyıl", en: "4th century AD" },
+    unesco: "listed",
+    summary: {
+      tr: "Kentin ikinci büyük kapalı sarnıcı; 224 sütunun her biri üst üste konmuş iki parçadan oluşur ve ek yerlerindeki taş bilezikler hâlâ görülür.",
+      en: "The city's second largest covered cistern: each of its 224 columns is two shafts set one on the other, the stone collars at the joins still visible.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "serefiye-sarnici",
+    name: { tr: "Şerefiye Sarnıcı", en: "Theodosius Cistern" },
+    heritageType: "cistern",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0089,
+    lng: 28.9736,
+    civilizations: ["Bizans", "Roma"],
+    era: { tr: "MS 428-443", en: "AD 428–443" },
+    unesco: "listed",
+    summary: {
+      tr: "II. Theodosius döneminde Valens Kemeri'nin getirdiği suyu depolamak için yapıldı; otuz iki mermer sütunlu salon 2018'de onarılarak ziyarete açıldı.",
+      en: "Built under Theodosius II to store the water the Valens aqueduct brought in; its hall of thirty-two marble columns was repaired and opened to visitors in 2018.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "halime-hatun-kumbeti",
+    name: { tr: "Halime Hatun Kümbeti", en: "Halime Hatun Tomb" },
+    heritageType: "tomb",
+    region: "dogu",
+    province: { tr: "Van", en: "Van" },
+    lat: 38.2917,
+    lng: 43.1064,
+    civilizations: ["Karakoyunlu"],
+    era: { tr: "1358", en: "1358" },
+    fee: 0,
+    summary: {
+      tr: "Gevaş'ta Van Gölü'ne bakan on iki yüzlü kümbet; Karakoyunlu taş işçiliğinin en iyi korunmuş örneği ve geometrik bezemesiyle bölgenin simgesi.",
+      en: "A twelve-sided tomb tower above Lake Van at Gevaş — the best preserved piece of Kara Koyunlu stonework and, for its geometric carving, the emblem of the district.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "mama-hatun-turbesi",
+    name: { tr: "Mama Hatun Türbesi", en: "Mama Hatun Tomb" },
+    heritageType: "tomb",
+    region: "dogu",
+    province: { tr: "Erzincan", en: "Erzincan" },
+    lat: 39.7767,
+    lng: 40.3906,
+    civilizations: ["Saltuklu"],
+    era: { tr: "12. yüzyıl sonu", en: "Late 12th century" },
+    fee: 0,
+    summary: {
+      tr: "Saltuklu hükümdarı Mama Hatun için yapılan türbe, dairesel bir avlu duvarının ortasında durur; Anadolu'da bu planın başka örneği yoktur.",
+      en: "Built for the Saltukid ruler Mama Hatun, the tomb stands at the centre of a circular walled court — a plan with no other example in Anatolia.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "gumuskesen",
+    name: { tr: "Gümüşkesen Anıt Mezarı", en: "Gümüşkesen Tomb" },
+    heritageType: "tomb",
+    region: "ege",
+    province: { tr: "Muğla", en: "Muğla" },
+    lat: 37.3161,
+    lng: 27.7803,
+    civilizations: ["Roma", "Karia"],
+    era: { tr: "MS 2. yüzyıl", en: "2nd century AD" },
+    fee: 0,
+    summary: {
+      tr: "Milas'taki Roma dönemi anıt mezarı, Halikarnassos'taki Mausoleion'un küçültülmüş bir kopyası kabul edilir; piramit çatısı ve sütunlu üst katı ayaktadır.",
+      en: "A Roman tomb at Milas taken to be a scaled-down copy of the Mausoleum at Halicarnassus, its pyramid roof and colonnaded upper storey still standing.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "agzikarahan",
+    name: { tr: "Ağzıkarahan", en: "Ağzıkarahan Caravanserai" },
+    heritageType: "caravanserai",
+    region: "ic-anadolu",
+    province: { tr: "Aksaray", en: "Aksaray" },
+    lat: 38.4283,
+    lng: 34.2278,
+    civilizations: ["Selçuklu"],
+    era: { tr: "1231-1239", en: "1231–1239" },
+    unesco: "tentative",
+    summary: {
+      tr: "Aksaray-Nevşehir yolundaki Selçuklu hanı; avlusunun ortasındaki köşk mescidiyle Sultanhanı'nın küçük ölçekli, daha sade bir kardeşi gibidir.",
+      en: "A Seljuk han on the Aksaray–Nevşehir road, its kiosk mosque at the centre of the court making it a smaller, plainer sibling of the Sultan Han.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "alara-han",
+    name: { tr: "Alarahan", en: "Alara Han" },
+    heritageType: "caravanserai",
+    region: "akdeniz",
+    province: { tr: "Antalya", en: "Antalya" },
+    lat: 36.6103,
+    lng: 31.7139,
+    civilizations: ["Selçuklu"],
+    era: { tr: "1232", en: "1232" },
+    unesco: "tentative",
+    summary: {
+      tr: "Alara Çayı kıyısındaki han, Alanya limanından iç bölgelere giden yolun ilk durağıydı; yukarısındaki kaya kalesiyle birlikte yolu koruyordu.",
+      en: "On the bank of the Alara stream, the han was the first stop on the road inland from the port of Alanya, guarding it together with the rock castle above.",
+    },
+    figures: ["I. Alâeddin Keykubad"],
+    popularity: 5,
+  }),
+  h({
+    slug: "justinianus-koprusu",
+    name: { tr: "Justinianus Köprüsü", en: "Bridge of Justinian" },
+    heritageType: "bridge",
+    region: "marmara",
+    province: { tr: "Sakarya", en: "Sakarya" },
+    lat: 40.7411,
+    lng: 30.3572,
+    civilizations: ["Bizans", "Roma"],
+    era: { tr: "MS 559-562", en: "AD 559–562" },
+    fee: 0,
+    summary: {
+      tr: "Justinianus'un Sakarya Nehri üzerine yaptırdığı 430 metrelik köprü; nehir sonradan yatak değiştirdiği için bugün büyük ölçüde kuru ovada durur.",
+      en: "The 430-metre bridge Justinian threw over the Sakarya. The river later shifted its bed, so the bridge now stands largely on dry ground.",
+    },
+    figures: ["İmparator Justinianus"],
+    popularity: 6,
+  }),
+  h({
+    slug: "uzunkopru",
+    name: { tr: "Uzunköprü", en: "Uzunköprü Bridge" },
+    heritageType: "bridge",
+    region: "marmara",
+    province: { tr: "Edirne", en: "Edirne" },
+    lat: 41.2661,
+    lng: 26.6889,
+    civilizations: ["Osmanlı"],
+    era: { tr: "1443", en: "1443" },
+    fee: 0,
+    summary: {
+      tr: "Ergene üzerindeki 1.238 metrelik köprü, dünyanın en uzun taş kemerli köprüsüdür; 174 gözünün kilit taşlarında aslan, fil ve lale kabartmaları vardır.",
+      en: "At 1,238 metres over the Ergene, the longest stone arch bridge in the world; the keystones of its 174 arches carry lions, elephants and tulips.",
+    },
+    figures: ["II. Murad"],
+    popularity: 6,
+  }),
+  h({
+    slug: "irgandi-koprusu",
+    name: { tr: "Irgandı Köprüsü", en: "Irgandı Bridge" },
+    heritageType: "bridge",
+    region: "marmara",
+    province: { tr: "Bursa", en: "Bursa" },
+    lat: 40.1839,
+    lng: 29.0731,
+    civilizations: ["Osmanlı"],
+    era: { tr: "1442", en: "1442" },
+    fee: 0,
+    summary: {
+      tr: "Üzerinde dükkânlar bulunan çarşılı köprü; dünyada bu tipte ayakta kalan dört köprüden biridir ve bugün de zanaatkârlara ev sahipliği yapar.",
+      en: "A bridge with a market built along it — one of four of the type still standing anywhere in the world, and still housing craftspeople today.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "beylerbeyi-sarayi",
+    name: { tr: "Beylerbeyi Sarayı", en: "Beylerbeyi Palace" },
+    heritageType: "palace",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0422,
+    lng: 29.0389,
+    civilizations: ["Osmanlı"],
+    era: { tr: "1861-1865", en: "1861–1865" },
+    summary: {
+      tr: "Sultan Abdülaziz'in Boğaz'ın Anadolu yakasına yaptırdığı yazlık saray; devlet konuğu ağırlamak için kullanıldı ve II. Abdülhamid burada göz hapsinde öldü.",
+      en: "The summer palace Sultan Abdülaziz built on the Asian shore of the Bosphorus, used to house visiting heads of state; Abdülhamid II died here under house arrest.",
+    },
+    figures: ["Sultan Abdülaziz", "II. Abdülhamid"],
+    popularity: 7,
+  }),
+  h({
+    slug: "kubadabad",
+    name: { tr: "Kubadabad Sarayı", en: "Kubadabad Palace" },
+    heritageType: "palace",
+    region: "ic-anadolu",
+    province: { tr: "Konya", en: "Konya" },
+    lat: 37.7031,
+    lng: 31.515,
+    civilizations: ["Selçuklu"],
+    era: { tr: "1226-1237", en: "1226–1237" },
+    summary: {
+      tr: "I. Alâeddin Keykubad'ın Beyşehir Gölü kıyısına kurdurduğu saray kenti; duvarlarını kaplayan figürlü çiniler bugün Konya'daki Karatay Müzesi'nde.",
+      en: "The palace town Alâeddin Keykubad I raised on the shore of Lake Beyşehir; the figured tiles that lined its walls are now in the Karatay Museum in Konya.",
+    },
+    figures: ["I. Alâeddin Keykubad"],
+    popularity: 5,
+  }),
+  h({
+    slug: "anadolu-hisari",
+    name: { tr: "Anadolu Hisarı", en: "Anadoluhisarı" },
+    heritageType: "castle",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0817,
+    lng: 29.0664,
+    civilizations: ["Osmanlı"],
+    era: { tr: "1394", en: "1394" },
+    fee: 0,
+    summary: {
+      tr: "Yıldırım Bayezid'in Boğaz'ın en dar yerinde yaptırdığı hisar; altmış yıl sonra karşı kıyıya Rumeli Hisarı yapılınca geçiş tamamen kapandı.",
+      en: "The fortress Bayezid I raised at the narrowest point of the Bosphorus; sixty years later Rumeli Hisarı went up opposite and closed the strait completely.",
+    },
+    figures: ["Yıldırım Bayezid"],
+    popularity: 6,
+  }),
+  h({
+    slug: "ankara-kalesi",
+    name: { tr: "Ankara Kalesi", en: "Ankara Castle" },
+    heritageType: "castle",
+    region: "ic-anadolu",
+    province: { tr: "Ankara", en: "Ankara" },
+    lat: 39.9394,
+    lng: 32.8639,
+    civilizations: ["Galat", "Roma", "Bizans", "Selçuklu", "Osmanlı"],
+    era: { tr: "MS 7. yüzyıl", en: "7th century AD" },
+    fee: 0,
+    summary: {
+      tr: "Kentin üzerine kurulduğu tepeyi saran kale; duvarlarında Roma yapılarından sökülmüş sütun tamburları ve yazıtlı bloklar sıra sıra örülüdür.",
+      en: "The citadel wrapping the hill the city grew on, its walls built course by course from column drums and inscribed blocks stripped out of Roman buildings.",
+    },
+    popularity: 7,
+  }),
+  h({
+    slug: "mamure-kalesi",
+    name: { tr: "Mamure Kalesi", en: "Mamure Castle" },
+    heritageType: "castle",
+    region: "akdeniz",
+    province: { tr: "Mersin", en: "Mersin" },
+    lat: 36.0847,
+    lng: 32.9403,
+    civilizations: ["Roma", "Bizans", "Ermeni Krallığı", "Karamanoğulları", "Osmanlı"],
+    era: { tr: "12.-15. yüzyıl", en: "12th–15th century" },
+    summary: {
+      tr: "Anamur kıyısında denize sıfır konumlanan kale, otuz dokuz burcu ve hendeğiyle Akdeniz kıyısının en büyük ve en iyi korunmuş kalesidir.",
+      en: "Set right on the shore at Anamur, its thirty-nine towers and moat make it the largest and best preserved castle on the Mediterranean coast.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "yedikule",
+    name: { tr: "Yedikule Hisarı", en: "Yedikule Fortress" },
+    heritageType: "castle",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 40.9931,
+    lng: 28.9228,
+    civilizations: ["Bizans", "Osmanlı", "Roma"],
+    era: { tr: "1458", en: "1458" },
+    unesco: "listed",
+    summary: {
+      tr: "Fatih'in Theodosius surlarının Altın Kapı bölümüne eklettiği yedi kuleli hisar; hazine, cephanelik ve elçilerin tutulduğu devlet hapishanesi olarak kullanıldı.",
+      en: "The seven-towered fortress Mehmed II grafted onto the Golden Gate of the Theodosian walls, used as treasury, arsenal and the state prison where envoys were held.",
+    },
+    figures: ["Fatih Sultan Mehmed", "Genç Osman"],
+    popularity: 6,
+  }),
+  h({
+    slug: "alahan",
+    name: { tr: "Alahan Manastırı", en: "Alahan Monastery" },
+    heritageType: "monastery",
+    region: "akdeniz",
+    province: { tr: "Mersin", en: "Mersin" },
+    lat: 36.8503,
+    lng: 33.3489,
+    civilizations: ["Bizans"],
+    era: { tr: "MS 5. yüzyıl", en: "5th century AD" },
+    unesco: "tentative",
+    summary: {
+      tr: "Toroslar'da bin metre yükseklikteki terasa kurulu manastır; doğu kilisesinin taş kubbe kasnağı, Ayasofya'dan önceki kubbe denemelerinin en iyi korunmuşudur.",
+      en: "A monastery on a terrace a thousand metres up in the Taurus; the stone drum of its east church is the best preserved of the dome experiments that came before Hagia Sophia.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "vazelon",
+    name: { tr: "Vazelon Manastırı", en: "Vazelon Monastery" },
+    heritageType: "monastery",
+    region: "karadeniz",
+    province: { tr: "Trabzon", en: "Trabzon" },
+    lat: 40.7514,
+    lng: 39.5528,
+    civilizations: ["Bizans"],
+    era: { tr: "270", en: "270" },
+    fee: 0,
+    summary: {
+      tr: "Sümela'dan da eski olan manastır, Maçka vadisinin dik yamacına yaslanır; Trabzon Rum İmparatorluğu döneminde bölgenin tapu kayıtlarını tutuyordu.",
+      en: "Older than Sümela, the monastery leans into the steep side of the Maçka valley; under the Empire of Trebizond it kept the land registers of the region.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "meryem-ana-evi",
+    name: { tr: "Meryem Ana Evi", en: "House of the Virgin Mary" },
+    heritageType: "monastery",
+    region: "ege",
+    province: { tr: "İzmir", en: "İzmir" },
+    lat: 37.9114,
+    lng: 27.3339,
+    civilizations: ["Bizans", "Roma"],
+    era: { tr: "MS 1. yüzyıl (temeller)", en: "1st century AD (foundations)" },
+    summary: {
+      tr: "Bülbüldağı'nda, Meryem'in son yıllarını geçirdiğine inanılan taş ev; papalar tarafından ziyaret edilen ve hem Hristiyanların hem Müslümanların geldiği bir hac yeri.",
+      en: "A stone house on Bülbüldağı held to be where Mary spent her last years — visited by popes, and a place of pilgrimage for Christians and Muslims alike.",
+    },
+    popularity: 7,
+  }),
+  h({
+    slug: "beypazari",
+    name: { tr: "Beypazarı Evleri", en: "Beypazarı Houses" },
+    heritageType: "old-town",
+    region: "ic-anadolu",
+    province: { tr: "Ankara", en: "Ankara" },
+    lat: 40.1678,
+    lng: 31.9214,
+    civilizations: ["Osmanlı"],
+    era: { tr: "18.-19. yüzyıl", en: "18th–19th century" },
+    fee: 0,
+    summary: {
+      tr: "İpek Yolu'nun Ankara kolundaki kasabanın cumbalı, beyaz badanalı evleri; sokakları restore edilerek bütün olarak korunan az sayıdaki Anadolu kasabasından biri.",
+      en: "The bow-fronted, whitewashed houses of a town on the Ankara branch of the Silk Road — one of the few Anatolian towns restored and kept whole rather than house by house.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "sirince",
+    name: { tr: "Şirince", en: "Şirince" },
+    heritageType: "old-town",
+    region: "ege",
+    province: { tr: "İzmir", en: "İzmir" },
+    lat: 37.9464,
+    lng: 27.4472,
+    civilizations: ["Osmanlı", "Rum"],
+    era: { tr: "19. yüzyıl", en: "19th century" },
+    fee: 0,
+    summary: {
+      tr: "Efes'in yukarısındaki yamaca kurulu Rum köyü; 1923 mübadelesinden sonra boşalan taş evler korunarak bugüne kaldı.",
+      en: "A Greek village on the slope above Ephesus, its stone houses emptied by the 1923 exchange of populations and preserved rather than replaced.",
+    },
+    popularity: 7,
+  }),
+  h({
+    slug: "antalya-kaleici",
+    name: { tr: "Antalya Kaleiçi", en: "Antalya Old Town" },
+    heritageType: "old-town",
+    region: "akdeniz",
+    province: { tr: "Antalya", en: "Antalya" },
+    lat: 36.8842,
+    lng: 30.7056,
+    civilizations: ["Roma", "Bizans", "Selçuklu", "Osmanlı"],
+    era: { tr: "MS 2. yüzyıl'dan itibaren", en: "From the 2nd century AD" },
+    fee: 0,
+    summary: {
+      tr: "Roma limanının çevresine sarılan surlu eski kent; Hadrianus Kapısı, Yivli Minare ve Osmanlı konakları aynı dar sokaklar üzerinde sıralanır.",
+      en: "The walled old town wrapped around the Roman harbour, where Hadrian's Gate, the Fluted Minaret and Ottoman mansions stand along the same narrow lanes.",
+    },
+    figures: ["İmparator Hadrianus"],
+    popularity: 8,
+  }),
+  h({
+    slug: "alaeddin-camii",
+    name: { tr: "Konya Alâeddin Camii", en: "Alâeddin Mosque, Konya" },
+    heritageType: "mosque",
+    region: "ic-anadolu",
+    province: { tr: "Konya", en: "Konya" },
+    lat: 37.8722,
+    lng: 32.4906,
+    civilizations: ["Selçuklu"],
+    era: { tr: "1155-1221", en: "1155–1221" },
+    fee: 0,
+    summary: {
+      tr: "Anadolu Selçuklu Devleti'nin başkentindeki ulu camisi; kırk iki devşirme sütunun taşıdığı düz tavanlı salonun yanında sekiz sultanın türbesi durur.",
+      en: "The congregational mosque of the Anatolian Seljuk capital: a flat-roofed hall on forty-two reused columns, with the tombs of eight sultans beside it.",
+    },
+    figures: ["I. Alâeddin Keykubad", "II. Kılıçarslan"],
+    popularity: 7,
+  }),
+  h({
+    slug: "uc-serefeli-cami",
+    name: { tr: "Üç Şerefeli Cami", en: "Üç Şerefeli Mosque" },
+    heritageType: "mosque",
+    region: "marmara",
+    province: { tr: "Edirne", en: "Edirne" },
+    lat: 41.6767,
+    lng: 26.5561,
+    civilizations: ["Osmanlı"],
+    era: { tr: "1437-1447", en: "1437–1447" },
+    fee: 0,
+    summary: {
+      tr: "Osmanlı mimarisinin dönüm noktası: ilk kez bu ölçekte bir merkezî kubbe denendi ve dört minaresinin her biri farklı biçimde yapıldı.",
+      en: "The turning point of Ottoman architecture: the first attempt at a central dome on this scale, with each of its four minarets built to a different design.",
+    },
+    figures: ["II. Murad"],
+    popularity: 6,
+  }),
+  h({
+    slug: "mahmut-bey-camii",
+    name: { tr: "Kasaba Mahmut Bey Camii", en: "Mahmut Bey Mosque" },
+    heritageType: "mosque",
+    region: "karadeniz",
+    province: { tr: "Kastamonu", en: "Kastamonu" },
+    lat: 41.4711,
+    lng: 33.6528,
+    civilizations: ["Candaroğulları"],
+    era: { tr: "1366", en: "1366" },
+    unesco: "listed",
+    fee: 0,
+    summary: {
+      tr: "Tek bir çivi kullanılmadan geçme tekniğiyle kurulan ahşap camide, tavan ve sütun başlıklarındaki altı yüz yıllık kalem işi boya hâlâ özgündür.",
+      en: "Built entirely by interlocking joinery without a single nail, its ceiling and capitals still carrying six-hundred-year-old original paintwork.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "rustem-pasa-camii",
+    name: { tr: "Rüstem Paşa Camii", en: "Rüstem Pasha Mosque" },
+    heritageType: "mosque",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0175,
+    lng: 28.97,
+    civilizations: ["Osmanlı"],
+    era: { tr: "1561-1563", en: "1561–1563" },
+    unesco: "listed",
+    fee: 0,
+    summary: {
+      tr: "Mimar Sinan'ın Eminönü çarşısının üzerine kurduğu cami; iç ve dış yüzeylerini kaplayan İznik çinileri, hiçbir Osmanlı yapısında bu yoğunlukta görülmez.",
+      en: "Sinan's mosque raised over the Eminönü market, sheathed inside and out in İznik tiles at a density no other Ottoman building attempts.",
+    },
+    figures: ["Mimar Sinan", "Rüstem Paşa"],
+    popularity: 7,
+  }),
+  h({
+    slug: "kiz-kulesi",
+    name: { tr: "Kız Kulesi", en: "Maiden's Tower" },
+    heritageType: "monument",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0211,
+    lng: 29.0044,
+    civilizations: ["Bizans", "Osmanlı", "Roma"],
+    era: { tr: "MÖ 5. yüzyıl (ilk yapı)", en: "5th century BC (first structure)" },
+    summary: {
+      tr: "Üsküdar açıklarındaki adacığın üzerinde: önce gümrük noktası, sonra karantina, fener ve gözetleme kulesi; bugünkü yapı 18. yüzyıldan kalmadır.",
+      en: "On an islet off Üsküdar: first a customs post, later a quarantine station, lighthouse and watchtower; the building standing today dates from the eighteenth century.",
+    },
+    popularity: 8,
+  }),
+  h({
+    slug: "yesemek",
+    name: {
+      tr: "Yesemek Taş Ocağı ve Heykel Atölyesi",
+      en: "Yesemek Quarry and Sculpture Workshop",
+    },
+    heritageType: "monument",
+    region: "guneydogu",
+    province: { tr: "Gaziantep", en: "Gaziantep" },
+    lat: 36.9903,
+    lng: 36.7561,
+    civilizations: ["Hitit", "Geç Hitit"],
+    era: { tr: "MÖ 14.-8. yüzyıl", en: "14th–8th century BC" },
+    unesco: "tentative",
+    summary: {
+      tr: "Yakın Doğu'nun bilinen en büyük açık hava heykel atölyesi; yamaca dağılmış üç yüzden fazla yarım kalmış aslan, sfenks ve dağ tanrısı taslağı yerinde durur.",
+      en: "The largest known open-air sculpture workshop of the Near East: more than three hundred half-finished lions, sphinxes and mountain gods lie across the slope where they were left.",
+    },
+    popularity: 6,
+  }),
+  h({
+    slug: "dikilitas",
+    name: { tr: "Theodosius Dikilitaşı", en: "Obelisk of Theodosius" },
+    heritageType: "monument",
+    region: "marmara",
+    province: { tr: "İstanbul", en: "İstanbul" },
+    lat: 41.0061,
+    lng: 28.9753,
+    civilizations: ["Mısır", "Roma", "Bizans"],
+    era: { tr: "MÖ 15. yüzyıl", en: "15th century BC" },
+    unesco: "listed",
+    fee: 0,
+    summary: {
+      tr: "III. Tutmosis'in Karnak'ta diktirdiği granit dikilitaş, MS 390'da Hipodrom'a taşındı; kaidesindeki kabartmalar taşın nasıl dikildiğini adım adım gösterir.",
+      en: "The granite obelisk Thutmose III raised at Karnak, moved to the Hippodrome in AD 390; the reliefs on its base show step by step how it was set upright.",
+    },
+    figures: ["III. Tutmosis", "I. Theodosius"],
+    popularity: 7,
+  }),
+  h({
+    slug: "ozkonak",
+    name: { tr: "Özkonak Yeraltı Şehri", en: "Özkonak Underground City" },
+    heritageType: "rock-site",
+    region: "ic-anadolu",
+    province: { tr: "Nevşehir", en: "Nevşehir" },
+    lat: 38.7889,
+    lng: 34.8544,
+    civilizations: ["Bizans", "Roma"],
+    era: { tr: "MS 4. yüzyıl", en: "4th century AD" },
+    summary: {
+      tr: "Avanos'un kuzeyindeki yeraltı şehri; kat aralarına açılmış borularla saldırganların üzerine kaynar yağ dökülebilen savunma düzeni Kapadokya'da tektir.",
+      en: "The underground city north of Avanos, with a defensive arrangement unique in Cappadocia: pipes cut between the storeys so that hot oil could be poured on attackers.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "aciksaray",
+    name: { tr: "Açıksaray", en: "Açıksaray" },
+    heritageType: "rock-site",
+    region: "ic-anadolu",
+    province: { tr: "Nevşehir", en: "Nevşehir" },
+    lat: 38.7236,
+    lng: 34.6217,
+    civilizations: ["Bizans"],
+    era: { tr: "9.-11. yüzyıl", en: "9th–11th century" },
+    fee: 0,
+    summary: {
+      tr: "Gülşehir yakınındaki kaya yerleşimi, kiliseden çok konut ve ahırdan oluşur; Kapadokya'da bir Bizans taşra soylusunun nasıl yaşadığını gösteren en iyi örnektir.",
+      en: "The rock settlement near Gülşehir is made up of dwellings and stables rather than churches — the clearest picture in Cappadocia of how a provincial Byzantine landowner lived.",
+    },
+    popularity: 4,
+  }),
+  h({
+    slug: "yazilikaya",
+    name: { tr: "Yazılıkaya (Hattuşa)", en: "Yazılıkaya" },
+    heritageType: "sanctuary",
+    region: "karadeniz",
+    province: { tr: "Çorum", en: "Çorum" },
+    lat: 40.0244,
+    lng: 34.6353,
+    civilizations: ["Hitit"],
+    era: { tr: "MÖ 13. yüzyıl", en: "13th century BC" },
+    unesco: "listed",
+    summary: {
+      tr: "Hattuşa'nın açık hava tapınağı: iki kaya odasının duvarlarında altmışı aşkın tanrı ve tanrıça alayı kabartma olarak yürür.",
+      en: "The open-air sanctuary of Hattusa: along the walls of two rock chambers, a procession of more than sixty gods and goddesses is carved in relief.",
+    },
+    popularity: 7,
+  }),
+  h({
+    slug: "smintheion",
+    name: { tr: "Smintheion", en: "Smintheion" },
+    heritageType: "sanctuary",
+    region: "marmara",
+    province: { tr: "Çanakkale", en: "Çanakkale" },
+    lat: 39.5322,
+    lng: 26.13,
+    civilizations: ["Helenistik", "Roma"],
+    era: { tr: "MÖ 2. yüzyıl", en: "2nd century BC" },
+    summary: {
+      tr: "Apollon Smintheus'un tapınağı; İlyada'nın ilk sayfalarında adı geçen kültün merkezidir ve friz kabartmaları doğrudan destanın sahnelerini anlatır.",
+      en: "The temple of Apollo Smintheus, centre of the cult named in the opening pages of the Iliad, its frieze carved with scenes from the epic itself.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "yumuktepe",
+    name: { tr: "Yumuktepe Höyüğü", en: "Yumuktepe" },
+    heritageType: "mound",
+    region: "akdeniz",
+    province: { tr: "Mersin", en: "Mersin" },
+    lat: 36.8047,
+    lng: 34.6206,
+    civilizations: ["Neolitik", "Kalkolitik", "Hitit", "Roma"],
+    era: { tr: "MÖ 7000", en: "7000 BC" },
+    summary: {
+      tr: "Otuz üç yerleşim katmanıyla dünyanın kesintisiz iskân edilmiş en eski höyüklerinden biri; Kalkolitik surları, bilinen en erken kale duvarları arasındadır.",
+      en: "With thirty-three settlement layers, one of the longest continuously inhabited mounds in the world; its Chalcolithic walls are among the earliest fortifications known.",
+    },
+    popularity: 5,
+  }),
+  h({
+    slug: "domuztepe",
+    name: { tr: "Domuztepe Höyüğü", en: "Domuztepe" },
+    heritageType: "mound",
+    region: "akdeniz",
+    province: { tr: "Kahramanmaraş", en: "Kahramanmaraş" },
+    lat: 37.3208,
+    lng: 36.8703,
+    civilizations: ["Halaf", "Kalkolitik"],
+    era: { tr: "MÖ 6000", en: "6000 BC" },
+    summary: {
+      tr: "Halaf kültürünün bilinen en büyük yerleşimi; 'Ölüm Çukuru' adı verilen toplu gömü, tarih öncesi Anadolu'nun en tartışmalı buluntularından biridir.",
+      en: "The largest known settlement of the Halaf culture; the mass burial called the Death Pit is among the most argued-over finds in prehistoric Anatolia.",
+    },
+    popularity: 4,
+  }),
+  h({
+    slug: "sillyon",
+    name: { tr: "Sillyon", en: "Sillyon" },
+    heritageType: "ancient-city",
+    region: "akdeniz",
+    province: { tr: "Antalya", en: "Antalya" },
+    lat: 36.9922,
+    lng: 30.9814,
+    civilizations: ["Pamfilya", "Helenistik", "Roma", "Selçuklu"],
+    era: { tr: "MÖ 5. yüzyıl", en: "5th century BC" },
+    summary: {
+      tr: "Ovaya hâkim düz tepenin üzerindeki kent, Büyük İskender'in alamadığı ender Anadolu kentlerinden biridir; Pamfilya lehçesiyle yazılmış yazıtı burada bulundu.",
+      en: "On a flat-topped hill over the plain, one of the few Anatolian cities Alexander failed to take; the only substantial inscription in the Pamphylian dialect was found here.",
+    },
+    figures: ["Büyük İskender"],
+    popularity: 5,
+  }),
+  h({
+    slug: "kremna",
+    name: { tr: "Kremna", en: "Cremna" },
+    heritageType: "ancient-city",
+    region: "akdeniz",
+    province: { tr: "Burdur", en: "Burdur" },
+    lat: 37.4236,
+    lng: 30.5119,
+    civilizations: ["Pisidya", "Roma"],
+    era: { tr: "MÖ 3. yüzyıl", en: "3rd century BC" },
+    summary: {
+      tr: "Pisidya'nın uçurumla çevrili Roma kolonisi; MS 278'deki isyanı bastırmak için Romalıların yaptığı kuşatma rampası ve karargâh bugün hâlâ görülebiliyor.",
+      en: "A Roman colony in Pisidia ringed by cliffs, where the siege ramp and camp the Romans built to put down the revolt of AD 278 can still be traced.",
+    },
+    popularity: 4,
+  }),
 ];
 
 export const totalSites = sites.length;
@@ -3773,7 +4792,7 @@ const heritageTypeNames: Record<HeritageType, Localized> = {
   aqueduct: { tr: "Su kemeri", en: "Aqueduct" },
   cistern: { tr: "Sarnıç", en: "Cistern" },
   tomb: { tr: "Türbe ve kümbet", en: "Tomb" },
-  "old-town": { tr: "Tarihî kent dokusu", en: "Historic town" },
+  "old-town": { tr: "Tarihi kent dokusu", en: "Historic town" },
   museum: { tr: "Müze", en: "Museum" },
 };
 
@@ -3812,9 +4831,43 @@ export const historicPlaces: Site[] = sites
   .filter((site) => STANDING_TYPES.has(site.heritageType))
   .sort((a, b) => b.popularity - a.popularity);
 
-/** Only the types the data holds, so the filter offers no dead options. */
-export function usedHeritageTypes(): HeritageType[] {
-  const present = new Set(sites.map((site) => site.heritageType));
+/** What you walk over rather than into: the excavated half of the data. */
+const RUIN_TYPES = new Set<HeritageType>(["ancient-city", "sanctuary", "mound"]);
+
+/** Excavated cities, sanctuaries and mounds, most visited first. */
+export const ancientCities: Site[] = sites
+  .filter((site) => RUIN_TYPES.has(site.heritageType))
+  .sort((a, b) => b.popularity - a.popularity);
+
+/** Museums, most visited first. */
+export const museums: Site[] = sites
+  .filter((site) => site.heritageType === "museum")
+  .sort((a, b) => b.popularity - a.popularity);
+
+/**
+ * The three lists the browse tabs are built from, plus the whole set.
+ *
+ * Every site belongs to exactly one of the three: the type sets are disjoint
+ * and together they cover `HeritageType`, so a type added to the union without
+ * being added to a set would silently vanish from every tab. The test suite
+ * asserts that, because nothing on screen would show it.
+ */
+export const SCOPES = ["hepsi", "antik", "tarihi", "muze"] as const;
+export type Scope = (typeof SCOPES)[number];
+
+export function scopeSites(scope: Scope): Site[] {
+  if (scope === "antik") return ancientCities;
+  if (scope === "tarihi") return historicPlaces;
+  if (scope === "muze") return museums;
+  return sites;
+}
+
+/**
+ * Only the types the given list holds, so the filter offers no dead options —
+ * the ancient-cities tab must not offer "Mosque" and come back empty.
+ */
+export function usedHeritageTypes(list: readonly Site[] = sites): HeritageType[] {
+  const present = new Set(list.map((site) => site.heritageType));
   return heritageTypeOrder.filter((type) => present.has(type));
 }
 

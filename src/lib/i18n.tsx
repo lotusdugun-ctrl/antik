@@ -28,13 +28,19 @@ const dict = {
     en: "Discover, learn and log the ancient cities of Türkiye.",
   },
   nav_home: { tr: "Ana Sayfa", en: "Home" },
-  nav_explore: { tr: "Tarihî Yerler", en: "Heritage Sites" },
+  /**
+   * The four browse tabs. `nav_explore` is the unscoped one and is deliberately
+   * the vaguest word of the four: everything else on the bar names a kind of
+   * place, so the tab that names none has to read as "no filter at all".
+   */
+  nav_explore: { tr: "Tümü", en: "All" },
+  nav_ancient: { tr: "Antik Kentler", en: "Ancient Cities" },
   nav_map: { tr: "Harita", en: "Map" },
   nav_regions: { tr: "Bölgeler", en: "Regions" },
   nav_games: { tr: "Oyunlar", en: "Games" },
   nav_profile: { tr: "Profil", en: "Profile" },
   search_placeholder: {
-    tr: "Antik kent, il veya tarihî kişi ara…",
+    tr: "Antik kent, il veya tarihi kişi ara…",
     en: "Search a city, province or historical figure…",
   },
   daily_pick: { tr: "Günün antik kenti", en: "Ancient city of the day" },
@@ -72,7 +78,7 @@ const dict = {
   structures: { tr: "Önemli yapılar", en: "Key structures" },
   gallery: { tr: "Fotoğraf galerisi", en: "Gallery" },
   did_you_know: { tr: "Bunu biliyor muydunuz?", en: "Did you know?" },
-  figures: { tr: "Tarihî kişiler", en: "Historical figures" },
+  figures: { tr: "Tarihi kişiler", en: "Historical figures" },
   filters: { tr: "Filtreler", en: "Filters" },
   region: { tr: "Bölge", en: "Region" },
   province: { tr: "İl", en: "Province" },
@@ -119,7 +125,7 @@ const dict = {
    * it holds museums, mosques, caves and Ottoman towns — so a count labelled
    * "antik kent" would now be a false claim about what is in it.
    */
-  heritage_sites: { tr: "tarihî yer", en: "heritage sites" },
+  heritage_sites: { tr: "tarihi yer", en: "heritage sites" },
   type: { tr: "Tür", en: "Type" },
   regions: { tr: "bölge", en: "regions" },
   km_away: { tr: "km uzakta", en: "km away" },
@@ -140,7 +146,7 @@ const dict = {
   },
   game_who: { tr: "Kim bu?", en: "Who is this?" },
   game_who_d: {
-    tr: "Tarihî kişiyi doğru kente eşle.",
+    tr: "Tarihi kişiyi doğru kente eşle.",
     en: "Match the historical figure to their city.",
   },
   game_tf: { tr: "Doğru / Yanlış", en: "True / False" },
@@ -271,15 +277,18 @@ const dict = {
     tr: "Kazılardan çıkanların bugün durduğu yerler. Bir ören yerini gezdikten sonra sıra buraya gelir — çoğu zaman aradığın heykel ya da mozaik burada.",
     en: "Where what came out of the ground is kept today. The museum is the second half of a visit to a ruin: the statue or the mosaic you were looking for is usually here.",
   },
-  /**
-   * Deliberately not "Tarihî Yerler", which `nav_explore` already uses for the
-   * whole index. This is the narrower set: the heritage that is still a
-   * building rather than a foundation.
-   */
-  nav_places: { tr: "Tarihî Mekânlar", en: "Historic Places" },
+  nav_places: { tr: "Tarihi Yerler", en: "Historic Places" },
   places_sub: {
-    tr: "Kazı alanı değil, hâlâ ayakta duran miras: camiler, kaleler, köprüler, kervansaraylar, kaya kiliseleri ve Osmanlı kent dokuları. İçine girilen, üzerinden geçilen, hâlâ kullanılan yerler.",
+    tr: "Kazı alanı değil, hâlâ ayakta duran miras: camiler, kaleler, köprüler, kervansaraylar, kaya kiliseleri ve Osmanlı kent dokuları. İçine girilen, üzerinden geçilen, çoğu hâlâ kullanılan yerler.",
     en: "Not excavations but heritage still standing: mosques, castles, bridges, caravanserais, rock churches and Ottoman quarters — places you walk into, cross, or that are still in daily use.",
+  },
+  ancient_sub: {
+    tr: "Toprağın altından çıkarılanlar: İyonya'nın mermer kentleri, Likya kaya mezarları, Hitit başkentleri ve Neolitik höyükler. Üzerinde yürüdüğün, içinde oturulmayan yerler.",
+    en: "What was dug back out of the ground: the marble cities of Ionia, the rock tombs of Lycia, the Hittite capitals and the Neolithic mounds — places you walk over, not into.",
+  },
+  explore_sub: {
+    tr: "Bütün miras tek listede. Bölge, il, uygarlık ve türe göre filtrele; listede ya da harita üzerinde gez.",
+    en: "The whole of the heritage in one list. Filter by region, province, civilisation and type; browse it as a list or on the map.",
   },
   nav_collections: { tr: "Koleksiyonlar", en: "Collections" },
   collections_title: { tr: "Koleksiyonlar", en: "Collections" },
@@ -287,26 +296,9 @@ const dict = {
     tr: "Bir temayı takip eden derlemeler: bir hafta sonuna sığan rotalar, ücretsiz ören yerleri, kayıp harikalar.",
     en: "Curated sets that follow one theme: routes that fit a weekend, sites that cost nothing, lost wonders.",
   },
-  collection_sites: { tr: "tarihî yer", en: "sites" },
+  collection_sites: { tr: "tarihi yer", en: "sites" },
   collection_visited: { tr: "gezildi", en: "visited" },
   collection_back: { tr: "Tüm koleksiyonlar", en: "All collections" },
-
-  // ——— Daily challenge ———
-  nav_daily: { tr: "Günlük", en: "Daily" },
-  daily_title: { tr: "Günün Antik Kenti", en: "Ancient City of the Day" },
-  daily_sub: {
-    tr: "Herkese aynı beş soru, her gün yenisi. Sonucunu tek satırda paylaşabilirsin.",
-    en: "The same five questions for everyone, new every day. Share your result in a single line.",
-  },
-  daily_done_today: {
-    tr: "Bugünün sorularını çözdün. Yarın yenisi gelecek.",
-    en: "You have finished today's questions. New ones arrive tomorrow.",
-  },
-  daily_share: { tr: "Sonucu kopyala", en: "Copy result" },
-  daily_copied: { tr: "Panoya kopyalandı", en: "Copied to clipboard" },
-  daily_streak: { tr: "günlük seri", en: "day streak" },
-  daily_play: { tr: "Bugünü oyna", en: "Play today" },
-  daily_question_of: { tr: "/ 5", en: "/ 5" },
 
   // ——— Backup ———
   backup_title: { tr: "Yedekle ve taşı", en: "Back up and transfer" },
@@ -349,7 +341,7 @@ const dict = {
     en: "Explore the ancient cities of Türkiye on a map, read their histories, log your visits and learn through mini games.",
   },
   seo_explore_title: {
-    tr: "Tarihî Yerler — Antik Kentler, Anıtlar ve Müzeler | Antik Türkiye",
+    tr: "Tarihi Yerler — Antik Kentler, Anıtlar ve Müzeler | Antik Türkiye",
     en: "Heritage Sites — Ancient Cities, Monuments and Museums | Ancient Türkiye",
   },
   seo_explore_desc: {
@@ -425,12 +417,20 @@ const dict = {
     tr: "Anadolu Medeniyetleri, Zeugma Mozaik, İstanbul Arkeoloji ve daha fazlası: kazılardan çıkan eserlerin sergilendiği müzeleri harita üzerinde keşfet.",
     en: "Anatolian Civilizations, the Zeugma Mosaic Museum, Istanbul Archaeological and more: find the museums holding what the excavations produced, on a map.",
   },
+  seo_ancient_title: {
+    tr: "Antik Kentler — Türkiye'nin Ören Yerleri ve Höyükleri | Antik Türkiye",
+    en: "Ancient Cities — Archaeological Sites and Mounds of Türkiye | Ancient Türkiye",
+  },
+  seo_ancient_desc: {
+    tr: "Efes'ten Göbeklitepe'ye, Hattuşa'dan Aphrodisias'a: Türkiye'nin antik kentlerini, kutsal alanlarını ve höyüklerini bölge, uygarlık ve UNESCO durumuna göre filtrele.",
+    en: "From Ephesus to Göbeklitepe, Hattusa to Aphrodisias: filter the ancient cities, sanctuaries and mounds of Türkiye by region, civilisation and UNESCO status.",
+  },
   seo_places_title: {
-    tr: "Tarihî Mekânlar — Camiler, Kaleler, Köprüler ve Hanlar | Antik Türkiye",
+    tr: "Tarihi Yerler — Camiler, Kaleler, Köprüler ve Hanlar | Antik Türkiye",
     en: "Historic Places — Mosques, Castles, Bridges and Caravanserais | Ancient Türkiye",
   },
   seo_places_desc: {
-    tr: "Sultanahmet'ten Anıtkabir'e, Malabadi Köprüsü'nden Sultanhanı'na: Türkiye'nin hâlâ ayakta duran tarihî yapılarını harita üzerinde keşfet.",
+    tr: "Sultanahmet'ten Anıtkabir'e, Malabadi Köprüsü'nden Sultanhanı'na: Türkiye'nin hâlâ ayakta duran tarihi yapılarını harita üzerinde keşfet.",
     en: "From the Blue Mosque to Anıtkabir, the Malabadi Bridge to the Sultan Han: explore the historic buildings of Türkiye that are still standing, on a map.",
   },
   seo_collections_title: {
@@ -440,14 +440,6 @@ const dict = {
   seo_collections_desc: {
     tr: "Bir hafta sonuna sığan Likya rotası, ücretsiz ören yerleri, UNESCO listesi ve daha fazlası: temaya göre derlenmiş antik kent listeleri.",
     en: "A Lycian route that fits a weekend, sites that cost nothing, the UNESCO list and more: ancient cities gathered by theme.",
-  },
-  seo_daily_title: {
-    tr: "Günün Antik Kenti — Günlük Beş Soru | Antik Türkiye",
-    en: "Ancient City of the Day — Five Questions Daily | Ancient Türkiye",
-  },
-  seo_daily_desc: {
-    tr: "Her gün herkese aynı beş soru. Antik kentler hakkında bilgini sına, sonucunu paylaş, serini sürdür.",
-    en: "The same five questions for everyone, every day. Test what you know about the ancient cities, share your result, keep your streak.",
   },
 } satisfies Record<string, Localized>;
 

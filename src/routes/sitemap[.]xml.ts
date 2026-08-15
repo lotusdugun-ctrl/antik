@@ -18,14 +18,14 @@ import { regions, sites } from "@/lib/sites";
 const staticPaths = [
   "/",
   "/kentler",
+  "/antik-kentler",
+  "/tarihi-yerler",
   "/muzeler",
-  "/tarihi-mekanlar",
   "/harita",
   "/bolgeler",
   "/koleksiyonlar",
   "/rota",
   "/oyunlar",
-  "/gunluk",
   "/gorseller",
 ];
 

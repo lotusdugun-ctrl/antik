@@ -2,9 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
-  CalendarDays,
   Compass,
-  Flame,
   Layers,
   MapPin,
   Navigation,
@@ -19,10 +17,12 @@ import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
 import { seoTags } from "@/lib/seo";
 import {
+  ancientCities,
   distanceKm,
   getSite,
   heroImage,
   historicPlaces,
+  museums,
   regionCoverImage,
   regions,
   siteOfTheDay,
@@ -72,20 +72,10 @@ function Index() {
 
   useEffect(() => setDaily(siteOfTheDay()), []);
 
-  const popular = useMemo(
-    () => [...sites].sort((a, b) => b.popularity - a.popularity).slice(0, 8),
-    [],
-  );
-  // Both lists arrive sorted by popularity from the data layer.
-  const places = historicPlaces.slice(0, 4);
-  const museums = useMemo(
-    () =>
-      sites
-        .filter((site) => site.heritageType === "museum")
-        .sort((a, b) => b.popularity - a.popularity)
-        .slice(0, 4),
-    [],
-  );
+  // All three arrive sorted by popularity from the data layer.
+  const topCities = ancientCities.slice(0, 8);
+  const topPlaces = historicPlaces.slice(0, 4);
+  const topMuseums = museums.slice(0, 4);
   const recent = state.recent.map(getSite).filter(Boolean).slice(0, 4);
   const nearby = useMemo(() => {
     if (!coords) return [];
@@ -157,32 +147,6 @@ function Index() {
       </section>
 
       <div className="mx-auto max-w-7xl space-y-14 px-4 py-12 sm:px-6">
-        {/* Daily challenge — the reason to come back tomorrow, and the only
-            entry point to it on a phone, where the tab bar is already full. */}
-        <section>
-          <Link
-            to="/gunluk"
-            className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border-l-4 border-gold bg-secondary p-6 transition-transform hover:scale-[1.01] sm:p-8"
-          >
-            <div className="min-w-0">
-              <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-                <CalendarDays className="h-3.5 w-3.5" /> {t("daily_title")}
-              </p>
-              <h3 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
-                {t("daily_sub")}
-              </h3>
-              {state.dailyStreak > 1 && (
-                <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-gold">
-                  <Flame className="h-4 w-4" /> {state.dailyStreak} {t("daily_streak")}
-                </p>
-              )}
-            </div>
-            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
-              {t("daily_play")} <ArrowRight className="h-4 w-4" />
-            </span>
-          </Link>
-        </section>
-
         {/* Daily pick */}
         <section>
           <SectionTitle title={t("daily_pick")} />
@@ -347,12 +311,12 @@ function Index() {
         {/* Historic places — the heritage that is still a building, kept apart
             from the ruins so it is not buried under a hundred ancient cities. */}
         <section>
-          <SectionTitle title={t("nav_places")} action={t("view_all")} to="/tarihi-mekanlar" />
+          <SectionTitle title={t("nav_places")} action={t("view_all")} to="/tarihi-yerler" />
           <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             {t("places_sub")}
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {places.map((site) => (
+            {topPlaces.map((site) => (
               <SiteCard key={site.slug} site={site} />
             ))}
           </div>
@@ -365,17 +329,17 @@ function Index() {
             {t("museums_sub")}
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {museums.map((site) => (
+            {topMuseums.map((site) => (
               <SiteCard key={site.slug} site={site} />
             ))}
           </div>
         </section>
 
-        {/* Popular */}
+        {/* Popular ancient cities */}
         <section>
-          <SectionTitle title={t("popular")} action={t("view_all")} to="/kentler" />
+          <SectionTitle title={t("popular")} action={t("view_all")} to="/antik-kentler" />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {popular.map((site) => (
+            {topCities.map((site) => (
               <SiteCard key={site.slug} site={site} />
             ))}
           </div>
