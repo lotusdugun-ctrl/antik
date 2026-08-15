@@ -37,7 +37,7 @@ import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
 import { structurePhotoFor } from "@/lib/structure-photos";
 import { structureInfo } from "@/lib/structures";
-import { coverImage, getSite, regions } from "@/lib/sites";
+import { coverImage, getSite, heritageTypeName, regions } from "@/lib/sites";
 
 export const Route = createFileRoute("/kent/$slug")({
   loader: ({ params }) => {
@@ -63,10 +63,17 @@ export const Route = createFileRoute("/kent/$slug")({
     }
     const name = loaderData.name[lang];
     const image = imageAt(loaderData.image, 1280);
+    const site = getSite(loaderData.slug);
+    const region = site && regions.find((r) => r.id === site.region);
+    // The type belongs in the title: "Titus Tüneli Antik Kenti" was what a
+    // hardcoded suffix produced for a tunnel, and for a museum.
+    const typeName = site ? heritageTypeName(site.heritageType)[lang] : "";
     const tags = seoTags({
       lang,
       pathname: `/kent/${loaderData.slug}`,
-      title: `${name} ${translate("seo_city_suffix", lang)}`,
+      title: typeName
+        ? `${name} — ${typeName} | ${translate("seo_place_suffix", lang)}`
+        : `${name} | ${translate("seo_place_suffix", lang)}`,
       description: loaderData.summary[lang],
       // Social cards want a large image, not the 330px card thumbnail.
       image,
@@ -75,8 +82,6 @@ export const Route = createFileRoute("/kent/$slug")({
 
     // Structured data: without it a search engine has to infer from prose that
     // this page is about one place, at one coordinate, in one province.
-    const site = getSite(loaderData.slug);
-    const region = site && regions.find((r) => r.id === site.region);
     const scripts =
       site && region
         ? [

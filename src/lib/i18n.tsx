@@ -381,9 +381,13 @@ const dict = {
     tr: "Gezdiğin antik kentler, favorilerin, bölge bazlı ilerlemen, XP seviyen ve kazandığın başarı rozetleri.",
     en: "The ancient cities you have visited, your favourites, regional progress, XP level and the badges you have earned.",
   },
-  seo_city_suffix: {
-    tr: "Antik Kenti — Tarihçe, Ziyaret Bilgileri",
-    en: "Ancient City — History and Visitor Information",
+  /**
+   * Composed with the place's own type rather than hardcoding "Antik Kenti",
+   * which titled the Titus Tunnel and the Mevlâna Museum as ancient cities.
+   */
+  seo_place_suffix: {
+    tr: "Tarihçe ve ziyaret bilgileri",
+    en: "History and visitor information",
   },
   seo_region_suffix: {
     tr: "Bölgesi Antik Kentleri",
