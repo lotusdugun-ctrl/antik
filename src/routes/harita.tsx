@@ -28,7 +28,8 @@ function MapPage() {
         <div className="min-w-0">
           <h1 className="font-display text-3xl font-semibold sm:text-4xl">{t("nav_map")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {sites.length} {t("cities")} · {state.visited.length} {t("visited_done").toLowerCase()}
+            {sites.length} {t("heritage_sites")} · {state.visited.length}{" "}
+            {t("visited_done").toLowerCase()}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground">

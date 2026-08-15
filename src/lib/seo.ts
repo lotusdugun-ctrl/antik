@@ -161,7 +161,8 @@ export function siteTags(
         addressRegion: options.regionName,
         addressLocality: site.province[options.lang],
       },
-      isAccessibleForFree: site.fee === 0,
+      // Only asserted when we know: an unknown fee is not evidence of a paid site.
+      ...(site.fee === undefined ? {} : { isAccessibleForFree: site.fee === 0 }),
       touristType: "Cultural",
       ...(site.unesco === "listed"
         ? {

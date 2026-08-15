@@ -22,9 +22,11 @@ import {
   distanceKm,
   getSite,
   heroImage,
+  regionCoverImage,
   regions,
   siteOfTheDay,
   sites,
+  totalSites,
   coverImage,
 } from "@/lib/sites";
 
@@ -116,7 +118,7 @@ function Index() {
           <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-7xl px-4 pb-10 sm:px-6">
             <p className="fade-up mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/85">
               <Sparkles className="h-3.5 w-3.5" />
-              {sites.length} {t("cities")} · 7 {t("regions")}
+              {totalSites} {t("heritage_sites")} · {regions.length} {t("regions")}
             </p>
             <h1 className="fade-up max-w-3xl font-display text-4xl font-semibold leading-[1.05] text-white sm:text-6xl">
               {t("tagline")}
@@ -273,7 +275,7 @@ function Index() {
                 className="group relative aspect-[5/3] overflow-hidden rounded-2xl border border-border lift"
               >
                 <Photo
-                  src={region.image}
+                  src={regionCoverImage(region.id)}
                   alt={L(region.name)}
                   sizes="(min-width: 1280px) 300px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   fallbackWidth={330}
@@ -285,7 +287,7 @@ function Index() {
                     {L(region.name)}
                   </h3>
                   <p className="text-xs text-white/90">
-                    {sites.filter((s) => s.region === region.id).length} {t("cities")}
+                    {sites.filter((s) => s.region === region.id).length} {t("heritage_sites")}
                   </p>
                 </div>
               </Link>

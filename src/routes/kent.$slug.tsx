@@ -31,10 +31,12 @@ import {
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
+import { creditLine } from "@/lib/photo-credits";
 import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
 import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
-import { structureImage, structureInfo } from "@/lib/structures";
+import { structurePhotoFor } from "@/lib/structure-photos";
+import { structureInfo } from "@/lib/structures";
 import { coverImage, getSite, regions } from "@/lib/sites";
 
 export const Route = createFileRoute("/kent/$slug")({
@@ -127,7 +129,7 @@ function SiteDetail() {
   const shownPhotos = [
     ...gallery,
     coverImage(site),
-    ...(detail?.structures ?? []).map((s) => structureInfo[s.tr]?.image),
+    ...(detail?.structures ?? []).map((s) => structurePhotoFor(slug, s.tr)),
   ].filter((url): url is string => typeof url === "string");
 
   useEffect(() => {
@@ -137,6 +139,8 @@ function SiteDetail() {
 
   const visited = isVisited(slug);
   const selectedStructure = openStructure ? structureInfo[openStructure] : undefined;
+  const structurePhoto = openStructure ? structurePhotoFor(slug, openStructure) : undefined;
+  const structureCredit = structurePhoto ? creditLine(structurePhoto) : undefined;
 
   function onVisit() {
     const on = toggleVisited(slug);
@@ -351,15 +355,20 @@ function SiteDetail() {
         <DialogContent>
           {openStructure && (
             <>
-              <div className="overflow-hidden rounded-xl">
+              <figure className="overflow-hidden rounded-xl">
                 <Photo
-                  src={structureImage(openStructure, coverImage(site))}
+                  src={structurePhoto ?? coverImage(site)}
                   alt={openStructure}
                   sizes="(min-width: 640px) 512px, 100vw"
                   fallbackWidth={500}
                   className="h-52 w-full object-cover"
                 />
-              </div>
+                <figcaption className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
+                  {/* Say so when this is the city and not the structure: the
+                      photo is otherwise indistinguishable from a real one. */}
+                  {structurePhoto ? structureCredit : t("structure_general_view")}
+                </figcaption>
+              </figure>
               <DialogHeader>
                 <DialogTitle className="font-display text-xl">{openStructure}</DialogTitle>
                 <DialogDescription>

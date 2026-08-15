@@ -28,7 +28,7 @@ const dict = {
     en: "Discover, learn and log the ancient cities of Türkiye.",
   },
   nav_home: { tr: "Ana Sayfa", en: "Home" },
-  nav_explore: { tr: "Antik Kentler", en: "Ancient Cities" },
+  nav_explore: { tr: "Tarihî Yerler", en: "Heritage Sites" },
   nav_map: { tr: "Harita", en: "Map" },
   nav_regions: { tr: "Bölgeler", en: "Regions" },
   nav_games: { tr: "Oyunlar", en: "Games" },
@@ -114,6 +114,13 @@ const dict = {
     en: "Explore ruins across Türkiye's seven regions and track your progress.",
   },
   cities: { tr: "antik kent", en: "ancient cities" },
+  /**
+   * The neutral word for a total. The list is no longer only ancient cities —
+   * it holds museums, mosques, caves and Ottoman towns — so a count labelled
+   * "antik kent" would now be a false claim about what is in it.
+   */
+  heritage_sites: { tr: "tarihî yer", en: "heritage sites" },
+  type: { tr: "Tür", en: "Type" },
   regions: { tr: "bölge", en: "regions" },
   km_away: { tr: "km uzakta", en: "km away" },
   profile_sub: {
@@ -200,6 +207,10 @@ const dict = {
   structure_details: { tr: "Yapı hakkında", en: "About this structure" },
   structure_close: { tr: "Kapat", en: "Close" },
   structure_photo_of: { tr: "Fotoğraf", en: "Photo" },
+  structure_general_view: {
+    tr: "Bu fotoğraf kentin genel görünümüdür; yapının kendisine ait bir görsel henüz yok.",
+    en: "This is a general view of the city — there is no photograph of the structure itself yet.",
+  },
   structure_generic: {
     tr: "{site} kentinin önemli yapılarından biri. Kentin tarihçesi ve diğer kalıntıları için ayrıntılar bölümünü inceleyin.",
     en: "One of the key structures of {site}. Explore the history section to learn more about the city.",
@@ -224,6 +235,10 @@ const dict = {
   fee_indicative: {
     tr: "gösterge",
     en: "indicative",
+  },
+  fee_unknown: {
+    tr: "Ücret bilgisi elimizde yok — resmî tarifeden kontrol edin.",
+    en: "We do not have the fee for this site — check the official tariff.",
   },
   fee_indicative_note: {
     tr: "Ücretler her yıl güncellenir. Yola çıkmadan önce resmî tarifeden doğrulayın.",
@@ -257,7 +272,7 @@ const dict = {
     tr: "Bir temayı takip eden derlemeler: bir hafta sonuna sığan rotalar, ücretsiz ören yerleri, kayıp harikalar.",
     en: "Curated sets that follow one theme: routes that fit a weekend, sites that cost nothing, lost wonders.",
   },
-  collection_sites: { tr: "antik kent", en: "sites" },
+  collection_sites: { tr: "tarihî yer", en: "sites" },
   collection_visited: { tr: "gezildi", en: "visited" },
   collection_back: { tr: "Tüm koleksiyonlar", en: "All collections" },
 
@@ -319,12 +334,12 @@ const dict = {
     en: "Explore the ancient cities of Türkiye on a map, read their histories, log your visits and learn through mini games.",
   },
   seo_explore_title: {
-    tr: "Antik Kentler — Filtrele ve Keşfet | Antik Türkiye",
-    en: "Ancient Cities — Filter and Explore | Ancient Türkiye",
+    tr: "Tarihî Yerler — Antik Kentler, Anıtlar ve Müzeler | Antik Türkiye",
+    en: "Heritage Sites — Ancient Cities, Monuments and Museums | Ancient Türkiye",
   },
   seo_explore_desc: {
-    tr: "Bölge, il, uygarlık ve UNESCO durumuna göre Türkiye'deki antik kentleri filtrele; liste veya harita görünümünde keşfet.",
-    en: "Filter the ancient cities of Türkiye by region, province, civilisation and UNESCO status; browse them as a list or on the map.",
+    tr: "Türkiye'deki antik kentleri, anıtları, kaya yerleşimlerini, camileri ve müzeleri bölge, il, uygarlık, tür ve UNESCO durumuna göre filtrele; liste veya harita görünümünde keşfet.",
+    en: "Filter the ancient cities, monuments, rock settlements, mosques and museums of Türkiye by region, province, civilisation, type and UNESCO status; browse them as a list or on the map.",
   },
   seo_map_title: {
     tr: "Antik Kent Haritası — Türkiye | Antik Türkiye",

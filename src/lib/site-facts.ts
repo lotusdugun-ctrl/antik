@@ -1325,6 +1325,408 @@ export const siteFacts: Record<string, Localized[]> = {
       "The cuneiform archive of King Niqmepa records how a small Bronze Age kingdom kept its footing between great powers.",
     ),
   ],
+
+  // ————— Anıtlar ve mühendislik —————
+  "titus-tuneli": [
+    f(
+      "Tünel 1380 metre uzunluğunda, yer yer 7 metre yüksekliğinde ve tamamen elle, çekiç ve keskiyle oyulmuştur. Antik dünyanın bilinen en büyük su tahliye tünelidir.",
+      "The tunnel runs 1,380 metres, stands up to seven metres high in places, and was cut entirely by hand with hammer and chisel — the largest known diversion tunnel of the ancient world.",
+    ),
+    f(
+      "İki uçtan aynı anda kazılmaya başlandı ve ekipler dağın ortasında buluştu; birleşme noktasındaki hafif kayma bugün tünelin içinde çıplak gözle görülebiliyor.",
+      "Digging began from both ends at once and the teams met inside the mountain; the slight misalignment where they joined can still be seen with the naked eye.",
+    ),
+    f(
+      "Tünelin çıkışındaki Beşikli Mağara, kayaya oyulmuş on iki mezar odasından oluşan bir Roma nekropolüdür.",
+      "The Beşikli Cave at the tunnel's outflow is a Roman necropolis of twelve rock-cut burial chambers.",
+    ),
+  ],
+  karain: [
+    f(
+      "Mağaranın dolgusu 11 metre kalınlığındadır ve içinde yarım milyon yıllık kesintisiz bir yerleşim dizisi barındırır — Türkiye'de bunun benzeri yoktur.",
+      "The cave's deposits are eleven metres deep and hold an unbroken sequence of half a million years of occupation — there is nothing else like it in Türkiye.",
+    ),
+    f(
+      "Anadolu'da bulunan ilk Neandertal kalıntıları buradan çıktı; aynı katmanlarda Homo sapiens izleri de var.",
+      "The first Neanderthal remains found in Anatolia came from here, and traces of Homo sapiens occur in the same layers.",
+    ),
+  ],
+  ivriz: [
+    f(
+      "Kabartmada tanrı kraldan neredeyse iki kat büyük gösterilmiştir; boyut farkı Geç Hitit sanatında hiyerarşiyi anlatmanın standart yoludur.",
+      "The god is shown nearly twice the king's height: in Neo-Hittite art, scale is the standard way of stating rank.",
+    ),
+    f(
+      "Tanrının elindeki başak ve üzüm, bir tanrının elinde tarım ürünüyle betimlendiği bilinen en eski örneklerdendir.",
+      "The grain and grapes in the god's hands are among the earliest known images of a deity holding the produce of farming.",
+    ),
+  ],
+  eflatunpinar: [
+    f(
+      "Anıt, bir kaynağın tam üzerine kurulmuştur ve su hâlâ akmaktadır: üç bin yıl önce tasarlanan havuz bugün de dolu.",
+      "The monument was built directly over a spring, and the water still runs: the pool designed three thousand years ago is full today.",
+    ),
+    f(
+      "Hitit dünyasından günümüze kalan anıtsal su yapısı sayısı bir elin parmaklarını geçmez; Eflatunpınar bunların en eksiksizidir.",
+      "Monumental Hittite waterworks that survive can be counted on one hand, and Eflatunpınar is the most complete of them.",
+    ),
+  ],
+
+  // ————— Kapadokya —————
+  goreme: [
+    f(
+      "Karanlık Kilise adını tek bir küçük pencereden alır; içeri az ışık girdiği için freskleri Kapadokya'nın en canlı renkli resimleridir.",
+      "The Dark Church is named for its single small window: because so little light gets in, its frescoes are the most vividly coloured in Cappadocia.",
+    ),
+    f(
+      "Kaya kiliselerinin çoğunda taşıyıcı işlevi olmayan sütunlar ve kemerler yontulmuştur — kayanın içinde gereksiz olan bu ögeler, yalnızca gerçek bir kilise gibi görünsün diye yapılmıştır.",
+      "Most of the rock churches were carved with columns and arches that hold nothing up. Inside solid rock they are structurally pointless: they are there so the space would look like a real church.",
+    ),
+    f(
+      "Tokalı Kilise'nin mavi rengi, o dönemde altından pahalı olan lapis lazuli taşından elde edilmişti.",
+      "The blue of the Buckle Church was made from lapis lazuli — at the time, more expensive than gold.",
+    ),
+  ],
+  derinkuyu: [
+    f(
+      "Yeraltı kenti 1963'te bir ev tadilatında tesadüfen bulundu: duvarı yıkan adam, arkasından bilinmeyen bir oda çıkınca durdu.",
+      "The city was found by accident during home repairs in 1963: the man knocking through a wall stopped when an unknown room appeared behind it.",
+    ),
+    f(
+      "Katları ayıran yuvarlak taş kapılar bir tondan ağırdır ve yalnızca içeriden açılabilecek biçimde tasarlanmıştır.",
+      "The round stone doors between levels weigh over a tonne each and were designed to be opened only from the inside.",
+    ),
+    f(
+      "55 metre derinliğindeki havalandırma bacası aynı zamanda kuyudur; bacanın alt ucu kentin en derin katının da altındadır.",
+      "The 55-metre ventilation shaft doubles as a well, and its foot lies below even the deepest level of the city.",
+    ),
+  ],
+  kaymakli: [
+    f(
+      "Koridorlar kasten alçak ve dar yapılmıştır: içeri girmek zorunda kalan bir saldırgan eğilmek ve tek sıra ilerlemek zorundadır.",
+      "The corridors were made deliberately low and narrow: an attacker who got in had to stoop, and go single file.",
+    ),
+    f(
+      "Yüzeydeki köyün evleri hâlâ bu tünellerin üzerinde duruyor ve köylüler bir bölümünü depo olarak kullanmayı sürdürüyor.",
+      "The village above still stands on these tunnels, and its people still use parts of them for storage.",
+    ),
+  ],
+  zelve: [
+    f(
+      "Zelve, aynı kaya kütlesinde bir kaya kilisesi ile kayaya oyulmuş bir caminin yan yana bulunduğu ender yerlerdendir.",
+      "Zelve is one of the few places where a rock-cut church and a rock-cut mosque stand side by side in the same cliff.",
+    ),
+    f(
+      "Köy 1952'de kayaların çökme tehlikesi nedeniyle boşaltıldı; Kapadokya'da terk edilme tarihi kesin olarak bilinen ender yerleşimlerdendir.",
+      "The village was evacuated in 1952 because the rock was starting to collapse — one of the few Cappadocian settlements with an exact date of abandonment.",
+    ),
+  ],
+  ihlara: [
+    f(
+      "Vadi 14 kilometre uzunluğunda ve yer yer 100 metre derinliğindedir; duvarlarına yüzden fazla kilise ve şapel oyulmuştur.",
+      "The valley runs fourteen kilometres and reaches a hundred metres deep, with more than a hundred churches and chapels cut into its walls.",
+    ),
+    f(
+      "Freskler iki ayrı dünyanın resmini bir arada gösterir: yerel Kapadokya üslubu Doğu etkisi taşırken, aynı vadideki bazı kiliseler İstanbul saray üslubuyla boyanmıştır.",
+      "The frescoes hold two worlds together: the local Cappadocian manner shows eastern influence, while other churches in the same valley are painted in the court style of Constantinople.",
+    ),
+  ],
+
+  // ————— Manastır ve kiliseler —————
+  sumela: [
+    f(
+      "Manastır, vadi tabanından 300 metre yükseklikteki dik kayaya yaslanmıştır; yapıya ulaşan tek yol yamacı tırmanan patikadır.",
+      "The monastery is pressed against a cliff 300 metres above the valley floor, reached only by the path that climbs the slope.",
+    ),
+    f(
+      "Kaya Kilisesi'nin dış duvarı da baştan sona fresklidir: içeri sığmayanların ayini dışarıdan izleyebilmesi için resimler binanın dışına taşırılmıştır.",
+      "The rock church is frescoed on the outside too, so that those who could not fit in could follow the service from the terrace.",
+    ),
+    f(
+      "Osmanlı padişahları manastırın ayrıcalıklarını fermanlarla korudu; Yavuz Sultan Selim'in verdiği ferman da bunların arasındadır.",
+      "Ottoman sultans confirmed the monastery's privileges by decree — among them Selim I.",
+    ),
+  ],
+  ayasofya: [
+    f(
+      "Kubbe 55 metre yükseklikte ve 31 metre çapındadır; bin yıl boyunca dünyanın en büyük kapalı mekânı olarak kaldı.",
+      "The dome stands 55 metres high and 31 metres across, and for a thousand years covered the largest enclosed space in the world.",
+    ),
+    f(
+      "Kubbenin tabanındaki kırk pencere sırası, ağırlığı gizleyerek kubbenin havada asılı durduğu izlenimini verir; Prokopios kubbenin 'gökten altın bir zincirle sarkıyor gibi' göründüğünü yazar.",
+      "The ring of forty windows at the dome's base hides its weight and makes it seem to float; Procopius wrote that it looked as if it hung from heaven on a golden chain.",
+    ),
+    f(
+      "Kuzey galerinin mermer korkuluğunda bir Varang muhafızının kazıdığı rünik yazıt vardır — 'Halfdan bunu yazdı' diye okunur.",
+      "A Varangian guardsman scratched a runic inscription into a marble parapet in the north gallery: it reads as 'Halfdan carved this'.",
+    ),
+  ],
+  kariye: [
+    f(
+      "Parekklesion'daki Anastasis (Diriliş) freski Bizans resminin en tanınmış eseridir: İsa, Âdem ile Havva'yı bileklerinden tutup mezardan çekip çıkarır.",
+      "The Anastasis in the side chapel is the best-known image in Byzantine art: Christ hauls Adam and Eve out of their tombs by the wrists.",
+    ),
+    f(
+      "Bağışçı Theodoros Metokhites, kapı üstündeki mozaikte binanın maketini İsa'ya sunarken betimlenmiştir; devlet adamı olarak servetini kaybetti ve ömrünün sonunu bu manastırda keşiş olarak geçirdi.",
+      "The donor Theodore Metochites is shown above the door offering Christ a model of the building. He later lost his fortune and ended his life as a monk in this same monastery.",
+    ),
+  ],
+
+  // ————— Camiler —————
+  selimiye: [
+    f(
+      "Kubbe 31,25 metre çapıyla Ayasofya'nınkinden geniştir; Sinan ömrü boyunca uğraştığı bu hedefe seksen yaşından sonra ulaştı.",
+      "At 31.25 metres the dome is wider than that of Hagia Sophia — the goal Sinan worked towards his whole life, and reached after eighty.",
+    ),
+    f(
+      "Sinan taşıyıcı ayakları duvarlara iterek içeride hiçbir sütunun bölmediği tek bir hacim elde etti: caminin her noktasından mihrap görülür.",
+      "By pushing the piers into the walls Sinan won a single volume broken by no column: the mihrab is visible from every point in the mosque.",
+    ),
+    f(
+      "Müezzin mahfilinin altındaki sütunlardan birinde ters duran bir lale motifi vardır; arazisini vakfa vermek istemeyen lale bahçesi sahibinin inadını kaydettiği anlatılır.",
+      "One column beneath the muezzin's platform carries an upside-down tulip, said to record the stubbornness of a tulip grower who would not give up his land.",
+    ),
+  ],
+  divrigi: [
+    f(
+      "Taç kapılardaki kabartmalar o kadar derindir ki taş dokuma kumaş etkisi verir; İslam mimarisinde bu ölçekte ve serbestlikte başka bir bezeme yoktur.",
+      "The carving on the portals is so deep that the stone reads as woven cloth; no other ornament in Islamic architecture works at this scale or this freedom.",
+    ),
+    f(
+      "Yılın belirli günlerinde güneş, batı kapısının kabartmaları üzerinde namaz kılan bir insan silueti oluşturur.",
+      "On certain days of the year the sun casts, across the west portal's carving, the silhouette of a figure at prayer.",
+    ),
+    f(
+      "Darüşşifada hastaların su sesi ve müzikle tedavi edildiği, avlunun akustiğinin bunun için tasarlandığı kabul edilir.",
+      "The hospital is held to have treated patients with the sound of water and with music, and its courtyard acoustics to have been designed for it.",
+    ),
+  ],
+  suleymaniye: [
+    f(
+      "Kandillerin isi, tavandaki hava akımıyla tek bir odada toplanırdı; biriken kurum hattatların mürekkebi olurdu.",
+      "Soot from the lamps was funnelled by the airflow into a single chamber and collected to make ink for calligraphers.",
+    ),
+    f(
+      "Duvarların içine akustik için boşluklu küpler yerleştirilmiştir; imamın sesi mikrofonsuz olarak caminin her yerinden duyulur.",
+      "Hollow jars were built into the walls for the acoustics: without amplification, the imam is heard everywhere in the mosque.",
+    ),
+    f(
+      "Sinan kendi türbesini külliyenin dışına, köşedeki mütevazı bir yere yaptırdı; yaptığı camiye değil, ona giden yola bakar.",
+      "Sinan placed his own tomb outside the complex, in a modest corner — facing not the mosque he built but the road to it.",
+    ),
+  ],
+
+  // ————— Saray ve kaleler —————
+  topkapi: [
+    f(
+      "Saray tek bir yapı değil, dört avlu boyunca uzanan bir yerleşkedir; içeri doğru gidildikçe girebilenlerin sayısı azalır ve dördüncü avlu yalnızca padişaha açıktır.",
+      "The palace is a compound, not a building: four courtyards deep, each admitting fewer people, until the fourth is open to the sultan alone.",
+    ),
+    f(
+      "Mutfaklarda günde beş bine yakın kişiye yemek çıkardı; bacaları Sinan'ın yeniden tasarladığı bu yapılar bugün Çin porselenleri koleksiyonunu barındırıyor.",
+      "The kitchens fed close to five thousand people a day. Sinan redesigned their chimneys, and the buildings now hold the Chinese porcelain collection.",
+    ),
+    f(
+      "Harem'in duvarlarındaki İznik çinileri, 16. yüzyılda kaybolan ve bir daha üretilemeyen mercan kırmızısıyla boyanmıştır.",
+      "The İznik tiles of the Harem carry the coral red that was lost in the sixteenth century and never reproduced.",
+    ),
+  ],
+  "ishak-pasa": [
+    f(
+      "Sarayın merkezi ısıtma ve kanalizasyon sistemi vardı; 18. yüzyılda Anadolu'da bu donanıma sahip başka bir konut yapısı bilinmiyor.",
+      "The palace had central heating and a drainage system — no other residence in eighteenth-century Anatolia is known to have had either.",
+    ),
+    f(
+      "Altın kaplama kapı kanatları 1917'de sökülüp Rusya'ya götürüldü ve bugün Moskova'da bir müzede sergileniyor.",
+      "Its gilded door leaves were removed to Russia in 1917 and are shown today in a Moscow museum.",
+    ),
+    f(
+      "Yapıda Selçuklu, Osmanlı, Gürcü ve Ermeni taş işçiliği aynı cephede yan yana durur; hiçbir üslubun tek başına hâkim olmadığı ender bir örnektir.",
+      "Seljuk, Ottoman, Georgian and Armenian stonework stand side by side on the same façade — a rare case in which no one style takes over.",
+    ),
+  ],
+  "rumeli-hisari": [
+    f(
+      "Kale, İstanbul kuşatmasından önce yalnızca dört ayda tamamlandı; üç büyük kulenin her biri bir vezire verilmişti ve kuleler hâlâ onların adını taşır.",
+      "The fortress went up in four months before the siege of Constantinople. Each of its three great towers was assigned to a vizier, and still carries his name.",
+    ),
+    f(
+      "İnşaat sırasında Boğaz'dan izinsiz geçmeye çalışan bir Venedik gemisi batırıldı; olay Bizans'ın dışarıdan yardım umudunu fiilen bitirdi.",
+      "A Venetian ship that tried to run the strait while it was being built was sunk — which effectively ended Byzantine hopes of relief.",
+    ),
+  ],
+  "diyarbakir-surlari": [
+    f(
+      "5,8 kilometrelik bazalt sur, Çin Seddi'nden sonra dünyanın en uzun kesintisiz savunma duvarı sayılır.",
+      "Its 5.8 kilometres of basalt are reckoned the longest unbroken defensive circuit in the world after the Great Wall.",
+    ),
+    f(
+      "Burçların üzerindeki kitabeler Roma'dan Osmanlı'ya kenti yöneten her hanedanın imzasını taşır: sur, taş üzerine yazılmış bir iktidar arşividir.",
+      "The inscriptions on its towers carry the signature of every dynasty that held the city, from Rome to the Ottomans: the wall is an archive of power written in stone.",
+    ),
+    f(
+      "Surların dibindeki Hevsel Bahçeleri sekiz bin yıldır kesintisiz ekilip biçiliyor ve UNESCO listesine surlarla birlikte tek bir bütün olarak girdi.",
+      "The Hevsel Gardens below the walls have been farmed without a break for eight thousand years, and UNESCO inscribed them together with the walls as one whole.",
+    ),
+  ],
+
+  // ————— Tarihî kent dokuları —————
+  safranbolu: [
+    f(
+      "Kasabada bini aşkın tescilli Osmanlı evi ayaktadır; demiryolu ve karayolu güzergâhlarının Safranbolu'yu atlaması dokuyu koruyan asıl etken oldu.",
+      "More than a thousand registered Ottoman houses still stand. The railway and the highway both passed the town by, and that is what preserved it.",
+    ),
+    f(
+      "Evlerin çoğunda harem ile selamlık arasında dönen bir dolap vardır: yemek, iki taraf birbirini görmeden bu raf döndürülerek aktarılırdı.",
+      "Most houses have a revolving cupboard between the family and guest quarters: food was passed by turning the shelf, without either side seeing the other.",
+    ),
+    f(
+      "Kasabanın adı, çevresinde yetiştirilen ve bir zamanlar altınla tartılan safrandan gelir.",
+      "The town is named for the saffron grown around it, once weighed against gold.",
+    ),
+  ],
+  cumalikizik: [
+    f(
+      "Köy, geliri bir vakfa bağlandığı için yedi yüzyıl boyunca bölünmedi; sokak dokusu ve parselleme 14. yüzyıldan bu yana değişmedi.",
+      "Because its income was tied to a foundation, the village was never broken up: its street pattern and plot divisions are unchanged since the fourteenth century.",
+    ),
+    f(
+      "Yaklaşık 270 evin yarısından fazlası hâlâ ayaktadır ve içinde yaşanmaya devam eder — burası müze değil, çalışan bir köydür.",
+      "More than half of its roughly 270 houses still stand and are still lived in: this is a working village, not a museum.",
+    ),
+  ],
+  "mardin-eski-kent": [
+    f(
+      "Kent, her evin damı bir üstündeki evin avlusu olacak biçimde teraslanmıştır; bu düzen bütün kente kesintisiz bir ova manzarası verir.",
+      "The town is terraced so that each house's roof is the courtyard of the one above, which gives every house an unbroken view over the plain.",
+    ),
+    f(
+      "Cami, medrese, kilise ve manastır aynı sokakta yan yana durur; Süryani cemaatinin Deyrulzafaran Manastırı 1500 yıldır aynı yerdedir.",
+      "Mosque, madrasa, church and monastery stand on the same street, and the Syriac monastery of Deyrulzafaran has been in the same place for 1,500 years.",
+    ),
+    f(
+      "Kasımiye Medresesi'nin avlusundaki uzun havuz, kaynaktan çıkan, havuzda duran ve akıp giden suyla insan ömrünü anlatacak biçimde tasarlanmıştır.",
+      "The long pool in the Kasımiye Madrasa was designed to describe a human life: water rises, rests in the basin, and flows away.",
+    ),
+  ],
+
+  // ————— Müzeler —————
+  "anadolu-medeniyetleri-muzesi": [
+    f(
+      "Müze, 15. yüzyıldan kalma bir bedesten ile bir hanın restore edilip birleştirilmesiyle kuruldu; yani bina da koleksiyonun bir parçasıdır.",
+      "The museum was made by restoring and joining a fifteenth-century bedesten and a han: the building is part of the collection.",
+    ),
+    f(
+      "1997'de 'Yılın Avrupa Müzesi' seçildi; ödülü kazanan ilk Türkiye müzesidir.",
+      "It was named European Museum of the Year in 1997, the first museum in Türkiye to win the award.",
+    ),
+    f(
+      "Dünyanın en kapsamlı Hitit ve Geç Hitit koleksiyonu buradadır; Karatepe, Carchemish ve Arslantepe'nin ortostatları aynı salonda sıralanır.",
+      "It holds the world's fullest Hittite and Neo-Hittite collection: the orthostats of Karatepe, Carchemish and Arslantepe line up in one hall.",
+    ),
+  ],
+  "istanbul-arkeoloji-muzeleri": [
+    f(
+      "Türkiye'nin ilk müzesidir ve eski eserlerin yurt dışına çıkarılmasını yasaklayan düzenlemelerle birlikte doğdu: kazıdan çıkanın ülkede kalması için bir yer gerekiyordu.",
+      "Türkiye's first museum, born alongside the rules that stopped antiquities leaving the country: what came out of the ground needed somewhere to stay.",
+    ),
+    f(
+      "İskender Lahdi'nin adı yanıltıcıdır: lahit İskender için değil, çağdaşı Sidon kralı Abdalonymos için yapılmıştır.",
+      "The Alexander Sarcophagus is misnamed: it was made not for Alexander but for Abdalonymus, king of Sidon.",
+    ),
+    f(
+      "Kadeş Antlaşması'nın çivi yazılı tableti buradadır — bilinen en eski yazılı barış antlaşmasının bir kopyası New York'taki BM binasında asılıdır.",
+      "The cuneiform tablet of the Treaty of Kadesh is here; a copy of the oldest known written peace treaty hangs at the UN in New York.",
+    ),
+  ],
+  "zeugma-muzesi": [
+    f(
+      "Dünyanın en büyük mozaik müzesidir; sergilenen mozaikler Birecik Barajı suları yükselmeden önce kurtarma kazısıyla sökülüp çıkarıldı.",
+      "It is the largest mosaic museum in the world, and its floors were lifted out in a rescue dig before the Birecik dam filled.",
+    ),
+    f(
+      "Mozaikler, bulundukları odaların planına sadık kalarak yerleştirilmiştir: ziyaretçi mozaiklerin üzerinde değil, evlerin içinde dolaşır.",
+      "The mosaics are laid out following the plans of the rooms they came from, so a visitor walks through the houses rather than over the floors.",
+    ),
+    f(
+      "'Çingene Kızı' aslında büyük bir mozaiğin küçük bir parçasıdır; figürün bir Menad ya da toprak tanrıçası Gaia olduğunu savunan araştırmacılar vardır.",
+      "The 'Gypsy Girl' is a small fragment of a much larger mosaic, and some scholars read the figure as a maenad, or as the earth goddess Gaia.",
+    ),
+  ],
+  "sanliurfa-muzesi": [
+    f(
+      "Türkiye'nin en büyük kapalı sergi alanına sahiptir ve Göbekli Tepe'nin bir yapısı, kazı alanındaki ölçüleriyle müzenin içinde yeniden kurulmuştur.",
+      "It has the largest indoor exhibition space in Türkiye, and one of the enclosures of Göbekli Tepe has been rebuilt inside it at full excavation scale.",
+    ),
+    f(
+      "Balıklıgöl Heykeli yaklaşık 11.000 yaşındadır ve bilinen en eski insan boyutlu heykeldir; gözlerine obsidyen yerleştirilmiş, ağzı ise hiç yapılmamıştır.",
+      "The Balıklıgöl statue is about 11,000 years old, the oldest known life-size human figure. Obsidian was set into its eyes; it was never given a mouth.",
+    ),
+  ],
+  "hatay-muzesi": [
+    f(
+      "Antakya, Roma İmparatorluğu'nun en büyük üçüncü kentiydi; çevresindeki villaların taban mozaikleri dünyanın en zengin Roma mozaik koleksiyonunu oluşturur.",
+      "Antioch was the third city of the Roman Empire, and the floors of the villas around it make up the richest collection of Roman mosaic in the world.",
+    ),
+    f(
+      "Koleksiyondaki 'Uğursuzluğa Karşı' mozaiği nazarı bir göz olarak resmeder ve üstüne kargalar, bir akrep ve bir yılan salar: MS 2. yüzyıldan kalma bir muska.",
+      "The museum's 'Evil Eye' mosaic paints the curse as an eye and sets crows, a scorpion and a snake on it — a charm from the second century AD.",
+    ),
+  ],
+  "efes-muzesi": [
+    f(
+      "Artemis heykellerinin gövdesini kaplayan yumurta biçimli çıkıntıların ne olduğu hâlâ tartışılır: göğüs, boğa testisi, hurma ya da adak keseleri olduğu öne sürülmüştür.",
+      "What the egg-shaped protrusions on the Artemis statues are is still argued: breasts, bulls' testicles, dates and votive pouches have all been proposed.",
+    ),
+    f(
+      "Yamaç Evler'in fresk ve mozaikleri buradadır; Roma'da bir zenginin evinin içinin nasıl göründüğünü gösteren en eksiksiz buluntu gruplarındandır.",
+      "The frescoes and mosaics of the Terrace Houses are here — among the fullest surviving evidence of what the inside of a wealthy Roman home looked like.",
+    ),
+  ],
+  "antalya-muzesi": [
+    f(
+      "Müze 1922'de, kentteki eserlerin yurt dışına çıkarılmasını engellemek isteyen bir öğretmenin kişisel çabasıyla kuruldu.",
+      "The museum was founded in 1922 through the personal effort of a schoolteacher trying to keep the city's antiquities from leaving the country.",
+    ),
+    f(
+      "'Ağırbaşlı Herakles' heykelinin üst yarısı 1960'larda kaçırılıp Boston'a satılmıştı; alt yarısı Antalya'da kaldı ve iki parça 2011'de birleştirildi.",
+      "The upper half of the Weary Heracles was smuggled out and sold in Boston in the 1960s while the lower half stayed here. The two were reunited in 2011.",
+    ),
+  ],
+  "bodrum-sualti-muzesi": [
+    f(
+      "Müze, Halikarnas Mozolesi'nin taşlarıyla kısmen inşa edilmiş bir Haçlı kalesinin içindedir: bina, sergilediği tarihin bir parçasıdır.",
+      "The museum sits inside a crusader castle partly built from the stones of the Mausoleum: the building is a piece of the history it displays.",
+    ),
+    f(
+      "MÖ 14. yüzyıla tarihlenen Uluburun batığı, on bir farklı kültürün malını taşıyordu: bakır külçe, fildişi, Baltık kehribarı ve Mısır mücevheri aynı gemide.",
+      "The Uluburun ship, of the fourteenth century BC, carried goods from eleven cultures: copper ingots, ivory, Baltic amber and Egyptian jewellery in one hold.",
+    ),
+    f(
+      "Batıktan çıkan bir altın eserin üzerinde Mısır kraliçesi Nefertiti'nin adı yazılıdır; gemi battığında bu parça zaten yüz yıllıktı.",
+      "A gold object from the wreck carries the name of the Egyptian queen Nefertiti — already a century old when the ship went down.",
+    ),
+  ],
+  "troya-muzesi": [
+    f(
+      "Müze, toprağa gömülü paslı çelik bir küp olarak tasarlandı: bina, kazı alanı gibi aşağıdan yukarıya doğru gezilir.",
+      "The museum was designed as a rusted steel cube sunk into the ground, walked from the bottom up like the excavation itself.",
+    ),
+    f(
+      "Schliemann'ın çıkardığı 'Priamos Hazinesi' önce Almanya'ya götürüldü, savaşta kayboldu ve 1993'te Moskova'da ortaya çıktı; hâlâ Rusya'da.",
+      "The 'Treasure of Priam' went to Germany, vanished in the war, and reappeared in Moscow in 1993. It is still in Russia.",
+    ),
+  ],
+  "mevlana-muzesi": [
+    f(
+      "Yeşil çinili kubbe 13. yüzyıldan kalmadır ve Konya'nın simgesidir; türbenin bulunduğu arazi Selçuklu sarayının gül bahçesiydi.",
+      "The green-tiled dome dates from the thirteenth century and is the emblem of Konya. The ground it stands on was the rose garden of the Seljuk palace.",
+    ),
+    f(
+      "Mevlânâ'nın öldüğü gece 'Şeb-i Arûs', yani düğün gecesi diye anılır ve her yıl 17 Aralık'ta törenle anılır.",
+      "The night Mevlâna died is called Şeb-i Arûs — the wedding night — and is marked every 17 December.",
+    ),
+  ],
 };
 
 /** The extra facts for a site, or an empty list when none are written yet. */

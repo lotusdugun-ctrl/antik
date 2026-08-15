@@ -1,8 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { coverImage, regions, sitePhoto, sites, type Site } from "@/lib/sites";
 import { galleryImages, siteDetails, siteGallery } from "@/lib/site-details";
+import { imageAt, srcSetFor } from "@/lib/images";
 import { creditFor, photoCredits } from "@/lib/photo-credits";
 import { factsFor, siteFacts } from "@/lib/site-facts";
+import { structurePhotos } from "@/lib/structure-photos";
 import { structureInfo } from "@/lib/structures";
 import type { Localized } from "@/lib/i18n";
 
@@ -60,7 +62,10 @@ describe("the site list", () => {
   });
 
   test("popularity stays on its 1-10 scale and fees are not negative", () => {
-    const odd = sites.filter((s) => s.popularity < 1 || s.popularity > 10 || s.fee < 0);
+    // An absent fee means unknown and is fine; a negative one is data damage.
+    const odd = sites.filter(
+      (s) => s.popularity < 1 || s.popularity > 10 || (s.fee !== undefined && s.fee < 0),
+    );
     expect(odd.map((s) => `${s.slug}: pop ${s.popularity}, fee ${s.fee}`)).toEqual([]);
   });
 
@@ -126,6 +131,31 @@ describe("photography", () => {
     expect(remote.filter((url) => !url.startsWith("https://"))).toEqual([]);
   });
 
+  /**
+   * The failure this catches was live: galleries were padded to four
+   * thumbnails with `heroEphesus`, so Heraclea Pontica on the Black Sea showed
+   * the Library of Celsus among its own photographs. Nothing on screen marked
+   * it as belonging elsewhere, and no test noticed.
+   */
+  test("no site shows a photograph that belongs to another site", () => {
+    const owner = new Map<string, string>();
+    for (const [slug, url] of Object.entries(sitePhoto)) {
+      if (url) owner.set(url, slug);
+    }
+    for (const [slug, urls] of Object.entries(siteGallery)) {
+      for (const url of urls ?? []) if (!owner.has(url)) owner.set(url, slug);
+    }
+
+    const stolen: string[] = [];
+    for (const site of sites) {
+      for (const url of [coverImage(site), ...galleryImages(site)]) {
+        const belongsTo = owner.get(url);
+        if (belongsTo && belongsTo !== site.slug) stolen.push(`${site.slug} <- ${belongsTo}`);
+      }
+    }
+    expect([...new Set(stolen)]).toEqual([]);
+  });
+
   test("no gallery repeats the same photo twice", () => {
     const dupes = Object.entries(siteGallery).filter(
       ([, urls]) => urls && new Set(urls).size !== urls.length,
@@ -143,12 +173,52 @@ describe("photography", () => {
       ...Object.values(sitePhoto),
       ...Object.values(siteGallery).flat(),
       ...Object.values(structureInfo).map((info) => info?.image),
+      ...Object.values(structurePhotos),
     ].filter(
       (url): url is string => typeof url === "string" && url.includes("upload.wikimedia.org"),
     );
 
     const uncredited = remote.filter((url) => !creditFor(url));
     expect([...new Set(uncredited)]).toEqual([]);
+  });
+
+  test("no structure photo is keyed to a site or structure that does not exist", () => {
+    const known = new Set(
+      sites.flatMap((site) =>
+        (siteDetails[site.slug]?.structures ?? []).map((s) => `${site.slug}|${s.tr}`),
+      ),
+    );
+    expect(Object.keys(structurePhotos).filter((key) => !known.has(key))).toEqual([]);
+  });
+
+  /**
+   * `imageAt` and `srcSetFor` read the width ceiling out of the URL itself. A
+   * URL that does not match the thumb shape is returned untouched, which does
+   * not break the page — it just silently drops that photo out of responsive
+   * sizing and ships the largest file to a phone.
+   */
+  test("every remote photo URL is a thumb URL the resizer can read", () => {
+    const remote = [
+      ...Object.values(sitePhoto),
+      ...Object.values(siteGallery).flat(),
+      ...Object.values(structureInfo).map((info) => info?.image),
+    ].filter((url): url is string => typeof url === "string" && url.startsWith("http"));
+
+    // A parseable thumb URL always yields more than one rung, because the
+    // ladder's smallest width is below every ceiling in the data.
+    const unreadable = remote.filter((url) => !srcSetFor(url));
+    expect([...new Set(unreadable)]).toEqual([]);
+  });
+
+  test("asking for a card-sized photo actually returns a smaller one", () => {
+    const remote = [...Object.values(sitePhoto), ...Object.values(siteGallery).flat()].filter(
+      (url): url is string => typeof url === "string" && url.startsWith("http"),
+    );
+
+    // 250 is the smallest rung, so every photo in the data — all of which are
+    // pinned well above it — must resize down rather than come back unchanged.
+    const stuck = remote.filter((url) => imageAt(url, 250).includes("/250px-") === false);
+    expect([...new Set(stuck)]).toEqual([]);
   });
 
   test("each credit names both an author and a licence", () => {

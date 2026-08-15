@@ -5,7 +5,16 @@ import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
-import { allCivilizations, allProvinces, regions, sites, type RegionId } from "@/lib/sites";
+import {
+  allCivilizations,
+  allProvinces,
+  heritageTypeName,
+  regions,
+  sites,
+  usedHeritageTypes,
+  type HeritageType,
+  type RegionId,
+} from "@/lib/sites";
 
 /**
  * Every filter is optional, and declared optional rather than
@@ -18,6 +27,8 @@ type SearchParams = {
   region?: RegionId | undefined;
   province?: string | undefined;
   civ?: string | undefined;
+  /** Ancient city, museum, mosque, cave… — see `HeritageType`. */
+  type?: HeritageType | undefined;
   unesco?: boolean | undefined;
   free?: boolean | undefined;
   view?: "list" | "map" | undefined;
@@ -29,6 +40,7 @@ export const Route = createFileRoute("/kentler")({
     region: typeof search["region"] === "string" ? (search["region"] as RegionId) : undefined,
     province: typeof search["province"] === "string" ? search["province"] : undefined,
     civ: typeof search["civ"] === "string" ? search["civ"] : undefined,
+    type: typeof search["type"] === "string" ? (search["type"] as HeritageType) : undefined,
     unesco: search["unesco"] === true || search["unesco"] === "true" ? true : undefined,
     free: search["free"] === true || search["free"] === "true" ? true : undefined,
     view: search["view"] === "map" ? "map" : undefined,
@@ -76,6 +88,7 @@ function ExplorePage() {
       if (search.region && site.region !== search.region) return false;
       if (search.province && site.province.tr !== search.province) return false;
       if (search.civ && !site.civilizations.includes(search.civ)) return false;
+      if (search.type && site.heritageType !== search.type) return false;
       if (search.unesco && site.unesco !== "listed") return false;
       if (search.free && site.fee !== 0) return false;
       if (!q) return true;
@@ -94,7 +107,13 @@ function ExplorePage() {
   }, [search, lang]);
 
   const hasFilters = Boolean(
-    search.q || search.region || search.province || search.civ || search.unesco || search.free,
+    search.q ||
+    search.region ||
+    search.province ||
+    search.civ ||
+    search.type ||
+    search.unesco ||
+    search.free,
   );
   const isMap = search["view"] === "map";
 
@@ -174,6 +193,20 @@ function ExplorePage() {
           {allCivilizations().map((c) => (
             <option key={c} value={c}>
               {c}
+            </option>
+          ))}
+        </select>
+        <select
+          value={search.type ?? ""}
+          onChange={(e) => setParam({ type: (e.target.value || undefined) as HeritageType })}
+          className="h-9 rounded-full border border-border bg-card px-3 text-xs font-medium outline-none focus:ring-2 focus:ring-ring"
+        >
+          <option value="">
+            {t("type")}: {t("all")}
+          </option>
+          {usedHeritageTypes().map((type) => (
+            <option key={type} value={type}>
+              {L(heritageTypeName(type))}
             </option>
           ))}
         </select>

@@ -14,7 +14,10 @@ import { MINISTRY_HOURS, OFFICIAL_INFO_URL, type Site } from "@/lib/sites";
  */
 export function VisitingInfo({ site }: { site: Site }) {
   const { t, L } = useI18n();
+  // Three states, not two: free, a known indicative price, and no idea. The
+  // third used to be rendered as "0 ₺", which is a confident wrong answer.
   const free = site.fee === 0;
+  const unknownFee = site.fee === undefined;
 
   return (
     <section className="rounded-2xl surface-panel p-5">
@@ -46,9 +49,9 @@ export function VisitingInfo({ site }: { site: Site }) {
             <Ticket className="h-3.5 w-3.5" /> {t("entry_fee")}
           </p>
           <p className="mt-1 font-medium">
-            {free ? (
-              t("free")
-            ) : (
+            {free && t("free")}
+            {unknownFee && <span className="text-muted-foreground">—</span>}
+            {!free && !unknownFee && (
               <>
                 {site.fee} ₺{" "}
                 <span className="rounded-full bg-secondary px-2 py-0.5 text-[11px] font-semibold text-secondary-foreground">
@@ -59,7 +62,7 @@ export function VisitingInfo({ site }: { site: Site }) {
           </p>
           {!free && (
             <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              {t("fee_indicative_note")} {t("museum_card")}
+              {unknownFee ? t("fee_unknown") : t("fee_indicative_note")} {t("museum_card")}
             </p>
           )}
         </div>
