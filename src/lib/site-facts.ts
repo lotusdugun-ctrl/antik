@@ -2637,6 +2637,678 @@ export const siteFacts: Record<string, Localized[]> = {
       "Kremna is one of the few places in the world where a Roman siege survives whole in the landscape.",
     ),
   ],
+
+  // ————— Dördüncü grup —————
+  "bursa-turk-islam-muzesi": [
+    f(
+      "Müze, Yeşil Külliye'nin medresesindedir; öğrenci hücreleri vitrine dönüştürülmüştür.",
+      "The museum occupies the madrasa of the Green complex, its students' cells turned into display cases.",
+    ),
+    f(
+      "Koleksiyondaki bazı çiniler, aynı külliyenin camisinde kullanılan çinilerin atölye denemeleridir.",
+      "Some of the tiles here are workshop trials for the ones that went into the mosque of the same complex.",
+    ),
+  ],
+  "kahramanmaras-muzesi": [
+    f(
+      "Müze, Domuztepe'nin Halaf dönemi buluntularının merkez koleksiyonudur.",
+      "The museum is the central collection for the Halaf-period finds of Domuztepe.",
+    ),
+    f(
+      "Bölgede bulunan fil fosilleri, Maraş ovasının bir zamanlar bataklık ve savan olduğunu gösteriyor.",
+      "The fossil elephants found here show the Maraş plain was once marsh and savanna.",
+    ),
+  ],
+  "afyon-muzesi": [
+    f(
+      "Yakındaki Dokimeion ocakları, Roma dünyasının en aranan mor damarlı beyaz mermerini üretiyordu.",
+      "The nearby quarries of Docimium produced the Roman world's most sought-after purple-veined white marble.",
+    ),
+    f(
+      "Bu mermer Roma'ya kadar taşındı; Pantheon'un sütunlarının bir bölümü bu ocaklardan çıktı.",
+      "That marble travelled as far as Rome: some of the Pantheon's columns came out of these quarries.",
+    ),
+  ],
+  "burdur-muzesi": [
+    f(
+      "Sagalassos'ta bulunan devasa Hadrianus başı ve ayağı, beş metrelik bir heykelden kalmadır.",
+      "The colossal head and foot of Hadrian from Sagalassos come from a statue five metres tall.",
+    ),
+    f(
+      "Aynı çatı altında yaklaşık yedi bin yıl vardır: Neolitik Hacılar kapları ile Roma heykelleri yan yana.",
+      "About seven thousand years sit under one roof here: Neolithic Hacılar pots beside Roman sculpture.",
+    ),
+  ],
+  "malatya-muzesi": [
+    f(
+      "Arslantepe'de bulunan dokuz kılıç, dünyada bilinen en eski kılıçlardır ve arsenikli bakırdan yapılmıştır.",
+      "The nine swords from Arslantepe are the oldest known anywhere, made of arsenical copper.",
+    ),
+    f(
+      "Höyüğün MÖ 4. binyıla ait sarayı, devlet örgütlenmesinin en erken kanıtları arasında sayılır.",
+      "The mound's palace of the fourth millennium BC is counted among the earliest evidence for state organisation.",
+    ),
+  ],
+  "tokat-muzesi": [
+    f(
+      "Müze uzun yıllar Selçuklu Gök Medrese'sinde barındı ve sonradan yeni binasına taşındı.",
+      "The museum was housed for years in the Seljuk Gök Medrese before moving to a new building.",
+    ),
+    f(
+      "Komana Pontika'nın tapınağına bağlı altı bin kişilik bir hizmetli topluluğu vardı.",
+      "The temple at Komana Pontica had a staff of six thousand attached to it.",
+    ),
+  ],
+  "kastamonu-muzesi": [
+    f(
+      "Atatürk şapka devrimini 1925'te bu binanın salonunda duyurdu.",
+      "Atatürk announced the hat reform in the hall of this building in 1925.",
+    ),
+    f(
+      "Paflagonya kaya mezarları Likya'nınkilere benzer, ama iki bölge arasında bilinen bir bağ yoktur.",
+      "The Paphlagonian rock tombs resemble Lycia's, yet no connection between the two regions is known.",
+    ),
+  ],
+  "sadberk-hanim-muzesi": [
+    f(
+      "1980'de açılan müze Türkiye'nin ilk özel müzesidir.",
+      "Opened in 1980, this is Türkiye's first private museum.",
+    ),
+    f(
+      "Büyükdere'deki iki yalıdan biri arkeolojiye, diğeri Osmanlı el sanatlarına ayrılmıştır.",
+      "Of its two waterfront houses at Büyükdere, one is given to archaeology and one to Ottoman craft.",
+    ),
+  ],
+  metropolis: [
+    f(
+      "Kentin adı 'ana tanrıça kenti' demektir; Meter Gallesia kültünün merkeziydi.",
+      "The name means 'city of the mother goddess': it was the centre of the cult of Meter Gallesia.",
+    ),
+    f(
+      "Hamam-gymnasium yapısı iki bin kişiye hizmet verecek ölçüde tasarlanmıştı.",
+      "Its bath-gymnasium was built to serve two thousand people at once.",
+    ),
+  ],
+  blaundos: [
+    f(
+      "Kent, üç yanı derin vadilerle çevrili bir burun üzerindedir; konumu onu kendiliğinden savunulur kılar.",
+      "The city sits on a promontory ringed on three sides by gorges, a position that defends itself.",
+    ),
+    f(
+      "Yazıtlarda kent 'Makedonlar Blaundos'u' diye anılır: adını buraya yerleştirilen Makedon askerlerden alır.",
+      "Inscriptions call it 'Blaundos of the Macedonians', after the soldiers settled here.",
+    ),
+  ],
+  "tripolis-meander": [
+    f(
+      "Kent, Lydia, Karia ve Frigya'nın kesiştiği noktada kuruldu; adı bu üçlü sınıra gönderme yapar.",
+      "The city was founded where Lydia, Caria and Phrygia meet, and its name refers to that triple border.",
+    ),
+    f(
+      "Sütunlu caddenin dükkânlarıyla birlikte bütün olarak açığa çıkarılması ender bir durumdur.",
+      "Uncovering the colonnaded street whole, with the shops that lined it, is a rare thing.",
+    ),
+  ],
+  "herakleia-latmos": [
+    f(
+      "Bafa Gölü bir zamanlar deniz körfeziydi; Menderes'in alüvyonu körfezi kapatınca liman kenti içeride kaldı.",
+      "Lake Bafa was once a sea gulf; silt from the Meander closed it and left the harbour town inland.",
+    ),
+    f(
+      "Latmos dağlarındaki kaya resimleri MÖ 6. binyıla iner ve Batı Anadolu'nun en eski resimli anlatılarıdır.",
+      "The rock paintings in the Latmos hills go back to the sixth millennium BC, the oldest pictorial narratives in western Anatolia.",
+    ),
+  ],
+  alabanda: [
+    f(
+      "Kent, çevresindeki mermer ocakları ve siyah graniti sayesinde zenginleşti ve Roma'da serbest kent statüsü kazandı.",
+      "The city grew rich on its marble quarries and black granite, and won the status of a free city under Rome.",
+    ),
+    f(
+      "Strabon kentin lüks düşkünlüğüyle ün saldığını ve 'akrep dolu' olduğunu yazar.",
+      "Strabo writes that the city was known for its luxury and was 'full of scorpions'.",
+    ),
+  ],
+  alinda: [
+    f(
+      "Karia kraliçesi Ada, MÖ 334'te Büyük İskender'i burada evlat edindi ve karşılığında Karia'nın yönetimini geri aldı.",
+      "Here in 334 BC the Carian queen Ada adopted Alexander and got the rule of Caria back in return.",
+    ),
+    f(
+      "Üç katlı agora binası, antik dünyanın en iyi korunmuş ticaret yapılarındandır.",
+      "Its three-storey market building is among the best preserved commercial structures of antiquity.",
+    ),
+  ],
+  iasos: [
+    f(
+      "Kentin mavi-beyaz damarlı mermeri Roma'da 'cipollino' adıyla satıldı ve imparatorluk yapılarında kullanıldı.",
+      "The city's blue-and-white veined marble was sold in Rome as cipollino and used in imperial buildings.",
+    ),
+    f(
+      "Antik yazarlar, ünlü bir müzisyenin konserinin balık pazarı çanı çalınca yarıda kaldığını anlatır.",
+      "Ancient writers tell of a famous musician's recital emptying the moment the fish-market bell rang.",
+    ),
+  ],
+  rhodiapolis: [
+    f(
+      "Opramoas MS 2. yüzyılda Likya'nın yirmi sekiz kentine deprem sonrası yardım gönderdi.",
+      "In the second century AD Opramoas sent aid to twenty-eight Lycian cities after earthquakes.",
+    ),
+    f(
+      "Anıt mezarındaki yazıt yetmiş bir belgeden oluşur ve Roma taşrasında hayırseverliğin en ayrıntılı kaydıdır.",
+      "The inscription on his tomb runs to seventy-one documents, the fullest record of public giving in the Roman provinces.",
+    ),
+  ],
+  andriake: [
+    f(
+      "Hadrianus'un yaptırdığı tahıl ambarı sekiz bölmesiyle neredeyse tam olarak ayakta.",
+      "The granary Hadrian built still stands almost entire, with its eight chambers.",
+    ),
+    f(
+      "Limanda kazılan sinagog, Anadolu'da bulunmuş en iyi korunmuş erken sinagoglardan biridir.",
+      "The synagogue excavated at the harbour is one of the best preserved early synagogues found in Anatolia.",
+    ),
+  ],
+  selge: [
+    f(
+      "Kent bin yüz metre yükseklikte kurulmuştu ve konumu sayesinde bağımsızlığını uzun süre korudu.",
+      "The city stood eleven hundred metres up, and its position kept it independent for a long time.",
+    ),
+    f(
+      "Selge sikkelerinde storaks ağacının dalı resmedilir; bu reçine antik dünyada tütsü olarak yakılırdı.",
+      "Selgian coins show a branch of the storax tree: its resin was burned as incense across the ancient world.",
+    ),
+  ],
+  lagina: [
+    f(
+      "Burası, Hekate'ye adanmış ve antik dünyada bilinen tek büyük kutsal alandır.",
+      "This is the only major sanctuary of Hecate known in the ancient world.",
+    ),
+    f(
+      "Stratonikeia'dan buraya uzanan on bir kilometrelik kutsal yol boyunca her yıl anahtar taşıma töreni yapılırdı.",
+      "The procession of the key was carried each year along the eleven-kilometre sacred way from Stratonikeia.",
+    ),
+  ],
+  "apollon-lairbenos": [
+    f(
+      "Buradan çıkan yüzlerce 'günah itirafı' yazıtı, tanrının cezalandırdığı kişilerin suçlarını açıkça kaydeder.",
+      "Hundreds of confession inscriptions from here record, plainly, the offences of people the god had punished.",
+    ),
+    f(
+      "Bu yazıtlar Roma taşrasında sıradan insanların inancını kendi sözleriyle aktaran en doğrudan kaynaktır.",
+      "They are the most direct source we have for the belief of ordinary people in the Roman countryside, in their own words.",
+    ),
+  ],
+  panionion: [
+    f(
+      "On iki İon kentinin ortak kutsal alanı ve birliğin toplandığı yerdi.",
+      "It was the common sanctuary of the twelve Ionian cities and the seat of their league.",
+    ),
+    f(
+      "Thales'in kentlerin tek devlet altında birleşmesi önerisi burada reddedildi; İon kentleri teker teker Perslere yenildi.",
+      "Thales' proposal that the cities unite under one government was rejected here, and they were beaten by Persia one by one.",
+    ),
+  ],
+  hacilar: [
+    f(
+      "Höyükten çıkan boyalı çanak çömlek, Yakın Doğu'nun en erken ve en gelişkin örneklerindendir.",
+      "The painted pottery from the mound is among the earliest and most accomplished in the Near East.",
+    ),
+    f(
+      "Kazıdan sonra piyasaya çıkan sahte Hacılar kapları o kadar çoğaldı ki, testler müzelerdeki parçaların çoğunun sahte olduğunu gösterdi.",
+      "So many fake Hacılar pots reached the market that testing showed most of the pieces in museums were forgeries.",
+    ),
+  ],
+  beycesultan: [
+    f(
+      "Kırk yerleşim katmanıyla Batı Anadolu'nun en derin höyüklerindendir.",
+      "With forty settlement layers it is among the deepest mounds in western Anatolia.",
+    ),
+    f(
+      "Sarayın yanmış tabakası yapının aniden terk edildiğini gösteriyor; içeride bırakılan eşyaları yangının kendisi korumuş.",
+      "The palace's burnt layer shows it was abandoned suddenly, and the fire itself preserved what was left inside.",
+    ),
+  ],
+  tilmen: [
+    f(
+      "Höyük MÖ 2. binyılda bir kent devletinin başkentiydi ve Halep ile Hitit dünyası arasında duruyordu.",
+      "The mound was the capital of a city state in the second millennium BC, standing between Aleppo and the Hittite world.",
+    ),
+    f(
+      "Buluntular yerinde ayağa kaldırıldı: ziyaretçi temel değil, duvar görüyor.",
+      "The finds were re-erected in place, so a visitor sees walls rather than foundations.",
+    ),
+  ],
+  "yilanli-sutun": [
+    f(
+      "Sütun, Plataia'da Persleri yenen otuz bir Yunan kentinin ele geçirdikleri silahları eritmesiyle döküldü.",
+      "The column was cast from the weapons captured by the thirty-one Greek cities that beat Persia at Plataea.",
+    ),
+    f(
+      "Gövdesine kazınan otuz bir kentin adı, Yunan tarihinin ayakta kalan en eski ittifak listesidir.",
+      "The thirty-one city names cut into the shaft are the oldest surviving list of a Greek alliance.",
+    ),
+  ],
+  cemberlitas: [
+    f(
+      "Konstantin sütunu 330'da kendi forumunun ortasına diktirdi ve tepesine kendi heykelini koydurdu; heykel 1106'da bir fırtınada düştü.",
+      "Constantine set the column at the centre of his forum in 330 and put his own statue on top; it came down in a storm in 1106.",
+    ),
+    f(
+      "Kentin ayakta duran en eski anıtıdır: Ayasofya'dan iki, Sultanahmet'ten on üç yüzyıl önce dikildi.",
+      "It is the city's oldest standing monument — raised two centuries before Hagia Sophia and thirteen before the Blue Mosque.",
+    ),
+  ],
+  fasillar: [
+    f(
+      "Yedi metrelik heykel, çıkarıldığı taş ocağında yattığı yerde duruyor ve hiç tamamlanmadı.",
+      "The seven-metre statue lies where it was cut, in its own quarry, and was never finished.",
+    ),
+    f(
+      "Anadolu'da bilinen en büyük Hitit heykelidir; yaklaşık yetmiş ton ağırlığında olduğu için hiç kaldırılamamıştır.",
+      "It is the largest Hittite statue known in Anatolia, and at some seventy tonnes it was never lifted at all.",
+    ),
+  ],
+  beldibi: [
+    f(
+      "Kaya sığınağının duvarlarındaki kazıma figürler, Anadolu'da bilinen en eski kaya resimleri arasındadır.",
+      "The incised figures on the shelter walls are among the oldest rock art known in Anatolia.",
+    ),
+    f(
+      "Sığınakta bulunan deniz kabukları, buradaki topluluğun kıyı kaynaklarını düzenli kullandığını gösteriyor.",
+      "Sea shells found in the shelter show the community drew regularly on the resources of the coast.",
+    ),
+  ],
+  direkli: [
+    f(
+      "Mağara, buzul çağının sonunda avcı topluluklarının mevsimlik kampıydı.",
+      "The cave was a seasonal camp for hunting groups at the end of the ice age.",
+    ),
+    f(
+      "Ocak yerleri, aynı noktanın binlerce yıl boyunca tekrar tekrar kullanıldığını gösteriyor.",
+      "Its hearths show the same spot was returned to over thousands of years.",
+    ),
+  ],
+  manazan: [
+    f(
+      "Yerleşim vadi duvarına beş kat hâlinde oyulmuştur ve en üst kata yalnızca içeriden ulaşılır.",
+      "The settlement is cut five storeys into a valley wall, and its top floor can be reached only from within.",
+    ),
+    f(
+      "Kuru mağara ikliminde korunmuş cesetler 'Manazan mumyaları' olarak bilinir.",
+      "Bodies preserved by the dry cave air are known as the Manazan mummies.",
+    ),
+  ],
+  mazi: [
+    f(
+      "Yeraltı şehrinin dört ayrı girişi vardır ve büyük bölümü hâlâ kazılmamıştır.",
+      "The underground city has four separate entrances and much of it is still unexcavated.",
+    ),
+    f(
+      "Yeraltı şehirlerinde ahırlar hep en üst kattadır: hayvanları aşağı indirmek zordu ve hava yukarıda daha iyiydi.",
+      "Stables in these cities are always on the top level: animals were hard to take down, and the air was better near the surface.",
+    ),
+  ],
+  gumusler: [
+    f(
+      "Ana kilisenin freskinde Meryem gülümser betimlenmiştir; bu, Bizans ikonografisinde son derece ender bir seçimdir.",
+      "In the fresco of the main church the Virgin is shown smiling — an extremely rare choice in Byzantine iconography.",
+    ),
+    f(
+      "Freskler kayanın içinde kaldıkları için güneş ve nemden korunmuş, renkleri canlı kalmıştır.",
+      "Because they stayed inside the rock the frescoes were shielded from sun and damp, and their colours stayed bright.",
+    ),
+  ],
+  "aya-irini": [
+    f(
+      "Kentin ilk kilisesidir ve 381'deki İkinci Ekümenik Konsil burada toplandı.",
+      "It is the city's first church, and the Second Ecumenical Council met in it in 381.",
+    ),
+    f(
+      "Camiye çevrilmediği için iç mekânı özgün hâlini korudu; apsisteki sade haç ikona kırıcılık döneminden kalmadır.",
+      "It was never converted into a mosque, so the interior survives as it was, and the plain cross in the apse dates from iconoclasm.",
+    ),
+  ],
+  "aziz-nikolaos": [
+    f(
+      "Kilise, Myra piskoposu Nikolaos'un mezarı üzerine kuruldu ve Bizans'ta önemli bir hac merkezi oldu.",
+      "The church was built over the tomb of Nicholas, bishop of Myra, and became a major place of pilgrimage.",
+    ),
+    f(
+      "1087'de İtalyan tüccarlar azizin kemiklerinin büyük bölümünü Bari'ye kaçırdı.",
+      "In 1087 Italian merchants carried most of the saint's bones off to Bari.",
+    ),
+  ],
+  "aziz-petrus": [
+    f(
+      "Elçilerin İşleri'ne göre inananlar ilk kez bu kentte 'Hristiyan' diye anıldı.",
+      "According to Acts, it was in this city that believers were first called Christians.",
+    ),
+    f(
+      "Kilisenin arkasında dağın içine açılan bir tünel vardır; baskın anında kaçış için yapıldığı düşünülüyor.",
+      "A tunnel runs from the back of the church into the mountain, thought to have been cut for escape during a raid.",
+    ),
+  ],
+  "aziz-yuhanna": [
+    f(
+      "Justinianus'un yaptırdığı bazilika tamamlandığında Ayasofya'dan sonraki en büyük kiliseydi.",
+      "When Justinian's basilica was finished it was the largest church after Hagia Sophia.",
+    ),
+    f(
+      "Planı, Yuhanna'nın mezarının tam olarak kubbelerin kesiştiği noktanın altına gelmesi için kuruldu.",
+      "The plan was set so that the tomb of John would fall exactly beneath the crossing of the domes.",
+    ),
+  ],
+  "yesil-cami": [
+    f(
+      "Caminin bezemesini Tebriz'den gelen çini ustaları yürüttü; hünkâr mahfili erken Osmanlı süslemesinin doruğudur.",
+      "Tile masters from Tabriz carried out the decoration, and the royal loge is the high point of early Ottoman ornament.",
+    ),
+    f(
+      "Dış cephe hiç tamamlanmadı; taş yüzeyde ustaların bıraktığı ölçü çizgileri hâlâ görülüyor.",
+      "The exterior was never finished, and the masons' setting-out lines can still be seen on the stone.",
+    ),
+  ],
+  "sivrihisar-ulu-cami": [
+    f(
+      "Altmış yedi ahşap sütunuyla Anadolu'nun en çok sütunlu ahşap direkli camisidir.",
+      "With sixty-seven wooden columns it is the most heavily columned timber mosque in Anatolia.",
+    ),
+    f(
+      "Tavan kirişleri bilerek gevşek geçmelerle bağlandı: ahşabın nem alıp vermesine izin verilmesi gerekiyordu.",
+      "The roof joints were left deliberately loose, because the timber had to be able to take up and give off moisture.",
+    ),
+  ],
+  "afyon-ulu-cami": [
+    f(
+      "1272 tarihli cami, ahşap direkli camilerin bilinen en erken tarihlilerindendir.",
+      "Dated 1272, it is among the earliest dated timber hypostyle mosques.",
+    ),
+    f(
+      "Tuğla minaresi, firuze çini şeritleriyle Selçuklu minare geleneğinin batıdaki en uç örneğidir.",
+      "Its brick minaret, banded with turquoise tile, is the westernmost example of the Seljuk minaret tradition.",
+    ),
+  ],
+  "arslanhane-camii": [
+    f(
+      "Cami adını duvarına yerleştirilmiş Roma dönemi aslan kabartmasından alır.",
+      "The mosque takes its name from the Roman lion relief set into its wall.",
+    ),
+    f(
+      "Yapı Ahi teşkilatının Ankara'daki merkeziydi; esnaf loncalarının toplantıları burada yapılırdı.",
+      "It was the Ankara seat of the Ahi brotherhood, and the craft guilds met in it.",
+    ),
+  ],
+  "cifte-minareli-medrese": [
+    f(
+      "Anadolu'nun en büyük açık avlulu medresesidir ve iki katlıdır.",
+      "It is the largest open-courtyard madrasa in Anatolia, and it rises two storeys.",
+    ),
+    f(
+      "Arkasındaki kümbet Anadolu'daki en büyük Selçuklu kümbetidir; yapı bir hanedan anıtı olarak tasarlandı.",
+      "The tomb tower behind it is the largest Seljuk kümbet in Anatolia: the building was conceived as a dynastic monument.",
+    ),
+  ],
+  "gok-medrese": [
+    f(
+      "Adını minarelerini kaplayan firuze çinilerden alır; taç kapısındaki on iki hayvanlı burç dizisi Anadolu'da eşsizdir.",
+      "It takes its name from the turquoise tiles on its minarets, and the zodiac of twelve animals on its portal is without equal in Anatolia.",
+    ),
+    f(
+      "Sivas'ta 1271'de üç büyük medrese birden yapıldı; kent bilerek bir eğitim merkezine dönüştürülüyordu.",
+      "Three great madrasas went up in Sivas in 1271: the city was being deliberately turned into a centre of learning.",
+    ),
+  ],
+  "sifaiye-medresesi": [
+    f(
+      "Yapı hem hastane hem tıp medresesiydi; tedavide su sesi ve müzik kullanılırdı.",
+      "The building was both hospital and medical school, and running water and music were part of the treatment.",
+    ),
+    f(
+      "Veremden ölen sultan I. İzzeddin Keykâvus, avlunun güney eyvanındaki çini kaplı türbeye gömüldü.",
+      "Sultan Kaykaus I, who died of tuberculosis, was buried in the tiled tomb in the south iwan of the courtyard.",
+    ),
+  ],
+  "ince-minareli-medrese": [
+    f(
+      "Taç kapısında yazı, taşın üzerine kurdele gibi düğümlenerek işlenmiştir; Selçuklu oymacılığının en cüretli örneğidir.",
+      "On its portal the inscription is knotted across the stone like ribbon — the boldest piece of Seljuk carving.",
+    ),
+    f(
+      "Adını veren ince minare 1901'de yıldırım düşmesiyle üst bölümünü kaybetti.",
+      "The slender minaret that gave it its name lost its upper part to lightning in 1901.",
+    ),
+  ],
+  "gevher-nesibe": [
+    f(
+      "Bir hastane ile tıp medresesinin bitişik kurulduğu bilinen ilk yapıdır: hastalar tedavi edilirken öğrenciler aynı avluda ders görüyordu.",
+      "It is the first known building to set a hospital and a medical school adjoining: patients were treated while students studied across the same courtyard.",
+    ),
+    f(
+      "Yapıda akıl hastalarının tedavisine ayrılmış odalar vardır; ruh sağlığının hastane içinde ele alındığı en erken örneklerdendir.",
+      "It set aside rooms for the treatment of mental illness — among the earliest cases of psychiatric care inside a hospital.",
+    ),
+  ],
+  "yildiz-sarayi": [
+    f(
+      "II. Abdülhamid otuz üç yıl boyunca devleti buradan yönetti; saray tek bir bina değil, koruya dağılmış bir yerleşkedir.",
+      "Abdülhamid II governed for thirty-three years from here, and the palace is not one building but a compound scattered through a park.",
+    ),
+    f(
+      "Bahçedeki porselen fabrikası Avrupa'ya karşı yerli üretim kurma girişimiydi ve hâlâ çalışıyor.",
+      "The porcelain factory in the grounds was an attempt to build home production against European imports, and it is still working.",
+    ),
+  ],
+  "edirne-sarayi": [
+    f(
+      "Saray, Topkapı'dan önce Osmanlı'nın asıl sarayıydı ve Avrupa seferlerinin karargâhıydı.",
+      "The palace was the Ottomans' principal seat before Topkapı and the headquarters for their campaigns in Europe.",
+    ),
+    f(
+      "1878'de Rus işgali sırasında cephanelik patlatılınca yapının büyük bölümü yıkıldı.",
+      "Most of it came down in 1878, when its magazine was blown up during the Russian occupation.",
+    ),
+  ],
+  "amasra-kalesi": [
+    f(
+      "Ceneviz armaları kale kapılarının üstünde hâlâ duruyor.",
+      "Genoese coats of arms still sit above the castle gates.",
+    ),
+    f(
+      "Surların içinde bugün de bir mahalle yaşar; bu, Türkiye'de kesintisiz iskân edilmiş ender bir ortaçağ kalesidir.",
+      "A neighbourhood still lives inside the walls — a rare case in Türkiye of a medieval castle inhabited without a break.",
+    ),
+  ],
+  "sanliurfa-kalesi": [
+    f(
+      "Doğu ucundaki iki Korint sütunu, Edessa kralı Manu'nun diktirdiği anıttan kalmadır ve halk arasında 'Nemrut'un tahtı' diye anılır.",
+      "The two Corinthian columns at its eastern end survive from a monument raised by king Manu of Edessa, and are locally called the throne of Nimrod.",
+    ),
+    f(
+      "Kuzey hendeği kayaya oyularak açıldı ve kaleyi tepeden gelen saldırılara karşı adaya çevirdi.",
+      "The northern ditch was cut into the living rock, turning the citadel into an island against attack from the hill.",
+    ),
+  ],
+  "erzurum-kalesi": [
+    f(
+      "İç kale MS 5. yüzyılda Theodosius döneminde kuruldu.",
+      "The inner citadel was founded under Theodosius in the fifth century AD.",
+    ),
+    f(
+      "Saltuklu döneminden kalan Tepsi Minare sonradan saat kulesine dönüştü; mekanizması 19. yüzyılda İngiltere'den getirildi.",
+      "The Saltukid Tepsi Minaret was later turned into a clock tower, its movement brought from England in the nineteenth century.",
+    ),
+  ],
+  "silifke-kalesi": [
+    f(
+      "Kale Haçlı seferleri boyunca Kilikya'nın anahtarı sayıldı ve Tapınak Şövalyeleri ile Ermeni Krallığı arasında defalarca el değiştirdi.",
+      "The castle counted through the crusades as the key to Cilicia and changed hands repeatedly between the Templars and the Armenian kingdom.",
+    ),
+    f(
+      "Kutsal Roma İmparatoru Friedrich Barbarossa 1190'da kalenin altındaki Göksu Nehri'nde boğuldu.",
+      "The Holy Roman Emperor Frederick Barbarossa drowned in 1190 in the Göksu below this castle.",
+    ),
+  ],
+  zerzevan: [
+    f(
+      "Kayaya oyulmuş Mithras tapınağı, bu askerî kültün Anadolu'da bilinen en iyi korunmuş mabedidir.",
+      "The rock-cut Mithraeum is the best preserved temple of that soldiers' cult known in Anatolia.",
+    ),
+    f(
+      "Kent, Roma'nın Pers sınırındaki garnizonuydu ve dört yüzyıl boyunca kullanıldı.",
+      "The town was a Roman garrison on the Persian frontier and stayed in use for four centuries.",
+    ),
+  ],
+  "kayseri-sultanhani": [
+    f(
+      "Aksaray'daki adaşıyla birlikte imparatorluk ölçeğinde yapılmış iki Selçuklu hanından biridir.",
+      "With its namesake at Aksaray, it is one of only two Seljuk hans built at imperial scale.",
+    ),
+    f(
+      "İki hanın planı neredeyse aynıdır: aynı hükümdar aynı yıllarda yolun iki ucunda aynı yapıyı tekrarlattı.",
+      "The two follow almost the same plan: one ruler repeated one building at both ends of the road in the same years.",
+    ),
+  ],
+  "karatay-han": [
+    f(
+      "Taç kapısındaki insan başlı figürler ve aslanlar, Selçuklu taş süslemesinin en zengin dizilerinden biridir.",
+      "The human-headed figures and lions of its portal make one of the richest sequences of Seljuk ornament.",
+    ),
+    f(
+      "Karatay'ın vakfiyesi, handa konaklayanların din ve mezhep ayrımı gözetilmeden ağırlanmasını şart koşar.",
+      "Karatay's endowment deed requires travellers to be received without regard to religion or sect.",
+    ),
+  ],
+  "cinci-hani": [
+    f(
+      "Han 1645'te yapıldı ve Safranbolu'nun İpek Yolu üzerindeki konumu sayesinde yüzyıllarca işledi.",
+      "Built in 1645, the han worked for centuries thanks to Safranbolu's place on the Silk Road.",
+    ),
+    f(
+      "Yaptıran Cinci Hoca, servetini saray çevresindeki nüfuzuna borçluydu ve handan kısa süre sonra idam edildi.",
+      "Cinci Hoca, who built it, owed his fortune to his influence at court and was executed soon after it was finished.",
+    ),
+  ],
+  "adana-taskopru": [
+    f(
+      "Roma köprüsü on yedi yüzyıl boyunca kesintisiz kullanıldı ve 2007'ye kadar araç trafiği taşıdı.",
+      "The Roman bridge has been in use for seventeen centuries and carried motor traffic until 2007.",
+    ),
+    f(
+      "Özgün yirmi bir gözünden on dördü ayakta.",
+      "Fourteen of its original twenty-one arches survive.",
+    ),
+  ],
+  cobandede: [
+    f(
+      "Yedi gözlü İlhanlı köprüsü, kesme taş işçiliğiyle Doğu Anadolu'nun en gösterişli ortaçağ köprüsüdür.",
+      "The seven-arched Ilkhanid bridge is, for its ashlar work, the most imposing medieval bridge in eastern Anatolia.",
+    ),
+    f(
+      "Kemer gözleri ortadan kenarlara doğru küçülür; bu düzen hem yükü dağıtır hem taşkın suyunu geçirir.",
+      "Its arches shrink from the middle outwards, a plan that spreads the load and lets flood water through.",
+    ),
+  ],
+  "koyunbaba-koprusu": [
+    f(
+      "On beş gözlü köprü 250 metre uzunluğuyla Kızılırmak'ın en uzun tarihî geçididir.",
+      "At 250 metres, the fifteen-arched bridge is the longest historic crossing of the Kızılırmak.",
+    ),
+    f(
+      "Kızılırmak'ın taşkınları üzerindeki köprülerin çoğunu götürdü; Koyunbaba beş yüz otuz yıldır duruyor.",
+      "The river's floods carried away most of the bridges built over it; Koyunbaba has stood for five hundred and thirty years.",
+    ),
+  ],
+  kursunlugerme: [
+    f(
+      "Kemer, iki ayrı su yolunu üst üste taşır; farklı kaynaklardan gelen sular karışmadan kente ulaşırdı.",
+      "The aqueduct carries two channels one above the other, so water from different springs reached the city without mixing.",
+    ),
+    f(
+      "Konstantinopolis'in su hattı, Roma dünyasının bilinen en uzun su yolu sistemidir: 400 kilometreyi aşar.",
+      "The water line to Constantinople is the longest known aqueduct system of the Roman world, at more than 400 kilometres.",
+    ),
+  ],
+  "aspendos-su-kemeri": [
+    f(
+      "Su yolu vadiyi geçerken basınç kuleleriyle çalışan bir ters sifon sistemi kullanır.",
+      "The line crosses the valley on an inverted siphon worked by pressure towers.",
+    ),
+    f(
+      "Sistemin çalışması için borulardaki basıncın hesaplanması gerekiyordu; bunun nasıl yapıldığı hâlâ tam bilinmiyor.",
+      "Making it work required calculating the pressure in the pipes, and how that was done is still not fully known.",
+    ),
+  ],
+  fildami: [
+    f(
+      "127 metreye 76 metrelik açık sarnıcın duvarları bugün de tam yükseklikte ayakta.",
+      "The walls of this open cistern, 127 metres by 76, still stand to full height.",
+    ),
+    f(
+      "Sarnıç, Bizans imparatorlarının ordunun önünde taç giydiği Hebdomon'un suyunu tutuyordu.",
+      "It held the water of Hebdomon, where Byzantine emperors were crowned before the army.",
+    ),
+  ],
+  "uc-kumbetler": [
+    f(
+      "En eskisi olan Emir Saltuk Kümbeti, Anadolu'daki kümbet mimarisinin başlangıcı sayılır.",
+      "The oldest of the three, that of Emir Saltuk, is taken as the beginning of the tomb-tower form in Anatolia.",
+    ),
+    f(
+      "Kümbet biçimi Orta Asya'nın çadır mimarisinden gelir: konik külah, keçe çadırın taşa çevrilmiş hâlidir.",
+      "The form comes from the tents of Central Asia: the conical cap is a felt tent translated into stone.",
+    ),
+  ],
+  "hudavend-hatun": [
+    f(
+      "Gövdedeki melek figürleri, çift başlı kartallar ve insan yüzleri Anadolu'da bu bileşimde başka hiçbir yapıda yoktur.",
+      "Its angels, double-headed eagles and human faces appear in this combination on no other building in Anatolia.",
+    ),
+    f(
+      "Kabartmalardaki meleklerin Hüdavend Hatun'un kendisini temsil ettiği öne sürülür; kesin bir yorum yoktur.",
+      "It has been argued that the angels represent Hüdavend Hatun herself, though no reading is settled.",
+    ),
+  ],
+  "osmangazi-turbesi": [
+    f(
+      "Türbeler bir Bizans manastırının kalıntıları üzerindedir; Orhan Gazi'nin türbesinde manastırın taban mozaiği hâlâ yerindedir.",
+      "The tombs stand over the remains of a Byzantine monastery, and its floor mosaic is still in place in Orhan's.",
+    ),
+    f(
+      "Osman Gazi'nin oğluna vasiyeti Bursa'ya gömülmekti; kent o ölmeden hemen önce alınmıştı.",
+      "Osman's last wish to his son was to be buried at Bursa, and the city had been taken just before his death.",
+    ),
+  ],
+  birgi: [
+    f(
+      "Kasaba 14. yüzyılda Aydınoğulları Beyliği'nin başkentiydi.",
+      "The town was the capital of the Aydınid emirate in the fourteenth century.",
+    ),
+    f(
+      "Ulu Cami'nin duvarlarında, yakındaki antik Hypaipa kentinden getirilmiş mermer bloklar ve yazıtlar kullanıldı.",
+      "Marble blocks and inscriptions from the nearby ancient city of Hypaipa were built into the walls of the great mosque.",
+    ),
+  ],
+  goynuk: [
+    f(
+      "Yerleşim, Fatih'in hocası Akşemseddin'in türbesinin çevresinde büyüdü.",
+      "The settlement grew around the tomb of Akşemseddin, tutor to Mehmed the Conqueror.",
+    ),
+    f(
+      "Akşemseddin, bulaşıcı hastalıkların gözle görülmeyen canlılarla yayıldığını yazan ilk Osmanlı yazarlarındandır.",
+      "Akşemseddin was among the first Ottoman writers to hold that contagious disease spread by living things too small to see.",
+    ),
+  ],
+  kula: [
+    f(
+      "Kasabada altı yüzden fazla tescilli Osmanlı evi ayakta ve sokak dokusu neredeyse hiç değişmedi.",
+      "More than six hundred listed Ottoman houses survive here, and the street pattern has barely changed.",
+    ),
+    f(
+      "Yakındaki lav tabakasında bulunan insan ayak izleri yaklaşık on bin yıllıktır ve Anadolu'nun en eski insan izleridir.",
+      "Human footprints found in the lava nearby are about ten thousand years old, the oldest human traces in Anatolia.",
+    ),
+  ],
 };
 
 /** The extra facts for a site, or an empty list when none are written yet. */

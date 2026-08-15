@@ -4032,6 +4032,219 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC BY-SA 3.0",
     licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
   },
+  "Kahramanmaras_Museum_Statue_Maras_13_Schrift.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Burdur_Museum_3224.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Malatya_museum_035.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gök_Medrese_at_Tokat.jpg": {
+    author: "Kafka Liz",
+    license: "Public domain",
+  },
+  "Kastamonu_Museum_from_Clock_Tower_hill_8771.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Istanbul_Sadberk_Hanım_Museum_Vessel_Iron_Age_Urartian_3270.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Metropolis,_Ionia,_Turkey_(44836850221).jpg": {
+    author: "Carole Raddato from FRANKFURT, Germany",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Blaundos.jpg": {
+    author: "Thecatcherintherye",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Bafa_Lake_Kapikiri.JPG": {
+    author: "Wolfgang Glock",
+    license: "Public domain",
+  },
+  "Alabanda_Bouleuterion.JPG": {
+    author: "Kefaser at Turkish Wikipedia",
+    license: "Public domain",
+  },
+  "Alinda_Agora.JPG": {
+    author: "Ana al'ain",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Iasos_5510.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Rhodiapolis.JPG": {
+    author: "Gunthram",
+    license: "Public domain",
+  },
+  "Andriake_Harbour_area_0312.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Selge_08_04_2015_Theater_von_Selge.jpg": {
+    author: "Volker Höhfeld",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "The_Sanctuary_of_Hecate_in_Lagina,_Caria,_Turkey_(17289438085).jpg": {
+    author: "Carole Raddato from FRANKFURT, Germany",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "God_Apollo_Lairbenos_with_labrys_(double_axe),_from_the_the_scaenae_frons_of_the_Roman_theatre,_2nd_century_AD,_Hierapolis_Archaeology_Museum,_Turkey_(32286281651).jpg":
+    {
+      author: "Carole Raddato from FRANKFURT, Germany",
+      license: "CC BY-SA 2.0",
+      licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+    },
+  "Panionion.jpg": {
+    author: "RehberCanSan",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Museum_of_Anatolian_Civilizations_Hacılar_Statuette_of_goddess_holding_a_young_leopard_in_2019_10.jpg":
+    {
+      author: "Dosseman",
+      license: "CC BY-SA 4.0",
+      licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+    },
+  "Beycesultan_20.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Tilmen1.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Column_of_Constantine.jpg": {
+    author: "Dmitry A. Mottl",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gumusler_Monastery_Courtyard_1202.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Hagia_Irene,_Istanbul_(52112279404)_(cropped).jpg": {
+    author: "Ninara",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "St_Nicholas_Church_Demre_024.jpg": {
+    author: "Yamen",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "ChurchSaintPeterAntakya.jpg": {
+    author: "Carole Raddato",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Saint-John_in_Ephesus_(6).JPG": {
+    author: "José Luiz",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Afyonkarahisar_Ulu_Camii_Exterior_1881.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Ankara_asv2021-10_img29_Kale_and_Arslanhane_Mosque.jpg": {
+    author: "A.Savin",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "GREEN_MOSQUE-YEŞİL_CAMİ-BURSA_-_panoramio_-_HALUK_COMERTEL.jpg": {
+    author: "HALUK COMERTEL",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Twin_Minaret_Madrasah_-_Çifte_Minareli_Medrese_01.jpg": {
+    author: "Zeynel Cebeci",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gök_medrese_-_Sivas_-_Turquie.jpg": {
+    author: "Alexjes98",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "Şifaiye_Medrese_at_tomb_(Sivas)_in_2011_8263.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gevher_Nesibe_Medrese_(Cifte_Medrese)_DSCF1179.jpg": {
+    author: "R Prazeres",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Adalet_kasrı.png": {
+    author: "iha",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Silifke_castle_exterior_in_2006_2119.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Zerzevan_Kalesi_Kilise.jpg": {
+    author: "Chansey",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sultanhanı_(Kayseri)_-1.jpg": {
+    author: "Buzancar",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Safranbolu_Cinci_Han_in_2006_8106.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Çobandede_Köprüsü.jpg": {
+    author: "Mehmet Yıldırım",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
+  "Three_tombs_-_Üç_kümbetler_04.jpg": {
+    author: "Zeynel Cebeci",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Birgi_ve_tarihi_taş_evler_9.jpg": {
+    author: "Thecatcherintherye",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kula_stone_house_2.jpg": {
+    author: "Bluetime93",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
 };
 
 /**

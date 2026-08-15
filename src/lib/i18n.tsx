@@ -91,8 +91,14 @@ const dict = {
   map_view: { tr: "Harita", en: "Map" },
   progress: { tr: "İlerleme", en: "Progress" },
   completion: { tr: "tamamlandı", en: "complete" },
-  total_visited: { tr: "Gezilen antik kent", en: "Cities visited" },
-  remaining: { tr: "Kalan antik kent", en: "Cities remaining" },
+  /**
+   * Both are counted against every site in the data, not against the ancient
+   * cities alone, so labelling them "antik kent" was a false claim about what
+   * the number meant — a visitor who had seen four museums read it as four
+   * cities.
+   */
+  total_visited: { tr: "Gezilen yerler", en: "Places visited" },
+  remaining: { tr: "Kalan yerler", en: "Places remaining" },
   stats: { tr: "İstatistikler", en: "Statistics" },
   badges: { tr: "Başarı rozetleri", en: "Achievement badges" },
   favorites: { tr: "Favoriler", en: "Favorites" },
