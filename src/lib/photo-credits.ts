@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Attribution for every Wikimedia Commons photo the app displays.
  *
  * Most of these images are CC BY or CC BY-SA: showing them without naming the
@@ -3601,6 +3601,185 @@ export const photoCredits: Record<string, PhotoCredit> = {
   },
   "Магнесия_на_Меандре._Пропилеи.jpg": {
     author: "Vadimph",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+
+  "Turkish_and_Islamic_Museum_1432_(cropped).jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mosaic_museum_Istanbul_2007_021.jpg": {
+    author: "Byzantine mosaic artists from the 5th century",
+    license: "Public domain",
+  },
+  "Museo_archeologico_di_izmir,_veduta.JPG": {
+    author: "sailko",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Bergama_Museum_009.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Hierapolis_Archaeological_Museum_09.jpg": {
+    author: "Biologg",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Uşak_müzesi_2.jpg": {
+    author: "Satirdan kahraman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Hygieia_Statue_Side_Museum.jpg": {
+    author: "Blcksprt",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Adana_Müzesi_(Milli_Mensucat_Fabrikası).jpg": {
+    author: "Basak",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mardin_P1050137_20080426105032.JPG": {
+    author: "Nevit Dilmen",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/",
+  },
+  "Van_Museum_009.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Amasya_Museum_03.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Trabzon_museum.jpg": {
+    author: "Radosław Botev",
+    license: "Attribution",
+  },
+  "CorumMuseum1.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Konya_Karatay_Ceramics_Museum_exterior_4465.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Istanbul_(34223582516)_(cropped).jpg": {
+    author: "Pedro Szekely from Los Angeles, USA",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "71_Bursa_la_Grande_Moschea_(Edited).jpg": {
+    author: "Beñat Irasuegi",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Eşrefoğlu_Camii,_Beyşehir,_April_2024_05.jpg": {
+    author: "Calistemon",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Great_Mosque,_Diyarbakir.jpg": {
+    author: "Cemallamec",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Sultan_Han_(4551085637).jpg": {
+    author: "puffin11k from Mirfield, UK",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "SarihanHof.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Portuguese_Bridge_(Severan_Bridge)2.jpg": {
+    author: "Damien Halleux Radermecker from Brussels, Belgium",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Malabadibridge.jpg": {
+    author: "Dyrt",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Turkey-1353_(2216628788).jpg": {
+    author: "Dennis G. Jarvis",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Kayseri_Doner_tomb_2019_1875.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Bozdoģan_Kemeri_-_panoramio.jpg": {
+    author: "Laima Gūtmane (simka…",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Cisterna_Basílica,_Estambul,_Turquía,_2024-09-28,_DD_58-60_HDR.jpg": {
+    author: "Diego Delso",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Dolmabahce_Istanbul_Turkey.jpg": {
+    author: "flowcomm",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Anıtkabir,_Ankara,_Turquía,_2024-10-03,_DD_01.jpg": {
+    author: "Diego Delso",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Istanbul_asv2020-02_img48_Galata_Tower.jpg": {
+    author: "A.Savin",
+    license: "FAL",
+    licenseUrl: "http://artlibre.org/licence/lal/en",
+  },
+  "Alanya_Castle.jpeg": {
+    author: "Hydrox",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Kizkalesi,_Erdemli.IMG_3491.jpg": {
+    author: "YG01",
+    license: "CC BY 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/4.0",
+  },
+  "Eskisehir_odunpazarı_beyler_sokagı.jpg": {
+    author: "FoPen",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/",
+  },
+  "Yeşilırmak2.jpg": {
+    author: "Ahmtzngn34",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Deyrulumur_P1040804_20080425103239.JPG": {
+    author: "Nevit Dilmen",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/",
+  },
+  "Mardin_Mor_Hananyo_Monastery_in_2000-2001_114.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Soganli_Valley_Cappadocia.JPG": {
+    author: "Wolfgang Moroder",
     license: "CC BY-SA 3.0",
     licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
   },

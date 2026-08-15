@@ -1727,6 +1727,374 @@ export const siteFacts: Record<string, Localized[]> = {
       "The night Mevlâna died is called Şeb-i Arûs — the wedding night — and is marked every 17 December.",
     ),
   ],
+
+  // ————— Camiler, köprüler, hanlar ve konaklar —————
+  "sultanahmet-camii": [
+    f(
+      "Altı minare, yapıldığı sırada yalnızca Mekke'deki Harem-i Şerif'te vardı; iddia tartışma yaratınca Mekke'ye bir minare daha eklendi.",
+      "Six minarets were, at the time, matched only by the sanctuary at Mecca; when the claim caused offence, a further minaret was added there.",
+    ),
+    f(
+      "Cami hâlâ ibadete açıktır ve ziyaret saatleri namaz vakitlerine göre değişir; giriş ücretsizdir.",
+      "The mosque is still in use for prayer, so visiting hours shift with the prayer times. There is no entry charge.",
+    ),
+    f(
+      "Yapı, Bizans Büyük Sarayı'nın üzerine kuruldu; sarayın mozaik tabanı bugün caminin arkasındaki müzede yerinde durur.",
+      "It was built over the Byzantine Great Palace, whose mosaic floor still lies in place in the museum behind it.",
+    ),
+  ],
+  "bursa-ulu-cami": [
+    f(
+      "Yirmi kubbe, Yıldırım Bayezid'in Niğbolu zaferi için adadığı yirmi caminin yerine geçti.",
+      "The twenty domes stand in place of the twenty mosques Bayezid I had vowed for his victory at Nicopolis.",
+    ),
+    f(
+      "Ortadaki şadırvan, kubbelerden birinin yerine bırakılan açıklığın altındadır: avlusu olmayan camide avlunun işlevini içerisi görür.",
+      "The fountain at the centre sits under the opening left where a dome would be: with no courtyard, the interior does the courtyard's work.",
+    ),
+  ],
+  "yesil-turbe": [
+    f(
+      "Türbeye adını veren firuze çini kaplama, 1855 depreminden sonra yenilendi; özgün çinilerin bir bölümü içeride korunur.",
+      "The turquoise tiling that gives the tomb its name was renewed after the earthquake of 1855; some of the original tiles survive inside.",
+    ),
+    f(
+      "Çelebi Mehmed'in sandukası, Osmanlı çini sanatının Bursa dönemindeki en gösterişli örneğidir.",
+      "The cenotaph of Mehmed I is the most elaborate piece of Ottoman tilework surviving from the Bursa period.",
+    ),
+  ],
+  "esrefoglu-cami": [
+    f(
+      "Camiyi taşıyan kırk iki sedir sütunun hiçbiri sonradan değiştirilmedi; yedi yüz yıldır aynı ağaçlar ayakta.",
+      "None of the forty-two cedar columns has ever been replaced: the same trees have carried the roof for seven centuries.",
+    ),
+    f(
+      "2023'te Anadolu'nun ahşap direkli camileri UNESCO Dünya Mirası Listesi'ne alındı; Eşrefoğlu bu grubun en büyüğüdür.",
+      "In 2023 Anatolia's wooden hypostyle mosques entered the World Heritage List, and Eşrefoğlu is the largest of them.",
+    ),
+  ],
+  "diyarbakir-ulu-cami": [
+    f(
+      "Avlunun cephesinde kullanılan sütun ve başlıklar, kentin Roma yapılarından sökülerek yeniden kullanıldı.",
+      "The columns and capitals of the courtyard front were taken from the city's Roman buildings and used again.",
+    ),
+    f(
+      "Cami, aynı avluyu paylaşan Mesudiye ve Zinciriye medreseleriyle birlikte bir külliye oluşturur.",
+      "The mosque forms a complex with the Mesudiye and Zinciriye madrasas, which share its courtyard.",
+    ),
+  ],
+  sultanhani: [
+    f(
+      "Avlunun ortasındaki köşk mescit, dört ayak üzerinde yükselir; altından geçen kervan yükünü boşaltmadan avluya girebilirdi.",
+      "The kiosk mosque in the middle of the court stands on four piers, so a loaded caravan could pass beneath it into the yard.",
+    ),
+    f(
+      "Han, yazlık avlu ve kışlık kapalı hol olarak ikiye ayrılır; Anadolu'nun sert kışı Selçuklu han planını böyle belirledi.",
+      "The han is split between an open summer court and a covered winter hall — the Anatolian winter wrote the Seljuk plan.",
+    ),
+  ],
+  sarihan: [
+    f(
+      "Han, Kapadokya'daki Selçuklu kervansaraylarının en geç tarihlilerindendir ve yapının adını çevredeki ocakların sarı taşı verir.",
+      "It is among the latest of the Seljuk caravanserais in Cappadocia, and takes its name from the yellow stone of the quarries around it.",
+    ),
+    f(
+      "Yirminci yüzyılda yıkılmaya yüz tutan yapı, 1980'lerdeki restorasyonla bütün olarak ayağa kaldırıldı.",
+      "Close to collapse in the twentieth century, the building was raised again whole in the restoration of the 1980s.",
+    ),
+  ],
+  "cendere-koprusu": [
+    f(
+      "Köprünün dört sütunundan biri eksiktir: Geta'nın adı ölümünden sonra kayıtlardan silinince sütunu da kaldırıldı.",
+      "One of the bridge's four columns is missing: when Geta's name was struck from the record after his death, his column came down with it.",
+    ),
+    f(
+      "Yapı Nemrut Dağı'na çıkan yolun üzerindedir; Kommagene gezisinin çoğu bu köprüden geçer.",
+      "The bridge sits on the road up to Mount Nemrut, so most Commagene itineraries cross it.",
+    ),
+  ],
+  "malabadi-koprusu": [
+    f(
+      "Tek kemerin açıklığı otuz sekiz metreyi aşar; Orta Çağ'da bu genişlikte örülmüş taş kemer sayısı bir elin parmaklarını geçmez.",
+      "The single span passes thirty-eight metres — medieval stone arches built that wide can be counted on one hand.",
+    ),
+    f(
+      "Köprünün yan duvarlarındaki odalar, kış aylarında yolcuların geceyi geçirmesi için yapılmıştı.",
+      "The rooms in the bridge's flanks were built so that travellers could spend a winter night inside it.",
+    ),
+  ],
+  "doner-kumbet": [
+    f(
+      "Kümbet dönmez: adı, on iki yüzlü gövdenin çevresinde yürüyen birine yapı dönüyormuş gibi görünmesinden gelir.",
+      "The tomb does not turn: the name comes from the way the twelve-sided shaft seems to rotate as you walk around it.",
+    ),
+    f(
+      "Gövdedeki hayat ağacı kabartmasının iki yanında karşılıklı duran hayvan figürleri, Orta Asya'dan gelen bir bezeme geleneğini sürdürür.",
+      "The animals facing each other across the tree-of-life relief continue a decorative tradition carried from Central Asia.",
+    ),
+  ],
+  "bozdogan-kemeri": [
+    f(
+      "Kemer, kenti Trakya'daki kaynaklara bağlayan yüzlerce kilometrelik su hattının yalnızca son halkasıydı.",
+      "The aqueduct was only the last link of a water line hundreds of kilometres long reaching back to the springs of Thrace.",
+    ),
+    f(
+      "Osmanlı döneminde de bakımı sürdürüldü; su sistemi yüzyıllar boyunca bu Roma hattı üzerinden işledi.",
+      "It was maintained under the Ottomans too, and the city's water ran along this Roman line for centuries.",
+    ),
+  ],
+  "yerebatan-sarnici": [
+    f(
+      "Sarnıcın 336 sütunu farklı yapılardan toplandı; boyları tutmadığı için kimi kaideler yükseltildi, kimi başlıklar ters çevrildi.",
+      "Its 336 columns were gathered from different buildings, so where the heights did not match, bases were raised and capitals turned over.",
+    ),
+    f(
+      "Sarnıcın varlığı Osmanlı döneminde unutulmuştu; 16. yüzyılda üstündeki evlerin bodrumundan balık çıkaran mahalleliler sayesinde yeniden kayda geçti.",
+      "The cistern had been forgotten under the Ottomans, and was recorded again in the sixteenth century only because people were pulling fish up through their cellar floors.",
+    ),
+  ],
+  "dolmabahce-sarayi": [
+    f(
+      "Muayede Salonu'nun 4,5 tonluk avizesi, dünyanın en ağır kristal avizelerindendir ve salonun kubbesine asılıdır.",
+      "The four-and-a-half-tonne chandelier of the ceremonial hall is among the heaviest crystal chandeliers anywhere, hung from the dome.",
+    ),
+    f(
+      "Atatürk 10 Kasım 1938'de bu sarayda öldü; öldüğü odadaki saat hâlâ 09:05'i gösterir.",
+      "Atatürk died in this palace on 10 November 1938, and the clock in the room still shows 09:05.",
+    ),
+  ],
+  "galata-kulesi": [
+    f(
+      "Kuleyi Cenevizliler 1348'de kendi surlarının en yüksek noktasına dikti ve 'İsa Kulesi' adını verdi.",
+      "The Genoese raised the tower in 1348 at the highest point of their own walls and named it the Tower of Christ.",
+    ),
+    f(
+      "Osmanlı döneminde kule yangın gözetleme noktasıydı; ahşap kentte yangın haberi buradan verilirdi.",
+      "Under the Ottomans it was a fire watchtower — in a city of timber, the alarm was raised from here.",
+    ),
+  ],
+  anitkabir: [
+    f(
+      "Anıtın yeri, Ankara'ya hâkim Rasattepe'ydi; inşaat sırasında tepenin altından Frig dönemine ait tümülüsler çıktı.",
+      "The monument stands on Rasattepe above Ankara, and the building work uncovered Phrygian tumuli beneath the hill.",
+    ),
+    f(
+      "Aslanlı Yol'un yirmi dört aslanı, Hitit heykel geleneğine uyularak ayakta değil oturur biçimde yontuldu.",
+      "The twenty-four lions of the Lion Road are carved seated rather than standing, following Hittite sculptural practice.",
+    ),
+  ],
+  "alanya-kalesi": [
+    f(
+      "Yarımadayı çeviren sur 6,5 kilometre uzunluğundadır ve içinde yüzlerce sarnıç bulunur; kale kuşatmada suyunu kendi toplardı.",
+      "The wall around the peninsula runs 6.5 kilometres and encloses hundreds of cisterns: under siege the castle collected its own water.",
+    ),
+    f(
+      "Kızılkule, Selçuklu tersanesini korumak için yapıldı ve Anadolu Selçuklu askerî mimarisinin en iyi korunmuş kulesidir.",
+      "The Red Tower was built to protect the Seljuk shipyard and is the best preserved tower of Anatolian Seljuk military architecture.",
+    ),
+  ],
+  kizkalesi: [
+    f(
+      "Kale, kıyıdan iki yüz metre açıktaki adacığın tamamını kaplar; karadaki Korykos Kalesi'yle birlikte limanın iki yanını tutardı.",
+      "The castle covers the whole islet two hundred metres offshore, holding one side of the harbour while Korykos Castle held the other.",
+    ),
+    f(
+      "Adını, kral kızının yılan sokmasından ölmesini önlemek için buraya kapatıldığı halk anlatısından alır.",
+      "Its name comes from the story of a king's daughter shut up here to keep her from a prophesied snakebite.",
+    ),
+  ],
+  odunpazari: [
+    f(
+      "Evlerin üst katları alt katlardan geniştir: cumbalar sokağa doğru çıkma yaparak dar arsadan fazladan oda kazandırır.",
+      "The upper floors are wider than the lower ones: the bays corbel out over the lane and win extra rooms from a narrow plot.",
+    ),
+    f(
+      "Mahalle, dünyanın en kaliteli lületaşının çıktığı Eskişehir ocaklarının pipo ve süs eşyası atölyelerine ev sahipliği yapar.",
+      "The quarter houses the pipe and carving workshops fed by the Eskişehir seams, which produce the finest meerschaum in the world.",
+    ),
+  ],
+  "amasya-yaliboyu-evleri": [
+    f(
+      "Evlerin arkasındaki kayalıkta Pontus krallarının anıt mezarları vardır; konaklar ile mezarlar arasında iki bin yıl bulunur.",
+      "The rock face behind the houses carries the monumental tombs of the Pontic kings: two thousand years separate the mansions from the graves.",
+    ),
+    f(
+      "Coğrafyacı Strabon MÖ 64'te bu kentte doğdu ve ırmağın iki yakasını kendi satırlarında tarif etti.",
+      "The geographer Strabo was born in this city in 64 BC and described both banks of its river himself.",
+    ),
+  ],
+  "mor-gabriel": [
+    f(
+      "397'de kurulan manastır, Süryani Ortodoks Kilisesi'nin kesintisiz olarak ayakta kalan en eski manastırıdır.",
+      "Founded in 397, it is the oldest Syriac Orthodox monastery still in continuous use.",
+    ),
+    f(
+      "Turabdin, Süryanicede 'kulların dağı' demektir; bu yaylada bir zamanlar seksenden fazla manastır vardı.",
+      "Turabdin means 'mountain of the servants of God' in Syriac; more than eighty monasteries once stood on this plateau.",
+    ),
+  ],
+  deyrulzafaran: [
+    f(
+      "Manastır, Süryani Ortodoks patrikliğinin yüzyıllar boyunca merkeziydi; patriklik 1932'de Şam'a taşındı.",
+      "The monastery was the seat of the Syriac Orthodox patriarchate for centuries, until it moved to Damascus in 1932.",
+    ),
+    f(
+      "Altındaki tonozlu oda, harç kullanılmadan örülmüş taş bloklarla örtülüdür ve manastırdan çok daha eskidir.",
+      "The vaulted room beneath it is roofed with blocks laid without mortar and is far older than the monastery.",
+    ),
+  ],
+  soganli: [
+    f(
+      "Vadi, Göreme Milli Parkı ile birlikte Dünya Mirası kapsamındadır ama ziyaretçisi Göreme'nin küçük bir bölümü kadardır.",
+      "The valley falls within the same World Heritage inscription as the Göreme National Park, yet sees a fraction of its visitors.",
+    ),
+    f(
+      "Kayalara oyulmuş güvercinlikler süs değildi: güvercin gübresi yüzyıllarca buradaki bağların başlıca gübresiydi.",
+      "The dovecotes cut into the rock were not decorative — pigeon droppings were for centuries the main fertiliser of these vineyards.",
+    ),
+  ],
+
+  // ————— Müzeler, ikinci grup —————
+  "turk-islam-eserleri-muzesi": [
+    f(
+      "Müze, Kanuni'nin sadrazamı İbrahim Paşa'nın sarayındadır; yapı, Osmanlı sivil mimarisinden günümüze kalan en eski saraylardandır.",
+      "The museum occupies the palace of İbrahim Pasha, Süleyman's grand vizier — among the oldest surviving examples of Ottoman domestic palace architecture.",
+    ),
+    f(
+      "Konya'da bulunan 13. yüzyıl Selçuklu halıları, dünyada bilinen en eski düğümlü halı gruplarındandır.",
+      "The thirteenth-century Seljuk carpets found at Konya are among the oldest groups of knotted carpets known anywhere.",
+    ),
+  ],
+  "buyuk-saray-mozaikleri": [
+    f(
+      "Mozaik sökülüp taşınmadı: bulunduğu yerde, Bizans sarayının avlu tabanı olarak korunuyor.",
+      "The mosaic was never lifted: it is kept where it was found, as the courtyard floor of the Byzantine palace.",
+    ),
+    f(
+      "Sahnelerin hiçbiri dinî ya da hanedana ait değildir; av, çoban ve hayvan tasvirleri kırsal hayatı anlatır.",
+      "Not one scene is religious or dynastic: hunters, herdsmen and animals describe life in the countryside.",
+    ),
+  ],
+  "izmir-arkeoloji-muzesi": [
+    f(
+      "Koleksiyonun çekirdeği Smyrna Agorası kazılarından gelir; agoranın Poseidon ve Demeter heykelleri burada sergilenir.",
+      "The core of the collection comes from the Smyrna agora excavations, including its statues of Poseidon and Demeter.",
+    ),
+    f(
+      "Müze, İzmir çevresindeki İon kentlerinin — Klazomenai, Teos, Bayraklı — buluntularını tek çatı altında toplar.",
+      "It gathers the finds of the Ionian cities around İzmir — Klazomenai, Teos, Bayraklı — under one roof.",
+    ),
+  ],
+  "bergama-muzesi": [
+    f(
+      "Zeus Sunağı'nın büyük frizi Berlin'dedir; sunağın Bergama'da görülebilen tek özgün parçaları bu müzededir.",
+      "The great frieze of the Altar of Zeus is in Berlin; the only original fragments of it that can be seen in Bergama are here.",
+    ),
+    f(
+      "Koleksiyon, Asklepion'un sağlık merkezinden çıkan adak eserlerini de içerir.",
+      "The collection includes the votive objects found in the healing centre of the Asklepion.",
+    ),
+  ],
+  "hierapolis-muzesi": [
+    f(
+      "Müze, kentin Roma hamamının kubbeli salonlarına yerleştirildi; bina koleksiyonun bir parçasıdır.",
+      "The museum was installed in the vaulted halls of the city's Roman baths, so the building is part of the collection.",
+    ),
+    f(
+      "Tiyatronun sahne binasından sökülen kabartmalar, Apollon ve Artemis kültünü anlatan en kapsamlı Roma dizilerindendir.",
+      "The reliefs taken from the theatre's stage building are among the fullest Roman sequences describing the cult of Apollo and Artemis.",
+    ),
+  ],
+  "usak-muzesi": [
+    f(
+      "Karun Hazinesi, kaçırıldıktan yıllar sonra açılan bir davayla New York'tan geri getirildi.",
+      "The Lydian Hoard was brought back from New York years after it was smuggled out, through a lawsuit.",
+    ),
+    f(
+      "Koleksiyonun simgesi kanatlı deniz atı broşu, dönüşünden sonra bir kez daha çalınıp sahtesiyle değiştirildi; aslı sonradan bulundu.",
+      "The winged sea-horse brooch, the collection's emblem, was stolen again after its return and swapped for a fake; the original was later recovered.",
+    ),
+  ],
+  "side-muzesi": [
+    f(
+      "Müze, kentin Roma hamamıdır: heykeller bugün, Side'nin yıkandığı salonlarda duruyor.",
+      "The museum is the city's Roman bath: the sculpture stands in the rooms where Side washed.",
+    ),
+    f(
+      "Side, Pamfilya'nın köle ticaretinin merkeziydi; Strabon limanda tutsakların açık artırmayla satıldığını yazar.",
+      "Side was the slave-trading centre of Pamphylia, and Strabo writes of captives auctioned in its harbour.",
+    ),
+  ],
+  "adana-muzesi": [
+    f(
+      "Müze, 20. yüzyılın başından kalma bir dokuma fabrikasının salonlarına taşındı ve Türkiye'nin en büyük müze binalarından biri oldu.",
+      "The museum moved into the halls of a textile mill from the start of the twentieth century, becoming one of the largest museum buildings in Türkiye.",
+    ),
+    f(
+      "Fabrikanın dokuma makineleri sökülmedi: aynı çatı altında Roma lahitleriyle sanayi mirası birlikte sergileniyor.",
+      "The mill's looms were left in place, so Roman sarcophagi and industrial heritage are shown under the same roof.",
+    ),
+  ],
+  "mardin-muzesi": [
+    f(
+      "Müze, Süryani Katolik Patrikliği'nin konağındadır; Mardin taş oymacılığının en iyi örneklerinden biri binanın kendisidir.",
+      "The museum is in the mansion of the Syriac Catholic patriarchate, and the finest example of Mardin stone carving in it is the building itself.",
+    ),
+    f(
+      "Koleksiyon, Nusaybin yakınındaki Girnavaz höyüğünün Asur katmanlarından çıkan buluntuları içerir.",
+      "The collection holds the finds from the Assyrian levels of the Girnavaz mound near Nusaybin.",
+    ),
+  ],
+  "van-muzesi": [
+    f(
+      "Urartu tunç işçiliği koleksiyonu dünyadaki en kapsamlılardandır: kemerler, miğferler ve at koşum takımları aynı salonda.",
+      "Its collection of Urartian bronzes is among the fullest anywhere — belts, helmets and horse harness in a single hall.",
+    ),
+    f(
+      "Hakkâri'de bulunan steller, Anadolu'da bilinen hiçbir sanat geleneğine benzemez; hangi halka ait oldukları tartışılmaya devam ediyor.",
+      "The stelae found at Hakkâri resemble no known Anatolian tradition, and which people made them is still debated.",
+    ),
+  ],
+  "amasya-muzesi": [
+    f(
+      "Müzedeki İlhanlı dönemi mumyaları, Anadolu'da bu biçimde korunmuş cesetlerin bilinen tek grubudur.",
+      "The Ilkhanid-period mummies here are the only known group of bodies preserved this way in Anatolia.",
+    ),
+    f(
+      "Koleksiyon, kentin Hitit'ten Pontus'a ve Osmanlı'ya uzanan katmanlarını tek bir sırada izler.",
+      "The collection follows the city's layers from the Hittites through Pontus to the Ottomans in a single sequence.",
+    ),
+  ],
+  "trabzon-muzesi": [
+    f(
+      "Bina, bir bankacı ailesinin konağıydı ve 1924'te Atatürk'ün Trabzon'daki ikametgâhı oldu.",
+      "The building was a banking family's mansion and became Atatürk's residence in Trabzon in 1924.",
+    ),
+    f(
+      "Tavanlardaki kalem işi bezeme yerinde korundu; konak, Karadeniz'in 19. yüzyıl sivil mimarisinin en iyi örneklerindendir.",
+      "The painted ceiling decoration was left in place, and the house is among the best examples of nineteenth-century Black Sea domestic architecture.",
+    ),
+  ],
+  "corum-muzesi": [
+    f(
+      "Müze, Hattuşa ve Alacahöyük kazılarının merkez koleksiyonudur; Hitit mühürleri ve tabletleri burada toplanır.",
+      "The museum is the central collection for the Hattusa and Alacahöyük excavations, where the Hittite seals and tablets are gathered.",
+    ),
+    f(
+      "Hattuşa'da bulunan tabletler, Hint-Avrupa dillerinin bilinen en eski yazılı örneklerini verdi.",
+      "The tablets found at Hattusa yielded the earliest written record of any Indo-European language.",
+    ),
+  ],
+  "karatay-muzesi": [
+    f(
+      "Medresenin kubbesi, ortadaki havuza yansıyan bir gece göğü olarak tasarlandı; mavi ve siyah çiniler yıldızları kurar.",
+      "The dome of the madrasa was designed as a night sky reflected in the pool below, its blue and black tiles making the stars.",
+    ),
+    f(
+      "Kubadabad Sarayı'ndan sökülen çinilerde av kuşları ve sirenler görülür; Selçuklu sanatında figürlü bezemenin en zengin örneğidir.",
+      "The tiles taken from the Kubadabad palace carry hunting birds and sirens — the richest figural decoration of Seljuk art.",
+    ),
+  ],
 };
 
 /** The extra facts for a site, or an empty list when none are written yet. */

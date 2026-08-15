@@ -18,6 +18,8 @@ import { regions, sites } from "@/lib/sites";
 const staticPaths = [
   "/",
   "/kentler",
+  "/muzeler",
+  "/tarihi-mekanlar",
   "/harita",
   "/bolgeler",
   "/koleksiyonlar",

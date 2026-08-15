@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import {
+  Building2,
   CalendarDays,
+  Castle,
   Columns3,
   Gamepad2,
   Home,
@@ -25,8 +27,10 @@ import type { ReactNode } from "react";
 const navItems: { to: string; key: TKey; icon: typeof Home; desktopOnly?: boolean }[] = [
   { to: "/", key: "nav_home", icon: Home },
   { to: "/kentler", key: "nav_explore", icon: Landmark },
+  { to: "/muzeler", key: "nav_museums", icon: Building2 },
+  { to: "/tarihi-mekanlar", key: "nav_places", icon: Castle, desktopOnly: true },
   { to: "/harita", key: "nav_map", icon: MapIcon },
-  { to: "/bolgeler", key: "nav_regions", icon: Columns3 },
+  { to: "/bolgeler", key: "nav_regions", icon: Columns3, desktopOnly: true },
   { to: "/koleksiyonlar", key: "nav_collections", icon: Layers, desktopOnly: true },
   { to: "/rota", key: "nav_route", icon: RouteIcon, desktopOnly: true },
   { to: "/gunluk", key: "nav_daily", icon: CalendarDays, desktopOnly: true },

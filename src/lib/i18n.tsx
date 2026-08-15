@@ -266,6 +266,21 @@ const dict = {
   nav_credits: { tr: "Görsel künyeleri", en: "Image credits" },
 
   // ——— Collections ———
+  nav_museums: { tr: "Müzeler", en: "Museums" },
+  museums_sub: {
+    tr: "Kazılardan çıkanların bugün durduğu yerler. Bir ören yerini gezdikten sonra sıra buraya gelir — çoğu zaman aradığın heykel ya da mozaik burada.",
+    en: "Where what came out of the ground is kept today. The museum is the second half of a visit to a ruin: the statue or the mosaic you were looking for is usually here.",
+  },
+  /**
+   * Deliberately not "Tarihî Yerler", which `nav_explore` already uses for the
+   * whole index. This is the narrower set: the heritage that is still a
+   * building rather than a foundation.
+   */
+  nav_places: { tr: "Tarihî Mekânlar", en: "Historic Places" },
+  places_sub: {
+    tr: "Kazı alanı değil, hâlâ ayakta duran miras: camiler, kaleler, köprüler, kervansaraylar, kaya kiliseleri ve Osmanlı kent dokuları. İçine girilen, üzerinden geçilen, hâlâ kullanılan yerler.",
+    en: "Not excavations but heritage still standing: mosques, castles, bridges, caravanserais, rock churches and Ottoman quarters — places you walk into, cross, or that are still in daily use.",
+  },
   nav_collections: { tr: "Koleksiyonlar", en: "Collections" },
   collections_title: { tr: "Koleksiyonlar", en: "Collections" },
   collections_sub: {
@@ -401,6 +416,22 @@ const dict = {
   seo_credits_desc: {
     tr: "Sitede kullanılan bütün Wikimedia Commons fotoğraflarının fotoğrafçıları, lisansları ve kaynak sayfaları.",
     en: "Photographers, licences and source pages for every Wikimedia Commons photograph used on this site.",
+  },
+  seo_museums_title: {
+    tr: "Müzeler — Türkiye'nin Arkeoloji ve Tarih Müzeleri | Antik Türkiye",
+    en: "Museums — Archaeology and History Museums of Türkiye | Ancient Türkiye",
+  },
+  seo_museums_desc: {
+    tr: "Anadolu Medeniyetleri, Zeugma Mozaik, İstanbul Arkeoloji ve daha fazlası: kazılardan çıkan eserlerin sergilendiği müzeleri harita üzerinde keşfet.",
+    en: "Anatolian Civilizations, the Zeugma Mosaic Museum, Istanbul Archaeological and more: find the museums holding what the excavations produced, on a map.",
+  },
+  seo_places_title: {
+    tr: "Tarihî Mekânlar — Camiler, Kaleler, Köprüler ve Hanlar | Antik Türkiye",
+    en: "Historic Places — Mosques, Castles, Bridges and Caravanserais | Ancient Türkiye",
+  },
+  seo_places_desc: {
+    tr: "Sultanahmet'ten Anıtkabir'e, Malabadi Köprüsü'nden Sultanhanı'na: Türkiye'nin hâlâ ayakta duran tarihî yapılarını harita üzerinde keşfet.",
+    en: "From the Blue Mosque to Anıtkabir, the Malabadi Bridge to the Sultan Han: explore the historic buildings of Türkiye that are still standing, on a map.",
   },
   seo_collections_title: {
     tr: "Koleksiyonlar — Temalı Antik Kent Derlemeleri | Antik Türkiye",

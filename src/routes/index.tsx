@@ -22,6 +22,7 @@ import {
   distanceKm,
   getSite,
   heroImage,
+  historicPlaces,
   regionCoverImage,
   regions,
   siteOfTheDay,
@@ -73,6 +74,16 @@ function Index() {
 
   const popular = useMemo(
     () => [...sites].sort((a, b) => b.popularity - a.popularity).slice(0, 8),
+    [],
+  );
+  // Both lists arrive sorted by popularity from the data layer.
+  const places = historicPlaces.slice(0, 4);
+  const museums = useMemo(
+    () =>
+      sites
+        .filter((site) => site.heritageType === "museum")
+        .sort((a, b) => b.popularity - a.popularity)
+        .slice(0, 4),
     [],
   );
   const recent = state.recent.map(getSite).filter(Boolean).slice(0, 4);
@@ -330,6 +341,33 @@ function Index() {
                 </Link>
               );
             })}
+          </div>
+        </section>
+
+        {/* Historic places — the heritage that is still a building, kept apart
+            from the ruins so it is not buried under a hundred ancient cities. */}
+        <section>
+          <SectionTitle title={t("nav_places")} action={t("view_all")} to="/tarihi-mekanlar" />
+          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {t("places_sub")}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {places.map((site) => (
+              <SiteCard key={site.slug} site={site} />
+            ))}
+          </div>
+        </section>
+
+        {/* Museums */}
+        <section>
+          <SectionTitle title={t("nav_museums")} action={t("view_all")} to="/muzeler" />
+          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {t("museums_sub")}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {museums.map((site) => (
+              <SiteCard key={site.slug} site={site} />
+            ))}
           </div>
         </section>
 

@@ -16,11 +16,13 @@ import { Route as GunlukRouteImport } from './routes/gunluk'
 import { Route as HaritaRouteImport } from './routes/harita'
 import { Route as KentlerRouteImport } from './routes/kentler'
 import { Route as KoleksiyonlarRouteImport } from './routes/koleksiyonlar'
+import { Route as MuzelerRouteImport } from './routes/muzeler'
 import { Route as OyunlarRouteImport } from './routes/oyunlar'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RotaRouteImport } from './routes/rota'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TarihiMekanlarRouteImport } from './routes/tarihi-mekanlar'
 import { Route as BolgeIdRouteImport } from './routes/bolge.$id'
 import { Route as KentSlugRouteImport } from './routes/kent.$slug'
 import { Route as KoleksiyonIdRouteImport } from './routes/koleksiyon.$id'
@@ -60,6 +62,11 @@ const KoleksiyonlarRoute = KoleksiyonlarRouteImport.update({
   path: '/koleksiyonlar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MuzelerRoute = MuzelerRouteImport.update({
+  id: '/muzeler',
+  path: '/muzeler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OyunlarRoute = OyunlarRouteImport.update({
   id: '/oyunlar',
   path: '/oyunlar',
@@ -83,6 +90,11 @@ const RotaRoute = RotaRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TarihiMekanlarRoute = TarihiMekanlarRouteImport.update({
+  id: '/tarihi-mekanlar',
+  path: '/tarihi-mekanlar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BolgeIdRoute = BolgeIdRouteImport.update({
@@ -109,11 +121,13 @@ export interface FileRoutesByFullPath {
   '/harita': typeof HaritaRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
+  '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tarihi-mekanlar': typeof TarihiMekanlarRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
@@ -126,11 +140,13 @@ export interface FileRoutesByTo {
   '/harita': typeof HaritaRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
+  '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tarihi-mekanlar': typeof TarihiMekanlarRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
@@ -144,11 +160,13 @@ export interface FileRoutesById {
   '/harita': typeof HaritaRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
+  '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tarihi-mekanlar': typeof TarihiMekanlarRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
@@ -163,11 +181,13 @@ export interface FileRouteTypes {
     | '/harita'
     | '/kentler'
     | '/koleksiyonlar'
+    | '/muzeler'
     | '/oyunlar'
     | '/profil'
     | '/robots.txt'
     | '/rota'
     | '/sitemap.xml'
+    | '/tarihi-mekanlar'
     | '/bolge/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
@@ -180,11 +200,13 @@ export interface FileRouteTypes {
     | '/harita'
     | '/kentler'
     | '/koleksiyonlar'
+    | '/muzeler'
     | '/oyunlar'
     | '/profil'
     | '/robots.txt'
     | '/rota'
     | '/sitemap.xml'
+    | '/tarihi-mekanlar'
     | '/bolge/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
@@ -197,11 +219,13 @@ export interface FileRouteTypes {
     | '/harita'
     | '/kentler'
     | '/koleksiyonlar'
+    | '/muzeler'
     | '/oyunlar'
     | '/profil'
     | '/robots.txt'
     | '/rota'
     | '/sitemap.xml'
+    | '/tarihi-mekanlar'
     | '/bolge/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
@@ -215,11 +239,13 @@ export interface RootRouteChildren {
   HaritaRoute: typeof HaritaRoute
   KentlerRoute: typeof KentlerRoute
   KoleksiyonlarRoute: typeof KoleksiyonlarRoute
+  MuzelerRoute: typeof MuzelerRoute
   OyunlarRoute: typeof OyunlarRoute
   ProfilRoute: typeof ProfilRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   RotaRoute: typeof RotaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TarihiMekanlarRoute: typeof TarihiMekanlarRoute
   BolgeIdRoute: typeof BolgeIdRoute
   KentSlugRoute: typeof KentSlugRoute
   KoleksiyonIdRoute: typeof KoleksiyonIdRoute
@@ -276,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KoleksiyonlarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/muzeler': {
+      id: '/muzeler'
+      path: '/muzeler'
+      fullPath: '/muzeler'
+      preLoaderRoute: typeof MuzelerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/oyunlar': {
       id: '/oyunlar'
       path: '/oyunlar'
@@ -311,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tarihi-mekanlar': {
+      id: '/tarihi-mekanlar'
+      path: '/tarihi-mekanlar'
+      fullPath: '/tarihi-mekanlar'
+      preLoaderRoute: typeof TarihiMekanlarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bolge/$id': {
       id: '/bolge/$id'
       path: '/bolge/$id'
@@ -343,11 +383,13 @@ const rootRouteChildren: RootRouteChildren = {
   HaritaRoute: HaritaRoute,
   KentlerRoute: KentlerRoute,
   KoleksiyonlarRoute: KoleksiyonlarRoute,
+  MuzelerRoute: MuzelerRoute,
   OyunlarRoute: OyunlarRoute,
   ProfilRoute: ProfilRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   RotaRoute: RotaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TarihiMekanlarRoute: TarihiMekanlarRoute,
   BolgeIdRoute: BolgeIdRoute,
   KentSlugRoute: KentSlugRoute,
   KoleksiyonIdRoute: KoleksiyonIdRoute,
