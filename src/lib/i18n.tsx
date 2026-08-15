@@ -43,6 +43,12 @@ const dict = {
     tr: "Antik kent, il veya tarihi kişi ara…",
     en: "Search a city, province or historical figure…",
   },
+  /**
+   * The home page's search button had been labelled with `nav_explore`, which
+   * was fine while that key read "Heritage Sites" and absurd once it became
+   * the name of the unscoped tab: the button said "All".
+   */
+  search_action: { tr: "Ara", en: "Search" },
   daily_pick: { tr: "Günün antik kenti", en: "Ancient city of the day" },
   recent: { tr: "Son ziyaret edilenler", en: "Recently viewed" },
   nearby: { tr: "Yakındaki antik kentler", en: "Ancient cities near you" },

@@ -7,7 +7,6 @@ import {
   Home,
   Landmark,
   Layers,
-  LayoutGrid,
   Map as MapIcon,
   Moon,
   Route as RouteIcon,
@@ -21,15 +20,19 @@ import type { ReactNode } from "react";
 
 /**
  * `desktopOnly` keeps the mobile tab bar at six items. Everything hidden there
- * is reachable from the home page instead — the daily challenge has its own
- * card, collections sit under the regions strip.
+ * is reachable from the home page instead — collections sit under the regions
+ * strip.
+ *
+ * `/kentler` is deliberately absent: the three named scopes cover the same
+ * data between them, and a fourth entry called "Tümü" beside them read as a
+ * duplicate rather than a wider net. It stays reachable from the scope tabs on
+ * each list page and from the home page's search box.
  */
 const navItems: { to: string; key: TKey; icon: typeof Home; desktopOnly?: boolean }[] = [
   { to: "/", key: "nav_home", icon: Home },
   { to: "/antik-kentler", key: "nav_ancient", icon: Landmark },
   { to: "/tarihi-yerler", key: "nav_places", icon: Castle },
   { to: "/muzeler", key: "nav_museums", icon: Building2 },
-  { to: "/kentler", key: "nav_explore", icon: LayoutGrid, desktopOnly: true },
   { to: "/harita", key: "nav_map", icon: MapIcon, desktopOnly: true },
   { to: "/bolgeler", key: "nav_regions", icon: Columns3, desktopOnly: true },
   { to: "/koleksiyonlar", key: "nav_collections", icon: Layers, desktopOnly: true },

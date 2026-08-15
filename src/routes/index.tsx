@@ -139,7 +139,7 @@ function Index() {
                 type="submit"
                 className="h-12 shrink-0 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
               >
-                {t("nav_explore")}
+                {t("search_action")}
               </button>
             </form>
           </div>
