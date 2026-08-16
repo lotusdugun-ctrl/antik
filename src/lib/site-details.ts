@@ -3032,10 +3032,10 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Laodicea_Ancient_City_2026%2C_131.jpg/1280px-Laodicea_Ancient_City_2026%2C_131.jpg",
   ],
   halikarnassos: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Mausoleum_of_Halicarnassus_2009.jpg/1280px-Mausoleum_of_Halicarnassus_2009.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_ruins_of_the_Mausoleum_at_Halicarnassus.jpg/1280px-The_ruins_of_the_Mausoleum_at_Halicarnassus.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg/500px-Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Architectural_elements_from_the_Mausoleum_of_Halicarnassus%2C_constructed_for_King_Mausolus_during_the_mid-4th_century_BC_at_Halicarnassus_in_Caria%2C_Bodrum%2C_Turkey_%2817364177689%29.jpg/1280px-thumbnail.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Model_of_the_Mausoleum_of_Halicarnassus%2C_constructed_for_King_Mausolus_during_the_mid-4th_century_BC_at_Halicarnassus_in_Caria%2C_Bodrum%2C_Turkey_%2817362934180%29.jpg/1280px-Model_of_the_Mausoleum_of_Halicarnassus%2C_constructed_for_King_Mausolus_during_the_mid-4th_century_BC_at_Halicarnassus_in_Caria%2C_Bodrum%2C_Turkey_%2817362934180%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Mosaic_with_the_personification_of_Halicarnassus%2C_British_Museum.jpg/1280px-Mosaic_with_the_personification_of_Halicarnassus%2C_British_Museum.jpg",
   ],
   knidos: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Dat%C3%A7a-Knidos.jpg/500px-Dat%C3%A7a-Knidos.jpg",
@@ -3188,10 +3188,10 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/APOLLON_NEMRUT_MOUNTAIN.jpg/1280px-APOLLON_NEMRUT_MOUNTAIN.jpg",
   ],
   zeugma: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg/1280px-Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Zeugma_Mosaic_Museum%2C_Gaziantep%2C_Turkey_%2852414721257%29.jpg/1280px-Zeugma_Mosaic_Museum%2C_Gaziantep%2C_Turkey_%2852414721257%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Gaziantep_Zeugma_Museum_Andromeda_mosaic_4170.jpg/1280px-Gaziantep_Zeugma_Museum_Andromeda_mosaic_4170.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Zeugma_dec_2008_7367.jpg/1280px-Zeugma_dec_2008_7367.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Zeugma.jpg/1280px-Zeugma.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Zeugma_dec_2008_7383.jpg/1280px-Zeugma_dec_2008_7383.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg/1280px-Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg",
   ],
   harran: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Harran_Beehive_houses_192b.jpg/1280px-Harran_Beehive_houses_192b.jpg",
@@ -3448,10 +3448,10 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Alexandria_Troas_2025-08-31_10-25-37.jpg/1280px-Alexandria_Troas_2025-08-31_10-25-37.jpg",
   ],
   lampsacus: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Lapseki_havadan.jpg/1280px-Lapseki_havadan.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Stater_Zeus_Lampsacus_CdM.jpg/1280px-Stater_Zeus_Lampsacus_CdM.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Istanbul_Archaeology_Museum_Tray_from_Lampsacus_6th-7th_C_CE_4090.jpg/1280px-Istanbul_Archaeology_Museum_Tray_from_Lampsacus_6th-7th_C_CE_4090.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Istanbul_Archaeology_Museum_Tray_from_Lampsacus_6th-7th_C_CE_4091.jpg/1280px-Istanbul_Archaeology_Museum_Tray_from_Lampsacus_6th-7th_C_CE_4091.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Lampsacus_Treasure_inscribed_spoons.jpg/1280px-Lampsacus_Treasure_inscribed_spoons.jpg",
   ],
   antandros: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Antandros1.jpg/1280px-Antandros1.jpg",
@@ -3559,10 +3559,10 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Antakya_Vespasian_Titus_Tunnel_in_2004_With_names_of_emperors_11.jpg/1280px-Antakya_Vespasian_Titus_Tunnel_in_2004_With_names_of_emperors_11.jpg",
   ],
   karain: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Karain_cave_antalya_museum_turkey_paleolitik.JPG/1280px-Karain_cave_antalya_museum_turkey_paleolitik.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Karain.JPG/1280px-Karain.JPG",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Karain_-_Cave_Chamber.jpg/1280px-Karain_-_Cave_Chamber.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Karain_Ma%C4%9Faras%C4%B14.jpg/1280px-Karain_Ma%C4%9Faras%C4%B14.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Karain.JPG/1280px-Karain.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Karain_cave_antalya_museum_turkey_paleolitik.JPG/1280px-Karain_cave_antalya_museum_turkey_paleolitik.JPG",
   ],
   eflatunpinar: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Eflatunp%C4%B1nar_Hittite_Water_Monument_1.jpg/1280px-Eflatunp%C4%B1nar_Hittite_Water_Monument_1.jpg",
@@ -3679,11 +3679,10 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Alexander_sarcophagus_in_the_Istanbul_Archaeological_Museums-Detail.jpg/1280px-Alexander_sarcophagus_in_the_Istanbul_Archaeological_Museums-Detail.jpg",
   ],
   "zeugma-muzesi": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Gaziantep_Zeugma_museum_Exterior_in_2019_4154.jpg/1280px-Gaziantep_Zeugma_museum_Exterior_in_2019_4154.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_All_in_2011_1843b.jpg/1280px-Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_All_in_2011_1843b.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Maybe_Pan_in_2011_1861b.jpg/1280px-Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Maybe_Pan_in_2011_1861b.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Eros_riding_dolphin_in_2011_1857b.jpg/1280px-Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Eros_riding_dolphin_in_2011_1857b.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Fishes_in_2011_1862b.jpg/1280px-Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Fishes_in_2011_1862b.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Eros_riding_dolphin_in_2011_1858b.jpg/1280px-Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_Eros_riding_dolphin_in_2011_1858b.jpg",
   ],
   "sanliurfa-muzesi": [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/UrfaMuseumG%C3%B6bekli.jpg/1280px-UrfaMuseumG%C3%B6bekli.jpg",
@@ -3754,8 +3753,9 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Do%C4%9Fubayaz%C4%B1t%2C_palazzo_di_ishak_pasha%2C_1685-1784%2C_ingresso_principale_03_nicchia.jpg/1280px-Do%C4%9Fubayaz%C4%B1t%2C_palazzo_di_ishak_pasha%2C_1685-1784%2C_ingresso_principale_03_nicchia.jpg",
   ],
   "anadolu-medeniyetleri-muzesi": [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg/1280px-Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Anadolu_Medeniyetleri_M%C3%BCzesi_%281%29.jpg/1280px-Anadolu_Medeniyetleri_M%C3%BCzesi_%281%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/ACM_ANKARA4665_KT051021.jpg/1280px-ACM_ANKARA4665_KT051021.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg/1280px-Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg",
   ],
 
   // ——— kapak fotoğrafının Commons kategorisindeki kardeşleri ———
@@ -3769,12 +3769,6 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/20131205_Istanbul_031.jpg/1280px-20131205_Istanbul_031.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/20131205_Istanbul_111.jpg/1280px-20131205_Istanbul_111.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/20131205_Istanbul_110.jpg/1280px-20131205_Istanbul_110.jpg",
-  ],
-  "comana-cappadociae": [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Sar-Comana.jpg/1280px-Sar-Comana.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/%22Bow-tie%22_diagram_of_components_in_a_directed_network.jpg/1280px-%22Bow-tie%22_diagram_of_components_in_a_directed_network.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/%28Rock_in_den_Ruinen_2013%29_IMGP2509_smial_wp.jpg/1280px-%28Rock_in_den_Ruinen_2013%29_IMGP2509_smial_wp.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/%28Rock_in_den_Ruinen_2013%29_IMGP2891_smial_wp.jpg/1280px-%28Rock_in_den_Ruinen_2013%29_IMGP2891_smial_wp.jpg",
   ],
   "heraclia-pontica": [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Zonguldak_Cehennem_A%C4%9Fz%C4%B1_Ma%C4%9Faralar%C4%B1.jpg/1280px-Zonguldak_Cehennem_A%C4%9Fz%C4%B1_Ma%C4%9Faralar%C4%B1.jpg",
@@ -3793,12 +3787,6 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Alayhan%2C_April_2024_02.jpg/1280px-Alayhan%2C_April_2024_02.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Alayhan%2C_April_2024_03.jpg/1280px-Alayhan%2C_April_2024_03.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Alayhan%2C_April_2024_01.jpg/1280px-Alayhan%2C_April_2024_01.jpg",
-  ],
-  "cendere-koprusu": [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Portuguese_Bridge_%28Severan_Bridge%292.jpg/1280px-Portuguese_Bridge_%28Severan_Bridge%292.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/%2213_-_Italian_supercar_-_ALFA_ROMEO_4C_exotic_light_dreamcar_-_pure_white.jpg/1280px-%2213_-_Italian_supercar_-_ALFA_ROMEO_4C_exotic_light_dreamcar_-_pure_white.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/%22Agamemnon%22_2008_Studiob%C3%BChne_Siegburg_%28bearbeitet%29.jpg/1280px-%22Agamemnon%22_2008_Studiob%C3%BChne_Siegburg_%28bearbeitet%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/%22America_at_War%22_-_US_Marine_Corps_Raiders_1942_%28enhanced%29.jpg/1280px-%22America_at_War%22_-_US_Marine_Corps_Raiders_1942_%28enhanced%29.jpg",
   ],
   "doner-kumbet": [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Kayseri_Doner_tomb_2019_1875.jpg/1280px-Kayseri_Doner_tomb_2019_1875.jpg",
@@ -3857,22 +3845,16 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Amasya_Museum_01.jpg/1280px-Amasya_Museum_01.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Amasya_Museum_02.jpg/1280px-Amasya_Museum_02.jpg",
   ],
-  "milet-muzesi": [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Milet_m%C3%BCzesi_-_panoramio.jpg/1280px-Milet_m%C3%BCzesi_-_panoramio.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hac%C4%B1baba_-_panoramio_%281%29.jpg/1280px-Hac%C4%B1baba_-_panoramio_%281%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Hac%C4%B1baba_-_panoramio_%282%29.jpg/1280px-Hac%C4%B1baba_-_panoramio_%282%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/E%C5%9F%C5%9Fek_da%C4%9F%C4%B1n%C4%B1n_arkas%C4%B1_-_panoramio.jpg/1280px-E%C5%9F%C5%9Fek_da%C4%9F%C4%B1n%C4%B1n_arkas%C4%B1_-_panoramio.jpg",
-  ],
   "afrodisias-muzesi": [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Aphrodisias_Archaeological_Museum.jpg/1280px-Aphrodisias_Archaeological_Museum.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Aphrodisias_2013-03-27o.jpg/1280px-Aphrodisias_2013-03-27o.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Aphrodisias_Museum_4354.jpg/1280px-Aphrodisias_Museum_4354.jpg",
   ],
   "kutahya-cini-muzesi": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/K%C3%BCtahya_Ceramics_Museum_interior_8972.jpg/1280px-K%C3%BCtahya_Ceramics_Museum_interior_8972.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg/1280px-K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/K%C3%BCtahya_Ceramics_Museum_tile_8976.jpg/1280px-K%C3%BCtahya_Ceramics_Museum_tile_8976.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/K%C3%BCtahya_Ceramics_Museum_tile_107.jpg/1280px-K%C3%BCtahya_Ceramics_Museum_tile_107.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/K%C3%BCtahya_Ceramics_Museum_tile_106.jpg/1280px-K%C3%BCtahya_Ceramics_Museum_tile_106.jpg",
   ],
   "sinop-muzesi": [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Sinop-museum.JPG/1280px-Sinop-museum.JPG",
@@ -3891,11 +3873,6 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Decorated_vessels%2C_K%C3%B6rtik_Tepe%2C_10%2C400-9250_BCE%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg/1280px-Decorated_vessels%2C_K%C3%B6rtik_Tepe%2C_10%2C400-9250_BCE%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Decorated_vessels%2C_10%2C400-9250_BCE%2C_Diyarbak%C4%B1r_Archaeology_Museum_%282%29.jpg/1280px-Decorated_vessels%2C_10%2C400-9250_BCE%2C_Diyarbak%C4%B1r_Archaeology_Museum_%282%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Figured_Ritual-Stone_Plaques%2C_Pre-Pottery_Neolithic%2C_K%C3%B6rtik_Tepe%2C_10%2C400-9250_BCE.jpg/1280px-Figured_Ritual-Stone_Plaques%2C_Pre-Pottery_Neolithic%2C_K%C3%B6rtik_Tepe%2C_10%2C400-9250_BCE.jpg",
-  ],
-  okuzini: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Relief_%C3%96k%C3%BCzini.jpg/1280px-Relief_%C3%96k%C3%BCzini.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/20141231_154016-Hacibayram.jpg/1280px-20141231_154016-Hacibayram.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Wild_boar%2C_mural%2C_6th_millennium_BC%2C_MACA%2C_99002.jpg/1280px-Wild_boar%2C_mural%2C_6th_millennium_BC%2C_MACA%2C_99002.jpg",
   ],
   "maglova-kemeri": [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Ma%C4%9Flova_Aquaduct_4.jpg/1280px-Ma%C4%9Flova_Aquaduct_4.jpg",
@@ -3919,12 +3896,6 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Uzun_k%C3%B6pr%C3%BC_%281%29.jpg/1280px-Uzun_k%C3%B6pr%C3%BC_%281%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Uzun_k%C3%B6pr%C3%BC_%282%29.jpg/1280px-Uzun_k%C3%B6pr%C3%BC_%282%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Uzun_k%C3%B6pr%C3%BC_%283%29.jpg/1280px-Uzun_k%C3%B6pr%C3%BC_%283%29.jpg",
-  ],
-  "irgandi-koprusu": [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg/1280px-Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/%21No_Pasaran%21-Konferenz_-_51947633373.jpg/1280px-%21No_Pasaran%21-Konferenz_-_51947633373.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/%22_14_-_ITALY_-_500_Abarth_TFT_-_Speedometers_dashboards_driving_stand_cockpits_Automobile_gauges.JPG/1280px-%22_14_-_ITALY_-_500_Abarth_TFT_-_Speedometers_dashboards_driving_stand_cockpits_Automobile_gauges.JPG",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/%21No_Pasaran%21-Konferenz_-_51948554900.jpg/1280px-%21No_Pasaran%21-Konferenz_-_51948554900.jpg",
   ],
   yedikule: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Istanbul_asv2021-11_img61_Yedikule.jpg/1280px-Istanbul_asv2021-11_img61_Yedikule.jpg",
@@ -3955,10 +3926,12 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/20131207_Istanbul_042.jpg/1280px-20131207_Istanbul_042.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/10800_Hasanlar-Dursunbey-Bal%C4%B1kesir%2C_Turkey_-_panoramio_%2810%29.jpg/1280px-10800_Hasanlar-Dursunbey-Bal%C4%B1kesir%2C_Turkey_-_panoramio_%2810%29.jpg",
   ],
+  // The mound itself, then the museum case holding what came out of it. The
+  // two general views of that museum are the museum's own photographs and now
+  // live under `kahramanmaras-muzesi`, where they are not this site's.
   domuztepe: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Domuztepe_from_NE..jpg/500px-Domuztepe_from_NE..jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Kahramanmaras_Museum_Domuztepe.jpg/1280px-Kahramanmaras_Museum_Domuztepe.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Kahramanmaras_Museum_Arch%C3%A4ologie.jpg/1280px-Kahramanmaras_Museum_Arch%C3%A4ologie.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Kahramanmaras_Museum_Eingang.jpg/1280px-Kahramanmaras_Museum_Eingang.jpg",
   ],
   sillyon: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Sillyon_Small_church_in_2015_5451.jpg/1280px-Sillyon_Small_church_in_2015_5451.jpg",
@@ -4060,28 +4033,51 @@ export const siteGallery: Partial<Record<string, string[]>> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Bal%C4%B1kl%C4%B1g%C3%B6l_park_076.jpg/1280px-Bal%C4%B1kl%C4%B1g%C3%B6l_park_076.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Bal%C4%B1kl%C4%B1g%C3%B6l_park_075.jpg/1280px-Bal%C4%B1kl%C4%B1g%C3%B6l_park_075.jpg",
   ],
-  "erzurum-kalesi": [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Erzurum%2C_la_cittadella%2C_02.jpg/1280px-Erzurum%2C_la_cittadella%2C_02.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%22On_est_vieux_Jamais_versez_Apprendre%2C_Chaque_Jour_oreille_va_%C3%A0_l%27%C3%A9cole%22_%2812769114505%29.jpg/1280px-%22On_est_vieux_Jamais_versez_Apprendre%2C_Chaque_Jour_oreille_va_%C3%A0_l%27%C3%A9cole%22_%2812769114505%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/%27s-hertogenbosch%2C_complesso_di_case_del_1911%2C_00.jpg/1280px-%27s-hertogenbosch%2C_complesso_di_case_del_1911%2C_00.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/%27s-hertogenbosch%2C_complesso_di_case_del_1911%2C_03.jpg/1280px-%27s-hertogenbosch%2C_complesso_di_case_del_1911%2C_03.jpg",
-  ],
   "adana-taskopru": [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Adana_banner_Stone_Bridge.jpg/1280px-Adana_banner_Stone_Bridge.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Aegean_Turkey_banner.jpg/1280px-Aegean_Turkey_banner.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Abant_banner.jpg/1280px-Abant_banner.jpg",
-  ],
-  cobandede: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/%C3%87obandede_K%C3%B6pr%C3%BCs%C3%BC.jpg/1280px-%C3%87obandede_K%C3%B6pr%C3%BCs%C3%BC.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/145M_TAKS%C4%B0M-ESENYURT-BEYKENT_express_otob%C3%BCs%C3%BC_-_panoramio.jpg/1280px-145M_TAKS%C4%B0M-ESENYURT-BEYKENT_express_otob%C3%BCs%C3%BC_-_panoramio.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/29_Haziran_2013_Ferit-Ceyla_Odman_Nikah_Kokteyli_-_panoramio_%286%29.jpg/1280px-29_Haziran_2013_Ferit-Ceyla_Odman_Nikah_Kokteyli_-_panoramio_%286%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/%22Cross%22.jpg/1280px-%22Cross%22.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Adana_Roman_Bridge_%28Ta%C5%9Fk%C3%B6pr%C3%BC%29%2C_built_during_the_reign_of_Hadrian%2C_Adana%2C_Turkey.jpg/1280px-Adana_Roman_Bridge_%28Ta%C5%9Fk%C3%B6pr%C3%BC%29%2C_built_during_the_reign_of_Hadrian%2C_Adana%2C_Turkey.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Ta%C5%9F_K%C3%B6pr%C3%BC_Adana.jpg/1280px-Ta%C5%9F_K%C3%B6pr%C3%BC_Adana.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Ta%C5%9Fk%C3%B6pr%C3%BC%2C_Adana_1_%2834243582532%29.jpg/1280px-Ta%C5%9Fk%C3%B6pr%C3%BC%2C_Adana_1_%2834243582532%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Adana_Ta%C5%9Fk%C3%B6pr%C3%BC_side_view_in_2014_12_4564.jpg/1280px-Adana_Ta%C5%9Fk%C3%B6pr%C3%BC_side_view_in_2014_12_4564.jpg",
   ],
   kula: [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Kula_stone_house_2.jpg/1280px-Kula_stone_house_2.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/2024_Tokyo_Summerland.jpg/1280px-2024_Tokyo_Summerland.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/2024_Tokyo_Summerland_2.jpg/1280px-2024_Tokyo_Summerland_2.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/2024_Tokyo_Summerland_3.jpg/1280px-2024_Tokyo_Summerland_3.jpg",
+  ],
+  yarimburgaz: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Yar%C4%B1mburgazCave_%286%29.JPG/1280px-Yar%C4%B1mburgazCave_%286%29.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Yar%C4%B1mburgazCave.JPG/1280px-Yar%C4%B1mburgazCave.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Yar%C4%B1mburgazCave_%282%29.JPG/1280px-Yar%C4%B1mburgazCave_%282%29.JPG",
+  ],
+  "mama-hatun-turbesi": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Mama_Hatun_T%C3%BCrbesi_exterior_2740.jpg/1280px-Mama_Hatun_T%C3%BCrbesi_exterior_2740.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Tercan_Mama_Hatun_T%C3%BCrbesi_interior_9122.jpg/1280px-Tercan_Mama_Hatun_T%C3%BCrbesi_interior_9122.jpg",
+  ],
+  "beylerbeyi-sarayi": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/The_Beylerbeyi_Palace_%288394906036%29.jpg/1280px-The_Beylerbeyi_Palace_%288394906036%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Beylerbeyi_Palace_8922.jpg/1280px-Beylerbeyi_Palace_8922.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Beylerbeyi-palace-interior.jpg/1280px-Beylerbeyi-palace-interior.jpg",
+  ],
+  "kahramanmaras-muzesi": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Kahramanmaras_Museum.jpg/1280px-Kahramanmaras_Museum.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Kahramanmaras_Museum_Eingang.jpg/1280px-Kahramanmaras_Museum_Eingang.jpg",
+  ],
+  "koyunbaba-koprusu": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Osmanc%C4%B1k_Koyunbaba_Bridge_-_night.jpg/500px-Osmanc%C4%B1k_Koyunbaba_Bridge_-_night.jpg",
+  ],
+  "hudavend-hatun": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/H%C3%BCd%C3%A2vend_Hatun_K%C3%BCmbeti.jpg/960px-H%C3%BCd%C3%A2vend_Hatun_K%C3%BCmbeti.jpg",
+  ],
+  fasillar: [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Fasillar.jpg/1280px-Fasillar.jpg",
+  ],
+  "afyon-muzesi": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/AfyonkarahisarMuseum.JPG/1280px-AfyonkarahisarMuseum.JPG",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Museum_Afyonkarahisar_01.jpg/1280px-Museum_Afyonkarahisar_01.jpg",
+  ],
+  "sadberk-hanim-muzesi": [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/%C4%B0stanbul_Sadberk_Han%C4%B1m_M%C3%BCzesi_-_Sar%C4%B1yer%2C_B%C3%BCy%C3%BCkdere%2C_Piyasa_Cad_-_Dec_2013.JPG/1280px-%C4%B0stanbul_Sadberk_Han%C4%B1m_M%C3%BCzesi_-_Sar%C4%B1yer%2C_B%C3%BCy%C3%BCkdere%2C_Piyasa_Cad_-_Dec_2013.JPG",
   ],
 };
 

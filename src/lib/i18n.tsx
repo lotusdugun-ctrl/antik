@@ -224,6 +224,15 @@ const dict = {
   structure_details: { tr: "Yapı hakkında", en: "About this structure" },
   structure_close: { tr: "Kapat", en: "Close" },
   structure_photo_of: { tr: "Fotoğraf", en: "Photo" },
+  /**
+   * The lightbox. Every photo on the page is cropped to fit its slot, so the
+   * label on the affordance has to promise the part that is missing — the
+   * frame, whole — rather than merely say "büyüt".
+   */
+  photo_expand: { tr: "Fotoğrafın tamamını gör", en: "View the whole photo" },
+  photo_close: { tr: "Fotoğrafı kapat", en: "Close photo" },
+  photo_prev: { tr: "Önceki fotoğraf", en: "Previous photo" },
+  photo_next: { tr: "Sonraki fotoğraf", en: "Next photo" },
   structure_general_view: {
     tr: "Bu fotoğraf kentin genel görünümüdür; yapının kendisine ait bir görsel henüz yok.",
     en: "This is a general view of the city — there is no photograph of the structure itself yet.",

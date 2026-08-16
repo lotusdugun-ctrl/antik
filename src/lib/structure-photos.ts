@@ -36,10 +36,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Sphinx_Gate%2C_Alaca_H%C3%B6y%C3%BCk_01.jpg/1280px-Sphinx_Gate%2C_Alaca_H%C3%B6y%C3%BCk_01.jpg",
   "alexandria-troas|Roma Hamamı":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Herodes_Atticus_Bath_near_Alexandria_Troas.jpg/1280px-Herodes_Atticus_Bath_near_Alexandria_Troas.jpg",
-  "alexandria-troas|Stadion":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Al_Ittihad_Alexandria_vs._Porto_Suez%2C_Alexandria_Stadium.jpg/1280px-Al_Ittihad_Alexandria_vs._Porto_Suez%2C_Alexandria_Stadium.jpg",
-  "alexandria-troas|Tiyatro":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Alexandria_AMC_Theatre_arcade.jpg/1280px-Alexandria_AMC_Theatre_arcade.jpg",
   "altintepe|apadanalı saray":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Altintepe-apadanaW.jpg/1280px-Altintepe-apadanaW.jpg",
   "amaseia|Amasya Kalesi":
@@ -232,8 +228,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Karatepe_South_Gate_Philistine_script_on_back_of_god_Tarhunzas_statue_5277.jpg/1280px-Karatepe_South_Gate_Philistine_script_on_back_of_god_Tarhunzas_statue_5277.jpg",
   "karatepe|Güney Kapı":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Karatepe_to_South_Gate_5240.jpg/1280px-Karatepe_to_South_Gate_5240.jpg",
-  "karatepe|Kuzey Kapı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/%C3%9Crg%C3%BCp_A%C3%A7%C4%B1k_Hava_m%C3%BCzesi%2Ckuzey_manzaras%C4%B1.jpg/1280px-%C3%9Crg%C3%BCp_A%C3%A7%C4%B1k_Hava_m%C3%BCzesi%2Ckuzey_manzaras%C4%B1.jpg",
   "karatepe|Sfenks Heykelleri":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Karatepe_North_Gate_NKr_sphinx_5297.jpg/1280px-Karatepe_North_Gate_NKr_sphinx_5297.jpg",
   "kaunos|Agora":
@@ -254,12 +248,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Kibyra_View_towards_stadium_9766_panorama.jpg/1280px-Kibyra_View_towards_stadium_9766_panorama.jpg",
   "kibyra|Tiyatro":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Kibyra_Theatre_9919.jpg/1280px-Kibyra_Theatre_9919.jpg",
-  "klaros|Apollon Tapınağı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Apollo_11_Crew.jpg/1280px-Apollo_11_Crew.jpg",
-  "klaros|Artemis Sunağı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Apollo_Artemis_Brygos_Louvre_G151.jpg/1280px-Apollo_Artemis_Brygos_Louvre_G151.jpg",
-  "klaros|Kehanet Mahzeni (Krypta)":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Didyma_Temple_of_Apollo_adyton.jpg/1280px-Didyma_Temple_of_Apollo_adyton.jpg",
   "klaros|Kutsal Yol":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/A_piece_of_the_sacred_Apollo_complex.jpg/1280px-A_piece_of_the_sacred_Apollo_complex.jpg",
   "klazomenai|Liman Tepe Höyüğü":
@@ -294,8 +282,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Labraunda_Doric_Building_3781_Panorama.jpg/1280px-Labraunda_Doric_Building_3781_Panorama.jpg",
   "labraunda|Zeus Tapınağı":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Labraunda_Temple_of_Zeus_3832_Panorama.jpg/1280px-Labraunda_Temple_of_Zeus_3832_Panorama.jpg",
-  "lampsacus|Kent Surları":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Lampsacus_Treasure_inscribed_spoons.jpg/1280px-Lampsacus_Treasure_inscribed_spoons.jpg",
   "lampsacus|Sikke Darphanesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Kings_of_Macedon_-_AR_Drachm_323-317_BC._Philip_III_Arrhidaios%2C_Lampsakos_mint._vz_-_MA-Shops.jpg/1280px-Kings_of_Macedon_-_AR_Drachm_323-317_BC._Philip_III_Arrhidaios%2C_Lampsakos_mint._vz_-_MA-Shops.jpg",
   "lampsacus|Zeus Sunağı":
@@ -332,12 +318,8 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Magnesia_Stadium.jpg/1280px-Magnesia_Stadium.jpg",
   "midas|bitmemiş anıt":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Midas_Monument%2C_Yaz%C4%B1l%C4%B1kaya.jpg/1280px-Midas_Monument%2C_Yaz%C4%B1l%C4%B1kaya.jpg",
-  "midas|dev sarnıçlar":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Afyonkarahisar%2C_Kocatepe_An%C4%B1t%C4%B1_%2C_a_historical_place_with_great_view_scene.jpg/1280px-Afyonkarahisar%2C_Kocatepe_An%C4%B1t%C4%B1_%2C_a_historical_place_with_great_view_scene.jpg",
   "midas|kaya mezarları":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Midas_City%2C_Yaz%C4%B1l%C4%B1kaya_05.jpg/1280px-Midas_City%2C_Yaz%C4%B1l%C4%B1kaya_05.jpg",
-  "midas|Kral Sunağı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Armorial_Plate_%28tondino%29-_The_story_of_King_Midas_MET_DT740.jpg/1280px-Armorial_Plate_%28tondino%29-_The_story_of_King_Midas_MET_DT740.jpg",
   "midas|Midas Anıtı (Yazılıkaya)":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/MidasSehriAkropolis.jpg/1280px-MidasSehriAkropolis.jpg",
   "milet|Bouleuterion":
@@ -486,8 +468,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Bar-Restaurant_atop_the_Sinop_Tower_Wall%2C_Sinop_Turkey.jpg/1280px-Bar-Restaurant_atop_the_Sinop_Tower_Wall%2C_Sinop_Turkey.jpg",
   "sinope|Sinop Müzesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Sinop_Eastern_Bastion_9139.jpg/1280px-Sinop_Eastern_Bastion_9139.jpg",
-  "smyrna|Bazilika":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Baptistry_-_Basilica_of_St._John%2C_Sel%C3%A7uk%2C_%C4%B0zmir_Province%2C_Turkey_-_October_7%2C_2025.jpg/1280px-Baptistry_-_Basilica_of_St._John%2C_Sel%C3%A7uk%2C_%C4%B0zmir_Province%2C_Turkey_-_October_7%2C_2025.jpg",
   "smyrna|Kadifekale":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Izmir_-_Kadifekale.JPG/1280px-Izmir_-_Kadifekale.JPG",
   "smyrna|Roma Agorası":
@@ -500,8 +480,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/So%C4%9Fmatar_Hb_29.05.2010_Pognon-H%C3%B6hle%2C_Felstempel_Skulpturen_554.jpg/1280px-So%C4%9Fmatar_Hb_29.05.2010_Pognon-H%C3%B6hle%2C_Felstempel_Skulpturen_554.jpg",
   "stratonikeia|Tiyatro":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Stratonicea-ancient-theatre-road.jpg/1280px-Stratonicea-ancient-theatre-road.jpg",
-  "tell-atchana|Tunç Çağı Konutları":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Detail%2C_Balawat_gate_of_Shalmaneser%2C_bronze_band%2C_from_Tell_Balawat.jpg/1280px-Detail%2C_Balawat_gate_of_Shalmaneser%2C_bronze_band%2C_from_Tell_Balawat.jpg",
   "teos|Bouleuterion":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Teos_bouleuterion.jpg/1280px-Teos_bouleuterion.jpg",
   "teos|Dionysos Tapınağı":

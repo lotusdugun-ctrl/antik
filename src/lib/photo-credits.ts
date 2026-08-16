@@ -5097,6 +5097,146 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC0",
     licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
   },
+  "Fasillar.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Domuztepe_from_NE..jpg": {
+    author: "Stuart Campbell",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Mausoleum_of_Halicarnassus_2009.jpg": {
+    author: "Dorushiva",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Osmancık_Koyunbaba_Bridge_-_night.jpg": {
+    author: "Yesilordek",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
+  "Hüdâvend_Hatun_Kümbeti.jpg": {
+    author: "Ciftehan51",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "İstanbul_Sadberk_Hanım_Müzesi_-_Sarıyer,_Büyükdere,_Piyasa_Cad_-_Dec_2013.JPG": {
+    author: "VikiPicture",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "The_Beylerbeyi_Palace_(8394906036).jpg": {
+    author: "Jorge Láscar from Australia",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Kahramanmaras_Museum.jpg": {
+    author: "Klaus-Peter Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "AfyonkarahisarMuseum.JPG": {
+    author: "CeeGee",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "YarımburgazCave_(6).JPG": {
+    author: "CeeGee",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Taşköprü,_Adana_1_(34243582532).jpg": {
+    author: "John Lubbock",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Lapseki_havadan.jpg": {
+    author: "ibrahim Kıroğlu",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Zeugma_dec_2008_7367.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Kütahya_Ceramics_Museum_interior_8972.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Mama_Hatun_Türbesi_exterior_2740.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gaziantep_Zeugma_museum_Exterior_in_2019_4154.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Adana_Roman_Bridge_(Taşköprü),_built_during_the_reign_of_Hadrian,_Adana,_Turkey.jpg": {
+    author: "Carole Raddato",
+    license: "CC BY-SA 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+  },
+  "Taş_Köprü_Adana.jpg": {
+    author: "Engin Mutlu 58",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Anadolu_Medeniyetleri_Müzesi_(1).jpg": {
+    author: "𐰇𐱅𐰚𐰤",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Beylerbeyi-palace-interior.jpg": {
+    author: "Edal Anton Lefterov",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "The_ruins_of_the_Mausoleum_at_Halicarnassus.jpg": {
+    author: "FollowingHadrian",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "YarımburgazCave_(2).JPG": {
+    author: "CeeGee",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "YarımburgazCave.JPG": {
+    author: "CeeGee",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Beylerbeyi_Palace_8922.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Zeugma_dec_2008_7383.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Museum_Afyonkarahisar_01.jpg": {
+    author: "Ingeborg Simon",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+  },
+  "Tercan_Mama_Hatun_Türbesi_interior_9122.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Adana_Taşköprü_side_view_in_2014_12_4564.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
 };
 
 /**

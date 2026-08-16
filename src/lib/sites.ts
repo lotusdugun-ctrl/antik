@@ -241,8 +241,7 @@ const photoRef: Partial<Record<string, string>> = {
   priene: "e/e5/Priene_Acropolis.jpg|1280",
   sardes: "0/08/20230429_Gymnasium_at_Sardis_4.jpg|1280",
   laodikeia: "5/5c/Laodicea_Ancient_City_2026%2C_108.jpg|1280",
-  halikarnassos:
-    "5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg|500",
+  halikarnassos: "d/d5/Mausoleum_of_Halicarnassus_2009.jpg|1280",
   knidos: "0/0b/Dat%C3%A7a-Knidos.jpg|500",
   patara: "9/90/Patara_Ka%C5%9F.jpg|1280",
   xanthos:
@@ -270,7 +269,7 @@ const photoRef: Partial<Record<string, string>> = {
   amastris: "1/14/2009_in_Amasra_14.jpg|1280",
   gobeklitepe: "d/d5/G%C3%B6bekli_Tepe%2C_Urfa.jpg|1280",
   nemrut: "2/2e/001362_Nemrut_Da%C4%9F%C4%B1_-_T%C3%BCrkei.jpg|1280",
-  zeugma: "1/12/Gaziantep_Zeugma_Museum_Dionysos_Triumf_mosaic_1921.jpg|1280",
+  zeugma: "1/1d/Zeugma_dec_2008_7367.jpg|1280",
   harran: "a/a5/Harran_Beehive_houses_192b.jpg|1280",
   dara: "7/7f/Dara_Nekropol_Alan%C4%B1.jpg|1280",
   ani: "1/11/Ani_Archeological_Site%2C_March_2020_1.jpg|1280",
@@ -316,7 +315,7 @@ const photoRef: Partial<Record<string, string>> = {
   "alexandria-troas": "0/0d/Panorama_alexandriatroas.jpg|1280",
   parion: "8/81/Hemidrachme_Parion_Rs.JPG|1280",
   daskyleion: "a/a2/Relife_depicting_a_sacrificial_scene.jpg|1280",
-  lampsacus: "5/56/Stater_Zeus_Lampsacus_CdM.jpg|1280",
+  lampsacus: "d/d7/Lapseki_havadan.jpg|1280",
   antandros: "4/4d/Antandros1.jpg|1280",
   pessinus: "3/3c/Pessinus_Ancient_City_-_2.jpg|1280",
   amorium: "9/9a/Amorion%2C_ausgegrabene_Geb%C3%A4ude_in_der_Unterstadt.jpg|1280",
@@ -338,7 +337,7 @@ const photoRef: Partial<Record<string, string>> = {
   hosap: "a/af/Xwe%C5%9Fav.jpg|1280",
   ahtamar: "3/37/Akhtamar_Island_on_Lake_Van_with_the_Armenian_Cathedral_of_the_Holy_Cross.jpg|960",
   "titus-tuneli": "7/76/Vespasian-Titus-Tunnel.jpg|1280",
-  karain: "2/2e/Karain_cave_antalya_museum_turkey_paleolitik.JPG|1280",
+  karain: "1/12/Karain.JPG|1280",
   ivriz: "6/60/Ivriz_site_of_Neo-Hittite_relief_%281993%29.jpg|1280",
   eflatunpinar: "2/29/Eflatunp%C4%B1nar_Hittite_Water_Monument_1.jpg|1280",
   goreme: "6/60/G%C3%B6reme_Open_Air_Museum_01.jpg|1280",
@@ -357,8 +356,7 @@ const photoRef: Partial<Record<string, string>> = {
   cumalikizik: "c/cb/Bursa_Cumal%C4%B1k%C4%B1z%C4%B1k_in_the_snow_2004_0104.jpg|1280",
   "mardin-eski-kent": "d/d3/Mardin_panorama_3.png|1280",
   "istanbul-arkeoloji-muzeleri": "a/a7/Gate_of_Istanbul_Archaeological_Museums.jpg|1280",
-  "zeugma-muzesi":
-    "b/b7/Gaziantep_Zeugma_Museum_Oceanus_and_Thetys_mosaic_All_in_2011_1843b.jpg|1280",
+  "zeugma-muzesi": "2/2a/Gaziantep_Zeugma_museum_Exterior_in_2019_4154.jpg|1280",
   "sanliurfa-muzesi": "3/3c/UrfaMuseumG%C3%B6bekli.jpg|1280",
   "hatay-muzesi":
     "1/17/Antakya_Archaeology_Museum_The_jugglers_inv_831_mosiac_sept_2019_5928.jpg|1280",
@@ -370,8 +368,7 @@ const photoRef: Partial<Record<string, string>> = {
   ayasofya: "2/22/Hagia_Sophia_Mars_2013.jpg|1280",
   suleymaniye: "b/b8/Courtyard_of_the_S%C3%BCleymaniye_Mosque_in_Istanbul%2C_Turkey_004.jpg|1280",
   "ishak-pasa": "9/93/00_3411_%C4%B0shak_Pa%C5%9Fa_Saray%C4%B1_-_Turkey.jpg|1280",
-  "anadolu-medeniyetleri-muzesi":
-    "9/9e/Anadolu_Medeniyetleri_M%C3%BCzesi_G%C3%BCne%C5%9F_Kursu.jpg|1280",
+  "anadolu-medeniyetleri-muzesi": "0/0f/Anadolu_Medeniyetleri_M%C3%BCzesi_%281%29.jpg|1280",
   "turk-islam-eserleri-muzesi": "a/a3/Turkish_and_Islamic_Museum_1432_%28cropped%29.jpg|1280",
   "buyuk-saray-mozaikleri": "4/41/Mosaic_museum_Istanbul_2007_021.jpg|1280",
   "izmir-arkeoloji-muzesi": "1/1e/Museo_archeologico_di_izmir%2C_veduta.JPG|1280",
@@ -429,7 +426,7 @@ const photoRef: Partial<Record<string, string>> = {
   uzunkopru: "9/9f/Uzunk%C3%B6pr%C3%BC_the_Long_Bridge_approach_from_north_6365.jpg|1280",
   "irgandi-koprusu":
     "c/c1/Irgand%C4%B1_k%C3%B6pr%C3%BCs%C3%BC-K%C3%B6pr%C3%BCl%C3%BC_%C3%A7ar%C5%9F%C4%B1_veya_%C3%A7ar%C5%9F%C4%B1l%C4%B1_k%C3%B6pr%C3%BC%2C_Bursa.jpg|1280",
-  "beylerbeyi-sarayi": "8/81/Beylerbeyi_Palace_-_Lion_statue.jpg|1280",
+  "beylerbeyi-sarayi": "1/1c/The_Beylerbeyi_Palace_%288394906036%29.jpg|1280",
   kubadabad: "9/9c/Kubadabad_general_view.jpg|1280",
   "anadolu-hisari": "d/d4/Anadolu_Hisar%C4%B1_in_2024_%28cropped%29.jpg|1280",
   "ankara-kalesi":
@@ -450,26 +447,25 @@ const photoRef: Partial<Record<string, string>> = {
   dikilitas: "b/bb/Theodosius_obelisk_3.jpg|1280",
   yazilikaya: "5/58/Yazilikaya_Kammer_A.jpg|1280",
   smintheion: "c/ce/Smintheion_2025-08-30_16-18-29.jpg|1280",
-  domuztepe: "3/31/Kahramanmaras_Museum_Domuztepe.jpg|1280",
+  domuztepe: "5/51/Domuztepe_from_NE..jpg|500",
   sillyon: "0/09/Sillyon_Small_church_in_2015_5451.jpg|1280",
-  "kutahya-cini-muzesi": "f/ff/K%C3%BCtahya_Ceramics_Museum_tile_8979.jpg|1280",
+  "kutahya-cini-muzesi": "e/ed/K%C3%BCtahya_Ceramics_Museum_interior_8972.jpg|1280",
   "erzurum-muzesi": "b/ba/Archaeological_Museum_of_Erzurum_in_2011_8414.jpg|1280",
   "diyarbakir-muzesi":
     "2/26/Standing_Stones%2C_7500_BC%2C_Diyarbak%C4%B1r_Archaeology_Museum.jpg|1280",
-  yarimburgaz:
-    "c/c2/%C4%B0stanbul_Arkeoloji_M%C3%BCzesi_-_Yar%C4%B1mburgaz_Ma%C4%9Faras%C4%B1_%28Ba%C5%9Fak%C5%9Fehir%29.jpg|1280",
+  yarimburgaz: "f/f6/Yar%C4%B1mburgazCave_%286%29.JPG|1280",
   "justinianus-koprusu": "0/04/Sangarius_Bridge%2C_Justinyen_K%C3%B6pr%C3%BCs%C3%BC.JPG|1280",
   "antalya-kaleici": "9/9a/P9271453_Hadrian%27s_Gate.jpg|1280",
   ozkonak: "3/3e/Entrance_of_%C3%96zkonak_Underground_City.jpg|1280",
   aciksaray: "7/74/Aciksaray-04-jries.jpg|1280",
   yumuktepe: "0/06/Y%C3%BCm%C3%BCktepe%2C_Mersin.JPG|1280",
-  "kahramanmaras-muzesi": "0/0f/Kahramanmaras_Museum_Statue_Maras_13_Schrift.jpg|1280",
+  "kahramanmaras-muzesi": "b/b5/Kahramanmaras_Museum.jpg|1280",
   "burdur-muzesi": "1/11/Burdur_Museum_3224.jpg|1280",
   "malatya-muzesi": "b/bf/Malatya_museum_035.jpg|1280",
   "tokat-muzesi": "1/1f/G%C3%B6k_Medrese_at_Tokat.jpg|1280",
   "kastamonu-muzesi": "7/72/Kastamonu_Museum_from_Clock_Tower_hill_8771.jpg|1280",
   "sadberk-hanim-muzesi":
-    "3/30/Istanbul_Sadberk_Han%C4%B1m_Museum_Vessel_Iron_Age_Urartian_3270.jpg|1280",
+    "5/5f/%C4%B0stanbul_Sadberk_Han%C4%B1m_M%C3%BCzesi_-_Sar%C4%B1yer%2C_B%C3%BCy%C3%BCkdere%2C_Piyasa_Cad_-_Dec_2013.JPG|1280",
   metropolis: "f/f4/Metropolis%2C_Ionia%2C_Turkey_%2844836850221%29.jpg|1280",
   blaundos: "5/51/Blaundos.jpg|1280",
   "herakleia-latmos": "b/b6/Bafa_Lake_Kapikiri.JPG|1280",
@@ -518,7 +514,8 @@ const photoRef: Partial<Record<string, string>> = {
   "sanliurfa-kalesi": "e/e3/Urfa_%28hist._Edessa%29_%2825572197287%29.jpg|1280",
   "karatay-han":
     "1/13/Karatay_Han_%28B%C3%BCnyan%C4%B1%29%2C_Blick_vom_Dach_nach_Norden_mit_Laternenturm.jpg|1280",
-  "adana-taskopru": "a/aa/Adana_banner_Stone_Bridge.jpg|1280",
+  "adana-taskopru":
+    "3/3e/Adana_Roman_Bridge_%28Ta%C5%9Fk%C3%B6pr%C3%BC%29%2C_built_during_the_reign_of_Hadrian%2C_Adana%2C_Turkey.jpg|1280",
   "osmangazi-turbesi":
     "b/ba/Bursa%2C_tophane%2C_tomba_di_osman_gazi%2C_1863%2C_interno_02.jpg|1280",
   "adiyaman-muzesi": "b/b2/Museum_Ad%C4%B1yaman_Au%C3%9Fenansicht.jpg|1280",
@@ -531,8 +528,12 @@ const photoRef: Partial<Record<string, string>> = {
   "erzurum-kalesi": "a/ac/Erzurum%2C_la_cittadella%2C_02.jpg|1280",
   "aspendos-su-kemeri": "a/a4/Aspendos_Aqueduct_3313.jpg|1280",
   goynuk: "e/eb/A_view_from_G%C3%B6yn%C3%BCk%2C_Bolu.jpg|1280",
-  "afyon-muzesi": "f/fc/Byzantine_capital_with_birds_drinking_%28Afyon_Museum%29.jpg|1280",
+  "afyon-muzesi": "e/ef/AfyonkarahisarMuseum.JPG|1280",
   fildami: "a/a7/Fildami_sarn%C4%B1c%C4%B13.jpg|1280",
+  "mama-hatun-turbesi": "1/13/Mama_Hatun_T%C3%BCrbesi_exterior_2740.jpg|1280",
+  "koyunbaba-koprusu": "4/46/Osmanc%C4%B1k_Koyunbaba_Bridge_-_night.jpg|500",
+  "hudavend-hatun": "1/1d/H%C3%BCd%C3%A2vend_Hatun_K%C3%BCmbeti.jpg|960",
+  fasillar: "d/d1/Fasillar.jpg|1280",
 };
 
 function expandPhoto(ref: string): string {

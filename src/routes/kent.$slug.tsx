@@ -11,11 +11,13 @@ import {
   Lightbulb,
   MapPin,
   Navigation,
+  Maximize2,
   Route as RouteIcon,
   Sparkles,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Lightbox } from "@/components/Lightbox";
 import { Photo } from "@/components/Photo";
 import { PhotoCredits } from "@/components/PhotoCredits";
 import { SiteMap } from "@/components/SiteMap";
@@ -126,6 +128,13 @@ function SiteDetail() {
   const detail = getSiteDetail(slug);
   const [activeImage, setActiveImage] = useState(0);
   const [openStructure, setOpenStructure] = useState<string | null>(null);
+  /**
+   * Which gallery photo the lightbox is showing; `null` closes it. The
+   * structure dialog's photo is not one of the gallery images, so it opens
+   * its own lightbox rather than an index into this one.
+   */
+  const [zoomed, setZoomed] = useState<number | null>(null);
+  const [zoomedStructure, setZoomedStructure] = useState(false);
   const gallery = galleryImages(site);
   const region = regions.find((r) => r.id === site.region)!;
   const facts = factsFor(slug);
@@ -157,27 +166,45 @@ function SiteDetail() {
   return (
     <article>
       <div className="relative h-[52vh] min-h-[340px] w-full overflow-hidden">
-        <Photo
-          src={gallery[activeImage] ?? coverImage(site)}
-          alt={L(site.name)}
-          sizes="100vw"
-          fallbackWidth={1280}
-          width={1920}
-          height={1088}
-          loading="eager"
-          fetchPriority="high"
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 hero-scrim" />
-        <div className="absolute inset-x-0 top-0 mx-auto max-w-6xl px-4 pt-4 sm:px-6">
+        {/* The banner crops to fill the band, so the photo itself is the
+            control that gives the whole frame back. Everything layered over it
+            is pointer-transparent except the controls, or the band would stop
+            being clickable where the scrim and the captions cover it. */}
+        <button
+          type="button"
+          onClick={() => setZoomed(activeImage)}
+          aria-label={t("photo_expand")}
+          className="absolute inset-0 h-full w-full cursor-zoom-in"
+        >
+          <Photo
+            src={gallery[activeImage] ?? coverImage(site)}
+            alt={L(site.name)}
+            sizes="100vw"
+            fallbackWidth={1280}
+            width={1920}
+            height={1088}
+            loading="eager"
+            fetchPriority="high"
+            className="h-full w-full object-cover"
+          />
+        </button>
+        <div className="pointer-events-none absolute inset-0 hero-scrim" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto flex max-w-6xl items-start justify-between px-4 pt-4 sm:px-6">
           <Link
             to="/kentler"
-            className="inline-flex items-center gap-1.5 rounded-full bg-card/85 px-3 py-1.5 text-xs font-semibold backdrop-blur"
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-card/85 px-3 py-1.5 text-xs font-semibold backdrop-blur"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> {t("back")}
           </Link>
+          <button
+            type="button"
+            onClick={() => setZoomed(activeImage)}
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-card/85 px-3 py-1.5 text-xs font-semibold backdrop-blur transition-colors hover:bg-card"
+          >
+            <Maximize2 className="h-3.5 w-3.5" /> {t("photo_expand")}
+          </button>
         </div>
-        <div className="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-6 sm:px-6">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-6 sm:px-6">
           <div className="mb-2 flex flex-wrap gap-1.5">
             {site.unesco !== "none" && (
               <span className="rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-bold text-gold-foreground">
@@ -248,8 +275,15 @@ function SiteDetail() {
             {gallery.map((img, i) => (
               <button
                 key={img + i}
-                onClick={() => setActiveImage(i)}
-                className={`h-20 w-28 shrink-0 overflow-hidden rounded-xl border-2 transition-opacity ${
+                // Selecting it and opening it are the same gesture on purpose:
+                // a thumbnail click used to swap the cropped banner and there
+                // was no way left to see the photo whole.
+                onClick={() => {
+                  setActiveImage(i);
+                  setZoomed(i);
+                }}
+                aria-label={`${L(site.name)} ${i + 1} — ${t("photo_expand")}`}
+                className={`h-20 w-28 shrink-0 cursor-zoom-in overflow-hidden rounded-xl border-2 transition-opacity ${
                   activeImage === i ? "border-primary" : "border-transparent opacity-70"
                 }`}
               >
@@ -356,18 +390,49 @@ function SiteDetail() {
         <PhotoCredits urls={shownPhotos} className="mt-10 border-t border-border pt-6" />
       </div>
 
-      <Dialog open={openStructure !== null} onOpenChange={(o) => !o && setOpenStructure(null)}>
+      <Lightbox
+        images={gallery}
+        index={zoomed}
+        onIndexChange={(next) => {
+          setZoomed(next);
+          // Paging in the lightbox leaves the banner on whatever you stopped at,
+          // so closing it does not throw the selection away.
+          setActiveImage(next);
+        }}
+        onClose={() => setZoomed(null)}
+        alt={L(site.name)}
+      />
+
+      <Dialog
+        open={openStructure !== null}
+        onOpenChange={(o) => {
+          if (!o) {
+            setOpenStructure(null);
+            setZoomedStructure(false);
+          }
+        }}
+      >
         <DialogContent>
           {openStructure && (
             <>
-              <figure className="overflow-hidden rounded-xl">
-                <Photo
-                  src={structurePhoto ?? coverImage(site)}
-                  alt={openStructure}
-                  sizes="(min-width: 640px) 512px, 100vw"
-                  fallbackWidth={500}
-                  className="h-52 w-full object-cover"
-                />
+              <figure>
+                <button
+                  type="button"
+                  onClick={() => setZoomedStructure(true)}
+                  aria-label={t("photo_expand")}
+                  className="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl"
+                >
+                  <Photo
+                    src={structurePhoto ?? coverImage(site)}
+                    alt={openStructure}
+                    sizes="(min-width: 640px) 512px, 100vw"
+                    fallbackWidth={500}
+                    className="h-52 w-full object-cover"
+                  />
+                  <span className="absolute right-2 top-2 rounded-full bg-card/85 p-1.5 backdrop-blur transition-colors group-hover:bg-card">
+                    <Maximize2 className="h-3.5 w-3.5" />
+                  </span>
+                </button>
                 <figcaption className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
                   {/* Say so when this is the city and not the structure: the
                       photo is otherwise indistinguishable from a real one. */}
@@ -386,6 +451,16 @@ function SiteDetail() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* The structure photo is not one of the gallery images, so it opens as a
+          list of one rather than as an index into the gallery. */}
+      <Lightbox
+        images={[structurePhoto ?? coverImage(site)]}
+        index={zoomedStructure && openStructure ? 0 : null}
+        onIndexChange={() => {}}
+        onClose={() => setZoomedStructure(false)}
+        alt={openStructure ?? L(site.name)}
+      />
     </article>
   );
 }
