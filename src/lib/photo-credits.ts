@@ -5237,6 +5237,32 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC BY-SA 4.0",
     licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
   },
+  "The_Temple_of_Apollo_built_in_the_3rd_century_AD_using_stone_blocks_from_the_older_temple,_Hierapolis,_Phrygia,_Turkey_(32332224546).jpg":
+    {
+      author: "Carole Raddato from FRANKFURT, Germany",
+      license: "CC BY-SA 2.0",
+      licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
+    },
+  "Walls_of_Ancient_Troy.jpg": {
+    author: "Ebru Sargın L.",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "TR.IZ.Selcuk_Ephesus_2011-10-04_Temple-of-Artemis_07_3x2-R_5K.jpg": {
+    author: "Roy Egloff",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Gordion_Midas_Citadel_Gate_complex_in_2012_0935.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Bodrum_Castle,_Turkey.jpg": {
+    author: "Mustang Joe",
+    license: "CC0",
+    licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  },
 };
 
 /**

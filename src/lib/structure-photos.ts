@@ -133,7 +133,7 @@ const photos: Record<string, string> = {
   "didyma|Medusa başı":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/A_stone-carved_Medusa_head%2C_Apollo_Temple%2C_Didyma.jpg/1280px-A_stone-carved_Medusa_head%2C_Apollo_Temple%2C_Didyma.jpg",
   "efes|Artemis Tapınağı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Efes._Artemision_Illustratie_van_een_kapiteel%2C_GD004540.jpg/1280px-Efes._Artemision_Illustratie_van_een_kapiteel%2C_GD004540.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/TR.IZ.Selcuk_Ephesus_2011-10-04_Temple-of-Artemis_07_3x2-R_5K.jpg/1280px-TR.IZ.Selcuk_Ephesus_2011-10-04_Temple-of-Artemis_07_3x2-R_5K.jpg",
   "efes|Büyük Tiyatro":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ephesus_-_Great_Theater.jpg/1280px-Ephesus_-_Great_Theater.jpg",
   "efes|Celsus Kütüphanesi":
@@ -161,13 +161,13 @@ const photos: Record<string, string> = {
   "gobeklitepe|T biçimli dikilitaşlar":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Urfa_museum_Mini_T-shaped_stones_G%C3%B6bekli_Tepe_-_Neolithic_age_-_4791.jpg/1280px-Urfa_museum_Mini_T-shaped_stones_G%C3%B6bekli_Tepe_-_Neolithic_age_-_4791.jpg",
   "gordion|Kral Kapısı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Statuette_of_a_statry%2C_terracotta%2C_previously_thought_to_be_King_Midas%2C_from_Gordion%2C_Museum_of_Anatolian_Civilizations%2C_Ankara_%2826322234546%29.jpg/1280px-Statuette_of_a_statry%2C_terracotta%2C_previously_thought_to_be_King_Midas%2C_from_Gordion%2C_Museum_of_Anatolian_Civilizations%2C_Ankara_%2826322234546%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Gordion_Midas_Citadel_Gate_complex_in_2012_0935.jpg/1280px-Gordion_Midas_Citadel_Gate_complex_in_2012_0935.jpg",
   "gordion|Megaron yapıları":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Gordion_city_mound_megaron_M10_%281993%29.jpg/1280px-Gordion_city_mound_megaron_M10_%281993%29.jpg",
   "gordion|Midas Tümülüsü":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Entrance_and_Dromos_of_Tumulus_MM_Midas_Mound_Gordion.jpg/1280px-Entrance_and_Dromos_of_Tumulus_MM_Midas_Mound_Gordion.jpg",
   "halikarnassos|Bodrum Kalesi":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg/500px-Mausoleum_at_Halicarnassus_at_the_Bodrum_Museum_of_Underwater_Archaeology.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Bodrum_Castle%2C_Turkey.jpg/1280px-Bodrum_Castle%2C_Turkey.jpg",
   "halikarnassos|Mausoleion":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Architectural_elements_from_the_Mausoleum_of_Halicarnassus%2C_constructed_for_King_Mausolus_during_the_mid-4th_century_BC_at_Halicarnassus_in_Caria%2C_Bodrum%2C_Turkey_%2817364177689%29.jpg/1280px-thumbnail.jpg",
   "harput|Harput Kalesi":
@@ -207,7 +207,7 @@ const photos: Record<string, string> = {
   "hierapolis|Antik havuz":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Antique_theatre_in_Hierapolis.jpg/1280px-Antique_theatre_in_Hierapolis.jpg",
   "hierapolis|Apollon Tapınağı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Hierapolis_Museum_Birth_of_Apollo_4285.jpg/1280px-Hierapolis_Museum_Birth_of_Apollo_4285.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/The_Temple_of_Apollo_built_in_the_3rd_century_AD_using_stone_blocks_from_the_older_temple%2C_Hierapolis%2C_Phrygia%2C_Turkey_%2832332224546%29.jpg/1280px-The_Temple_of_Apollo_built_in_the_3rd_century_AD_using_stone_blocks_from_the_older_temple%2C_Hierapolis%2C_Phrygia%2C_Turkey_%2832332224546%29.jpg",
   "hierapolis|Frontinus Caddesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Frontinus_Gate_-_Hierapolis%2C_Pamukkale%2C_Denizli_Province%2C_Turkey_-_October_6%2C_2025.jpg/1280px-Frontinus_Gate_-_Hierapolis%2C_Pamukkale%2C_Denizli_Province%2C_Turkey_-_October_6%2C_2025.jpg",
   "hierapolis|Nekropol":
@@ -515,7 +515,7 @@ const photos: Record<string, string> = {
   "troya|Athena Tapınağı":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Architrave_with_sculpted_metope_showing_sun_god_Helios_in_a_quadriga%3B_from_temple_of_Athena_at_Troy%2C_ca_300-280_BCE%3B_Altes_Museum%2C_Berlin_%2825308440197%29.jpg/1280px-Architrave_with_sculpted_metope_showing_sun_god_Helios_in_a_quadriga%3B_from_temple_of_Athena_at_Troy%2C_ca_300-280_BCE%3B_Altes_Museum%2C_Berlin_%2825308440197%29.jpg",
   "troya|Kent surları":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Achilles_dragging_the_body_of_Hector_around_the_walls_of_Troy_Met_DP888749.jpg/1280px-Achilles_dragging_the_body_of_Hector_around_the_walls_of_Troy_Met_DP888749.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Walls_of_Ancient_Troy.jpg/1280px-Walls_of_Ancient_Troy.jpg",
   "troya|Odeon":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Hadrianic_Odeon_in_Troy_IX_%28Ilion%29%2C_Turkey.jpg/1280px-Hadrianic_Odeon_in_Troy_IX_%28Ilion%29%2C_Turkey.jpg",
   "troya|Truva atı replikası":
