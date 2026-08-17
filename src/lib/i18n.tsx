@@ -233,6 +233,15 @@ const dict = {
   photo_close: { tr: "Fotoğrafı kapat", en: "Close photo" },
   photo_prev: { tr: "Önceki fotoğraf", en: "Previous photo" },
   photo_next: { tr: "Sonraki fotoğraf", en: "Next photo" },
+  /**
+   * Shown when a place has no photograph of its own and the page is falling
+   * back to the regional artwork. That stand-in is a real photograph of
+   * somewhere else, so leaving it unlabelled reads as a picture of this place.
+   */
+  photo_placeholder: {
+    tr: "Bu görsel temsilidir — buranın fotoğrafı henüz yok, bölgeyi anlatan bir manzara gösteriliyor.",
+    en: "This image is a stand-in — there is no photograph of this place yet, so a view of the region is shown instead.",
+  },
   structure_general_view: {
     tr: "Bu fotoğraf kentin genel görünümüdür; yapının kendisine ait bir görsel henüz yok.",
     en: "This is a general view of the city — there is no photograph of the structure itself yet.",

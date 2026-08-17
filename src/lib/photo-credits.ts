@@ -5263,6 +5263,11 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC0",
     licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
   },
+  "Mausoleum_of_Halicarnassus_2004.jpg": {
+    author: "Petr Vykoukal",
+    license: "CC BY 2.5",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.5",
+  },
 };
 
 /**

@@ -169,7 +169,7 @@ const photos: Record<string, string> = {
   "halikarnassos|Bodrum Kalesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Bodrum_Castle%2C_Turkey.jpg/1280px-Bodrum_Castle%2C_Turkey.jpg",
   "halikarnassos|Mausoleion":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Architectural_elements_from_the_Mausoleum_of_Halicarnassus%2C_constructed_for_King_Mausolus_during_the_mid-4th_century_BC_at_Halicarnassus_in_Caria%2C_Bodrum%2C_Turkey_%2817364177689%29.jpg/1280px-thumbnail.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Mausoleum_of_Halicarnassus_2004.jpg/1280px-Mausoleum_of_Halicarnassus_2004.jpg",
   "harput|Harput Kalesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Harput_113_%2859495%29.jpg/1280px-Harput_113_%2859495%29.jpg",
   "harput|Harput Müzesi":
@@ -248,8 +248,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Kibyra_View_towards_stadium_9766_panorama.jpg/1280px-Kibyra_View_towards_stadium_9766_panorama.jpg",
   "kibyra|Tiyatro":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Kibyra_Theatre_9919.jpg/1280px-Kibyra_Theatre_9919.jpg",
-  "klaros|Kutsal Yol":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/A_piece_of_the_sacred_Apollo_complex.jpg/1280px-A_piece_of_the_sacred_Apollo_complex.jpg",
   "klazomenai|Liman Tepe Höyüğü":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Klazomenai_%28Liman_Tepe%29_Early_Bronze_Age_fortification_wall.jpg/1280px-Klazomenai_%28Liman_Tepe%29_Early_Bronze_Age_fortification_wall.jpg",
   "klazomenai|Zeytinyağı Atölyesi":
@@ -500,8 +498,6 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Termessos_-_Theater.jpg/1280px-Termessos_-_Theater.jpg",
   "thyatira|Bazilika":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Thyatira_Basilica_%288691956539%29.jpg/1280px-Thyatira_Basilica_%288691956539%29.jpg",
-  "thyatira|Roma Hamamı":
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sasabey_Turkish_bath%2C_Akhisar.JPG/1280px-Sasabey_Turkish_bath%2C_Akhisar.JPG",
   "tieion|Filyos Kalesi":
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Filyos_Bay.jpg/1280px-Filyos_Bay.jpg",
   "tlos|Bellerophon Kaya Mezarı":

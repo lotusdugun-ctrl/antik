@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -25,6 +25,7 @@ export function Lightbox({
   onIndexChange,
   onClose,
   alt,
+  note,
 }: {
   /** Every photo the viewer can page through, in display order. */
   images: string[];
@@ -34,6 +35,8 @@ export function Lightbox({
   onClose: () => void;
   /** Base alt text; the position is appended when there is more than one. */
   alt: string;
+  /** Said instead of a credit when the photo is not of this place at all. */
+  note?: string | undefined;
 }) {
   const { t } = useI18n();
   const open = index !== null && index >= 0 && index < images.length;
@@ -58,10 +61,34 @@ export function Lightbox({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, many, step]);
 
+  /**
+   * Swipe, which is what a phone expects — the arrow buttons are small targets
+   * and the keyboard is not there. A gesture counts only when it is clearly
+   * horizontal, so a diagonal drag does not page the photo out from under a
+   * thumb that was doing something else.
+   */
+  const touch = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    if (t) touch.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touch.current;
+    const t = e.changedTouches[0];
+    touch.current = null;
+    if (!start || !t || !many) return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    step(dx < 0 ? 1 : -1);
+  };
+
   if (!open) return null;
 
   const src = images[index]!;
-  const credit = creditLine(src);
+  // A stand-in has no Commons credit to show, so the note takes that slot —
+  // the caption is where a viewer looks to find out what they are looking at.
+  const credit = note ?? creditLine(src);
 
   return (
     <DialogPrimitive.Root open onOpenChange={(o) => !o && onClose()}>
@@ -72,6 +99,8 @@ export function Lightbox({
           className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 focus:outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0"
           // Clicking the backdrop closes; clicking the photo itself must not.
           onClick={onClose}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           <DialogPrimitive.Title className="sr-only">{alt}</DialogPrimitive.Title>
 

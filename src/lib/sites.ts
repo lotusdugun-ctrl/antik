@@ -205,6 +205,19 @@ export function coverImage(site: Site) {
 }
 
 /**
+ * Whether the cover is a photograph of this place, or the regional artwork
+ * standing in for one.
+ *
+ * The stand-in is itself a real photograph of somewhere, which is exactly the
+ * problem: it looks like a picture of the site and a visitor has no way to
+ * tell that it is not. A page showing one says so, the way the structure
+ * dialog already admits when it is showing the city instead of the structure.
+ */
+export function hasOwnPhoto(site: Site) {
+  return Boolean(sitePhoto[site.slug]);
+}
+
+/**
  * Representative photo for a region card: the cover image of the region's
  * most popular site, falling back to the generic region image.
  */

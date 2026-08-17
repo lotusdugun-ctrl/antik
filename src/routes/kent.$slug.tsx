@@ -8,6 +8,7 @@ import {
   Check,
   Clock,
   Heart,
+  ImageOff,
   Lightbulb,
   MapPin,
   Navigation,
@@ -39,7 +40,7 @@ import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
 import { structurePhotoFor } from "@/lib/structure-photos";
 import { structureInfo } from "@/lib/structures";
-import { coverImage, getSite, heritageTypeName, regions } from "@/lib/sites";
+import { coverImage, getSite, hasOwnPhoto, heritageTypeName, regions } from "@/lib/sites";
 
 export const Route = createFileRoute("/kent/$slug")({
   loader: ({ params }) => {
@@ -136,6 +137,7 @@ function SiteDetail() {
   const [zoomed, setZoomed] = useState<number | null>(null);
   const [zoomedStructure, setZoomedStructure] = useState(false);
   const gallery = galleryImages(site);
+  const ownPhoto = hasOwnPhoto(site);
   const region = regions.find((r) => r.id === site.region)!;
   const facts = factsFor(slug);
   // Everything this page can put on screen, so the credit block below covers
@@ -225,6 +227,14 @@ function SiteDetail() {
       </div>
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        {/* Directly under the banner, because that is the image it is about. */}
+        {!ownPhoto && (
+          <p className="mb-6 flex items-start gap-2 rounded-xl surface-panel p-3 text-xs leading-relaxed text-muted-foreground">
+            <ImageOff className="mt-0.5 h-4 w-4 shrink-0" />
+            {t("photo_placeholder")}
+          </p>
+        )}
+
         {/* Actions */}
         <div className="flex flex-wrap gap-2">
           <button
@@ -401,6 +411,7 @@ function SiteDetail() {
         }}
         onClose={() => setZoomed(null)}
         alt={L(site.name)}
+        note={ownPhoto ? undefined : t("photo_placeholder")}
       />
 
       <Dialog

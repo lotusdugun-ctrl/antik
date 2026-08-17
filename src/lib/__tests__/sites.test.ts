@@ -124,7 +124,11 @@ describe("the claims a visitor could check", () => {
    */
   test("no more places fall back to the regional artwork than already do", () => {
     const uncovered = sites.filter((s) => !sitePhoto[s.slug]).map((s) => s.slug);
-    expect(uncovered.length).toBeLessThanOrEqual(9);
+    // Was 9. Beldibi, Direkli, Manazan, Mazı and Kurşunlugerme are the five
+    // left: Commons has no photograph of any of them, by name, by category, by
+    // the Wikipedia article or by a search around their coordinates. Lower this
+    // number as they are found; never raise it.
+    expect(uncovered.length).toBeLessThanOrEqual(5);
   });
 });
 
@@ -265,6 +269,96 @@ describe("photography", () => {
       ),
     );
     expect(Object.keys(structurePhotos).filter((key) => !known.has(key))).toEqual([]);
+  });
+
+  /**
+   * The failure this catches was live, and had been for a long time: the
+   * Temple of Apollo at Klaros was illustrated with `Apollo_11_Crew.jpg`, the
+   * NASA astronauts. Alongside it, the stadium of Alexandria Troas was a
+   * football match in Alexandria, Egypt, and the theatre was an AMC cinema in
+   * Alexandria, Virginia. Every one of them looked like a real photograph on
+   * screen, captioned with the structure's name and a genuine Commons credit.
+   *
+   * `structure-photos.ts` already claims in its own header that each entry was
+   * matched "by requiring the Commons file name to carry both the city and the
+   * structure". Nothing enforced it, so the claim was simply untrue. This is
+   * that claim, asserted.
+   *
+   * It checks the city half only: structure words are too varied to match
+   * mechanically ("Tiyatro" against "Theatre", "theatre", "Odeon"), whereas a
+   * place name is stable enough to demand. A file whose name carries no name
+   * this city is known by is not evidence of anything.
+   */
+  test("every structure photo names the city it belongs to", () => {
+    /**
+     * What each city's photographs may legitimately be named after: the
+     * excavation's name, the modern town on top of it, or the province that
+     * holds the museum the pieces ended up in. Every entry here is a fact
+     * about the place, not a licence to loosen the check.
+     */
+    const alsoKnownAs: Record<string, string[]> = {
+      acemhoyuk: ["acemhoyuk"],
+      ahtamar: ["akhtamar", "ahtamar"],
+      alacahoyuk: ["alacahoyuk"],
+      "alexandria-troas": ["alexandriatroas", "troas"],
+      amaseia: ["amasya", "amaseia"],
+      amastris: ["amasra", "amastris"],
+      amisos: ["amisos", "samsun"],
+      ani: ["ani"],
+      "antioch-pisidia": ["antioch", "pisid"],
+      aphrodisias: ["aphrodisias", "afrodisias"],
+      arslantepe: ["arslantepe", "malatya"],
+      "asikli-hoyuk": ["asikli"],
+      carchemish: ["carchemish", "karkamis"],
+      catalhoyuk: ["catalhoyuk"],
+      "elaiussa-sebaste": ["elaiussa"],
+      efes: ["ephesus", "efes"],
+      gobeklitepe: ["gobeklitepe", "gobekli"],
+      halikarnassos: ["halicarnassus", "halikarnassos", "bodrum"],
+      hattusa: ["hattusa", "bogazkale", "yazilikaya"],
+      "heraclia-pontica": ["heraclea", "herakleia", "zonguldak"],
+      "karahan-tepe": ["karahan"],
+      klazomenai: ["klazomenai", "limantepe"],
+      kultepe: ["kultepe", "kanesh"],
+      kyzikos: ["cyzicus", "kyzikos"],
+      lampsacus: ["lampsacus", "lampsakos", "lapseki"],
+      laodikeia: ["laodicea", "laodikeia"],
+      midas: ["midas", "yazilikaya"],
+      milet: ["miletus", "milet"],
+      nikaia: ["iznik", "nikaia"],
+      pergamon: ["pergamon", "bergama"],
+      "sam-al": ["samal", "zincirli"],
+      sardes: ["sardis", "sardes"],
+      "seleucia-calycadnum": ["seleucia", "silifke"],
+      sinope: ["sinope", "sinop"],
+      smyrna: ["smyrna", "izmir", "kadifekale"],
+      stratonikeia: ["stratonikeia", "stratonicea"],
+      thyatira: ["thyatira", "akhisar"],
+      tieion: ["tieion", "filyos"],
+      troya: ["troy", "troya", "ilion", "canakkale"],
+      uzuncaburc: ["uzuncaburc", "diocaesarea"],
+    };
+
+    /** Turkish letters folded, so "İznik" matches "Iznik" and "iznik". */
+    const fold = (value: string) =>
+      value
+        .toLowerCase()
+        .replace(/ı/g, "i")
+        .replace(/ş/g, "s")
+        .replace(/ğ/g, "g")
+        .replace(/ü/g, "u")
+        .replace(/ö/g, "o")
+        .replace(/ç/g, "c")
+        .replace(/[^a-z0-9]/g, "");
+
+    const anonymous: string[] = [];
+    for (const [key, url] of Object.entries(structurePhotos)) {
+      const slug = key.slice(0, key.indexOf("|"));
+      const file = fold(decodeURIComponent(url.split("/").pop() ?? ""));
+      const names = alsoKnownAs[slug] ?? [slug.replace(/-/g, "")];
+      if (!names.some((name) => file.includes(fold(name)))) anonymous.push(key);
+    }
+    expect(anonymous).toEqual([]);
   });
 
   /**
