@@ -2,10 +2,12 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   ArrowRight,
+  Box,
   Layers,
   MapPin,
   Navigation,
   Route as RouteIcon,
+  Ruler,
   Search,
   Sparkles,
 } from "lucide-react";
@@ -14,6 +16,7 @@ import { SiteCard } from "@/components/SiteCard";
 import { collections, collectionSites } from "@/lib/collections";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
+import { reconstructions } from "@/lib/reconstructions";
 import { seoTags } from "@/lib/seo";
 import {
   ancientCities,
@@ -264,6 +267,41 @@ function Index() {
                       {collectionSites(collection).length} {t("collection_sites")}
                     </p>
                   </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* 3D reconstructions. They have no photograph to lead with — the point
+            of them is the buildings no photograph could show — so the card
+            leads with the measurements instead. */}
+        <section>
+          <SectionTitle title={t("recon_title")} action={t("view_all")} to="/rekonstruksiyonlar" />
+          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {t("recon_sub")}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {reconstructions.slice(0, 4).map((item) => {
+              const site = getSite(item.siteSlug);
+              return (
+                <Link
+                  key={item.id}
+                  to="/rekonstruksiyon/$id"
+                  params={{ id: item.id }}
+                  className="flex flex-col rounded-2xl surface-panel p-4 lift"
+                >
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
+                    <Box className="h-3 w-3" /> {t("recon_badge")}
+                  </span>
+                  <h3 className="mt-2 font-display text-base font-semibold">{L(item.title)}</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {site ? L(site.name) : item.siteSlug} · {L(item.period)}
+                  </p>
+                  <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                    <Ruler className="h-3.5 w-3.5" />
+                    {item.measures.length} {t("recon_measure_count")}
+                  </p>
                 </Link>
               );
             })}

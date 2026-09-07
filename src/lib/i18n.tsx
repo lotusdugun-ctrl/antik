@@ -470,6 +470,58 @@ const dict = {
     tr: "Bir hafta sonuna sığan Likya rotası, ücretsiz ören yerleri, UNESCO listesi ve daha fazlası: temaya göre derlenmiş antik kent listeleri.",
     en: "A Lycian route that fits a weekend, sites that cost nothing, the UNESCO list and more: ancient cities gathered by theme.",
   },
+  /**
+   * The 3D reconstructions. The wording keeps insisting that a model is an
+   * argument rather than a photograph, because on a screen it looks like one.
+   */
+  nav_reconstructions: { tr: "3B Modeller", en: "3D Models" },
+  recon_title: { tr: "3B rekonstrüksiyonlar", en: "3D reconstructions" },
+  recon_sub: {
+    tr: "Bugün ayakta olmayan yapıları, yayımlanmış ölçülerden kurulmuş üç boyutlu modellerle gez. Her ölçünün kaynağı ve modelin nerede tahmin yürüttüğü yanında yazıyor.",
+    en: "Walk around structures that no longer stand, modelled from published measurements. Every dimension names its source, and each model says where it is guessing.",
+  },
+  recon_badge: { tr: "3B", en: "3D" },
+  recon_open: { tr: "3B modeli aç", en: "Open the 3D model" },
+  recon_back: { tr: "Tüm 3B modeller", en: "All 3D models" },
+  recon_measures: {
+    tr: "Modelin kurulduğu ölçüler",
+    en: "The measurements the model is built from",
+  },
+  recon_uncertainty: { tr: "Modelin tahmin ettiği yerler", en: "What the model infers" },
+  recon_sources: { tr: "Ölçülerin kaynağı", en: "Where the measurements come from" },
+  recon_hint: {
+    tr: "Sürükleyerek döndür, tekerlekle yaklaş.",
+    en: "Drag to orbit, scroll to zoom.",
+  },
+  recon_views: { tr: "Bakış", en: "Views" },
+  recon_export: { tr: "3B dosyayı indir (.glb)", en: "Download the 3D file (.glb)" },
+  recon_exporting: { tr: "Hazırlanıyor…", en: "Preparing…" },
+  recon_view_front: { tr: "Önden", en: "Front" },
+  recon_view_corner: { tr: "Köşeden", en: "Corner" },
+  recon_view_above: { tr: "Üstten", en: "Above" },
+  recon_labels_show: { tr: "Etiketleri göster", en: "Show labels" },
+  recon_labels_hide: { tr: "Etiketleri gizle", en: "Hide labels" },
+  recon_spin: { tr: "Döndür", en: "Spin" },
+  recon_spin_stop: { tr: "Durdur", en: "Stop" },
+  recon_reset: { tr: "Görünümü sıfırla", en: "Reset the view" },
+  recon_loading: { tr: "Model hazırlanıyor…", en: "Building the model…" },
+  recon_scale: {
+    tr: "Mavi figür 1,75 m boyunda bir insan — ölçek için orada.",
+    en: "The blue figure is a person 1.75 m tall, standing there for scale.",
+  },
+  recon_unavailable: {
+    tr: "Tarayıcın 3B görüntülemeyi (WebGL) desteklemiyor. Ölçüler ve kaynaklar aşağıda.",
+    en: "This browser cannot display 3D (WebGL). The measurements and sources are below.",
+  },
+  recon_measure_count: { tr: "kaynaklı ölçü", en: "cited measurements" },
+  seo_reconstructions_title: {
+    tr: "3B Rekonstrüksiyonlar — Ölçüleri Kaynaklı Modeller | Antik Türkiye",
+    en: "3D Reconstructions — Models with Cited Measurements | Ancient Türkiye",
+  },
+  seo_reconstructions_desc: {
+    tr: "Celsus Kütüphanesi, Artemis Tapınağı, Aspendos ve Hierapolis tiyatroları, Didyma Apollon Tapınağı, Pergamon Zeus Sunağı, Aphrodisias Stadyumu ve Göbeklitepe D Yapısı: yayımlanmış ölçülerden kurulmuş, her rakamı kaynaklı üç boyutlu modeller.",
+    en: "The Library of Celsus, the Temple of Artemis, the theatres at Aspendos and Hierapolis, the Temple of Apollo at Didyma, the Great Altar of Pergamon, the stadium at Aphrodisias and Enclosure D at Göbeklitepe, modelled from published measurements with every figure sourced.",
+  },
 } satisfies Record<string, Localized>;
 
 export type TKey = keyof typeof dict;

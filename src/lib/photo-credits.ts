@@ -124,6 +124,46 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC BY-SA 2.0",
     licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0",
   },
+  "Episteme_statue_Library_of_Celsus_Ephesus_2024.jpg": {
+    author: "Furkan Akkurt",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Column_drum_from_the_temple_of_Artemis_at_Ephesus_(British_Museum).jpg": {
+    author: "Yair Haklai",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Pergamonmuseum_-_Antikensammlung_-_Pergamonaltar_31.JPG": {
+    author: "Claus Ableiter",
+    license: "CC BY-SA 3.0",
+    licenseUrl: "http://creativecommons.org/licenses/by-sa/3.0/",
+  },
+  "Göbeklitepe_Building_C_3143.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Göbeklitepe_Building_C_3145.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Ephesus_Terrace_Houses_fresco_in_house_with_muses_in_2015_2718.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Ephesus_Terrace_Houses_Geometric_mosaic_in_2015_2743.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
+  "Ephesus_Terrace_Houses_Dionysus_mosaic_in_2015_2730.jpg": {
+    author: "Dosseman",
+    license: "CC BY-SA 4.0",
+    licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  },
   "A_Road_in_Alexandria_Troas.jpg": {
     author: "Raicem",
     license: "CC BY 4.0",

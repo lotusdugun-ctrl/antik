@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Award,
+  Box,
   Building2,
   CalendarClock,
   Check,
@@ -39,6 +40,7 @@ import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
 import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
 import { structurePhotoFor } from "@/lib/structure-photos";
+import { reconstructionForStructure } from "@/lib/reconstructions";
 import { structureInfo } from "@/lib/structures";
 import { coverImage, getSite, hasOwnPhoto, heritageTypeName, regions } from "@/lib/sites";
 
@@ -327,16 +329,32 @@ function SiteDetail() {
                   <Building2 className="h-5 w-5 text-primary" /> {t("structures")}
                 </h2>
                 <ul className="grid gap-2 sm:grid-cols-2">
-                  {detail.structures.map((structure) => (
-                    <li key={structure.tr}>
-                      <button
-                        onClick={() => setOpenStructure(structure.tr)}
-                        className="w-full rounded-xl surface-panel px-4 py-3 text-left text-sm font-medium transition-colors hover:border hover:border-primary"
-                      >
-                        {L(structure)}
-                      </button>
-                    </li>
-                  ))}
+                  {detail.structures.map((structure) => {
+                    const model = reconstructionForStructure(slug, structure.tr);
+                    return (
+                      <li key={structure.tr} className="flex items-stretch gap-2">
+                        <button
+                          onClick={() => setOpenStructure(structure.tr)}
+                          className="flex-1 rounded-xl surface-panel px-4 py-3 text-left text-sm font-medium transition-colors hover:border hover:border-primary"
+                        >
+                          {L(structure)}
+                        </button>
+                        {/* Only the handful of structures with a measured model
+                            carry this, so the badge means something. */}
+                        {model && (
+                          <Link
+                            to="/rekonstruksiyon/$id"
+                            params={{ id: model.id }}
+                            aria-label={`${L(structure)} — ${t("recon_open")}`}
+                            title={t("recon_open")}
+                            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-primary px-3 text-xs font-bold uppercase tracking-wide text-primary-foreground transition-transform hover:scale-[1.03]"
+                          >
+                            <Box className="h-3.5 w-3.5" /> {t("recon_badge")}
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </section>
             )}

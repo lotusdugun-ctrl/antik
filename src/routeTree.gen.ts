@@ -19,6 +19,7 @@ import { Route as KoleksiyonlarRouteImport } from './routes/koleksiyonlar'
 import { Route as MuzelerRouteImport } from './routes/muzeler'
 import { Route as OyunlarRouteImport } from './routes/oyunlar'
 import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as RekonstruksiyonlarRouteImport } from './routes/rekonstruksiyonlar'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RotaRouteImport } from './routes/rota'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -26,6 +27,7 @@ import { Route as TarihiYerlerRouteImport } from './routes/tarihi-yerler'
 import { Route as BolgeIdRouteImport } from './routes/bolge.$id'
 import { Route as KentSlugRouteImport } from './routes/kent.$slug'
 import { Route as KoleksiyonIdRouteImport } from './routes/koleksiyon.$id'
+import { Route as RekonstruksiyonIdRouteImport } from './routes/rekonstruksiyon.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -77,6 +79,11 @@ const ProfilRoute = ProfilRouteImport.update({
   path: '/profil',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RekonstruksiyonlarRoute = RekonstruksiyonlarRouteImport.update({
+  id: '/rekonstruksiyonlar',
+  path: '/rekonstruksiyonlar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
@@ -112,6 +119,11 @@ const KoleksiyonIdRoute = KoleksiyonIdRouteImport.update({
   path: '/koleksiyon/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RekonstruksiyonIdRoute = RekonstruksiyonIdRouteImport.update({
+  id: '/rekonstruksiyon/$id',
+  path: '/rekonstruksiyon/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
+  '/rekonstruksiyonlar': typeof RekonstruksiyonlarRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -131,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
+  '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -143,6 +157,7 @@ export interface FileRoutesByTo {
   '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
+  '/rekonstruksiyonlar': typeof RekonstruksiyonlarRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -150,6 +165,7 @@ export interface FileRoutesByTo {
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
+  '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -163,6 +179,7 @@ export interface FileRoutesById {
   '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
+  '/rekonstruksiyonlar': typeof RekonstruksiyonlarRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -170,6 +187,7 @@ export interface FileRoutesById {
   '/bolge/$id': typeof BolgeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
+  '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -184,6 +202,7 @@ export interface FileRouteTypes {
     | '/muzeler'
     | '/oyunlar'
     | '/profil'
+    | '/rekonstruksiyonlar'
     | '/robots.txt'
     | '/rota'
     | '/sitemap.xml'
@@ -191,6 +210,7 @@ export interface FileRouteTypes {
     | '/bolge/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
+    | '/rekonstruksiyon/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -203,6 +223,7 @@ export interface FileRouteTypes {
     | '/muzeler'
     | '/oyunlar'
     | '/profil'
+    | '/rekonstruksiyonlar'
     | '/robots.txt'
     | '/rota'
     | '/sitemap.xml'
@@ -210,6 +231,7 @@ export interface FileRouteTypes {
     | '/bolge/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
+    | '/rekonstruksiyon/$id'
   id:
     | '__root__'
     | '/'
@@ -222,6 +244,7 @@ export interface FileRouteTypes {
     | '/muzeler'
     | '/oyunlar'
     | '/profil'
+    | '/rekonstruksiyonlar'
     | '/robots.txt'
     | '/rota'
     | '/sitemap.xml'
@@ -229,6 +252,7 @@ export interface FileRouteTypes {
     | '/bolge/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
+    | '/rekonstruksiyon/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -242,6 +266,7 @@ export interface RootRouteChildren {
   MuzelerRoute: typeof MuzelerRoute
   OyunlarRoute: typeof OyunlarRoute
   ProfilRoute: typeof ProfilRoute
+  RekonstruksiyonlarRoute: typeof RekonstruksiyonlarRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   RotaRoute: typeof RotaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -249,6 +274,7 @@ export interface RootRouteChildren {
   BolgeIdRoute: typeof BolgeIdRoute
   KentSlugRoute: typeof KentSlugRoute
   KoleksiyonIdRoute: typeof KoleksiyonIdRoute
+  RekonstruksiyonIdRoute: typeof RekonstruksiyonIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -323,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rekonstruksiyonlar': {
+      id: '/rekonstruksiyonlar'
+      path: '/rekonstruksiyonlar'
+      fullPath: '/rekonstruksiyonlar'
+      preLoaderRoute: typeof RekonstruksiyonlarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
@@ -372,6 +405,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KoleksiyonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rekonstruksiyon/$id': {
+      id: '/rekonstruksiyon/$id'
+      path: '/rekonstruksiyon/$id'
+      fullPath: '/rekonstruksiyon/$id'
+      preLoaderRoute: typeof RekonstruksiyonIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -386,6 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   MuzelerRoute: MuzelerRoute,
   OyunlarRoute: OyunlarRoute,
   ProfilRoute: ProfilRoute,
+  RekonstruksiyonlarRoute: RekonstruksiyonlarRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   RotaRoute: RotaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -393,6 +434,7 @@ const rootRouteChildren: RootRouteChildren = {
   BolgeIdRoute: BolgeIdRoute,
   KentSlugRoute: KentSlugRoute,
   KoleksiyonIdRoute: KoleksiyonIdRoute,
+  RekonstruksiyonIdRoute: RekonstruksiyonIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
