@@ -89,15 +89,42 @@ type Props = {
   onExported: (data: ArrayBuffer) => void;
 };
 
-type Palette = { color: number; roughness: number; metalness: number };
+type Palette = {
+  color: number;
+  roughness: number;
+  metalness: number;
+  sheen?: number;
+  sheenRoughness?: number;
+  sheenColor?: number;
+};
 
 const MATERIALS: Record<Material, Palette> = {
-  marble: { color: 0xeee8dc, roughness: 0.72, metalness: 0 },
-  marbleWorn: { color: 0xded5c2, roughness: 0.82, metalness: 0 },
-  limestone: { color: 0xcabd9f, roughness: 0.9, metalness: 0 },
-  stone: { color: 0xc3b79c, roughness: 0.88, metalness: 0 },
-  stoneDark: { color: 0x9c927b, roughness: 0.92, metalness: 0 },
-  terrazzo: { color: 0xd0c2a4, roughness: 0.85, metalness: 0 },
+  /*
+   * Marble: a crystalline stone that glows from within. The `sheen` layer
+   * simulates the soft subsurface scatter that makes marble look alive
+   * rather than like painted plaster — the light enters, bounces around
+   * inside the crystals, and comes back out slightly shifted.
+   */
+  marble: {
+    color: 0xeee8dc,
+    roughness: 0.68,
+    metalness: 0,
+    sheen: 0.35,
+    sheenRoughness: 0.38,
+    sheenColor: 0xfff8f0,
+  },
+  marbleWorn: {
+    color: 0xded5c2,
+    roughness: 0.78,
+    metalness: 0,
+    sheen: 0.18,
+    sheenRoughness: 0.5,
+    sheenColor: 0xf5ede0,
+  },
+  limestone: { color: 0xcabd9f, roughness: 0.88, metalness: 0 },
+  stone: { color: 0xc3b79c, roughness: 0.86, metalness: 0 },
+  stoneDark: { color: 0x9c927b, roughness: 0.9, metalness: 0 },
+  terrazzo: { color: 0xd0c2a4, roughness: 0.83, metalness: 0 },
   shadow: { color: 0x2f2a22, roughness: 1, metalness: 0 },
   // Deliberately not a stone colour: the figure is a ruler, not a find.
   human: { color: 0x2f6f8f, roughness: 0.6, metalness: 0 },
@@ -106,10 +133,10 @@ const MATERIALS: Record<Material, Palette> = {
   ground: { color: 0xa9977a, roughness: 1, metalness: 0 },
   // The painted half of a Roman façade: cinnabar red on the panels, Egyptian
   // blue in the mouldings, gilding on the ornament.
-  paintRed: { color: 0x9c3a2c, roughness: 0.66, metalness: 0 },
-  paintBlue: { color: 0x2f5b86, roughness: 0.66, metalness: 0 },
-  paintGold: { color: 0xc19a3e, roughness: 0.42, metalness: 0.45 },
-  timber: { color: 0x6f4426, roughness: 0.78, metalness: 0 },
+  paintRed: { color: 0x9c3a2c, roughness: 0.62, metalness: 0 },
+  paintBlue: { color: 0x2f5b86, roughness: 0.62, metalness: 0 },
+  paintGold: { color: 0xc19a3e, roughness: 0.38, metalness: 0.48 },
+  timber: { color: 0x6f4426, roughness: 0.76, metalness: 0 },
   /*
    * Weathered bronze, kept well off full metalness on purpose. A physically
    * correct metal has almost no diffuse colour — it is only a mirror — so at
@@ -117,7 +144,14 @@ const MATERIALS: Record<Material, Palette> = {
    * that have stood outdoors are dulled and part-patinated anyway, and this is
    * what that looks like.
    */
-  bronze: { color: 0x7d6a3f, roughness: 0.52, metalness: 0.28 },
+  bronze: {
+    color: 0x7d6a3f,
+    roughness: 0.48,
+    metalness: 0.32,
+    sheen: 0.08,
+    sheenRoughness: 0.6,
+    sheenColor: 0xb8a878,
+  },
 };
 
 /*
@@ -319,10 +353,12 @@ export default function Reconstruction3DInner({
        * Two figures, told apart by their material.
        *
        * The blue one is the ruler — a person standing there for scale, and
-       * deliberately schematic so nobody mistakes them for a find. A marble one
-       * is a statue, and gets what a statue has: a plinth, a robe that falls
-       * from the shoulders and widens to the ground, folds turned into it, and
-       * no head, because the heads of these four are in Vienna and Istanbul.
+       * deliberately schematic so nobody mistakes them for a find. A marble or
+       * bronze one is a statue, and gets what a statue has: a stepped pedestal,
+       * a torso with the suggestion of anatomy beneath the cloth, a robe that
+       * falls from the shoulders in carved folds and widens to the ground, two
+       * arms in natural positions, and no head, because the heads of these
+       * figures are in Vienna and Istanbul.
        */
       const figureGeometry = (part: Extract<Part, { kind: "figure" }>) => {
         const h = part.height;
@@ -330,43 +366,75 @@ export default function Reconstruction3DInner({
         const statue = part.material !== "human";
 
         if (statue) {
-          const plinth = new THREE.CylinderGeometry(h * 0.17, h * 0.19, h * 0.05, 16);
-          plinth.translate(0, h * 0.025, 0);
-          pieces.push(plinth);
-          // The robe: a tapering column of cloth, wider at the hem than at the
-          // waist, which is the silhouette of every draped figure on a façade.
-          const robe = new THREE.CylinderGeometry(h * 0.115, h * 0.17, h * 0.72, 18);
-          robe.translate(0, h * 0.41, 0);
-          pieces.push(robe);
-          // Folds, cut as shallow flutes down the cloth.
-          const folds = 14;
-          const position = robe.attributes["position"]!;
-          for (let i = 0; i < position.count; i += 1) {
-            const px = position.getX(i);
-            const pz = position.getZ(i);
+          // A two-step pedestal: the wider base and the narrower cap that
+          // the figure actually stands on.
+          const base = new THREE.CylinderGeometry(h * 0.2, h * 0.22, h * 0.035, 20);
+          base.translate(0, h * 0.0175, 0);
+          pieces.push(base);
+          const cap = new THREE.CylinderGeometry(h * 0.17, h * 0.2, h * 0.03, 20);
+          cap.translate(0, h * 0.05, 0);
+          pieces.push(cap);
+          // The lower robe: a wide cone of cloth, widest at the hem, with
+          // folds that deepen towards the bottom where the fabric gathers.
+          const robeLower = new THREE.CylinderGeometry(h * 0.095, h * 0.175, h * 0.4, 24);
+          robeLower.translate(0, h * 0.25, 0);
+          const rlPos = robeLower.attributes["position"]!;
+          const foldsLower = 18;
+          for (let i = 0; i < rlPos.count; i += 1) {
+            const px = rlPos.getX(i);
+            const pz = rlPos.getZ(i);
             const r = Math.hypot(px, pz);
             if (r < 1e-6) continue;
             const angle = Math.atan2(pz, px);
-            const scale = 1 - 0.055 * (0.5 + 0.5 * Math.cos(folds * angle));
-            position.setX(i, px * scale);
-            position.setZ(i, pz * scale);
+            // Folds deepen toward the hem: the cloth hangs loose at the
+            // bottom and is gathered tight at the waist.
+            const hemFactor = (rlPos.getY(i) - h * 0.05) / (h * 0.4);
+            const depth = 0.07 * Math.max(0, hemFactor);
+            const scale = 1 - depth * (0.5 + 0.5 * Math.cos(foldsLower * angle));
+            rlPos.setX(i, px * scale);
+            rlPos.setZ(i, pz * scale);
           }
-          position.needsUpdate = true;
-          robe.computeVertexNormals();
-          // Shoulders and the stump of the neck.
-          const shoulders = new THREE.SphereGeometry(h * 0.115, 14, 10);
-          shoulders.scale(1, 0.62, 0.78);
-          shoulders.translate(0, h * 0.78, 0);
+          rlPos.needsUpdate = true;
+          robeLower.computeVertexNormals();
+          pieces.push(robeLower);
+          // The upper body: a tapered trunk that narrows at the waist and
+          // widens at the chest, the silhouette of a draped torso.
+          const torso = new THREE.CylinderGeometry(h * 0.115, h * 0.095, h * 0.28, 20);
+          torso.translate(0, h * 0.59, 0);
+          pieces.push(torso);
+          // Shoulders: a wide, shallow dome that bridges torso and arms.
+          const shoulders = new THREE.SphereGeometry(h * 0.13, 18, 12);
+          shoulders.scale(1.15, 0.48, 0.72);
+          shoulders.translate(0, h * 0.74, 0);
           pieces.push(shoulders);
-          const neck = new THREE.CylinderGeometry(h * 0.045, h * 0.055, h * 0.06, 10);
-          neck.translate(0, h * 0.83, 0);
+          // The neck: a short cylinder that rises from the shoulder dome.
+          const neck = new THREE.CylinderGeometry(h * 0.04, h * 0.05, h * 0.065, 12);
+          neck.translate(0, h * 0.8, 0);
           pieces.push(neck);
-          // One arm across the body, the way three of the four virtues stand.
-          const arm = new THREE.CylinderGeometry(h * 0.035, h * 0.03, h * 0.3, 8);
-          arm.rotateX(Math.PI / 2.6);
-          arm.translate(h * 0.085, h * 0.62, h * 0.05);
-          pieces.push(arm);
+          // The right arm, hanging at the side with a slight bend — the way
+          // a virtue stands when it is not holding anything.
+          const armR = new THREE.CylinderGeometry(h * 0.032, h * 0.026, h * 0.3, 10);
+          armR.rotateX(Math.PI / 35);
+          armR.translate(h * 0.14, h * 0.58, h * 0.015);
+          pieces.push(armR);
+          // The left arm across the body, the way three of the four virtues
+          // on the Celsus façade stand.
+          const armL = new THREE.CylinderGeometry(h * 0.032, h * 0.026, h * 0.28, 10);
+          armL.rotateX(Math.PI / 2.5);
+          armL.translate(-h * 0.09, h * 0.61, h * 0.04);
+          pieces.push(armL);
+          // Hands: small spheres at the ends of the arms.
+          const handR = new THREE.SphereGeometry(h * 0.028, 8, 6);
+          handR.translate(h * 0.145, h * 0.44, h * 0.05);
+          pieces.push(handR);
+          const handL = new THREE.SphereGeometry(h * 0.028, 8, 6);
+          handL.translate(-h * 0.11, h * 0.48, h * 0.12);
+          pieces.push(handL);
         } else {
+          // The scale figure: deliberately schematic, a teaching device. The
+          // proportions are those of a person 1.75 m tall, but the rendering
+          // is deliberately non-photographic — blue and smooth — so nobody
+          // mistakes it for a find.
           const legs = new THREE.CylinderGeometry(h * 0.055, h * 0.045, h * 0.47, 8);
           for (const side of [-1, 1]) {
             const leg = legs.clone();
@@ -516,11 +584,11 @@ export default function Reconstruction3DInner({
             const [w, h] = part.size;
             /*
              * Fine enough for the carving to read, coarse enough to stay a
-             * usable asset: at 50 divisions a metre and no cap, the Pergamon
-             * frieze alone came to a quarter of a million triangles, and the
-             * exported file to 43 MB.
+             * usable asset: at 46 divisions a metre, a 36 m Pergamon frieze
+             * panel comes to about 160k triangles — enough to show the
+             * relief without bogging down the GPU.
              */
-            const grid = (metres: number) => Math.min(110, Math.max(20, Math.round(metres * 34)));
+            const grid = (metres: number) => Math.min(165, Math.max(30, Math.round(metres * 46)));
             geometry = new THREE.PlaneGeometry(w, h, grid(w), grid(h));
             geometry.translate(0, h / 2, 0);
             if (part.rotX) geometry.rotateX(part.rotX);
@@ -605,13 +673,14 @@ export default function Reconstruction3DInner({
       };
 
       /**
-       * The stone itself, drawn once into a canvas: a fine grain over a slow
-       * mottle, so a wall has both the tooth of the surface and the patchiness
-       * of a quarried block. Painted here rather than downloaded because it has
-       * to tile seamlessly and cost nothing.
+       * The stone itself, drawn once into a canvas: three layers of noise —
+       * a coarse mottle for the patchiness of a quarried block, a medium
+       * detail layer for the grain of the surface, and a fine jitter for
+       * the tooth of the stone — plus faint veining that makes marble
+       * read as marble rather than as painted plaster.
        */
       const stoneTexture = (() => {
-        const size = 512;
+        const size = 1024;
         const canvas = document.createElement("canvas");
         canvas.width = size;
         canvas.height = size;
@@ -624,31 +693,66 @@ export default function Reconstruction3DInner({
             return state / 4294967296;
           };
         })();
-        // A coarse lattice smoothed across the canvas gives the mottle; the
-        // per-pixel jitter on top of it gives the grain.
-        const cells = 8;
-        const lattice: number[] = [];
-        for (let i = 0; i < (cells + 1) * (cells + 1); i += 1) lattice.push(random());
         const smooth = (t: number) => t * t * (3 - 2 * t);
+        // The coarse mottle: an 8×8 lattice gives the patchiness of a
+        // quarried block — some stones are lighter, some darker, and the
+        // transitions are soft.
+        const coarseCells = 8;
+        const coarseLattice: number[] = [];
+        for (let i = 0; i < (coarseCells + 1) * (coarseCells + 1); i += 1)
+          coarseLattice.push(random());
+        const sampleCoarse = (x: number, y: number) => {
+          const fx = (x / size) * coarseCells;
+          const fy = (y / size) * coarseCells;
+          const x0 = Math.floor(fx);
+          const y0 = Math.floor(fy);
+          const tx = smooth(fx - x0);
+          const ty = smooth(fy - y0);
+          const at = (cx: number, cy: number) =>
+            coarseLattice[(cy % coarseCells) * (coarseCells + 1) + (cx % coarseCells)]!;
+          return (
+            (at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx) * (1 - ty) +
+            (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
+          );
+        };
+        // The medium detail: a 24×24 lattice gives the grain of the surface.
+        const medCells = 24;
+        const medLattice: number[] = [];
+        for (let i = 0; i < (medCells + 1) * (medCells + 1); i += 1) medLattice.push(random());
+        const sampleMed = (x: number, y: number) => {
+          const fx = (x / size) * medCells;
+          const fy = (y / size) * medCells;
+          const x0 = Math.floor(fx);
+          const y0 = Math.floor(fy);
+          const tx = smooth(fx - x0);
+          const ty = smooth(fy - y0);
+          const at = (cx: number, cy: number) =>
+            medLattice[(cy % medCells) * (medCells + 1) + (cx % medCells)]!;
+          return (
+            (at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx) * (1 - ty) +
+            (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
+          );
+        };
         for (let y = 0; y < size; y += 1) {
           for (let x = 0; x < size; x += 1) {
-            const fx = (x / size) * cells;
-            const fy = (y / size) * cells;
-            const x0 = Math.floor(fx);
-            const y0 = Math.floor(fy);
-            const tx = smooth(fx - x0);
-            const ty = smooth(fy - y0);
-            const at = (cx: number, cy: number) =>
-              lattice[(cy % cells) * (cells + 1) + (cx % cells)]!;
-            const top = at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx;
-            const bottom = at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx;
-            const mottle = top * (1 - ty) + bottom * ty;
-            const grain = random();
-            const value = 214 + (mottle - 0.5) * 26 + (grain - 0.5) * 16;
+            const mottle = sampleCoarse(x, y);
+            const grain2 = sampleMed(x, y);
+            const jitter = random();
+            // Veining: faint diagonal streaks that make marble read as
+            // marble. The sine gives the streak pattern, the coarse
+            // mottle modulates its strength so veins do not appear on
+            // every block.
+            const vein =
+              Math.sin((x * 0.008 + y * 0.012 + mottle * 6) * 2.5) *
+              (0.5 + 0.5 * Math.sin((x * 0.003 - y * 0.005 + grain2 * 4) * 5)) *
+              0.06 *
+              mottle;
+            const value =
+              214 + (mottle - 0.5) * 24 + (grain2 - 0.5) * 14 + (jitter - 0.5) * 12 + vein * 28;
             const index = (y * size + x) * 4;
             image.data[index] = value;
             image.data[index + 1] = value - 1;
-            image.data[index + 2] = value - 4;
+            image.data[index + 2] = value - 5;
             image.data[index + 3] = 255;
           }
         }
@@ -700,6 +804,13 @@ export default function Reconstruction3DInner({
           roughness: palette.roughness,
           metalness: 0,
           ...(grain ? { map: grain, roughnessMap: grain } : {}),
+          ...(palette.sheen
+            ? {
+                sheen: palette.sheen,
+                sheenRoughness: palette.sheenRoughness ?? 0.4,
+                sheenColor: new THREE.Color(palette.sheenColor ?? 0xffffff),
+              }
+            : {}),
         });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.castShadow = true;
@@ -774,6 +885,13 @@ export default function Reconstruction3DInner({
           // does not.
           map: name === "shadow" || name === "human" ? null : stoneTexture,
           roughnessMap: name === "shadow" || name === "human" ? null : stoneTexture,
+          ...(palette.sheen
+            ? {
+                sheen: palette.sheen,
+                sheenRoughness: palette.sheenRoughness ?? 0.4,
+                sheenColor: new THREE.Color(palette.sheenColor ?? 0xffffff),
+              }
+            : {}),
         });
         const mesh = new THREE.Mesh(merged, material);
         mesh.castShadow = true;

@@ -126,17 +126,17 @@ export function AppShell({ children }: { children: ReactNode }) {
       <nav className="fixed inset-x-0 bottom-0 z-[1000] border-t border-border bg-background/95 backdrop-blur-xl lg:hidden">
         <div className="mx-auto flex max-w-xl items-stretch justify-between px-2 py-1.5">
           {navItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: item.to === "/" }}
-                activeProps={{ className: "text-primary" }}
-                className="flex flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[10px] font-medium text-muted-foreground transition-colors"
-              >
-                <item.icon className="h-5 w-5" />
-                <span className="truncate">{t(item.key)}</span>
-              </Link>
-            ))}
+            <Link
+              key={item.to}
+              to={item.to}
+              activeOptions={{ exact: item.to === "/" }}
+              activeProps={{ className: "text-primary" }}
+              className="flex flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[10px] font-medium text-muted-foreground transition-colors"
+            >
+              <item.icon className="h-5 w-5" />
+              <span className="truncate">{t(item.key)}</span>
+            </Link>
+          ))}
         </div>
       </nav>
     </div>
