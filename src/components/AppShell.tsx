@@ -18,25 +18,15 @@ import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
-/**
- * `desktopOnly` keeps the mobile tab bar at six items. Everything hidden there
- * is reachable from the home page instead — collections sit under the regions
- * strip.
- *
- * `/kentler` is deliberately absent: the three named scopes cover the same
- * data between them, and a fourth entry called "Tümü" beside them read as a
- * duplicate rather than a wider net. It stays reachable from the scope tabs on
- * each list page and from the home page's search box.
- */
-const navItems: { to: string; key: TKey; icon: typeof Home; desktopOnly?: boolean }[] = [
+const navItems: { to: string; key: TKey; icon: typeof Home }[] = [
   { to: "/", key: "nav_home", icon: Home },
   { to: "/antik-kentler", key: "nav_ancient", icon: Landmark },
   { to: "/tarihi-yerler", key: "nav_places", icon: Castle },
   { to: "/muzeler", key: "nav_museums", icon: Building2 },
-  { to: "/harita", key: "nav_map", icon: MapIcon, desktopOnly: true },
-  { to: "/bolgeler", key: "nav_regions", icon: Columns3, desktopOnly: true },
-  { to: "/koleksiyonlar", key: "nav_collections", icon: Layers, desktopOnly: true },
-  { to: "/rota", key: "nav_route", icon: RouteIcon, desktopOnly: true },
+  { to: "/harita", key: "nav_map", icon: MapIcon },
+  { to: "/bolgeler", key: "nav_regions", icon: Columns3 },
+  { to: "/koleksiyonlar", key: "nav_collections", icon: Layers },
+  { to: "/rota", key: "nav_route", icon: RouteIcon },
   { to: "/oyunlar", key: "nav_games", icon: Gamepad2 },
   { to: "/profil", key: "nav_profile", icon: User },
 ];
@@ -135,9 +125,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile tab bar */}
       <nav className="fixed inset-x-0 bottom-0 z-[1000] border-t border-border bg-background/95 backdrop-blur-xl lg:hidden">
         <div className="mx-auto flex max-w-xl items-stretch justify-between px-2 py-1.5">
-          {navItems
-            .filter((i) => !i.desktopOnly)
-            .map((item) => (
+          {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
