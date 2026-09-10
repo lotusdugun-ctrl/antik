@@ -20,10 +20,58 @@ import type { ModelSpec } from "@/lib/reconstructions";
 /** A part of the building, named, with the point on the model it names. */
 export type SceneLabel = { text: string; at: [number, number, number] };
 
+/** A time of day the scene can be lit as. */
+export type AtmosMode = "day" | "golden" | "night";
+
+type SkyPalette = { top: string; horizon: string };
+
+type AtmosPalette = {
+  sky: SkyPalette;
+  fog: number;
+  ground: number;
+  hemiSky: number;
+  hemiGround: number;
+  hemiIntensity: number;
+  sunColor: number;
+  sunIntensity: number;
+  fillColor: number;
+  fillIntensity: number;
+  starOpacity: number;
+  cloudOpacity: number;
+  cloudColor: number;
+  birdOpacity: number;
+  exposure: number;
+};
+
+/**
+ * The whole scene, held as mutable numbers and colours that ease towards
+ * `target` every frame, so switching light actually has a dusk to pass through
+ * instead of a hard cut.
+ */
+type LiveAtmos = {
+  skyTop: THREE_NS.Color;
+  skyHorizon: THREE_NS.Color;
+  fog: THREE_NS.Color;
+  ground: THREE_NS.Color;
+  hemiSky: THREE_NS.Color;
+  hemiGround: THREE_NS.Color;
+  hemiIntensity: number;
+  sunColor: THREE_NS.Color;
+  sunIntensity: number;
+  fillColor: THREE_NS.Color;
+  fillIntensity: number;
+  starOpacity: number;
+  cloudOpacity: number;
+  cloudColor: THREE_NS.Color;
+  birdOpacity: number;
+  exposure: number;
+};
+
 type Props = {
   parts: Part[];
   kind: ModelSpec["kind"];
   theme: "light" | "dark";
+  atmos: AtmosMode;
   autoRotate: boolean;
   /** Bumped by the caller to send the camera home. */
   resetToken: number;
@@ -72,6 +120,76 @@ const MATERIALS: Record<Material, Palette> = {
   bronze: { color: 0x7d6a3f, roughness: 0.52, metalness: 0.28 },
 };
 
+/*
+ * One lighting opinion per time of day. None of this is measured — the model
+ * is the measured thing — but the light has to be something the building
+ * plausibly stood in: high white sun, low warm sun, or moon. The dark theme
+ * keeps the same moods, tuned down and towards blue, so a night model in dark
+ * mode still reads at night.
+ */
+const paletteFor = (theme: "light" | "dark", atmos: AtmosMode): AtmosPalette => {
+  const dark = theme === "dark";
+  switch (atmos) {
+    case "golden": {
+      return {
+        sky: dark ? { top: "#151b25", horizon: "#5c3f22" } : { top: "#5d86a8", horizon: "#f3a45c" },
+        fog: dark ? 0x3a2b20 : 0xefc493,
+        ground: dark ? 0x4a3c2d : 0xaa8b5e,
+        hemiSky: 0xffd9a6,
+        hemiGround: 0x9a7b4f,
+        hemiIntensity: dark ? 0.72 : 1.05,
+        sunColor: 0xff9d4d,
+        sunIntensity: dark ? 1.4 : 2.2,
+        fillColor: 0xf6c58b,
+        fillIntensity: 0.55,
+        starOpacity: 0,
+        cloudOpacity: dark ? 0.22 : 0.5,
+        cloudColor: 0xffd9b0,
+        birdOpacity: 1,
+        exposure: 1.08,
+      };
+    }
+    case "night": {
+      return {
+        sky: dark ? { top: "#05080f", horizon: "#101724" } : { top: "#0a1220", horizon: "#2b3a52" },
+        fog: dark ? 0x0a1118 : 0x17222f,
+        ground: dark ? 0x1e242e : 0x3c4556,
+        hemiSky: 0x4a5b7d,
+        hemiGround: 0x22262f,
+        hemiIntensity: dark ? 0.45 : 0.55,
+        sunColor: 0xaeb9d8,
+        sunIntensity: dark ? 0.5 : 0.62,
+        fillColor: 0x2e3f63,
+        fillIntensity: 0.35,
+        starOpacity: 1,
+        cloudOpacity: 0,
+        cloudColor: 0x33405a,
+        birdOpacity: 0,
+        exposure: 1.18,
+      };
+    }
+    default: {
+      return {
+        sky: dark ? { top: "#0d1218", horizon: "#2b3440" } : { top: "#7fa6cc", horizon: "#dfe6ec" },
+        fog: dark ? 0x141a20 : 0xdfe6ec,
+        ground: dark ? 0x4a4436 : 0xb5a487,
+        hemiSky: 0xffffff,
+        hemiGround: 0x8d8264,
+        hemiIntensity: dark ? 0.75 : 1.05,
+        sunColor: 0xfff3e0,
+        sunIntensity: dark ? 1.5 : 2.4,
+        fillColor: 0xdce8ff,
+        fillIntensity: 0.5,
+        starOpacity: 0,
+        cloudOpacity: dark ? 0.25 : 0.6,
+        cloudColor: 0xffffff,
+        birdOpacity: 1,
+        exposure: 1.05,
+      };
+    }
+  }
+};
+
 /**
  * Where the camera starts, per kind of building — chosen, not computed. Each
  * one is kept low enough to be a view someone standing there could have had;
@@ -93,13 +211,11 @@ const VIEWPOINT: Record<ModelSpec["kind"], [number, number, number]> = {
   "peristyle-house": [0.5, 0.32, -1],
 };
 
-const SKY = { light: 0xdfe6ec, dark: 0x141a20 };
-const GROUND_TINT = { light: 0xb5a487, dark: 0x4a4436 };
-
 export default function Reconstruction3DInner({
   parts,
   kind,
   theme,
+  atmos,
   autoRotate,
   resetToken,
   label,
@@ -114,7 +230,7 @@ export default function Reconstruction3DInner({
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<{
-    setTheme: (t: "light" | "dark") => void;
+    setAtmos: (t: "light" | "dark", a: AtmosMode) => void;
     setAutoRotate: (on: boolean) => void;
     reset: () => void;
     setLabels: (labels: SceneLabel[], visible: boolean, active: number | null) => void;
@@ -698,6 +814,7 @@ export default function Reconstruction3DInner({
       sun.shadow.mapSize.set(2048, 2048);
       sun.shadow.bias = -0.0006;
       sun.shadow.normalBias = 0.03;
+      sun.shadow.radius = 2.5;
       const shadowSpan = span * 0.85;
       sun.shadow.camera.left = -shadowSpan;
       sun.shadow.camera.right = shadowSpan;
@@ -760,7 +877,7 @@ export default function Reconstruction3DInner({
 
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFShadowMap;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
       renderer.domElement.style.width = "100%";
@@ -786,43 +903,233 @@ export default function Reconstruction3DInner({
        * The sky, as a gradient rather than a flat fill: pale at the horizon and
        * deeper overhead, which is what makes a model read as standing outdoors
        * instead of being pasted onto a colour swatch. Painted into a strip and
-       * wrapped round the scene.
+       * wrapped round the scene, then repainted in place as its colours ease
+       * between one time of day and the next — so changing the light is a dusk
+       * the scene passes through, not a hard cut.
        */
-      const skyTexture = (top: string, horizon: string) => {
-        const canvas = document.createElement("canvas");
-        canvas.width = 4;
-        canvas.height = 256;
-        const ctx = canvas.getContext("2d")!;
+      const skyCanvas = document.createElement("canvas");
+      skyCanvas.width = 4;
+      skyCanvas.height = 256;
+      const sky = new THREE.CanvasTexture(skyCanvas);
+      sky.mapping = THREE.EquirectangularReflectionMapping;
+      sky.colorSpace = THREE.SRGBColorSpace;
+      const repaintSky = (top: THREE_NS.Color, horizon: THREE_NS.Color) => {
+        const ctx = skyCanvas.getContext("2d")!;
         const gradient = ctx.createLinearGradient(0, 0, 0, 256);
-        gradient.addColorStop(0, top);
-        gradient.addColorStop(0.62, horizon);
-        gradient.addColorStop(1, horizon);
+        gradient.addColorStop(0, `#${top.getHexString()}`);
+        gradient.addColorStop(0.62, `#${horizon.getHexString()}`);
+        gradient.addColorStop(1, `#${horizon.getHexString()}`);
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, 4, 256);
-        const texture = new THREE.CanvasTexture(canvas);
-        texture.mapping = THREE.EquirectangularReflectionMapping;
-        texture.colorSpace = THREE.SRGBColorSpace;
-        return texture;
+        sky.needsUpdate = true;
+      };
+      scene.background = sky;
+      /*
+       * The same sky, used as the light that metal reflects. Without it a
+       * bronze horse renders black: a metal in a physically based renderer
+       * has almost no colour of its own, it only shows what is around it,
+       * and what was around it was nothing.
+       */
+      scene.environment = sky;
+      const fog = new THREE.Fog(0xdfe6ec, span * 1.8, span * 5.5);
+      scene.fog = fog;
+
+      /*
+       * The night sky's stars: points scattered over the upper hemisphere and
+       * well beyond the fog, gone by day. They fade in as the palette does and
+       * add over the dark sky, so moonlight leaves them pin-sharp.
+       */
+      const starCount = 700;
+      const starPositions = new Float32Array(starCount * 3);
+      for (let i = 0; i < starCount; i += 1) {
+        let x = 0;
+        let y = 0;
+        let z = 0;
+        let len = 0;
+        do {
+          x = Math.random() * 2 - 1;
+          y = Math.random() * 2 - 1;
+          z = Math.random() * 2 - 1;
+          len = Math.hypot(x, y, z);
+          // Only the upper hemisphere; a sky half-full of stars below the
+          // ground sits under the model and reads as noise, not as night.
+        } while (len > 1 || y / len < 0.08);
+        const r = span * 7;
+        starPositions[i * 3] = centre.x + (x / len) * r;
+        starPositions[i * 3 + 1] = centre.y * 0.2 + (y / len) * r;
+        starPositions[i * 3 + 2] = centre.z + (z / len) * r;
+      }
+      const starGeometry = new THREE.BufferGeometry();
+      starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+      const starMaterial = new THREE.PointsMaterial({
+        color: 0xfff2d8,
+        size: Math.max(0.5, span * 0.018),
+        sizeAttenuation: true,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        fog: false,
+        blending: THREE.AdditiveBlending,
+      });
+      const stars = new THREE.Points(starGeometry, starMaterial);
+      scene.add(stars);
+
+      /*
+       * Clouds, and the birds that work them: a few flattened puffs drifting
+       * round the model and a small flock circling over the seating. Both fade
+       * out at night — the scene is to be lit, not decorated — and both are
+       * built from the measured building's own scale, so a stadium seats birds
+       * in proportion the way it seats its audience.
+       */
+      const cloudMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 1,
+        metalness: 0,
+        transparent: true,
+        opacity: 0.6,
+      });
+      const cloudPuff = new THREE.SphereGeometry(1, 12, 9);
+      const clouds: {
+        group: THREE_NS.Group;
+        radius: number;
+        speed: number;
+        phase: number;
+        altitude: number;
+      }[] = [];
+      for (let c = 0; c < 5; c += 1) {
+        const group = new THREE.Group();
+        const puffs = 3 + Math.floor(Math.random() * 4);
+        for (let i = 0; i < puffs; i += 1) {
+          const puff = new THREE.Mesh(cloudPuff, cloudMaterial);
+          const s = span * (0.045 + Math.random() * 0.05);
+          puff.scale.set(s * 1.9, s * 0.5, s);
+          puff.position.set(
+            (Math.random() - 0.5) * s * 2.4,
+            (Math.random() - 0.5) * s * 0.9,
+            (Math.random() - 0.5) * s * 1.6,
+          );
+          group.add(puff);
+        }
+        scene.add(group);
+        clouds.push({
+          group,
+          radius: span * (0.7 + Math.random() * 0.5),
+          speed: 0.01 + Math.random() * 0.015,
+          phase: Math.random() * Math.PI * 2,
+          altitude: centre.y + span * (0.85 + Math.random() * 0.4),
+        });
+      }
+
+      // A gull in plan, flattened; the flapping is a roll about the body axis.
+      const birdShape = new THREE.Shape();
+      birdShape.moveTo(-1.15, -0.06);
+      birdShape.lineTo(-1.02, 0);
+      birdShape.lineTo(-0.3, 0.09);
+      birdShape.lineTo(0, 0.34);
+      birdShape.lineTo(0.3, 0.09);
+      birdShape.lineTo(1.02, 0);
+      birdShape.lineTo(1.15, -0.06);
+      birdShape.lineTo(0.34, 0.1);
+      birdShape.lineTo(0, -0.28);
+      birdShape.lineTo(-0.34, 0.1);
+      birdShape.closePath();
+      const birdGeometry = new THREE.ShapeGeometry(birdShape);
+      birdGeometry.rotateX(-Math.PI / 2);
+      const birdMaterial = new THREE.MeshStandardMaterial({
+        color: 0x20242c,
+        roughness: 0.9,
+        metalness: 0,
+        transparent: true,
+        opacity: 1,
+        side: THREE.DoubleSide,
+      });
+      const flock: {
+        group: THREE_NS.Group;
+        wings: THREE_NS.Mesh;
+        radius: number;
+        speed: number;
+        phase: number;
+        altitude: number;
+        flap: number;
+      }[] = [];
+      for (let b = 0; b < 9; b += 1) {
+        const group = new THREE.Group();
+        const wings = new THREE.Mesh(birdGeometry, birdMaterial);
+        wings.scale.setScalar(span * (0.016 + Math.random() * 0.018));
+        group.add(wings);
+        scene.add(group);
+        flock.push({
+          group,
+          wings,
+          radius: span * (0.3 + Math.random() * 0.5),
+          speed: 0.15 + Math.random() * 0.25,
+          phase: Math.random() * Math.PI * 2,
+          altitude: centre.y + span * (0.3 + Math.random() * 0.45),
+          flap: 5 + Math.random() * 5,
+        });
+      }
+
+      /**
+       * The atmosphere in numbers: what the lights, sky and life are *aiming*
+       * at (its palette) and what they currently are (live). The loop eases
+       * live towards its target every frame — about a two-second crossfade —
+       * and then pushes the live values out to the scene.
+       */
+      const makeLive = (p: AtmosPalette): LiveAtmos => ({
+        skyTop: new THREE.Color(p.sky.top),
+        skyHorizon: new THREE.Color(p.sky.horizon),
+        fog: new THREE.Color(p.fog),
+        ground: new THREE.Color(p.ground),
+        hemiSky: new THREE.Color(p.hemiSky),
+        hemiGround: new THREE.Color(p.hemiGround),
+        hemiIntensity: p.hemiIntensity,
+        sunColor: new THREE.Color(p.sunColor),
+        sunIntensity: p.sunIntensity,
+        fillColor: new THREE.Color(p.fillColor),
+        fillIntensity: p.fillIntensity,
+        starOpacity: p.starOpacity,
+        cloudOpacity: p.cloudOpacity,
+        cloudColor: new THREE.Color(p.cloudColor),
+        birdOpacity: p.birdOpacity,
+        exposure: p.exposure,
+      });
+
+      const liveAtmos = makeLive(paletteFor(theme, atmos));
+      let atmosTarget = liveAtmos;
+
+      const applyLive = () => {
+        hemisphere.color.set(liveAtmos.hemiSky);
+        hemisphere.groundColor.set(liveAtmos.hemiGround);
+        hemisphere.intensity = liveAtmos.hemiIntensity;
+        sun.color.set(liveAtmos.sunColor);
+        sun.intensity = liveAtmos.sunIntensity;
+        fill.color.set(liveAtmos.fillColor);
+        fill.intensity = liveAtmos.fillIntensity;
+        fog.color.set(liveAtmos.fog);
+        apronMaterial.color.set(liveAtmos.ground);
+        renderer.toneMappingExposure = liveAtmos.exposure;
+        starMaterial.opacity = liveAtmos.starOpacity;
+        cloudMaterial.color.set(liveAtmos.cloudColor);
+        cloudMaterial.opacity = liveAtmos.cloudOpacity;
+        birdMaterial.opacity = liveAtmos.birdOpacity;
       };
 
-      let sky: THREE_NS.Texture | null = null;
-      const paint = (mode: "light" | "dark") => {
-        sky?.dispose();
-        sky = mode === "dark" ? skyTexture("#0d1218", "#2b3440") : skyTexture("#7fa6cc", "#dfe6ec");
-        scene.background = sky;
-        /*
-         * The same sky, used as the light that metal reflects. Without it a
-         * bronze horse renders black: a metal in a physically based renderer
-         * has almost no colour of its own, it only shows what is around it,
-         * and what was around it was nothing.
-         */
-        scene.environment = sky;
-        scene.fog = new THREE.Fog(mode === "dark" ? SKY.dark : SKY.light, span * 1.8, span * 5.5);
-        apronMaterial.color.set(mode === "dark" ? GROUND_TINT.dark : GROUND_TINT.light);
-        hemisphere.intensity = mode === "dark" ? 0.75 : 1.05;
-        sun.intensity = mode === "dark" ? 1.5 : 2.4;
+      // The canvas repaints only when its colours actually moved, so a settled
+      // scene stops rerendering the sky entirely.
+      let lastSky: [number, number] = [-1, -1];
+      const repaintSkyIfChanged = () => {
+        const top = liveAtmos.skyTop.getHex();
+        const horizon = liveAtmos.skyHorizon.getHex();
+        if (top === lastSky[0] && horizon === lastSky[1]) return;
+        lastSky = [top, horizon];
+        repaintSky(liveAtmos.skyTop, liveAtmos.skyHorizon);
       };
-      paint(theme);
+
+      // The decorations are the model's surroundings, not the model. They drop
+      // out of a model export the way they would drop out of a section drawing.
+      const decorations = [stars, ...clouds.map((c) => c.group), ...flock.map((f) => f.group)];
+      applyLive();
+      repaintSkyIfChanged();
 
       const resize = () => {
         const { clientWidth, clientHeight } = host;
@@ -923,7 +1230,52 @@ export default function Reconstruction3DInner({
 
       buildPins(labels, activeLabel);
 
+      let lastFrame = performance.now() / 1000;
       renderer.setAnimationLoop(() => {
+        const now = performance.now() / 1000;
+        const dt = Math.min(0.1, now - lastFrame);
+        lastFrame = now;
+        if (dt > 0) {
+          const rate = Math.min(1, dt / 1.8);
+          liveAtmos.hemiIntensity += (atmosTarget.hemiIntensity - liveAtmos.hemiIntensity) * rate;
+          liveAtmos.sunIntensity += (atmosTarget.sunIntensity - liveAtmos.sunIntensity) * rate;
+          liveAtmos.fillIntensity += (atmosTarget.fillIntensity - liveAtmos.fillIntensity) * rate;
+          liveAtmos.starOpacity += (atmosTarget.starOpacity - liveAtmos.starOpacity) * rate;
+          liveAtmos.cloudOpacity += (atmosTarget.cloudOpacity - liveAtmos.cloudOpacity) * rate;
+          liveAtmos.birdOpacity += (atmosTarget.birdOpacity - liveAtmos.birdOpacity) * rate;
+          liveAtmos.exposure += (atmosTarget.exposure - liveAtmos.exposure) * rate;
+          liveAtmos.skyTop.lerp(atmosTarget.skyTop, rate);
+          liveAtmos.skyHorizon.lerp(atmosTarget.skyHorizon, rate);
+          liveAtmos.fog.lerp(atmosTarget.fog, rate);
+          liveAtmos.ground.lerp(atmosTarget.ground, rate);
+          liveAtmos.hemiSky.lerp(atmosTarget.hemiSky, rate);
+          liveAtmos.hemiGround.lerp(atmosTarget.hemiGround, rate);
+          liveAtmos.sunColor.lerp(atmosTarget.sunColor, rate);
+          liveAtmos.fillColor.lerp(atmosTarget.fillColor, rate);
+          liveAtmos.cloudColor.lerp(atmosTarget.cloudColor, rate);
+          applyLive();
+        }
+        // The flocks' circles come out of time, not out of vectors, so no two
+        // birds ever collide or pause, and the clouds drift with the place.
+        for (const cloud of clouds) {
+          const a = now * cloud.speed + cloud.phase;
+          cloud.group.position.set(
+            centre.x + Math.cos(a) * cloud.radius,
+            cloud.altitude + Math.sin(now * 0.3 + cloud.phase) * span * 0.02,
+            centre.z + Math.sin(a) * cloud.radius,
+          );
+        }
+        for (const bird of flock) {
+          const a = now * bird.speed + bird.phase;
+          bird.group.position.set(
+            centre.x + Math.cos(a) * bird.radius,
+            bird.altitude + Math.sin(now * 1.7 + bird.phase * 3) * span * 0.03,
+            centre.z + Math.sin(a) * bird.radius,
+          );
+          bird.group.rotation.y = Math.PI - a;
+          bird.wings.rotation.z = Math.sin(now * bird.flap + bird.phase * 7) * 0.65;
+        }
+        repaintSkyIfChanged();
         controls.update();
         renderer.render(scene, camera);
         placePins();
@@ -937,7 +1289,9 @@ export default function Reconstruction3DInner({
       };
 
       apiRef.current = {
-        setTheme: paint,
+        setAtmos: (light: "light" | "dark", mode: AtmosMode) => {
+          atmosTarget = makeLive(paletteFor(light, mode));
+        },
         setAutoRotate: (on) => {
           controls.autoRotate = on;
         },
@@ -979,8 +1333,17 @@ export default function Reconstruction3DInner({
         exportGLB: async () => {
           const { GLTFExporter } = await import("three/addons/exporters/GLTFExporter.js");
           const exporter = new GLTFExporter();
-          const result = await exporter.parseAsync(scene, { binary: true, onlyVisible: true });
-          return result as ArrayBuffer;
+          // The sky, clouds and birds are the building's surroundings, not the
+          // building; they drop out of a model file the way they would drop
+          // out of a section drawing.
+          const wasVisible = decorations.map((object) => object.visible);
+          decorations.forEach((object) => (object.visible = false));
+          try {
+            const result = await exporter.parseAsync(scene, { binary: true, onlyVisible: true });
+            return result as ArrayBuffer;
+          } finally {
+            decorations.forEach((object, index) => (object.visible = wasVisible[index]!));
+          }
         },
         focus: (at) => {
           const point = new THREE.Vector3(...at);
@@ -1006,7 +1369,13 @@ export default function Reconstruction3DInner({
         geometriesOwned.forEach((geometry) => geometry.dispose());
         materialsOwned.forEach((material) => material.dispose());
         textures.forEach((texture) => texture.dispose());
-        sky?.dispose();
+        sky.dispose();
+        starGeometry.dispose();
+        starMaterial.dispose();
+        cloudPuff.dispose();
+        cloudMaterial.dispose();
+        birdGeometry.dispose();
+        birdMaterial.dispose();
         apron.dispose();
         apronMaterial.dispose();
         renderer.dispose();
@@ -1021,8 +1390,8 @@ export default function Reconstruction3DInner({
   }, [parts, kind, label]);
 
   useEffect(() => {
-    apiRef.current?.setTheme(theme);
-  }, [theme, ready]);
+    apiRef.current?.setAtmos(theme, atmos);
+  }, [theme, atmos, ready]);
 
   useEffect(() => {
     apiRef.current?.setAutoRotate(autoRotate);

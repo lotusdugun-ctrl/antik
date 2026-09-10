@@ -1,9 +1,20 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
-import { Download, RotateCcw, RotateCw, Square, Tag, TagsIcon } from "lucide-react";
+import {
+  Download,
+  Moon,
+  RotateCcw,
+  RotateCw,
+  Square,
+  Sun,
+  Sunset,
+  Tag,
+  TagsIcon,
+} from "lucide-react";
 import { partsFor } from "@/lib/reconstruction-parts";
 import type { Reconstruction } from "@/lib/reconstructions";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
+import type { AtmosMode } from "./Reconstruction3DInner";
 
 // three.js reaches for `window` and a canvas as it initialises, and it is the
 // heaviest thing this app can load — so it stays out of the SSR graph and out
@@ -38,6 +49,7 @@ export function Reconstruction3D({
   const [resetToken, setResetToken] = useState(0);
   const [showLabels, setShowLabels] = useState(true);
   const [active, setActive] = useState<number | null>(null);
+  const [atmos, setAtmos] = useState<AtmosMode>("day");
   const [view, setView] = useState<{ name: "front" | "above" | "corner"; token: number } | null>(
     null,
   );
@@ -87,6 +99,7 @@ export function Reconstruction3D({
               parts={parts}
               kind={item.model.kind}
               theme={theme}
+              atmos={atmos}
               autoRotate={spinning}
               resetToken={resetToken}
               label={`${L(item.title)} — ${t("recon_unavailable")}`}
@@ -172,6 +185,31 @@ export function Reconstruction3D({
           {exporting ? t("recon_exporting") : t("recon_export")}
         </button>
         <p className="text-xs text-muted-foreground">{t("recon_hint")}</p>
+      </div>
+
+      {/* Light: the same building under a high sun, a low one, or the moon. */}
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {t("recon_light")}
+        </span>
+        {(
+          [
+            ["day", Sun],
+            ["golden", Sunset],
+            ["night", Moon],
+          ] as const
+        ).map(([mode, Icon]) => (
+          <button
+            key={mode}
+            onClick={() => setAtmos(mode)}
+            aria-pressed={atmos === mode}
+            className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
+          >
+            <Icon className="h-3.5 w-3.5" />
+            {t(`recon_light_${mode}` as const)}
+          </button>
+        ))}{" "}
+        <p className="text-xs text-muted-foreground">{t("recon_light_hint")}</p>
       </div>
 
       <p className="mt-2 text-xs text-muted-foreground">{t("recon_scale")}</p>
