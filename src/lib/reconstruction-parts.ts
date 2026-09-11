@@ -176,7 +176,18 @@ export type Part =
   /** A triangular prism, apex centred: pediments and gable ends. */
   | (Base & { kind: "prism"; at: Vec3; size: Vec3; rotY: number })
   /** A stylised human, for scale. `at` is the ground under their feet. */
-  | (Base & { kind: "figure"; at: Vec3; height: number; rotY: number });
+  | (Base & {
+      kind: "figure";
+      at: Vec3;
+      height: number;
+      rotY: number;
+      /**
+       * A beard, drawn under the jaw. `true` makes a male figure; without it a
+       * bronze horseman, a marble Celsus or the Didyma Apollo would share the
+       * hair-bun of the four Celsus virtues.
+       */
+      bearded?: boolean;
+    });
 
 const TAU = Math.PI * 2;
 
@@ -196,12 +207,6 @@ export const SHAFT_DRUMS = 7;
  * Aspendos among them, which is why that wall is carved in geometry instead.
  */
 export const CARVINGS = {
-  /** Episteme — Knowledge — in her niche on the Celsus façade, with her name cut below. */
-  celsusStatue: {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Episteme_statue_Library_of_Celsus_Ephesus_2024.jpg/1280px-Episteme_statue_Library_of_Celsus_Ephesus_2024.jpg",
-    // A statue in the round, standing well clear of the wall behind her.
-    relief: 0.32,
-  },
   /** A sculpted drum from the Artemision, now in the British Museum. */
   artemisionDrum: {
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Column_drum_from_the_temple_of_Artemis_at_Ephesus_%28British_Museum%29.jpg/1280px-Column_drum_from_the_temple_of_Artemis_at_Ephesus_%28British_Museum%29.jpg",
@@ -472,12 +477,19 @@ const relief = (
 const floorPanel = (material: Material, at: Vec3, size: [number, number], carving: Carving): Part =>
   relief(material, at, size, carving, 0, -Math.PI / 2);
 
-const person = (at: Vec3, height = 1.75, rotY = 0, material: Material = "human"): Part => ({
+const person = (
+  at: Vec3,
+  height = 1.75,
+  rotY = 0,
+  material: Material = "human",
+  bearded?: boolean,
+): Part => ({
   kind: "figure",
   material,
   at,
   height,
   rotY,
+  ...(bearded !== undefined ? { bearded } : {}),
 });
 
 /**
@@ -753,6 +765,159 @@ function cornice(
 }
 
 /* ------------------------------------------------------------------ *
+ * Low-relief figures cut into a standing face
+ * ------------------------------------------------------------------ */
+
+/**
+ * The animals of the Göbeklitepe pillars, carved a few centimetres proud of
+ * the stone: a fox trotting, a chunky boar with its tusks up, an aurochs with
+ * horns, a spread-winged vulture, a snake coiling up the face, an abstract
+ * H-symbol and a slim gazelle. Each is a small stack of limestone slabs laid
+ * against the plane through `base` whose outward normal is `out` — the same
+ * weathered limestone as the pillar, so the carving reads as cut out of it
+ * rather than stuck onto it.
+ */
+export type Animal = "fox" | "boar" | "aurochs" | "vulture" | "snake" | "symbol" | "gazelle";
+
+function animalCarving(
+  animal: Animal,
+  base: Vec3,
+  out: [number, number],
+  seed: number,
+  scale = 1,
+): Part[] {
+  const parts: Part[] = [];
+  const tx = -out[1];
+  const tz = out[0];
+  // A box stood with `rotY` turns its local x onto the face normal, so the
+  // slabs' depth dimension runs out of the stone the way a chisel went in.
+  const rotY = Math.atan2(-out[1], out[0]);
+  const random = seeded(seed);
+  const pool = seeded(seed + 1);
+  const proud = 0.05;
+  const whip = 1 + (random() - 0.5) * 0.04;
+  const slab = (t: number, y: number, dt: number, dy: number, rise = 0, lean = 0): Part =>
+    worn(
+      box(
+        "limestone",
+        [
+          base[0] + tx * t * scale + out[0] * rise,
+          base[1] + y * scale,
+          base[2] + tz * t * scale + out[1] * rise,
+        ],
+        [proud, dy * scale * whip, dt * scale],
+        rotY + lean * (0.5 + pool() * 0.5),
+      ),
+      0.03,
+    );
+
+  if (animal !== "snake" && animal !== "symbol") {
+    // A groundline under the feet, the way the carvers ran their figures.
+    parts.push(slab(0, -0.02, 0.95, 0.07));
+  }
+
+  switch (animal) {
+    case "fox":
+      parts.push(
+        slab(-0.02, 0.24, 0.44, 0.3),
+        slab(-0.24, 0.34, 0.2, 0.22),
+        slab(0.22, 0.28, 0.22, 0.2),
+        slab(-0.44, 0.5, 0.17, 0.19),
+        slab(-0.6, 0.46, 0.12, 0.12),
+        slab(-0.36, 0.78, 0.08, 0.18, 0.02),
+        slab(-0.5, 0.78, 0.08, 0.18),
+        slab(0.42, 0.4, 0.26, 0.24),
+        slab(-0.14, 0.02, 0.06, 0.24),
+        slab(0.02, 0.02, 0.06, 0.24),
+        slab(0.22, 0.02, 0.06, 0.24),
+        slab(0.38, 0.02, 0.06, 0.24),
+      );
+      break;
+    case "boar":
+      parts.push(
+        slab(0, 0.16, 0.66, 0.46),
+        slab(-0.28, 0.6, 0.2, 0.2),
+        slab(0.26, 0.28, 0.24, 0.32),
+        slab(0.48, 0.14, 0.16, 0.2),
+        slab(0.36, 0.6, 0.08, 0.22),
+        slab(0.52, 0.52, 0.07, 0.18),
+        slab(0.14, 0.66, 0.09, 0.13),
+        slab(-0.36, 0.46, 0.13, 0.16),
+        slab(-0.24, 0.02, 0.09, 0.18),
+        slab(-0.02, 0.02, 0.09, 0.18),
+        slab(0.14, 0.02, 0.09, 0.18),
+        slab(0.3, 0.02, 0.09, 0.18),
+      );
+      break;
+    case "aurochs":
+      parts.push(
+        slab(0, 0.16, 0.56, 0.4),
+        slab(-0.16, 0.46, 0.22, 0.22),
+        slab(0.22, 0.24, 0.2, 0.3),
+        slab(0.12, 0.56, 0.12, 0.22, 0.02),
+        slab(0.3, 0.56, 0.12, 0.22),
+        slab(0.4, 0.16, 0.13, 0.18),
+        slab(-0.42, 0.34, 0.12, 0.2),
+        slab(-0.26, 0.02, 0.09, 0.16),
+        slab(-0.06, 0.02, 0.09, 0.16),
+        slab(0.14, 0.02, 0.09, 0.16),
+        slab(0.3, 0.02, 0.09, 0.16),
+      );
+      break;
+    case "vulture":
+      parts.push(
+        slab(0, 0.44, 0.3, 0.34),
+        slab(-0.1, 0.72, 0.14, 0.18),
+        slab(-0.24, 0.8, 0.16, 0.1),
+        slab(-0.28, 0.46, 0.34, 0.14),
+        slab(-0.6, 0.54, 0.26, 0.12),
+        slab(-0.86, 0.62, 0.2, 0.1),
+        slab(0.28, 0.46, 0.34, 0.14),
+        slab(0.6, 0.54, 0.26, 0.12),
+        slab(0.86, 0.62, 0.2, 0.1),
+        slab(0, 0.18, 0.16, 0.3),
+        slab(0, 0.04, 0.24, 0.16),
+      );
+      break;
+    case "snake":
+      parts.push(
+        slab(0.04, 0.0, 0.16, 0.16),
+        slab(-0.04, 0.16, 0.16, 0.14),
+        slab(0.04, 0.3, 0.16, 0.14),
+        slab(-0.04, 0.44, 0.16, 0.14),
+        slab(0.04, 0.58, 0.16, 0.14),
+        slab(-0.02, 0.74, 0.22, 0.16),
+        slab(0.06, 0.9, 0.14, 0.08),
+      );
+      break;
+    case "symbol":
+      parts.push(
+        slab(-0.26, 0.0, 0.14, 0.78),
+        slab(0.26, 0.0, 0.14, 0.78),
+        slab(0, 0.36, 0.54, 0.12),
+        slab(0, 0.84, 0.18, 0.18),
+      );
+      break;
+    case "gazelle":
+      parts.push(
+        slab(0.06, 0.3, 0.46, 0.2),
+        slab(-0.22, 0.42, 0.12, 0.16),
+        slab(0.28, 0.56, 0.16, 0.18),
+        slab(0.36, 0.72, 0.12, 0.15),
+        slab(0.28, 0.9, 0.08, 0.22, 0.02, -0.2),
+        slab(0.14, 0.34, 0.1, 0.2),
+        slab(-0.32, 0.4, 0.1, 0.14),
+        slab(-0.08, 0.02, 0.06, 0.28),
+        slab(0.1, 0.02, 0.06, 0.28),
+        slab(0.26, 0.02, 0.06, 0.32),
+        slab(0.42, 0.02, 0.06, 0.32),
+      );
+      break;
+  }
+  return parts;
+}
+
+/* ------------------------------------------------------------------ *
  * A two-storey Roman façade, and the hall behind it
  * ------------------------------------------------------------------ */
 
@@ -973,6 +1138,8 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     project: number,
     /** What this one is wearing: the robes were painted, not left white. */
     robe: Material,
+    /** A bearded man — Celsus or his son — rather than a draped virtue. */
+    bearded?: boolean,
   ) => {
     const pedestal = height * 0.26;
     const shaft = height * 0.58;
@@ -1012,22 +1179,18 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     }
 
     /*
-     * The niche, and the statue standing in it — a photograph of Episteme in
-     * her own niche on this façade, her name cut into the plinth beneath her.
-     * Four virtues below and Celsus with his son above; one photograph stands
-     * for all of them, which the uncertainty note owns up to.
+     * The niche, and the statue standing clear of the wall in it. Eight
+     * statues lived on this front — the four virtues below and Celsus with his
+     * son above — and each is modelled in the round, a draped figure on its
+     * own stepped pedestal, rather than drawn as a photograph. The dress, the
+     * poses and which virtue wears which colour are the reconstruction's
+     * reading; the surviving originals are in Vienna.
      */
     parts.push(
       box("paintRed", [centre, base + pedestal, 0.02], [spread * 1.5, statueHeight + 1.3, 0.1]),
     );
     parts.push(
-      relief(
-        robe,
-        [centre, base + pedestal, -0.02],
-        [spread * 1.45, statueHeight + 1.2],
-        CARVINGS.celsusStatue,
-        Math.PI,
-      ),
+      person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, bearded),
     );
     for (const side of [-1, 1]) {
       parts.push(
@@ -1119,7 +1282,9 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     );
   });
   // The upper order is set back and drawn in, which is what makes the front
-  // read as two storeys rather than one tall one.
+  // read as two storeys rather than one tall one. Where the virtues stand
+  // below, the four podia above carried Celsus and his son Aquila — white
+  // marble by now, not painted, the bearded father and the clean-shaven son.
   aediculaCentres.forEach((centre, index) => {
     const inward = Math.sign(centre) * aediculaWidth * 0.12;
     aedicula(
@@ -1130,7 +1295,8 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       spec.columnDiameter * 0.86,
       1.9,
       0.72,
-      robes[(index + 2) % robes.length]!,
+      "marbleWorn",
+      index % 2 === 0,
     );
   });
 
@@ -1184,18 +1350,56 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     parts.push(box("marbleWorn", [px, 0, pz], [2.3, 0.28, 2.0]));
     parts.push(box("marble", [px, 0.28, pz], [1.9, 2.4, 1.6]));
     parts.push(box("marbleWorn", [px, 2.68, pz], [2.3, 0.26, 2.0]));
-    // The horse: body, neck, head and four legs, in bronze.
+    // The horse, built the way a sculptor models one — barrels along the body,
+    // a neck rising to the head, four legs and a tail — all in bronze, reined
+    // in with the rider above its back.
     const horseY = 2.94;
-    parts.push(box("bronze", [px, horseY + 0.9, pz], [0.66, 0.86, 2.1]));
-    parts.push(box("bronze", [px, horseY + 1.5, pz - 0.86], [0.5, 0.78, 0.5], 0.24));
-    parts.push(box("bronze", [px, horseY + 2.05, pz - 1.12], [0.42, 0.34, 0.86]));
-    for (const fx of [-1, 1]) {
-      for (const fz of [-1, 1]) {
-        parts.push(box("bronze", [px + fx * 0.22, horseY, pz + fz * 0.78], [0.2, 0.92, 0.24]));
-      }
+    // The three barrels of the body: rump, barrel and chest, each tipped over
+    // on its side so they run along -z towards the viewer.
+    parts.push(
+      cyl("bronze", [px, horseY + 0.88, pz - 0.42], 0.27, 0.33, 0.58, 20, { rotX: Math.PI / 2 }),
+    );
+    parts.push(
+      cyl("bronze", [px, horseY + 0.96, pz - 0.98], 0.33, 0.34, 0.6, 20, { rotX: Math.PI / 2 }),
+    );
+    parts.push(
+      cyl("bronze", [px, horseY + 1.0, pz - 1.48], 0.34, 0.28, 0.5, 20, { rotX: Math.PI / 2 }),
+    );
+    // The belly drawn in beneath the three barrels.
+    parts.push(
+      cyl("bronze", [px, horseY + 0.5, pz - 1.12], 0.17, 0.19, 1.14, 14, { rotX: Math.PI / 2 }),
+    );
+    // The neck, carried forward from the chest up to the head.
+    parts.push(cyl("bronze", [px, horseY + 1.3, pz - 1.3], 0.15, 0.23, 0.95, 18, { rotX: -1.12 }));
+    // The head, muzzle and a pair of ears pricked forward.
+    parts.push(box("bronze", [px, horseY + 1.8, pz - 2.06], [0.2, 0.16, 0.52], -0.06));
+    parts.push(box("bronze", [px, horseY + 1.72, pz - 2.38], [0.13, 0.12, 0.34], -0.03));
+    parts.push(box("bronze", [px - 0.07, horseY + 1.98, pz - 2.14], [0.06, 0.17, 0.06], 0.25));
+    parts.push(box("bronze", [px + 0.07, horseY + 1.98, pz - 2.14], [0.06, 0.17, 0.06], -0.25));
+    // The mane, a comb of slabs riding the crest of the neck.
+    for (const [mz, my, mr] of [
+      [-1.42, 1.42, -0.12],
+      [-1.66, 1.56, -0.16],
+      [-1.9, 1.7, -0.16],
+      [-2.1, 1.82, -0.1],
+    ] as [number, number, number][]) {
+      parts.push(box("bronze", [px, horseY + my, pz + mz], [0.05, 0.22, 0.3], mr));
+    }
+    // The tail, falling behind the rump.
+    parts.push(cyl("bronze", [px, horseY + 1.1, pz + 0.32], 0.05, 0.1, 0.62, 10, { rotX: 1.95 }));
+    // Four legs planted on the plinth, thick above the knee and tapering to
+    // the hoof, under the chest at the front and the rump behind.
+    for (const [sfx, sfz] of [
+      [-1, -1],
+      [1, -1],
+      [-1, 1],
+      [1, 1],
+    ] as [number, number][]) {
+      const legZ = sfz > 0 ? pz + 0.22 : pz - 1.02;
+      parts.push(cyl("bronze", [px + sfx * 0.21, horseY + 0.02, legZ], 0.07, 0.12, 0.9, 14));
     }
     // And the rider, arm raised, the way both of them are shown.
-    parts.push(person([px, horseY + 1.72, pz + 0.1], 1.5, side > 0 ? -0.4 : 0.4, "bronze"));
+    parts.push(person([px, horseY + 1.42, pz - 0.58], 1.5, side > 0 ? -0.4 : 0.4, "bronze"));
   }
 
   /* The hall: side walls, rear wall and apse, stopped at the height the
@@ -1868,9 +2072,12 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
    * every one of them carved. Nearly all the excavated pillars at Göbeklitepe
    * carry animals; a ring of blank stones is the one thing this place was not.
    * Three different photographed faces are dealt round the circle so that no
-   * two neighbours repeat.
+   * two neighbours repeat, and every other pillar carries its animal instead
+   * as carved geometry — a fox, a boar, an aurochs, a snake, an H-symbol or a
+   * gazelle — so the ring shows real relief, not only faces that are pictures.
    */
   const faces = [CARVINGS.gobekliPillarFace, CARVINGS.gobekliBeast, CARVINGS.gobekliReliefs];
+  const ringAnimals: Animal[] = ["fox", "boar", "aurochs", "snake", "symbol", "gazelle"];
   const shapes = seeded(613);
   for (let i = 0; i < spec.ringPillars; i += 1) {
     const theta = pillarAngle(i);
@@ -1898,15 +2105,35 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
     parts.push(worn(box("limestone", [x, shaft, z], [depth, head, width * 1.45], rotY), 0.045));
     // The carving, on the inner face — the one the pillar turns to the centre.
     const faceRadius = r - depth / 2 - 0.01;
-    parts.push(
-      relief(
-        "limestone",
-        [Math.cos(theta) * faceRadius, 0.45, Math.sin(theta) * faceRadius],
-        [width * 0.86, shaft * 0.62],
-        faces[i % faces.length]!,
-        -theta - Math.PI / 2 + lean,
-      ),
-    );
+    const faceCentre: [number, number] = [
+      Math.cos(theta) * faceRadius,
+      Math.sin(theta) * faceRadius,
+    ];
+    if (i % 2 === 0) {
+      // Every other stone keeps the photograph of the real animal on its face.
+      parts.push(
+        relief(
+          "limestone",
+          [faceCentre[0], 0.45, faceCentre[1]],
+          [width * 0.86, shaft * 0.62],
+          faces[i % faces.length]!,
+          -theta - Math.PI / 2 + lean,
+        ),
+      );
+    } else {
+      // The rest are carved rather than photographed.
+      const animal = ringAnimals[((i - 1) / 2) % ringAnimals.length]!;
+      const shake = seeded(9000 + i);
+      parts.push(
+        ...animalCarving(
+          animal,
+          [faceCentre[0], 0.4 + (shake() - 0.5) * 0.12, faceCentre[1]],
+          [Math.cos(theta), Math.sin(theta)],
+          4000 + i,
+          0.82 + shake() * 0.18,
+        ),
+      );
+    }
   }
 
   // The two at the centre: taller, thicker, facing one another across the floor.
@@ -1934,6 +2161,18 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
         [1.34, shaft * 0.55],
         CARVINGS.gobekliReliefs,
         side > 0 ? -Math.PI / 2 : Math.PI / 2,
+      ),
+    );
+    // Above the photographed panel, one more figure risen straight out of the
+    // stone: a vulture with spread wings on one pillar, like the "Vulture
+    // Stone" and its birds, a fox on the other — both carved as geometry.
+    parts.push(
+      ...animalCarving(
+        side < 0 ? "vulture" : "fox",
+        [x - side * 0.32, base + 0.4 + shaft * 0.56, 0],
+        side < 0 ? [1, 0] : [-1, 0],
+        7000 + side,
+        side < 0 ? 0.62 : 0.85,
       ),
     );
 

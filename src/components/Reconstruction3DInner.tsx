@@ -358,9 +358,10 @@ export default function Reconstruction3DInner({
        * feet, a robe with irregular folds, a torso with the anatomy beneath the
        * cloth, shoulders, two arms from shoulder to fingertip, and a head —
        * because these are reconstructions, not the broken originals. Marble
-       * figures are the draped personifications of the Celsus façade, made of
-       * photographed white marble; bronze ones are the warriors of the Pergamon
-       * court, and wear the beard the cavalry wore.
+       * figures in paint are the draped personifications of the Celsus façade;
+       * bronze ones are the warriors of the Pergamon
+       * court, and wear the beard the cavalry wore. A figure asked to be
+       * bearded — the Celsus flanks — draws the beard too.
        */
       const figureGeometry = (part: Extract<Part, { kind: "figure" }>) => {
         const h = part.height;
@@ -369,7 +370,7 @@ export default function Reconstruction3DInner({
         const n1 = valueNoise(seed);
         const pieces: THREE_NS.BufferGeometry[] = [];
         const statue = part.material !== "human";
-        const bearded = part.material === "bronze";
+        const bearded = part.bearded ?? part.material === "bronze";
 
         /** A tapered limb from point A to point B, a humerus, radius or finger. */
         const limb = (
