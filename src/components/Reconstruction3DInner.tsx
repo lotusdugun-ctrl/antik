@@ -355,85 +355,283 @@ export default function Reconstruction3DInner({
        * The blue one is the ruler — a person standing there for scale, and
        * deliberately schematic so nobody mistakes them for a find. A marble or
        * bronze one is a statue, and gets what a statue has: a stepped pedestal,
-       * a torso with the suggestion of anatomy beneath the cloth, a robe that
-       * falls from the shoulders in carved folds and widens to the ground, two
-       * arms in natural positions, and no head, because the heads of these
-       * figures are in Vienna and Istanbul.
+       * feet, a robe with irregular folds, a torso with the anatomy beneath the
+       * cloth, shoulders, two arms from shoulder to fingertip, and a head —
+       * because these are reconstructions, not the broken originals. Marble
+       * figures are the draped personifications of the Celsus façade, made of
+       * photographed white marble; bronze ones are the warriors of the Pergamon
+       * court, and wear the beard the cavalry wore.
        */
       const figureGeometry = (part: Extract<Part, { kind: "figure" }>) => {
         const h = part.height;
+        const seed = hashString(`${JSON.stringify(part.at)}|${part.material}|fig`);
+        const rand = mulberry(seed);
+        const n1 = valueNoise(seed);
         const pieces: THREE_NS.BufferGeometry[] = [];
         const statue = part.material !== "human";
+        const bearded = part.material === "bronze";
+
+        /** A tapered limb from point A to point B, a humerus, radius or finger. */
+        const limb = (
+          a: [number, number, number],
+          b: [number, number, number],
+          r1: number,
+          r2: number,
+        ) => {
+          const dx = b[0] - a[0];
+          const dy = b[1] - a[1];
+          const dz = b[2] - a[2];
+          const len = Math.hypot(dx, dy, dz);
+          const geo = new THREE.CylinderGeometry(r1, r2, len, 9);
+          const quat = new THREE.Quaternion().setFromUnitVectors(
+            new THREE.Vector3(0, 1, 0),
+            new THREE.Vector3(dx, dy, dz).normalize(),
+          );
+          geo.applyQuaternion(quat);
+          geo.translate((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2);
+          return geo;
+        };
+
+        /** A hand: a shaped palm, four fingers and a thumb, hung from a wrist. */
+        const hand = (p: [number, number, number], r: number): THREE_NS.BufferGeometry[] => {
+          const palm = new THREE.SphereGeometry(r, 10, 8);
+          palm.scale(1, 0.8, 1.2);
+          palm.translate(p[0], p[1], p[2]);
+          const out: THREE_NS.BufferGeometry[] = [palm];
+          for (let f = 0; f < 4; f += 1) {
+            const splay = (f - 1.5) * 0.1 + (rand() - 0.5) * 0.05;
+            out.push(
+              limb(
+                [p[0] + splay * r, p[1] - r * 0.7, p[2] + r * 0.4],
+                [p[0] + splay * r * 1.3, p[1] - r * 2.2, p[2] + r * 0.55],
+                r * 0.24,
+                r * 0.16,
+              ),
+            );
+          }
+          out.push(
+            limb(
+              [p[0] - r * 0.85, p[1] - r * 0.3, p[2] + r * 0.15],
+              [p[0] - r * 1.2, p[1] - r * 0.8, p[2] + r * 0.55],
+              r * 0.22,
+              r * 0.15,
+            ),
+          );
+          return out;
+        };
+
+        /**
+         * Sculpt a face into a plain sphere: nose, brow, sockets, cheeks, lips,
+         * chin, jaw and ears, each a soft gaussian push along the surface normal
+         * — the way a sculptor adds clay and takes it away. Recomputed normals
+         * afterwards make it read as carved marble, not as a mask stuck on.
+         */
+        const sculptHead = (geo: THREE_NS.BufferGeometry, r0: number) => {
+          const pos = geo.attributes["position"]!;
+          for (let i = 0; i < pos.count; i += 1) {
+            const x = pos.getX(i);
+            const y = pos.getY(i);
+            const z = pos.getZ(i);
+            const a = x / r0;
+            const b = y / r0;
+            const c = z / r0;
+            const rr = Math.hypot(a, b, c) || 1;
+            const ux = a / rr;
+            const uy = b / rr;
+            const uz = c / rr;
+            const bump = (
+              cx: number,
+              cy: number,
+              cz: number,
+              sx: number,
+              sy: number,
+              sz: number,
+              strength: number,
+            ) => {
+              const dx = a - cx;
+              const dy = b - cy;
+              const dz = c - cz;
+              return (
+                Math.exp(-(dx * dx) / (sx * sx) - (dy * dy) / (sy * sy) - (dz * dz) / (sz * sz)) *
+                strength
+              );
+            };
+            let disp = 0;
+            // The nose, and its bulbous tip.
+            disp += bump(0, -0.05, 0.82, 0.16, 0.4, 0.34, 0.52);
+            disp += bump(0, -0.12, 0.87, 0.12, 0.16, 0.2, 0.3);
+            // The sockets, cut in rather than built up.
+            disp += bump(-0.156, 0.04, 0.7, 0.15, 0.12, 0.15, -0.42);
+            disp += bump(0.156, 0.04, 0.7, 0.15, 0.12, 0.15, -0.42);
+            // The brow over each eye.
+            disp += bump(-0.16, 0.2, 0.78, 0.2, 0.14, 0.3, 0.26);
+            disp += bump(0.16, 0.2, 0.78, 0.2, 0.14, 0.3, 0.26);
+            // The cheekbones.
+            disp += bump(-0.42, -0.04, 0.42, 0.3, 0.24, 0.28, 0.18);
+            disp += bump(0.42, -0.04, 0.42, 0.3, 0.24, 0.28, 0.18);
+            // The mouth: lips, and the crease between them.
+            disp += bump(0, -0.26, 0.8, 0.22, 0.12, 0.2, 0.16);
+            disp += bump(0, -0.31, 0.77, 0.12, 0.045, 0.11, -0.14);
+            // The chin and the jaw that carries it.
+            disp += bump(0, -0.52, 0.52, 0.26, 0.26, 0.32, 0.28);
+            disp += bump(0, -0.62, 0.3, 0.36, 0.24, 0.42, 0.2);
+            // The ears.
+            disp += bump(-0.98, -0.02, 0, 0.1, 0.22, 0.17, 0.3);
+            disp += bump(0.98, -0.02, 0, 0.1, 0.22, 0.17, 0.3);
+            if (bearded) {
+              // The beard, massed under the jaw, rugged with hair.
+              disp += bump(0, -0.42, 0.32, 0.36, 0.5, 0.5, 0.4);
+              if (b < -0.2) disp += (n1(a * 14, b * 14, c * 14) - 0.5) * 0.28;
+            } else {
+              // Hair drawn up off the crown, rough where the surface is high.
+              if (b > 0.3) disp += 0.24 + (n1(a * 12, b * 12, c * 12) - 0.5) * 0.24;
+            }
+            disp *= r0;
+            pos.setX(i, x + ux * disp);
+            pos.setY(i, y + uy * disp);
+            pos.setZ(i, z + uz * disp);
+          }
+          pos.needsUpdate = true;
+        };
 
         if (statue) {
-          // A two-step pedestal: the wider base and the narrower cap that
-          // the figure actually stands on.
-          const base = new THREE.CylinderGeometry(h * 0.2, h * 0.22, h * 0.035, 20);
+          // A two-step pedestal: the wider base and the narrower cap that the
+          // figure actually stands on.
+          const base = new THREE.CylinderGeometry(h * 0.2, h * 0.225, h * 0.035, 24);
           base.translate(0, h * 0.0175, 0);
           pieces.push(base);
-          const cap = new THREE.CylinderGeometry(h * 0.17, h * 0.2, h * 0.03, 20);
+          const cap = new THREE.CylinderGeometry(h * 0.17, h * 0.2, h * 0.03, 24);
           cap.translate(0, h * 0.05, 0);
           pieces.push(cap);
-          // The lower robe: a wide cone of cloth, widest at the hem, with
-          // folds that deepen towards the bottom where the fabric gathers.
-          const robeLower = new THREE.CylinderGeometry(h * 0.095, h * 0.175, h * 0.4, 24);
-          robeLower.translate(0, h * 0.25, 0);
+          // Feet, peeking out from beneath the hem.
+          for (const side of [-1, 1]) {
+            const foot = new THREE.SphereGeometry(h * 0.038, 10, 7);
+            foot.scale(1.25, 0.72, 1.5);
+            foot.translate(side * h * 0.045, h * 0.018, h * 0.05);
+            pieces.push(foot);
+          }
+          // The lower robe: a wide cone of cloth, widest at the hem, folded
+          // irregularly — the folds are a seeded sum of harmonics, so no two
+          // statues on the façade wear the same cloth.
+          const robeLower = new THREE.CylinderGeometry(h * 0.1, h * 0.165, h * 0.38, 32);
+          robeLower.translate(0, h * 0.245, 0);
           const rlPos = robeLower.attributes["position"]!;
-          const foldsLower = 18;
+          const foldA = 10 + Math.floor(rand() * 6);
+          const foldB = 7 + Math.floor(rand() * 5);
+          const ph1 = rand() * Math.PI * 2;
+          const ph2 = rand() * Math.PI * 2;
+          const hem = 0.18;
           for (let i = 0; i < rlPos.count; i += 1) {
             const px = rlPos.getX(i);
             const pz = rlPos.getZ(i);
             const r = Math.hypot(px, pz);
             if (r < 1e-6) continue;
             const angle = Math.atan2(pz, px);
-            // Folds deepen toward the hem: the cloth hangs loose at the
-            // bottom and is gathered tight at the waist.
-            const hemFactor = (rlPos.getY(i) - h * 0.05) / (h * 0.4);
-            const depth = 0.07 * Math.max(0, hemFactor);
-            const scale = 1 - depth * (0.5 + 0.5 * Math.cos(foldsLower * angle));
+            const hemFactor = (rlPos.getY(i) - h * 0.055) / (h * 0.38);
+            const depth =
+              0.085 *
+              Math.max(0, Math.min(1, hemFactor)) *
+              (0.35 + 0.65 * (0.5 + 0.5 * Math.cos(foldA * angle + ph1)));
+            const finer = 0.025 * (0.5 + 0.5 * Math.cos(foldB * angle * 2 + ph2));
+            const scale = 1 - depth - finer;
             rlPos.setX(i, px * scale);
             rlPos.setZ(i, pz * scale);
+          }
+          // A ragged hem: the cloth does not fall to a flat ring, it drops and
+          // lifts a little all the way round.
+          const yAt = (i: number) => rlPos.getY(i);
+          const minY = h * 0.055;
+          for (let i = 0; i < rlPos.count; i += 1) {
+            if (yAt(i) - minY < 1e-6) {
+              const px = rlPos.getX(i);
+              const pz = rlPos.getZ(i);
+              rlPos.setY(i, minY + (n1(px * 9, pz * 9, seed * 0.3) - 0.5) * 0.022 * h);
+            }
           }
           rlPos.needsUpdate = true;
           robeLower.computeVertexNormals();
           pieces.push(robeLower);
-          // The upper body: a tapered trunk that narrows at the waist and
-          // widens at the chest, the silhouette of a draped torso.
-          const torso = new THREE.CylinderGeometry(h * 0.115, h * 0.095, h * 0.28, 20);
-          torso.translate(0, h * 0.59, 0);
-          pieces.push(torso);
-          // Shoulders: a wide, shallow dome that bridges torso and arms.
-          const shoulders = new THREE.SphereGeometry(h * 0.13, 18, 12);
-          shoulders.scale(1.15, 0.48, 0.72);
-          shoulders.translate(0, h * 0.74, 0);
+          // The belt, where the peplos is gathered.
+          const belt = new THREE.CylinderGeometry(h * 0.1, h * 0.1, h * 0.045, 24);
+          belt.translate(0, h * 0.47, 0);
+          pieces.push(belt);
+          // The torso: a waist, a ribcage and a chest, tapered between them.
+          const torsoLower = new THREE.CylinderGeometry(h * 0.09, h * 0.11, h * 0.14, 24);
+          torsoLower.translate(0, h * 0.54, 0);
+          pieces.push(torsoLower);
+          const torsoUpper = new THREE.CylinderGeometry(h * 0.11, h * 0.13, h * 0.13, 24);
+          torsoUpper.translate(0, h * 0.675, 0);
+          pieces.push(torsoUpper);
+          if (!bearded) {
+            // The hint of the breasts beneath the cloth, just enough to read.
+            for (const side of [-1, 1]) {
+              const breast = new THREE.SphereGeometry(h * 0.034, 9, 7);
+              breast.scale(1, 0.8, 1.2);
+              breast.translate(side * h * 0.05, h * 0.635, h * 0.1);
+              pieces.push(breast);
+            }
+            // The drape: two ridges of cloth across the chest where the himation
+            // folds over the shoulder.
+            for (const dy of [0.018, 0.052]) {
+              const fold = new THREE.SphereGeometry(h * 0.028, 10, 7);
+              fold.scale(4.2, 0.55, 1.6);
+              fold.translate(0, h * 0.66 + dy, h * 0.104);
+              pieces.push(fold);
+            }
+          }
+          // The shoulders, a broad shallow dome, and the neck rising from it.
+          const shoulders = new THREE.SphereGeometry(h * 0.135, 20, 13);
+          shoulders.scale(1.34, 0.5, 0.74);
+          shoulders.translate(0, h * 0.755, 0);
           pieces.push(shoulders);
-          // The neck: a short cylinder that rises from the shoulder dome.
-          const neck = new THREE.CylinderGeometry(h * 0.04, h * 0.05, h * 0.065, 12);
-          neck.translate(0, h * 0.8, 0);
+          const neck = new THREE.CylinderGeometry(h * 0.045, h * 0.055, h * 0.065, 14);
+          neck.translate(0, h * 0.815, 0);
           pieces.push(neck);
-          // The right arm, hanging at the side with a slight bend — the way
-          // a virtue stands when it is not holding anything.
-          const armR = new THREE.CylinderGeometry(h * 0.032, h * 0.026, h * 0.3, 10);
-          armR.rotateX(Math.PI / 35);
-          armR.translate(h * 0.14, h * 0.58, h * 0.015);
-          pieces.push(armR);
-          // The left arm across the body, the way three of the four virtues
-          // on the Celsus façade stand.
-          const armL = new THREE.CylinderGeometry(h * 0.032, h * 0.026, h * 0.28, 10);
-          armL.rotateX(Math.PI / 2.5);
-          armL.translate(-h * 0.09, h * 0.61, h * 0.04);
-          pieces.push(armL);
-          // Hands: small spheres at the ends of the arms.
-          const handR = new THREE.SphereGeometry(h * 0.028, 8, 6);
-          handR.translate(h * 0.145, h * 0.44, h * 0.05);
-          pieces.push(handR);
-          const handL = new THREE.SphereGeometry(h * 0.028, 8, 6);
-          handL.translate(-h * 0.11, h * 0.48, h * 0.12);
-          pieces.push(handL);
+          // The head: a sphere carved with a face, hair drawn up for the marble
+          // figures, a soldier's close hair and beard for the bronze ones.
+          const head = new THREE.SphereGeometry(h * 0.1, 32, 26);
+          const headY = h * 0.885;
+          sculptHead(head, h * 0.1);
+          head.computeVertexNormals();
+          head.translate(0, headY, 0);
+          pieces.push(head);
+          if (bearded) {
+            const hairCap = new THREE.SphereGeometry(h * 0.107, 20, 14);
+            hairCap.scale(1, 0.62, 1);
+            hairCap.translate(0, headY + h * 0.03, h * 0.01);
+            pieces.push(hairCap);
+          } else {
+            // The bun at the back of the head.
+            const bun = new THREE.SphereGeometry(h * 0.055, 14, 11);
+            bun.translate(0, headY + h * 0.075, -h * 0.083);
+            pieces.push(bun);
+          }
+          // The right arm, hanging at the side — the way a virtue stands when
+          // it is not holding anything. Shoulder, elbow, forearm, wrist, hand.
+          const shoulderR: [number, number, number] = [h * 0.15, h * 0.75, h * 0.02];
+          const elbowR: [number, number, number] = [h * 0.145, h * 0.585, h * 0.025];
+          const wristR: [number, number, number] = [h * 0.14, h * 0.445, h * 0.045];
+          pieces.push(limb(shoulderR, elbowR, h * 0.036, h * 0.031));
+          pieces.push(limb(elbowR, wristR, h * 0.028, h * 0.021));
+          const elbowBall = new THREE.SphereGeometry(h * 0.032, 8, 6);
+          elbowBall.translate(...elbowR);
+          pieces.push(elbowBall);
+          pieces.push(...hand(wristR, h * 0.026));
+          // The left arm across the body, forearm bent, the way three of the
+          // four virtues on the Celsus façade stand.
+          const shoulderL: [number, number, number] = [-h * 0.15, h * 0.755, 0];
+          const elbowL: [number, number, number] = [-h * 0.12, h * 0.615, h * 0.03];
+          const wristL: [number, number, number] = [h * 0.055, h * 0.585, h * 0.07];
+          pieces.push(limb(shoulderL, elbowL, h * 0.036, h * 0.032));
+          pieces.push(limb(elbowL, wristL, h * 0.028, h * 0.022));
+          const elbowBallL = new THREE.SphereGeometry(h * 0.032, 8, 6);
+          elbowBallL.translate(...elbowL);
+          pieces.push(elbowBallL);
+          pieces.push(...hand(wristL, h * 0.026));
         } else {
           // The scale figure: deliberately schematic, a teaching device. The
-          // proportions are those of a person 1.75 m tall, but the rendering
-          // is deliberately non-photographic — blue and smooth — so nobody
+          // proportions are those of a person 1.75 m tall, but the rendering is
+          // deliberately non-photographic — blue and smooth — so nobody
           // mistakes it for a find.
           const legs = new THREE.CylinderGeometry(h * 0.055, h * 0.045, h * 0.47, 8);
           for (const side of [-1, 1]) {
@@ -445,6 +643,11 @@ export default function Reconstruction3DInner({
           const torso = new THREE.CapsuleGeometry(h * 0.11, h * 0.28, 4, 10);
           torso.translate(0, h * 0.68, 0);
           pieces.push(torso);
+          for (const side of [-1, 1]) {
+            const arm = new THREE.CylinderGeometry(h * 0.028, h * 0.022, h * 0.36, 7);
+            arm.translate(side * h * 0.115, h * 0.6, 0);
+            pieces.push(arm);
+          }
           const head = new THREE.SphereGeometry(h * 0.075, 12, 10);
           head.translate(0, h * 0.93, 0);
           pieces.push(head);
@@ -455,28 +658,34 @@ export default function Reconstruction3DInner({
         return merged;
       };
 
-      /**
-       * Push every vertex of a block along its own normal by a smooth field of
-       * noise, and pull the corners in hardest.
-       *
-       * Erosion does not treat a stone evenly: the faces bow slowly and the
-       * arrises go first, because an edge is exposed from two sides at once.
-       * Weighting the displacement by how close a vertex is to a corner is what
-       * turns a box into a quarried block rather than a crumpled one.
-       */
-      const erode = (geometry: THREE_NS.BufferGeometry, amount: number) => {
-        const position = geometry.attributes["position"]!;
-        const normal = geometry.attributes["normal"]!;
+      /** A stable string hash, so each part's scars are its own, forever. */
+      const hashString = (text: string) => {
+        let h = 2166136261 >>> 0;
+        for (let i = 0; i < text.length; i += 1) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+        return h >>> 0;
+      };
+
+      /** A deterministic generator: the same seed always yields the same stone. */
+      const mulberry = (seed: number) => {
+        let state = seed >>> 0;
+        return () => {
+          state = (state * 1664525 + 1013904223) >>> 0;
+          return state / 4294967296;
+        };
+      };
+
+      /** A 3-D value noise whose lattice is seeded, so no two parts match. */
+      const valueNoise = (seed: number) => {
         const hash = (x: number, y: number, z: number) => {
-          const n = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453;
+          const n =
+            Math.sin(x * 12.9898 + y * 78.233 + z * 37.719 + seed * 1.6180339887) * 43758.5453;
           return n - Math.floor(n);
         };
-        // Value noise: eight lattice corners, smoothly blended.
-        const noise = (x: number, y: number, z: number) => {
+        const fade = (t: number) => t * t * (3 - 2 * t);
+        return (x: number, y: number, z: number) => {
           const xi = Math.floor(x);
           const yi = Math.floor(y);
           const zi = Math.floor(z);
-          const fade = (t: number) => t * t * (3 - 2 * t);
           const tx = fade(x - xi);
           const ty = fade(y - yi);
           const tz = fade(z - zi);
@@ -486,10 +695,59 @@ export default function Reconstruction3DInner({
           const x10 = mix(corner(0, 1, 0), corner(1, 1, 0), tx);
           const x01 = mix(corner(0, 0, 1), corner(1, 0, 1), tx);
           const x11 = mix(corner(0, 1, 1), corner(1, 1, 1), tx);
-          return mix(mix(x00, x10, ty), mix(x01, x11, ty), mix(x00, x11, tz) * 0 + tz);
+          return mix(mix(x00, x10, ty), mix(x01, x11, ty), tz);
         };
+      };
+
+      /**
+       * Wear a stone three ways at once, each seed of its own:
+       *
+       *  — erosion, a slow smooth field that bows the faces;
+       *  — the arrises, which wear hardest, because an edge is exposed twice;
+       *  — and cracks, a few meandering grooves diced into the surface.
+       *
+       * Every part is keyed by its position and material, so no two blocks on
+       * the site — or in the same wall, for that matter — carry the same scar.
+       */
+      const damage = (geometry: THREE_NS.BufferGeometry, amount: number, seed: number) => {
+        const position = geometry.attributes["position"]!;
+        const normal = geometry.attributes["normal"]!;
         geometry.computeBoundingBox();
         const size = geometry.boundingBox!.getSize(new THREE.Vector3());
+        const n1 = valueNoise(seed);
+        const n2 = valueNoise(seed ^ 0x9e3779b9);
+        const rand = mulberry(seed ^ 0x51ed270b);
+        // Each crack is a wandering groove: a point, a direction, a width and a
+        // wobble. Their count varies per part, so a row of fallen drums never
+        // all breaks the same way.
+        const crackCount = 1 + Math.floor(rand() * 3);
+        const cracks: {
+          p: [number, number, number];
+          d: [number, number, number];
+          width: number;
+          wobble: number;
+        }[] = [];
+        for (let c = 0; c < crackCount; c += 1) {
+          const p: [number, number, number] = [
+            (rand() - 0.5) * size.x,
+            (rand() - 0.5) * size.y,
+            (rand() - 0.5) * size.z,
+          ];
+          const d: [number, number, number] = [0, 0, 0];
+          const axis = Math.floor(rand() * 3);
+          d[axis] = 1;
+          d[(axis + 1 + Math.floor(rand() * 2)) % 3] = (rand() - 0.5) * 2;
+          const len = Math.hypot(d[0], d[1], d[2]);
+          d[0] /= len;
+          d[1] /= len;
+          d[2] /= len;
+          cracks.push({
+            p,
+            d,
+            width: 0.02 + rand() * 0.045,
+            wobble: 1 + rand() * 3.2,
+          });
+        }
         for (let i = 0; i < position.count; i += 1) {
           const x = position.getX(i);
           const y = position.getY(i);
@@ -500,11 +758,65 @@ export default function Reconstruction3DInner({
             (Math.abs(x) / (size.x / 2 + 1e-6)) * 0.5 +
             (Math.abs(y) / (size.y / 2 + 1e-6)) * 0.25 +
             (Math.abs(z) / (size.z / 2 + 1e-6)) * 0.5;
-          const wander = (noise(x * 2.4, y * 2.4, z * 2.4) - 0.5) * 2;
-          const push = amount * (wander * 0.6 - edge * 0.55);
+          const erosion =
+            (n1(x * 2.4, y * 2.4, z * 2.4) - 0.5) * 0.6 +
+            (n2(x * 4.8, y * 4.8, z * 4.8) - 0.5) * 0.3;
+          let carve = 0;
+          for (const crack of cracks) {
+            const px = x - crack.p[0];
+            const py = y - crack.p[1];
+            const pz = z - crack.p[2];
+            const along = px * crack.d[0] + py * crack.d[1] + pz * crack.d[2];
+            const qx = crack.p[0] + crack.d[0] * along;
+            const qy = crack.p[1] + crack.d[1] * along;
+            const qz = crack.p[2] + crack.d[2] * along;
+            const dist = Math.hypot(x - qx, y - qy, z - qz);
+            const groove = Math.exp(-(dist * dist) / (crack.width * crack.width));
+            // The cut is not a straight knife-line: it pulses as it runs,
+            // opening and closing the way a fracture really does.
+            const pulse = 0.5 + 0.5 * Math.sin(along * crack.wobble + seed);
+            carve -= groove * amount * pulse * 1.5;
+          }
+          const push = amount * erosion - amount * edge * 0.5 + carve * Math.max(0.2, amount * 6);
           position.setX(i, x + normal.getX(i) * push);
           position.setY(i, y + normal.getY(i) * push);
           position.setZ(i, z + normal.getZ(i) * push);
+        }
+        position.needsUpdate = true;
+        geometry.computeVertexNormals();
+      };
+
+      /**
+       * Scour a relief panel after it is cut: the stoneworker's chatter, the
+       * chipped border and the slight dish of a panel that has stood upright
+       * for two thousand years. This is real geometry — the photo height map
+       * the carving wears is laid over it, so detail and age both show.
+       */
+      const scour = (geometry: THREE_NS.BufferGeometry, seed: number, amount: number) => {
+        const position = geometry.attributes["position"]!;
+        geometry.computeBoundingBox();
+        const bbox = geometry.boundingBox!;
+        const w = bbox.max.x - bbox.min.x;
+        const h = bbox.max.y - bbox.min.y;
+        const n1 = valueNoise(seed);
+        const n2 = valueNoise(seed ^ 0x9e3779b9);
+        for (let i = 0; i < position.count; i += 1) {
+          const x = position.getX(i);
+          const y = position.getY(i);
+          const z = position.getZ(i);
+          const chatter =
+            (n1(x * 2.4, y * 2.4, seed * 0.001) - 0.5) * 0.9 +
+            (n2(x * 6, y * 6, seed * 0.0014) - 0.5) * 0.45;
+          const u = Math.abs(x) / (w / 2);
+          const v = Math.abs(y) / (h / 2);
+          // The border, within a couple of centimetres of the frame, is the
+          // part that has been knocked about most: chips at the edges uncover
+          // the dressing marks, so the frame reads as worn before anything in
+          // it does.
+          const border =
+            Math.pow(Math.max(0, (u - 0.96) / 0.05), 2) +
+            Math.pow(Math.max(0, (v - 0.96) / 0.05), 2);
+          position.setZ(i, z + chatter * amount * 0.12 + border * amount * 0.1);
         }
         position.needsUpdate = true;
         geometry.computeVertexNormals();
@@ -522,9 +834,13 @@ export default function Reconstruction3DInner({
                * being a box. The subdivision is capped — a wall of a hundred
                * stones has to stay a wall, not a sculpture competition.
                */
-              const cuts = (metres: number) => Math.min(10, Math.max(2, Math.round(metres / 0.12)));
+              const cuts = (metres: number) => Math.min(14, Math.max(3, Math.round(metres / 0.1)));
               geometry = new THREE.BoxGeometry(w, h, d, cuts(w), cuts(h), cuts(d));
-              erode(geometry, part.weather);
+              damage(
+                geometry,
+                part.weather,
+                hashString(`${JSON.stringify(part.at)}|${part.material}|box`),
+              );
             } else {
               geometry = new THREE.BoxGeometry(w, h, d);
             }
@@ -544,7 +860,12 @@ export default function Reconstruction3DInner({
               part.thetaStart ?? 0,
               part.thetaLength ?? Math.PI * 2,
             );
-            if (part.weather) erode(geometry, part.weather);
+            if (part.weather)
+              damage(
+                geometry,
+                part.weather,
+                hashString(`${JSON.stringify(part.at)}|${part.material}|cyl`),
+              );
             if (part.flutes) {
               // Push every vertex in towards the axis by a cosine of its angle:
               // the troughs of that wave are the grooves down the shaft.
@@ -583,13 +904,23 @@ export default function Reconstruction3DInner({
              */
             const [w, h] = part.size;
             /*
-             * Fine enough for the carving to read, coarse enough to stay a
-             * usable asset: at 46 divisions a metre, a 36 m Pergamon frieze
-             * panel comes to about 160k triangles — enough to show the
-             * relief without bogging down the GPU.
+             * Fine enough for the carving to read, and denser than the
+             * photograph beneath it so the relief never out-resolves the mesh:
+             * at 64 divisions a metre, a 12 m panel works out to about 78k
+             * triangles — heavy but still smooth, and the carvings are the
+             * parts of a model people actually walk up to.
              */
-            const grid = (metres: number) => Math.min(165, Math.max(30, Math.round(metres * 46)));
+            const grid = (metres: number) => Math.min(220, Math.max(40, Math.round(metres * 64)));
             geometry = new THREE.PlaneGeometry(w, h, grid(w), grid(h));
+            // The panel is scoured before it is stood up: a wave of stoneworker's
+            // chatter, a worn border and a dish that two thousand years of
+            // standing have pushed out of flat. Geometry, not a texture, so it
+            // holds up to a camera an inch from the face.
+            scour(
+              geometry,
+              hashString(`${JSON.stringify(part.at)}|${part.material}|relief`),
+              part.weather ?? 0.12,
+            );
             geometry.translate(0, h / 2, 0);
             if (part.rotX) geometry.rotateX(part.rotX);
             if (part.rotY) geometry.rotateY(part.rotY);
@@ -673,31 +1004,48 @@ export default function Reconstruction3DInner({
       };
 
       /**
-       * The stone itself, drawn once into a canvas: three layers of noise —
-       * a coarse mottle for the patchiness of a quarried block, a medium
-       * detail layer for the grain of the surface, and a fine jitter for
-       * the tooth of the stone — plus faint veining that makes marble
-       * read as marble rather than as painted plaster.
+       * One stone, painted once into three canvases that live and die together:
+       * the colour, a normal map carved from the very same height, and an
+       * ambient occlusion map that darkens its pits. Three layers of noise —
+       * a coarse mottle for the patchiness of a quarried block, a medium grain
+       * for the surface, a fine jitter for the tooth — plus veining where the
+       * material is marble. Drawn here rather than downloaded because each
+       * texture has to tile seamlessly, carry its own normal map and cost
+       * nothing, and because the PBR detail is what keeps a marble column from
+       * ceasing to be marble the moment the camera walks up to it.
        */
-      const stoneTexture = (() => {
+      type StoneSet = {
+        map: THREE_NS.CanvasTexture;
+        normal: THREE_NS.CanvasTexture;
+        ao: THREE_NS.CanvasTexture;
+      };
+      const buildStone = (
+        seed: number,
+        tune: { coarse: number; medium: number; vein: number },
+      ): StoneSet => {
         const size = 1024;
-        const canvas = document.createElement("canvas");
-        canvas.width = size;
-        canvas.height = size;
-        const ctx = canvas.getContext("2d")!;
-        const image = ctx.createImageData(size, size);
+        const mapCanvas = document.createElement("canvas");
+        const normalCanvas = document.createElement("canvas");
+        const aoCanvas = document.createElement("canvas");
+        for (const canvas of [mapCanvas, normalCanvas, aoCanvas]) {
+          canvas.width = size;
+          canvas.height = size;
+        }
+        const mapCtx = mapCanvas.getContext("2d")!;
+        const normalCtx = normalCanvas.getContext("2d")!;
+        const aoCtx = aoCanvas.getContext("2d")!;
+        const image = mapCtx.createImageData(size, size);
+        const normalImage = normalCtx.createImageData(size, size);
+        const aoImage = aoCtx.createImageData(size, size);
         const random = (() => {
-          let state = 20260907;
+          let state = seed >>> 0;
           return () => {
             state = (state * 1664525 + 1013904223) >>> 0;
             return state / 4294967296;
           };
         })();
         const smooth = (t: number) => t * t * (3 - 2 * t);
-        // The coarse mottle: an 8×8 lattice gives the patchiness of a
-        // quarried block — some stones are lighter, some darker, and the
-        // transitions are soft.
-        const coarseCells = 8;
+        const coarseCells = tune.coarse;
         const coarseLattice: number[] = [];
         for (let i = 0; i < (coarseCells + 1) * (coarseCells + 1); i += 1)
           coarseLattice.push(random());
@@ -715,8 +1063,7 @@ export default function Reconstruction3DInner({
             (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
           );
         };
-        // The medium detail: a 24×24 lattice gives the grain of the surface.
-        const medCells = 24;
+        const medCells = tune.medium;
         const medLattice: number[] = [];
         for (let i = 0; i < (medCells + 1) * (medCells + 1); i += 1) medLattice.push(random());
         const sampleMed = (x: number, y: number) => {
@@ -733,22 +1080,22 @@ export default function Reconstruction3DInner({
             (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
           );
         };
+        const values = new Float32Array(size * size);
         for (let y = 0; y < size; y += 1) {
           for (let x = 0; x < size; x += 1) {
             const mottle = sampleCoarse(x, y);
             const grain2 = sampleMed(x, y);
             const jitter = random();
-            // Veining: faint diagonal streaks that make marble read as
-            // marble. The sine gives the streak pattern, the coarse
-            // mottle modulates its strength so veins do not appear on
-            // every block.
+            // Veining: faint diagonal streaks. The sine makes the streak, the
+            // mottle modulates its strength so veins do not cross every block.
             const vein =
               Math.sin((x * 0.008 + y * 0.012 + mottle * 6) * 2.5) *
               (0.5 + 0.5 * Math.sin((x * 0.003 - y * 0.005 + grain2 * 4) * 5)) *
-              0.06 *
+              tune.vein *
               mottle;
             const value =
               214 + (mottle - 0.5) * 24 + (grain2 - 0.5) * 14 + (jitter - 0.5) * 12 + vein * 28;
+            values[y * size + x] = value;
             const index = (y * size + x) * 4;
             image.data[index] = value;
             image.data[index + 1] = value - 1;
@@ -756,14 +1103,62 @@ export default function Reconstruction3DInner({
             image.data[index + 3] = 255;
           }
         }
-        ctx.putImageData(image, 0, 0);
-        const texture = new THREE.CanvasTexture(canvas);
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-        return texture;
-      })();
+        for (let y = 0; y < size; y += 1) {
+          for (let x = 0; x < size; x += 1) {
+            const at = (xx: number, yy: number) =>
+              values[((yy + size) % size) * size + ((xx + size) % size)]!;
+            const v = at(x, y);
+            // The gradient of the same height that made the colour, turned into
+            // a tangent-space normal: the tooth of the stone, not a flat map.
+            const dzx = at(x + 1, y) - at(x - 1, y);
+            const dzy = at(x, y + 1) - at(x, y - 1);
+            const scale = 255 / 70;
+            const r = Math.max(0, Math.min(255, 128 - dzx * scale));
+            const g = Math.max(0, Math.min(255, 128 + dzy * scale));
+            const ni = (y * size + x) * 4;
+            normalImage.data[ni] = r;
+            normalImage.data[ni + 1] = g;
+            normalImage.data[ni + 2] = 255;
+            normalImage.data[ni + 3] = 255;
+            // Ambient occlusion: wherever this height sits below its three
+            // neighbours, light cannot reach it — a pit, a seam, a chip — so
+            // those are the places that go dark.
+            let tallest = 0;
+            for (let yy = -1; yy <= 1; yy += 1)
+              for (let xx = -1; xx <= 1; xx += 1) tallest = Math.max(tallest, at(x + xx, y + yy));
+            const pit = Math.max(0, tallest - v);
+            const ao = Math.max(0.62, 1 - pit * 0.055);
+            const ai = (y * size + x) * 4;
+            const aov = ao * 255;
+            aoImage.data[ai] = aov;
+            aoImage.data[ai + 1] = aov;
+            aoImage.data[ai + 2] = aov;
+            aoImage.data[ai + 3] = 255;
+          }
+        }
+        mapCtx.putImageData(image, 0, 0);
+        normalCtx.putImageData(normalImage, 0, 0);
+        aoCtx.putImageData(aoImage, 0, 0);
+        const wrap = (texture: THREE_NS.CanvasTexture) => {
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+          return texture;
+        };
+        const map = wrap(new THREE.CanvasTexture(mapCanvas));
+        map.colorSpace = THREE.SRGBColorSpace;
+        const normal = wrap(new THREE.CanvasTexture(normalCanvas));
+        normal.colorSpace = THREE.NoColorSpace;
+        const ao = wrap(new THREE.CanvasTexture(aoCanvas));
+        ao.colorSpace = THREE.NoColorSpace;
+        return { map, normal, ao };
+      };
+      // Marble: fine crystalline grain, and the veins that give it away.
+      const stoneSet = buildStone(20260907, { coarse: 8, medium: 24, vein: 0.06 });
+      // Limestone and block stone: coarser, yellower patchiness, no veins.
+      const blockSet = buildStone(48712347, { coarse: 12, medium: 30, vein: 0 });
+      // The name the rest of this file still talks in: the marble surface.
+      const stoneTexture = stoneSet.map;
 
       /*
        * Parts that carry a photograph of their carving cannot join the merge:
@@ -776,7 +1171,14 @@ export default function Reconstruction3DInner({
       const geometriesOwned: THREE_NS.BufferGeometry[] = [];
       const loader = new THREE.TextureLoader();
       loader.setCrossOrigin("anonymous");
-      const textures: THREE_NS.Texture[] = [stoneTexture];
+      const textures: THREE_NS.Texture[] = [
+        stoneSet.map,
+        stoneSet.normal,
+        stoneSet.ao,
+        blockSet.map,
+        blockSet.normal,
+        blockSet.ao,
+      ];
       const carved = parts.filter((part) => part.carving);
       for (const part of carved) {
         const carving = part.carving!;
@@ -875,16 +1277,26 @@ export default function Reconstruction3DInner({
         if (!merged) continue;
         if (list.length > 1) list.forEach((geometry) => geometry.dispose());
         worldUVs(merged);
+        // The ambient occlusion map is read from the second UV channel, so the
+        // same world-projected coordinates are duplicated there for it.
+        const uv = merged.getAttribute("uv");
+        if (uv) merged.setAttribute("uv1", uv.clone());
         const palette = MATERIALS[name];
+        const isStone = name !== "shadow" && name !== "human";
+        const stone = name === "marble" || name === "marbleWorn" ? stoneSet : blockSet;
         const material = new THREE.MeshStandardMaterial({
           color: palette.color,
           roughness: palette.roughness,
           metalness: palette.metalness,
           // The same grain on everything, tinted by each material's own colour
           // and roughened by it too, so marble reads polished and limestone
-          // does not.
-          map: name === "shadow" || name === "human" ? null : stoneTexture,
-          roughnessMap: name === "shadow" || name === "human" ? null : stoneTexture,
+          // does not. The PBR channels are baked from the very same height, so
+          // grain, shine and shadow agree about where every pit is.
+          map: isStone ? stone.map : null,
+          roughnessMap: isStone ? stone.map : null,
+          normalMap: isStone ? stone.normal : null,
+          aoMap: isStone ? stone.ao : null,
+          aoMapIntensity: isStone ? 0.75 : 1,
           ...(palette.sheen
             ? {
                 sheen: palette.sheen,
@@ -908,7 +1320,7 @@ export default function Reconstruction3DInner({
       const apron = new THREE.CircleGeometry(span * 2.2, 64);
       apron.rotateX(-Math.PI / 2);
       apron.translate(centre.x, bounds.min[1] - 0.06, centre.z);
-      const groundTexture = stoneTexture.clone();
+      const groundTexture = blockSet.map.clone();
       groundTexture.needsUpdate = true;
       groundTexture.repeat.set(span / 3, span / 3);
       textures.push(groundTexture);
