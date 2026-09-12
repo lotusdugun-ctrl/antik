@@ -96,6 +96,17 @@ type Palette = {
   sheen?: number;
   sheenRoughness?: number;
   sheenColor?: number;
+  /**
+   * The layer of polish on top of the stone — how Imperial marble was finished.
+   *
+   * Roman architectural marble was not left matte like a soaped worktop; the
+   * visible faces were ground down and polished to a warm gloss that lets the
+   * grain glow through. `clearcoat` puts that thin lacquer back on the polished
+   * faces, and `clearcoatRoughness` keeps the reflection just off a mirror so a
+   * carved panel still reads as carved rather than as a sheet of glass.
+   */
+  clearcoat?: number;
+  clearcoatRoughness?: number;
 };
 
 const MATERIALS: Record<Material, Palette> = {
@@ -112,6 +123,14 @@ const MATERIALS: Record<Material, Palette> = {
     sheen: 0.35,
     sheenRoughness: 0.38,
     sheenColor: 0xfff8f0,
+    /*
+     * Roman façade marble was ground down and polished to a warm gloss; the
+     * `clearcoat` here is that polish. Without it the renderer keeps its
+     * regular mesh, and a façade the size of Celsus reads as unglazed plaster —
+     * which is why this is set rather than left to the sheen to hint at.
+     */
+    clearcoat: 0.5,
+    clearcoatRoughness: 0.24,
   },
   marbleWorn: {
     color: 0xded5c2,
@@ -120,6 +139,9 @@ const MATERIALS: Record<Material, Palette> = {
     sheen: 0.18,
     sheenRoughness: 0.5,
     sheenColor: 0xf5ede0,
+    // Still in from the same year it was laid, so it keeps a trace of polish.
+    clearcoat: 0.22,
+    clearcoatRoughness: 0.45,
   },
   limestone: { color: 0xcabd9f, roughness: 0.88, metalness: 0 },
   stone: { color: 0xc3b79c, roughness: 0.86, metalness: 0 },
@@ -1285,7 +1307,16 @@ export default function Reconstruction3DInner({
         const palette = MATERIALS[name];
         const isStone = name !== "shadow" && name !== "human";
         const stone = name === "marble" || name === "marbleWorn" ? stoneSet : blockSet;
-        const material = new THREE.MeshStandardMaterial({
+        /*
+         * MeshPhysicalMaterial over MeshStandardMaterial on purpose: the palette
+         * files a thin clearcoat layer onto Roman marble (see `Palette`), and
+         * only the physical material actually renders it — its `clearcoat`
+         * term is the tight, bright highlight that polish puts back on the
+         * stone. Standard material would silently drop it and leave every
+         * façade reading as matte plaster, which is a reconstruction that never
+         * happened (Roman façades were polished, the Celsus front famously so).
+         */
+        const material = new THREE.MeshPhysicalMaterial({
           color: palette.color,
           roughness: palette.roughness,
           metalness: palette.metalness,
@@ -1303,6 +1334,14 @@ export default function Reconstruction3DInner({
                 sheen: palette.sheen,
                 sheenRoughness: palette.sheenRoughness ?? 0.4,
                 sheenColor: new THREE.Color(palette.sheenColor ?? 0xffffff),
+              }
+            : {}),
+          // The polish layer, if the palette declared one. Kept just off a
+          // mirror so the carving still reads as carved rather than as glass.
+          ...(palette.clearcoat !== undefined
+            ? {
+                clearcoat: palette.clearcoat,
+                clearcoatRoughness: palette.clearcoatRoughness ?? 0.35,
               }
             : {}),
         });
