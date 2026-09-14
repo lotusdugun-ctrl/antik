@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type * as THREE_NS from "three";
-import { boundsOf, type Material, type Part } from "@/lib/reconstruction-parts";
+import { boundsOf, type LoftSection, type Material, type Part } from "@/lib/reconstruction-parts";
 import type { ModelSpec } from "@/lib/reconstructions";
 
 /**
@@ -372,18 +372,109 @@ export default function Reconstruction3DInner({
       };
 
       /**
+       * A skin lofted over elliptical cross-sections along a smooth path
+       * through their centres — the one primitive that turns a list of
+       * measured girths into an animal or a body. Each section is an ellipse
+       * `rx` wide across the path and `ry` tall; the path is a Catmull-Rom
+       * spline, so the skin bends smoothly through a neck or a raised knee,
+       * and the radii ease from one section to the next. Both ends are
+       * capped. The frame each ring is drawn in keeps world-up as its up
+       * where it can, and carries the previous ring's frame through the
+       * places it cannot, so a neck that rises from horizontal to nearly
+       * vertical never twists.
+       */
+      const loftGeometry = (sections: LoftSection[], around = 20, along = 6) => {
+        const centres = sections.map((s) => new THREE.Vector3(s.c[0], s.c[1], s.c[2]));
+        const curve = new THREE.CatmullRomCurve3(centres, false, "centripetal");
+        const rings = Math.max(1, (sections.length - 1) * along);
+        const positions: number[] = [];
+        const ease = (t: number) => t * t * (3 - 2 * t);
+        const side = new THREE.Vector3();
+        const up = new THREE.Vector3();
+        let previous: THREE_NS.Vector3 | null = null;
+        for (let i = 0; i <= rings; i += 1) {
+          const t = i / rings;
+          const s = Math.min(sections.length - 1 - 1e-6, t * (sections.length - 1));
+          const k = Math.floor(s);
+          const f = ease(s - k);
+          const a = sections[k]!;
+          const b = sections[Math.min(k + 1, sections.length - 1)]!;
+          const rx = a.rx + (b.rx - a.rx) * f;
+          const ry = a.ry + (b.ry - a.ry) * f;
+          const c = curve.getPoint(t);
+          const tangent = curve.getTangent(t).normalize();
+          const reference =
+            Math.abs(tangent.y) < 0.85 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(0, 0, 1);
+          side.crossVectors(reference, tangent);
+          if (previous && side.lengthSq() < 0.05) {
+            side.copy(previous).addScaledVector(tangent, -previous.dot(tangent));
+          }
+          if (side.lengthSq() < 1e-8) side.set(1, 0, 0);
+          side.normalize();
+          if (previous && side.dot(previous) < 0) side.negate();
+          up.crossVectors(tangent, side).normalize();
+          previous = side.clone();
+          for (let j = 0; j < around; j += 1) {
+            const angle = (j / around) * Math.PI * 2;
+            const cx = Math.cos(angle) * rx;
+            const cy = Math.sin(angle) * ry;
+            positions.push(
+              c.x + side.x * cx + up.x * cy,
+              c.y + side.y * cx + up.y * cy,
+              c.z + side.z * cx + up.z * cy,
+            );
+          }
+        }
+        const indices: number[] = [];
+        for (let i = 0; i < rings; i += 1) {
+          for (let j = 0; j < around; j += 1) {
+            const a = i * around + j;
+            const b = i * around + ((j + 1) % around);
+            const c = (i + 1) * around + j;
+            const d = (i + 1) * around + ((j + 1) % around);
+            indices.push(a, b, c, b, d, c);
+          }
+        }
+        const first = centres[0]!;
+        const last = centres[centres.length - 1]!;
+        const startCentre = positions.length / 3;
+        positions.push(first.x, first.y, first.z);
+        const endCentre = startCentre + 1;
+        positions.push(last.x, last.y, last.z);
+        const lastRing = rings * around;
+        for (let j = 0; j < around; j += 1) {
+          const next = (j + 1) % around;
+          indices.push(startCentre, next, j);
+          indices.push(endCentre, lastRing + j, lastRing + next);
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        // Texture coordinates are re-cut from world position later; the merge
+        // only needs every geometry to carry the same attributes.
+        geometry.setAttribute(
+          "uv",
+          new THREE.Float32BufferAttribute(new Float32Array((positions.length / 3) * 2), 2),
+        );
+        geometry.setIndex(indices);
+        geometry.computeVertexNormals();
+        return geometry;
+      };
+
+      /**
        * Two figures, told apart by their material.
        *
        * The blue one is the ruler — a person standing there for scale, and
        * deliberately schematic so nobody mistakes them for a find. A marble or
        * bronze one is a statue, and gets what a statue has: a stepped pedestal,
-       * feet, a robe with irregular folds, a torso with the anatomy beneath the
-       * cloth, shoulders, two arms from shoulder to fingertip, and a head —
-       * because these are reconstructions, not the broken originals. Marble
-       * figures in paint are the draped personifications of the Celsus façade;
-       * bronze ones are the warriors of the Pergamon
-       * court, and wear the beard the cavalry wore. A figure asked to be
-       * bearded — the Celsus flanks — draws the beard too.
+       * feet, a body lofted from real girths standing in contrapposto with the
+       * weight on one leg, a peplos whose folds are pushed into the cloth and
+       * whose overfold breaks at the hips, the rolled edge of a mantle across
+       * the chest, two arms from shoulder to fingertip, and a head with a face
+       * carved into it — because these are reconstructions, not the broken
+       * originals. Marble figures are the draped personifications of the
+       * Celsus façade; bronze ones are the warriors of the Pergamon court and
+       * wear the beard the cavalry wore. A rider sits astride instead, tunic
+       * spread over the horse's back, cloak down behind, one arm out.
        */
       const figureGeometry = (part: Extract<Part, { kind: "figure" }>) => {
         const h = part.height;
@@ -393,14 +484,17 @@ export default function Reconstruction3DInner({
         const pieces: THREE_NS.BufferGeometry[] = [];
         const statue = part.material !== "human";
         const bearded = part.bearded ?? part.material === "bronze";
+        const riding = part.pose === "riding";
+        type P = [number, number, number];
+        const section = (c: P, rx: number, ry: number): LoftSection => ({ c, rx, ry });
+        const skin = (sections: LoftSection[], around = 24, along = 6) => {
+          const geometry = loftGeometry(sections, around, along);
+          pieces.push(geometry);
+          return geometry;
+        };
 
         /** A tapered limb from point A to point B, a humerus, radius or finger. */
-        const limb = (
-          a: [number, number, number],
-          b: [number, number, number],
-          r1: number,
-          r2: number,
-        ) => {
+        const limb = (a: P, b: P, r1: number, r2: number) => {
           const dx = b[0] - a[0];
           const dy = b[1] - a[1];
           const dz = b[2] - a[2];
@@ -414,15 +508,20 @@ export default function Reconstruction3DInner({
           geo.translate((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2);
           return geo;
         };
+        const joint = (p: P, r: number) => {
+          const ball = new THREE.SphereGeometry(r, 10, 8);
+          ball.translate(...p);
+          return ball;
+        };
 
         /** A hand: a shaped palm, four fingers and a thumb, hung from a wrist. */
-        const hand = (p: [number, number, number], r: number): THREE_NS.BufferGeometry[] => {
+        const hand = (p: P, r: number, spread = 1): THREE_NS.BufferGeometry[] => {
           const palm = new THREE.SphereGeometry(r, 10, 8);
           palm.scale(1, 0.8, 1.2);
           palm.translate(p[0], p[1], p[2]);
           const out: THREE_NS.BufferGeometry[] = [palm];
           for (let f = 0; f < 4; f += 1) {
-            const splay = (f - 1.5) * 0.1 + (rand() - 0.5) * 0.05;
+            const splay = ((f - 1.5) * 0.1 + (rand() - 0.5) * 0.05) * spread;
             out.push(
               limb(
                 [p[0] + splay * r, p[1] - r * 0.7, p[2] + r * 0.4],
@@ -517,103 +616,46 @@ export default function Reconstruction3DInner({
           pos.needsUpdate = true;
         };
 
-        if (statue) {
-          // A two-step pedestal: the wider base and the narrower cap that the
-          // figure actually stands on.
-          const base = new THREE.CylinderGeometry(h * 0.2, h * 0.225, h * 0.035, 24);
-          base.translate(0, h * 0.0175, 0);
-          pieces.push(base);
-          const cap = new THREE.CylinderGeometry(h * 0.17, h * 0.2, h * 0.03, 24);
-          cap.translate(0, h * 0.05, 0);
-          pieces.push(cap);
-          // Feet, peeking out from beneath the hem.
-          for (const side of [-1, 1]) {
-            const foot = new THREE.SphereGeometry(h * 0.038, 10, 7);
-            foot.scale(1.25, 0.72, 1.5);
-            foot.translate(side * h * 0.045, h * 0.018, h * 0.05);
-            pieces.push(foot);
+        /**
+         * Cloth. Folds are pushed into a lofted skin after it is built: a
+         * primary set of ridges round the body, a finer set that drifts as
+         * it climbs, and a seeded wander so the pleats are never regular —
+         * then the normals are recomputed, so every fold catches the light.
+         * `amplitude` says how deep the folds go at each height: deepest at a
+         * hem, nothing at a belt.
+         */
+        const drape = (
+          geo: THREE_NS.BufferGeometry,
+          amplitude: (y: number) => number,
+          folds: number,
+          phase: number,
+        ) => {
+          const pos = geo.attributes["position"]!;
+          for (let i = 0; i < pos.count; i += 1) {
+            const x = pos.getX(i);
+            const y = pos.getY(i);
+            const z = pos.getZ(i);
+            const r = Math.hypot(x, z);
+            if (r < 1e-4) continue;
+            const angle = Math.atan2(z, x);
+            const primary = 0.5 + 0.5 * Math.cos(folds * angle + phase);
+            const finer = 0.5 + 0.5 * Math.cos(folds * 2.3 * angle + phase * 1.7 + y * 6);
+            const wander = n1(angle * 2.2, y * 3.1, seed * 0.01) - 0.5;
+            const depth = amplitude(y) * (0.45 * primary + 0.3 * finer + 0.5 * wander);
+            const scale = Math.max(0.2, 1 - depth / r);
+            pos.setX(i, x * scale);
+            pos.setZ(i, z * scale);
           }
-          // The lower robe: a wide cone of cloth, widest at the hem, folded
-          // irregularly — the folds are a seeded sum of harmonics, so no two
-          // statues on the façade wear the same cloth.
-          const robeLower = new THREE.CylinderGeometry(h * 0.1, h * 0.165, h * 0.38, 32);
-          robeLower.translate(0, h * 0.245, 0);
-          const rlPos = robeLower.attributes["position"]!;
-          const foldA = 10 + Math.floor(rand() * 6);
-          const foldB = 7 + Math.floor(rand() * 5);
-          const ph1 = rand() * Math.PI * 2;
-          const ph2 = rand() * Math.PI * 2;
-          const hem = 0.18;
-          for (let i = 0; i < rlPos.count; i += 1) {
-            const px = rlPos.getX(i);
-            const pz = rlPos.getZ(i);
-            const r = Math.hypot(px, pz);
-            if (r < 1e-6) continue;
-            const angle = Math.atan2(pz, px);
-            const hemFactor = (rlPos.getY(i) - h * 0.055) / (h * 0.38);
-            const depth =
-              0.085 *
-              Math.max(0, Math.min(1, hemFactor)) *
-              (0.35 + 0.65 * (0.5 + 0.5 * Math.cos(foldA * angle + ph1)));
-            const finer = 0.025 * (0.5 + 0.5 * Math.cos(foldB * angle * 2 + ph2));
-            const scale = 1 - depth - finer;
-            rlPos.setX(i, px * scale);
-            rlPos.setZ(i, pz * scale);
-          }
-          // A ragged hem: the cloth does not fall to a flat ring, it drops and
-          // lifts a little all the way round.
-          const yAt = (i: number) => rlPos.getY(i);
-          const minY = h * 0.055;
-          for (let i = 0; i < rlPos.count; i += 1) {
-            if (yAt(i) - minY < 1e-6) {
-              const px = rlPos.getX(i);
-              const pz = rlPos.getZ(i);
-              rlPos.setY(i, minY + (n1(px * 9, pz * 9, seed * 0.3) - 0.5) * 0.022 * h);
-            }
-          }
-          rlPos.needsUpdate = true;
-          robeLower.computeVertexNormals();
-          pieces.push(robeLower);
-          // The belt, where the peplos is gathered.
-          const belt = new THREE.CylinderGeometry(h * 0.1, h * 0.1, h * 0.045, 24);
-          belt.translate(0, h * 0.47, 0);
-          pieces.push(belt);
-          // The torso: a waist, a ribcage and a chest, tapered between them.
-          const torsoLower = new THREE.CylinderGeometry(h * 0.09, h * 0.11, h * 0.14, 24);
-          torsoLower.translate(0, h * 0.54, 0);
-          pieces.push(torsoLower);
-          const torsoUpper = new THREE.CylinderGeometry(h * 0.11, h * 0.13, h * 0.13, 24);
-          torsoUpper.translate(0, h * 0.675, 0);
-          pieces.push(torsoUpper);
-          if (!bearded) {
-            // The hint of the breasts beneath the cloth, just enough to read.
-            for (const side of [-1, 1]) {
-              const breast = new THREE.SphereGeometry(h * 0.034, 9, 7);
-              breast.scale(1, 0.8, 1.2);
-              breast.translate(side * h * 0.05, h * 0.635, h * 0.1);
-              pieces.push(breast);
-            }
-            // The drape: two ridges of cloth across the chest where the himation
-            // folds over the shoulder.
-            for (const dy of [0.018, 0.052]) {
-              const fold = new THREE.SphereGeometry(h * 0.028, 10, 7);
-              fold.scale(4.2, 0.55, 1.6);
-              fold.translate(0, h * 0.66 + dy, h * 0.104);
-              pieces.push(fold);
-            }
-          }
-          // The shoulders, a broad shallow dome, and the neck rising from it.
-          const shoulders = new THREE.SphereGeometry(h * 0.135, 20, 13);
-          shoulders.scale(1.34, 0.5, 0.74);
-          shoulders.translate(0, h * 0.755, 0);
-          pieces.push(shoulders);
-          const neck = new THREE.CylinderGeometry(h * 0.045, h * 0.055, h * 0.065, 14);
-          neck.translate(0, h * 0.815, 0);
+          pos.needsUpdate = true;
+          geo.computeVertexNormals();
+        };
+
+        /** The head, on its neck, with the hair the figure's sex wears. */
+        const headAt = (neckBase: number, neckHeight: number, headY: number) => {
+          const neck = new THREE.CylinderGeometry(h * 0.045, h * 0.055, neckHeight, 14);
+          neck.translate(0, neckBase + neckHeight / 2, 0);
           pieces.push(neck);
-          // The head: a sphere carved with a face, hair drawn up for the marble
-          // figures, a soldier's close hair and beard for the bronze ones.
           const head = new THREE.SphereGeometry(h * 0.1, 32, 26);
-          const headY = h * 0.885;
           sculptHead(head, h * 0.1);
           head.computeVertexNormals();
           head.translate(0, headY, 0);
@@ -629,28 +671,208 @@ export default function Reconstruction3DInner({
             bun.translate(0, headY + h * 0.075, -h * 0.083);
             pieces.push(bun);
           }
-          // The right arm, hanging at the side — the way a virtue stands when
-          // it is not holding anything. Shoulder, elbow, forearm, wrist, hand.
-          const shoulderR: [number, number, number] = [h * 0.15, h * 0.75, h * 0.02];
-          const elbowR: [number, number, number] = [h * 0.145, h * 0.585, h * 0.025];
-          const wristR: [number, number, number] = [h * 0.14, h * 0.445, h * 0.045];
-          pieces.push(limb(shoulderR, elbowR, h * 0.036, h * 0.031));
+        };
+
+        if (statue && !riding) {
+          // A two-step pedestal: the wider base and the narrower cap that the
+          // figure actually stands on.
+          const base = new THREE.CylinderGeometry(h * 0.2, h * 0.225, h * 0.035, 24);
+          base.translate(0, h * 0.0175, 0);
+          pieces.push(base);
+          const cap = new THREE.CylinderGeometry(h * 0.17, h * 0.2, h * 0.03, 24);
+          cap.translate(0, h * 0.05, 0);
+          pieces.push(cap);
+          // Feet, peeking out from beneath the hem.
+          for (const side of [-1, 1]) {
+            const foot = new THREE.SphereGeometry(h * 0.038, 10, 7);
+            foot.scale(1.25, 0.72, 1.5);
+            foot.translate(side * h * 0.045, h * 0.018, h * 0.05);
+            pieces.push(foot);
+          }
+          /*
+           * Contrapposto: the weight on the right leg, so the right hip rides
+           * up and out and the whole figure leans a little back over it,
+           * while the free left knee bends and pushes through the cloth. It
+           * is the one thing that turns a column of drapery into somebody
+           * standing.
+           */
+          const hip = 0.02 * h;
+          const robe = skin(
+            [
+              section([0, h * 0.055, 0], h * 0.165, h * 0.125),
+              section([0, h * 0.16, 0], h * 0.15, h * 0.115),
+              section([0.004 * h, h * 0.3, 0.006 * h], h * 0.135, h * 0.105),
+              section([0.012 * h, h * 0.42, 0.004 * h], h * 0.14, h * 0.108),
+              section([hip, h * 0.5, 0], h * 0.15, h * 0.115),
+              section([hip * 0.7, h * 0.57, 0], h * 0.115, h * 0.09),
+            ],
+            36,
+            6,
+          );
+          {
+            const pos = robe.attributes["position"]!;
+            const normal = robe.attributes["normal"]!;
+            for (let i = 0; i < pos.count; i += 1) {
+              const dx = (pos.getX(i) + 0.06 * h) / (0.06 * h);
+              const dy = (pos.getY(i) - 0.31 * h) / (0.08 * h);
+              const dz = (pos.getZ(i) - 0.1 * h) / (0.07 * h);
+              const push = Math.exp(-(dx * dx + dy * dy + dz * dz)) * 0.03 * h;
+              if (push < 1e-5) continue;
+              pos.setX(i, pos.getX(i) + normal.getX(i) * push);
+              pos.setY(i, pos.getY(i) + normal.getY(i) * push);
+              pos.setZ(i, pos.getZ(i) + normal.getZ(i) * push);
+            }
+            pos.needsUpdate = true;
+          }
+          const folds = 9 + Math.floor(rand() * 4);
+          const phase = rand() * Math.PI * 2;
+          drape(
+            robe,
+            (y) => 0.03 * h * Math.max(0.25, Math.min(1, (h * 0.57 - y) / (h * 0.5))),
+            folds,
+            phase,
+          );
+          // The overfold of the peplos, turned down from the shoulders, its
+          // hem breaking across the hips.
+          const overfold = skin(
+            [
+              section([hip * 0.7, h * 0.62, 0], h * 0.13, h * 0.1),
+              section([hip * 0.8, h * 0.52, 0], h * 0.152, h * 0.115),
+              section([hip * 0.8, h * 0.445, 0], h * 0.16, h * 0.122),
+            ],
+            32,
+            5,
+          );
+          drape(overfold, () => 0.02 * h, 12, rand() * Math.PI * 2);
+          // The torso: waist, ribcage, bust, the shoulder line, the neck root.
+          const torso = skin(
+            [
+              section([hip * 0.6, h * 0.6, 0], h * 0.125, h * 0.095),
+              section([hip * 0.4, h * 0.68, 0.004 * h], h * 0.145, h * 0.11),
+              section([hip * 0.2, h * 0.75, 0], h * 0.155, h * 0.095),
+              section([0, h * 0.79, 0], h * 0.17, h * 0.085),
+              section([0, h * 0.815, 0], h * 0.085, h * 0.07),
+            ],
+            28,
+            5,
+          );
+          drape(torso, () => 0.008 * h, 14, rand() * Math.PI * 2);
+          if (!bearded) {
+            // The hint of the breasts beneath the cloth, just enough to read.
+            for (const side of [-1, 1]) {
+              const breast = new THREE.SphereGeometry(h * 0.036, 10, 8);
+              breast.scale(1, 0.85, 1.2);
+              breast.translate(side * h * 0.052, h * 0.665, h * 0.095);
+              pieces.push(breast);
+            }
+          }
+          // The mantle: its rolled edge over the left shoulder, down across
+          // the chest to the right hip, and on round the back.
+          skin(
+            [
+              section([-0.15 * h, 0.8 * h, 0], 0.05 * h, 0.035 * h),
+              section([-0.1 * h, 0.73 * h, 0.1 * h], 0.05 * h, 0.035 * h),
+              section([0, 0.63 * h, 0.125 * h], 0.048 * h, 0.034 * h),
+              section([0.1 * h, 0.54 * h, 0.11 * h], 0.046 * h, 0.032 * h),
+              section([0.16 * h, 0.485 * h, 0.03 * h], 0.044 * h, 0.03 * h),
+              section([0.14 * h, 0.47 * h, -0.08 * h], 0.04 * h, 0.028 * h),
+              section([0, 0.5 * h, -0.125 * h], 0.04 * h, 0.028 * h),
+            ],
+            12,
+            5,
+          );
+          headAt(h * 0.815, h * 0.065, h * 0.885);
+          // The right arm, hanging at the side and a little forward, a fold of
+          // the mantle gathered in the hand. Shoulder, elbow, forearm, wrist.
+          const shoulderR: P = [h * 0.155, h * 0.76, h * 0.01];
+          const elbowR: P = [h * 0.16, h * 0.6, h * 0.03];
+          const wristR: P = [h * 0.15, h * 0.46, h * 0.07];
+          pieces.push(limb(shoulderR, elbowR, h * 0.037, h * 0.031));
           pieces.push(limb(elbowR, wristR, h * 0.028, h * 0.021));
-          const elbowBall = new THREE.SphereGeometry(h * 0.032, 8, 6);
-          elbowBall.translate(...elbowR);
-          pieces.push(elbowBall);
+          pieces.push(joint(elbowR, h * 0.032));
           pieces.push(...hand(wristR, h * 0.026));
-          // The left arm across the body, forearm bent, the way three of the
-          // four virtues on the Celsus façade stand.
-          const shoulderL: [number, number, number] = [-h * 0.15, h * 0.755, 0];
-          const elbowL: [number, number, number] = [-h * 0.12, h * 0.615, h * 0.03];
-          const wristL: [number, number, number] = [h * 0.055, h * 0.585, h * 0.07];
-          pieces.push(limb(shoulderL, elbowL, h * 0.036, h * 0.032));
+          // The left arm across the body, forearm bent, a scroll in the hand —
+          // the way three of the four virtues on the Celsus façade stand.
+          const shoulderL: P = [-h * 0.155, h * 0.765, 0];
+          const elbowL: P = [-h * 0.13, h * 0.615, h * 0.04];
+          const wristL: P = [h * 0.04, h * 0.59, h * 0.09];
+          pieces.push(limb(shoulderL, elbowL, h * 0.037, h * 0.032));
           pieces.push(limb(elbowL, wristL, h * 0.028, h * 0.022));
-          const elbowBallL = new THREE.SphereGeometry(h * 0.032, 8, 6);
-          elbowBallL.translate(...elbowL);
-          pieces.push(elbowBallL);
-          pieces.push(...hand(wristL, h * 0.026));
+          pieces.push(joint(elbowL, h * 0.032));
+          pieces.push(...hand(wristL, h * 0.026, 0.6));
+          const scroll = new THREE.CylinderGeometry(h * 0.016, h * 0.016, h * 0.09, 10);
+          scroll.rotateZ(Math.PI / 2);
+          scroll.rotateY(0.3);
+          scroll.translate(h * 0.05, h * 0.55, h * 0.1);
+          pieces.push(scroll);
+        } else if (statue && riding) {
+          /*
+           * Astride. The seat is the origin: a tunic spread over the horse's
+           * back, thighs forward and down round the barrel, the legs hanging
+           * with the feet pointed, the torso upright, a cloak falling down the
+           * back — and the right arm out in the gesture of address the
+           * Capitoline horseman makes, the left holding the rein.
+           */
+          const tunic = skin(
+            [
+              section([0, 0.16 * h, 0], 0.115 * h, 0.09 * h),
+              section([0, 0.06 * h, 0.01 * h], 0.15 * h, 0.12 * h),
+              section([0, -0.02 * h, 0.02 * h], 0.19 * h, 0.15 * h),
+              section([0, -0.08 * h, 0.03 * h], 0.21 * h, 0.16 * h),
+            ],
+            28,
+            5,
+          );
+          drape(tunic, () => 0.012 * h, 10, rand() * Math.PI * 2);
+          for (const side of [-1, 1]) {
+            const hipP: P = [side * 0.07 * h, 0, 0.02 * h];
+            const knee: P = [side * 0.19 * h, -0.13 * h, 0.22 * h];
+            const ankle: P = [side * 0.21 * h, -0.45 * h, 0.15 * h];
+            pieces.push(limb(hipP, knee, h * 0.058, h * 0.042));
+            pieces.push(joint(knee, h * 0.045));
+            pieces.push(limb(knee, ankle, h * 0.04, h * 0.026));
+            const foot = new THREE.SphereGeometry(h * 0.035, 10, 7);
+            foot.scale(1, 0.7, 1.8);
+            foot.translate(ankle[0], ankle[1] - 0.02 * h, ankle[2] + 0.03 * h);
+            pieces.push(foot);
+          }
+          skin(
+            [
+              section([0, 0.08 * h, 0], 0.105 * h, 0.08 * h),
+              section([0, 0.18 * h, 0.005 * h], 0.125 * h, 0.09 * h),
+              section([0, 0.27 * h, 0], 0.15 * h, 0.09 * h),
+              section([0, 0.32 * h, 0], 0.165 * h, 0.085 * h),
+              section([0, 0.345 * h, 0], 0.085 * h, 0.07 * h),
+            ],
+            28,
+            5,
+          );
+          const cloak = skin(
+            [
+              section([0, 0.33 * h, -0.05 * h], 0.19 * h, 0.03 * h),
+              section([0, 0.2 * h, -0.09 * h], 0.22 * h, 0.035 * h),
+              section([0, 0.02 * h, -0.12 * h], 0.24 * h, 0.04 * h),
+              section([0, -0.14 * h, -0.14 * h], 0.23 * h, 0.045 * h),
+            ],
+            20,
+            5,
+          );
+          drape(cloak, () => 0.01 * h, 9, rand() * Math.PI * 2);
+          headAt(h * 0.345, h * 0.06, h * 0.455);
+          const shoulderR: P = [0.16 * h, 0.31 * h, 0.01 * h];
+          const elbowR: P = [0.25 * h, 0.22 * h, 0.13 * h];
+          const wristR: P = [0.27 * h, 0.25 * h, 0.3 * h];
+          pieces.push(limb(shoulderR, elbowR, h * 0.037, h * 0.031));
+          pieces.push(joint(elbowR, h * 0.032));
+          pieces.push(limb(elbowR, wristR, h * 0.028, h * 0.022));
+          pieces.push(...hand(wristR, h * 0.026, 1.3));
+          const shoulderL: P = [-0.16 * h, 0.31 * h, 0];
+          const elbowL: P = [-0.19 * h, 0.17 * h, 0.07 * h];
+          const wristL: P = [-0.1 * h, 0.14 * h, 0.19 * h];
+          pieces.push(limb(shoulderL, elbowL, h * 0.037, h * 0.031));
+          pieces.push(joint(elbowL, h * 0.032));
+          pieces.push(limb(elbowL, wristL, h * 0.028, h * 0.022));
+          pieces.push(...hand(wristL, h * 0.026, 0.5));
         } else {
           // The scale figure: deliberately schematic, a teaching device. The
           // proportions are those of a person 1.75 m tall, but the rendering is
@@ -676,8 +898,12 @@ export default function Reconstruction3DInner({
           pieces.push(head);
         }
 
-        const merged = mergeGeometries(pieces, false)!;
+        // Every primitive here is indexed and a loft is too, but a merge only
+        // holds when the lists agree, so everything is flattened first.
+        const flat = pieces.map((piece) => (piece.index ? piece.toNonIndexed() : piece));
+        const merged = mergeGeometries(flat, false)!;
         pieces.forEach((piece) => piece.dispose());
+        flat.forEach((piece) => piece.dispose());
         return merged;
       };
 
@@ -958,6 +1184,36 @@ export default function Reconstruction3DInner({
             triangle.closePath();
             geometry = new THREE.ExtrudeGeometry(triangle, { depth: d, bevelEnabled: false });
             geometry.translate(0, 0, -d / 2);
+            if (part.rotY) geometry.rotateY(part.rotY);
+            break;
+          }
+          case "carving": {
+            /*
+             * The silhouette, extruded and bevelled so its edge takes a raking
+             * light the way a chisel-cut edge does. It is drawn on the face
+             * and then sunk a little into it, so the bevel runs into the stone
+             * behind rather than leaving a hairline round the figure.
+             */
+            const shape = new THREE.Shape(part.outline.map(([u, v]) => new THREE.Vector2(u, v)));
+            for (const hole of part.holes ?? []) {
+              shape.holes.push(new THREE.Path(hole.map(([u, v]) => new THREE.Vector2(u, v))));
+            }
+            const bevel = Math.min(0.02, part.depth * 0.3);
+            geometry = new THREE.ExtrudeGeometry(shape, {
+              depth: part.depth,
+              bevelEnabled: true,
+              bevelThickness: bevel,
+              bevelSize: bevel * 0.7,
+              bevelSegments: 2,
+              curveSegments: 4,
+            });
+            geometry.translate(0, 0, -part.depth * (part.sink ?? 0.4));
+            if (part.rotZ) geometry.rotateZ(part.rotZ);
+            if (part.rotY) geometry.rotateY(part.rotY);
+            break;
+          }
+          case "loft": {
+            geometry = loftGeometry(part.sections);
             if (part.rotY) geometry.rotateY(part.rotY);
             break;
           }
@@ -1468,6 +1724,11 @@ export default function Reconstruction3DInner({
       // Never let the camera go under the ground the building stands on.
       controls.maxPolarAngle = Math.PI * 0.495;
       controls.update();
+      if (import.meta.env.DEV) {
+        // A handle for the headless visual checks, so a test can walk the
+        // camera up to a statue instead of guessing at wheel events.
+        (window as unknown as { __recon?: unknown }).__recon = { camera, controls, target, span };
+      }
 
       /**
        * The sky, as a gradient rather than a flat fill: pale at the horizon and

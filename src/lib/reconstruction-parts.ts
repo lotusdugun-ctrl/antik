@@ -187,7 +187,55 @@ export type Part =
        * hair-bun of the four Celsus virtues.
        */
       bearded?: boolean;
+      /**
+       * Standing on the ground under `at`, or astride a horse whose back is
+       * at `at` — for a rider the point given is the seat, not the feet, and
+       * `height` is still how tall they would stand.
+       */
+      pose?: "standing" | "riding";
+    })
+  /**
+   * A silhouette cut in relief: an outline drawn in the plane of a face and
+   * pushed out of it, the edges bevelled so the light catches them. `at` is
+   * the point on the face the outline is drawn from, `u` across it and `v`
+   * up it, and the carving stands out along local `+z` before `rotY` turns
+   * that onto the face's own normal. This is what a Göbeklitepe animal is —
+   * a flat raised shape with the ground chipped back around it — and what a
+   * crest of mane or a fold of cloth can be cut as too.
+   */
+  | (Base & {
+      kind: "carving";
+      at: Vec3;
+      outline: [number, number][];
+      /** Cut-outs inside the outline: a drilled eye. */
+      holes?: [number, number][][];
+      /** How far the whole carving is, front to back. */
+      depth: number;
+      /**
+       * The share of `depth` buried behind the face, so the bevel runs into
+       * the stone it is cut from rather than leaving a hairline. `0.4` unless
+       * said otherwise; `0.5` centres a fin in a surface.
+       */
+      sink?: number;
+      rotY: number;
+      /** Turns the outline in its own plane first: a beast leaping downwards. */
+      rotZ?: number;
+    })
+  /**
+   * A skin lofted over elliptical cross-sections along a path: the body of a
+   * horse, a neck, a limb, a fold of cloth. Each section is an ellipse `rx`
+   * wide across the path and `ry` tall, centred at `c` relative to `at`, and
+   * the surface runs smoothly through all of them.
+   */
+  | (Base & {
+      kind: "loft";
+      at: Vec3;
+      rotY: number;
+      sections: LoftSection[];
     });
+
+/** One cross-section of a loft, in metres relative to the part's `at`. */
+export type LoftSection = { c: Vec3; rx: number; ry: number };
 
 const TAU = Math.PI * 2;
 
@@ -492,6 +540,26 @@ const person = (
   ...(bearded !== undefined ? { bearded } : {}),
 });
 
+/** A lofted skin: see the `loft` part kind. */
+const loft = (material: Material, at: Vec3, rotY: number, sections: LoftSection[]): Part => ({
+  kind: "loft",
+  material,
+  at,
+  rotY,
+  sections,
+});
+
+/**
+ * A point given in a figure's own frame, turned by `rotY` and moved to `at` —
+ * the same turn three.js applies, so a rider computed here sits where the
+ * horse's own parts end up.
+ */
+const placed = (at: Vec3, rotY: number, local: Vec3): Vec3 => [
+  at[0] + local[0] * Math.cos(rotY) + local[2] * Math.sin(rotY),
+  at[1] + local[1],
+  at[2] - local[0] * Math.sin(rotY) + local[2] * Math.cos(rotY),
+];
+
 /**
  * A repeatable pseudo-random source.
  *
@@ -769,151 +837,367 @@ function cornice(
  * ------------------------------------------------------------------ */
 
 /**
- * The animals of the Göbeklitepe pillars, carved a few centimetres proud of
- * the stone: a fox trotting, a chunky boar with its tusks up, an aurochs with
- * horns, a spread-winged vulture, a snake coiling up the face, an abstract
- * H-symbol and a slim gazelle. Each is a small stack of limestone slabs laid
- * against the plane through `base` whose outward normal is `out` — the same
- * weathered limestone as the pillar, so the carving reads as cut out of it
- * rather than stuck onto it.
+ * The animals of the Göbeklitepe pillars, each traced from photographs of the
+ * carving it stands for and cut as a silhouette a few centimetres proud of
+ * the stone — which is exactly what the originals are: flat raised outlines,
+ * the ground chipped back around them with flint, a drilled eye, the legs
+ * split by a groove.
+ *
+ * Outlines are drawn in a unit frame, the animal about one unit long with
+ * its feet on `v = 0`, facing `-u`. `animalCarving` scales them into metres.
+ * Traced from: the fox on the flank of Pillar 18 and the fox of Pillar 10;
+ * the boar of Pillar 12; the aurochs, fox and crane stacked on Pillar 2;
+ * the vulture, scorpion and cranes of Pillar 43 (the "Vulture Stone"); the
+ * snakes of Pillar 1; the gazelles of Enclosure C; the H-sign that recurs on
+ * the central pillars of Enclosure D.
  */
-export type Animal = "fox" | "boar" | "aurochs" | "vulture" | "snake" | "symbol" | "gazelle";
+export type Animal =
+  "fox" | "boar" | "aurochs" | "vulture" | "crane" | "snake" | "scorpion" | "symbol" | "gazelle";
 
+type Outline = [number, number][];
+
+/** A snake sliding down the face: a tapering wave with a spade of a head. */
+function snakeOutline(): Outline {
+  const left: Outline = [];
+  const right: Outline = [];
+  const steps = 22;
+  for (let i = 0; i <= steps; i += 1) {
+    const v = 0.08 + (i / steps) * 0.78;
+    const t = i / steps;
+    const centre = Math.sin(t * Math.PI * 2.4 + 0.6) * 0.14;
+    // Thick behind the head, thinning to a tail at the bottom.
+    const half = 0.025 + t * 0.045;
+    left.push([centre - half, v]);
+    right.push([centre + half, v]);
+  }
+  const top = right[right.length - 1]!;
+  const head: Outline = [
+    [top[0] + 0.02, top[1] + 0.02],
+    [top[0] + 0.09, top[1] + 0.1],
+    [top[0] + 0.02, top[1] + 0.2],
+    [top[0] - 0.11, top[1] + 0.2],
+    [top[0] - 0.17, top[1] + 0.1],
+    [top[0] - 0.1, top[1] + 0.02],
+  ];
+  return [...right, ...head, ...left.reverse()];
+}
+
+/**
+ * Every outline runs once round the figure without crossing itself; a
+ * silhouette that folds back over its own edge will not extrude.
+ */
+// prettier-ignore
+export const ANIMAL_SHAPES: Record<Animal, { outline: Outline; eye?: [number, number, number] }> =
+  {
+    fox: {
+      outline: [
+        [-0.5, 0.42], [-0.44, 0.47], [-0.36, 0.52], [-0.33, 0.62], [-0.3, 0.72], [-0.26, 0.6],
+        [-0.18, 0.59], [0.0, 0.61], [0.18, 0.59], [0.3, 0.55], [0.4, 0.6], [0.52, 0.52],
+        [0.5, 0.43], [0.4, 0.44], [0.34, 0.37], [0.37, 0.02], [0.3, 0.02], [0.29, 0.18],
+        [0.27, 0.02], [0.2, 0.02], [0.2, 0.31], [0.1, 0.34], [-0.02, 0.34], [-0.06, 0.3],
+        [-0.04, 0.02], [-0.11, 0.02], [-0.12, 0.18], [-0.14, 0.02], [-0.21, 0.02], [-0.2, 0.31],
+        [-0.28, 0.38], [-0.36, 0.4], [-0.46, 0.38],
+      ],
+      eye: [-0.38, 0.5, 0.022],
+    },
+    boar: {
+      outline: [
+        [-0.5, 0.3], [-0.48, 0.38], [-0.4, 0.46], [-0.3, 0.56], [-0.26, 0.66], [-0.22, 0.57],
+        [-0.12, 0.63], [0.05, 0.65], [0.22, 0.61], [0.36, 0.53], [0.44, 0.46], [0.46, 0.36],
+        [0.41, 0.34], [0.37, 0.3], [0.39, 0.02], [0.32, 0.02], [0.31, 0.14], [0.29, 0.02],
+        [0.22, 0.02], [0.21, 0.24], [0.05, 0.22], [-0.08, 0.22], [-0.12, 0.24], [-0.1, 0.02],
+        [-0.17, 0.02], [-0.18, 0.14], [-0.2, 0.02], [-0.27, 0.02], [-0.26, 0.26], [-0.34, 0.3],
+        [-0.42, 0.26], [-0.46, 0.2], [-0.48, 0.26],
+      ],
+      eye: [-0.4, 0.42, 0.022],
+    },
+    aurochs: {
+      outline: [
+        [-0.5, 0.4], [-0.5, 0.48], [-0.44, 0.56], [-0.42, 0.6], [-0.48, 0.72], [-0.42, 0.82],
+        [-0.4, 0.7], [-0.36, 0.62], [-0.32, 0.7], [-0.28, 0.82], [-0.24, 0.7], [-0.26, 0.6],
+        [-0.14, 0.64], [0.0, 0.68], [0.18, 0.64], [0.32, 0.6], [0.42, 0.58], [0.44, 0.2],
+        [0.4, 0.2], [0.39, 0.5], [0.36, 0.36], [0.37, 0.02], [0.3, 0.02], [0.29, 0.16],
+        [0.27, 0.02], [0.2, 0.02], [0.2, 0.32], [0.06, 0.3], [-0.08, 0.3], [-0.14, 0.32],
+        [-0.12, 0.02], [-0.19, 0.02], [-0.2, 0.16], [-0.22, 0.02], [-0.29, 0.02], [-0.28, 0.32],
+        [-0.38, 0.36], [-0.46, 0.36],
+      ],
+      eye: [-0.42, 0.52, 0.022],
+    },
+    vulture: {
+      outline: [
+        [-0.3, 0.72], [-0.34, 0.66], [-0.26, 0.64], [-0.22, 0.58], [-0.22, 0.44], [-0.2, 0.3],
+        [-0.12, 0.24], [-0.12, 0.02], [-0.06, 0.02], [-0.06, 0.22], [0.04, 0.22], [0.04, 0.02],
+        [0.1, 0.02], [0.1, 0.24], [0.16, 0.22], [0.26, 0.26], [0.24, 0.36], [0.3, 0.44],
+        [0.44, 0.62], [0.5, 0.8], [0.46, 0.82], [0.4, 0.7], [0.38, 0.84], [0.34, 0.72],
+        [0.32, 0.86], [0.28, 0.74], [0.24, 0.8], [0.2, 0.66], [0.12, 0.66], [0.02, 0.7],
+        [-0.02, 0.86], [-0.06, 0.74], [-0.08, 0.88], [-0.12, 0.76], [-0.14, 0.86], [-0.18, 0.72],
+        [-0.2, 0.78], [-0.22, 0.8], [-0.28, 0.8],
+      ],
+      eye: [-0.27, 0.73, 0.016],
+    },
+    crane: {
+      outline: [
+        [-0.4, 0.86], [-0.36, 0.9], [-0.26, 0.9], [-0.22, 0.84], [-0.18, 0.7], [-0.14, 0.6],
+        [0.0, 0.62], [0.16, 0.58], [0.3, 0.52], [0.34, 0.44], [0.24, 0.4], [0.12, 0.34],
+        [0.06, 0.32], [0.07, 0.02], [0.02, 0.02], [0.01, 0.3], [-0.04, 0.3], [-0.03, 0.02],
+        [-0.08, 0.02], [-0.09, 0.32], [-0.14, 0.38], [-0.18, 0.48], [-0.22, 0.6], [-0.26, 0.72],
+        [-0.3, 0.8], [-0.4, 0.83],
+      ],
+      eye: [-0.29, 0.86, 0.014],
+    },
+    snake: { outline: snakeOutline() },
+    scorpion: {
+      outline: [
+        // Claws raised at the top, a segmented tail curling up on the right.
+        [-0.34, 0.86], [-0.24, 0.9], [-0.2, 0.82], [-0.26, 0.78], [-0.16, 0.74], [-0.06, 0.76],
+        [0.02, 0.82], [0.08, 0.92], [0.14, 0.86], [0.1, 0.76], [0.14, 0.66], [0.26, 0.6],
+        [0.36, 0.5], [0.4, 0.36], [0.36, 0.22], [0.42, 0.14], [0.36, 0.08], [0.3, 0.18],
+        [0.32, 0.34], [0.26, 0.46], [0.16, 0.52], [0.12, 0.44], [0.24, 0.38], [0.26, 0.32],
+        [0.14, 0.36], [0.1, 0.3], [0.22, 0.24], [0.24, 0.18], [0.1, 0.22], [0.04, 0.2],
+        [0.04, 0.02], [-0.02, 0.02], [-0.02, 0.2], [-0.1, 0.22], [-0.22, 0.18], [-0.2, 0.24],
+        [-0.08, 0.3], [-0.12, 0.36], [-0.24, 0.32], [-0.22, 0.38], [-0.1, 0.44], [-0.14, 0.52],
+        [-0.24, 0.5], [-0.24, 0.56], [-0.14, 0.6], [-0.2, 0.68], [-0.3, 0.72], [-0.38, 0.8],
+      ],
+    },
+    symbol: {
+      outline: [
+        [-0.3, 0.0], [-0.3, 0.9], [-0.14, 0.9], [-0.14, 0.52], [0.14, 0.52], [0.14, 0.9],
+        [0.3, 0.9], [0.3, 0.0], [0.14, 0.0], [0.14, 0.38], [-0.14, 0.38], [-0.14, 0.0],
+      ],
+    },
+    gazelle: {
+      outline: [
+        [-0.44, 0.62], [-0.42, 0.68], [-0.36, 0.72], [-0.34, 0.74], [-0.28, 0.9], [-0.26, 0.92],
+        [-0.3, 0.76], [-0.32, 0.74], [-0.22, 0.66], [-0.12, 0.6], [0.04, 0.6], [0.2, 0.58],
+        [0.3, 0.54], [0.36, 0.5], [0.36, 0.42], [0.32, 0.44], [0.3, 0.36], [0.33, 0.02],
+        [0.28, 0.02], [0.26, 0.22], [0.24, 0.02], [0.19, 0.02], [0.2, 0.34], [0.08, 0.36],
+        [-0.06, 0.36], [-0.1, 0.36], [-0.08, 0.02], [-0.13, 0.02], [-0.14, 0.22], [-0.16, 0.02],
+        [-0.21, 0.02], [-0.2, 0.36], [-0.26, 0.44], [-0.3, 0.56], [-0.38, 0.6],
+      ],
+      eye: [-0.38, 0.66, 0.018],
+    },
+  };
+
+/** A small drilled circle, the way the carvers made an eye. */
+function eyeHole(centre: [number, number], radius: number): Outline {
+  const points: Outline = [];
+  for (let i = 0; i < 10; i += 1) {
+    const a = (i / 10) * TAU;
+    points.push([centre[0] + Math.cos(a) * radius, centre[1] + Math.sin(a) * radius]);
+  }
+  return points;
+}
+
+/**
+ * One animal, about `scale` metres long, on the plane through `base` whose
+ * outward normal is `out`. Cut in the pillar's own limestone so it reads as
+ * carved out of the stone rather than stuck onto it; each one is a few
+ * degrees off level and a little different in size, the way hand-cut ones
+ * are. `flip` turns the animal to face the other way, and `tilt` tips it over
+ * in the face — the Pillar 18 fox is cut leaping head-first down the flank.
+ */
 function animalCarving(
   animal: Animal,
   base: Vec3,
   out: [number, number],
   seed: number,
   scale = 1,
+  options: { flip?: boolean; tilt?: number } = {},
 ): Part[] {
-  const parts: Part[] = [];
-  const tx = -out[1];
-  const tz = out[0];
-  // A box stood with `rotY` turns its local x onto the face normal, so the
-  // slabs' depth dimension runs out of the stone the way a chisel went in.
-  const rotY = Math.atan2(-out[1], out[0]);
+  const shape = ANIMAL_SHAPES[animal];
   const random = seeded(seed);
-  const pool = seeded(seed + 1);
-  const proud = 0.05;
-  const whip = 1 + (random() - 0.5) * 0.04;
-  const slab = (t: number, y: number, dt: number, dy: number, rise = 0, lean = 0): Part =>
-    worn(
-      box(
-        "limestone",
-        [
-          base[0] + tx * t * scale + out[0] * rise,
-          base[1] + y * scale,
-          base[2] + tz * t * scale + out[1] * rise,
-        ],
-        [proud, dy * scale * whip, dt * scale],
-        rotY + lean * (0.5 + pool() * 0.5),
-      ),
-      0.03,
-    );
+  const size = scale * (0.92 + random() * 0.16);
+  const mirror = options.flip ? -1 : 1;
+  const lean = (random() - 0.5) * 0.08 + (options.tilt ?? 0);
+  const scaled = (points: Outline): Outline =>
+    points.map(([u, v]) => [u * size * mirror, v * size]);
+  return [
+    {
+      kind: "carving",
+      material: "limestone",
+      at: base,
+      outline: scaled(shape.outline),
+      ...(shape.eye
+        ? { holes: [scaled(eyeHole([shape.eye[0], shape.eye[1]], shape.eye[2]))] }
+        : {}),
+      // Flint chipped the ground back this far around the animal; a little
+      // of the depth is sunk so the bevel runs into the bowed, weathered face.
+      depth: 0.075,
+      rotY: Math.atan2(out[0], out[1]),
+      ...(lean ? { rotZ: lean } : {}),
+    },
+  ];
+}
 
-  if (animal !== "snake" && animal !== "symbol") {
-    // A groundline under the feet, the way the carvers ran their figures.
-    parts.push(slab(0, -0.02, 0.95, 0.07));
-  }
+/* ------------------------------------------------------------------ *
+ * A bronze horse and rider
+ * ------------------------------------------------------------------ */
 
-  switch (animal) {
-    case "fox":
-      parts.push(
-        slab(-0.02, 0.24, 0.44, 0.3),
-        slab(-0.24, 0.34, 0.2, 0.22),
-        slab(0.22, 0.28, 0.22, 0.2),
-        slab(-0.44, 0.5, 0.17, 0.19),
-        slab(-0.6, 0.46, 0.12, 0.12),
-        slab(-0.36, 0.78, 0.08, 0.18, 0.02),
-        slab(-0.5, 0.78, 0.08, 0.18),
-        slab(0.42, 0.4, 0.26, 0.24),
-        slab(-0.14, 0.02, 0.06, 0.24),
-        slab(0.02, 0.02, 0.06, 0.24),
-        slab(0.22, 0.02, 0.06, 0.24),
-        slab(0.38, 0.02, 0.06, 0.24),
-      );
-      break;
-    case "boar":
-      parts.push(
-        slab(0, 0.16, 0.66, 0.46),
-        slab(-0.28, 0.6, 0.2, 0.2),
-        slab(0.26, 0.28, 0.24, 0.32),
-        slab(0.48, 0.14, 0.16, 0.2),
-        slab(0.36, 0.6, 0.08, 0.22),
-        slab(0.52, 0.52, 0.07, 0.18),
-        slab(0.14, 0.66, 0.09, 0.13),
-        slab(-0.36, 0.46, 0.13, 0.16),
-        slab(-0.24, 0.02, 0.09, 0.18),
-        slab(-0.02, 0.02, 0.09, 0.18),
-        slab(0.14, 0.02, 0.09, 0.18),
-        slab(0.3, 0.02, 0.09, 0.18),
-      );
-      break;
-    case "aurochs":
-      parts.push(
-        slab(0, 0.16, 0.56, 0.4),
-        slab(-0.16, 0.46, 0.22, 0.22),
-        slab(0.22, 0.24, 0.2, 0.3),
-        slab(0.12, 0.56, 0.12, 0.22, 0.02),
-        slab(0.3, 0.56, 0.12, 0.22),
-        slab(0.4, 0.16, 0.13, 0.18),
-        slab(-0.42, 0.34, 0.12, 0.2),
-        slab(-0.26, 0.02, 0.09, 0.16),
-        slab(-0.06, 0.02, 0.09, 0.16),
-        slab(0.14, 0.02, 0.09, 0.16),
-        slab(0.3, 0.02, 0.09, 0.16),
-      );
-      break;
-    case "vulture":
-      parts.push(
-        slab(0, 0.44, 0.3, 0.34),
-        slab(-0.1, 0.72, 0.14, 0.18),
-        slab(-0.24, 0.8, 0.16, 0.1),
-        slab(-0.28, 0.46, 0.34, 0.14),
-        slab(-0.6, 0.54, 0.26, 0.12),
-        slab(-0.86, 0.62, 0.2, 0.1),
-        slab(0.28, 0.46, 0.34, 0.14),
-        slab(0.6, 0.54, 0.26, 0.12),
-        slab(0.86, 0.62, 0.2, 0.1),
-        slab(0, 0.18, 0.16, 0.3),
-        slab(0, 0.04, 0.24, 0.16),
-      );
-      break;
-    case "snake":
-      parts.push(
-        slab(0.04, 0.0, 0.16, 0.16),
-        slab(-0.04, 0.16, 0.16, 0.14),
-        slab(0.04, 0.3, 0.16, 0.14),
-        slab(-0.04, 0.44, 0.16, 0.14),
-        slab(0.04, 0.58, 0.16, 0.14),
-        slab(-0.02, 0.74, 0.22, 0.16),
-        slab(0.06, 0.9, 0.14, 0.08),
-      );
-      break;
-    case "symbol":
-      parts.push(
-        slab(-0.26, 0.0, 0.14, 0.78),
-        slab(0.26, 0.0, 0.14, 0.78),
-        slab(0, 0.36, 0.54, 0.12),
-        slab(0, 0.84, 0.18, 0.18),
-      );
-      break;
-    case "gazelle":
-      parts.push(
-        slab(0.06, 0.3, 0.46, 0.2),
-        slab(-0.22, 0.42, 0.12, 0.16),
-        slab(0.28, 0.56, 0.16, 0.18),
-        slab(0.36, 0.72, 0.12, 0.15),
-        slab(0.28, 0.9, 0.08, 0.22, 0.02, -0.2),
-        slab(0.14, 0.34, 0.1, 0.2),
-        slab(-0.32, 0.4, 0.1, 0.14),
-        slab(-0.08, 0.02, 0.06, 0.28),
-        slab(0.1, 0.02, 0.06, 0.28),
-        slab(0.26, 0.02, 0.06, 0.32),
-        slab(0.42, 0.02, 0.06, 0.32),
-      );
-      break;
+/**
+ * A horse, built the way a sculptor builds one: as a skin lofted over the
+ * animal's cross-sections. Rump, loin, barrel, girth and chest; a neck that
+ * rises and thins to the poll; a head that tapers to the muzzle with pricked
+ * ears; four legs with the joints a horse has — stifle, hock and fetlock
+ * behind, elbow, knee and fetlock in front — and a tail falling from the
+ * dock. The proportions are those of the Capitoline Marcus Aurelius, the one
+ * Roman bronze horseman that survives whole: withers at about 1.5 m, the body
+ * as long as it is tall, the near foreleg raised with the hoof hanging.
+ *
+ * The horse stands at `at` facing `-z` before `rotY` turns it, one unit of
+ * `scale` being a life-sized animal. The mane is a serrated crest cut along
+ * the neck; the rider is a bearded figure astride, arm out in address.
+ */
+function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1): Part[] {
+  const parts: Part[] = [];
+  const S = (c: Vec3, rx: number, ry: number): LoftSection => ({
+    c: [c[0] * scale, c[1] * scale, c[2] * scale],
+    rx: rx * scale,
+    ry: ry * scale,
+  });
+  const skin = (sections: LoftSection[]) => parts.push(loft("bronze", at, rotY, sections));
+
+  // The body, from the tail root forward to the breast.
+  skin([
+    S([0, 1.06, 0.82], 0.1, 0.13),
+    S([0, 1.06, 0.62], 0.25, 0.28),
+    S([0, 1.04, 0.32], 0.3, 0.34),
+    S([0, 1.01, 0.0], 0.31, 0.37),
+    S([0, 1.02, -0.36], 0.3, 0.37),
+    S([0, 1.07, -0.66], 0.25, 0.33),
+    S([0, 1.12, -0.86], 0.17, 0.24),
+    S([0, 1.14, -0.96], 0.08, 0.12),
+  ]);
+  // The neck, carried up from the withers to the poll.
+  skin([
+    S([0, 1.18, -0.6], 0.2, 0.3),
+    S([0, 1.4, -0.86], 0.18, 0.3),
+    S([0, 1.64, -1.08], 0.15, 0.26),
+    S([0, 1.84, -1.26], 0.12, 0.2),
+    S([0, 1.97, -1.38], 0.1, 0.15),
+    S([0, 2.02, -1.44], 0.09, 0.12),
+  ]);
+  // The head, lowered a little against the rein, forehead to muzzle.
+  skin([
+    S([0, 2.02, -1.4], 0.1, 0.12),
+    S([0, 1.96, -1.54], 0.115, 0.15),
+    S([0, 1.86, -1.68], 0.1, 0.13),
+    S([0, 1.74, -1.82], 0.085, 0.11),
+    S([0, 1.64, -1.94], 0.078, 0.095),
+    S([0, 1.58, -2.02], 0.07, 0.08),
+    S([0, 1.56, -2.06], 0.05, 0.06),
+  ]);
+  // Ears pricked forward.
+  for (const side of [-1, 1]) {
+    skin([
+      S([side * 0.06, 2.04, -1.42], 0.035, 0.025),
+      S([side * 0.085, 2.14, -1.44], 0.025, 0.02),
+      S([side * 0.1, 2.22, -1.46], 0.006, 0.006),
+    ]);
   }
+  for (const side of [-1, 1]) {
+    const x = side * 0.17;
+    if (side === raised) {
+      // The near foreleg lifted: knee brought up and forward, cannon hanging.
+      skin([
+        S([x, 1.05, -0.64], 0.11, 0.14),
+        S([x, 0.84, -0.78], 0.085, 0.1),
+        S([x, 0.66, -0.98], 0.06, 0.07),
+        S([x, 0.5, -0.96], 0.045, 0.055),
+        S([x, 0.36, -0.9], 0.05, 0.06),
+        S([x, 0.28, -0.86], 0.06, 0.065),
+        S([x, 0.24, -0.84], 0.055, 0.06),
+      ]);
+    } else {
+      skin([
+        S([x, 1.05, -0.64], 0.11, 0.14),
+        S([x, 0.8, -0.68], 0.085, 0.1),
+        S([x, 0.56, -0.68], 0.06, 0.07),
+        S([x, 0.3, -0.67], 0.045, 0.055),
+        S([x, 0.12, -0.66], 0.05, 0.06),
+        S([x, 0.04, -0.68], 0.062, 0.068),
+        S([x, 0.0, -0.69], 0.065, 0.07),
+      ]);
+    }
+    // The hind leg: thigh into the body, gaskin, hock set back, cannon down.
+    const hx = side * 0.16;
+    skin([
+      S([hx, 1.0, 0.42], 0.14, 0.17),
+      S([hx, 0.74, 0.54], 0.1, 0.12),
+      S([hx, 0.52, 0.66], 0.06, 0.08),
+      S([hx, 0.3, 0.6], 0.045, 0.055),
+      S([hx, 0.1, 0.56], 0.05, 0.06),
+      S([hx, 0.04, 0.57], 0.062, 0.068),
+      S([hx, 0.0, 0.58], 0.065, 0.07),
+    ]);
+  }
+  // The tail, from the dock, falling behind the hocks.
+  skin([
+    S([0, 1.08, 0.8], 0.05, 0.06),
+    S([0, 1.0, 0.92], 0.07, 0.08),
+    S([0, 0.78, 1.0], 0.08, 0.09),
+    S([0, 0.52, 0.98], 0.07, 0.08),
+    S([0, 0.3, 0.92], 0.045, 0.05),
+    S([0, 0.2, 0.88], 0.02, 0.02),
+  ]);
+
+  /*
+   * The mane: a crest of clipped tufts standing along the top of the neck,
+   * cut as one serrated silhouette in the plane of the neck. Its foot is
+   * buried in the neck so it grows out of it rather than sitting on it.
+   */
+  const crest: [number, number][] = [
+    [-0.56, 1.42],
+    [-0.86, 1.68],
+    [-1.08, 1.88],
+    [-1.26, 2.02],
+    [-1.4, 2.1],
+    [-1.46, 2.13],
+  ];
+  const crestAt = (z: number) => {
+    for (let i = 0; i < crest.length - 1; i += 1) {
+      const [z0, y0] = crest[i]!;
+      const [z1, y1] = crest[i + 1]!;
+      if (z <= z0 && z >= z1) return y0 + ((z - z0) / (z1 - z0)) * (y1 - y0);
+    }
+    return z > crest[0]![0] ? crest[0]![1] : crest[crest.length - 1]![1];
+  };
+  const mane: [number, number][] = [];
+  const tufts = 14;
+  const zFrom = -0.58;
+  const zTo = -1.44;
+  // Along the top, one tuft after another; the outline's `u` runs towards
+  // the head, which the carving's turn below maps onto the horse's `-z`.
+  for (let i = 0; i <= tufts; i += 1) {
+    const z = zFrom + ((zTo - zFrom) * i) / tufts;
+    const tall = i % 2 === 0 ? 0.13 : 0.08;
+    mane.push([-z * scale, (crestAt(z) + tall) * scale]);
+  }
+  // Then back along the foot, inside the neck.
+  for (let i = tufts; i >= 0; i -= 1) {
+    const z = zFrom + ((zTo - zFrom) * i) / tufts;
+    mane.push([-z * scale, (crestAt(z) - 0.1) * scale]);
+  }
+  parts.push({
+    kind: "carving",
+    material: "bronze",
+    at,
+    outline: mane,
+    depth: 0.06 * scale,
+    sink: 0.5,
+    // A quarter turn lays the silhouette in the horse's own x = 0 plane.
+    rotY: rotY + Math.PI / 2,
+  });
+
+  // The rider, astride at the withers, turned to face the way the horse does.
+  parts.push({
+    kind: "figure",
+    material: "bronze",
+    at: placed(at, rotY, [0, 1.38 * scale, -0.3 * scale]),
+    height: 1.85 * scale,
+    rotY: rotY + Math.PI,
+    bearded: true,
+    pose: "riding",
+  });
   return parts;
 }
 
@@ -1266,9 +1550,10 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     parts.push(box("paintGold", [0, level + 0.47, face], [w * 0.995, 0.07, 0.07]));
   }
 
-  // Wisdom, Knowledge, Intelligence and Virtue, each in her own colour, the
-  // way the painted reconstructions of this front show them.
-  const robes: Material[] = ["paintRed", "paintBlue", "paintGold", "marbleWorn"];
+  // Wisdom, Knowledge, Intelligence and Virtue, in the white marble the
+  // surviving figures are cut from. The paint is on the niche behind each of
+  // them, which is what makes a pale statue read against a pale front.
+  const robes: Material[] = ["marble", "marble", "marble", "marble"];
   aediculaCentres.forEach((centre, index) => {
     aedicula(
       y0,
@@ -1347,59 +1632,14 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
   for (const side of [-1, 1]) {
     const px = side * (w * 0.56);
     const pz = -spec.steps * stepTread - 2.6;
-    parts.push(box("marbleWorn", [px, 0, pz], [2.3, 0.28, 2.0]));
-    parts.push(box("marble", [px, 0.28, pz], [1.9, 2.4, 1.6]));
-    parts.push(box("marbleWorn", [px, 2.68, pz], [2.3, 0.26, 2.0]));
-    // The horse, built the way a sculptor models one — barrels along the body,
-    // a neck rising to the head, four legs and a tail — all in bronze, reined
-    // in with the rider above its back.
-    const horseY = 2.94;
-    // The three barrels of the body: rump, barrel and chest, each tipped over
-    // on its side so they run along -z towards the viewer.
+    parts.push(box("marbleWorn", [px, 0, pz], [2.6, 0.28, 3.4]));
+    parts.push(box("marble", [px, 0.28, pz], [2.2, 2.4, 3.0]));
+    parts.push(box("marbleWorn", [px, 2.68, pz], [2.6, 0.26, 3.4]));
+    // The horse and its rider, a little over life size, each turned a touch
+    // towards the stair so the pair address whoever climbs it.
     parts.push(
-      cyl("bronze", [px, horseY + 0.88, pz - 0.42], 0.27, 0.33, 0.58, 20, { rotX: Math.PI / 2 }),
+      ...bronzeHorseman([px, 2.94, pz + 0.05], side > 0 ? -0.3 : 0.3, 1.1, side > 0 ? -1 : 1),
     );
-    parts.push(
-      cyl("bronze", [px, horseY + 0.96, pz - 0.98], 0.33, 0.34, 0.6, 20, { rotX: Math.PI / 2 }),
-    );
-    parts.push(
-      cyl("bronze", [px, horseY + 1.0, pz - 1.48], 0.34, 0.28, 0.5, 20, { rotX: Math.PI / 2 }),
-    );
-    // The belly drawn in beneath the three barrels.
-    parts.push(
-      cyl("bronze", [px, horseY + 0.5, pz - 1.12], 0.17, 0.19, 1.14, 14, { rotX: Math.PI / 2 }),
-    );
-    // The neck, carried forward from the chest up to the head.
-    parts.push(cyl("bronze", [px, horseY + 1.3, pz - 1.3], 0.15, 0.23, 0.95, 18, { rotX: -1.12 }));
-    // The head, muzzle and a pair of ears pricked forward.
-    parts.push(box("bronze", [px, horseY + 1.8, pz - 2.06], [0.2, 0.16, 0.52], -0.06));
-    parts.push(box("bronze", [px, horseY + 1.72, pz - 2.38], [0.13, 0.12, 0.34], -0.03));
-    parts.push(box("bronze", [px - 0.07, horseY + 1.98, pz - 2.14], [0.06, 0.17, 0.06], 0.25));
-    parts.push(box("bronze", [px + 0.07, horseY + 1.98, pz - 2.14], [0.06, 0.17, 0.06], -0.25));
-    // The mane, a comb of slabs riding the crest of the neck.
-    for (const [mz, my, mr] of [
-      [-1.42, 1.42, -0.12],
-      [-1.66, 1.56, -0.16],
-      [-1.9, 1.7, -0.16],
-      [-2.1, 1.82, -0.1],
-    ] as [number, number, number][]) {
-      parts.push(box("bronze", [px, horseY + my, pz + mz], [0.05, 0.22, 0.3], mr));
-    }
-    // The tail, falling behind the rump.
-    parts.push(cyl("bronze", [px, horseY + 1.1, pz + 0.32], 0.05, 0.1, 0.62, 10, { rotX: 1.95 }));
-    // Four legs planted on the plinth, thick above the knee and tapering to
-    // the hoof, under the chest at the front and the rump behind.
-    for (const [sfx, sfz] of [
-      [-1, -1],
-      [1, -1],
-      [-1, 1],
-      [1, 1],
-    ] as [number, number][]) {
-      const legZ = sfz > 0 ? pz + 0.22 : pz - 1.02;
-      parts.push(cyl("bronze", [px + sfx * 0.21, horseY + 0.02, legZ], 0.07, 0.12, 0.9, 14));
-    }
-    // And the rider, arm raised, the way both of them are shown.
-    parts.push(person([px, horseY + 1.42, pz - 0.58], 1.5, side > 0 ? -0.4 : 0.4, "bronze"));
   }
 
   /* The hall: side walls, rear wall and apse, stopped at the height the
@@ -2071,13 +2311,28 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
    * Twelve pillars set into the ring, each turned to face the centre — and
    * every one of them carved. Nearly all the excavated pillars at Göbeklitepe
    * carry animals; a ring of blank stones is the one thing this place was not.
-   * Three different photographed faces are dealt round the circle so that no
-   * two neighbours repeat, and every other pillar carries its animal instead
-   * as carved geometry — a fox, a boar, an aurochs, a snake, an H-symbol or a
-   * gazelle — so the ring shows real relief, not only faces that are pictures.
+   * Three of them wear a photograph of a real carved face as depth; the rest
+   * carry animals cut as silhouettes in the stone, one to three a pillar,
+   * dealt round the ring the way the excavated programme runs — the aurochs,
+   * fox and crane stacked on Pillar 2, the boars of Pillar 12, the vulture
+   * and scorpion of Pillar 43, snakes, gazelles and the H-sign — so that no
+   * two neighbours repeat and every face shows real relief.
    */
   const faces = [CARVINGS.gobekliPillarFace, CARVINGS.gobekliBeast, CARVINGS.gobekliReliefs];
-  const ringAnimals: Animal[] = ["fox", "boar", "aurochs", "snake", "symbol", "gazelle"];
+  const programme: { animals: Animal[]; photo?: number; tilt?: number }[] = [
+    { animals: ["fox"], photo: 0 },
+    { animals: ["crane", "fox", "aurochs"] },
+    { animals: ["boar"] },
+    { animals: ["snake"] },
+    { animals: ["gazelle"], photo: 1 },
+    { animals: ["scorpion", "vulture"] },
+    { animals: ["symbol", "boar"] },
+    { animals: ["fox", "crane"] },
+    { animals: ["boar"], photo: 2 },
+    { animals: ["fox"], tilt: 1.15 },
+    { animals: ["symbol", "gazelle"] },
+    { animals: ["vulture"] },
+  ];
   const shapes = seeded(613);
   for (let i = 0; i < spec.ringPillars; i += 1) {
     const theta = pillarAngle(i);
@@ -2104,36 +2359,45 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
     parts.push(worn(box("limestone", [x, 0, z], [depth, shaft, width], rotY), 0.05));
     parts.push(worn(box("limestone", [x, shaft, z], [depth, head, width * 1.45], rotY), 0.045));
     // The carving, on the inner face — the one the pillar turns to the centre.
-    const faceRadius = r - depth / 2 - 0.01;
+    const faceRadius = r - depth / 2;
     const faceCentre: [number, number] = [
       Math.cos(theta) * faceRadius,
       Math.sin(theta) * faceRadius,
     ];
-    if (i % 2 === 0) {
-      // Every other stone keeps the photograph of the real animal on its face.
+    const inward: [number, number] = [-Math.cos(theta), -Math.sin(theta)];
+    const plan = programme[i % programme.length]!;
+    // How long an animal can be on this stone, and where the next one goes.
+    const size = Math.min(1.0, width * 0.78);
+    let y = 0.32;
+    if (plan.photo !== undefined) {
       parts.push(
         relief(
           "limestone",
-          [faceCentre[0], 0.45, faceCentre[1]],
-          [width * 0.86, shaft * 0.62],
-          faces[i % faces.length]!,
+          [faceCentre[0], 0.42, faceCentre[1]],
+          [width * 0.86, shaft * 0.5],
+          faces[plan.photo]!,
           -theta - Math.PI / 2 + lean,
         ),
       );
-    } else {
-      // The rest are carved rather than photographed.
-      const animal = ringAnimals[((i - 1) / 2) % ringAnimals.length]!;
-      const shake = seeded(9000 + i);
+      y = 0.42 + shaft * 0.5 + 0.12;
+    }
+    plan.animals.forEach((animal, order) => {
+      const shake = seeded(9000 + i * 7 + order);
+      const scale = plan.tilt ? size * 1.15 : size * (animal === "snake" ? 1.3 : 1);
+      // A tilted beast is pinned by its middle, so it is lifted up the face.
+      const lift = plan.tilt ? shaft * 0.42 : 0;
       parts.push(
         ...animalCarving(
           animal,
-          [faceCentre[0], 0.4 + (shake() - 0.5) * 0.12, faceCentre[1]],
-          [Math.cos(theta), Math.sin(theta)],
-          4000 + i,
-          0.82 + shake() * 0.18,
+          [faceCentre[0], y + lift + (shake() - 0.5) * 0.08, faceCentre[1]],
+          inward,
+          4000 + i * 11 + order,
+          scale,
+          { flip: (i + order) % 3 === 1, ...(plan.tilt ? { tilt: plan.tilt } : {}) },
         ),
       );
-    }
+      y += scale * (animal === "snake" || animal === "symbol" ? 0.98 : 0.78) + 0.1;
+    });
   }
 
   // The two at the centre: taller, thicker, facing one another across the floor.
@@ -2163,17 +2427,32 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
         side > 0 ? -Math.PI / 2 : Math.PI / 2,
       ),
     );
-    // Above the photographed panel, one more figure risen straight out of the
-    // stone: a vulture with spread wings on one pillar, like the "Vulture
-    // Stone" and its birds, a fox on the other — both carved as geometry.
+    // Above the photographed panel, more figures risen straight out of the
+    // stone: a vulture with spread wings over a scorpion on one pillar, like
+    // Pillar 43, a boar under a fox on the other — all carved as silhouettes.
+    const upper = base + 0.4 + shaft * 0.56;
+    const broad: [number, number] = side < 0 ? [1, 0] : [-1, 0];
+    if (side < 0) {
+      parts.push(
+        ...animalCarving("scorpion", [x - side * 0.31, upper, 0], broad, 7001, 0.55),
+        ...animalCarving("vulture", [x - side * 0.31, upper + 0.62, 0], broad, 7002, 0.95),
+      );
+    } else {
+      parts.push(
+        ...animalCarving("boar", [x - side * 0.31, upper, 0], broad, 7003, 0.9),
+        ...animalCarving("fox", [x - side * 0.31, upper + 0.7, 0], broad, 7004, 0.85, {
+          flip: true,
+        }),
+      );
+    }
+    // And on the narrow flank of each, below the belt, the fox of Pillar 18 —
+    // cut leaping head-first down the stone the way it is on the original,
+    // and small enough to fit between the edges of a 62 cm flank.
     parts.push(
-      ...animalCarving(
-        side < 0 ? "vulture" : "fox",
-        [x - side * 0.32, base + 0.4 + shaft * 0.56, 0],
-        side < 0 ? [1, 0] : [-1, 0],
-        7000 + side,
-        side < 0 ? 0.62 : 0.85,
-      ),
+      ...animalCarving("fox", [x, base + shaft * 0.16, side * 0.75], [0, side], 7005 + side, 0.5, {
+        tilt: side > 0 ? 1.15 : -1.15,
+        flip: side > 0,
+      }),
     );
 
     /*
@@ -2696,10 +2975,36 @@ export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
       const { hx, hz } = yawed(x, z, part.size[0], 0.2, part.rotY);
       grow(x - hx, y, z - hz);
       grow(x + hx, y + part.size[1], z + hz);
+    } else if (part.kind === "carving") {
+      // A tilted outline can swing any of its extent into any direction, so
+      // one is taken for all three; a level one only reaches as high as it is.
+      let reach = 0;
+      let top = 0;
+      for (const [u, v] of part.outline) {
+        reach = Math.max(reach, Math.abs(u), Math.abs(v));
+        top = Math.max(top, v);
+      }
+      const { hx, hz } = yawed(x, z, reach * 2, part.depth * 2, part.rotY);
+      grow(x - hx, y - (part.rotZ ? reach : 0), z - hz);
+      grow(x + hx, y + (part.rotZ ? reach : top), z + hz);
+    } else if (part.kind === "loft") {
+      const c = Math.cos(part.rotY);
+      const s = Math.sin(part.rotY);
+      for (const section of part.sections) {
+        const r = Math.max(section.rx, section.ry);
+        const px = x + section.c[0] * c + section.c[2] * s;
+        const py = y + section.c[1];
+        const pz = z - section.c[0] * s + section.c[2] * c;
+        grow(px - r, py - r, pz - r);
+        grow(px + r, py + r, pz + r);
+      }
     } else {
+      // A figure: a rider's legs hang below the seat given as `at`.
       const r = part.height * 0.25;
-      grow(x - r, y, z - r);
-      grow(x + r, y + part.height, z + r);
+      const foot = part.pose === "riding" ? y - part.height * 0.5 : y;
+      const top = part.pose === "riding" ? y + part.height * 0.56 : y + part.height;
+      grow(x - r, foot, z - r);
+      grow(x + r, top, z + r);
     }
   }
 

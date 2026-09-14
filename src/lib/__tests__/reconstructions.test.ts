@@ -1,5 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { boundsOf, CARVINGS, partsFor, SHAFT_DRUMS, type Part } from "@/lib/reconstruction-parts";
+import {
+  ANIMAL_SHAPES,
+  boundsOf,
+  CARVINGS,
+  partsFor,
+  SHAFT_DRUMS,
+  type Part,
+} from "@/lib/reconstruction-parts";
 import {
   reconstructionForStructure,
   reconstructions,
@@ -201,6 +208,9 @@ describe("the geometry", () => {
         if (part.kind === "relief") return part.size.some((v) => v <= 0);
         if (part.kind === "cylinder") return part.height <= 0 || part.radiusBottom <= 0;
         if (part.kind === "ring") return part.height <= 0 || part.outer <= part.inner;
+        if (part.kind === "carving") return part.outline.length < 3 || part.depth <= 0;
+        if (part.kind === "loft")
+          return part.sections.length < 2 || part.sections.some((s) => s.rx <= 0 || s.ry <= 0);
         return part.height <= 0;
       });
       expect(degenerate.map((p) => `${item.id}: ${p.kind}`)).toEqual([]);
@@ -347,6 +357,103 @@ describe("the geometry", () => {
     expect(central.length).toBe(2);
     for (const pillar of central) {
       expect(pillar.at[1]).toBeCloseTo(0.45 - spec.pedestalSocket, 5);
+    }
+  });
+});
+
+describe("the carved silhouettes", () => {
+  /** Whether two closed segments cross, touching endpoints excepted. */
+  const crosses = (
+    a: [number, number],
+    b: [number, number],
+    c: [number, number],
+    d: [number, number],
+  ) => {
+    const orient = (p: [number, number], q: [number, number], r: [number, number]) =>
+      Math.sign((q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]));
+    return orient(a, b, c) * orient(a, b, d) < 0 && orient(c, d, a) * orient(c, d, b) < 0;
+  };
+
+  /**
+   * An outline that folds back over its own edge does not extrude — the
+   * triangulator gives up quietly and the animal is simply missing from the
+   * pillar. Every traced silhouette has to be a simple polygon, so a slipped
+   * point in a hand-drawn list fails here rather than on the stone.
+   */
+  test("every animal outline runs once round itself without crossing", () => {
+    for (const [name, shape] of Object.entries(ANIMAL_SHAPES)) {
+      const points = shape.outline;
+      expect(points.length).toBeGreaterThanOrEqual(8);
+      const crossings: string[] = [];
+      for (let i = 0; i < points.length; i += 1) {
+        const a = points[i]!;
+        const b = points[(i + 1) % points.length]!;
+        for (let j = i + 2; j < points.length; j += 1) {
+          if (i === 0 && j === points.length - 1) continue;
+          const c = points[j]!;
+          const d = points[(j + 1) % points.length]!;
+          if (crosses(a, b, c, d)) crossings.push(`${name}: edge ${i} x edge ${j}`);
+        }
+      }
+      expect(crossings).toEqual([]);
+      // Feet on the ground, and about a unit long, so the scale means metres.
+      expect(Math.min(...points.map((p) => p[1]))).toBeGreaterThanOrEqual(-0.01);
+      const width = Math.max(...points.map((p) => p[0])) - Math.min(...points.map((p) => p[0]));
+      expect(width).toBeGreaterThan(0.4);
+      expect(width).toBeLessThanOrEqual(1.1);
+      if (shape.eye) {
+        // The drilled eye has to sit inside the head, or it drills the air.
+        const [ex, ey, er] = shape.eye;
+        let inside = false;
+        for (let i = 0, j = points.length - 1; i < points.length; j = i, i += 1) {
+          const [xi, yi] = points[i]!;
+          const [xj, yj] = points[j]!;
+          if (yi > ey !== yj > ey && ex < ((xj - xi) * (ey - yi)) / (yj - yi) + xi) {
+            inside = !inside;
+          }
+        }
+        expect(`${name} eye inside: ${inside}`).toBe(`${name} eye inside: true`);
+        expect(er).toBeLessThan(0.05);
+      }
+    }
+  });
+
+  test("every Göbeklitepe pillar carries at least one carving on its inner face", () => {
+    const gobekli = reconstructions.find((r) => r.id === "gobeklitepe-d-yapisi")!;
+    const spec = gobekli.model;
+    if (spec.kind !== "neolithic-enclosure") throw new Error("expected an enclosure");
+    const radius = spec.enclosureDiameter / 2;
+    const carvings = partsOf(gobekli).filter(
+      (part): part is Extract<Part, { kind: "carving" }> =>
+        part.kind === "carving" && Math.hypot(part.at[0], part.at[2]) > radius / 2,
+    );
+    // Each carving is turned to face the centre: its normal points inwards.
+    for (const carving of carvings) {
+      const normal = [Math.sin(carving.rotY), Math.cos(carving.rotY)];
+      const outward = [carving.at[0], carving.at[2]];
+      expect(normal[0]! * outward[0]! + normal[1]! * outward[1]!).toBeLessThan(0);
+    }
+    // Twelve pillars, and every one of them with something cut into it.
+    const pillars = new Set(
+      carvings.map((c) => Math.round((Math.atan2(c.at[2], c.at[0]) / (Math.PI * 2)) * 12)),
+    );
+    expect(pillars.size).toBe(spec.ringPillars);
+  });
+
+  test("the horsemen ride a lofted horse, not a stack of drums", () => {
+    const celsus = reconstructions.find((r) => r.id === "celsus-kutuphanesi")!;
+    const riders = partsOf(celsus).filter(
+      (part) => part.kind === "figure" && part.pose === "riding",
+    );
+    expect(riders.length).toBe(2);
+    const skins = partsOf(celsus).filter(
+      (part) => part.kind === "loft" && part.material === "bronze",
+    );
+    // Body, neck, head, two ears, four legs and a tail: ten a horse.
+    expect(skins.length).toBe(20);
+    // The rider sits on the horse's back, above every hoof.
+    for (const rider of riders) {
+      expect(rider.at[1]).toBeGreaterThan(2.94 + 1.2);
     }
   });
 });
