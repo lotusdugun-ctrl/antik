@@ -1,12 +1,14 @@
 import type {
   GreatAltarSpec,
   IonicDipterosSpec,
+  MausoleumSpec,
   ModelSpec,
   NeolithicEnclosureSpec,
   PeristyleHouseSpec,
   RomanFacadeSpec,
   RomanTheatreSpec,
   StadiumSpec,
+  TumulusSanctuarySpec,
 } from "@/lib/reconstructions";
 
 /**
@@ -192,7 +194,7 @@ export type Part =
        * at `at` — for a rider the point given is the seat, not the feet, and
        * `height` is still how tall they would stand.
        */
-      pose?: "standing" | "riding";
+      pose?: "standing" | "riding" | "seated";
     })
   /**
    * A silhouette cut in relief: an outline drawn in the plane of a face and
@@ -1047,14 +1049,20 @@ function animalCarving(
  * `scale` being a life-sized animal. The mane is a serrated crest cut along
  * the neck; the rider is a bearded figure astride, arm out in address.
  */
-function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1): Part[] {
+function horseStatue(
+  material: Material,
+  at: Vec3,
+  rotY: number,
+  scale = 1,
+  raised: -1 | 1 = -1,
+): Part[] {
   const parts: Part[] = [];
   const S = (c: Vec3, rx: number, ry: number): LoftSection => ({
     c: [c[0] * scale, c[1] * scale, c[2] * scale],
     rx: rx * scale,
     ry: ry * scale,
   });
-  const skin = (sections: LoftSection[]) => parts.push(loft("bronze", at, rotY, sections));
+  const skin = (sections: LoftSection[]) => parts.push(loft(material, at, rotY, sections));
 
   // The body, from the tail root forward to the breast.
   skin([
@@ -1179,7 +1187,7 @@ function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1
   }
   parts.push({
     kind: "carving",
-    material: "bronze",
+    material,
     at,
     outline: mane,
     depth: 0.06 * scale,
@@ -1188,16 +1196,179 @@ function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1
     rotY: rotY + Math.PI / 2,
   });
 
-  // The rider, astride at the withers, turned to face the way the horse does.
-  parts.push({
-    kind: "figure",
-    material: "bronze",
-    at: placed(at, rotY, [0, 1.38 * scale, -0.3 * scale]),
-    height: 1.85 * scale,
-    rotY: rotY + Math.PI,
-    bearded: true,
-    pose: "riding",
+  return parts;
+}
+
+/**
+ * A bronze horse with its rider astride at the withers, turned to face the
+ * way the horse does: the pair on the Celsus court.
+ */
+function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1): Part[] {
+  return [
+    ...horseStatue("bronze", at, rotY, scale, raised),
+    {
+      kind: "figure",
+      material: "bronze",
+      at: placed(at, rotY, [0, 1.38 * scale, -0.3 * scale]),
+      height: 1.85 * scale,
+      rotY: rotY + Math.PI,
+      bearded: true,
+      pose: "riding",
+    },
+  ];
+}
+
+/* ------------------------------------------------------------------ *
+ * Animals in the round: a lion and an eagle
+ * ------------------------------------------------------------------ */
+
+/**
+ * A lion, lofted the way the horse is. Standing, it is the guardian that
+ * lined the podium of the Mausoleum — twenty of them were found; sitting on
+ * its haunches with its forelegs straight, it is the lion that closes each
+ * row of colossi on Nemrut Dağı. About 1.5 m at the top of the mane at a
+ * scale of one, facing `-z` before `rotY` turns it.
+ */
+function lionStatue(
+  material: Material,
+  at: Vec3,
+  rotY: number,
+  scale = 1,
+  pose: "standing" | "seated" = "standing",
+): Part[] {
+  const parts: Part[] = [];
+  const S = (c: Vec3, rx: number, ry: number): LoftSection => ({
+    c: [c[0] * scale, c[1] * scale, c[2] * scale],
+    rx: rx * scale,
+    ry: ry * scale,
   });
+  const skin = (sections: LoftSection[]) => parts.push(loft(material, at, rotY, sections));
+  // Where the head sits depends on the pose: level with the back standing,
+  // lifted when the animal sits up.
+  const lift = pose === "seated" ? 0.25 : 0;
+  const back = pose === "seated" ? 0.2 : 0;
+  if (pose === "standing") {
+    skin([
+      S([0, 0.78, 0.9], 0.14, 0.16),
+      S([0, 0.8, 0.6], 0.28, 0.32),
+      S([0, 0.78, 0.2], 0.3, 0.34),
+      S([0, 0.8, -0.2], 0.31, 0.36),
+      S([0, 0.86, -0.55], 0.3, 0.38),
+      S([0, 0.9, -0.75], 0.2, 0.26),
+    ]);
+    for (const side of [-1, 1]) {
+      for (const z of [-0.55, 0.6]) {
+        const x = side * 0.18;
+        skin([
+          S([x, 0.8, z], 0.12, 0.14),
+          S([x, 0.45, z], 0.09, 0.1),
+          S([x, 0.1, z], 0.09, 0.1),
+          S([x, 0.0, z - 0.06], 0.12, 0.12),
+        ]);
+      }
+    }
+    skin([
+      S([0, 0.82, 0.95], 0.05, 0.05),
+      S([0, 0.6, 1.3], 0.045, 0.045),
+      S([0, 0.3, 1.5], 0.04, 0.04),
+      S([0, 0.25, 1.6], 0.07, 0.07),
+    ]);
+  } else {
+    // Rump on the ground, the back rising to the shoulders.
+    skin([
+      S([0, 0.35, 0.7], 0.35, 0.35),
+      S([0, 0.5, 0.4], 0.36, 0.42),
+      S([0, 0.75, 0.05], 0.32, 0.4),
+      S([0, 0.95, -0.3], 0.3, 0.36),
+      S([0, 1.05, -0.5], 0.24, 0.28),
+    ]);
+    for (const side of [-1, 1]) {
+      // The folded haunch, and the straight foreleg.
+      skin([
+        S([side * 0.32, 0.4, 0.55], 0.16, 0.28),
+        S([side * 0.3, 0.15, 0.4], 0.12, 0.16),
+        S([side * 0.28, 0.02, 0.1], 0.11, 0.1),
+      ]);
+      skin([
+        S([side * 0.2, 1.0, -0.45], 0.12, 0.14),
+        S([side * 0.2, 0.5, -0.5], 0.09, 0.1),
+        S([side * 0.2, 0.05, -0.55], 0.11, 0.12),
+      ]);
+    }
+    skin([
+      S([0, 0.3, 1.0], 0.05, 0.05),
+      S([0, 0.15, 1.3], 0.045, 0.045),
+      S([0, 0.08, 1.5], 0.06, 0.06),
+    ]);
+  }
+  // The mane, massed round the neck, and the head coming out of it.
+  skin([
+    S([0, 0.92 + lift, -0.6 + back], 0.3, 0.34),
+    S([0, 1.0 + lift, -0.85 + back], 0.42, 0.46),
+    S([0, 1.02 + lift, -1.05 + back], 0.4, 0.44),
+    S([0, 1.0 + lift, -1.2 + back], 0.28, 0.3),
+  ]);
+  skin([
+    S([0, 1.02 + lift, -1.0 + back], 0.2, 0.22),
+    S([0, 1.0 + lift, -1.25 + back], 0.2, 0.2),
+    S([0, 0.95 + lift, -1.45 + back], 0.15, 0.15),
+    S([0, 0.9 + lift, -1.55 + back], 0.11, 0.1),
+  ]);
+  for (const side of [-1, 1]) {
+    skin([
+      S([side * 0.13, 1.14 + lift, -1.1 + back], 0.05, 0.04),
+      S([side * 0.16, 1.24 + lift, -1.12 + back], 0.03, 0.03),
+      S([side * 0.17, 1.28 + lift, -1.13 + back], 0.005, 0.005),
+    ]);
+  }
+  return parts;
+}
+
+/**
+ * An eagle standing with its wings folded, the bird that guards the rows of
+ * gods on Nemrut Dağı. About 0.8 m tall at a scale of one, facing `-z`.
+ */
+function eagleStatue(material: Material, at: Vec3, rotY: number, scale = 1): Part[] {
+  const parts: Part[] = [];
+  const S = (c: Vec3, rx: number, ry: number): LoftSection => ({
+    c: [c[0] * scale, c[1] * scale, c[2] * scale],
+    rx: rx * scale,
+    ry: ry * scale,
+  });
+  const skin = (sections: LoftSection[]) => parts.push(loft(material, at, rotY, sections));
+  // The body stands nearly upright, the breast forward, the tail low behind.
+  skin([
+    S([0, 0.12, 0.2], 0.14, 0.12),
+    S([0, 0.35, 0.1], 0.24, 0.22),
+    S([0, 0.55, 0.0], 0.22, 0.2),
+    S([0, 0.72, -0.08], 0.13, 0.12),
+  ]);
+  skin([
+    S([0, 0.74, -0.1], 0.1, 0.1),
+    S([0, 0.8, -0.2], 0.1, 0.1),
+    S([0, 0.78, -0.28], 0.06, 0.06),
+  ]);
+  // The hooked beak.
+  skin([
+    S([0, 0.78, -0.28], 0.04, 0.04),
+    S([0, 0.76, -0.34], 0.03, 0.03),
+    S([0, 0.72, -0.37], 0.01, 0.01),
+  ]);
+  for (const side of [-1, 1]) {
+    // A folded wing, lying along the flank and crossing over the tail.
+    skin([
+      S([side * 0.2, 0.66, -0.02], 0.06, 0.16),
+      S([side * 0.22, 0.5, 0.15], 0.05, 0.2),
+      S([side * 0.21, 0.3, 0.35], 0.03, 0.12),
+      S([side * 0.2, 0.2, 0.48], 0.01, 0.04),
+    ]);
+    skin([
+      S([side * 0.08, 0.3, 0.0], 0.05, 0.05),
+      S([side * 0.08, 0.05, 0.0], 0.035, 0.035),
+      S([side * 0.08, 0.0, -0.08], 0.09, 0.03),
+    ]);
+  }
+  skin([S([0, 0.2, 0.28], 0.12, 0.05), S([0, 0.1, 0.45], 0.16, 0.03)]);
   return parts;
 }
 
@@ -1737,7 +1908,8 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   const parts: Part[] = [];
   const outerRadius = spec.caveaDiameter / 2;
   const orchestraRadius = spec.orchestraDiameter / 2;
-  const rows = spec.lowerRows + spec.upperRows;
+  const middle = spec.middleRows ?? 0;
+  const rows = spec.lowerRows + middle + spec.upperRows;
   const diazoma = 1.8;
 
   // The orchestra floor. The ground under it all is the renderer's to lay.
@@ -1748,7 +1920,10 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   parts.push(ring("stone", 0, orchestraRadius, podiumOuter, spec.podiumHeight, 0, Math.PI));
 
   const rowAt = (index: number) => {
-    const walkways = index >= spec.lowerRows ? diazoma : 0;
+    // One walkway above the lower tier, and another above the middle one.
+    const walkways =
+      (index >= spec.lowerRows ? diazoma : 0) +
+      (middle > 0 && index >= spec.lowerRows + middle ? diazoma : 0);
     const inner = podiumOuter + index * spec.seatTread + walkways;
     return { inner, outer: inner + spec.seatTread, y: spec.podiumHeight + index * spec.seatRise };
   };
@@ -1758,19 +1933,23 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     parts.push(ring("stone", y, inner, outer, spec.seatRise + 0.06, 0, Math.PI));
   }
 
-  // The walkway that splits the bank in two.
-  const lower = rowAt(spec.lowerRows - 1);
-  parts.push(
-    ring(
-      "stoneDark",
-      lower.y + spec.seatRise,
-      lower.outer,
-      lower.outer + diazoma,
-      0.12,
-      0,
-      Math.PI,
-    ),
-  );
+  // The walkways that split the bank: one, or two where there are three tiers.
+  for (const last of middle > 0
+    ? [spec.lowerRows - 1, spec.lowerRows + middle - 1]
+    : [spec.lowerRows - 1]) {
+    const below = rowAt(last);
+    parts.push(
+      ring(
+        "stoneDark",
+        below.y + spec.seatRise,
+        below.outer,
+        below.outer + diazoma,
+        0.12,
+        0,
+        Math.PI,
+      ),
+    );
+  }
 
   // Radial stairs, laid over the rows rather than cut into them.
   const top = rowAt(rows - 1);
@@ -1866,8 +2045,9 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   );
 
   // Post holes for the awning masts, one mast each, around the rim.
-  for (let i = 0; i < spec.velariumMasts; i += 1) {
-    const theta = (Math.PI * (i + 0.5)) / spec.velariumMasts;
+  const masts = spec.velariumMasts ?? 0;
+  for (let i = 0; i < masts; i += 1) {
+    const theta = (Math.PI * (i + 0.5)) / masts;
     const r = outerRadius + 0.6;
     parts.push(
       cyl(
@@ -2042,13 +2222,17 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
     }
   };
 
+  const dipteral = (spec.rings ?? 2) === 2;
   perimeter(spec.outerColumnsShort, spec.outerColumnsLong, gridWidth / 2, gridLength / 2);
-  perimeter(
-    spec.outerColumnsShort - 2,
-    spec.outerColumnsLong - 2,
-    gridWidth / 2 - stepX,
-    gridLength / 2 - stepZ,
-  );
+  // A pseudodipteros keeps the second ring's spacing and leaves its place empty.
+  if (dipteral) {
+    perimeter(
+      spec.outerColumnsShort - 2,
+      spec.outerColumnsLong - 2,
+      gridWidth / 2 - stepX,
+      gridLength / 2 - stepZ,
+    );
+  }
 
   // Architrave, frieze and cornice, carried only over the colonnade: the court
   // inside was open to the sky and never took a roof.
@@ -2072,7 +2256,7 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
     }
   };
   beam(gridWidth / 2, gridLength / 2);
-  beam(gridWidth / 2 - stepX, gridLength / 2 - stepZ);
+  if (dipteral) beam(gridWidth / 2 - stepX, gridLength / 2 - stepZ);
 
   if (spec.interior === "open-court") {
     /*
@@ -2677,6 +2861,7 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
 
   parts.push(box("stone", [0, 0, 0], [spec.arenaWidth, 0.12, endCentre * 2]));
   for (const side of [-1, 1]) {
+    if (spec.openEnd && side < 0) continue;
     parts.push(
       ring("stone", 0, 0, arenaHalf, 0.12, side > 0 ? 0 : Math.PI, Math.PI, [0, side * endCentre]),
     );
@@ -2696,8 +2881,9 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
         ),
       );
     }
-    // And the two curved ends that close them.
+    // And the curved ends that close them — or the one end, at Perge.
     for (const side of [-1, 1]) {
+      if (spec.openEnd && side < 0) continue;
       parts.push(
         ring("stone", y, inner, outer, spec.seatRise + 0.06, side > 0 ? 0 : Math.PI, Math.PI, [
           0,
@@ -2726,6 +2912,7 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
     parts.push(
       box("stoneDark", [side * (outerRadius + 0.6), 0, 0], [1.2, bankTop + 1.2, endCentre * 2]),
     );
+    if (spec.openEnd && side < 0) continue;
     parts.push(
       ring(
         "stoneDark",
@@ -2887,6 +3074,309 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
   return parts;
 }
 
+/* ------------------------------------------------------------------ *
+ * A tomb on a podium under a stepped pyramid
+ * ------------------------------------------------------------------ */
+
+/**
+ * The Mausoleum at Halicarnassus, as the ancient descriptions and the
+ * excavated foundation give it: a podium in three tiers, a ring of thirty-six
+ * Ionic columns round a cella, a pyramid of twenty-four steps, and on the
+ * summit a marble chariot drawn by four horses. The lions that lined the
+ * podium and the statues that stood between the columns are here too — the
+ * building carried some four hundred figures, and a bare version of it would
+ * be a different building.
+ */
+export function mausoleumParts(spec: MausoleumSpec): Part[] {
+  const parts: Part[] = [];
+  const tiers = 3;
+  const tierHeight = spec.podiumHeight / tiers;
+  const setback = 1.4;
+  const band = 0.9;
+
+  // The podium, each tier set in and crowned by a moulded band.
+  for (let t = 0; t < tiers; t += 1) {
+    const w = spec.baseWidth - 2 * t * setback;
+    const d = spec.baseDepth - 2 * t * setback;
+    const y = t * tierHeight;
+    parts.push(box("marble", [0, y, 0], [w, tierHeight - band, d]));
+    parts.push(...cornice("marble", [0, y + tierHeight - band, 0], w + 0.5, d + 0.5, band));
+  }
+  const podiumTop = spec.podiumHeight;
+
+  // The lions, pacing the ledge below the top tier, all facing outwards.
+  const ledgeY = 2 * tierHeight;
+  const lw = spec.baseWidth / 2 - setback - 0.35;
+  const ld = spec.baseDepth / 2 - setback - 0.35;
+  const perimeter = 4 * (lw + ld);
+  for (let i = 0; i < spec.lions; i += 1) {
+    let s = (perimeter * (i + 0.5)) / spec.lions;
+    let at: Vec3;
+    let rotY: number;
+    if (s < 2 * ld) {
+      at = [lw, ledgeY, -ld + s];
+      rotY = -Math.PI / 2;
+    } else if ((s -= 2 * ld) < 2 * lw) {
+      at = [lw - s, ledgeY, ld];
+      rotY = Math.PI;
+    } else if ((s -= 2 * lw) < 2 * ld) {
+      at = [-lw, ledgeY, ld - s];
+      rotY = Math.PI / 2;
+    } else {
+      s -= 2 * ld;
+      at = [-lw + s, ledgeY, -ld];
+      rotY = 0;
+    }
+    parts.push(...lionStatue("marbleWorn", at, rotY, 0.9));
+  }
+
+  // Thirty-six columns, nine by eleven, one intercolumniation in from the edge.
+  const topW = spec.baseWidth - 2 * (tiers - 1) * setback;
+  const topD = spec.baseDepth - 2 * (tiers - 1) * setback;
+  const gridW = topW - 3;
+  const gridD = topD - 3;
+  let raised = 0;
+  const columnsAt: Vec3[] = [];
+  for (let i = 0; i < spec.columnsShort; i += 1) {
+    for (let k = 0; k < spec.columnsLong; k += 1) {
+      const onEdge =
+        i === 0 || i === spec.columnsShort - 1 || k === 0 || k === spec.columnsLong - 1;
+      if (!onEdge || raised >= spec.columns) continue;
+      raised += 1;
+      const x = -gridW / 2 + (gridW * i) / (spec.columnsShort - 1);
+      const z = -gridD / 2 + (gridD * k) / (spec.columnsLong - 1);
+      columnsAt.push([x, podiumTop, z]);
+      parts.push(
+        ...column("marble", [x, podiumTop, z], spec.columnDiameter, spec.columnHeight, "ionic"),
+      );
+    }
+  }
+  // Statues between the columns: draped figures on the front and the sides.
+  let placed = 0;
+  for (let i = 0; i < columnsAt.length - 1 && placed < spec.statues; i += 1) {
+    const a = columnsAt[i]!;
+    const b = columnsAt[i + 1]!;
+    if (Math.hypot(a[0] - b[0], a[2] - b[2]) > gridW / (spec.columnsShort - 1) + 0.5) continue;
+    const mid: Vec3 = [(a[0] + b[0]) / 2, podiumTop, (a[2] + b[2]) / 2];
+    // Facing outwards from the cella.
+    const facing = Math.atan2(mid[0], -mid[2]);
+    parts.push(person(mid, 2.6, facing + Math.PI, "marble", placed % 2 === 0));
+    placed += 1;
+  }
+  // The cella inside the ring.
+  parts.push(box("marbleWorn", [0, podiumTop, 0], [gridW - 5, spec.columnHeight, gridD - 5]));
+  // Architrave, frieze and cornice over the colonnade.
+  const beamTop = podiumTop + spec.columnHeight;
+  parts.push(
+    ...cornice(
+      "marble",
+      [0, beamTop, 0],
+      gridW + spec.columnDiameter * 2.4,
+      gridD + spec.columnDiameter * 2.4,
+      spec.entablatureHeight,
+    ),
+  );
+  parts.push(box("marbleWorn", [0, beamTop, 0], [gridW - 5, spec.entablatureHeight, gridD - 5]));
+
+  // The pyramid: twenty-four steps closing to the platform the chariot stands on.
+  const pyramidBase = beamTop + spec.entablatureHeight;
+  const stepH = spec.pyramidHeight / spec.pyramidSteps;
+  const fromW = gridW + spec.columnDiameter * 2.4;
+  const fromD = gridD + spec.columnDiameter * 2.4;
+  const summit = 7;
+  for (let s = 0; s < spec.pyramidSteps; s += 1) {
+    const t = s / spec.pyramidSteps;
+    const w = fromW + (summit - fromW) * t;
+    const d = fromD + (summit - fromD) * t;
+    parts.push(box("marble", [0, pyramidBase + s * stepH, 0], [w, stepH, d]));
+  }
+
+  // The quadriga: a pedestal, four horses abreast, the chariot and the two
+  // figures riding in it, all in marble, the whole group the cited height.
+  const summitY = pyramidBase + spec.pyramidHeight;
+  const pedestal = 1.0;
+  parts.push(box("marble", [0, summitY, 0], [summit, pedestal, summit]));
+  const horseScale = (spec.quadrigaHeight - pedestal) / 2.3;
+  const groupY = summitY + pedestal;
+  for (const x of [-1.5, -0.5, 0.5, 1.5]) {
+    parts.push(
+      ...horseStatue(
+        "marble",
+        [x * 1.05 * horseScale, groupY, 0.6 * horseScale],
+        0,
+        horseScale,
+        x < 0 ? -1 : 1,
+      ),
+    );
+  }
+  const chariotZ = 1.9 * horseScale;
+  parts.push(
+    box("marble", [0, groupY, chariotZ], [1.3 * horseScale, 0.55 * horseScale, 0.9 * horseScale]),
+  );
+  parts.push(
+    box(
+      "marble",
+      [0, groupY + 0.55 * horseScale, chariotZ + 0.12 * horseScale],
+      [1.3 * horseScale, 0.55 * horseScale, 0.12 * horseScale],
+    ),
+  );
+  for (const side of [-1, 1]) {
+    parts.push(
+      cyl(
+        "marble",
+        [side * 0.72 * horseScale, groupY + 0.42 * horseScale, chariotZ],
+        0.42 * horseScale,
+        0.42 * horseScale,
+        0.1 * horseScale,
+        18,
+        { rotY: Math.PI / 2, rotX: Math.PI / 2 },
+      ),
+    );
+  }
+  // Mausolus, bearded, and Artemisia beside him, standing in the car.
+  parts.push(
+    person(
+      [-0.3 * horseScale, groupY + 0.55 * horseScale, chariotZ],
+      1.55 * horseScale,
+      Math.PI,
+      "marble",
+      true,
+    ),
+  );
+  parts.push(
+    person(
+      [0.3 * horseScale, groupY + 0.55 * horseScale, chariotZ],
+      1.45 * horseScale,
+      Math.PI,
+      "marble",
+      false,
+    ),
+  );
+
+  // On the low ground of the city, with the harbour hills behind.
+  parts.push(...setting(spec.baseDepth * 0.7, 3531, { stone: 0.5, grass: 0.9, hills: 0.45 }));
+  parts.push(person([spec.baseWidth * 0.5 + 4, 0, -spec.baseDepth * 0.5 - 3], 1.75, 0.4));
+  return parts;
+}
+
+/* ------------------------------------------------------------------ *
+ * A tumulus with a terrace of enthroned colossi
+ * ------------------------------------------------------------------ */
+
+/**
+ * The east terrace of Nemrut Dağı, with the gravel tumulus rising behind it.
+ *
+ * Five colossi sit enthroned in a row with their backs to the mound — the
+ * king, the goddess of Commagene, Zeus, Apollo and Herakles under the names
+ * Antiochus gave them — with an eagle and a lion closing the row at either
+ * end, and the stepped altar facing them across the court. The tumulus is
+ * scenery: the camera frames the terrace, and the mound is what stands behind
+ * it. The heads that today lie at the statues' feet are back on their
+ * shoulders, because this is the sanctuary as built.
+ */
+export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
+  const parts: Part[] = [];
+  const R = spec.tumulusDiameter / 2;
+  // The mound, its foot just behind the plinth the statues sit on.
+  parts.push(
+    scenery(worn(cyl("stone", [-R - 2.5, -0.5, 0], R, R * 0.06, spec.tumulusHeight, 72), 1.6)),
+  );
+
+  // The terrace: the paved court, and the plinth along its west side.
+  const halfCourt = spec.courtWidth / 2;
+  parts.push(
+    box(
+      "stone",
+      [spec.courtDepth / 2 + 1, -0.3, 0],
+      [spec.courtDepth + 6, 0.3, spec.courtWidth + 12],
+    ),
+  );
+  const plinthHeight = 0.9;
+  const rowWidth = spec.courtWidth + 8;
+  parts.push(box("limestone", [-0.5, 0, 0], [5.4, plinthHeight, rowWidth]));
+  parts.push(box("limestone", [-1.2, plinthHeight, 0], [4.0, 0.5, rowWidth - 1]));
+  const seatY = plinthHeight + 0.5;
+
+  // The colossi, facing east across the court; left to right as seen from
+  // the court, the king first and Herakles last.
+  const bearded = [true, false, true, false, true];
+  const throne = spec.throneHeight;
+  const seated = spec.statueHeight - throne;
+  for (let i = 0; i < spec.colossi; i += 1) {
+    const z = (i - (spec.colossi - 1) / 2) * (spec.throneBase + 0.8);
+    parts.push(
+      worn(box("limestone", [-1.0, seatY, z], [spec.throneBase, throne, spec.throneBase]), 0.04),
+    );
+    // A low footstool in front of the throne.
+    parts.push(
+      box("limestone", [spec.throneBase / 2 - 0.2, seatY, z], [1.6, 0.6, spec.throneBase * 0.7]),
+    );
+    parts.push({
+      kind: "figure",
+      material: "limestone",
+      at: [-1.5, seatY + throne, z],
+      // A seated figure is measured from the seat to the crown.
+      height: seated / 0.52,
+      rotY: Math.PI / 2,
+      bearded: bearded[i % bearded.length]!,
+      pose: "seated",
+    });
+  }
+  // The guardians: an eagle then a lion beyond the last throne at each end,
+  // turned the other way from the figures because an animal faces -z.
+  const edge = ((spec.colossi - 1) / 2) * (spec.throneBase + 0.8) + spec.throneBase / 2;
+  for (const side of [-1, 1]) {
+    const eagleZ = side * (edge + 1.6);
+    const lionZ = side * (edge + 4.6);
+    parts.push(box("limestone", [-1.0, seatY, eagleZ], [2.6, 0.6, 2.4]));
+    parts.push(
+      ...eagleStatue(
+        "limestone",
+        [-1.0, seatY + 0.6, eagleZ],
+        -Math.PI / 2,
+        spec.guardianHeight / 0.8,
+      ),
+    );
+    parts.push(box("limestone", [-1.0, seatY, lionZ], [3.2, 0.6, 3.0]));
+    parts.push(
+      ...lionStatue(
+        "limestone",
+        [-1.0, seatY + 0.6, lionZ],
+        -Math.PI / 2,
+        spec.guardianHeight / 1.55,
+        "seated",
+      ),
+    );
+  }
+
+  // The stepped altar across the court from the gods.
+  const altarX = spec.courtDepth - 4;
+  for (let s = 0; s < spec.altarSteps; s += 1) {
+    const w = 7 - s * 1.1;
+    parts.push(worn(box("limestone", [altarX, s * 0.8, 0], [w, 0.8, w]), 0.03));
+  }
+  // The rows of stelae with the king's ancestors, along both long sides.
+  for (const side of [-1, 1]) {
+    for (let i = 0; i < 6; i += 1) {
+      const x = 5 + i * 3.2;
+      parts.push(worn(box("limestone", [x, 0, side * (halfCourt + 1)], [1.5, 2.6, 0.4]), 0.03));
+      parts.push(box("limestone", [x, 0, side * (halfCourt + 1)], [2.0, 0.4, 1.0]));
+    }
+  }
+
+  // A bare summit above the tree line: rock and thin scrub, ridges all round.
+  parts.push(
+    ...setting(spec.courtDepth * 0.9, 6234, {
+      stone: 1.4,
+      grass: 0.4,
+      hills: 1.1,
+      ground: "stone",
+    }),
+  );
+  parts.push(person([spec.courtDepth * 0.45, 0, -halfCourt * 0.5], 1.75, 2.0));
+  return parts;
+}
+
 export function partsFor(spec: ModelSpec): Part[] {
   switch (spec.kind) {
     case "roman-facade":
@@ -2903,6 +3393,10 @@ export function partsFor(spec: ModelSpec): Part[] {
       return peristyleHouseParts(spec);
     case "stadium":
       return stadiumParts(spec);
+    case "mausoleum":
+      return mausoleumParts(spec);
+    case "tumulus-sanctuary":
+      return tumulusSanctuaryParts(spec);
   }
 }
 
@@ -3001,8 +3495,14 @@ export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
     } else {
       // A figure: a rider's legs hang below the seat given as `at`.
       const r = part.height * 0.25;
-      const foot = part.pose === "riding" ? y - part.height * 0.5 : y;
-      const top = part.pose === "riding" ? y + part.height * 0.56 : y + part.height;
+      const foot =
+        part.pose === "riding"
+          ? y - part.height * 0.5
+          : part.pose === "seated"
+            ? y - part.height * 0.3
+            : y;
+      const top =
+        part.pose === "riding" || part.pose === "seated" ? y + part.height * 0.62 : y + part.height;
       grow(x - r, foot, z - r);
       grow(x + r, top, z + r);
     }

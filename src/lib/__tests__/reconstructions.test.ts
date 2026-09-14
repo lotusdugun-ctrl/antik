@@ -76,11 +76,12 @@ describe("the reconstruction records", () => {
       expect(reconstructionForStructure(item.siteSlug, item.structure.tr)?.id).toBe(item.id);
     }
     expect(reconstructionForStructure("efes", "Kuretler Caddesi")).toBeUndefined();
-    // Ephesus has three, which is the case the lookup has to keep apart.
+    // Ephesus has four, which is the case the lookup has to keep apart.
     expect(reconstructionsFor("efes").map((r) => r.id)).toEqual([
       "celsus-kutuphanesi",
       "artemis-tapinagi",
       "efes-yamac-evler",
+      "efes-buyuk-tiyatro",
     ]);
   });
 
@@ -455,5 +456,81 @@ describe("the carved silhouettes", () => {
     for (const rider of riders) {
       expect(rider.at[1]).toBeGreaterThan(2.94 + 1.2);
     }
+  });
+});
+
+describe("the six models added in September 2026", () => {
+  /** The Aspendos derivation, applied to every theatre: rows fit the diameter. */
+  test("every theatre's rows fit inside its cited diameter with a gallery to spare", () => {
+    for (const item of reconstructions) {
+      const spec = item.model;
+      if (spec.kind !== "roman-theatre") continue;
+      const rows = spec.lowerRows + (spec.middleRows ?? 0) + spec.upperRows;
+      const walkways = spec.middleRows ? 2 : 1;
+      const topOfRows = spec.orchestraDiameter / 2 + 0.7 + rows * spec.seatTread + walkways * 1.8;
+      const outer = spec.caveaDiameter / 2;
+      expect(`${item.id}: ${topOfRows < outer}`).toBe(`${item.id}: true`);
+      expect(outer - topOfRows).toBeGreaterThan(2.5);
+    }
+  });
+
+  test("the mausoleum stands as tall as its measurement, on all its columns", () => {
+    const tomb = reconstructions.find((r) => r.id === "halikarnas-mozolesi")!;
+    const spec = tomb.model;
+    if (spec.kind !== "mausoleum") throw new Error("expected a mausoleum");
+    const { max } = boundsOf(partsOf(tomb));
+    expect(Math.abs(max[1] - spec.totalHeight)).toBeLessThan(3);
+    const drumHeight = (spec.columnHeight / SHAFT_DRUMS) * 0.8;
+    const drums = partsOf(tomb).filter(
+      (part) => part.kind === "cylinder" && part.flutes !== undefined && part.height > drumHeight,
+    );
+    expect(drums.length / SHAFT_DRUMS).toBe(spec.columns);
+    // Four horses on the summit, each ten lofts, and twenty lions on the ledge.
+    const lofts = partsOf(tomb).filter((part) => part.kind === "loft");
+    expect(lofts.length).toBeGreaterThanOrEqual(40 + spec.lions * 10);
+    expect(spec.columnsShort * 2 + spec.columnsLong * 2 - 4).toBe(spec.columns);
+  });
+
+  test("the terrace seats every colossus on its throne, facing the court", () => {
+    const nemrut = reconstructions.find((r) => r.id === "nemrut-dogu-terasi")!;
+    const spec = nemrut.model;
+    if (spec.kind !== "tumulus-sanctuary") throw new Error("expected a sanctuary");
+    const enthroned = partsOf(nemrut).filter(
+      (part): part is Extract<Part, { kind: "figure" }> =>
+        part.kind === "figure" && part.pose === "seated",
+    );
+    expect(enthroned.length).toBe(spec.colossi);
+    for (const figure of enthroned) {
+      // Seated height plus the throne is the cited statue height.
+      expect(figure.height * 0.52 + spec.throneHeight).toBeCloseTo(spec.statueHeight, 5);
+      // Every one faces +x, out over the court.
+      expect(Math.sin(figure.rotY)).toBeCloseTo(1, 5);
+    }
+    // The mound is scenery, so the camera frames the terrace and not 152 m of gravel.
+    const { max, min } = boundsOf(partsOf(nemrut));
+    expect(max[0] - min[0]).toBeLessThan(spec.tumulusDiameter);
+    expect(max[1]).toBeLessThan(spec.tumulusHeight);
+  });
+
+  test("the open-ended stadium closes only its north end", () => {
+    const perge = reconstructions.find((r) => r.id === "perge-stadyumu")!;
+    const spec = perge.model;
+    if (spec.kind !== "stadium") throw new Error("expected a stadium");
+    expect(spec.openEnd).toBe(true);
+    const endRings = partsOf(perge).filter(
+      (part) => part.kind === "ring" && Math.abs(part.at[2]) > spec.overallLength / 4,
+    );
+    expect(endRings.length).toBeGreaterThan(0);
+    expect(endRings.every((part) => part.at[2] > 0)).toBe(true);
+    const tread = (spec.overallWidth - spec.arenaWidth) / 2 / spec.rows;
+    expect(tread).toBeCloseTo(0.63, 2);
+  });
+
+  test("the pseudodipteros raises one ring of columns, not two", () => {
+    const aizanoi = reconstructions.find((r) => r.id === "aizanoi-zeus-tapinagi")!;
+    const spec = aizanoi.model;
+    if (spec.kind !== "ionic-dipteros") throw new Error("expected a temple");
+    expect(spec.rings).toBe(1);
+    expect(2 * spec.outerColumnsShort + 2 * spec.outerColumnsLong - 4).toBe(spec.totalColumns);
   });
 });

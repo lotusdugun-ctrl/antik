@@ -72,7 +72,8 @@ export type RomanTheatreSpec = {
   caveaDiameter: number;
   orchestraDiameter: number;
   scaenaeHeight: number;
-  velariumMasts: number;
+  /** Omitted where the post holes have not been counted. */
+  velariumMasts?: number;
   /** Modelled: seat geometry, and therefore the row count. See `uncertainty`. */
   seatTread: number;
   seatRise: number;
@@ -81,6 +82,8 @@ export type RomanTheatreSpec = {
   stairways: number;
   lowerRows: number;
   upperRows: number;
+  /** A third tier between the two, as at Ephesus; one walkway more. */
+  middleRows?: number;
 };
 
 /**
@@ -112,6 +115,12 @@ export type IonicDipterosSpec = {
   naiskosLength: number;
   /** Modelled. */
   interior: "open-court" | "cella";
+  /**
+   * Rings of columns round the building: two for a true dipteros, one for a
+   * pseudodipteros, which keeps the second ring's spacing and leaves its
+   * place empty. Two unless said otherwise.
+   */
+  rings?: 1 | 2;
   courtWidth: number;
   courtLength: number;
   columnDiameter: number;
@@ -170,6 +179,8 @@ export type StadiumSpec = {
   arenaWidth: number;
   seatRise: number;
   entrances: number;
+  /** One end left open, as at Perge, instead of both closed. */
+  openEnd?: boolean;
 };
 
 /** A Pre-Pottery Neolithic enclosure: a ring of T-shaped pillars in a wall. */
@@ -188,6 +199,52 @@ export type NeolithicEnclosureSpec = {
   pillarThickness: number;
 };
 
+/**
+ * A tomb on a tall podium, ringed by columns and roofed by a stepped pyramid
+ * with a chariot on the summit — the Mausoleum at Halicarnassus, which gave
+ * every later mausoleum its name.
+ */
+export type MausoleumSpec = {
+  kind: "mausoleum";
+  /** Cited. */
+  baseWidth: number;
+  baseDepth: number;
+  podiumHeight: number;
+  columns: number;
+  columnsShort: number;
+  columnsLong: number;
+  pyramidSteps: number;
+  pyramidHeight: number;
+  quadrigaHeight: number;
+  totalHeight: number;
+  lions: number;
+  /** Modelled. */
+  columnHeight: number;
+  columnDiameter: number;
+  entablatureHeight: number;
+  statues: number;
+};
+
+/**
+ * A hilltop tumulus with a terrace of colossal enthroned figures at its foot:
+ * the tomb-sanctuary of Antiochus I on Nemrut Dağı.
+ */
+export type TumulusSanctuarySpec = {
+  kind: "tumulus-sanctuary";
+  /** Cited. */
+  tumulusHeight: number;
+  tumulusDiameter: number;
+  courtWidth: number;
+  courtDepth: number;
+  statueHeight: number;
+  throneBase: number;
+  colossi: number;
+  /** Modelled. */
+  throneHeight: number;
+  guardianHeight: number;
+  altarSteps: number;
+};
+
 export type ModelSpec =
   | RomanFacadeSpec
   | RomanTheatreSpec
@@ -195,7 +252,9 @@ export type ModelSpec =
   | NeolithicEnclosureSpec
   | GreatAltarSpec
   | StadiumSpec
-  | PeristyleHouseSpec;
+  | PeristyleHouseSpec
+  | MausoleumSpec
+  | TumulusSanctuarySpec;
 
 /**
  * A named part of the building, pinned to the point in the model where it is.
@@ -315,8 +374,8 @@ export const reconstructions: Reconstruction[] = [
       },
     ],
     uncertainty: l(
-      "Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni — dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen/yay alınlıklar — 1970-78'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır; iki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise orantıdır, ölçü değil. Nişlerdeki heykeller çizilmemiş, cephedeki Episteme heykelinin — kaidesinde adı yazılı olanın — fotoğrafı dört nişe de kaplanmıştır; dördü de aynı görünür, oysa yerlerinde Sophia, Ennoia ve Arete duruyordu. Başlıkların akant yaprakları ve volütleri modellenmiştir ama taştaki işçiliğin kopyası değildir; frizlerdeki yazıtlar ve bezeme modelde yoktur. **Renkler de ölçü değil, yorumdur:** Roma mermer cepheleri boyalıydı ve bugün Efes'te boya izi kalmamıştır — modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar, altın kafes pencereler ve merdivenin iki yanındaki bronz atlı heykeller yayımlanmış bir rekonstrüksiyon resminden alınmıştır, kazıdan değil. Salonun tavanı da yoktur: yapının iki katlı mı üç katlı mı olduğu tartışmalıdır.",
-      "The façade's width and height are measured. The rhythm of the front — four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those — is read off photographs of the front re-erected in 1970-78; how the two orders divide the 16 metres, the column diameters and the poses of the statues are proportion rather than measurement. The statues in the niches are not drawn but photographed: a picture of Episteme, who still stands on this front with her name cut beneath her, fills all four niches — where Sophia, Ennoia and Arete stood beside her. The acanthus and volutes of the capitals are modelled but are not a copy of the carving on the stone, and the inscriptions and the ornament of the friezes are absent. **The colour is interpretation, not measurement:** Roman marble fronts were painted, and no pigment survives at Ephesus — the red panels, the blue and gilded mouldings, the timber doors, the gilded window lattices and the bronze horsemen flanking the stairs are taken from a published reconstruction painting, not from the excavation. So is the hall's ceiling absent: whether the building had two storeys or three is disputed.",
+      "Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni — dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen/yay alınlıklar — 1970-78'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır; iki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise orantıdır, ölçü değil. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir ama Viyana'daki özgün heykellerin kopyası değildir; duruşları ve giysileri yorumdur. Avludaki bronz atlılar da Roma'daki Marcus Aurelius heykelinin oranlarıyla kurulmuştur. Başlıkların akant yaprakları ve volütleri modellenmiştir ama taştaki işçiliğin kopyası değildir; frizlerdeki yazıtlar ve bezeme modelde yoktur. **Renkler de ölçü değil, yorumdur:** Roma mermer cepheleri boyalıydı ve bugün Efes'te boya izi kalmamıştır — modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar, altın kafes pencereler ve merdivenin iki yanındaki bronz atlı heykeller yayımlanmış bir rekonstrüksiyon resminden alınmıştır, kazıdan değil. Salonun tavanı da yoktur: yapının iki katlı mı üç katlı mı olduğu tartışmalıdır.",
+      "The façade's width and height are measured. The rhythm of the front — four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those — is read off photographs of the front re-erected in 1970-78; how the two orders divide the 16 metres, the column diameters and the poses of the statues are proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, but they are not copies of the originals in Vienna; their poses and clothing are interpretation. The bronze horsemen in the court are likewise built on the proportions of the Marcus Aurelius in Rome. The acanthus and volutes of the capitals are modelled but are not a copy of the carving on the stone, and the inscriptions and the ornament of the friezes are absent. **The colour is interpretation, not measurement:** Roman marble fronts were painted, and no pigment survives at Ephesus — the red panels, the blue and gilded mouldings, the timber doors, the gilded window lattices and the bronze horsemen flanking the stairs are taken from a published reconstruction painting, not from the excavation. So is the hall's ceiling absent: whether the building had two storeys or three is disputed.",
     ),
     hotspots: [
       spot(
@@ -1294,6 +1353,705 @@ export const reconstructions: Reconstruction[] = [
       roomDepth: 5.5,
       columnDiameter: 0.42,
       poolWidth: 3.2,
+    },
+  },
+  {
+    id: "efes-buyuk-tiyatro",
+    siteSlug: "efes",
+    structure: l("Büyük Tiyatro", "Great Theatre"),
+    title: l("Efes Büyük Tiyatrosu", "The Great Theatre of Ephesus"),
+    blurb: l(
+      "Antik dünyanın en büyük tiyatrolarından biri: Panayır Dağı'nın yamacına oyulmuş üç katlı cavea, liman caddesinin ucundan Roma sahne binasına bakar. Elçilerin İşleri'ndeki gümüşçüler ayaklanması bu tiyatroda geçer.",
+      "One of the largest theatres of antiquity: a three-tiered cavea cut into the slope of Mount Pion, looking down the Harbour Street at a Roman stage building. The riot of the silversmiths in the Acts of the Apostles takes place here.",
+    ),
+    period: l("MÖ 3. yüzyıl - MS 2. yüzyıl", "3rd century BC - 2nd century AD"),
+    measures: [
+      {
+        value: 142,
+        unit: "m",
+        label: l("Oturma bölümünün (cavea) çapı", "Diameter of the seating bank"),
+        source: "archive",
+      },
+      {
+        value: 26,
+        unit: "m",
+        label: l("Orkestra çapı", "Diameter of the orchestra"),
+        source: "archive",
+      },
+      {
+        value: 24,
+        unit: "count",
+        label: l("Alt kattaki (ima cavea) sıra", "Rows in the lower tier"),
+        source: "archive",
+      },
+      {
+        value: 22,
+        unit: "count",
+        label: l("Orta kattaki (media cavea) sıra", "Rows in the middle tier"),
+        source: "archive",
+      },
+      {
+        value: 21,
+        unit: "count",
+        label: l("Üst kattaki (summa cavea) sıra", "Rows in the upper tier"),
+        source: "archive",
+      },
+      {
+        value: 21500,
+        unit: "people",
+        label: l("Oturma kapasitesi", "Seated capacity"),
+        source: "archive",
+      },
+    ],
+    uncertainty: l(
+      "Caveanın çapı, orkestranın çapı ve üç kattaki sıra sayıları arşiv kaydından alınmıştır; basamak derinliği (0,7 m), sıra yüksekliği ve iki diazomanın genişliği ise bunları 142 metreye sığdıracak biçimde türetilmiştir. Sahne binasının üç katlı cephesi ölçülmüş değil, Nero döneminde iki kat olarak yapılıp 2. yüzyılda üçüncü katın eklendiği bilgisinden 18 metre olarak orantılanmıştır; kapı ve niş düzeni Aspendos'taki gibi genel bir Roma sahne duvarıdır, Efes'inkinin kopyası değildir. 3. yüzyılda orkestranın arenaya çevrilişi, merdiven sayısı ve tente direkleri modelde yoktur.",
+      "The diameter of the cavea and the orchestra and the row counts of the three tiers come from the archive record; the seat tread (0.7 m), the riser and the width of the two walkways are derived to fit them into 142 metres. The three-storey stage front is not measured: it is proportioned to 18 metres from the record that it was built two storeys high under Nero and given its third in the 2nd century, and its doorways and aediculae are a generic Roman stage wall, as at Aspendos, not a copy of the one at Ephesus. The 3rd-century conversion of the orchestra into an arena, the exact stairway count and the awning masts are not modelled.",
+    ),
+    hotspots: [
+      spot(
+        [0, 0.8, 8],
+        "Orkestra",
+        "The orchestra",
+        "26 metre çapında; 3. yüzyılda etrafı duvarla çevrilip arenaya dönüştürüldü.",
+        "26 metres across; walled round in the 3rd century and turned into an arena.",
+      ),
+      spot(
+        [0, 12, -7.8],
+        "Sahne binası",
+        "The stage building",
+        "Nero döneminde iki katlı yapıldı, üçüncü kat 2. yüzyılda eklendi.",
+        "Built two storeys high under Nero; the third storey was added in the 2nd century.",
+      ),
+      spot(
+        [0, 10, 31],
+        "Birinci diazoma",
+        "The first walkway",
+        "Alt kat ile orta katı ayıran geçit; alt katta 24 sıra vardır.",
+        "The walkway between the lower and middle tiers; the lower tier has 24 rows.",
+      ),
+      spot(
+        [0, 18, 48],
+        "İkinci diazoma",
+        "The second walkway",
+        "Orta kat ile üst katı ayırır; üst kat 1. yüzyılda eklendi.",
+        "Separates the middle tier from the upper one, which was added in the 1st century.",
+      ),
+      spot(
+        [-30, 12, 45],
+        "Üç katlı cavea",
+        "The three-tiered cavea",
+        "24, 22 ve 21 sıra: toplam 67 sıra, 21.500 kişi.",
+        "24, 22 and 21 rows: 67 in all, for 21,500 people.",
+      ),
+      spot(
+        [0, 26, 69],
+        "Üst galeri",
+        "The upper gallery",
+        "Yamacın tepesinde, en üst sıranın arkasındaki örtülü geçit.",
+        "The covered passage behind the top row, at the crest of the slope.",
+      ),
+    ],
+    sources: [
+      {
+        key: "archive",
+        title: l("Ancient Theatre Archive: Ephesus", "The Ancient Theatre Archive: Ephesus"),
+        url: "https://ancienttheatrearchive.com/theatre/ephesus-modern-selcuk-turkey/",
+      },
+    ],
+    model: {
+      kind: "roman-theatre",
+      caveaDiameter: 142,
+      orchestraDiameter: 26,
+      scaenaeHeight: 18,
+      seatTread: 0.7,
+      seatRise: 0.36,
+      podiumHeight: 1.2,
+      stageDepth: 7,
+      stairways: 10,
+      lowerRows: 24,
+      middleRows: 22,
+      upperRows: 21,
+    },
+  },
+  {
+    id: "side-tiyatrosu",
+    siteSlug: "side",
+    structure: l("Tiyatro", "Theatre"),
+    title: l("Side Tiyatrosu", "The Theatre of Side"),
+    blurb: l(
+      "Pamphylia'nın en büyük tiyatrosu ve yamaca değil, düz zemine kurulmuş nadir örneklerden: cavea iki katlı tonozlu bir alt yapı üzerinde yükselir. Üç katlı sahne binası kentin sütunlu caddesine cephe verirdi.",
+      "The largest theatre in Pamphylia, and one of the rare ones built on level ground rather than a hillside: the cavea stands on a two-storey vaulted substructure. Its three-storey stage building faced the colonnaded street of the city.",
+    ),
+    period: l("MS 150 - 175", "AD 150 - 175"),
+    measures: [
+      {
+        value: 120,
+        unit: "m",
+        label: l("Oturma bölümünün (cavea) çapı", "Diameter of the seating bank"),
+        source: "archive",
+      },
+      {
+        value: 29,
+        unit: "m",
+        label: l("Orkestra çapı", "Diameter of the orchestra"),
+        source: "archive",
+      },
+      {
+        value: 30,
+        unit: "count",
+        label: l("Alt kattaki sıra", "Rows in the lower tier"),
+        source: "archive",
+      },
+      {
+        value: 25,
+        unit: "count",
+        label: l("Üst kattaki sıra", "Rows in the upper tier"),
+        source: "archive",
+      },
+      {
+        value: 0.805,
+        unit: "m",
+        label: l("Orkestrayı çevreleyen podyum duvarı", "Podium wall round the orchestra"),
+        source: "archive",
+      },
+      {
+        value: 6,
+        unit: "m",
+        label: l("Sahne platformunun derinliği", "Depth of the stage platform"),
+        source: "archive",
+      },
+      {
+        value: 15000,
+        unit: "people",
+        label: l("Kapasite", "Capacity"),
+        source: "de",
+      },
+    ],
+    uncertainty: l(
+      "Caveanın ve orkestranın çapı, iki kattaki sıra sayıları, podyum duvarı ve sahnenin derinliği arşiv kaydından; kapasite Almanca Wikipedia'dan alınmıştır. Basamak derinliği (0,7 m) ve sıra yüksekliği bunları 120 metreye sığdıracak biçimde türetilmiştir. Üç katlı sahne binasının 63 metrelik genişliği bilinir ama yüksekliği ölçülmüş değildir; model onu 17 metreye orantılar ve cephenin nişleriyle kapılarını genel bir Roma sahne duvarı olarak çizer. Caveayı taşıyan iki katlı tonozlu alt yapı modelde kemerli bir dış cephe olarak gösterilir; orkestranın sonradan arenaya çevrilirken örülen 2 metrelik duvar yoktur.",
+      "The cavea and orchestra diameters, the row counts of the two tiers, the podium wall and the stage depth come from the archive record; the capacity from the German Wikipedia. The seat tread (0.7 m) and the riser are derived to fit them into 120 metres. The three-storey stage building is known to be 63 m wide but its height is not measured; the model proportions it to 17 metres and draws its niches and doorways as a generic Roman stage wall. The two-storey vaulted substructure that carries the cavea is shown as an arcaded outer face, and the 2 m wall built round the orchestra when it became an arena is not modelled.",
+    ),
+    hotspots: [
+      spot(
+        [0, 0.8, 8],
+        "Orkestra",
+        "The orchestra",
+        "29 metre çapında; 80 santimlik podyum duvarı seyirciyi arenadan ayırırdı.",
+        "29 metres across; an 80 cm podium wall kept the audience off the floor.",
+      ),
+      spot(
+        [0, 3.5, -3],
+        "Sahne platformu",
+        "The stage platform",
+        "Altı metre derinliğinde, orkestradan üç metre yukarıda taş bir platform.",
+        "A stone platform six metres deep, standing three metres above the orchestra.",
+      ),
+      spot(
+        [0, 11, -7],
+        "Sahne binası",
+        "The stage building",
+        "Üç katlı, 63 metre genişliğinde; sütunlu caddeye bakan cephesi heykellerle doluydu.",
+        "Three storeys and 63 metres wide, its street front once crowded with statues.",
+      ),
+      spot(
+        [0, 12, 37],
+        "Diazoma",
+        "The diazoma",
+        "Otuz sıralık alt kat ile yirmi beş sıralık üst katı ayıran geçit.",
+        "The walkway between the thirty rows below and the twenty-five above.",
+      ),
+      spot(
+        [0, 21, 58],
+        "Tonozlu alt yapı",
+        "The vaulted substructure",
+        "Yamaç olmadığı için cavea iki kat tonoz üstünde durur; dıştan kemerli bir cephe.",
+        "With no hillside, the cavea rests on two storeys of vaults: an arcaded face outside.",
+      ),
+    ],
+    sources: [
+      {
+        key: "archive",
+        title: l("Ancient Theatre Archive: Side", "The Ancient Theatre Archive: Side"),
+        url: "https://ancienttheatrearchive.com/theatre/side-modern-eski-turkey/",
+      },
+      wiki(
+        "de",
+        "de",
+        "Side_(Pamphylien)",
+        "Wikipedia (Almanca): Side (Pamphylien)",
+        "Wikipedia (German): Side (Pamphylien)",
+      ),
+    ],
+    model: {
+      kind: "roman-theatre",
+      caveaDiameter: 120,
+      orchestraDiameter: 29,
+      scaenaeHeight: 17,
+      seatTread: 0.7,
+      seatRise: 0.36,
+      podiumHeight: 0.805,
+      stageDepth: 6,
+      stairways: 10,
+      lowerRows: 30,
+      upperRows: 25,
+    },
+  },
+  {
+    id: "perge-stadyumu",
+    siteSlug: "perge",
+    structure: l("Stadyum", "Stadium"),
+    title: l("Perge Stadyumu", "The Stadium at Perge"),
+    blurb: l(
+      "Anadolu'nun en iyi korunmuş stadyumlarından biri: oturma sıraları yetmiş tonozun üstünde taşınır, tonozların her üçüncüsü giriş, kalanı dükkândı. Kuzey ucu at nalı gibi kapalı, güney ucu açıktır.",
+      "One of the best-preserved stadiums in Anatolia: the seating is carried on seventy vaults, every third one an entrance and the rest shops. The north end closes in a horseshoe; the south end is open.",
+    ),
+    period: l("MS 1. yüzyılın ikinci yarısı", "Second half of the 1st century AD"),
+    measures: [
+      { value: 234, unit: "m", label: l("Uzunluk", "Length"), source: "tr" },
+      { value: 34, unit: "m", label: l("Genişlik", "Width"), source: "tr" },
+      {
+        value: 11,
+        unit: "count",
+        label: l("Oturma sırası", "Rows of seats"),
+        source: "tr",
+      },
+      {
+        value: 0.436,
+        unit: "m",
+        label: l("Bir sıranın yüksekliği", "Height of one row"),
+        source: "tr",
+      },
+      { value: 12000, unit: "people", label: l("Kapasite", "Capacity"), source: "tr" },
+    ],
+    uncertainty: l(
+      "Uzunluk, genişlik, sıra sayısı ve sıranın yüksekliği Türkçe Wikipedia'dan alınmıştır; kaynağın verdiği 0,63 metrelik sıra derinliği ile pistin genişliği (20,1 m) bunlardan türetilmiştir. Yetmiş tonozun dıştan görünen kemerleri, dükkânları ve kuzey ucun içindeki geçitler modelde yalnızca giriş ağızları olarak gösterilir; güney ucun açık bırakılışı kaynağa dayanır ama oradaki anıtsal girişin biçimi bilinmediğinden çizilmemiştir.",
+      "Length, width, the row count and the height of a row come from the Turkish Wikipedia; the 0.63 m tread the source gives and the width of the track (20.1 m) are derived from them. The seventy vaults' outer arches, their shops and the passages inside the north end appear only as entrance mouths, and while the open south end follows the source, the form of the monumental entrance there is unknown and is not drawn.",
+    ),
+    hotspots: [
+      spot(
+        [0, 0.6, 0],
+        "Pist",
+        "The track",
+        "Yaklaşık 20 metre eninde, 234 metre boyunda koşu alanı.",
+        "The running floor, about 20 metres wide and 234 long.",
+      ),
+      spot(
+        [13, 3, 40],
+        "Oturma sıraları",
+        "The seating",
+        "Her iki yanda on bir sıra, her biri 43,6 santim yüksekliğinde.",
+        "Eleven rows on each side, each 43.6 centimetres high.",
+      ),
+      spot(
+        [0, 5, 110],
+        "Kapalı kuzey ucu",
+        "The closed north end",
+        "At nalı biçiminde kapanan uç; sıralar buradan kesintisiz döner.",
+        "The end that closes in a horseshoe; the rows run round it unbroken.",
+      ),
+      spot(
+        [0, 1, -105],
+        "Açık güney ucu",
+        "The open south end",
+        "Pistin bu ucu kapatılmamıştı; anıtsal giriş buradaydı.",
+        "This end of the track was left open; the monumental entrance stood here.",
+      ),
+      spot(
+        [18, 1.6, 30],
+        "Tonozlar",
+        "The vaults",
+        "Yetmiş tonoz sıraları taşır: her üçüncüsü giriş, ötekiler dükkân.",
+        "Seventy vaults carry the seats: every third an entrance, the others shops.",
+      ),
+    ],
+    sources: [wiki("tr", "tr", "Perge", "Wikipedia (Türkçe): Perge", "Wikipedia (Turkish): Perge")],
+    model: {
+      kind: "stadium",
+      overallLength: 234,
+      overallWidth: 34,
+      rows: 11,
+      arenaWidth: 20.14,
+      seatRise: 0.436,
+      entrances: 12,
+      openEnd: true,
+    },
+  },
+  {
+    id: "aizanoi-zeus-tapinagi",
+    siteSlug: "aizanoi",
+    structure: l("Zeus Tapınağı", "Temple of Zeus"),
+    title: l("Aizanoi Zeus Tapınağı", "The Temple of Zeus at Aizanoi"),
+    blurb: l(
+      "Anadolu'nun en iyi korunmuş Zeus tapınağı: sekize on beş sütunlu bir pseudodipteros, altında ışık pencereli tonozlu bir mahzenle. Domitianus döneminde adanmış; sütunlarının çoğu hâlâ ayakta.",
+      "The best-preserved temple of Zeus in Anatolia: a pseudodipteros of eight by fifteen columns over a vaulted chamber lit by windows. Dedicated under Domitian, most of its columns still stand.",
+    ),
+    period: l("MS 92 - 95", "AD 92 - 95"),
+    measures: [
+      {
+        value: 35,
+        unit: "m",
+        label: l("Stylobat genişliği", "Width of the stylobate"),
+        source: "en",
+      },
+      {
+        value: 53,
+        unit: "m",
+        label: l("Stylobat uzunluğu", "Length of the stylobate"),
+        source: "en",
+      },
+      {
+        value: 8,
+        unit: "count",
+        label: l("Kısa kenardaki sütun", "Columns on the short sides"),
+        source: "en",
+      },
+      {
+        value: 15,
+        unit: "count",
+        label: l("Uzun kenardaki sütun", "Columns on the long sides"),
+        source: "en",
+      },
+    ],
+    uncertainty: l(
+      "Stylobatın ölçüleri ve kenarlardaki sütun sayıları İngilizce Wikipedia'dan alınmıştır; 42 sütunluk toplam bunlardan çıkar. Sütun yüksekliği (9 m), çapı, saçaklık, çatı ve cellanın duvarları ölçülmüş değil, İon düzeninin oranlarından verilmiştir. Pseudodipteros düzeninde ikinci sütun halkasının yeri boş bırakılmış, cella o kadar geriye çekilmiştir. Tapınağın altındaki tonozlu mahzen ve ışık pencereleri modelde yoktur; podyum yalnızca basamaklı bir krepis olarak gösterilir.",
+      "The stylobate dimensions and the column counts on the sides come from the English Wikipedia; the total of 42 columns follows from them. The column height (9 m), the diameter, the entablature, the roof and the cella walls are not measured but proportioned from the Ionic order. In the pseudodipteral plan the place of the second ring of columns is left empty and the cella set back by that much. The vaulted chamber beneath the temple and its light windows are not modelled; the podium is shown only as a stepped crepis.",
+    ),
+    hotspots: [
+      spot(
+        [-16, 6, -25],
+        "Köşe sütunu",
+        "The corner column",
+        "Sekize on beş sütun: köşeler ortak sayılınca kırk iki.",
+        "Eight by fifteen columns: forty-two once the corners are shared.",
+      ),
+      spot(
+        [0, 5, -24],
+        "Pronaos",
+        "The pronaos",
+        "Cellanın önündeki derin sundurma; kapı buradan içeri açılırdı.",
+        "The deep porch before the cella; the door opened inwards from here.",
+      ),
+      spot(
+        [0, 9, 2],
+        "Cella",
+        "The cella",
+        "Zeus'un kült heykelinin durduğu kapalı oda.",
+        "The closed chamber that held the cult statue of Zeus.",
+      ),
+      spot(
+        [10, 4, 8],
+        "Pseudodipteros",
+        "The pseudodipteros",
+        "Sütun halkası ile cella arasında bir halka genişliğinde boşluk bırakılmıştır.",
+        "A gap one ring wide is left between the colonnade and the cella.",
+      ),
+      spot(
+        [0, 1.2, 20],
+        "Tonozlu mahzen",
+        "The vaulted chamber",
+        "Tapınağın altında ışık pencereli bir tonoz uzanır; kült için kullanıldığı sanılıyor.",
+        "A barrel vault lit by windows runs beneath the temple, probably a cult room.",
+      ),
+    ],
+    sources: [wiki("en", "en", "Aizanoi", "Wikipedia (İngilizce): Aizanoi", "Wikipedia: Aizanoi")],
+    model: {
+      kind: "ionic-dipteros",
+      stylobateWidth: 35,
+      stylobateLength: 53,
+      crepidomaWidth: 39,
+      crepidomaLength: 57,
+      crepidomaSteps: 5,
+      columnHeight: 9,
+      outerColumnsShort: 8,
+      outerColumnsLong: 15,
+      pronaosRows: 1,
+      pronaosPerRow: 2,
+      totalColumns: 42,
+      sekosWallHeight: 10,
+      naiskosWidth: 6,
+      naiskosLength: 8,
+      interior: "cella",
+      rings: 1,
+      courtWidth: 14,
+      courtLength: 30,
+      columnDiameter: 1.0,
+      entablatureHeight: 2.2,
+    },
+  },
+  {
+    id: "halikarnas-mozolesi",
+    siteSlug: "halikarnassos",
+    structure: l("Mausoleion", "Mausoleum"),
+    title: l("Halikarnas Mozolesi", "The Mausoleum at Halicarnassus"),
+    blurb: l(
+      "Dünyanın Yedi Harikası'ndan biri ve 'mozole' sözcüğünün kaynağı: Karia satrapı Mausolos için karısı Artemisia'nın yaptırdığı mezar. Yüksek bir podyum, otuz altı sütun, basamaklı bir piramit ve tepede dört atlı bir araba.",
+      "One of the Seven Wonders, and the building every mausoleum is named after: the tomb Artemisia raised for her husband Mausolus, satrap of Caria. A tall podium, thirty-six columns, a stepped pyramid and a four-horse chariot on the summit.",
+    ),
+    period: l("MÖ 353 - 350", "353 - 350 BC"),
+    measures: [
+      {
+        value: 32,
+        unit: "m",
+        label: l("Temel genişliği", "Width of the foundation"),
+        source: "de",
+      },
+      {
+        value: 38.4,
+        unit: "m",
+        label: l("Temel uzunluğu", "Length of the foundation"),
+        source: "de",
+      },
+      {
+        value: 18.5,
+        unit: "m",
+        label: l("Podyumun yüksekliği", "Height of the podium"),
+        source: "de",
+      },
+      {
+        value: 36,
+        unit: "count",
+        label: l("İon sütunu (dokuza on bir)", "Ionic columns (nine by eleven)"),
+        source: "de",
+      },
+      {
+        value: 24,
+        unit: "count",
+        label: l("Piramidin basamağı", "Steps of the pyramid"),
+        source: "de",
+      },
+      {
+        value: 7,
+        unit: "m",
+        label: l("Piramidin yüksekliği", "Height of the pyramid"),
+        source: "de",
+      },
+      {
+        value: 6,
+        unit: "m",
+        label: l("Kaidesiyle quadriga", "The quadriga with its base"),
+        source: "de",
+      },
+      { value: 46, unit: "m", label: l("Toplam yükseklik", "Total height"), source: "de" },
+      {
+        value: 20,
+        unit: "count",
+        label: l("Bulunan aslan heykeli", "Lion statues found"),
+        source: "en",
+      },
+    ],
+    uncertainty: l(
+      "Temelin ölçüleri, podyumun, piramidin ve quadriganın yüksekliği, sütun ve basamak sayıları Almanca Wikipedia'dan; aslan sayısı İngilizce Wikipedia'dan alınmıştır. Yapı 15. yüzyılda sökülüp Bodrum Kalesi'ne taş olduğu için gerisi Plinius'un anlatımına ve kazılan temele dayanan bir yorumdur: podyumun üç kademesi, sütunların 12 metrelik yüksekliği, cellanın biçimi, piramidin tepesindeki platform ve quadriganın duruşu orantıdır, ölçü değil. Podyumu saran üç kabartma frizi (Amazonomakhia, Kentauromakhia, araba yarışı) ve dört yüz heykelin büyük kısmı modelde yoktur; sütun aralarındaki figürler ile aslanlar yerleşimi göstermek için konmuştur.",
+      "The foundation dimensions, the heights of the podium, pyramid and quadriga, and the column and step counts come from the German Wikipedia; the lion count from the English one. Because the building was quarried into Bodrum Castle in the 15th century, the rest is interpretation from Pliny's description and the excavated foundation: the three tiers of the podium, the 12 m column height, the shape of the cella, the summit platform and the pose of the quadriga are proportion, not measurement. The three relief friezes round the podium (Amazons, centaurs, a chariot race) and most of the four hundred statues are absent; the figures between the columns and the lions are there to show the arrangement.",
+    ),
+    hotspots: [
+      spot(
+        [0, 9, -19.5],
+        "Podyum",
+        "The podium",
+        "18,5 metre yüksekliğinde, üç kademeli; frizler bu kademeleri sarardı.",
+        "18.5 metres high, in three tiers; the friezes wrapped these tiers.",
+      ),
+      spot(
+        [14, 13.5, -14],
+        "Aslanlar",
+        "The lions",
+        "Podyumun çevresinde yirmi aslan heykeli bulundu; hepsi dışarı bakar.",
+        "Twenty lion statues were found round the podium, all facing outwards.",
+      ),
+      spot(
+        [0, 25, -16.5],
+        "Sütun halkası",
+        "The colonnade",
+        "Dokuza on bir, otuz altı İon sütunu; aralarında heykeller dururdu.",
+        "Thirty-six Ionic columns, nine by eleven, with statues standing between them.",
+      ),
+      spot(
+        [0, 37, -9],
+        "Piramit",
+        "The pyramid",
+        "Yirmi dört basamakla yedi metre yükselen çatı.",
+        "A roof rising seven metres in twenty-four steps.",
+      ),
+      spot(
+        [0, 44, 0],
+        "Quadriga",
+        "The quadriga",
+        "Tepedeki mermer araba: dört at, Mausolos ve Artemisia. Atın başı bugün Londra'da.",
+        "The marble chariot on top: four horses, Mausolus and Artemisia. A horse's head is in London.",
+      ),
+    ],
+    sources: [
+      wiki(
+        "de",
+        "de",
+        "Mausoleum_von_Halikarnassos",
+        "Wikipedia (Almanca): Mausoleum von Halikarnassos",
+        "Wikipedia (German): Mausoleum von Halikarnassos",
+      ),
+      wiki(
+        "en",
+        "en",
+        "Mausoleum_at_Halicarnassus",
+        "Wikipedia (İngilizce): Mausoleum at Halicarnassus",
+        "Wikipedia: Mausoleum at Halicarnassus",
+      ),
+    ],
+    model: {
+      kind: "mausoleum",
+      baseWidth: 32,
+      baseDepth: 38.4,
+      podiumHeight: 18.5,
+      columns: 36,
+      columnsShort: 9,
+      columnsLong: 11,
+      pyramidSteps: 24,
+      pyramidHeight: 7,
+      quadrigaHeight: 6,
+      totalHeight: 46,
+      lions: 20,
+      columnHeight: 12,
+      columnDiameter: 1.05,
+      entablatureHeight: 2.5,
+      statues: 20,
+    },
+  },
+  {
+    id: "nemrut-dogu-terasi",
+    siteSlug: "nemrut",
+    structure: l("Doğu terası", "East terrace"),
+    title: l("Nemrut Dağı, Doğu Terası", "Mount Nemrut, the East Terrace"),
+    blurb: l(
+      "Kommagene kralı I. Antiokhos'un 2.150 metrede kurduğu mezar-tapınak: çakıl tümülüsün eteğinde, tahtlarında oturan sekiz-dokuz metrelik tanrılar — kral, Kommagene, Zeus, Apollon, Herakles — iki yanda kartal ve aslan, karşılarında basamaklı sunak. Model başları omuzlarına geri koyar.",
+      "The tomb-sanctuary King Antiochus I of Commagene built at 2,150 metres: at the foot of a gravel tumulus, gods eight to nine metres tall sit enthroned — the king, Commagene, Zeus, Apollo and Herakles — with an eagle and a lion at either end and a stepped altar facing them. The model puts the heads back on their shoulders.",
+    ),
+    period: l("MÖ 1. yüzyılın ikinci yarısı", "Second half of the 1st century BC"),
+    measures: [
+      {
+        value: 49,
+        unit: "m",
+        label: l("Tümülüsün yüksekliği", "Height of the tumulus"),
+        source: "en",
+      },
+      {
+        value: 152,
+        unit: "m",
+        label: l("Tümülüsün çapı", "Diameter of the tumulus"),
+        source: "en",
+      },
+      {
+        value: 26,
+        unit: "m",
+        label: l("Doğu terası avlusunun uzunluğu", "Length of the east terrace court"),
+        source: "de",
+      },
+      {
+        value: 21,
+        unit: "m",
+        label: l("Doğu terası avlusunun genişliği", "Width of the east terrace court"),
+        source: "de",
+      },
+      {
+        value: 8.75,
+        unit: "m",
+        label: l("Zeus heykelinin yüksekliği", "Height of the statue of Zeus"),
+        source: "de",
+      },
+      {
+        value: 3,
+        unit: "m",
+        label: l("Tahtların taban kenarı", "Side of a throne's base"),
+        source: "de",
+      },
+      {
+        value: 5,
+        unit: "count",
+        label: l("Tahtta oturan dev heykel", "Enthroned colossi"),
+        source: "de",
+      },
+    ],
+    uncertainty: l(
+      "Tümülüsün yüksekliği ve çapı İngilizce, avlunun ölçüleri, Zeus heykelinin yüksekliği, tahtların tabanı ve heykellerin sırası Almanca Wikipedia'dan alınmıştır. Beş heykel de aynı yükseklikte çizilmiştir, oysa yalnızca Zeus'unki ölçülüdür; tahtın oturma yüksekliği (3 m), kartal ile aslanın 4,75 metrelik boyu (kaynak 4,5-5 m der), sunağın basamakları ve atalar dizisinin stelleri orantıdır. Heykeller bugün başsızdır — başlar önlerinde, yere düşmüş durur — model sanctuary'yi kurulduğu hâliyle, başları yerinde gösterir; yüzler ve tiara biçimleri gerçek heykellerin kopyası değildir. Batı ve kuzey terasları modelde yoktur.",
+      "The height and diameter of the tumulus come from the English Wikipedia; the court dimensions, the height of Zeus, the throne bases and the order of the figures from the German one. All five colossi are drawn the same height, though only Zeus is measured; the seat height of the thrones (3 m), the 4.75 m of the eagle and the lion (the source says 4.5-5 m), the altar steps and the stelae of the ancestors are proportion. The statues stand headless today, their heads on the ground before them; the model shows the sanctuary as built, heads in place, and the faces and tiaras are not copies of the originals. The west and north terraces are not modelled.",
+    ),
+    hotspots: [
+      spot(
+        [1, 8, 0],
+        "Zeus-Oromasdes",
+        "Zeus-Oromasdes",
+        "Sıranın ortasında, 8,75 metre boyunda; Yunan ve Pers tanrısının birleşimi.",
+        "In the middle of the row at 8.75 metres: Greek Zeus and Persian Ahura Mazda in one.",
+      ),
+      spot(
+        [1, 8, 7.6],
+        "I. Antiokhos",
+        "Antiochus I",
+        "Kral, tanrıların arasında ve onlarla aynı boyda oturur.",
+        "The king sits among the gods, and at their height.",
+      ),
+      spot(
+        [1, 8, -7.6],
+        "Herakles-Artagnes-Ares",
+        "Herakles-Artagnes-Ares",
+        "Sıranın sağ ucundaki tanrı; ardından kartal ve aslan gelir.",
+        "The god at the right end of the row; beyond him the eagle and the lion.",
+      ),
+      spot(
+        [0, 5, 14],
+        "Aslan",
+        "The lion",
+        "Her sıranın iki ucunu bir kartal ve bir aslan kapatır.",
+        "An eagle and a lion close each end of the row.",
+      ),
+      spot(
+        [22, 4, 0],
+        "Basamaklı sunak",
+        "The stepped altar",
+        "Tanrıların karşısında, avlunun doğu ucunda; ateş sunağı.",
+        "Facing the gods at the east end of the court: the fire altar.",
+      ),
+      spot(
+        [12, 2.5, 11.5],
+        "Atalar dizisi",
+        "The ancestor stelae",
+        "Avlunun iki yanında kralın Pers ve Makedon atalarını gösteren steller sıralanırdı.",
+        "Along both sides of the court stood stelae of the king's Persian and Macedonian ancestors.",
+      ),
+      spot(
+        [-30, 22, 0],
+        "Tümülüs",
+        "The tumulus",
+        "Kırk dokuz metre yüksekliğinde çakıl yığını; mezar odası hâlâ bulunamadı.",
+        "A gravel mound forty-nine metres high; the burial chamber has never been found.",
+      ),
+    ],
+    sources: [
+      wiki(
+        "en",
+        "en",
+        "Mount_Nemrut",
+        "Wikipedia (İngilizce): Mount Nemrut",
+        "Wikipedia: Mount Nemrut",
+      ),
+      wiki(
+        "de",
+        "de",
+        "Nemrut_Dağı_(Adıyaman)",
+        "Wikipedia (Almanca): Nemrut Dağı (Adıyaman)",
+        "Wikipedia (German): Nemrut Dağı (Adıyaman)",
+      ),
+    ],
+    model: {
+      kind: "tumulus-sanctuary",
+      tumulusHeight: 49,
+      tumulusDiameter: 152,
+      courtWidth: 21,
+      courtDepth: 26,
+      statueHeight: 8.75,
+      throneBase: 3,
+      colossi: 5,
+      throneHeight: 3,
+      guardianHeight: 4.75,
+      altarSteps: 5,
     },
   },
 ];

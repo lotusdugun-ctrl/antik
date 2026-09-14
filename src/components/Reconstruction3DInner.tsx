@@ -265,6 +265,10 @@ const VIEWPOINT: Record<ModelSpec["kind"], [number, number, number]> = {
   stadium: [0.5, 0.26, 1],
   // Low and close, from the open side: this one is a room, not a monument.
   "peristyle-house": [0.5, 0.32, -1],
+  // Three-quarters and a little above: the pyramid and the podium both show.
+  mausoleum: [0.75, 0.4, -0.8],
+  // From the court, looking west at the row of gods with the mound behind.
+  "tumulus-sanctuary": [1, 0.32, 0.55],
 };
 
 export default function Reconstruction3DInner({
@@ -873,6 +877,67 @@ export default function Reconstruction3DInner({
           pieces.push(joint(elbowL, h * 0.032));
           pieces.push(limb(elbowL, wristL, h * 0.028, h * 0.022));
           pieces.push(...hand(wristL, h * 0.026, 0.5));
+        } else if (statue && part.pose === "seated") {
+          /*
+           * Enthroned. The seat is the origin: thighs forward along the
+           * throne, shins down to the footstool, hands resting on the knees,
+           * the torso upright and a tall tiara on the head — the pose of the
+           * gods on Nemrut Dağı, who sit with their hands on their laps and
+           * look straight out over the court.
+           */
+          const lap = skin(
+            [
+              section([0, 0.14 * h, 0], 0.12 * h, 0.09 * h),
+              section([0, 0.06 * h, 0.04 * h], 0.15 * h, 0.1 * h),
+              section([0, 0.03 * h, 0.16 * h], 0.16 * h, 0.07 * h),
+              section([0, 0.03 * h, 0.27 * h], 0.16 * h, 0.06 * h),
+            ],
+            28,
+            5,
+          );
+          drape(lap, () => 0.012 * h, 10, rand() * Math.PI * 2);
+          for (const side of [-1, 1]) {
+            const hipP: P = [side * 0.07 * h, 0, 0.02 * h];
+            const knee: P = [side * 0.09 * h, 0.02 * h, 0.28 * h];
+            const ankle: P = [side * 0.09 * h, -0.25 * h, 0.3 * h];
+            pieces.push(limb(hipP, knee, h * 0.06, h * 0.045));
+            pieces.push(joint(knee, h * 0.048));
+            pieces.push(limb(knee, ankle, h * 0.042, h * 0.03));
+            const foot = new THREE.SphereGeometry(h * 0.04, 10, 7);
+            foot.scale(1, 0.6, 1.9);
+            foot.translate(ankle[0], ankle[1] - 0.015 * h, ankle[2] + 0.05 * h);
+            pieces.push(foot);
+          }
+          const torso = skin(
+            [
+              section([0, 0.1 * h, 0], 0.11 * h, 0.085 * h),
+              section([0, 0.19 * h, 0.005 * h], 0.13 * h, 0.095 * h),
+              section([0, 0.27 * h, 0], 0.155 * h, 0.095 * h),
+              section([0, 0.32 * h, 0], 0.17 * h, 0.09 * h),
+              section([0, 0.345 * h, 0], 0.09 * h, 0.07 * h),
+            ],
+            28,
+            5,
+          );
+          drape(torso, () => 0.008 * h, 12, rand() * Math.PI * 2);
+          headAt(h * 0.345, h * 0.06, h * 0.455);
+          // The tiara: a tall cap rising from a band round the brow.
+          const bandY = h * 0.455 + h * 0.06;
+          const brow = new THREE.CylinderGeometry(h * 0.1, h * 0.105, h * 0.035, 20);
+          brow.translate(0, bandY, 0);
+          pieces.push(brow);
+          const tiara = new THREE.CylinderGeometry(h * 0.02, h * 0.098, h * 0.17, 20);
+          tiara.translate(0, bandY + h * 0.1, -h * 0.01);
+          pieces.push(tiara);
+          for (const side of [-1, 1]) {
+            const shoulder: P = [side * 0.165 * h, 0.31 * h, 0.01 * h];
+            const elbow: P = [side * 0.185 * h, 0.15 * h, 0.08 * h];
+            const wrist: P = [side * 0.1 * h, 0.05 * h, 0.25 * h];
+            pieces.push(limb(shoulder, elbow, h * 0.04, h * 0.033));
+            pieces.push(joint(elbow, h * 0.034));
+            pieces.push(limb(elbow, wrist, h * 0.03, h * 0.024));
+            pieces.push(...hand(wrist, h * 0.028, 0.8));
+          }
         } else {
           // The scale figure: deliberately schematic, a teaching device. The
           // proportions are those of a person 1.75 m tall, but the rendering is
