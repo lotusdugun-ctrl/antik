@@ -195,6 +195,12 @@ export type Part =
        * `height` is still how tall they would stand.
        */
       pose?: "standing" | "riding" | "seated";
+      /**
+       * Who this is. A statue with no identity is a generic draped figure —
+       * fine for the nameless crowd between the Mausoleum's columns, wrong
+       * for Zeus, who wore a tiara, or for Herakles, who leaned on a club.
+       */
+      identity?: FigureIdentity;
     })
   /**
    * A silhouette cut in relief: an outline drawn in the plane of a face and
@@ -238,6 +244,217 @@ export type Part =
 
 /** One cross-section of a loft, in metres relative to the part's `at`. */
 export type LoftSection = { c: Vec3; rx: number; ry: number };
+
+/** What a statue wears on its head. */
+export type Headgear =
+  /** The tall, rounded Persian cap with lappets: Zeus-Oromasdes at Nemrut. */
+  | "persianTiara"
+  /** The five-pointed Armenian tiara of the Commagene kings. */
+  | "armenianTiara"
+  /** The soft cap with its peak bent forward: Apollo-Mithras. */
+  | "phrygianCap"
+  /** A basket-crown heaped with fruit and grain: Kommagene, Tyche. */
+  | "polos"
+  /** A thin fillet round the brow. */
+  | "diadem"
+  /** A veil drawn up over the head and down the back. */
+  | "veil";
+
+/** How the hair is worn. `bun` is the default for a woman, `short` for a man. */
+export type Hair = "bun" | "short" | "long" | "curls";
+
+/**
+ * The dress. A `peplos` has the overfold turned down from the shoulders;
+ * a `chiton` is the thinner tunic under a mantle; a `himation` is the heavy
+ * mantle a Greek man wrapped himself in, and a `toga` the Roman one.
+ */
+export type Dress = "peplos" | "chiton" | "himation" | "toga";
+
+/** What a hand holds. */
+export type Held =
+  | "scroll"
+  | "tablet"
+  | "club"
+  | "cornucopia"
+  /** The bundle of rods a Persian priest or king held in front of him. */
+  | "barsom"
+  | "sceptre"
+  | "bow"
+  | "wheat";
+
+/** What the right hand does when it holds nothing. */
+export type Gesture = "rest" | "chin" | "raised";
+
+/**
+ * The particulars that tell one statue from another.
+ *
+ * A reconstruction that shows every figure as the same draped woman with a
+ * bun is a reconstruction of nobody. What the sculptors used to tell a god
+ * from a king was never the face — it was the tiara, the beard, the club,
+ * the horn of plenty. Those are cheap to model and impossible to mistake,
+ * so they are what the identity carries. The `name` is for the tests and
+ * the reader, not for rendering.
+ */
+export type FigureIdentity = {
+  name: string;
+  sex?: "female" | "male";
+  bearded?: boolean;
+  hair?: Hair;
+  headgear?: Headgear;
+  dress?: Dress;
+  /** In the left hand. */
+  left?: Held;
+  /** In the right hand. */
+  right?: Held;
+  gesture?: Gesture;
+};
+
+/**
+ * The named statues, by building. Poses and attributes follow the
+ * surviving originals where they survive — the Nemrut colossi and their
+ * heads, the Celsus virtues in Vienna, the Mausoleum figures in London —
+ * and published reconstructions where they do not.
+ */
+export const IDENTITIES = {
+  /** The four virtues in the lower niches of the Celsus front, left to right. */
+  celsusVirtues: [
+    {
+      name: "Sophia",
+      sex: "female",
+      dress: "chiton",
+      headgear: "veil",
+      hair: "long",
+      left: "scroll",
+      gesture: "rest",
+    },
+    {
+      name: "Arete",
+      sex: "female",
+      dress: "peplos",
+      hair: "bun",
+      headgear: "diadem",
+      gesture: "raised",
+    },
+    {
+      name: "Ennoia",
+      sex: "female",
+      dress: "chiton",
+      hair: "bun",
+      gesture: "chin",
+    },
+    {
+      name: "Episteme",
+      sex: "female",
+      dress: "peplos",
+      hair: "bun",
+      left: "tablet",
+      gesture: "rest",
+    },
+  ],
+  /** The father and son on the upper podia. */
+  celsus: {
+    name: "Tiberius Iulius Celsus Polemaeanus",
+    sex: "male",
+    bearded: true,
+    hair: "short",
+    dress: "toga",
+    left: "scroll",
+    gesture: "rest",
+  },
+  aquila: {
+    name: "Tiberius Iulius Aquila Polemaeanus",
+    sex: "male",
+    bearded: false,
+    hair: "curls",
+    dress: "toga",
+    left: "scroll",
+    gesture: "raised",
+  },
+  /**
+   * The five enthroned colossi of the east terrace, left to right as seen
+   * from the court. Each is known from its head, found at its feet: the
+   * king in the Armenian tiara, the goddess crowned with fruit, Zeus in the
+   * Persian cap, Apollo in the Phrygian one, Herakles bare-headed with his
+   * club.
+   */
+  nemrutColossi: [
+    {
+      name: "Antiochos I",
+      sex: "male",
+      bearded: false,
+      hair: "short",
+      headgear: "armenianTiara",
+      dress: "himation",
+      left: "barsom",
+      right: "sceptre",
+    },
+    {
+      name: "Kommagene",
+      sex: "female",
+      hair: "long",
+      headgear: "polos",
+      dress: "chiton",
+      left: "cornucopia",
+      right: "wheat",
+    },
+    {
+      name: "Zeus-Oromasdes",
+      sex: "male",
+      bearded: true,
+      hair: "long",
+      headgear: "persianTiara",
+      dress: "himation",
+      left: "barsom",
+      right: "sceptre",
+    },
+    {
+      name: "Apollon-Mithras-Helios-Hermes",
+      sex: "male",
+      bearded: false,
+      hair: "curls",
+      headgear: "phrygianCap",
+      dress: "himation",
+      left: "barsom",
+      right: "sceptre",
+    },
+    {
+      name: "Herakles-Artagnes-Ares",
+      sex: "male",
+      bearded: true,
+      hair: "curls",
+      dress: "himation",
+      right: "club",
+    },
+  ],
+  /** The pair in the quadriga on the summit of the Mausoleum. */
+  maussollos: {
+    name: "Maussollos",
+    sex: "male",
+    bearded: true,
+    hair: "long",
+    dress: "himation",
+    gesture: "rest",
+  },
+  artemisia: {
+    name: "Artemisia II",
+    sex: "female",
+    hair: "long",
+    headgear: "veil",
+    dress: "chiton",
+    gesture: "rest",
+  },
+  /** The archaic cult statue of the oracle: a young god with his bow. */
+  didymaApollo: {
+    name: "Apollon Philesios",
+    sex: "male",
+    bearded: false,
+    hair: "long",
+    headgear: "diadem",
+    dress: "chiton",
+    left: "bow",
+    gesture: "raised",
+  },
+} satisfies Record<string, FigureIdentity | FigureIdentity[]>;
 
 const TAU = Math.PI * 2;
 
@@ -532,14 +749,16 @@ const person = (
   height = 1.75,
   rotY = 0,
   material: Material = "human",
-  bearded?: boolean,
+  /** A named statue, or just whether a nameless one wears a beard. */
+  who?: FigureIdentity | boolean,
 ): Part => ({
   kind: "figure",
   material,
   at,
   height,
   rotY,
-  ...(bearded !== undefined ? { bearded } : {}),
+  ...(typeof who === "boolean" ? { bearded: who } : {}),
+  ...(typeof who === "object" ? { identity: who } : {}),
 });
 
 /** A lofted skin: see the `loft` part kind. */
@@ -1593,8 +1812,8 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     project: number,
     /** What this one is wearing: the robes were painted, not left white. */
     robe: Material,
-    /** A bearded man — Celsus or his son — rather than a draped virtue. */
-    bearded?: boolean,
+    /** Which of the eight this niche holds. */
+    who: FigureIdentity,
   ) => {
     const pedestal = height * 0.26;
     const shaft = height * 0.58;
@@ -1644,9 +1863,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     parts.push(
       box("paintRed", [centre, base + pedestal, 0.02], [spread * 1.5, statueHeight + 1.3, 0.1]),
     );
-    parts.push(
-      person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, bearded),
-    );
+    parts.push(person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, who));
     for (const side of [-1, 1]) {
       parts.push(
         box(
@@ -1735,6 +1952,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       2,
       1.0,
       robes[index % robes.length]!,
+      IDENTITIES.celsusVirtues[index % IDENTITIES.celsusVirtues.length]!,
     );
   });
   // The upper order is set back and drawn in, which is what makes the front
@@ -1752,7 +1970,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       1.9,
       0.72,
       "marbleWorn",
-      index % 2 === 0,
+      index % 2 === 0 ? IDENTITIES.celsus : IDENTITIES.aquila,
     );
   });
 
@@ -2402,7 +2620,15 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
     }
     // The cult statue, standing in the dark at the back of the cella.
     parts.push(box("marbleWorn", [0, y0, courtCentre + halfCL - 6], [4, 1.2, 4]));
-    parts.push(person([0, y0 + 1.2, courtCentre + halfCL - 6], 6, Math.PI, "marbleWorn"));
+    parts.push(
+      person(
+        [0, y0 + 1.2, courtCentre + halfCL - 6],
+        6,
+        Math.PI,
+        "marbleWorn",
+        IDENTITIES.didymaApollo,
+      ),
+    );
   } else {
     // The naiskos: a small temple standing alone in the open court, over the
     // spring the oracle answered from.
@@ -3160,7 +3386,17 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
     const mid: Vec3 = [(a[0] + b[0]) / 2, podiumTop, (a[2] + b[2]) / 2];
     // Facing outwards from the cella.
     const facing = Math.atan2(mid[0], -mid[2]);
-    parts.push(person(mid, 2.6, facing + Math.PI, "marble", placed % 2 === 0));
+    parts.push(
+      person(
+        mid,
+        2.6,
+        facing + Math.PI,
+        "marble",
+        placed % 2 === 0
+          ? { name: "Hekatomnid", sex: "male", bearded: true, hair: "short", dress: "himation" }
+          : { name: "Hekatomnid", sex: "female", hair: "bun", dress: "chiton", left: "scroll" },
+      ),
+    );
     placed += 1;
   }
   // The cella inside the ring.
@@ -3240,7 +3476,7 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       1.55 * horseScale,
       Math.PI,
       "marble",
-      true,
+      IDENTITIES.maussollos,
     ),
   );
   parts.push(
@@ -3249,7 +3485,7 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       1.45 * horseScale,
       Math.PI,
       "marble",
-      false,
+      IDENTITIES.artemisia,
     ),
   );
 
@@ -3298,12 +3534,13 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
   const seatY = plinthHeight + 0.5;
 
   // The colossi, facing east across the court; left to right as seen from
-  // the court, the king first and Herakles last.
-  const bearded = [true, false, true, false, true];
+  // the court, the king first and Herakles last. A viewer in the court looks
+  // west, so their left is +z and the row runs down it.
+  const colossi = IDENTITIES.nemrutColossi;
   const throne = spec.throneHeight;
   const seated = spec.statueHeight - throne;
   for (let i = 0; i < spec.colossi; i += 1) {
-    const z = (i - (spec.colossi - 1) / 2) * (spec.throneBase + 0.8);
+    const z = ((spec.colossi - 1) / 2 - i) * (spec.throneBase + 0.8);
     parts.push(
       worn(box("limestone", [-1.0, seatY, z], [spec.throneBase, throne, spec.throneBase]), 0.04),
     );
@@ -3318,8 +3555,8 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
       // A seated figure is measured from the seat to the crown.
       height: seated / 0.52,
       rotY: Math.PI / 2,
-      bearded: bearded[i % bearded.length]!,
       pose: "seated",
+      identity: colossi[i % colossi.length]!,
     });
   }
   // The guardians: an eagle then a lion beyond the last throne at each end,
