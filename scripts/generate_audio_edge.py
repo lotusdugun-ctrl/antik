@@ -61,6 +61,7 @@ async def main() -> None:
     voices = {"tr": args.voice_tr, "en": args.voice_en}
 
     items = [i for i in script["items"] if not args.only or i["key"] == args.only]
+    print(f"{len(items)} chapters to check. Voices: {voices['tr']} / {voices['en']}", flush=True)
     done = skipped = failed = 0
     for n, item in enumerate(items, 1):
         if text_hash(item["text"]) != item["hash"]:
@@ -72,16 +73,17 @@ async def main() -> None:
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         label = f"[{n}/{len(items)}] {item['key']} {item['lang']} {item['chapter']}"
+        print(f"{label}  ...", flush=True)
         ok = False
         for attempt in range(3):
             try:
                 communicate = edge_tts.Communicate(item["text"], voices[item["lang"]], rate=args.rate)
-                await communicate.save(str(target))
+                # A stalled connection must fail and be retried, not hang the run.
+                await asyncio.wait_for(communicate.save(str(target)), timeout=90)
                 ok = True
                 break
             except Exception as error:  # network hiccups: try again, then move on
-                if attempt == 2:
-                    print(f"{label}  FAILED: {error}")
+                print(f"{label}  attempt {attempt + 1} failed: {type(error).__name__}: {error}", flush=True)
                 await asyncio.sleep(2 * (attempt + 1))
         if not ok:
             failed += 1
@@ -91,7 +93,7 @@ async def main() -> None:
             "hash": item["hash"],
         }
         done += 1
-        print(f"{label}  ok")
+        print(f"{label}  ok", flush=True)
         save(manifest)  # as we go, so an interrupted run keeps what it made
 
     save(manifest)
