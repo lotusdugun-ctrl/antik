@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CloudDownload, WifiOff } from "lucide-react";
 import { toast } from "sonner";
+import { recordingsFor } from "@/lib/audio-manifest";
 import { useI18n } from "@/lib/i18n";
 import { imageAt } from "@/lib/images";
 import { useProgress } from "@/lib/progress";
@@ -68,6 +69,9 @@ export function OfflinePanel() {
         imageAt(photo, 500),
         imageAt(photo, 1280),
       ]),
+      // The audio guide's studio recordings, where there are any; the device
+      // voice needs nothing downloaded.
+      ...recordingsFor(`site:${site.slug}`).map((url) => new URL(url, window.location.origin).href),
     ]);
 
     setBusy(true);

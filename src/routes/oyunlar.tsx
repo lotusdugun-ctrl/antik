@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, Gamepad2, RotateCcw, Sparkles, X } from "lucide-react";
+import { BookOpen, Check, ChevronRight, Gamepad2, RotateCcw, Sparkles, X } from "lucide-react";
 import { Photo } from "@/components/Photo";
 import { parseLang, translate, useI18n, type TKey } from "@/lib/i18n";
 import { levelFromXp, useProgress, XP_PER_CORRECT } from "@/lib/progress";
@@ -81,6 +81,20 @@ function GamesPage() {
         <h1 className="font-display text-3xl font-semibold sm:text-4xl">{t("games_title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("games_sub")}</p>
       </header>
+
+      <Link
+        to="/hikayeler"
+        className="mb-6 flex items-center gap-4 rounded-2xl border-l-4 border-gold bg-secondary p-5 transition-colors hover:bg-secondary/80"
+      >
+        <BookOpen className="h-8 w-8 shrink-0 text-gold" />
+        <span className="flex-1">
+          <span className="block font-display text-lg font-semibold">{t("stories_title")}</span>
+          <span className="mt-0.5 block text-sm text-secondary-foreground">
+            {t("stories_intro")}
+          </span>
+        </span>
+        <ChevronRight className="h-5 w-5 shrink-0 text-primary" />
+      </Link>
 
       <div className="mb-8 flex flex-wrap items-center gap-4 rounded-2xl surface-panel p-5">
         <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-primary font-display text-xl font-bold text-primary-foreground">

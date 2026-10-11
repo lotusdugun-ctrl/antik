@@ -12,6 +12,7 @@ import {
 } from "@/lib/reconstructions";
 import { breadcrumbTags, seoTags } from "@/lib/seo";
 import { getSite } from "@/lib/sites";
+import { structurePhotoFor } from "@/lib/structure-photos";
 
 export const Route = createFileRoute("/rekonstruksiyon/$id")({
   loader: ({ params }) => {
@@ -120,7 +121,12 @@ function ReconstructionPage() {
 
       {/* The carvings on the model are other people's photographs, and nearly
           all of them are CC BY-SA: the credit is a licence term, not a note. */}
-      <PhotoCredits urls={carvingUrls(item)} className="mt-6" />
+      <PhotoCredits
+        urls={[...carvingUrls(item), structurePhotoFor(item.siteSlug, item.structure.tr)].filter(
+          (url): url is string => Boolean(url),
+        )}
+        className="mt-6"
+      />
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <section>
