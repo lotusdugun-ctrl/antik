@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { buildLandscape, type Biome } from "./scene/landscape";
 import type * as THREE_NS from "three";
 import {
   boundsOf,
@@ -97,6 +98,15 @@ type Props = {
   /** Bumped by the caller to hand back the model as a .glb file. */
   exportToken: number;
   onExported: (data: ArrayBuffer) => void;
+  /** What grows round the building; see `landscape.ts`. */
+  biome?: Biome | undefined;
+  /** Ambient occlusion on top of the shadows, for devices that can afford it. */
+  quality?: boolean | undefined;
+  /** Bumped by the caller to get a still of the current view. */
+  captureToken?: number | undefined;
+  onCaptured?: ((dataUrl: string) => void) | undefined;
+  /** Leave the ground disc out of the export (AR stands the model on a real floor). */
+  exportWithoutGround?: boolean | undefined;
 };
 
 type Palette = {
@@ -297,6 +307,11 @@ export default function Reconstruction3DInner({
   view,
   exportToken,
   onExported,
+  biome = "mediterranean",
+  quality = false,
+  captureToken = 0,
+  onCaptured,
+  exportWithoutGround = false,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<{
@@ -306,8 +321,16 @@ export default function Reconstruction3DInner({
     setLabels: (labels: SceneLabel[], visible: boolean, active: number | null) => void;
     setView: (view: "front" | "above" | "corner") => void;
     focus: (at: [number, number, number]) => void;
-    exportGLB: () => Promise<ArrayBuffer>;
+    exportGLB: (withGround: boolean) => Promise<ArrayBuffer>;
+    setQuality: (on: boolean) => void;
+    capture: () => string;
   } | null>(null);
+  const captureRef = useRef(onCaptured);
+  captureRef.current = onCaptured;
+  const groundRef = useRef(!exportWithoutGround);
+  groundRef.current = !exportWithoutGround;
+  const qualityRef = useRef(quality);
+  qualityRef.current = quality;
   // The scene reads these through the ref rather than through its own closure,
   // so a label toggle does not tear down and rebuild the whole model.
   const pickRef = useRef(onPickLabel);
@@ -2145,6 +2168,18 @@ export default function Reconstruction3DInner({
       apronMesh.receiveShadow = true;
       scene.add(apronMesh);
 
+      const landscape = buildLandscape(THREE, {
+        centre,
+        span,
+        groundY: bounds.min[1] - 0.06,
+        footprint: Math.hypot(
+          (bounds.max[0] - bounds.min[0]) / 2,
+          (bounds.max[2] - bounds.min[2]) / 2,
+        ),
+        biome,
+      });
+      scene.add(landscape.group);
+
       /* ---- light, camera ---- */
 
       const hemisphere = new THREE.HemisphereLight(0xffffff, 0x8d8264, 1.1);
@@ -2474,16 +2509,29 @@ export default function Reconstruction3DInner({
 
       // The decorations are the model's surroundings, not the model. They drop
       // out of a model export the way they would drop out of a section drawing.
-      const decorations = [stars, ...clouds.map((c) => c.group), ...flock.map((f) => f.group)];
+      const decorations = [
+        stars,
+        landscape.group,
+        ...clouds.map((c) => c.group),
+        ...flock.map((f) => f.group),
+      ];
       applyLive();
       repaintSkyIfChanged();
 
+      // Declared ahead of `resize`, which reaches for it; filled in further down.
+      let composer: {
+        render: () => void;
+        setSize: (w: number, h: number) => void;
+        dispose: () => void;
+      } | null = null;
+      let qualityOn = false;
       const resize = () => {
         const { clientWidth, clientHeight } = host;
         if (!clientWidth || !clientHeight) return;
         camera.aspect = clientWidth / clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(clientWidth, clientHeight, false);
+        composer?.setSize(clientWidth, clientHeight);
       };
       resize();
       const observer = new ResizeObserver(resize);
@@ -2577,6 +2625,74 @@ export default function Reconstruction3DInner({
 
       buildPins(labels, activeLabel);
 
+      /*
+       * Ambient occlusion: the darkening in the joints between blocks, under
+       * a cornice, between seat rows — the contact shadow the sun's shadow map
+       * is too coarse to draw. Loaded only when asked for; it roughly doubles
+       * the cost of a frame.
+       */
+      const ensureComposer = async () => {
+        if (composer) return;
+        const [{ EffectComposer }, { RenderPass }, { GTAOPass }, { OutputPass }] =
+          await Promise.all([
+            import("three/addons/postprocessing/EffectComposer.js"),
+            import("three/addons/postprocessing/RenderPass.js"),
+            import("three/addons/postprocessing/GTAOPass.js"),
+            import("three/addons/postprocessing/OutputPass.js"),
+          ]);
+        if (disposed) return;
+        const { clientWidth, clientHeight } = host;
+        const made = new EffectComposer(renderer);
+        made.addPass(new RenderPass(scene, camera));
+        const ao = new GTAOPass(scene, camera, clientWidth, clientHeight);
+        ao.updateGtaoMaterial({
+          radius: Math.max(0.6, span * 0.012),
+          distanceFallOff: 1,
+          thickness: 1,
+        });
+        ao.blendIntensity = 0.85;
+        made.addPass(ao);
+        made.addPass(new OutputPass());
+        made.setSize(clientWidth, clientHeight);
+        composer = {
+          render: () => made.render(),
+          setSize: (w, h) => made.setSize(w, h),
+          dispose: () => {
+            ao.dispose();
+            made.dispose();
+          },
+        };
+      };
+
+      /*
+       * Camera moves glide rather than cut. A cut was fine for one click; for
+       * a narrated tour that walks from part to part it is a slideshow, and
+       * the eye loses where on the building it is.
+       */
+      let flight: {
+        fromPos: THREE_NS.Vector3;
+        toPos: THREE_NS.Vector3;
+        fromTarget: THREE_NS.Vector3;
+        toTarget: THREE_NS.Vector3;
+        start: number;
+        duration: number;
+      } | null = null;
+      const flyTo = (position: THREE_NS.Vector3, look: THREE_NS.Vector3) => {
+        flight = {
+          fromPos: camera.position.clone(),
+          toPos: position.clone(),
+          fromTarget: controls.target.clone(),
+          toTarget: look.clone(),
+          start: performance.now() / 1000,
+          duration: 1.4,
+        };
+      };
+      // Grabbing the model mid-flight hands the camera back at once.
+      const cancelFlight = () => {
+        flight = null;
+      };
+      controls.addEventListener("start", cancelFlight);
+
       let lastFrame = performance.now() / 1000;
       renderer.setAnimationLoop(() => {
         const now = performance.now() / 1000;
@@ -2623,8 +2739,16 @@ export default function Reconstruction3DInner({
           bird.wings.rotation.z = Math.sin(now * bird.flap + bird.phase * 7) * 0.65;
         }
         repaintSkyIfChanged();
+        if (flight) {
+          const t = Math.min(1, (now - flight.start) / flight.duration);
+          const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+          camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
+          controls.target.lerpVectors(flight.fromTarget, flight.toTarget, e);
+          if (t >= 1) flight = null;
+        }
         controls.update();
-        renderer.render(scene, camera);
+        if (composer && qualityOn) composer.render();
+        else renderer.render(scene, camera);
         placePins();
       });
 
@@ -2642,11 +2766,7 @@ export default function Reconstruction3DInner({
         setAutoRotate: (on) => {
           controls.autoRotate = on;
         },
-        reset: () => {
-          camera.position.copy(home);
-          controls.target.copy(target);
-          controls.update();
-        },
+        reset: () => flyTo(home, target),
         setLabels: (list, visible, active) => {
           labelsVisible = visible;
           if (scaleFigure) scaleFigure.visible = visible;
@@ -2656,9 +2776,7 @@ export default function Reconstruction3DInner({
         },
         setView: (view) => {
           const direction = viewpoints[view].clone().normalize();
-          camera.position.copy(target).addScaledVector(direction, distance);
-          controls.target.copy(target);
-          controls.update();
+          flyTo(target.clone().addScaledVector(direction, distance), target);
         },
         /*
          * Go and stand in front of one named part.
@@ -2677,7 +2795,7 @@ export default function Reconstruction3DInner({
          * Unity and Unreal all read without a converter, and the export carries
          * the geometry with its materials rather than a picture of it.
          */
-        exportGLB: async () => {
+        exportGLB: async (withGround) => {
           const { GLTFExporter } = await import("three/addons/exporters/GLTFExporter.js");
           const exporter = new GLTFExporter();
           // The sky, clouds and birds are the building's surroundings, not the
@@ -2685,11 +2803,14 @@ export default function Reconstruction3DInner({
           // out of a section drawing.
           const wasVisible = decorations.map((object) => object.visible);
           decorations.forEach((object) => (object.visible = false));
+          const apronWas = apronMesh.visible;
+          if (!withGround) apronMesh.visible = false;
           try {
             const result = await exporter.parseAsync(scene, { binary: true, onlyVisible: true });
             return result as ArrayBuffer;
           } finally {
             decorations.forEach((object, index) => (object.visible = wasVisible[index]!));
+            apronMesh.visible = apronWas;
           }
         },
         focus: (at) => {
@@ -2700,11 +2821,20 @@ export default function Reconstruction3DInner({
           direction.y = Math.min(direction.y, 0.42);
           direction.normalize();
           const close = Math.max(5, span * 0.17);
-          camera.position.copy(point).addScaledVector(direction, close);
-          controls.target.copy(point);
-          controls.update();
+          flyTo(point.clone().addScaledVector(direction, close), point);
+        },
+        setQuality: (on) => {
+          qualityOn = on;
+          if (on) void ensureComposer();
+        },
+        /** A still of exactly what is on screen, rendered now so the buffer is fresh. */
+        capture: () => {
+          if (composer && qualityOn) composer.render();
+          else renderer.render(scene, camera);
+          return renderer.domElement.toDataURL("image/jpeg", 0.9);
         },
       };
+      apiRef.current.setQuality(qualityRef.current);
       setReady(true);
 
       cleanup = () => {
@@ -2725,6 +2855,9 @@ export default function Reconstruction3DInner({
         birdMaterial.dispose();
         apron.dispose();
         apronMaterial.dispose();
+        landscape.dispose();
+        composer?.dispose();
+        controls.removeEventListener("start", cancelFlight);
         renderer.dispose();
         renderer.domElement.remove();
       };
@@ -2734,7 +2867,17 @@ export default function Reconstruction3DInner({
       disposed = true;
       cleanup();
     };
-  }, [parts, kind, label]);
+    // `biome` is fixed per model, so it rebuilding the scene costs nothing.
+  }, [parts, kind, label, biome]);
+
+  useEffect(() => {
+    apiRef.current?.setQuality(quality);
+  }, [quality, ready]);
+
+  useEffect(() => {
+    if (captureToken <= 0 || !apiRef.current) return;
+    captureRef.current?.(apiRef.current.capture());
+  }, [captureToken]);
 
   useEffect(() => {
     apiRef.current?.setAtmos(theme, atmos);
@@ -2765,7 +2908,7 @@ export default function Reconstruction3DInner({
 
   useEffect(() => {
     if (exportToken <= 0) return;
-    void apiRef.current?.exportGLB().then((data) => exportRef.current(data));
+    void apiRef.current?.exportGLB(groundRef.current).then((data) => exportRef.current(data));
   }, [exportToken]);
 
   if (failed) {

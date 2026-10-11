@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { collections } from "@/lib/collections";
 import { DEFAULT_LANG, LANGS } from "@/lib/i18n";
 import { regions, sites } from "@/lib/sites";
+import { stories } from "@/lib/stories";
 
 /**
  * The sitemap is generated per request rather than committed as a static file
@@ -26,6 +27,7 @@ const staticPaths = [
   "/koleksiyonlar",
   "/rota",
   "/oyunlar",
+  "/hikayeler",
   "/gorseller",
 ];
 
@@ -68,6 +70,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...regions.map((region) => urlEntry(origin, `/bolge/${region.id}`, "0.7")),
           ...collections.map((c) => urlEntry(origin, `/koleksiyon/${c.id}`, "0.7")),
           ...sites.map((site) => urlEntry(origin, `/kent/${site.slug}`, "0.9")),
+          ...stories.map((story) => urlEntry(origin, `/hikaye/${story.id}`, "0.6")),
         ];
 
         const xml = [

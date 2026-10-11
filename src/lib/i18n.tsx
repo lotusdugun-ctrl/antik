@@ -530,6 +530,128 @@ const dict = {
     tr: "Celsus Kütüphanesi, Artemis Tapınağı, Aspendos ve Hierapolis tiyatroları, Didyma Apollon Tapınağı, Pergamon Zeus Sunağı, Aphrodisias Stadyumu ve Göbeklitepe D Yapısı: yayımlanmış ölçülerden kurulmuş, her rakamı kaynaklı üç boyutlu modeller.",
     en: "The Library of Celsus, the Temple of Artemis, the theatres at Aspendos and Hierapolis, the Temple of Apollo at Didyma, the Great Altar of Pergamon, the stadium at Aphrodisias and Enclosure D at Göbeklitepe, modelled from published measurements with every figure sourced.",
   },
+
+  // ————— Audio guide —————
+  guide_title: { tr: "Sesli rehber", en: "Audio guide" },
+  guide_tour_title: { tr: "Anlatımlı tur", en: "Narrated tour" },
+  guide_play: { tr: "Dinle", en: "Listen" },
+  guide_resume: { tr: "Devam et", en: "Resume" },
+  guide_pause: { tr: "Duraklat", en: "Pause" },
+  guide_stop: { tr: "Bitir", en: "Stop" },
+  guide_prev: { tr: "Önceki bölüm", en: "Previous chapter" },
+  guide_next: { tr: "Sonraki bölüm", en: "Next chapter" },
+  guide_replay: { tr: "Baştan dinle", en: "Play again" },
+  guide_speed: { tr: "Hız", en: "Speed" },
+  guide_chapter_count: { tr: "bölüm", en: "chapters" },
+  guide_chapters: { tr: "Bölümler", en: "Chapters" },
+  guide_minutes: { tr: "dk", en: "min" },
+  guide_offline_ok: {
+    tr: "Cihazınızın sesiyle okunuyor; internetsiz de çalışır.",
+    en: "Read by your device's voice; it works without a signal.",
+  },
+  guide_online_voice: {
+    tr: "Bu ses internet bağlantısı gerektirebilir. Çevrimdışı için cihaz ayarlarından bir ses paketi indirin.",
+    en: "This voice may need a connection. Download a voice pack in your device settings to listen offline.",
+  },
+  guide_recorded: { tr: "Stüdyo kaydı", en: "Studio recording" },
+  guide_no_voice: {
+    tr: "Bu cihazda bu dil için ses bulunamadı. Metni aşağıda okuyabilirsiniz.",
+    en: "No voice for this language on this device. The text is below to read.",
+  },
+  guide_unsupported: {
+    tr: "Tarayıcınız sesli okumayı desteklemiyor.",
+    en: "This browser cannot read aloud.",
+  },
+  guide_show_text: { tr: "Metni göster", en: "Show transcript" },
+  guide_hide_text: { tr: "Metni gizle", en: "Hide transcript" },
+  guide_geo: { tr: "Varınca başlat", en: "Start on arrival" },
+  guide_geo_on: { tr: "Konum izleniyor", en: "Watching location" },
+  guide_geo_hint: {
+    tr: "Kalıntılara {km} km mesafedesiniz. 1 km yaklaşınca rehber kendiliğinden başlar.",
+    en: "You are {km} km from the ruins. The guide starts by itself within 1 km.",
+  },
+  guide_geo_arrived: {
+    tr: "Hoş geldiniz! Sesli rehber başlıyor.",
+    en: "You've arrived! Starting the audio guide.",
+  },
+  guide_geo_denied: {
+    tr: "Konum alınamadı. Tarayıcı izinlerini kontrol edin.",
+    en: "Couldn't get your location. Check the browser permissions.",
+  },
+
+  // ————— Ambient sound —————
+  ambience_on: { tr: "Ortam sesi", en: "Ambient sound" },
+  ambience_off: { tr: "Sesi kapat", en: "Mute ambience" },
+  ambience_hint: {
+    tr: "Rüzgâr, ağustos böcekleri, gece cırcır böcekleri ve tiyatroda kalabalık — tarayıcıda üretilen sesler.",
+    en: "Wind, cicadas, night crickets and a crowd in the theatres — synthesised in the browser.",
+  },
+
+  // ————— Realism / AR / compare —————
+  recon_quality: { tr: "Yüksek kalite", en: "High quality" },
+  recon_quality_hint: {
+    tr: "Ortam gölgelemesi: taş derzlerinde, saçak altlarında ve oturma sıraları arasında gerçekçi temas gölgesi. Güçlü cihazlar için.",
+    en: "Ambient occlusion: true contact shadow in stone joints, under cornices and between seat rows. For capable devices.",
+  },
+  recon_ar: { tr: "AR'da gör", en: "View in AR" },
+  recon_ar_preparing: { tr: "AR hazırlanıyor…", en: "Preparing AR…" },
+  recon_ar_start: { tr: "AR'ı başlat", en: "Start AR" },
+  recon_ar_real: { tr: "Gerçek boyut", en: "Life size" },
+  recon_ar_tabletop: { tr: "Masa boyu", en: "Tabletop" },
+  recon_ar_exit: { tr: "Kapat", en: "Close" },
+  recon_ar_place: {
+    tr: "Telefonu yavaşça gezdirip zemini bulun, beyaz halka çıkınca dokunun.",
+    en: "Move the phone slowly to find the floor; tap when the white ring appears.",
+  },
+  recon_landscape_note: {
+    tr: "Çevredeki arazi ve ağaçlar temsilîdir; ölçülere dayanmaz.",
+    en: "The surrounding land and trees are illustrative, not measured.",
+  },
+  recon_ar_unsupported: {
+    tr: "Bu cihaz AR desteklemiyor; modeli burada çevirebilirsiniz.",
+    en: "This device doesn't support AR; you can still turn the model here.",
+  },
+  recon_compare: { tr: "Bugün ve antik çağda", en: "Today and in antiquity" },
+  photo_unavailable: {
+    tr: "Bugünkü fotoğraf yüklenemedi (çevrimdışı olabilirsiniz).",
+    en: "Today's photograph couldn't load (you may be offline).",
+  },
+  recon_compare_close: { tr: "Karşılaştırmayı kapat", en: "Close comparison" },
+  recon_compare_today: { tr: "Bugün", en: "Today" },
+  recon_compare_then: { tr: "Rekonstrüksiyon", en: "Reconstruction" },
+  recon_compare_hint: {
+    tr: "Çizgiyi kaydırarak bugünkü fotoğrafla modeli karşılaştırın. Açılar birebir örtüşmez.",
+    en: "Drag the line to compare today's photograph with the model. The angles are not an exact match.",
+  },
+
+  // ————— Stories —————
+  nav_stories: { tr: "Hikâyeler", en: "Stories" },
+  stories_title: { tr: "Antik bir günde", en: "A day in antiquity" },
+  stories_intro: {
+    tr: "Bir kentin bir gününü, orada yaşamış biri gibi yaşayın. Kararlarınız hikâyeyi değiştirir. Karakterler kurgu, dünyaları kaynaklara dayalı.",
+    en: "Live one day in an ancient city as someone who lived there. Your choices change the story. The characters are fiction; their world comes from the sources.",
+  },
+  stories_fiction: {
+    tr: "Kurgu — tarihsel arka plan her sahnenin altında.",
+    en: "Fiction — the historical background is under each scene.",
+  },
+  stories_history_note: { tr: "Tarihte", en: "In history" },
+  stories_restart: { tr: "Baştan başla", en: "Start again" },
+  stories_back: { tr: "Bir önceki sahne", en: "Previous scene" },
+  stories_end: { tr: "Son", en: "The end" },
+  stories_all: { tr: "Tüm hikâyeler", en: "All stories" },
+  stories_read: { tr: "Hikâyeye başla", en: "Begin the story" },
+  stories_listen: { tr: "Sahneyi dinle", en: "Listen to the scene" },
+  stories_endings: { tr: "son", en: "endings" },
+  stories_found: { tr: "Bulduğunuz sonlar", en: "Endings found" },
+  seo_stories_title: {
+    tr: "Antik Bir Günde — Etkileşimli Tarih Hikâyeleri | Antik Türkiye",
+    en: "A Day in Antiquity — Interactive History Stories | Ancient Türkiye",
+  },
+  seo_stories_desc: {
+    tr: "Efes, Aspendos, Göbeklitepe, Pergamon ve Aphrodisias'ta geçen, seçimlerinizle ilerleyen ve her sahnesinin tarihsel arka planı verilen kısa hikâyeler.",
+    en: "Short branching stories set in Ephesus, Aspendos, Göbeklitepe, Pergamon and Aphrodisias, each scene with its historical background.",
+  },
 } satisfies Record<string, Localized>;
 
 export type TKey = keyof typeof dict;

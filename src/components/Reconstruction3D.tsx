@@ -1,6 +1,11 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  Columns2,
   Download,
+  Glasses,
+  Sparkles,
+  Volume2,
+  VolumeX,
   Moon,
   RotateCcw,
   RotateCw,
@@ -10,11 +15,35 @@ import {
   Tag,
   TagsIcon,
 } from "lucide-react";
+import { toast } from "sonner";
+import { createAmbience, type Ambience } from "@/lib/ambience";
 import { partsFor } from "@/lib/reconstruction-parts";
 import type { Reconstruction } from "@/lib/reconstructions";
 import { useI18n } from "@/lib/i18n";
+import { reconstructionGuide } from "@/lib/narration";
+import { structurePhotoFor } from "@/lib/structure-photos";
 import { useTheme } from "@/lib/theme";
+import { AudioGuide } from "./AudioGuide";
+import { CompareSlider } from "./CompareSlider";
+import { arSupport, openQuickLook, startWebXR, type ARMode } from "./ar/launch-ar";
 import type { AtmosMode } from "./Reconstruction3DInner";
+import type { Biome } from "./scene/landscape";
+
+/**
+ * What grows round each model. Olive and cypress are the default because most
+ * of these buildings stand near the Aegean or Mediterranean coast; the three
+ * that do not are named, since trees in the wrong place are a claim too.
+ */
+const BIOME: Partial<Record<string, Biome>> = {
+  "gobeklitepe-d-yapisi": "steppe",
+  "aizanoi-zeus-tapinagi": "steppe",
+  "nemrut-dogu-terasi": "mountain",
+};
+
+/** The photograph of what stands there today, for the before/after slider. */
+function todayPhotoFor(item: Reconstruction): string | undefined {
+  return structurePhotoFor(item.siteSlug, item.structure.tr);
+}
 
 // three.js reaches for `window` and a canvas as it initialises, and it is the
 // heaviest thing this app can load — so it stays out of the SSR graph and out
@@ -56,6 +85,88 @@ export function Reconstruction3D({
 
   useEffect(() => setMounted(true), []);
 
+  /* High quality: ambient occlusion. On by default where there is a mouse —
+     a desktop GPU — and off on touch devices, where it costs battery. */
+  const [quality, setQuality] = useState(false);
+  useEffect(() => {
+    setQuality(!window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  /* Ambient sound. Created on the first press: an AudioContext may only
+     start inside a user gesture. */
+  const ambienceRef = useRef<Ambience | null>(null);
+  const [ambient, setAmbient] = useState(false);
+  const ambientScene = useMemo(
+    () => ({
+      time: atmos,
+      crowd: item.model.kind === "roman-theatre" || item.model.kind === "stadium",
+      exposed: BIOME[item.id] === "mountain" || BIOME[item.id] === "steppe",
+    }),
+    [atmos, item.model.kind, item.id],
+  );
+  const toggleAmbient = () => {
+    if (ambient) {
+      ambienceRef.current?.stop();
+      setAmbient(false);
+      return;
+    }
+    ambienceRef.current ??= createAmbience();
+    if (!ambienceRef.current) return;
+    ambienceRef.current.setScene(ambientScene);
+    void ambienceRef.current.start();
+    setAmbient(true);
+  };
+  useEffect(() => {
+    ambienceRef.current?.setScene(ambientScene);
+  }, [ambientScene]);
+  useEffect(() => () => ambienceRef.current?.dispose(), []);
+
+  /* The narrated tour turns the camera to each hotspot as the voice gets to it. */
+  const guide = useMemo(() => reconstructionGuide(item), [item]);
+  const onChapter = useCallback(
+    (index: number) => {
+      const chapter = guide.chapters[index];
+      if (chapter?.hotspot !== undefined) {
+        setShowLabels(true);
+        setActive(chapter.hotspot);
+      } else {
+        setActive(null);
+        setView({ name: index === 0 ? "front" : "corner", token: Date.now() });
+      }
+    },
+    [guide],
+  );
+  const onGuideStatus = useCallback((playing: boolean) => {
+    ambienceRef.current?.duck(playing);
+  }, []);
+
+  /* AR: which route this device has, if any. */
+  const [arMode, setArMode] = useState<ARMode | null>(null);
+  const [arReady, setArReady] = useState(false);
+  const arDataRef = useRef<ArrayBuffer | null>(null);
+  const launchAR = () => {
+    const data = arDataRef.current;
+    if (!data) return;
+    const launch =
+      arMode === "quicklook"
+        ? openQuickLook(data, item.id)
+        : startWebXR(data, {
+            realSize: t("recon_ar_real"),
+            tabletop: t("recon_ar_tabletop"),
+            exit: t("recon_ar_exit"),
+            hint: t("recon_ar_place"),
+          });
+    launch.catch(() => toast.error(t("recon_ar_unsupported")));
+  };
+  useEffect(() => {
+    void arSupport().then(setArMode);
+  }, []);
+
+  /* Before / after: a still of the model beside today's photograph. */
+  const todayPhoto = todayPhotoFor(item);
+  const [captureToken, setCaptureToken] = useState(0);
+  const [still, setStill] = useState<string | null>(null);
+  const onCaptured = useCallback((url: string) => setStill(url), []);
   // Rebuilding the geometry on every render would rebuild the whole scene.
   const parts = useMemo(() => partsFor(item.model), [item.model]);
   // Same for the labels: a new array every render would rebuild every pin.
@@ -75,8 +186,18 @@ export function Reconstruction3D({
    */
   const [exportToken, setExportToken] = useState(0);
   const [exporting, setExporting] = useState(false);
+  const [exportFor, setExportFor] = useState<"download" | "ar">("download");
   const onExported = useCallback(
     (data: ArrayBuffer) => {
+      if (exportFor === "ar") {
+        // AR has to start inside a tap, and building the file can outlast the
+        // browser's patience with the first one — so it is kept, and the
+        // button asks for a second tap that launches at once.
+        arDataRef.current = data;
+        setExporting(false);
+        setArReady(true);
+        return;
+      }
       const url = URL.createObjectURL(new Blob([data], { type: "model/gltf-binary" }));
       const link = document.createElement("a");
       link.href = url;
@@ -85,7 +206,7 @@ export function Reconstruction3D({
       URL.revokeObjectURL(url);
       setExporting(false);
     },
-    [item.id],
+    [item.id, exportFor],
   );
 
   const chosen = active === null ? undefined : item.hotspots[active];
@@ -111,6 +232,11 @@ export function Reconstruction3D({
               view={view}
               exportToken={exportToken}
               onExported={onExported}
+              exportWithoutGround={exportFor === "ar"}
+              biome={BIOME[item.id] ?? "mediterranean"}
+              quality={quality}
+              captureToken={captureToken}
+              onCaptured={onCaptured}
             />
           </Suspense>
         ) : (
@@ -175,6 +301,7 @@ export function Reconstruction3D({
         ))}
         <button
           onClick={() => {
+            setExportFor("download");
             setExporting(true);
             setExportToken((n) => n + 1);
           }}
@@ -212,7 +339,87 @@ export function Reconstruction3D({
         <p className="text-xs text-muted-foreground">{t("recon_light_hint")}</p>
       </div>
 
-      <p className="mt-2 text-xs text-muted-foreground">{t("recon_scale")}</p>
+      {/* Realism, sound, AR, and the photograph of today. */}
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => setQuality((on) => !on)}
+          aria-pressed={quality}
+          title={t("recon_quality_hint")}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary ${
+            quality ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"
+          }`}
+        >
+          <Sparkles className="h-3.5 w-3.5" /> {t("recon_quality")}
+        </button>
+        <button
+          onClick={toggleAmbient}
+          aria-pressed={ambient}
+          title={t("ambience_hint")}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary ${
+            ambient ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"
+          }`}
+        >
+          {ambient ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+          {ambient ? t("ambience_off") : t("ambience_on")}
+        </button>
+        {arMode && (
+          <button
+            onClick={() => {
+              if (arReady) {
+                launchAR();
+                return;
+              }
+              setExportFor("ar");
+              setExporting(true);
+              setExportToken((n) => n + 1);
+            }}
+            disabled={exporting}
+            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
+          >
+            <Glasses className="h-3.5 w-3.5" />
+            {exporting && exportFor === "ar"
+              ? t("recon_ar_preparing")
+              : arReady
+                ? t("recon_ar_start")
+                : t("recon_ar")}
+          </button>
+        )}
+        {todayPhoto && (
+          <button
+            onClick={() => setCaptureToken((n) => n + 1)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
+          >
+            <Columns2 className="h-3.5 w-3.5" /> {t("recon_compare")}
+          </button>
+        )}
+      </div>
+      <p className="mt-2 text-xs text-muted-foreground">
+        {t("recon_scale")} {t("recon_landscape_note")}
+      </p>
+
+      {still && todayPhoto && (
+        <div className="mt-4">
+          <CompareSlider
+            before={todayPhoto}
+            after={still}
+            beforeLabel={t("recon_compare_today")}
+            afterLabel={t("recon_compare_then")}
+            alt={L(item.title)}
+            onClose={() => setStill(null)}
+          />
+          <p className="mt-2 text-xs text-muted-foreground">{t("recon_compare_hint")}</p>
+        </div>
+      )}
+
+      <div className="mt-4">
+        <AudioGuide
+          guide={guide}
+          title={t("guide_tour_title")}
+          onChapter={onChapter}
+          onStatus={onGuideStatus}
+          compact
+        />
+      </div>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Award,
+  BookOpen,
   Box,
   Building2,
   CalendarClock,
@@ -19,6 +20,7 @@ import {
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
+import { AudioGuide } from "@/components/AudioGuide";
 import { Lightbox } from "@/components/Lightbox";
 import { Photo } from "@/components/Photo";
 import { PhotoCredits } from "@/components/PhotoCredits";
@@ -37,10 +39,12 @@ import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
 import { creditLine } from "@/lib/photo-credits";
 import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
+import { guideForSite } from "@/lib/guide-sources";
 import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
 import { structurePhotoFor } from "@/lib/structure-photos";
 import { reconstructionForStructure } from "@/lib/reconstructions";
+import { storiesFor } from "@/lib/stories";
 import { structureInfo } from "@/lib/structures";
 import { coverImage, getSite, hasOwnPhoto, heritageTypeName, regions } from "@/lib/sites";
 
@@ -142,6 +146,7 @@ function SiteDetail() {
   const ownPhoto = hasOwnPhoto(site);
   const region = regions.find((r) => r.id === site.region)!;
   const facts = factsFor(slug);
+  const guide = useMemo(() => guideForSite(slug), [slug]);
   // Everything this page can put on screen, so the credit block below covers
   // the structure dialog's photo too and not just what is currently visible.
   const shownPhotos = [
@@ -280,6 +285,12 @@ function SiteDetail() {
           </div>
         )}
 
+        {guide && (
+          <div className="mt-6">
+            <AudioGuide guide={guide} arrival={{ lat: site.lat, lng: site.lng }} />
+          </div>
+        )}
+
         {/* Gallery */}
         <section className="mt-8">
           <h2 className="mb-3 font-display text-xl font-semibold">{t("gallery")}</h2>
@@ -358,6 +369,24 @@ function SiteDetail() {
                 </ul>
               </section>
             )}
+
+            {storiesFor(slug).map((story) => (
+              <Link
+                key={story.id}
+                to="/hikaye/$id"
+                params={{ id: story.id }}
+                className="flex items-center gap-4 rounded-2xl surface-panel p-5 transition-colors hover:border hover:border-primary"
+              >
+                <BookOpen className="h-7 w-7 shrink-0 text-primary" />
+                <span className="flex-1">
+                  <span className="block text-xs font-bold uppercase tracking-wide text-primary">
+                    {t("stories_title")}
+                  </span>
+                  <span className="block font-display text-lg font-semibold">{L(story.title)}</span>
+                  <span className="block text-sm text-muted-foreground">{L(story.role)}</span>
+                </span>
+              </Link>
+            ))}
 
             {detail && (
               <section className="rounded-2xl border-l-4 border-gold bg-secondary p-5">

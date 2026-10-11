@@ -14,6 +14,7 @@ import { Route as AntikKentlerRouteImport } from './routes/antik-kentler'
 import { Route as BolgelerRouteImport } from './routes/bolgeler'
 import { Route as GorsellerRouteImport } from './routes/gorseller'
 import { Route as HaritaRouteImport } from './routes/harita'
+import { Route as HikayelerRouteImport } from './routes/hikayeler'
 import { Route as KentlerRouteImport } from './routes/kentler'
 import { Route as KoleksiyonlarRouteImport } from './routes/koleksiyonlar'
 import { Route as MuzelerRouteImport } from './routes/muzeler'
@@ -25,6 +26,7 @@ import { Route as RotaRouteImport } from './routes/rota'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TarihiYerlerRouteImport } from './routes/tarihi-yerler'
 import { Route as BolgeIdRouteImport } from './routes/bolge.$id'
+import { Route as HikayeIdRouteImport } from './routes/hikaye.$id'
 import { Route as KentSlugRouteImport } from './routes/kent.$slug'
 import { Route as KoleksiyonIdRouteImport } from './routes/koleksiyon.$id'
 import { Route as RekonstruksiyonIdRouteImport } from './routes/rekonstruksiyon.$id'
@@ -52,6 +54,11 @@ const GorsellerRoute = GorsellerRouteImport.update({
 const HaritaRoute = HaritaRouteImport.update({
   id: '/harita',
   path: '/harita',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HikayelerRoute = HikayelerRouteImport.update({
+  id: '/hikayeler',
+  path: '/hikayeler',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KentlerRoute = KentlerRouteImport.update({
@@ -109,6 +116,11 @@ const BolgeIdRoute = BolgeIdRouteImport.update({
   path: '/bolge/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HikayeIdRoute = HikayeIdRouteImport.update({
+  id: '/hikaye/$id',
+  path: '/hikaye/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KentSlugRoute = KentSlugRouteImport.update({
   id: '/kent/$slug',
   path: '/kent/$slug',
@@ -131,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/bolgeler': typeof BolgelerRoute
   '/gorseller': typeof GorsellerRoute
   '/harita': typeof HaritaRoute
+  '/hikayeler': typeof HikayelerRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
   '/muzeler': typeof MuzelerRoute
@@ -142,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarihi-yerler': typeof TarihiYerlerRoute
   '/bolge/$id': typeof BolgeIdRoute
+  '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
   '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
@@ -152,6 +166,7 @@ export interface FileRoutesByTo {
   '/bolgeler': typeof BolgelerRoute
   '/gorseller': typeof GorsellerRoute
   '/harita': typeof HaritaRoute
+  '/hikayeler': typeof HikayelerRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
   '/muzeler': typeof MuzelerRoute
@@ -163,6 +178,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarihi-yerler': typeof TarihiYerlerRoute
   '/bolge/$id': typeof BolgeIdRoute
+  '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
   '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
@@ -174,6 +190,7 @@ export interface FileRoutesById {
   '/bolgeler': typeof BolgelerRoute
   '/gorseller': typeof GorsellerRoute
   '/harita': typeof HaritaRoute
+  '/hikayeler': typeof HikayelerRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
   '/muzeler': typeof MuzelerRoute
@@ -185,6 +202,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarihi-yerler': typeof TarihiYerlerRoute
   '/bolge/$id': typeof BolgeIdRoute
+  '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
   '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
@@ -197,6 +215,7 @@ export interface FileRouteTypes {
     | '/bolgeler'
     | '/gorseller'
     | '/harita'
+    | '/hikayeler'
     | '/kentler'
     | '/koleksiyonlar'
     | '/muzeler'
@@ -208,6 +227,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tarihi-yerler'
     | '/bolge/$id'
+    | '/hikaye/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
     | '/rekonstruksiyon/$id'
@@ -218,6 +238,7 @@ export interface FileRouteTypes {
     | '/bolgeler'
     | '/gorseller'
     | '/harita'
+    | '/hikayeler'
     | '/kentler'
     | '/koleksiyonlar'
     | '/muzeler'
@@ -229,6 +250,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tarihi-yerler'
     | '/bolge/$id'
+    | '/hikaye/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
     | '/rekonstruksiyon/$id'
@@ -239,6 +261,7 @@ export interface FileRouteTypes {
     | '/bolgeler'
     | '/gorseller'
     | '/harita'
+    | '/hikayeler'
     | '/kentler'
     | '/koleksiyonlar'
     | '/muzeler'
@@ -250,6 +273,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/tarihi-yerler'
     | '/bolge/$id'
+    | '/hikaye/$id'
     | '/kent/$slug'
     | '/koleksiyon/$id'
     | '/rekonstruksiyon/$id'
@@ -261,6 +285,7 @@ export interface RootRouteChildren {
   BolgelerRoute: typeof BolgelerRoute
   GorsellerRoute: typeof GorsellerRoute
   HaritaRoute: typeof HaritaRoute
+  HikayelerRoute: typeof HikayelerRoute
   KentlerRoute: typeof KentlerRoute
   KoleksiyonlarRoute: typeof KoleksiyonlarRoute
   MuzelerRoute: typeof MuzelerRoute
@@ -272,6 +297,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TarihiYerlerRoute: typeof TarihiYerlerRoute
   BolgeIdRoute: typeof BolgeIdRoute
+  HikayeIdRoute: typeof HikayeIdRoute
   KentSlugRoute: typeof KentSlugRoute
   KoleksiyonIdRoute: typeof KoleksiyonIdRoute
   RekonstruksiyonIdRoute: typeof RekonstruksiyonIdRoute
@@ -312,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/harita'
       fullPath: '/harita'
       preLoaderRoute: typeof HaritaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hikayeler': {
+      id: '/hikayeler'
+      path: '/hikayeler'
+      fullPath: '/hikayeler'
+      preLoaderRoute: typeof HikayelerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kentler': {
@@ -391,6 +424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BolgeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hikaye/$id': {
+      id: '/hikaye/$id'
+      path: '/hikaye/$id'
+      fullPath: '/hikaye/$id'
+      preLoaderRoute: typeof HikayeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kent/$slug': {
       id: '/kent/$slug'
       path: '/kent/$slug'
@@ -421,6 +461,7 @@ const rootRouteChildren: RootRouteChildren = {
   BolgelerRoute: BolgelerRoute,
   GorsellerRoute: GorsellerRoute,
   HaritaRoute: HaritaRoute,
+  HikayelerRoute: HikayelerRoute,
   KentlerRoute: KentlerRoute,
   KoleksiyonlarRoute: KoleksiyonlarRoute,
   MuzelerRoute: MuzelerRoute,
@@ -432,6 +473,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TarihiYerlerRoute: TarihiYerlerRoute,
   BolgeIdRoute: BolgeIdRoute,
+  HikayeIdRoute: HikayeIdRoute,
   KentSlugRoute: KentSlugRoute,
   KoleksiyonIdRoute: KoleksiyonIdRoute,
   RekonstruksiyonIdRoute: RekonstruksiyonIdRoute,
