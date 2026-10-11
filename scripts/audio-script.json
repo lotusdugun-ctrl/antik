@@ -1,0 +1,3738 @@
+{
+ "guides": [
+  "site:efes",
+  "site:gobeklitepe",
+  "site:nemrut",
+  "site:ayasofya",
+  "site:topkapi",
+  "site:sultanahmet-camii",
+  "site:pergamon",
+  "site:aphrodisias",
+  "site:hierapolis",
+  "site:aspendos",
+  "site:troya",
+  "site:hattusa",
+  "site:ani",
+  "site:goreme",
+  "site:sumela",
+  "site:selimiye",
+  "site:suleymaniye",
+  "site:yerebatan-sarnici",
+  "site:dolmabahce-sarayi",
+  "site:galata-kulesi",
+  "recon:celsus-kutuphanesi",
+  "recon:aspendos-tiyatrosu",
+  "recon:didyma-apollon-tapinagi",
+  "recon:gobeklitepe-d-yapisi",
+  "recon:artemis-tapinagi",
+  "recon:pergamon-zeus-sunagi",
+  "recon:aphrodisias-stadyumu",
+  "recon:hierapolis-tiyatrosu",
+  "recon:milet-buyuk-tiyatro",
+  "recon:efes-yamac-evler",
+  "recon:efes-buyuk-tiyatro",
+  "recon:side-tiyatrosu",
+  "recon:perge-stadyumu",
+  "recon:aizanoi-zeus-tapinagi",
+  "recon:halikarnas-mozolesi",
+  "recon:nemrut-dogu-terasi"
+ ],
+ "items": [
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Efes sesli rehberine hoş geldiniz. Burası İzmir ilinde bir antik kent. Dönemi: MÖ 10. yüzyıl. Antik dünyanın en iyi korunmuş Roma kentlerinden biri; Celsus Kütüphanesi ile ünlü.",
+   "hash": "e3b80c92"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "İyonların kurduğu kent, Artemis Tapınağı sayesinde Ege'nin dinî merkezi oldu. Roma döneminde Asia eyaletinin başkenti olarak 200 binden fazla nüfusa ulaştı; limanın alüvyonla dolmasıyla önemini yitirdi.",
+   "hash": "cd9bfd01"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Celsus Kütüphanesi. Efes'in mermer cephesi bir kütüphanenin değil, bir mezar anıtının önyüzüdür: Celsus'un lahdi hâlâ apsisin altındaki odada duruyor. Model, 1970-78'de yeniden dikilen cepheyi tam yüksekliğiyle, arkasındaki salonu ise duvarların ayakta kaldığı yüksekliğe kadar gösterir.",
+   "hash": "50d7f405"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "structure-2",
+   "text": "Büyük Tiyatro. Antik dünyanın en büyük tiyatrolarından biri: Panayır Dağı'nın yamacına oyulmuş üç katlı cavea, liman caddesinin ucundan Roma sahne binasına bakar. Elçilerin İşleri'ndeki gümüşçüler ayaklanması bu tiyatroda geçer.",
+   "hash": "71ae0d5a"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "structure-3",
+   "text": "Yamaç Evler. Kuretler Caddesi'nin karşısındaki yamaca kurulmuş altı lüks konut: yerler mozaik, duvarlar fresko. Tabandan ısıtma, kapalı kanalizasyon ve cam pencerelerle, MS 1. yüzyılda bir Roma zenginin evinin nasıl bir yer olduğunu gösteren tek yerdir. Model, peristilli avlusuyla bir konut biriminin içini gösterir.",
+   "hash": "c0c75029"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "structure-4",
+   "text": "Artemis Tapınağı. Dünyanın Yedi Harikası'ndan biri ve bugün ayakta tek bir sütunu bile kalmayan tek yapı: bataklık bir arazide, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalıydı. Model, MÖ 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösterir.",
+   "hash": "8f979529"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "structure-5",
+   "text": "Kuretler Caddesi. Celsus Kütüphanesi'ni tiyatroya bağlayan, anıtlar ve heykellerle süslü ana cadde.",
+   "hash": "796fd132"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Artemis Tapınağı Dünyanın Yedi Harikası'ndan biriydi; bugün ayakta sadece tek bir sütun var. Büyük Tiyatro 24.000 kişilikti. Elçilerin İşleri'ne göre Aziz Pavlus'a karşı iki saat süren 'Efeslilerin Artemis'i uludur!' gösterisi burada yapıldı. Yamaç Evler'de tabandan ve duvardan ısıtma, kapalı kanalizasyon ve cam pencereler vardı — MS 1. yüzyılda. Efes bir liman kentiydi. Küçük Menderes'in alüvyonu limanı doldurdu ve bugün deniz kalıntılardan 5 km uzakta.",
+   "hash": "eee90f5e"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Efes turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "983077d1"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Ephesus, an ancient city in İzmir province. Its period: 10th century BC. One of the best-preserved Roman cities of antiquity, famed for the Library of Celsus.",
+   "hash": "a6eb59fb"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Founded by Ionian settlers, the city grew around the Temple of Artemis. Under Rome it became capital of the province of Asia with over 200,000 people, then declined as its harbour silted up.",
+   "hash": "0ee527d4"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "Library of Celsus. The marble front at Ephesus is not the face of a library but of a tomb: Celsus' sarcophagus still lies in the chamber beneath the apse. The model shows the façade re-erected in 1970-78 at its full height, and the hall behind it only as high as its walls survive.",
+   "hash": "269c40b3"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "structure-2",
+   "text": "Great Theatre. One of the largest theatres of antiquity: a three-tiered cavea cut into the slope of Mount Pion, looking down the Harbour Street at a Roman stage building. The riot of the silversmiths in the Acts of the Apostles takes place here.",
+   "hash": "cb38373f"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "structure-3",
+   "text": "Terrace Houses. Six luxury residences on the slope opposite Curetes Street, their floors in mosaic and their walls in fresco. With underfloor heating, enclosed drains and glazed windows, they are the one place that shows what a rich Roman's house was actually like in the first century AD. The model shows the inside of one unit, around its colonnaded court.",
+   "hash": "5865ddac"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "structure-4",
+   "text": "Temple of Artemis. One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
+   "hash": "af90304a"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "structure-5",
+   "text": "Curetes Street. The main colonnaded street connecting the Library of Celsus to the theatre, lined with monuments and statues.",
+   "hash": "89126594"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The Temple of Artemis was one of the Seven Wonders; a single re-erected column remains today. The Great Theatre seated 24,000. According to Acts, the two-hour chant of 'Great is Artemis of the Ephesians!' against Saint Paul filled this bowl. The Terrace Houses had underfloor and wall heating, enclosed drains and glazed windows — in the first century AD. Ephesus was a port. Silt from the Küçük Menderes filled the harbour, and the sea now lies 5 km from the ruins.",
+   "hash": "0307396c"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Ephesus to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "52a6cc2b"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Göbeklitepe sesli rehberine hoş geldiniz. Burası Şanlıurfa ilinde bir kutsal alan. Dönemi: MÖ 9600. Dünyanın bilinen en eski tapınak kompleksi; tarihi yeniden yazan T biçimli dikili taşlar.",
+   "hash": "94af4595"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Tarım devriminden bin yıllarca önce avcı-toplayıcılar tarafından inşa edildi. Bu keşif, 'önce yerleşim sonra tapınak' varsayımını tersine çevirdi.",
+   "hash": "90affbb4"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "tr",
+   "chapter": "structure-1",
+   "text": "A–D yapıları. Dünyanın bilinen en eski anıtsal yapılarından biri ve tarihi en erkene giden çember. Ortadaki iki dikilitaşın kolları, elleri ve kemeri vardır: taşlar insan biçimindedir ve birbirlerine bakarlar.",
+   "hash": "23583a16"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: T biçimli dikilitaşlar, Hayvan kabartmaları ve Koruma çatısı.",
+   "hash": "1c11a5e3"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Stonehenge'den yaklaşık 6000, Giza piramitlerinden 7000 yıl daha eski. Yapanlar çiftçi değil avcı-toplayıcıydı. Bu, 'önce yerleşik hayat kurulur sonra tapınak yapılır' varsayımını tersine çevirdi. T biçimli dikilitaşların üzerinde tilki, yılan, akrep ve turna kabartmaları var; en ağır sütun yaklaşık on altı ton.",
+   "hash": "3a83c12f"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Göbeklitepe turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "e8073a64"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Göbekli Tepe, a sanctuary in Şanlıurfa province. Its period: 9600 BC. The world's oldest known temple complex — T-shaped pillars that rewrote history.",
+   "hash": "1438d03b"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Built by hunter-gatherers millennia before agriculture, its discovery reversed the assumption that settlement preceded monumental religion.",
+   "hash": "245fa116"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "Enclosures A–D. One of the oldest monumental structures known, and the earliest dated of the circles. The two pillars at its centre have arms, hands and a belt: the stones are human in form, and they face one another.",
+   "hash": "ded2fac0"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the T-shaped pillars, the Animal reliefs and the Protective canopy.",
+   "hash": "e46c4c2b"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? It predates Stonehenge by about 6,000 years and the pyramids of Giza by 7,000. Its builders were hunter-gatherers, not farmers — which reversed the assumption that people settle down first and build temples afterwards. The T-shaped pillars carry carved foxes, snakes, scorpions and cranes; the heaviest weighs about sixteen tonnes.",
+   "hash": "f7538a90"
+  },
+  {
+   "key": "site:gobeklitepe",
+   "folder": "site-gobeklitepe",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Göbekli Tepe to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "a28615c0"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Nemrut Dağı sesli rehberine hoş geldiniz. Burası Adıyaman ilinde bir anıt. Dönemi: MÖ 1. yüzyıl. 2150 metrede dev tanrı heykelleri ve kral mezar tümülüsü.",
+   "hash": "81aaabb4"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Kommagene Kralı I. Antiokhos kendi hierotheionunu (kutsal mezar alanı) burada yaptırdı. Doğu ve Batı tanrılarını birleştiren heykeller depremlerle başlarından ayrıldı.",
+   "hash": "79531087"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Doğu terası. Kommagene kralı I. Antiokhos'un 2.150 metrede kurduğu mezar-tapınak: çakıl tümülüsün eteğinde, tahtlarında oturan sekiz-dokuz metrelik tanrılar — kral, Kommagene, Zeus, Apollon, Herakles — iki yanda kartal ve aslan, karşılarında basamaklı sunak. Model başları omuzlarına geri koyar.",
+   "hash": "ce3bccf7"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "tr",
+   "chapter": "structure-3",
+   "text": "Dev tanrı başları. Nemrut Dağı'nın kuzey ve doğu teraslarında sıralanan dev heykel başları.",
+   "hash": "46a3e5a8"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Batı terası, Tümülüs ve Aslanlı horoskop.",
+   "hash": "83838342"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Batı terasındaki aslan kabartması bilinen en eski yıldız haritalarından biridir. Kommagene Kralı I. Antiokhos, 2150 metre yükseklikte kendine bir mezar tümülüsü yaptırdı ve etrafına dev tanrı heykelleri dizdirdi. Depremler bütün başları yere indirdi; heykeller gövdesiz başlarıyla oturuyor. Panteon kasten melezdir: Zeus-Oromasdes, Apollon-Mithras. Kral, Yunan ve Pers tanrılarını tek bir hanedan dininde birleştirdi.",
+   "hash": "fb56427e"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Nemrut Dağı turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "68481cb0"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Mount Nemrut, a monument in Adıyaman province. Its period: 1st century BC. Colossal god statues and a royal burial tumulus at 2,150 metres.",
+   "hash": "5ae2e60e"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "en",
+   "chapter": "history",
+   "text": "King Antiochus I of Commagene built his hierotheion here. The statues, fusing eastern and western gods, lost their heads to earthquakes.",
+   "hash": "f8de7d78"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "East terrace. The tomb-sanctuary King Antiochus I of Commagene built at 2,150 metres: at the foot of a gravel tumulus, gods eight to nine metres tall sit enthroned — the king, Commagene, Zeus, Apollo and Herakles — with an eagle and a lion at either end and a stepped altar facing them. The model puts the heads back on their shoulders.",
+   "hash": "ba23c863"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "en",
+   "chapter": "structure-3",
+   "text": "Colossal heads. The colossal heads lined up on Nemrut's north and east terraces.",
+   "hash": "f78fad91"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the West terrace, the Tumulus and the Lion horoscope.",
+   "hash": "8ea17ad9"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The lion relief on the west terrace is one of the oldest known star charts. King Antiochus I of Commagene raised a burial mound for himself at 2,150 metres and ringed it with colossal gods. Earthquakes brought every head to the ground, and they now sit apart from their bodies. The pantheon is deliberately hybrid — Zeus-Oromasdes, Apollo-Mithras. The king fused Greek and Persian gods into a single dynastic religion.",
+   "hash": "93d45c92"
+  },
+  {
+   "key": "site:nemrut",
+   "folder": "site-nemrut",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Mount Nemrut to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "89ec7fce"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Ayasofya sesli rehberine hoş geldiniz. Burası İstanbul ilinde bir manastır ve kilise. Dönemi: MS 537. Justinianus'un beş yılda yaptırdığı kubbeli bazilika; bin yıl boyunca dünyanın en büyük kapalı mekânı olarak kaldı.",
+   "hash": "a3016f8f"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Justinianus, 532'deki Nika ayaklanmasında yanan kilisenin yerine bugünkü yapıyı beş yıl on ay içinde yaptırdı. Mimarları Tralleisli Anthemios ile Miletoslu İsidoros geometri ve mekanik uzmanıydı; kubbeyi taşıyan pandantif çözümü bu ölçekte ilk kez burada uygulandı. 1453'ten sonra camiye, 1935'te müzeye, 2020'de yeniden camiye dönüştürüldü.",
+   "hash": "84ba5cb9"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Ana kubbe, Mozaikler, Hünkâr mahfili, Mermer kapılar ve Viking yazıtı.",
+   "hash": "266ee3af"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Kuzey galerinin mermer korkuluğunda, muhtemelen Bizans imparatorunun Varang muhafızlarından birinin kazıdığı bir rünik yazıt vardır — 'Halfdan bunu yazdı' diye okunur. Kubbe 55 metre yükseklikte ve 31 metre çapındadır; bin yıl boyunca dünyanın en büyük kapalı mekânı olarak kaldı. Kubbenin tabanındaki kırk pencere sırası, ağırlığı gizleyerek kubbenin havada asılı durduğu izlenimini verir; Prokopios kubbenin 'gökten altın bir zincirle sarkıyor gibi' göründüğünü yazar.",
+   "hash": "6d08ffb5"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Ayasofya turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "c6594203"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Hagia Sophia, a monastery and church in İstanbul province. Its period: AD 537. The domed basilica Justinian raised in five years, and for a thousand years the largest enclosed space in the world.",
+   "hash": "a4315dad"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Justinian replaced the church burned in the Nika riots of 532 with the present building in five years and ten months. Its architects, Anthemius of Tralles and Isidore of Miletus, were specialists in geometry and mechanics; the pendentive solution carrying the dome was applied at this scale for the first time here. It became a mosque after 1453, a museum in 1935, and a mosque again in 2020.",
+   "hash": "67efdf1c"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Main dome, the Mosaics, the Sultan's loge, the Marble doors and the Viking inscription.",
+   "hash": "e4b875a0"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? On a marble parapet in the north gallery a runic inscription, probably scratched by one of the emperor's Varangian guards, reads as 'Halfdan carved this'. The dome stands 55 metres high and 31 metres across, and for a thousand years covered the largest enclosed space in the world. The ring of forty windows at the dome's base hides its weight and makes it seem to float; Procopius wrote that it looked as if it hung from heaven on a golden chain.",
+   "hash": "1e9d0933"
+  },
+  {
+   "key": "site:ayasofya",
+   "folder": "site-ayasofya",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Hagia Sophia to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "7901b30c"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Topkapı Sarayı sesli rehberine hoş geldiniz. Burası İstanbul ilinde bir saray. Dönemi: 1460'lar. Dört avlu çevresinde büyüyen, tek bir bina değil bir yerleşke olarak kurulmuş saray; Osmanlı'yı dört yüzyıl buradan yönettiler.",
+   "hash": "0c10b53e"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Fatih Sultan Mehmet, fetihten sonra sarayını Marmara, Boğaz ve Haliç'in birleştiği burna kurdurdu. Topkapı tek bir bina değil, dört avlu boyunca sıralanan köşkler, koğuşlar ve hizmet yapılarından oluşan bir yerleşkedir: dışarıdan içeriye doğru gidildikçe erişim daralır, dördüncü avlu yalnızca padişaha ve en yakınlarına açıktır. Saray 19. yüzyılda Dolmabahçe'ye taşınana kadar kullanıldı.",
+   "hash": "840b7fdc"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Bâbüsselâm, Harem, Hazine, Kutsal Emanetler, Bağdat Köşkü ve Saray mutfakları.",
+   "hash": "b3defe76"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Sarayın mutfaklarında günde beş bine yakın kişiye yemek çıkardı; bacaları Sinan tarafından yeniden tasarlanan mutfak yapıları bugün Çin porselenleri koleksiyonunu barındırıyor. Saray tek bir yapı değil, dört avlu boyunca uzanan bir yerleşkedir; içeri doğru gidildikçe girebilenlerin sayısı azalır ve dördüncü avlu yalnızca padişaha açıktır. Harem'in duvarlarındaki İznik çinileri, 16. yüzyılda kaybolan ve bir daha üretilemeyen mercan kırmızısıyla boyanmıştır.",
+   "hash": "7a18eef1"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Topkapı Sarayı turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "7895901d"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Topkapı Palace, a palace in İstanbul province. Its period: 1460s. A palace built as a compound rather than a building, growing around four courtyards, from which the Ottomans ruled for four centuries.",
+   "hash": "a95d57b1"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "en",
+   "chapter": "history",
+   "text": "After the conquest Mehmed II set his palace on the point where the Marmara, the Bosphorus and the Golden Horn meet. Topkapı is not one building but a compound of kiosks, dormitories and service blocks strung along four courtyards, access narrowing as you go inward until the fourth court, open only to the sultan and his closest circle. It served until the court moved to Dolmabahçe in the nineteenth century.",
+   "hash": "97f6124c"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Gate of Salutation, the Harem, the Treasury, the Sacred Relics, the Baghdad Kiosk and the Palace kitchens.",
+   "hash": "2c90ab7f"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The palace kitchens fed close to five thousand people a day; their chimneys were redesigned by Sinan, and the buildings now hold the collection of Chinese porcelain. The palace is a compound, not a building: four courtyards deep, each admitting fewer people, until the fourth is open to the sultan alone. The İznik tiles of the Harem carry the coral red that was lost in the sixteenth century and never reproduced.",
+   "hash": "ad9d0040"
+  },
+  {
+   "key": "site:topkapi",
+   "folder": "site-topkapi",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Topkapı Palace to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "97a63efa"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Sultanahmet Camii sesli rehberine hoş geldiniz. Burası İstanbul ilinde bir cami ve külliye. Dönemi: 1609-1617. Altı minaresi ve iç duvarlarını kaplayan yirmi bine yakın İznik çinisiyle tanınan cami, Ayasofya'nın tam karşısına, eski Bizans sarayının üzerine kuruldu.",
+   "hash": "bfa6a06e"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "I. Ahmed, Ayasofya'nın karşısındaki Bizans Büyük Sarayı'nın kalıntıları üzerine kendi camisini yaptırmaya karar verdiğinde henüz on dokuz yaşındaydı ve savaş ganimeti olmadan cami yaptıran ilk padişah oldu. Sedefkâr Mehmed Ağa yapıyı 1609-1617 arasında tamamladı. Altı minare kararı Mekke'deki Harem-i Şerif'le eşitlik iddiası sayılınca, Mekke'ye yedinci minare eklendi.",
+   "hash": "c60fc685"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Ana kubbe ve yarım kubbeler, Altı minare, İznik çinileri, Hünkâr Kasrı, I. Ahmed Türbesi ve Avlu ve şadırvan.",
+   "hash": "c2b2a2cd"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Camiyi 'Mavi Cami' yapan çiniler İznik'ten geldi ve siparişin büyüklüğü atölyelerin fiyatlarını o kadar yükseltti ki, İznik çiniciliği bu işten sonra toparlanamadı. Altı minare, yapıldığı sırada yalnızca Mekke'deki Harem-i Şerif'te vardı; iddia tartışma yaratınca Mekke'ye bir minare daha eklendi. Cami hâlâ ibadete açıktır ve ziyaret saatleri namaz vakitlerine göre değişir; giriş ücretsizdir. Yapı, Bizans Büyük Sarayı'nın üzerine kuruldu; sarayın mozaik tabanı bugün caminin arkasındaki müzede yerinde durur.",
+   "hash": "0d6a2c2a"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Sultanahmet Camii turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "45c7f591"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Sultan Ahmed Mosque, a mosque and complex in İstanbul province. Its period: 1609–1617. Known for its six minarets and the twenty thousand İznik tiles lining its walls, the mosque was raised directly opposite Hagia Sophia, over the old Byzantine palace.",
+   "hash": "612125b1"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Ahmed I was nineteen when he decided to build his mosque on the ruins of the Byzantine Great Palace facing Hagia Sophia, and he became the first sultan to raise one without the spoils of a victory to pay for it. Sedefkâr Mehmed Ağa completed it between 1609 and 1617. When its six minarets were read as a claim to equal the sanctuary at Mecca, a seventh was added there.",
+   "hash": "9da672c3"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Main dome and semi-domes, the Six minarets, the İznik tiles, the Imperial Lodge, the Tomb of Ahmed I and the Courtyard and fountain.",
+   "hash": "03bb4a33"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The tiles that make it the 'Blue Mosque' came from İznik, and the order was so large that it drove the workshops' prices past recovery — İznik tilemaking never regained its footing. Six minarets were, at the time, matched only by the sanctuary at Mecca; when the claim caused offence, a further minaret was added there. The mosque is still in use for prayer, so visiting hours shift with the prayer times. There is no entry charge. It was built over the Byzantine Great Palace, whose mosaic floor still lies in place in the museum behind it.",
+   "hash": "12ea8e1b"
+  },
+  {
+   "key": "site:sultanahmet-camii",
+   "folder": "site-sultanahmet-camii",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Sultan Ahmed Mosque to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "9e8244f4"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Bergama (Pergamon) sesli rehberine hoş geldiniz. Burası İzmir ilinde bir antik kent. Dönemi: MÖ 3. yüzyıl. Dik yamacına kurulmuş akropolü ve dünyanın en dik tiyatrosuyla tanınan krallık başkenti.",
+   "hash": "bc37e5e9"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Attalos hanedanının başkenti olarak parşömenin adını aldığı 200 bin ciltlik kütüphaneye ev sahipliği yaptı. MÖ 133'te Roma'ya miras bırakıldı ve sağlık merkezi Asklepion ile ün kazandı.",
+   "hash": "2c38aee9"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "structure-2",
+   "text": "Zeus Sunağı terası. Bir sunaktan çok bir sahne: 113 metrelik Gigantomakhia frizi, yapının çevresini dolaşan taştan bir savaş anlatısıdır. 1878-86'da sökülüp Berlin'e taşındı; Bergama'da bugün yalnızca terası ve temeli var.",
+   "hash": "ee3f5d68"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "structure-5",
+   "text": "Kızıl Avlu. Bergama'daki büyük tuğla yapı kompleksi; Mısır tanrılarının kutsal alanıydı.",
+   "hash": "0df98b03"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Akropol, Trajan Tapınağı ve Asklepion.",
+   "hash": "3c86a41a"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Kentin adı 'parşömen' kelimesinin kökenidir: Mısır papirüs ihracatını kesince burada deri işlenmeye başlandı. Akropoldeki tiyatro antik dünyanın en dik tiyatrosudur: 80 sıra, neredeyse uçurum eğiminde, 10.000 kişilik. Asklepion'da tedavi rüya yorumu, su kürleri ve tiyatroyla yapılırdı. Tıbbın Galenos'u burada yetişti. Zeus Sunağı 1878-1886 kazılarında sökülüp Berlin'e taşındı; bugün Bergama Müzesi'nin adını taşıdığı yapı odur.",
+   "hash": "76f451c8"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Bergama (Pergamon) turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "21bf5f0d"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Pergamon, an ancient city in İzmir province. Its period: 3rd century BC. A royal capital on a steep acropolis, home to the steepest theatre of the ancient world.",
+   "hash": "82b3accd"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Capital of the Attalid dynasty, its 200,000-scroll library gave parchment its name. Bequeathed to Rome in 133 BC, it became famous for the Asklepion healing centre.",
+   "hash": "b82ed7c2"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
+   "chapter": "structure-2",
+   "text": "Great Altar terrace. Less an altar than a stage: the 113-metre Gigantomachy frieze wraps the building in a battle told in stone. It was dismantled and shipped to Berlin between 1878 and 1886; what stands at Pergamon now is the terrace and the footings.",
+   "hash": "fc8b386b"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
+   "chapter": "structure-5",
+   "text": "Red Basilica. The great brick complex at Pergamon, once a sanctuary of the Egyptian gods.",
+   "hash": "ef6910db"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Acropolis, the Temple of Trajan and the Asklepion.",
+   "hash": "c8f3e983"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The word 'parchment' comes from Pergamon: when Egypt cut off papyrus, the city perfected treated skins. The acropolis theatre is the steepest of the ancient world: 80 rows pitched almost like a cliff, seating 10,000. At the Asklepion, treatment meant dream interpretation, water cures and theatre. Galen, the physician, trained here. The Great Altar was dismantled and shipped to Berlin between 1878 and 1886; it is the building the Pergamon Museum is named after.",
+   "hash": "f4f3bb64"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Pergamon to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "aa70f009"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Afrodisias sesli rehberine hoş geldiniz. Burası Aydın ilinde bir antik kent. Dönemi: MÖ 2. yüzyıl. Mermer ocaklarının yanı başında yükselen, heykeltıraşlık okuluyla ünlü Roma kenti.",
+   "hash": "ea57f791"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Aphrodite kültü etrafında büyüyen kent, Roma'ya sadakati sayesinde vergi muafiyeti kazandı. Yerli mermeri işleyen heykeltıraşları imparatorluk boyunca eser verdi.",
+   "hash": "a9712f7f"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Stadyum. Antik dünyanın en iyi korunmuş stadyumu: iki ucu da ayakta, otuz sıra oturma basamağı çepeçevre dolanıyor. Kentin surlarının içinde, kuzey kenarına gömülü.",
+   "hash": "9704fcae"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Aphrodite Tapınağı, Tetrapylon, Sebasteion ve Heykel atölyeleri.",
+   "hash": "f36bbc0c"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? 30 bin kişilik stadyumu antik dünyanın en iyi korunmuş stadyumudur. Stadyum 30.000 kişilikti ve antik dünyanın en iyi korunmuş stadyumudur — iki ucu da ayakta. Sebasteion'un kabartmaları Roma imparatorlarını tanrılarla yan yana gösterir; imparatorluk propagandasının taşa işlenmiş en kapsamlı örneğidir. Kentin mermer ocağı iki kilometre uzaktaydı. Aphrodisiaslı heykeltıraşların imzaları Roma'dan Kuzey Afrika'ya kadar bulundu.",
+   "hash": "d388be78"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Afrodisias turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "1855b419"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Aphrodisias, an ancient city in Aydın province. Its period: 2nd century BC. A Roman city beside its own marble quarries, famous for its school of sculpture.",
+   "hash": "7e9d8b19"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Grown around the cult of Aphrodite, the city won tax exemption for its loyalty to Rome. Its sculptors, working local marble, supplied statues across the empire.",
+   "hash": "ab4840e9"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "Stadium. The best-preserved stadium of the ancient world: both ends still standing, thirty rows of seats running the whole way round. It sits inside the city walls, tucked against their northern edge.",
+   "hash": "367e934d"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Temple of Aphrodite, the Tetrapylon, the Sebasteion and the Sculpture workshops.",
+   "hash": "8175b634"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? Its 30,000-seat stadium is the best-preserved stadium surviving from antiquity. The stadium seated 30,000 and is the best-preserved in the ancient world, with both ends still standing. The Sebasteion reliefs show Roman emperors beside gods — the fullest surviving programme of imperial propaganda carved in stone. The marble quarry was two kilometres away. Signatures of Aphrodisian sculptors turn up from Rome to North Africa.",
+   "hash": "91e98a73"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Aphrodisias to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "04d2c5a3"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Hierapolis sesli rehberine hoş geldiniz. Burası Denizli ilinde bir antik kent. Dönemi: MÖ 2. yüzyıl. Pamukkale travertenlerinin üzerine kurulmuş kaplıca ve nekropol kenti.",
+   "hash": "3465fe33"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Bergama kralları tarafından kurulan kent, sıcak su kaynakları sayesinde bir şifa merkezi oldu. Depremlerle yıkılıp Roma döneminde yeniden inşa edildi.",
+   "hash": "8635f5c3"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "tr",
+   "chapter": "structure-2",
+   "text": "Tiyatro. Pamukkale'nin travertenlerine bakan yamaca oyulmuş 15.000 kişilik tiyatro. Sahne binasının üç sıra sütunlu cephesi büyük ölçüde ayakta ve 2004-2014 arasında yeniden dikildi.",
+   "hash": "ce0c8d5c"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Antik havuz, Nekropol, Frontinus Caddesi ve Apollon Tapınağı.",
+   "hash": "80f31911"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Antik havuzun dibindeki sütunlar MS 7. yüzyıldaki bir depremde suya düşen portiklere aittir. Plutonion'dan — 'Cehennem Kapısı' — yerin altından karbondioksit sızar. Kurban hayvanları ölürken rahiplerin sağ kalması mucize sayılırdı; gaz yerde birikir, ayakta duran insanın başı bulutun üstünde kalır. Nekropolü 1200'den fazla mezarıyla Anadolu'nun en büyüğüdür. Kaplıcalara şifa için gelen hastaların çoğu geri dönemedi.",
+   "hash": "a17c1654"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Hierapolis turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "58a96696"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Hierapolis, an ancient city in Denizli province. Its period: 2nd century BC. A spa and necropolis city built above the travertines of Pamukkale.",
+   "hash": "b0f45d42"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Founded by the kings of Pergamon, its hot springs made it a healing centre. Destroyed by earthquakes, it was rebuilt in grand Roman style.",
+   "hash": "b35e36a5"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "en",
+   "chapter": "structure-2",
+   "text": "Theatre. A theatre for 15,000 cut into the slope above the travertines of Pamukkale. Its stage front, three ranks of columns deep, survives in large part and was re-erected between 2004 and 2014.",
+   "hash": "86857b60"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Antique Pool, the Necropolis, the Frontinus Street and the Temple of Apollo.",
+   "hash": "74946fcb"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The columns lying in the Antique Pool fell there during a 7th-century earthquake. The Plutonion, the 'Gate to Hell', leaks carbon dioxide from below. Sacrificial animals died while the priests survived: the gas pools at ground level, leaving a standing man's head above the cloud. Its necropolis, with more than 1,200 tombs, is the largest in Anatolia. Many who came to the hot springs for a cure never left.",
+   "hash": "1ce46dc3"
+  },
+  {
+   "key": "site:hierapolis",
+   "folder": "site-hierapolis",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Hierapolis to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "6e8b4900"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Aspendos sesli rehberine hoş geldiniz. Burası Antalya ilinde bir antik kent. Dönemi: MÖ 5. yüzyıl. Dünyanın en iyi korunmuş antik tiyatrosu; bugün hâlâ konser veriliyor.",
+   "hash": "8aababaf"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Eurymedon Nehri sayesinde tuz, yağ ve at ticaretiyle zenginleşti. Tiyatro MS 2. yüzyılda mimar Zenon tarafından inşa edildi ve Selçuklular tarafından kervansaray olarak kullanıldığı için sağlam kaldı.",
+   "hash": "a4ebcd20"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Roma Tiyatrosu. Antik dünyanın ayakta kalan en bütün tiyatrosu. Oturma bölümü ile sahne binası tek bir blok hâlinde birleşir; Selçuklular kervansaray olarak kullanmayı sürdürdüğü için yıkılmadan bugüne geldi.",
+   "hash": "5df4e6f8"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Su kemerleri, Bazilika, Agora ve Stadyum.",
+   "hash": "a5a2970d"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Tiyatronun akustiği o kadar iyi ki sahnede fısıldanan söz 41. sıradan duyulabiliyor. Tiyatrosu Roma dünyasının en iyi korunmuş tiyatrosudur: sahne binası tam yüksekliğiyle ayakta ve bugün hâlâ konser veriliyor. Mimarı Zenon'un adı yazıtta geçer. Efsaneye göre kral kızını tiyatroyu yapana vaat etmiş, iki mimar arasında kalınca tiyatro kazanmıştır. Su kemerleri, ters sifon ilkesiyle çalışan basınçlı su sisteminin antik dünyadaki ender örneklerindendir.",
+   "hash": "bdc09d7c"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Aspendos turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "4aee94fd"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Aspendos, an ancient city in Antalya province. Its period: 5th century BC. The best-preserved ancient theatre in the world — still hosting concerts today.",
+   "hash": "e74e6cec"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Enriched by salt, oil and horse trade on the Eurymedon, its theatre was built by the architect Zeno in the 2nd century and survived because the Seljuks reused it as a caravanserai.",
+   "hash": "8c4b5a14"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "Roman Theatre. The most completely preserved theatre of antiquity. Its seating bank and stage building are bonded into a single block, and it came down to us intact because the Seljuqs kept it in use as a caravanserai.",
+   "hash": "c245cb0f"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Aqueducts, the Basilica, the Agora and the Stadium.",
+   "hash": "8ef3bccc"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The acoustics are so precise that a whisper on stage reaches the 41st row. Its theatre is the best-preserved in the Roman world — the stage building stands to full height, and concerts are still held in it. The architect Zeno is named in an inscription. Legend has the king promising his daughter to whoever built best — and the theatre winning. Its aqueduct is one of antiquity's rare pressurised systems, working on the inverted-siphon principle.",
+   "hash": "aaf0f044"
+  },
+  {
+   "key": "site:aspendos",
+   "folder": "site-aspendos",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Aspendos to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "cf0b2225"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Troya sesli rehberine hoş geldiniz. Burası Çanakkale ilinde bir höyük. Dönemi: MÖ 3000. Homeros'un İlyada'sına konu olan, üst üste dokuz kentten oluşan efsanevi höyük.",
+   "hash": "73e4ca33"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "5000 yıl boyunca kesintisiz iskân gördü. Heinrich Schliemann'ın 1870'lerdeki kazıları efsaneyi arkeolojiyle buluşturdu ama katmanlara da zarar verdi.",
+   "hash": "7a75d6dd"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "tr",
+   "chapter": "structure-5",
+   "text": "Truva atı replikası. Homeros'un İlyada destanındaki meşhur tahta atın bir replikası.",
+   "hash": "62cb009f"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Kent surları, Rampalı giriş, Odeon ve Athena Tapınağı.",
+   "hash": "7b026138"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Höyükte dokuz farklı kent katmanı var; Homeros'un Truva'sı büyük olasılıkla Troya VI/VII. Höyükte dokuz kent üst üste durur. Schliemann 1871'de kazarken Homeros'un Troya'sını aradı, hızla derine inip aradığı katı geçti ve 'Priamos'un Hazinesi'ni bin yıl daha eski bir katta buldu. Truva Atı'ndan hiçbir iz bulunmadı. Buna karşılık Hitit tabletlerinde, Troya'nın yeriyle uyuşan 'Wilusa' adlı bir kentle yapılan antlaşmalar geçer. Kentin surlarındaki eğimli taş duvar, İlyada'da Patroklos'un üç kez tırmanıp üç kez geri atıldığı duvar sanılır.",
+   "hash": "8d99cc7c"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Troya turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "ae9b4cf1"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Troy, a mound in Çanakkale province. Its period: 3000 BC. The legendary mound of nine superimposed cities behind Homer's Iliad.",
+   "hash": "5c52b54a"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Occupied for 5,000 years, it was excavated by Heinrich Schliemann in the 1870s — proving the legend real while damaging its layers.",
+   "hash": "1b1fb192"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "en",
+   "chapter": "structure-5",
+   "text": "Trojan horse replica. A replica of the famous wooden horse of Homer's Iliad.",
+   "hash": "96025e00"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the City walls, the Ramped gateway, the Odeon and the Temple of Athena.",
+   "hash": "ec325ac5"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The mound holds nine city layers; Homer's Troy is most likely level VI/VII. Nine cities stand stacked in the mound. Digging in 1871, Schliemann drove straight past the layer he was looking for and found his 'Treasure of Priam' in one a thousand years too old. No trace of the wooden horse has been found. Hittite tablets, however, record treaties with a city called Wilusa, in the right place to be Troy. The battered stone wall of the citadel is taken for the one Patroclus climbs three times, and is thrown back from three times, in the Iliad.",
+   "hash": "2ba84bb2"
+  },
+  {
+   "key": "site:troya",
+   "folder": "site-troya",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Troy to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "cae17904"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Hattuşa sesli rehberine hoş geldiniz. Burası Çorum ilinde bir antik kent. Dönemi: MÖ 17. yüzyıl. Hitit İmparatorluğu'nun başkenti; aslanlı kapıları ve kaya tapınağıyla ünlü.",
+   "hash": "179d0a15"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Anadolu'nun ilk büyük imparatorluğunu buradan yönetildi. Kentin arşivlerinde bulunan Kadeş Antlaşması dünyanın bilinen ilk yazılı barış antlaşmasıdır.",
+   "hash": "7c5ec5df"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "tr",
+   "chapter": "structure-2",
+   "text": "Kral Kapı. Kentin anıtsal kral kapısı; hükümdarın kente girişini simgeler.",
+   "hash": "6bd5726e"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "tr",
+   "chapter": "structure-3",
+   "text": "Yerkapı tüneli. Hattuşa surlarının altından geçen 80 metrelik anıtsal tünel.",
+   "hash": "7ae84cca"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Aslanlı Kapı, Büyük Tapınak ve Yazılıkaya.",
+   "hash": "8ca4dd2a"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Kadeş Antlaşması'nın bir kopyası BM binasının duvarında sergileniyor. Hitit İmparatorluğu'nun başkentiydi ve 6 kilometrelik surla çevriliydi; Yerkapı'nın altındaki 70 metrelik taş tünel bugün de yürünebiliyor. Kadeş Antlaşması'nın Hititçe kopyası burada bulundu. Bilinen en eski yazılı barış antlaşmasıdır ve bir kopyası New York'taki BM binasında sergilenir. Yazılıkaya açık hava tapınağının kaya duvarlarında altmıştan fazla tanrı, geçit töreni halinde yürür.",
+   "hash": "f52f12cd"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Hattuşa turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "60617d90"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Hattusa, an ancient city in Çorum province. Its period: 17th century BC. Capital of the Hittite Empire, famed for its lion gates and rock sanctuary.",
+   "hash": "4a3e0568"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Anatolia's first great empire was ruled from here. Its archives held the Treaty of Kadesh — the earliest known written peace treaty.",
+   "hash": "52c9e8e4"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "en",
+   "chapter": "structure-2",
+   "text": "King's Gate. The city's monumental royal gate, symbolising the sovereign's entry.",
+   "hash": "5844e142"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "en",
+   "chapter": "structure-3",
+   "text": "Yerkapı tunnel. The 80-metre monumental tunnel passing beneath the walls of Hattusa.",
+   "hash": "c4c65cd0"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Lion Gate, the Great Temple and the Yazılıkaya.",
+   "hash": "b3419db2"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? A copy of the Treaty of Kadesh hangs on a wall at the United Nations. Capital of the Hittite Empire, ringed by six kilometres of wall; the 70-metre stone tunnel under Yerkapı can still be walked through. The Hittite copy of the Treaty of Kadesh was found here — the oldest known written peace treaty, with a replica on display at the UN in New York. On the rock walls of the Yazılıkaya open-air sanctuary, more than sixty gods walk in procession.",
+   "hash": "f19bcb69"
+  },
+  {
+   "key": "site:hattusa",
+   "folder": "site-hattusa",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Hattusa to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "57f031ea"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Ani sesli rehberine hoş geldiniz. Burası Kars ilinde bir antik kent. Dönemi: MS 5. yüzyıl. '1001 kilise kenti'; Arpaçay vadisinin kenarındaki terk edilmiş ortaçağ başkenti.",
+   "hash": "afb3139f"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "İpek Yolu üzerinde büyüyen kent 100 bin nüfusa ulaştı. Depremler ve ticaret yollarının değişmesiyle terk edildi.",
+   "hash": "13b21d22"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Ani Katedrali. Ermeni mimarisinin başyapıtlarından; MS 1001 yılında tamamlanan kubbeli katedral.",
+   "hash": "07c4f3dd"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "tr",
+   "chapter": "structure-2",
+   "text": "Menuçehr Camii. Anadolu'nun en eski camilerinden kabul edilen Selçuklu yapısı.",
+   "hash": "60a628fa"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Surlar, Ebul Menuçehr ve Kız Kalesi.",
+   "hash": "8e490362"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Menuçehr Camii Anadolu'daki bilinen en eski Selçuklu camisi kabul edilir. 'Bin bir kilise şehri' olarak anılırdı ve zirvesinde nüfusu yüz bine yaklaştı — çağının İstanbul ve Bağdat'la anılan kentlerinden. Katedralin mimarı Trdat, İstanbul'daki Ayasofya'nın depremde çöken kubbesini onaran kişidir. İpek Yolu güzergâhı değişince ve 1319 depreminden sonra kent boşaldı; bugün sınır hattında, bozkırın ortasında bomboş duruyor.",
+   "hash": "62ea5858"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Ani turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "9b08b4c0"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Ani, an ancient city in Kars province. Its period: 5th century AD. The 'city of 1001 churches', an abandoned medieval capital above the Arpaçay gorge.",
+   "hash": "3211e3f0"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Grown on the Silk Road to some 100,000 people, it was abandoned after earthquakes and shifting trade routes.",
+   "hash": "2a160577"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "Ani Cathedral. A masterpiece of Armenian architecture; the domed cathedral completed in AD 1001.",
+   "hash": "987d1915"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "en",
+   "chapter": "structure-2",
+   "text": "Menüçehr Mosque. A Seljuk building regarded among Anatolia's oldest mosques.",
+   "hash": "a14ca31b"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the City walls, the Church of the Redeemer and the Maiden's Castle.",
+   "hash": "787c316f"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The Menüçehr Mosque is regarded as the oldest known Seljuk mosque in Anatolia. Known as the city of a thousand and one churches, it approached a hundred thousand people at its height, spoken of alongside Constantinople and Baghdad. Trdat, the cathedral's architect, was the man who repaired the earthquake-collapsed dome of Hagia Sophia in Constantinople. When the Silk Road shifted, and after the earthquake of 1319, the city emptied. It stands today on the border, alone in the steppe.",
+   "hash": "56203ae3"
+  },
+  {
+   "key": "site:ani",
+   "folder": "site-ani",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Ani to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "5161c30e"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Göreme Açık Hava Müzesi sesli rehberine hoş geldiniz. Burası Nevşehir ilinde bir kaya yerleşimi. Dönemi: MS 10-12. yüzyıl. Tüfe oyulmuş manastır ve kiliseler topluluğu; Karanlık Kilise'nin freskleri Bizans resim sanatının en iyi korunmuş örneklerindendir.",
+   "hash": "00d90b3f"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Volkanik tüf, kazmayla oyulabilecek kadar yumuşak, oyulduktan sonra sertleşecek kadar dayanıklıdır. Bu yüzden Göreme vadisi 10. yüzyıldan itibaren manastırlara dönüştü: kiliseler, yemekhaneler ve hücreler tek tek kayaya kazıldı. Kiliselerin bir bölümü sıva üzerine, bir bölümü doğrudan kayaya boyandı; Karanlık Kilise'nin pencereleri az olduğu için renkleri bugüne kadar solmadan geldi.",
+   "hash": "3aee44dc"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Karanlık Kilise, Tokalı Kilise, Elmalı Kilise, Yılanlı Kilise ve Rahibeler Manastırı.",
+   "hash": "8747f850"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Karanlık Kilise'nin freskleri, isten temizlenmesi on yıl süren bir restorasyonun ardından ortaya çıktı; mavi renginin canlılığı Bizans dünyasında eşsizdir. Karanlık Kilise adını tek bir küçük pencereden alır; içeri az ışık girdiği için freskleri Kapadokya'nın en canlı renkli resimleridir. Kaya kiliselerinin çoğunda taşıyıcı işlevi olmayan sütunlar ve kemerler yontulmuştur — kayanın içinde gereksiz olan bu ögeler, yalnızca gerçek bir kilise gibi görünsün diye yapılmıştır. Tokalı Kilise'nin mavi rengi, o dönemde altından pahalı olan lapis lazuli taşından elde edilmişti.",
+   "hash": "fe2b5ea7"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Göreme Açık Hava Müzesi turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "f44f607e"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Göreme Open Air Museum, a rock settlement in Nevşehir province. Its period: 10th–12th century AD. A cluster of monasteries and churches cut into the tuff; the frescoes of the Dark Church are among the best-preserved Byzantine paintings anywhere.",
+   "hash": "e49e5852"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Volcanic tuff is soft enough to dig with a pick and hardens once cut, which is why the Göreme valley became a landscape of monasteries from the tenth century on: churches, refectories and cells were hollowed out one by one. Some were painted on plaster, others straight onto the rock; the Dark Church kept its colours because it has so few windows.",
+   "hash": "73d5039c"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Dark Church, the Buckle Church, the Apple Church, the Snake Church and the Nunnery.",
+   "hash": "cde751ae"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The frescoes of the Dark Church emerged from a restoration that took ten years to lift the soot, and the intensity of their blue is unmatched in the Byzantine world. The Dark Church is named for its single small window: because so little light gets in, its frescoes are the most vividly coloured in Cappadocia. Most of the rock churches were carved with columns and arches that hold nothing up. Inside solid rock they are structurally pointless: they are there so the space would look like a real church. The blue of the Buckle Church was made from lapis lazuli — at the time, more expensive than gold.",
+   "hash": "52bc8440"
+  },
+  {
+   "key": "site:goreme",
+   "folder": "site-goreme",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Göreme Open Air Museum to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "f4c7e274"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Sümela Manastırı sesli rehberine hoş geldiniz. Burası Trabzon ilinde bir manastır ve kilise. Dönemi: MS 4. yüzyıl. Altındere Vadisi'nde 300 metrelik dik kayalığa yapışmış manastır; kaya kilisesinin iç ve dış duvarları baştan sona fresklerle kaplı.",
+   "hash": "19a05a95"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Manastırın kuruluşu 4. yüzyıla, bugünkü yapısı büyük ölçüde 13. yüzyıla, Trabzon İmparatorluğu dönemine tarihlenir. Kayaya yaslanan yapı, doğal bir mağaranın kiliseye dönüştürülmesiyle başladı ve yüzyıllar içinde beş katlı bir külliyeye büyüdü. Osmanlı padişahları manastırın ayrıcalıklarını fermanlarla korudu; 1923'te nüfus mübadelesiyle boşaltıldı.",
+   "hash": "188fd32b"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Kaya Kilisesi, Freskli iç ve dış duvarlar, Öğrenci odaları, Kütüphane ve Su kemeri.",
+   "hash": "859cd146"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Kaya Kilisesi'nin dış duvarı da baştan sona fresklidir: ayine giremeyenlerin dışarıdan izleyebilmesi için resimler binanın dışına taşırılmıştır. Manastır, vadi tabanından 300 metre yükseklikteki dik kayaya yaslanmıştır; yapıya ulaşan tek yol yamacı tırmanan patikadır. Osmanlı padişahları manastırın ayrıcalıklarını fermanlarla korudu; Yavuz Sultan Selim'in verdiği ferman da bunların arasındadır.",
+   "hash": "7d8ae4e3"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Sümela Manastırı turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "3dfc411c"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Sumela Monastery, a monastery and church in Trabzon province. Its period: 4th century AD. A monastery clinging to a 300-metre cliff above the Altındere valley, its rock church covered inside and out with frescoes.",
+   "hash": "b5742ee6"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Founded in the fourth century, the monastery owes most of its present form to the thirteenth, under the Empire of Trebizond. It began as a natural cave turned into a church and grew over centuries into a five-storey complex. Ottoman sultans confirmed its privileges by decree; it was emptied in the population exchange of 1923.",
+   "hash": "a70b1058"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Rock Church, the Frescoed inner and outer walls, the Students' rooms, the Library and the Aqueduct.",
+   "hash": "38052c09"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The outer wall of the rock church is frescoed too: the paintings were carried outside the building so that those who could not get in could follow the liturgy from without. The monastery is pressed against a cliff 300 metres above the valley floor, reached only by the path that climbs the slope. Ottoman sultans confirmed the monastery's privileges by decree — among them Selim I.",
+   "hash": "20980ce8"
+  },
+  {
+   "key": "site:sumela",
+   "folder": "site-sumela",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Sumela Monastery to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "c646b5e3"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Selimiye Camii sesli rehberine hoş geldiniz. Burası Edirne ilinde bir cami ve külliye. Dönemi: 1569-1575. Mimar Sinan'ın 'ustalık eserim' dediği külliye; sekiz fil ayağına oturan kubbesi Ayasofya'nınkinden geniştir.",
+   "hash": "ca851fea"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Mimar Sinan seksen yaşını geçtiğinde yaptığı Selimiye'de, ömrü boyunca uğraştığı sorunu çözdü: kubbeyi taşıyan ayakları mekânın kenarına iterek içeride bölünmemiş tek bir hacim elde etti. Sekiz fil ayağına oturan 31,25 metre çapındaki kubbe, Ayasofya'nınkinden geniştir. Külliye medrese, darülkurra, arasta ve muvakkithane ile birlikte tasarlandı.",
+   "hash": "5239bdde"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Ana kubbe, Sekiz fil ayağı, Müezzin mahfili, Çini panolar ve Arasta.",
+   "hash": "5eecf46d"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Müezzin mahfilinin altındaki mermer sütunlardan biri ters yerleştirilmiş bir lale motifi taşır; buranın vakfa direnen bir lale bahçesi sahibinin arazisi olduğu ve motifin bu inadın kaydı olduğu anlatılır. Kubbe 31,25 metre çapıyla Ayasofya'nınkinden geniştir; Sinan ömrü boyunca uğraştığı bu hedefe seksen yaşından sonra ulaştı. Sinan taşıyıcı ayakları duvarlara iterek içeride hiçbir sütunun bölmediği tek bir hacim elde etti: caminin her noktasından mihrap görülür.",
+   "hash": "9aba9170"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Selimiye Camii turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "2982ef92"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Selimiye Mosque, a mosque and complex in Edirne province. Its period: 1569–1575. The complex Sinan called his masterwork, its dome — resting on eight piers — wider than that of Hagia Sophia.",
+   "hash": "8b5e32d0"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "en",
+   "chapter": "history",
+   "text": "At Selimiye, built when he was past eighty, Sinan solved the problem of his working life: he pushed the piers carrying the dome to the edges of the space and won a single undivided volume inside. The dome, 31.25 metres across on eight piers, is wider than that of Hagia Sophia. The complex was designed together with its colleges, market row and timekeeper's house.",
+   "hash": "d934d07c"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Main dome, the Eight elephant-foot piers, the Muezzin's platform, the Tile panels and the Arasta market.",
+   "hash": "dbce6459"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? One marble column beneath the muezzin's platform carries an upside-down tulip. The story goes that the ground belonged to a tulip grower who resisted the endowment, and that the motif records his stubbornness. At 31.25 metres the dome is wider than that of Hagia Sophia — the goal Sinan worked towards his whole life, and reached after eighty. By pushing the piers into the walls Sinan won a single volume broken by no column: the mihrab is visible from every point in the mosque.",
+   "hash": "0a35aa58"
+  },
+  {
+   "key": "site:selimiye",
+   "folder": "site-selimiye",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Selimiye Mosque to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "abd5146f"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Süleymaniye Camii sesli rehberine hoş geldiniz. Burası İstanbul ilinde bir cami ve külliye. Dönemi: 1550-1557. Sinan'ın Haliç'e bakan tepeye kurduğu külliye: cami, medreseler, darüşşifa, hamam ve imaretle bir mahalle ölçeğinde tasarlandı.",
+   "hash": "ebd9869d"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Sinan'ın olgunluk dönemi eseri olan külliye, 1550-1557 arasında Kanuni Sultan Süleyman için yapıldı. Cami tek başına değil, dört medrese, tıp medresesi, darüşşifa, imaret, hamam, kervansaray ve türbelerle birlikte bir kent parçası olarak tasarlandı. Kubbenin akustiği için duvar içlerine boşluklu küpler yerleştirildi.",
+   "hash": "8c793c4c"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Ana kubbe, Kanuni ve Hürrem türbeleri, Medreseler, Darüşşifa ve Sinan'ın türbesi.",
+   "hash": "ca4b4ed1"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Caminin kandillerinden çıkan is, tavandaki hava akımıyla tek bir odaya toplanıyordu; biriken kurum toplanıp hattatlar için mürekkep yapımında kullanılırdı. Duvarların içine akustik için boşluklu küpler yerleştirilmiştir; imamın sesi mikrofonsuz olarak caminin her yerinden duyulur. Sinan kendi türbesini külliyenin dışına, köşedeki mütevazı bir yere yaptırdı; yaptığı camiye değil, ona giden yola bakar.",
+   "hash": "dd7b8f8c"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Süleymaniye Camii turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "e5143ad7"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Süleymaniye Mosque, a mosque and complex in İstanbul province. Its period: 1550–1557. Sinan's complex on the hill above the Golden Horn, planned at the scale of a neighbourhood: mosque, colleges, hospital, baths and kitchens.",
+   "hash": "cec4ecb2"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Sinan's mature work, the complex was built for Süleyman the Magnificent between 1550 and 1557. The mosque was designed not alone but as a piece of city, with four colleges, a medical school, a hospital, a soup kitchen, baths, a caravanserai and tombs. Hollow jars were set into the walls to serve the acoustics of the dome.",
+   "hash": "4bdf3f18"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Main dome, the Tombs of Süleyman and Hürrem, the Colleges, the Hospital and the Sinan's tomb.",
+   "hash": "3935d860"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? Soot from the mosque's lamps was drawn by the airflow into a single chamber, where it was collected and made into ink for calligraphers. Hollow jars were built into the walls for the acoustics: without amplification, the imam is heard everywhere in the mosque. Sinan placed his own tomb outside the complex, in a modest corner — facing not the mosque he built but the road to it.",
+   "hash": "66599e3f"
+  },
+  {
+   "key": "site:suleymaniye",
+   "folder": "site-suleymaniye",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Süleymaniye Mosque to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "4ad642ea"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Yerebatan Sarnıcı sesli rehberine hoş geldiniz. Burası İstanbul ilinde bir sarnıç. Dönemi: MS 6. yüzyıl. 336 sütunun taşıdığı yeraltı su deposu, kuşatma günlerinde sarayın ve çevresinin suyunu tutardı; iki sütunun altındaki devşirme Medusa başları ters ve yan yatırılmış durumda.",
+   "hash": "15915d1b"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Justinianus'un 532'deki Nika ayaklanmasından sonra yaptırdığı sarnıç, 138 metreye 65 metrelik bir alanı kaplar ve seksen bin metreküpe yakın su tutardı. Suyu Bozdoğan Kemeri'nden gelir, Büyük Saray'a ve çevresine dağıtılırdı. Osmanlı döneminde varlığı unutuldu; 16. yüzyılda evlerinin bodrumundan kova sarkıtıp balık çıkaran mahalleliler sayesinde yeniden kayda geçti.",
+   "hash": "0c67617b"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: 336 sütun, Medusa başları, Gözyaşı sütunu ve Tuğla tonozlar.",
+   "hash": "bd7fc522"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? İki Medusa başı, biri ters biri yan yatırılmış hâlde sütun kaidesi olarak kullanılmış; niçin öyle yerleştirildikleri bilinmiyor, en olası açıklama sütun boyunu tutturmak. Sarnıcın 336 sütunu farklı yapılardan toplandı; boyları tutmadığı için kimi kaideler yükseltildi, kimi başlıklar ters çevrildi. Sarnıcın varlığı Osmanlı döneminde unutulmuştu; 16. yüzyılda üstündeki evlerin bodrumundan balık çıkaran mahalleliler sayesinde yeniden kayda geçti.",
+   "hash": "f75e540c"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Yerebatan Sarnıcı turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "86a6bd94"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Basilica Cistern, a cistern in İstanbul province. Its period: 6th century AD. An underground reservoir on 336 columns, holding the water of the palace quarter through a siege; two of them stand on reused Medusa heads, one upside down and one on its side.",
+   "hash": "59ad32b8"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "en",
+   "chapter": "history",
+   "text": "Built by Justinian after the Nika revolt of 532, the cistern covers 138 by 65 metres and held close to eighty thousand cubic metres of water, fed from the Valens aqueduct and distributed to the Great Palace quarter. It was forgotten under the Ottomans and recorded again in the sixteenth century only because householders were lowering buckets through their cellar floors and pulling up fish.",
+   "hash": "15bbb13d"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the 336 columns, the Medusa heads, the Column of Tears and the Brick vaults.",
+   "hash": "26c1e6a1"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? Two Medusa heads serve as column bases, one upside down and one on its side. Why they were set that way is unknown; the likeliest answer is that they were simply the right height. Its 336 columns were gathered from different buildings, so where the heights did not match, bases were raised and capitals turned over. The cistern had been forgotten under the Ottomans, and was recorded again in the sixteenth century only because people were pulling fish up through their cellar floors.",
+   "hash": "26f87391"
+  },
+  {
+   "key": "site:yerebatan-sarnici",
+   "folder": "site-yerebatan-sarnici",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Basilica Cistern to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "7b786daa"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Dolmabahçe Sarayı sesli rehberine hoş geldiniz. Burası İstanbul ilinde bir saray. Dönemi: 1843-1856. Osmanlı sarayının Topkapı'dan taşındığı, Boğaz kıyısına 600 metre boyunca uzanan saray; Muayede Salonu'nun 4,5 tonluk avizesi ve 285 odası imparatorluğun son yüzyılının ölçeğini gösterir.",
+   "hash": "8cc61513"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Sultan Abdülmecid, Topkapı'yı devrin diplomasisi için yetersiz bulunca sarayı Boğaz kıyısındaki doldurulmuş koya taşıdı. Balyan ailesinin 1843-1856 arasında yaptığı yapı 285 oda, 46 salon ve altı yüz metrelik bir rıhtım cephesi barındırır. Cumhuriyet döneminde Atatürk'ün İstanbul'daki çalışma ve ikamet yeri oldu; 10 Kasım 1938'de burada öldü.",
+   "hash": "19932b46"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Muayede Salonu, Kristal Merdiven, Harem dairesi, Saat Kulesi ve Rıhtım ve bahçeler.",
+   "hash": "f73000db"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Sarayın saatleri Atatürk'ün öldüğü an olan 09:05'te durdurulmuştu; bugün öldüğü odadaki saat hâlâ o saati gösterir. Muayede Salonu'nun 4,5 tonluk avizesi, dünyanın en ağır kristal avizelerindendir ve salonun kubbesine asılıdır.",
+   "hash": "e3e48ab0"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Dolmabahçe Sarayı turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "b0928ec7"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Dolmabahçe Palace, a palace in İstanbul province. Its period: 1843–1856. Where the Ottoman court moved after Topkapı: 600 metres of façade along the Bosphorus, 285 rooms, and a 4.5-tonne chandelier in the ceremonial hall — the scale of the empire's last century.",
+   "hash": "41112b96"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "en",
+   "chapter": "history",
+   "text": "When Sultan Abdülmecid found Topkapı inadequate for the diplomacy of the age, he moved the court to a filled-in bay on the Bosphorus. Built by the Balyan family between 1843 and 1856, it holds 285 rooms, 46 halls and six hundred metres of quay frontage. In the Republic it became Atatürk's residence and workplace in İstanbul, and he died here on 10 November 1938.",
+   "hash": "c7092489"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Ceremonial Hall, the Crystal Staircase, the Harem apartments, the Clock Tower and the Quay and gardens.",
+   "hash": "fa7552f0"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? The palace clocks were stopped at 09:05, the moment of Atatürk's death; the clock in the room where he died still shows it. The four-and-a-half-tonne chandelier of the ceremonial hall is among the heaviest crystal chandeliers anywhere, hung from the dome.",
+   "hash": "55d25435"
+  },
+  {
+   "key": "site:dolmabahce-sarayi",
+   "folder": "site-dolmabahce-sarayi",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Dolmabahçe Palace to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "1ce044fc"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Galata Kulesi sesli rehberine hoş geldiniz. Burası İstanbul ilinde bir anıt. Dönemi: 1348. Cenevizlilerin Galata surlarının en yüksek noktasına diktiği kule; yüzyıllar boyunca yangın gözetleme kulesi olarak kullanıldı ve bugün Haliç'i tepeden gören manzarasıyla biliniyor.",
+   "hash": "4fa160e9"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "tr",
+   "chapter": "history",
+   "text": "Cenevizliler, Bizans'tan aldıkları imtiyazla kurdukları Galata kolonisinin surlarını 1348'de bu kuleyle taçlandırdı ve adına 'İsa Kulesi' dediler. Osmanlı döneminde kule zindan, gözlemevi ve yangın gözetleme noktası olarak kullanıldı. Külahı yangınlarda ve depremlerde birkaç kez değişti; bugünkü konik biçim 20. yüzyıldaki restorasyondan kalmadır.",
+   "hash": "11def52a"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "tr",
+   "chapter": "highlights",
+   "text": "Gezerken şunları kaçırmayın: Konik külah, Seyir terası, Ceneviz sur kalıntıları ve Taş gövde.",
+   "hash": "b502230d"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "tr",
+   "chapter": "facts",
+   "text": "Biliyor muydunuz? Evliya Çelebi'nin anlattığı, Hezârfen Ahmed Çelebi'nin kanat takıp bu kuleden Üsküdar'a uçtuğu hikâye, kulenin en bilinen ama en az doğrulanabilen anlatısıdır. Kuleyi Cenevizliler 1348'de kendi surlarının en yüksek noktasına dikti ve 'İsa Kulesi' adını verdi. Osmanlı döneminde kule yangın gözetleme noktasıydı; ahşap kentte yangın haberi buradan verilirdi.",
+   "hash": "7972dcc6"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "tr",
+   "chapter": "outro",
+   "text": "Galata Kulesi turumuz burada sona eriyor. Kalıntılara dokunmamaya, işaretli yollarda kalmaya ve yanınızda su bulundurmaya özen gösterin. İyi gezmeler.",
+   "hash": "543d8537"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Welcome to the audio guide to Galata Tower, a monument in İstanbul province. Its period: 1348. Raised by the Genoese at the highest point of their Galata walls, used for centuries as a fire watchtower, and known today for the view down over the Golden Horn.",
+   "hash": "17790d00"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "en",
+   "chapter": "history",
+   "text": "The Genoese, granted their colony at Galata by Byzantium, crowned its walls with this tower in 1348 and called it the Tower of Christ. Under the Ottomans it served as a prison, an observatory and a fire watchtower. Its cap changed several times after fires and earthquakes; the present cone dates from a twentieth-century restoration.",
+   "hash": "093240f8"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "en",
+   "chapter": "highlights",
+   "text": "As you walk round, don't miss the Conical cap, the Viewing gallery, the Remains of the Genoese walls and the Stone shaft.",
+   "hash": "ad55450f"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "en",
+   "chapter": "facts",
+   "text": "Did you know? Evliya Çelebi's account of Hezârfen Ahmed Çelebi strapping on wings and gliding from this tower to Üsküdar is the tower's best known and least verifiable story. The Genoese raised the tower in 1348 at the highest point of their own walls and named it the Tower of Christ. Under the Ottomans it was a fire watchtower — in a city of timber, the alarm was raised from here.",
+   "hash": "38b9ee10"
+  },
+  {
+   "key": "site:galata-kulesi",
+   "folder": "site-galata-kulesi",
+   "lang": "en",
+   "chapter": "outro",
+   "text": "This brings our tour of Galata Tower to an end. Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit.",
+   "hash": "60f94da7"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Celsus Kütüphanesi. MS 110'lar - 135. Efes'in mermer cephesi bir kütüphanenin değil, bir mezar anıtının önyüzüdür: Celsus'un lahdi hâlâ apsisin altındaki odada duruyor. Model, 1970-78'de yeniden dikilen cepheyi tam yüksekliğiyle, arkasındaki salonu ise duvarların ayakta kaldığı yüksekliğe kadar gösterir.",
+   "hash": "6582c901"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Sophia heykeli. Bilgelik: cephedeki dört erdemden biri. Özgün heykel bugün Viyana'da.",
+   "hash": "91825188"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Orta kapı. Üç kapının en genişi; ardındaki sundurmadan okuma salonuna geçilirdi.",
+   "hash": "62c9ef73"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Üst kat penceresi. Salonu aydınlatan ışık buradan girerdi; raflar duvar nişlerindeydi.",
+   "hash": "056ccfb0"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Yay alınlık. Üstteki üç alınlık dönüşümlüdür: ortada üçgen, yanlarda yay.",
+   "hash": "3cbd3822"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Dokuz basamak. Yapıyı boydan boya kaplayan basamaklar avludan cepheye çıkar.",
+   "hash": "1939a371"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "spot-6",
+   "text": "Apsis. Salonun dibindeki yarım yuvarlak niş. Altındaki odada Celsus'un lahdi durur.",
+   "hash": "73ed306a"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni — dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen/yay alınlıklar — 1970-78'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır; iki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise orantıdır, ölçü değil. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir ama Viyana'daki özgün heykellerin kopyası değildir; duruşları ve giysileri yorumdur. Avludaki bronz atlılar da Roma'daki Marcus Aurelius heykelinin oranlarıyla kurulmuştur. Başlıkların akant yaprakları ve volütleri modellenmiştir ama taştaki işçiliğin kopyası değildir; frizlerdeki yazıtlar ve bezeme modelde yoktur. **Renkler de ölçü değil, yorumdur:** Roma mermer cepheleri boyalıydı ve bugün Efes'te boya izi kalmamıştır — modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar, altın kafes pencereler ve merdivenin iki yanındaki bronz atlı heykeller yayımlanmış bir rekonstrüksiyon resminden alınmıştır, kazıdan değil. Salonun tavanı da yoktur: yapının iki katlı mı üç katlı mı olduğu tartışmalıdır.",
+   "hash": "cb332668"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Library of Celsus. AD 110s - 135. The marble front at Ephesus is not the face of a library but of a tomb: Celsus' sarcophagus still lies in the chamber beneath the apse. The model shows the façade re-erected in 1970-78 at its full height, and the hall behind it only as high as its walls survive.",
+   "hash": "b567e360"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The statue of Sophia. Wisdom, one of the four virtues on the front. The original is now in Vienna.",
+   "hash": "7e28197f"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The central doorway. The widest of the three doors; through the porch behind it lay the reading room.",
+   "hash": "2dbdd97a"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "Upper-storey window. The light that lit the hall came in here; the shelves stood in niches along the walls.",
+   "hash": "494d1f1f"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "Segmental pediment. The three pediments alternate: triangular in the middle, segmental either side.",
+   "hash": "146081d5"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The nine steps. Steps the full width of the building climb from the courtyard to the front.",
+   "hash": "18d9fc68"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "spot-6",
+   "text": "The apse. The semicircular niche at the back of the hall; Celsus' sarcophagus lies beneath it.",
+   "hash": "51ca9994"
+  },
+  {
+   "key": "recon:celsus-kutuphanesi",
+   "folder": "recon-celsus-kutuphanesi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The façade's width and height are measured. The rhythm of the front — four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those — is read off photographs of the front re-erected in 1970-78; how the two orders divide the 16 metres, the column diameters and the poses of the statues are proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, but they are not copies of the originals in Vienna; their poses and clothing are interpretation. The bronze horsemen in the court are likewise built on the proportions of the Marcus Aurelius in Rome. The acanthus and volutes of the capitals are modelled but are not a copy of the carving on the stone, and the inscriptions and the ornament of the friezes are absent. **The colour is interpretation, not measurement:** Roman marble fronts were painted, and no pigment survives at Ephesus — the red panels, the blue and gilded mouldings, the timber doors, the gilded window lattices and the bronze horsemen flanking the stairs are taken from a published reconstruction painting, not from the excavation. So is the hall's ceiling absent: whether the building had two storeys or three is disputed.",
+   "hash": "7372370c"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Aspendos Tiyatrosu. MS 155. Antik dünyanın ayakta kalan en bütün tiyatrosu. Oturma bölümü ile sahne binası tek bir blok hâlinde birleşir; Selçuklular kervansaray olarak kullanmayı sürdürdüğü için yıkılmadan bugüne geldi.",
+   "hash": "5bfc18d1"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Orkestra. Koronun ve müzisyenlerin yeri; çapı 23,9 metre.",
+   "hash": "665b8d4a"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Sahne duvarı. İki kat sütunlu niş ve beş kapı. Oyunun dekoru bu duvardı.",
+   "hash": "4418111a"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Diazoma. Oturma bölümünü ikiye ayıran yatay geçit; seyirci sıralarına buradan dağılırdı.",
+   "hash": "63adedb3"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Cavea. Kırk sıra oturma basamağı, on merdivenle dilimlere ayrılmış.",
+   "hash": "8aed9dd9"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Üst galeri. Kemerli arkadın üstündeki tonozlu galeri; en üst sıraya gölge ve giriş verir.",
+   "hash": "76e01a86"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-6",
+   "text": "Tente direkleri. Elli sekiz direk yuvası: seyirciyi güneşten koruyan tenteyi bunlar taşırdı.",
+   "hash": "d6a58a65"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Modeldeki sıra sayısı ölçülmüş değil, türetilmiştir: 96 metrelik dış çap ile 23,9 metrelik orkestra arasındaki yamaç, 0,75 m basamak derinliği ve üstteki tonozlu galeri payıyla 40 sıraya bölünmüştür. Sahne duvarının düzeni — iki kat sütunlu niş, beş kapı, kirişlerin bıraktığı kare yuva sıraları — yapının fotoğraflarından çıkarılmıştır. Cephenin heykelleri, ahşap çatısı ve tentesi modelde yoktur; sahnenin üzerindeki eğimli ahşap ses yansıtıcı zaten antik çağda kaybolmuştu.",
+   "hash": "15d7b2a6"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Theatre of Aspendos. AD 155. The most completely preserved theatre of antiquity. Its seating bank and stage building are bonded into a single block, and it came down to us intact because the Seljuqs kept it in use as a caravanserai.",
+   "hash": "138f0527"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The orchestra. Where the chorus and the musicians stood: 23.9 metres across.",
+   "hash": "4e2af625"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The scaenae frons. Two storeys of aediculae and five doorways: this wall was the scenery.",
+   "hash": "bb979c41"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The diazoma. The walkway splitting the seating in two; the crowd spread to their rows from here.",
+   "hash": "d0af4703"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The cavea. Forty rows of seats, cut into wedges by ten stairways.",
+   "hash": "135974ea"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The upper gallery. The vaulted gallery over the arcade, giving the top row its shade and its entrance.",
+   "hash": "0326b391"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-6",
+   "text": "The velarium masts. Fifty-eight post holes: these carried the awning that kept the sun off the audience.",
+   "hash": "76d53b6e"
+  },
+  {
+   "key": "recon:aspendos-tiyatrosu",
+   "folder": "recon-aspendos-tiyatrosu",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The row count in the model is derived, not measured: the slope between the 96 m outer diameter and the 23.9 m orchestra is divided into 40 rows at a tread of 0.75 m, allowing for the vaulted gallery on top. The arrangement of the stage wall — two storeys of aediculae, five doorways, the rows of square sockets left by its beams — is read off photographs of the building. The statuary of that front, its wooden roof and the awning are not modelled; the sloping wooden sounding-board over the stage was already lost in antiquity.",
+   "hash": "ceefaff5"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Didyma Apollon Tapınağı. MÖ 300 - MS 2. yüzyıl. Antik dünyanın en büyük tapınaklarından biri: yaklaşık 500 yıl inşa edildi ve hiçbir zaman bitirilemedi. Çatısı hiç olmadı — sütun ormanının ardındaki avlu açıktı, kehanet pınarı ile defne ağacı oradaydı.",
+   "hash": "41dbabd8"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Adyton. Çatısız iç avlu: kehanet pınarı ve kutsal defne ağacı buradaydı.",
+   "hash": "ed571a61"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Naiskos. Avlunun içindeki küçük tapınak; Apollon'un tunç kült heykelini barındırırdı.",
+   "hash": "fbafa217"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Sütun ormanı. Çift sıra İon sütunu; her biri 19,7 metre, Yunan dünyasının en yükseği.",
+   "hash": "8f27f317"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Medusa frizi. Saçaklığı dolaşan başlardan biri; devrilmiş bir tanesi bugün kalıntıların arasında durur.",
+   "hash": "f44cb7a2"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Krepidoma. Yedi basamaklı temel: 60 × 120 metrelik bir taş platform.",
+   "hash": "61fe97a7"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Model tapınağın tasarımını gösterir, inşa edilmiş hâlini değil: sütunların tamamı antik çağın sonunda bile dikilmemişti. Sütun çapları, başlıklar ve saçaklık yüksekliği ölçülerden değil İon düzeninin oranlarından modellenmiştir; kabartmalı sütun kaideleri de basitleştirilmiştir.",
+   "hash": "46d9af6e"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Temple of Apollo at Didyma. 300 BC - 2nd century AD. One of the largest temples ever attempted: some 500 years in the building, and never finished. It never had a roof — behind the forest of columns lay an open court holding the oracle spring and the laurel tree.",
+   "hash": "62614ded"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The adyton. The unroofed inner court: the oracle spring and the sacred laurel stood here.",
+   "hash": "3c4bbf05"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The naiskos. The small temple inside the court, which housed the bronze cult image of Apollo.",
+   "hash": "8a550442"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The forest of columns. A double file of Ionic columns, each 19.7 m: the tallest in the Greek world.",
+   "hash": "dadbc09c"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The Medusa frieze. One of the heads that ran round the entablature; a fallen block still lies among the ruins.",
+   "hash": "bb06ad21"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The crepidoma. Seven steps of platform: 60 by 120 metres of stone.",
+   "hash": "142046f2"
+  },
+  {
+   "key": "recon:didyma-apollon-tapinagi",
+   "folder": "recon-didyma-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The model shows the temple as designed, not as built: not all of the columns had been raised even by the end of antiquity. Column diameters, capitals and the height of the entablature are modelled from the proportions of the Ionic order rather than measured, and the carved column bases are simplified.",
+   "hash": "aafa4f25"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Göbeklitepe, D Yapısı. MÖ 10. binyılın ikinci yarısı. Dünyanın bilinen en eski anıtsal yapılarından biri ve tarihi en erkene giden çember. Ortadaki iki dikilitaşın kolları, elleri ve kemeri vardır: taşlar insan biçimindedir ve birbirlerine bakarlar.",
+   "hash": "bd4eb3d8"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Merkez dikilitaşlar. 5,5 metrelik iki T taşı birbirine bakar: kolları, elleri ve kemeriyle insan biçimindedirler.",
+   "hash": "1fe842ac"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Çevre dikilitaşları. On iki dikilitaş daire üzerinde dizili; hepsi merkeze döner.",
+   "hash": "878892d7"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Kuru duvar. Dikilitaşların arası işlenmemiş taşla örülmüştür; taşlar duvarın içinde durur.",
+   "hash": "2ddea50c"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Terrazzo zemin. Yakılmış kireçten dökme zemin — bilinen en eski örneklerinden biri.",
+   "hash": "721cc6f8"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Seki. Duvarın iç yüzü boyunca dolaşan oturma sekisi.",
+   "hash": "4ca4d3b0"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Yapının çapı için yayınlarda 20 ile 30 metre arasında değerler geçer; model 30 metreyi esas alır. Dikilitaşların yüzündeki hayvan kabartmaları çizilmemiştir: kazıda çıkan kabartmaların fotoğrafları yükseklik haritası olarak kullanılıp taşa oyulmuştur, yani derinlik gerçektir ve gölgesini kendi düşürür. Gerçek olmayan, hangi hayvanın hangi taşın neresinde durduğudur — fotoğraflar C Yapısı'nın taşlarından gelir, model ise D Yapısı'nı gösterir. Merkezdeki iki taşın kolları, elleri, kemeri ve peştamalı D Yapısı için belgelenmiştir ve alçak kabartma olarak modellenmiştir. Çemberin üstünün örtülü olup olmadığı bilinmiyor; model açık bırakır.",
+   "hash": "13b74a0f"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Göbeklitepe, Enclosure D. Second half of the 10th millennium BC. One of the oldest monumental structures known, and the earliest dated of the circles. The two pillars at its centre have arms, hands and a belt: the stones are human in form, and they face one another.",
+   "hash": "935e707c"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The central pillars. Two T-shaped stones 5.5 m tall face one another: human in form, with arms, hands and a belt.",
+   "hash": "75217ce0"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The ring of pillars. Twelve pillars set around the circle, every one turned towards the centre.",
+   "hash": "362ca691"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The dry-stone wall. The gaps between the pillars are filled with unworked stone: they stand inside the wall.",
+   "hash": "fc4433f2"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The terrazzo floor. A floor poured from burnt lime, among the earliest known anywhere.",
+   "hash": "042dffc9"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The bench. The bench for sitting that runs round the inside of the wall.",
+   "hash": "085a1ff4"
+  },
+  {
+   "key": "recon:gobeklitepe-d-yapisi",
+   "folder": "recon-gobeklitepe-d-yapisi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. Published diameters for the enclosure range from 20 to 30 metres; the model takes 30. The animals on the pillars are not drawn: photographs of the excavated reliefs are used as height maps and cut into the stone, so the depth is real and throws its own shadow. What is not real is which animal stood where on which pillar — the photographs come from the pillars of Enclosure C, while the model shows Enclosure D. The arms, hands, belt and loincloth of the two central stones are documented for D, and are modelled as the low relief they are. Whether the circle was roofed is unknown, and the model leaves it open.",
+   "hash": "082ae2bb"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Efes Artemis Tapınağı. MÖ 4. yüzyıl - MS 401. Dünyanın Yedi Harikası'ndan biri ve bugün ayakta tek bir sütunu bile kalmayan tek yapı: bataklık bir arazide, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalıydı. Model, MÖ 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösterir.",
+   "hash": "42cfc89e"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Cella. Çatılı iç mekân: Artemis'in kült heykeli burada dururdu.",
+   "hash": "bab00450"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Kabartmalı tambur. Plinius otuz altı sütunun kaidesinin kabartmalı olduğunu yazar; bir tanesi British Museum'da.",
+   "hash": "1b05fa61"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Çift sütun sırası. Dipteros: gövdeyi iki sıra sütun çevreler, toplamı 127.",
+   "hash": "5326ac24"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Beşik çatı. İki ucunda alınlık bulunan çatı; modelde kademeli olarak kurulmuştur.",
+   "hash": "8bad1894"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Tapınaktan geriye temel ve dağınık parçalar kaldığı için planı tartışmalıdır: kaynaklar boyutları ve 127 sütunu verir, sütunların ızgara düzenini değil. Model 127 sütunu tutturacak biçimde kurulmuştur ama sütun aralıkları, çatının eğimi ve alınlığın bezemesi tamamen modellemedir. Kabartmalı sütun kaideleri düz bırakılmıştır.",
+   "hash": "0a257dd3"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Temple of Artemis at Ephesus. 4th century BC - AD 401. One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
+   "hash": "e2c4af61"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The cella. The roofed inner room, where the cult statue of Artemis stood.",
+   "hash": "23031517"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The sculpted drum. Pliny says thirty-six columns were carved at the base; one of them is in the British Museum.",
+   "hash": "c1c2d33a"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The double colonnade. A dipteros: two rows of columns wrap the building, 127 in all.",
+   "hash": "7879f59f"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The gabled roof. The roof, with a pediment at either end, built up in steps in the model.",
+   "hash": "53f0f33e"
+  },
+  {
+   "key": "recon:artemis-tapinagi",
+   "folder": "recon-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. Only foundations and scattered fragments survive, so the plan is disputed: the sources give the dimensions and Pliny's 127 columns, not the grid they stood in. The model is laid out to reach 127, but the spacing, the pitch of the roof and the ornament of the pediment are all inference. The carved column bases are left plain.",
+   "hash": "646b8f96"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Pergamon Zeus Sunağı. MÖ 170 - 159 civarı. Bir sunaktan çok bir sahne: 113 metrelik Gigantomakhia frizi, yapının çevresini dolaşan taştan bir savaş anlatısıdır. 1878-86'da sökülüp Berlin'e taşındı; Bergama'da bugün yalnızca terası ve temeli var.",
+   "hash": "95d66a70"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Gigantomakhia frizi. 113 metrelik yüksek kabartma: tanrılarla devlerin savaşı, yapının çevresini dolaşır.",
+   "hash": "50827bfb"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Ön merdiven. Yirmi metre genişliğinde; iki kanadın arasından terasa çıkar.",
+   "hash": "b142f13f"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Sütunlu galeri. Terası çeviren İon sütun dizisi.",
+   "hash": "8e56f825"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Sunak. Asıl sunak yukarıdaki avlunun ortasındaydı; friz onun sahnesiydi.",
+   "hash": "c602033b"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Kanat. Merdivenin iki yanında öne çıkan kanatlar frizi kesmeden döndürür.",
+   "hash": "8b712087"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Taban ölçüleri, friz ve merdiven genişliği kazılmış parçalardan bilinir; 12 metrelik yükseklik ise Ampelius'un antik notundan gelir ve tartışmalıdır. Üstteki sütun dizisinin oranları, çatının olup olmadığı ve kanatların ayrıntıları modellemedir. Friz bandında Berlin'deki Pergamon Müzesi'nde yeniden kurulmuş Gigantomakhia'nın fotoğrafı dolanır: kabartma gerçek, ama 113 metrelik anlatının hangi sahnesinin yapının hangi yüzünde durduğu modelde doğru değildir.",
+   "hash": "ceea23d5"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Great Altar of Pergamon. c. 170 - 159 BC. Less an altar than a stage: the 113-metre Gigantomachy frieze wraps the building in a battle told in stone. It was dismantled and shipped to Berlin between 1878 and 1886; what stands at Pergamon now is the terrace and the footings.",
+   "hash": "8b431f6e"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The Gigantomachy frieze. 113 metres of high relief: the gods against the giants, wrapping the whole building.",
+   "hash": "1949121b"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The great stairway. Twenty metres wide, climbing to the terrace between the two wings.",
+   "hash": "13705d2d"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The colonnade. The Ionic colonnade that runs round the terrace.",
+   "hash": "1cddfff5"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The fire altar. The altar itself stood in the court on top; the frieze was its stage.",
+   "hash": "84782dda"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The wing. The wings projecting either side of the stair carry the frieze round without breaking it.",
+   "hash": "ca88671f"
+  },
+  {
+   "key": "recon:pergamon-zeus-sunagi",
+   "folder": "recon-pergamon-zeus-sunagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The base, the frieze and the width of the stairway are known from excavated blocks; the height of 12 metres comes from Ampelius' ancient note and is disputed. The proportions of the colonnade on top, whether it was roofed, and the detail of the wings are inference. The frieze band carries a photograph of the Gigantomachy as re-erected in the Pergamonmuseum in Berlin: the carving is real, but which scene of that 113-metre narrative sat on which face of the building is not what the model shows.",
+   "hash": "c83eecfd"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Aphrodisias Stadyumu. MS 1. yüzyıl. Antik dünyanın en iyi korunmuş stadyumu: iki ucu da ayakta, otuz sıra oturma basamağı çepeçevre dolanıyor. Kentin surlarının içinde, kuzey kenarına gömülü.",
+   "hash": "48e424e6"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Pist. Otuz metre eninde, iki ucu kavisli koşu alanı.",
+   "hash": "26a1555f"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Oturma sıraları. Her iki yanda otuz sıra; toplam otuz bin kişi.",
+   "hash": "969e15dd"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Kavisli uç. İki ucu da kapalıdır; antik dünyanın en bütün stadyumu olmasının sebebi budur.",
+   "hash": "ae39751f"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Tonozlu giriş. Seyirci pist seviyesindeki tonozlu geçitlerden girerdi.",
+   "hash": "0bbbf753"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Dış ölçüler ve sıra sayısı ölçülmüştür; pistin genişliği, basamak derinliği ve girişlerin yeri bunlardan türetilmiştir. Stadyumun uzun kenarları hafifçe dışa kavislidir — böylece her sıradan pistin tamamı görülür — ama modeldeki kavis ölçülmüş değil, oranlardan verilmiştir.",
+   "hash": "b4b98735"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Stadium at Aphrodisias. 1st century AD. The best-preserved stadium of the ancient world: both ends still standing, thirty rows of seats running the whole way round. It sits inside the city walls, tucked against their northern edge.",
+   "hash": "4db03b3d"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The track. The running floor, thirty metres wide and rounded at both ends.",
+   "hash": "f5cb4e86"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The seating. Thirty rows on each side: thirty thousand people in all.",
+   "hash": "4ae56faa"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The curved end. Both ends are closed, which is why this is the most complete stadium of antiquity.",
+   "hash": "8fa309b5"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The vaulted entrance. The crowd came in through vaulted passages at track level.",
+   "hash": "77ff0c31"
+  },
+  {
+   "key": "recon:aphrodisias-stadyumu",
+   "folder": "recon-aphrodisias-stadyumu",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The overall dimensions and the row count are measured; the width of the track, the depth of each step and the placing of the entrances are derived from them. The long sides bow outwards slightly, so that every row can see the whole track, but the curve in the model is proportional rather than surveyed.",
+   "hash": "2b43b0de"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Hierapolis Tiyatrosu. MS 2. yüzyıl. Pamukkale'nin travertenlerine bakan yamaca oyulmuş 15.000 kişilik tiyatro. Sahne binasının üç sıra sütunlu cephesi büyük ölçüde ayakta ve 2004-2014 arasında yeniden dikildi.",
+   "hash": "dbad868d"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Orkestra. Yirmi metre çapında yarım daire.",
+   "hash": "50f34e9a"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Sahne cephesi. Üç sıra sütunlu cephe 2004-2014 arasında yeniden dikildi.",
+   "hash": "15565264"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Diazoma. Alt yirmi sırayı üstteki yirmi beşten ayıran geçit.",
+   "hash": "6b51e079"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Cavea. Sekiz merdiven caveayı yedi dilime böler; kapasitesi 15.000 kişiydi.",
+   "hash": "91a2e47a"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Aynı kaynak tiyatroyu hem 50 sıralı hem de 20 alt + 25 üst sıralı diye anlatır; model ikinci sayıyı esas alır ve 45 sıra kurar. Cavea ile orkestranın çapı ölçülmüş değildir: sıra sayısından ve 0,75 m basamak derinliğinden türetilmiştir. Sahne cephesinin heykelleri ile imparator locası modelde yoktur.",
+   "hash": "5900c896"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Theatre at Hierapolis. 2nd century AD. A theatre for 15,000 cut into the slope above the travertines of Pamukkale. Its stage front, three ranks of columns deep, survives in large part and was re-erected between 2004 and 2014.",
+   "hash": "f45330b1"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The orchestra. A half circle twenty metres across.",
+   "hash": "b8651b85"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The stage front. The front, three ranks of columns deep, was re-erected between 2004 and 2014.",
+   "hash": "a55fd0bd"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The diazoma. The walkway dividing the twenty rows below from the twenty-five above.",
+   "hash": "cdc7a1f2"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The cavea. Eight stairways cut the cavea into seven wedges; it held 15,000.",
+   "hash": "d028c920"
+  },
+  {
+   "key": "recon:hierapolis-tiyatrosu",
+   "folder": "recon-hierapolis-tiyatrosu",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The same source describes the theatre both as having 50 rows and as having 20 below and 25 above; the model takes the second and raises 45. The diameters of the cavea and the orchestra are not measured but derived from the row count and a 0.75 m tread. The statuary of the stage front and the imperial box are not modelled.",
+   "hash": "1067c40f"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Milet Büyük Tiyatrosu. MÖ 250 - MS 3. yüzyıl. Anadolu'nun en büyük tiyatrolarından biri: caveası 140 metreye yakın çapıyla yamaca yaslanmış bir stadyum gibi açılır. MÖ 250-225'te Yunan mimarlarınca kurulmuş, MS 68-96'da üç katlı taş sahne binası getirilerek Roma döneminde yeniden inşa edilmiştir; bugün o sahne duvarı -arkasındaki işlikleriyle birlikte- en bütün örneklerden biridir.",
+   "hash": "81882185"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Orkestra. Yirmi yedi metre çapında yarım daire — MÖ 250-225'teki Yunan kuruluşunun bugüne kalan ana kütlesi.",
+   "hash": "c1c11fab"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Sahne cephesi. Üç katlı Roma sahne binası (MS 68-96); arkasındaki tonozlu işlikleriyle bugüne ulaşmıştır.",
+   "hash": "3c7c7cd6"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Diazoma. Caveayı ikiye bölen geçit: aşağıda otuz sıra, yukarıda yirmi altı.",
+   "hash": "cf384ec3"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Cavea. On bir merdiven oturma bölümünü dilimlere ayırır; kapasitesi 14.800 ile 18.500 arası sayılır.",
+   "hash": "337b192c"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Üst galeri. En üst sıranın ardındaki geniş galeri; Milet'te Roma caveası taşıyıcı duvarla yamaca bağlanmıştı.",
+   "hash": "463a945b"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Kaynaklı olan yalnızca iki çap ve kapasitedir; gerisi türetmedir. 140 metreye yaklaşan bir caveada oturma sırasının sayısı yayınlarda tek biçimli değildir: model, 27,34 metrelik orkestradan 69,9 metrelik dış kenara, 0,75 m basamak derinliği ve ortadaki 1,8 m geçit payıyla 56 sıra dağıtır. Sahne binasının yüksekliği, sahne derinliği, on bir merdiven ve üst galeriye dizilen sütunlar orantı ile yapının fotoğraflarından çıkarılmıştır; tente direkleri Milet için kazıda belgelenmemiştir ve varsayımdır. Model MS 68-96'daki Roma evresini gösterir: Yunan kuruluşunun ahşap sahnesini üç katlı taş bina çoktan değiştirmişti, ama sahne duvarını süsleyen heykeller modelde yoktur.",
+   "hash": "601cd917"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Great Theatre of Miletus. 250 BC - 3rd century AD. One of the largest theatres in Anatolia: its cavea, nearly 140 m across, opens like a stadium set against the hillside. Built by Greek architects in 250-225 BC, it was rebuilt under Rome in AD 68-96 with a three-storey stone stage building — a front that survives, with the workshops behind it, among the most complete anywhere.",
+   "hash": "8b404ab4"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The orchestra. A half circle 27.34 m across: the surviving mass of the Greek foundation of 250-225 BC.",
+   "hash": "6738dfad"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The stage front. The three-storey Roman stage building (AD 68-96), surviving with the vaulted workshops behind it.",
+   "hash": "14b72818"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The diazoma. The walkway splitting the seating: thirty rows below, twenty-six above.",
+   "hash": "9a177dc3"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The cavea. Eleven stairways cut the seating bank into wedges; its capacity is put between 14,800 and 18,500.",
+   "hash": "05929c9d"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The upper gallery. The broad gallery behind the top row; at Miletus the Roman cavea was tied to the slope by a supporting wall.",
+   "hash": "af02204b"
+  },
+  {
+   "key": "recon:milet-buyuk-tiyatro",
+   "folder": "recon-milet-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. Only the two diameters and the capacity are cited; the rest is derivation. In a cavea nearly 140 m across the row count varies between publications: the model distributes 56 rows from the 27.34 m orchestra to the 69.9 m outer edge at a 0.75 m tread with a 1.8 m walkway in between. The height of the stage building, the depth of the stage, the eleven stairways and the columns lining the upper gallery are proportion read off photographs of the building; the velarium masts are not documented by excavation at Miletus and are assumed. The model shows the Roman phase of AD 68-96: the timber stage of the Greek foundation had long been replaced by the three-storey building, but the statuary that adorned its front is not modelled.",
+   "hash": "979ff3ca"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Efes Yamaç Evler. MS 1. - 7. yüzyıl. Kuretler Caddesi'nin karşısındaki yamaca kurulmuş altı lüks konut: yerler mozaik, duvarlar fresko. Tabandan ısıtma, kapalı kanalizasyon ve cam pencerelerle, MS 1. yüzyılda bir Roma zenginin evinin nasıl bir yer olduğunu gösteren tek yerdir. Model, peristilli avlusuyla bir konut biriminin içini gösterir.",
+   "hash": "ec746a92"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Peristil avlu. Sütunlarla çevrili avlu: ev ışığını ve yağmur suyunu buradan alırdı.",
+   "hash": "1752b3fd"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "İmpluvium. Avlunun ortasındaki havuz, çatıdan inen yağmuru toplar.",
+   "hash": "38eacea0"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Fresko. Duvarlar sıva üzerine boyalıydı; Musalar Evi'nin resimleri bugün de duruyor.",
+   "hash": "c04943ad"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Mozaik zemin. Odaların zemini renkli taş tesseralarla döşeliydi.",
+   "hash": "fd6f2b42"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Sütun sırası. Avluyu çeviren sütunlar üst katı da taşırdı.",
+   "hash": "aae52c2e"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Bu modelin ölçüleri değil, malzemesi belgelidir: kaynak konutların sayısını, iki katlı oluşunu, yerlerin mozaik ve duvarların fresko olduğunu verir — tek tek odaların boyutlarını değil. Avlunun ölçüsü, sütun sayısı ve oda derinlikleri Roma peristilli evinin bilinen oranlarından modellenmiştir. Duvardaki fresko ile yerdeki mozaikler bu evlerin kendi fotoğraflarıdır, ama hangi resmin hangi odada durduğu modelde doğru değildir; ayrıca gerçek yapı bugün modern bir koruma çatısı altındadır ve model o çatıyı göstermez.",
+   "hash": "da9db71e"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Terrace Houses at Ephesus. 1st - 7th century AD. Six luxury residences on the slope opposite Curetes Street, their floors in mosaic and their walls in fresco. With underfloor heating, enclosed drains and glazed windows, they are the one place that shows what a rich Roman's house was actually like in the first century AD. The model shows the inside of one unit, around its colonnaded court.",
+   "hash": "dbfac0e8"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The peristyle court. The colonnaded court: the house took its light and its rainwater from here.",
+   "hash": "b4febd55"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The impluvium. The pool in the middle of the court, catching the rain off the roof.",
+   "hash": "e6451307"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The fresco. The walls were painted on plaster; the pictures in the House of the Muses survive.",
+   "hash": "7d34a30c"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The mosaic floor. The floors of the rooms were laid with coloured stone tesserae.",
+   "hash": "c77ccc0b"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The colonnade. The columns round the court carried the storey above as well.",
+   "hash": "2d83c351"
+  },
+  {
+   "key": "recon:efes-yamac-evler",
+   "folder": "recon-efes-yamac-evler",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. What is documented here is the material rather than the measurements: the source gives the number of residences, that they rise two storeys, and that the floors are mosaic and the walls fresco — not the size of any one room. The court, the number of columns round it and the depth of the rooms are modelled from the known proportions of a Roman peristyle house. The fresco on the wall and the mosaics on the floor are photographs of these houses, but which picture belonged in which room is not what the model shows — and the real building now stands under a modern protective roof, which the model leaves off.",
+   "hash": "f63d5195"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Efes Büyük Tiyatrosu. MÖ 3. yüzyıl - MS 2. yüzyıl. Antik dünyanın en büyük tiyatrolarından biri: Panayır Dağı'nın yamacına oyulmuş üç katlı cavea, liman caddesinin ucundan Roma sahne binasına bakar. Elçilerin İşleri'ndeki gümüşçüler ayaklanması bu tiyatroda geçer.",
+   "hash": "52c7bcbe"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Orkestra. 26 metre çapında; 3. yüzyılda etrafı duvarla çevrilip arenaya dönüştürüldü.",
+   "hash": "a7787817"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Sahne binası. Nero döneminde iki katlı yapıldı, üçüncü kat 2. yüzyılda eklendi.",
+   "hash": "90c1e6e8"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Birinci diazoma. Alt kat ile orta katı ayıran geçit; alt katta 24 sıra vardır.",
+   "hash": "26d2eb70"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "İkinci diazoma. Orta kat ile üst katı ayırır; üst kat 1. yüzyılda eklendi.",
+   "hash": "7e2f25c5"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Üç katlı cavea. 24, 22 ve 21 sıra: toplam 67 sıra, 21.500 kişi.",
+   "hash": "0f6ee3c9"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "spot-6",
+   "text": "Üst galeri. Yamacın tepesinde, en üst sıranın arkasındaki örtülü geçit.",
+   "hash": "ffc7787b"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Caveanın çapı, orkestranın çapı ve üç kattaki sıra sayıları arşiv kaydından alınmıştır; basamak derinliği (0,7 m), sıra yüksekliği ve iki diazomanın genişliği ise bunları 142 metreye sığdıracak biçimde türetilmiştir. Sahne binasının üç katlı cephesi ölçülmüş değil, Nero döneminde iki kat olarak yapılıp 2. yüzyılda üçüncü katın eklendiği bilgisinden 18 metre olarak orantılanmıştır; kapı ve niş düzeni Aspendos'taki gibi genel bir Roma sahne duvarıdır, Efes'inkinin kopyası değildir. 3. yüzyılda orkestranın arenaya çevrilişi, merdiven sayısı ve tente direkleri modelde yoktur.",
+   "hash": "4bea46b5"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Great Theatre of Ephesus. 3rd century BC - 2nd century AD. One of the largest theatres of antiquity: a three-tiered cavea cut into the slope of Mount Pion, looking down the Harbour Street at a Roman stage building. The riot of the silversmiths in the Acts of the Apostles takes place here.",
+   "hash": "fb1883f2"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The orchestra. 26 metres across; walled round in the 3rd century and turned into an arena.",
+   "hash": "0683d672"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The stage building. Built two storeys high under Nero; the third storey was added in the 2nd century.",
+   "hash": "8ebbdf93"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The first walkway. The walkway between the lower and middle tiers; the lower tier has 24 rows.",
+   "hash": "02b98370"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The second walkway. Separates the middle tier from the upper one, which was added in the 1st century.",
+   "hash": "c4d54b65"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The three-tiered cavea. 24, 22 and 21 rows: 67 in all, for 21,500 people.",
+   "hash": "79435864"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "spot-6",
+   "text": "The upper gallery. The covered passage behind the top row, at the crest of the slope.",
+   "hash": "37136ddb"
+  },
+  {
+   "key": "recon:efes-buyuk-tiyatro",
+   "folder": "recon-efes-buyuk-tiyatro",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The diameter of the cavea and the orchestra and the row counts of the three tiers come from the archive record; the seat tread (0.7 m), the riser and the width of the two walkways are derived to fit them into 142 metres. The three-storey stage front is not measured: it is proportioned to 18 metres from the record that it was built two storeys high under Nero and given its third in the 2nd century, and its doorways and aediculae are a generic Roman stage wall, as at Aspendos, not a copy of the one at Ephesus. The 3rd-century conversion of the orchestra into an arena, the exact stairway count and the awning masts are not modelled.",
+   "hash": "79aab66b"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Side Tiyatrosu. MS 150 - 175. Pamphylia'nın en büyük tiyatrosu ve yamaca değil, düz zemine kurulmuş nadir örneklerden: cavea iki katlı tonozlu bir alt yapı üzerinde yükselir. Üç katlı sahne binası kentin sütunlu caddesine cephe verirdi.",
+   "hash": "ac71429d"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Orkestra. 29 metre çapında; 80 santimlik podyum duvarı seyirciyi arenadan ayırırdı.",
+   "hash": "d868e717"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Sahne platformu. Altı metre derinliğinde, orkestradan üç metre yukarıda taş bir platform.",
+   "hash": "17bc2dfd"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Sahne binası. Üç katlı, 63 metre genişliğinde; sütunlu caddeye bakan cephesi heykellerle doluydu.",
+   "hash": "d8e0233b"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Diazoma. Otuz sıralık alt kat ile yirmi beş sıralık üst katı ayıran geçit.",
+   "hash": "17f002bd"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Tonozlu alt yapı. Yamaç olmadığı için cavea iki kat tonoz üstünde durur; dıştan kemerli bir cephe.",
+   "hash": "1efe8eb0"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Caveanın ve orkestranın çapı, iki kattaki sıra sayıları, podyum duvarı ve sahnenin derinliği arşiv kaydından; kapasite Almanca Wikipedia'dan alınmıştır. Basamak derinliği (0,7 m) ve sıra yüksekliği bunları 120 metreye sığdıracak biçimde türetilmiştir. Üç katlı sahne binasının 63 metrelik genişliği bilinir ama yüksekliği ölçülmüş değildir; model onu 17 metreye orantılar ve cephenin nişleriyle kapılarını genel bir Roma sahne duvarı olarak çizer. Caveayı taşıyan iki katlı tonozlu alt yapı modelde kemerli bir dış cephe olarak gösterilir; orkestranın sonradan arenaya çevrilirken örülen 2 metrelik duvar yoktur.",
+   "hash": "b4524340"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Theatre of Side. AD 150 - 175. The largest theatre in Pamphylia, and one of the rare ones built on level ground rather than a hillside: the cavea stands on a two-storey vaulted substructure. Its three-storey stage building faced the colonnaded street of the city.",
+   "hash": "affaa633"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The orchestra. 29 metres across; an 80 cm podium wall kept the audience off the floor.",
+   "hash": "b399e96c"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The stage platform. A stone platform six metres deep, standing three metres above the orchestra.",
+   "hash": "29c972ad"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The stage building. Three storeys and 63 metres wide, its street front once crowded with statues.",
+   "hash": "25c72212"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The diazoma. The walkway between the thirty rows below and the twenty-five above.",
+   "hash": "55feaf82"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The vaulted substructure. With no hillside, the cavea rests on two storeys of vaults: an arcaded face outside.",
+   "hash": "bf8c34b6"
+  },
+  {
+   "key": "recon:side-tiyatrosu",
+   "folder": "recon-side-tiyatrosu",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The cavea and orchestra diameters, the row counts of the two tiers, the podium wall and the stage depth come from the archive record; the capacity from the German Wikipedia. The seat tread (0.7 m) and the riser are derived to fit them into 120 metres. The three-storey stage building is known to be 63 m wide but its height is not measured; the model proportions it to 17 metres and draws its niches and doorways as a generic Roman stage wall. The two-storey vaulted substructure that carries the cavea is shown as an arcaded outer face, and the 2 m wall built round the orchestra when it became an arena is not modelled.",
+   "hash": "267cd29d"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Perge Stadyumu. MS 1. yüzyılın ikinci yarısı. Anadolu'nun en iyi korunmuş stadyumlarından biri: oturma sıraları yetmiş tonozun üstünde taşınır, tonozların her üçüncüsü giriş, kalanı dükkândı. Kuzey ucu at nalı gibi kapalı, güney ucu açıktır.",
+   "hash": "35f45e4f"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Pist. Yaklaşık 20 metre eninde, 234 metre boyunda koşu alanı.",
+   "hash": "6a6a3fb9"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Oturma sıraları. Her iki yanda on bir sıra, her biri 43,6 santim yüksekliğinde.",
+   "hash": "b1744c17"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Kapalı kuzey ucu. At nalı biçiminde kapanan uç; sıralar buradan kesintisiz döner.",
+   "hash": "70c98aaf"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Açık güney ucu. Pistin bu ucu kapatılmamıştı; anıtsal giriş buradaydı.",
+   "hash": "35b29610"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Tonozlar. Yetmiş tonoz sıraları taşır: her üçüncüsü giriş, ötekiler dükkân.",
+   "hash": "d0739e95"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Uzunluk, genişlik, sıra sayısı ve sıranın yüksekliği Türkçe Wikipedia'dan alınmıştır; kaynağın verdiği 0,63 metrelik sıra derinliği ile pistin genişliği (20,1 m) bunlardan türetilmiştir. Yetmiş tonozun dıştan görünen kemerleri, dükkânları ve kuzey ucun içindeki geçitler modelde yalnızca giriş ağızları olarak gösterilir; güney ucun açık bırakılışı kaynağa dayanır ama oradaki anıtsal girişin biçimi bilinmediğinden çizilmemiştir.",
+   "hash": "645549fb"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Stadium at Perge. Second half of the 1st century AD. One of the best-preserved stadiums in Anatolia: the seating is carried on seventy vaults, every third one an entrance and the rest shops. The north end closes in a horseshoe; the south end is open.",
+   "hash": "447cab3e"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The track. The running floor, about 20 metres wide and 234 long.",
+   "hash": "3095724f"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The seating. Eleven rows on each side, each 43.6 centimetres high.",
+   "hash": "e4e4e707"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The closed north end. The end that closes in a horseshoe; the rows run round it unbroken.",
+   "hash": "49f07275"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The open south end. This end of the track was left open; the monumental entrance stood here.",
+   "hash": "c03bc959"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The vaults. Seventy vaults carry the seats: every third an entrance, the others shops.",
+   "hash": "ce0020c4"
+  },
+  {
+   "key": "recon:perge-stadyumu",
+   "folder": "recon-perge-stadyumu",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. Length, width, the row count and the height of a row come from the Turkish Wikipedia; the 0.63 m tread the source gives and the width of the track (20.1 m) are derived from them. The seventy vaults' outer arches, their shops and the passages inside the north end appear only as entrance mouths, and while the open south end follows the source, the form of the monumental entrance there is unknown and is not drawn.",
+   "hash": "9c375b82"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Aizanoi Zeus Tapınağı. MS 92 - 95. Anadolu'nun en iyi korunmuş Zeus tapınağı: sekize on beş sütunlu bir pseudodipteros, altında ışık pencereli tonozlu bir mahzenle. Domitianus döneminde adanmış; sütunlarının çoğu hâlâ ayakta.",
+   "hash": "251885e7"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Köşe sütunu. Sekize on beş sütun: köşeler ortak sayılınca kırk iki.",
+   "hash": "85105c07"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Pronaos. Cellanın önündeki derin sundurma; kapı buradan içeri açılırdı.",
+   "hash": "82533fcd"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Cella. Zeus'un kült heykelinin durduğu kapalı oda.",
+   "hash": "f49b9d08"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Pseudodipteros. Sütun halkası ile cella arasında bir halka genişliğinde boşluk bırakılmıştır.",
+   "hash": "0d8db9b2"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Tonozlu mahzen. Tapınağın altında ışık pencereli bir tonoz uzanır; kült için kullanıldığı sanılıyor.",
+   "hash": "69b681a4"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Stylobatın ölçüleri ve kenarlardaki sütun sayıları İngilizce Wikipedia'dan alınmıştır; 42 sütunluk toplam bunlardan çıkar. Sütun yüksekliği (9 m), çapı, saçaklık, çatı ve cellanın duvarları ölçülmüş değil, İon düzeninin oranlarından verilmiştir. Pseudodipteros düzeninde ikinci sütun halkasının yeri boş bırakılmış, cella o kadar geriye çekilmiştir. Tapınağın altındaki tonozlu mahzen ve ışık pencereleri modelde yoktur; podyum yalnızca basamaklı bir krepis olarak gösterilir.",
+   "hash": "12a73a2f"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Temple of Zeus at Aizanoi. AD 92 - 95. The best-preserved temple of Zeus in Anatolia: a pseudodipteros of eight by fifteen columns over a vaulted chamber lit by windows. Dedicated under Domitian, most of its columns still stand.",
+   "hash": "30db3f5b"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The corner column. Eight by fifteen columns: forty-two once the corners are shared.",
+   "hash": "ce452fa5"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The pronaos. The deep porch before the cella; the door opened inwards from here.",
+   "hash": "21aca355"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The cella. The closed chamber that held the cult statue of Zeus.",
+   "hash": "4cb1b9b7"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The pseudodipteros. A gap one ring wide is left between the colonnade and the cella.",
+   "hash": "198df1d8"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The vaulted chamber. A barrel vault lit by windows runs beneath the temple, probably a cult room.",
+   "hash": "8e4a082b"
+  },
+  {
+   "key": "recon:aizanoi-zeus-tapinagi",
+   "folder": "recon-aizanoi-zeus-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The stylobate dimensions and the column counts on the sides come from the English Wikipedia; the total of 42 columns follows from them. The column height (9 m), the diameter, the entablature, the roof and the cella walls are not measured but proportioned from the Ionic order. In the pseudodipteral plan the place of the second ring of columns is left empty and the cella set back by that much. The vaulted chamber beneath the temple and its light windows are not modelled; the podium is shown only as a stepped crepis.",
+   "hash": "a196914f"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Halikarnas Mozolesi. MÖ 353 - 350. Dünyanın Yedi Harikası'ndan biri ve 'mozole' sözcüğünün kaynağı: Karia satrapı Mausolos için karısı Artemisia'nın yaptırdığı mezar. Yüksek bir podyum, otuz altı sütun, basamaklı bir piramit ve tepede dört atlı bir araba.",
+   "hash": "9d857691"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Podyum. 18,5 metre yüksekliğinde, üç kademeli; frizler bu kademeleri sarardı.",
+   "hash": "c8c52861"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Aslanlar. Podyumun çevresinde yirmi aslan heykeli bulundu; hepsi dışarı bakar.",
+   "hash": "bd960768"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Sütun halkası. Dokuza on bir, otuz altı İon sütunu; aralarında heykeller dururdu.",
+   "hash": "3f179e7c"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Piramit. Yirmi dört basamakla yedi metre yükselen çatı.",
+   "hash": "d840f944"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Quadriga. Tepedeki mermer araba: dört at, Mausolos ve Artemisia. Atın başı bugün Londra'da.",
+   "hash": "37adfd5c"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Temelin ölçüleri, podyumun, piramidin ve quadriganın yüksekliği, sütun ve basamak sayıları Almanca Wikipedia'dan; aslan sayısı İngilizce Wikipedia'dan alınmıştır. Yapı 15. yüzyılda sökülüp Bodrum Kalesi'ne taş olduğu için gerisi Plinius'un anlatımına ve kazılan temele dayanan bir yorumdur: podyumun üç kademesi, sütunların 12 metrelik yüksekliği, cellanın biçimi, piramidin tepesindeki platform ve quadriganın duruşu orantıdır, ölçü değil. Podyumu saran üç kabartma frizi (Amazonomakhia, Kentauromakhia, araba yarışı) ve dört yüz heykelin büyük kısmı modelde yoktur; sütun aralarındaki figürler ile aslanlar yerleşimi göstermek için konmuştur.",
+   "hash": "eab8171f"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Mausoleum at Halicarnassus. 353 - 350 BC. One of the Seven Wonders, and the building every mausoleum is named after: the tomb Artemisia raised for her husband Mausolus, satrap of Caria. A tall podium, thirty-six columns, a stepped pyramid and a four-horse chariot on the summit.",
+   "hash": "78c386c7"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The podium. 18.5 metres high, in three tiers; the friezes wrapped these tiers.",
+   "hash": "f978f869"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The lions. Twenty lion statues were found round the podium, all facing outwards.",
+   "hash": "8bfb86c1"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The colonnade. Thirty-six Ionic columns, nine by eleven, with statues standing between them.",
+   "hash": "b514a624"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The pyramid. A roof rising seven metres in twenty-four steps.",
+   "hash": "83917e06"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The quadriga. The marble chariot on top: four horses, Mausolus and Artemisia. A horse's head is in London.",
+   "hash": "d05d73b0"
+  },
+  {
+   "key": "recon:halikarnas-mozolesi",
+   "folder": "recon-halikarnas-mozolesi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The foundation dimensions, the heights of the podium, pyramid and quadriga, and the column and step counts come from the German Wikipedia; the lion count from the English one. Because the building was quarried into Bodrum Castle in the 15th century, the rest is interpretation from Pliny's description and the excavated foundation: the three tiers of the podium, the 12 m column height, the shape of the cella, the summit platform and the pose of the quadriga are proportion, not measurement. The three relief friezes round the podium (Amazons, centaurs, a chariot race) and most of the four hundred statues are absent; the figures between the columns and the lions are there to show the arrangement.",
+   "hash": "da5653c8"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Nemrut Dağı, Doğu Terası. MÖ 1. yüzyılın ikinci yarısı. Kommagene kralı I. Antiokhos'un 2.150 metrede kurduğu mezar-tapınak: çakıl tümülüsün eteğinde, tahtlarında oturan sekiz-dokuz metrelik tanrılar — kral, Kommagene, Zeus, Apollon, Herakles — iki yanda kartal ve aslan, karşılarında basamaklı sunak. Model başları omuzlarına geri koyar.",
+   "hash": "aebd56f3"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Zeus-Oromasdes. Sıranın ortasında, 8,75 metre boyunda; Yunan ve Pers tanrısının birleşimi.",
+   "hash": "88818ba6"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "I. Antiokhos. Kral, tanrıların arasında ve onlarla aynı boyda oturur.",
+   "hash": "2a3a8c96"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Herakles-Artagnes-Ares. Sıranın sağ ucundaki tanrı; ardından kartal ve aslan gelir.",
+   "hash": "d5e96ced"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Aslan. Her sıranın iki ucunu bir kartal ve bir aslan kapatır.",
+   "hash": "7cac3203"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "spot-5",
+   "text": "Basamaklı sunak. Tanrıların karşısında, avlunun doğu ucunda; ateş sunağı.",
+   "hash": "b27979ce"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "spot-6",
+   "text": "Atalar dizisi. Avlunun iki yanında kralın Pers ve Makedon atalarını gösteren steller sıralanırdı.",
+   "hash": "fb5c7b8d"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "spot-7",
+   "text": "Tümülüs. Kırk dokuz metre yüksekliğinde çakıl yığını; mezar odası hâlâ bulunamadı.",
+   "hash": "18c4d12a"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Tümülüsün yüksekliği ve çapı İngilizce, avlunun ölçüleri, Zeus heykelinin yüksekliği, tahtların tabanı ve heykellerin sırası Almanca Wikipedia'dan alınmıştır. Beş heykel de aynı yükseklikte çizilmiştir, oysa yalnızca Zeus'unki ölçülüdür; tahtın oturma yüksekliği (3 m), kartal ile aslanın 4,75 metrelik boyu (kaynak 4,5-5 m der), sunağın basamakları ve atalar dizisinin stelleri orantıdır. Heykeller bugün başsızdır — başlar önlerinde, yere düşmüş durur — model sanctuary'yi kurulduğu hâliyle, başları yerinde gösterir; yüzler ve tiara biçimleri gerçek heykellerin kopyası değildir. Batı ve kuzey terasları modelde yoktur.",
+   "hash": "5d211b4f"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Mount Nemrut, the East Terrace. Second half of the 1st century BC. The tomb-sanctuary King Antiochus I of Commagene built at 2,150 metres: at the foot of a gravel tumulus, gods eight to nine metres tall sit enthroned — the king, Commagene, Zeus, Apollo and Herakles — with an eagle and a lion at either end and a stepped altar facing them. The model puts the heads back on their shoulders.",
+   "hash": "ee87050a"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "Zeus-Oromasdes. In the middle of the row at 8.75 metres: Greek Zeus and Persian Ahura Mazda in one.",
+   "hash": "86e2dbe7"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "Antiochus I. The king sits among the gods, and at their height.",
+   "hash": "5e1a784e"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "Herakles-Artagnes-Ares. The god at the right end of the row; beyond him the eagle and the lion.",
+   "hash": "253a0b4b"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The lion. An eagle and a lion close each end of the row.",
+   "hash": "6b255f23"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "spot-5",
+   "text": "The stepped altar. Facing the gods at the east end of the court: the fire altar.",
+   "hash": "bd1d9d91"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "spot-6",
+   "text": "The ancestor stelae. Along both sides of the court stood stelae of the king's Persian and Macedonian ancestors.",
+   "hash": "9ccaeec2"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "spot-7",
+   "text": "The tumulus. A gravel mound forty-nine metres high; the burial chamber has never been found.",
+   "hash": "a9b04fc6"
+  },
+  {
+   "key": "recon:nemrut-dogu-terasi",
+   "folder": "recon-nemrut-dogu-terasi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The height and diameter of the tumulus come from the English Wikipedia; the court dimensions, the height of Zeus, the throne bases and the order of the figures from the German one. All five colossi are drawn the same height, though only Zeus is measured; the seat height of the thrones (3 m), the 4.75 m of the eagle and the lion (the source says 4.5-5 m), the altar steps and the stelae of the ancestors are proportion. The statues stand headless today, their heads on the ground before them; the model shows the sanctuary as built, heads in place, and the faces and tiaras are not copies of the originals. The west and north terraces are not modelled.",
+   "hash": "3ad28745"
+  }
+ ]
+}
