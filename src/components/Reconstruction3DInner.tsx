@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { SCANS } from "@/lib/scans";
 import { buildLandscape, type Biome } from "./scene/landscape";
 import type * as THREE_NS from "three";
 import {
@@ -1997,7 +1998,9 @@ export default function Reconstruction3DInner({
         blockSet.normal,
         blockSet.ao,
       ];
-      const carved = parts.filter((part) => part.carving);
+      // A part with a scan is drawn from the scan, further down, not from its
+      // own primitive — though its bounds above still frame the camera.
+      const carved = parts.filter((part) => part.carving && !part.scan);
       for (const part of carved) {
         const carving = part.carving!;
         const geometry = flatten(geometryFor(part));
@@ -2082,7 +2085,7 @@ export default function Reconstruction3DInner({
 
       const byMaterial = new Map<Material, THREE_NS.BufferGeometry[]>();
       for (const part of parts) {
-        if (part.carving) continue;
+        if (part.carving || part.scan) continue;
         const list = byMaterial.get(part.material) ?? [];
         list.push(flatten(geometryFor(part)));
         byMaterial.set(part.material, list);
@@ -2179,6 +2182,114 @@ export default function Reconstruction3DInner({
         biome,
       });
       scene.add(landscape.group);
+
+      /*
+       * The scans. Each file is fetched once, however many parts use it (the
+       * Mausoleum's frieze uses two files fifty times), and every use is a
+       * clone sharing the file's geometry and textures. They arrive after the
+       * rest of the model, so the building appears at once and its carvings
+       * a moment later.
+       */
+      const scanned = parts.filter((part) => part.scan);
+      const scanGroup = new THREE.Group();
+      scanGroup.name = "scans";
+      scene.add(scanGroup);
+      const scanResources: { dispose: () => void }[] = [];
+      if (scanned.length > 0) {
+        void (async () => {
+          const [{ GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
+            import("three/addons/loaders/GLTFLoader.js"),
+            import("three/addons/libs/meshopt_decoder.module.js"),
+          ]);
+          if (disposed) return;
+          const gltfLoader = new GLTFLoader();
+          gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+          const ids = [...new Set(scanned.map((part) => part.scan!.id))];
+          const loaded = new Map<string, THREE_NS.Object3D>();
+          await Promise.all(
+            ids.map(async (id) => {
+              try {
+                const gltf = await gltfLoader.loadAsync(SCANS[id].url);
+                loaded.set(id, gltf.scene);
+              } catch {
+                /* a missing scan leaves a gap, not a broken model */
+              }
+            }),
+          );
+          if (disposed) return;
+          for (const [id, root] of loaded) {
+            root.traverse((object) => {
+              const mesh = object as THREE_NS.Mesh;
+              if (!mesh.isMesh) return;
+              // A scan is a thin shell of surface: let it cast a shadow, but
+              // not receive its own, which on a shell is acne all over.
+              mesh.castShadow = true;
+              mesh.receiveShadow = false;
+              scanResources.push(mesh.geometry);
+              const original = mesh.material as THREE_NS.MeshStandardMaterial;
+              // A scan's own texture already holds the light it was
+              // photographed in; it should take this scene's light, not shine.
+              // An untextured scan (a plaster cast) takes the model's marble.
+              const palette = MATERIALS.marble;
+              const material = new THREE.MeshStandardMaterial({
+                map: original.map ?? null,
+                side: THREE.DoubleSide,
+                color: original.map ? 0xffffff : palette.color,
+                roughness: 0.82,
+                metalness: 0,
+                envMapIntensity: 0.9,
+                // A photographed texture under a second, simulated light reads
+                // too dark in shade; a little of it is let glow through.
+                ...(original.map ? { emissiveMap: original.map, emissive: 0x3a3a3a } : {}),
+              });
+              if (original.map) scanResources.push(original.map);
+              original.dispose();
+              mesh.material = material;
+              scanResources.push(material);
+            });
+            void id;
+          }
+          for (const part of scanned) {
+            const fit = part.scan!;
+            const root = loaded.get(fit.id);
+            if (!root) continue;
+            const box3 = new THREE.Box3().setFromObject(root);
+            const size = box3.getSize(new THREE.Vector3());
+            const holder = new THREE.Group();
+            const copy = root.clone(true);
+            copy.rotation.y = SCANS[fit.id].facing ?? 0;
+            holder.add(copy);
+            let scale = 1;
+            if (fit.centre && fit.diameter) {
+              // A drum: its own width matched to the column, round its axis.
+              scale = fit.diameter / Math.max(size.x, size.z);
+              holder.position.set(...fit.centre);
+              holder.rotation.y = part.kind === "relief" ? part.rotY : 0;
+            } else if (part.kind === "figure") {
+              scale = part.height / size.y;
+              holder.position.set(...part.at);
+              holder.rotation.y = part.rotY;
+            } else if (part.kind === "relief") {
+              const [w, h] = part.size;
+              scale = Math.min(w / size.x, h / size.y);
+              // The panel's back sits on the face it is carved into.
+              holder.rotation.y = part.rotY;
+              const out = new THREE.Vector3(0, 0, 1).applyAxisAngle(
+                new THREE.Vector3(0, 1, 0),
+                part.rotY,
+              );
+              holder.position
+                .set(...part.at)
+                .addScaledVector(out, (size.z * scale) / 2 - 0.04)
+                .add(new THREE.Vector3(0, (h - size.y * scale) / 2, 0));
+            } else {
+              continue;
+            }
+            holder.scale.setScalar(scale);
+            scanGroup.add(holder);
+          }
+        })();
+      }
 
       /* ---- light, camera ---- */
 
@@ -2278,7 +2389,13 @@ export default function Reconstruction3DInner({
       if (import.meta.env.DEV) {
         // A handle for the headless visual checks, so a test can walk the
         // camera up to a statue instead of guessing at wheel events.
-        (window as unknown as { __recon?: unknown }).__recon = { camera, controls, target, span };
+        (window as unknown as { __recon?: unknown }).__recon = {
+          camera,
+          controls,
+          target,
+          span,
+          scene,
+        };
       }
 
       /**
@@ -2856,6 +2973,7 @@ export default function Reconstruction3DInner({
         apron.dispose();
         apronMaterial.dispose();
         landscape.dispose();
+        scanResources.forEach((resource) => resource.dispose());
         composer?.dispose();
         controls.removeEventListener("start", cancelFlight);
         renderer.dispose();

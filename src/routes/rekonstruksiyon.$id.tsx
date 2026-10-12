@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Box, ExternalLink, MapPin, Ruler, TriangleAlert } from "lucide-react";
 import { PhotoCredits } from "@/components/PhotoCredits";
+import { ScanGallery } from "@/components/ScanGallery";
 import { Reconstruction3D } from "@/components/Reconstruction3D";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { partsFor } from "@/lib/reconstruction-parts";
@@ -11,6 +12,7 @@ import {
   type Reconstruction,
 } from "@/lib/reconstructions";
 import { breadcrumbTags, seoTags } from "@/lib/seo";
+import { scansFor } from "@/lib/scans";
 import { getSite } from "@/lib/sites";
 import { structurePhotoFor } from "@/lib/structure-photos";
 
@@ -127,6 +129,8 @@ function ReconstructionPage() {
         )}
         className="mt-6"
       />
+
+      <ScanGallery ids={scansFor(item.id)} />
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <section>

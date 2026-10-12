@@ -579,6 +579,18 @@ const dict = {
     en: "Couldn't get your location. Check the browser permissions.",
   },
 
+  // ————— Real scans —————
+  scans_title: { tr: "Gerçek eserin 3B taraması", en: "3D scans of the real pieces" },
+  scans_intro: {
+    tr: "Modelde kullanılan heykel ve kabartmalar, gerçek eserlerin fotogrametri taramalarıdır. Burada her birini tek başına çevirip inceleyebilirsiniz.",
+    en: "The sculpture set into the model comes from photogrammetry scans of the real pieces. Here each can be turned on its own.",
+  },
+  scans_by: { tr: "Tarama:", en: "Scan:" },
+  scans_reduced: {
+    tr: " · web için küçültüldü ve kırpıldı",
+    en: " · reduced and cropped for the web",
+  },
+
   // ————— Ambient sound —————
   ambience_on: { tr: "Ortam sesi", en: "Ambient sound" },
   ambience_off: { tr: "Sesi kapat", en: "Mute ambience" },
