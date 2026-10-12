@@ -1,0 +1,36 @@
+# Every push and pull request: install from the lockfile, then type-check,
+# lint, test and build. A red cross here means "do not merge" — this is what
+# would have caught the TanStack Start vulnerability before Vercel did.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install
+        run: bun install --frozen-lockfile
+      - name: Type-check
+        run: bunx tsc --noEmit
+      - name: Lint
+        run: bunx eslint . --quiet
+      - name: Test
+        run: bun test
+      - name: Build
+        run: bun run build
+      - name: Audit dependencies
+        # Known vulnerabilities in dependencies; fails on high or critical.
+        run: bun audit --audit-level=high
