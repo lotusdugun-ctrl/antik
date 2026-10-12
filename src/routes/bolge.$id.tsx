@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { LayoutGrid, MapIcon } from "lucide-react";
+import { OfflinePanel } from "@/components/OfflinePanel";
 import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
 import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
@@ -88,6 +89,15 @@ function RegionDetail() {
             style={{ width: `${p?.percent ?? 0}%` }}
           />
         </div>
+      </div>
+
+      <div className="mb-6">
+        <OfflinePanel
+          compact
+          sites={list}
+          packId={`region:${id}`}
+          sub={t("offline_region_sub").replace("{n}", String(list.length))}
+        />
       </div>
 
       {view === "map" ? (

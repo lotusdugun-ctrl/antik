@@ -24,6 +24,12 @@ export type Chapter = {
   text: Localized;
   /** On a reconstruction tour: the hotspot index the camera should face. */
   hotspot?: number;
+  /**
+   * Where this chapter's recording is filed, when the chapter was borrowed
+   * from another guide (a route playlist is built from the guides of its
+   * stops). Absent: the guide's own key and the chapter's own id.
+   */
+  source?: { key: string; id: string };
 };
 
 export type Guide = {

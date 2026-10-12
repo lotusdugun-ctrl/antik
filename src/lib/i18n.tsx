@@ -422,6 +422,154 @@ const dict = {
     tr: "Önce birkaç kenti favorilerine ekle.",
     en: "Add a few cities to your favourites first.",
   },
+  offline_download_pack: {
+    tr: "Bölge paketini indir",
+    en: "Download the region pack",
+    de: "Regionspaket herunterladen",
+    ru: "Скачать пакет региона",
+  },
+  offline_download_route: {
+    tr: "Rotayı indir",
+    en: "Download the route",
+    de: "Route herunterladen",
+    ru: "Скачать маршрут",
+  },
+  offline_update: {
+    tr: "Paketi güncelle",
+    en: "Update the pack",
+    de: "Paket aktualisieren",
+    ru: "Обновить пакет",
+  },
+  offline_saved_on: {
+    tr: "İndirildi:",
+    en: "Downloaded:",
+    de: "Heruntergeladen:",
+    ru: "Скачано:",
+  },
+  offline_region_title: {
+    tr: "Bölge paketi",
+    en: "Region pack",
+    de: "Regionspaket",
+    ru: "Пакет региона",
+  },
+  offline_region_sub: {
+    tr: "Bu bölgedeki {n} yerin sayfalarını, fotoğraflarını, kayıtlı sesli rehberini ve 3D taramalarını bir kerede indir; yolda şebeke olmasa da çalışır.",
+    en: "Download the pages, photographs, recorded audio guide and 3D scans of the {n} places in this region in one go; they keep working with no signal on the road.",
+    de: "Lade Seiten, Fotos, aufgenommenen Audioguide und 3D-Scans der {n} Orte dieser Region auf einmal herunter; unterwegs funktionieren sie auch ohne Netz.",
+    ru: "Скачайте сразу страницы, фотографии, записанный аудиогид и 3D-сканы {n} мест этого региона — они будут работать в дороге и без связи.",
+  },
+  offline_route_sub: {
+    tr: "Rotadaki kentleri sesli rehberleriyle birlikte indir; yolda şebeke olmasa da dinleyebilirsin.",
+    en: "Download the cities on this route with their audio guides, so they play on the road with no signal.",
+    de: "Lade die Städte dieser Route samt Audioguides herunter, damit sie unterwegs auch ohne Netz laufen.",
+    ru: "Скачайте города маршрута вместе с аудиогидами, чтобы слушать их в дороге без связи.",
+  },
+
+  // ——— Passport ———
+  passport_title: {
+    tr: "Dijital pasaport",
+    en: "Digital passport",
+    de: "Digitaler Reisepass",
+    ru: "Цифровой паспорт",
+  },
+  passport_sub: {
+    tr: "Ören yerine gittiğinde konumunla damga al. Damgalar yalnızca bu cihazda saklanır.",
+    en: "Collect a stamp with your location when you are at the site. Stamps are kept on this device only.",
+    de: "Hol dir vor Ort mit deinem Standort einen Stempel. Stempel werden nur auf diesem Gerät gespeichert.",
+    ru: "Получите штамп по геолокации, когда будете на месте. Штампы хранятся только на этом устройстве.",
+  },
+  passport_stamp: {
+    tr: "Pasaport damgası al",
+    en: "Get a passport stamp",
+    de: "Passstempel holen",
+    ru: "Получить штамп",
+  },
+  passport_checking: {
+    tr: "Konum kontrol ediliyor…",
+    en: "Checking your location…",
+    de: "Standort wird geprüft…",
+    ru: "Проверяем местоположение…",
+  },
+  passport_stamped: {
+    tr: "Damgalandı",
+    en: "Stamped",
+    de: "Gestempelt",
+    ru: "Штамп получен",
+  },
+  passport_stamp_ok: {
+    tr: "Damga pasaportuna eklendi.",
+    en: "Stamp added to your passport.",
+    de: "Stempel in deinen Pass eingetragen.",
+    ru: "Штамп добавлен в паспорт.",
+  },
+  passport_too_far: {
+    tr: "Damga için ören yerinde olman gerekiyor. Şu an yaklaşık {km} km uzaktasın.",
+    en: "You need to be at the site for a stamp. You are about {km} km away.",
+    de: "Für einen Stempel musst du vor Ort sein. Du bist etwa {km} km entfernt.",
+    ru: "Для штампа нужно быть на месте. Сейчас вы примерно в {km} км.",
+  },
+  passport_no_location: {
+    tr: "Konum alınamadı. Konum iznini açıp tekrar dene.",
+    en: "Could not get your location. Allow location access and try again.",
+    de: "Standort nicht verfügbar. Erlaube den Standortzugriff und versuche es erneut.",
+    ru: "Не удалось определить местоположение. Разрешите доступ и попробуйте снова.",
+  },
+  passport_empty: {
+    tr: "Henüz damga yok. Bir ören yerine gittiğinde kent sayfasından damga al.",
+    en: "No stamps yet. When you are at a site, collect one from its page.",
+    de: "Noch keine Stempel. Hol dir vor Ort einen auf der Seite des Ortes.",
+    ru: "Штампов пока нет. Получите штамп на странице места, когда будете там.",
+  },
+  passport_stamps: {
+    tr: "damga",
+    en: "stamps",
+    de: "Stempel",
+    ru: "штампов",
+  },
+  passport_share: {
+    tr: "Kartımı paylaş",
+    en: "Share my card",
+    de: "Meine Karte teilen",
+    ru: "Поделиться карточкой",
+  },
+  passport_card_visited: {
+    tr: "ziyaret edilen yer",
+    en: "places visited",
+    de: "besuchte Orte",
+    ru: "посещённых мест",
+  },
+  passport_card_badges: {
+    tr: "rozet",
+    en: "badges",
+    de: "Abzeichen",
+    ru: "значков",
+  },
+
+  // ——— Route audio ———
+  route_audio_title: {
+    tr: "Yol boyu sesli rehber",
+    en: "Audio guide for the road",
+    de: "Audioguide für unterwegs",
+    ru: "Аудиогид в дорогу",
+  },
+  route_audio_sub: {
+    tr: "Rotadaki her durağın rehberi sırayla çalar; duraklar arasında sıradaki yeri ve mesafeyi söyler.",
+    en: "Each stop's guide plays in order, with the next place and the distance announced between stops.",
+    de: "Die Führungen der Stationen laufen nacheinander; dazwischen werden der nächste Ort und die Entfernung angesagt.",
+    ru: "Гиды всех остановок звучат по порядку, а между ними объявляются следующее место и расстояние.",
+  },
+  route_audio_short: {
+    tr: "Öne çıkanlar",
+    en: "Highlights",
+    de: "Höhepunkte",
+    ru: "Главное",
+  },
+  route_audio_full: {
+    tr: "Tam rehber",
+    en: "Full guide",
+    de: "Vollständig",
+    ru: "Полностью",
+  },
 
   // ——— Page titles and descriptions ———
   // These are read outside React, by each route's `head()`, so that the tab

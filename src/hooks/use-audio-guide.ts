@@ -119,7 +119,12 @@ export function useAudioGuide(
         playFrom(index + 1);
       };
 
-      const recorded = recordingFor(guide.key, lang, current.id, pick(current.text, lang));
+      const recorded = recordingFor(
+        current.source?.key ?? guide.key,
+        lang,
+        current.source?.id ?? current.id,
+        pick(current.text, lang),
+      );
       if (recorded) {
         const audio = new Audio(recorded);
         audio.playbackRate = state.current.rate;
@@ -225,7 +230,7 @@ export function useAudioGuide(
   }, [guide.key, lang, stop, silence]);
 
   const recorded = guide.chapters.some((c) =>
-    recordingFor(guide.key, lang, c.id, pick(c.text, lang)),
+    recordingFor(c.source?.key ?? guide.key, lang, c.source?.id ?? c.id, pick(c.text, lang)),
   );
 
   return {

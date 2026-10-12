@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Award, BookOpen, Lock, MapPin, RotateCcw, Trash2, Trophy } from "lucide-react";
 import { BackupPanel } from "@/components/BackupPanel";
 import { OfflinePanel } from "@/components/OfflinePanel";
+import { PassportPanel } from "@/components/Passport";
 import { Photo } from "@/components/Photo";
 import { SiteCard } from "@/components/SiteCard";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
@@ -69,6 +70,8 @@ function ProfilePage() {
           </div>
         ))}
       </section>
+
+      <PassportPanel />
 
       {/* Region progress */}
       <section className="mt-8">

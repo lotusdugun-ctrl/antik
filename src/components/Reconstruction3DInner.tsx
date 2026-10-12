@@ -2299,7 +2299,10 @@ export default function Reconstruction3DInner({
       sun.position.set(centre.x + span * 0.65, bounds.min[1] + span * 1.15, centre.z - span * 0.55);
       sun.target.position.copy(centre);
       sun.castShadow = true;
-      sun.shadow.mapSize.set(2048, 2048);
+      // A phone's GPU pays four times over for a 2048 map; 1024 still keeps
+      // the colonnade shadows readable at the distances a phone is held.
+      const shadowSize = window.matchMedia("(pointer: coarse)").matches ? 1024 : 2048;
+      sun.shadow.mapSize.set(shadowSize, shadowSize);
       sun.shadow.bias = -0.0006;
       sun.shadow.normalBias = 0.03;
       sun.shadow.radius = 2.5;

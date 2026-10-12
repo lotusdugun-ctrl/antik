@@ -40,6 +40,7 @@ import { useProgress, XP_PER_VISIT } from "@/lib/progress";
 import { creditLine } from "@/lib/photo-credits";
 import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
 import { recordingFor } from "@/lib/audio-manifest";
+import { StampButton } from "@/components/Passport";
 import { guideForSite } from "@/lib/guide-sources";
 import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
@@ -145,7 +146,7 @@ function Fact({ icon: Icon, label, value }: { icon: typeof Clock; label: string;
 function SiteDetail() {
   const { slug } = Route.useParams();
   const { t, L } = useI18n();
-  const { isVisited, isFavorite, toggleVisited, toggleFavorite, pushRecent } = useProgress();
+  const { ready, isVisited, isFavorite, toggleVisited, toggleFavorite, pushRecent } = useProgress();
   const site = getSite(slug)!;
   const detail = getSiteDetail(slug);
   const [activeImage, setActiveImage] = useState(0);
@@ -170,10 +171,12 @@ function SiteDetail() {
     ...(detail?.structures ?? []).map((s) => structurePhotoFor(slug, s.tr)),
   ].filter((url): url is string => typeof url === "string");
 
+  // Waits for the stored progress, so "recently viewed" is added to it rather
+  // than written over it.
   useEffect(() => {
-    pushRecent(slug);
+    if (ready) pushRecent(slug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  }, [slug, ready]);
 
   const visited = isVisited(slug);
   const selectedStructure = openStructure ? structureInfoAt(openStructure) : undefined;
@@ -277,6 +280,7 @@ function SiteDetail() {
             />
             {isFavorite(slug) ? t("favorited") : t("favorite")}
           </button>
+          <StampButton site={site} />
           <Link
             to="/rota"
             search={{ start: slug }}
