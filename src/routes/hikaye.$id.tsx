@@ -12,10 +12,11 @@ import {
   Volume2,
 } from "lucide-react";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
+import { track } from "@/lib/analytics";
 import { useStoryEndings } from "@/hooks/use-story-endings";
 import { hasLang, LANGS, parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import type { Guide } from "@/lib/narration";
-import { seoTags } from "@/lib/seo";
+import { seoTags, storyTags } from "@/lib/seo";
 import { getSite } from "@/lib/sites";
 import { endingsOf, getStory, type Story } from "@/lib/stories";
 
@@ -36,12 +37,24 @@ export const Route = createFileRoute("/hikaye/$id")({
         noIndex: true,
       });
     }
-    return seoTags({
-      lang,
-      pathname: `/hikaye/${loaderData.id}`,
-      title: `${pick(loaderData.title, lang)} — ${translate("stories_title", lang)} | ${translate("appName", lang)}`,
-      description: pick(loaderData.blurb, lang),
-    });
+    const story = getStory(loaderData.id)!;
+    const place = getSite(story.siteSlug);
+    return {
+      ...seoTags({
+        lang,
+        pathname: `/hikaye/${loaderData.id}`,
+        title: `${pick(loaderData.title, lang)} — ${translate("stories_title", lang)} | ${translate("appName", lang)}`,
+        description: pick(loaderData.blurb, lang),
+      }),
+      scripts: storyTags({
+        lang,
+        pathname: `/hikaye/${loaderData.id}`,
+        title: pick(story.title, lang),
+        description: pick(story.blurb, lang),
+        placeName: place ? pick(place.name, lang) : story.siteSlug,
+        period: pick(story.period, lang),
+      }),
+    };
   },
   component: StoryPage,
 });
@@ -76,7 +89,10 @@ function StoryPage() {
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (scene.ending) record(story.id, sceneId);
+    if (scene.ending) {
+      record(story.id, sceneId);
+      track("Story ended", { story: story.id, ending: sceneId });
+    }
   }, [scene.ending, record, story.id, sceneId]);
 
   // A new scene starts at the top, where its first line is.

@@ -34,11 +34,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick, type Lang } from "@/lib/i18n";
 import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
 import { creditLine } from "@/lib/photo-credits";
 import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
+import { recordingFor } from "@/lib/audio-manifest";
 import { guideForSite } from "@/lib/guide-sources";
 import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
@@ -47,6 +48,19 @@ import { reconstructionForStructure } from "@/lib/reconstructions";
 import { storiesFor } from "@/lib/stories";
 import { structureInfoAt } from "@/lib/structure-names";
 import { coverImage, getSite, hasOwnPhoto, heritageTypeName, regions } from "@/lib/sites";
+
+/** What the audio guide offers this page, for its structured data. */
+function guideMeta(slug: string, lang: Lang) {
+  const guide = guideForSite(slug);
+  if (!guide) return undefined;
+  const intro = guide.chapters[0]!;
+  const spoken = guide.langs.includes(lang) ? lang : "en";
+  return {
+    languages: guide.langs,
+    chapters: guide.chapters.length,
+    recording: recordingFor(guide.key, spoken, intro.id, pick(intro.text, spoken)),
+  };
+}
 
 export const Route = createFileRoute("/kent/$slug")({
   loader: ({ params }) => {
@@ -99,6 +113,7 @@ export const Route = createFileRoute("/kent/$slug")({
               description: pick(loaderData.summary, lang),
               image,
               regionName: pick(region.name, lang),
+              guide: guideMeta(site.slug, lang),
             }),
             ...breadcrumbTags(
               [

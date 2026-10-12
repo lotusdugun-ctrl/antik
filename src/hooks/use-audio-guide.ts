@@ -1,5 +1,6 @@
 import { pick } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
 import { recordingFor } from "@/lib/audio-manifest";
 import type { Lang } from "@/lib/i18n";
 import { speakableChunks, type Guide } from "@/lib/narration";
@@ -166,6 +167,7 @@ export function useAudioGuide(
   );
 
   const play = useCallback(() => {
+    if (status === "idle") track("Guide played", { guide: guide.key, lang });
     if (status === "paused") {
       if (audioRef.current) {
         void audioRef.current.play();
@@ -176,7 +178,7 @@ export function useAudioGuide(
       return;
     }
     playFrom(status === "ended" ? 0 : state.current.chapter);
-  }, [playFrom, status]);
+  }, [playFrom, status, guide.key, lang]);
 
   const pause = useCallback(() => {
     if (audioRef.current) {

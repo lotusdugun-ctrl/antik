@@ -1,4 +1,4 @@
-import { DEFAULT_LANG, LANGS, type Lang } from "@/lib/i18n";
+import { DEFAULT_LANG, LANGS, pick, type Lang } from "@/lib/i18n";
 import type { Site } from "@/lib/sites";
 
 /**
@@ -31,6 +31,13 @@ export function urlFor(pathname: string, lang: Lang, origin = siteOrigin()): str
 }
 
 type MetaTag = Record<string, string>;
+
+const GUIDE_WORD: Record<Lang, string> = {
+  tr: "sesli rehber",
+  en: "audio guide",
+  de: "Audioguide",
+  ru: "аудиогид",
+};
 
 const OG_LOCALE: Record<Lang, string> = { tr: "tr_TR", en: "en_US", de: "de_DE", ru: "ru_RU" };
 type LinkTag = Record<string, string>;
@@ -138,11 +145,18 @@ export function breadcrumbTags(
  */
 export function siteTags(
   site: Site,
-  options: { lang: Lang; description: string; image?: string; regionName: string },
+  options: {
+    lang: Lang;
+    description: string;
+    image?: string;
+    regionName: string;
+    /** The audio guide, when the page has one: its languages and first recording. */
+    guide?: { languages: Lang[]; chapters: number; recording?: string | undefined } | undefined;
+  },
 ): ScriptTag[] {
   const origin = siteOrigin();
   if (!origin) return [];
-  const name = site.name[options.lang];
+  const name = pick(site.name, options.lang);
 
   return [
     jsonLd({
@@ -161,7 +175,7 @@ export function siteTags(
         "@type": "PostalAddress",
         addressCountry: "TR",
         addressRegion: options.regionName,
-        addressLocality: site.province[options.lang],
+        addressLocality: pick(site.province, options.lang),
       },
       // Only asserted when we know: an unknown fee is not evidence of a paid site.
       ...(site.fee === undefined ? {} : { isAccessibleForFree: site.fee === 0 }),
@@ -171,6 +185,47 @@ export function siteTags(
             award: options.lang === "tr" ? "UNESCO Dünya Mirası" : "UNESCO World Heritage Site",
           }
         : {}),
+      // The page's audio guide, so search engines can say there is one.
+      ...(options.guide
+        ? {
+            subjectOf: {
+              "@type": "AudioObject",
+              name: `${name} — ${GUIDE_WORD[options.lang]}`,
+              inLanguage: options.guide.languages.map((l) => OG_LOCALE[l].replace("_", "-")),
+              encodingFormat: "audio/mpeg",
+              ...(options.guide.recording
+                ? { contentUrl: new URL(options.guide.recording, origin).href }
+                : {}),
+            },
+          }
+        : {}),
+    }),
+  ];
+}
+
+/** A story page: interactive fiction about a real place. */
+export function storyTags(options: {
+  lang: Lang;
+  pathname: string;
+  title: string;
+  description: string;
+  placeName: string;
+  period: string;
+}): ScriptTag[] {
+  const origin = siteOrigin();
+  if (!origin) return [];
+  return [
+    jsonLd({
+      "@context": "https://schema.org",
+      "@type": "ShortStory",
+      name: options.title,
+      description: options.description,
+      url: urlFor(options.pathname, options.lang, origin),
+      inLanguage: OG_LOCALE[options.lang].replace("_", "-"),
+      genre: "Historical fiction",
+      isFamilyFriendly: true,
+      temporalCoverage: options.period,
+      contentLocation: { "@type": "Place", name: options.placeName },
     }),
   ];
 }
