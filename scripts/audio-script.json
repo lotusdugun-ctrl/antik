@@ -6009,8 +6009,8 @@
    "folder": "site-amorium",
    "lang": "tr",
    "chapter": "facts",
-   "text": "Biliyor muydunuz? 838'deki Amorion kuşatmasında yakalanan '42 Şehit', Hristiyanlık tarihinin ünlü efsanelerindendir. Bizans'ın Anadolu'daki en büyük askerî üslerindendi ve imparator hanedanının memleketiydi. 838'de Halife Mutasım kenti kuşatıp yıktı. Teslim olmayı reddeden komutanların idamı, 'Amorium'un 42 Şehidi' olarak Bizans azizler takvimine girdi.",
-   "hash": "b3ea9cad",
+   "text": "Biliyor muydunuz? 838'deki Amorion kuşatmasında yakalanan '42 Şehit', Hristiyanlık tarihinin ünlü efsanelerindendir. Bizans'ın Anadolu'daki en büyük askerî üslerindendi ve imparator hanedanının memleketiydi. 838'de Halife Mutasım kenti kuşatıp yıktı. İslam'a geçmeyi reddeden komutanların idamı, 'Amorium'un 42 Şehidi' olarak Bizans azizler takvimine girdi.",
+   "hash": "b9a58956",
    "target": "remote"
   },
   {
@@ -6441,8 +6441,8 @@
    "folder": "site-hattusa",
    "lang": "tr",
    "chapter": "structure-3",
-   "text": "Yerkapı tüneli. Hattuşa surlarının altından geçen 80 metrelik anıtsal tünel.",
-   "hash": "7ae84cca",
+   "text": "Yerkapı tüneli. Hattuşa surlarının altından geçen 70 metrelik anıtsal tünel.",
+   "hash": "491c10dd",
    "target": "app"
   },
   {
@@ -6504,8 +6504,8 @@
    "folder": "site-hattusa",
    "lang": "en",
    "chapter": "structure-3",
-   "text": "Yerkapı tunnel. The 80-metre monumental tunnel passing beneath the walls of Hattusa.",
-   "hash": "c4c65cd0",
+   "text": "Yerkapı tunnel. The 70-metre monumental tunnel passing beneath the walls of Hattusa.",
+   "hash": "11d32eb7",
    "target": "app"
   },
   {
@@ -6567,8 +6567,8 @@
    "folder": "site-hattusa",
    "lang": "de",
    "chapter": "structure-3",
-   "text": "Yerkapı-Tunnel. Der 80 Meter lange monumentale Tunnel, der unter den Mauern von Hattuša hindurchführt.",
-   "hash": "962cdb01",
+   "text": "Yerkapı-Tunnel. Der 70 Meter lange monumentale Tunnel, der unter den Mauern von Hattuša hindurchführt.",
+   "hash": "ad258332",
    "target": "remote"
   },
   {
@@ -6630,8 +6630,8 @@
    "folder": "site-hattusa",
    "lang": "ru",
    "chapter": "structure-3",
-   "text": "Туннель Еркапы. Монументальный 80-метровый туннель, проходящий под стенами Хаттусы.",
-   "hash": "3d095633",
+   "text": "Туннель Еркапы. Монументальный 70-метровый туннель, проходящий под стенами Хаттусы.",
+   "hash": "f135e128",
    "target": "remote"
   },
   {
@@ -14721,8 +14721,8 @@
    "folder": "site-derinkuyu",
    "lang": "tr",
    "chapter": "facts",
-   "text": "Biliyor muydunuz? Kentin varlığı 1963'te bir evin duvarı yıkılırken tesadüfen ortaya çıktı; arkasından bilinmeyen bir oda, onun arkasından da bütün bir yeraltı kenti çıktı. Yeraltı kenti 1963'te bir ev tadilatında tesadüfen bulundu: duvarı yıkan adam, arkasından bilinmeyen bir oda çıkınca durdu. Katları ayıran yuvarlak taş kapılar bir tondan ağırdır ve yalnızca içeriden açılabilecek biçimde tasarlanmıştır. 55 metre derinliğindeki havalandırma bacası aynı zamanda kuyudur; bacanın alt ucu kentin en derin katının da altındadır.",
-   "hash": "57d28577",
+   "text": "Biliyor muydunuz? Kentin varlığı 1963'te bir evin duvarı yıkılırken tesadüfen ortaya çıktı; arkasından bilinmeyen bir oda, onun arkasından da bütün bir yeraltı kenti çıktı. Yeraltı kenti 1963'te bir ev tadilatında tesadüfen bulundu: duvarı yıkan adam, arkasından bilinmeyen bir oda çıkınca durdu. Katları ayıran yuvarlak taş kapılar bir tondan ağırdır ve yalnızca içeriden açılabilecek biçimde tasarlanmıştır. 55 metre derinliğindeki havalandırma bacası aynı zamanda kuyu olarak da kullanılıyordu.",
+   "hash": "70fcaffd",
    "target": "remote"
   },
   {
@@ -14766,8 +14766,8 @@
    "folder": "site-derinkuyu",
    "lang": "en",
    "chapter": "facts",
-   "text": "Did you know? The city came to light by accident in 1963, when a householder knocked through a wall and found a room behind it — and behind that, a whole underground city. The city was found by accident during home repairs in 1963: the man knocking through a wall stopped when an unknown room appeared behind it. The round stone doors between levels weigh over a tonne each and were designed to be opened only from the inside. The 55-metre ventilation shaft doubles as a well, and its foot lies below even the deepest level of the city.",
-   "hash": "6f82ddd1",
+   "text": "Did you know? The city came to light by accident in 1963, when a householder knocked through a wall and found a room behind it — and behind that, a whole underground city. The city was found by accident during home repairs in 1963: the man knocking through a wall stopped when an unknown room appeared behind it. The round stone doors between levels weigh over a tonne each and were designed to be opened only from the inside. The 55-metre ventilation shaft also served as a well.",
+   "hash": "55d84ca4",
    "target": "remote"
   },
   {
@@ -16926,8 +16926,8 @@
    "folder": "site-bursa-ulu-cami",
    "lang": "en",
    "chapter": "facts",
-   "text": "Did you know? The two hundred-odd calligraphic panels on its walls let the mosque be read as a museum of the art, most of them by nineteenth-century masters. The twenty domes stand in place of the twenty mosques Bayezid I had vowed for his victory at Nicopolis. The fountain at the centre sits under the opening left where a dome would be: with no courtyard, the interior does the courtyard's work.",
-   "hash": "1c9a7eb2",
+   "text": "Did you know? The more than 190 calligraphic panels on its walls let the mosque be read as a museum of the art, most of them by nineteenth-century masters. The twenty domes stand in place of the twenty mosques Bayezid I had vowed for his victory at Nicopolis. The fountain at the centre sits under the opening left where a dome would be: with no courtyard, the interior does the courtyard's work.",
+   "hash": "4a2e7fce",
    "target": "remote"
   },
   {
@@ -23523,8 +23523,8 @@
    "folder": "site-irgandi-koprusu",
    "lang": "tr",
    "chapter": "history",
-   "text": "Bursalı tüccar Hoca Muslihiddin'in 1442'de yaptırdığı köprü, üzerinde otuz iki dükkânın sıralandığı bir çarşıydı. 1855 depreminde ve 1955'teki bir yangında ağır hasar gördü, sonunda yıkıldı ve 1949'da düz bir betonarme köprüyle değiştirildi. Özgün biçimi 2004'te yeniden inşa edildi ve dükkânlar zanaatkârlara verildi.",
-   "hash": "c618011e",
+   "text": "Bursalı tüccar Hoca Muslihiddin'in 1442'de yaptırdığı köprü, üzerinde otuz iki dükkânın sıralandığı bir çarşıydı. 1855 depreminde ve bir yangında ağır hasar gördü, sonunda yıkıldı ve 1949'da düz bir betonarme köprüyle değiştirildi. Özgün biçimi 2004'te yeniden inşa edildi ve dükkânlar zanaatkârlara verildi.",
+   "hash": "82faec44",
    "target": "remote"
   },
   {
