@@ -1,4 +1,5 @@
 import type { Localized } from "@/lib/i18n";
+import { moreStories } from "@/lib/stories-more";
 import { registerTranslations } from "@/lib/i18n";
 import { tm as translations } from "@/lib/locales/tm-stories";
 
@@ -37,7 +38,7 @@ export type Story = {
 const l = (tr: string, en: string): Localized => ({ tr, en });
 const go = (tr: string, en: string, to: string): Choice => ({ label: l(tr, en), to });
 
-export const stories: Story[] = [
+const firstStories: Story[] = [
   /* ————————————————————————— Ephesus ————————————————————————— */
   {
     id: "efes-gumuscu-ciragi",
@@ -520,6 +521,9 @@ export const stories: Story[] = [
     },
   },
 ];
+
+/** Every story, in the order the list shows them. */
+export const stories: Story[] = [...firstStories, ...moreStories];
 
 export function getStory(id: string): Story | undefined {
   return stories.find((story) => story.id === id);

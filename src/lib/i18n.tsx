@@ -206,6 +206,11 @@ const dict = {
   game_tf_d: { tr: "Bilgi kartlarını sına.", en: "Test the facts." },
   game_map: { tr: "Haritada bul", en: "Find it on the map" },
   game_map_d: { tr: "Hangi ilde olduğunu bil.", en: "Guess the province." },
+  game_story: { tr: "Hikâyelerin tarihi", en: "History of the stories" },
+  game_story_d: {
+    tr: "Antik bir günde hikâyelerinin arkasındaki gerçek tarih üzerine sorular.",
+    en: "Questions on the real history behind the A day in antiquity stories.",
+  },
   game_structure: { tr: "Yapıyı tanı", en: "Name the structure" },
   game_structure_d: {
     tr: "Yapıyı hangi kentte olduğunu bul.",
@@ -703,8 +708,8 @@ const dict = {
     en: "A Day in Antiquity — Interactive History Stories | Ancient Türkiye",
   },
   seo_stories_desc: {
-    tr: "Efes, Aspendos, Göbeklitepe, Pergamon ve Aphrodisias'ta geçen, seçimlerinizle ilerleyen ve her sahnesinin tarihsel arka planı verilen kısa hikâyeler.",
-    en: "Short branching stories set in Ephesus, Aspendos, Göbeklitepe, Pergamon and Aphrodisias, each scene with its historical background.",
+    tr: "Efes, Aspendos, Göbeklitepe, Pergamon, Troya, Hattuşa, Aphrodisias ve Göreme'de geçen, seçimlerinizle ilerleyen ve her sahnesinin tarihsel arka planı verilen kısa hikâyeler.",
+    en: "Short branching stories set in Ephesus, Aspendos, Göbeklitepe, Pergamon, Troy, Hattusa, Aphrodisias and Göreme, each scene with its historical background.",
   },
 } satisfies Record<string, Localized>;
 

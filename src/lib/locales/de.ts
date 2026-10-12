@@ -2,6 +2,8 @@ import type { TKey } from "@/lib/i18n";
 
 /** The interface in German. A key missing here shows in English. */
 export const de: Partial<Record<TKey, string>> = {
+  game_story: "Geschichte der Erzählungen",
+  game_story_d: "Fragen zur echten Geschichte hinter den Erzählungen „Ein Tag in der Antike“.",
   appName: "Antike Türkei",
   tagline: "Entdecke, erkunde und erfasse die antiken Städte der Türkei.",
   nav_home: "Start",
@@ -351,5 +353,5 @@ export const de: Partial<Record<TKey, string>> = {
   stories_found: "Gefundene Enden",
   seo_stories_title: "Ein Tag in der Antike – Interaktive Geschichtserzählungen | Antike Türkei",
   seo_stories_desc:
-    "Kurze verzweigte Geschichten in Ephesos, Aspendos, Göbekli Tepe, Pergamon und Aphrodisias, jede Szene mit ihrem historischen Hintergrund.",
+    "Kurze verzweigte Geschichten aus Ephesos, Aspendos, Göbekli Tepe, Pergamon, Troja, Hattuša, Aphrodisias und Göreme, jede Szene mit ihrem historischen Hintergrund.",
 };
