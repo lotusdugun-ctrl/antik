@@ -45,7 +45,7 @@ import { factsFor } from "@/lib/site-facts";
 import { structurePhotoFor } from "@/lib/structure-photos";
 import { reconstructionForStructure } from "@/lib/reconstructions";
 import { storiesFor } from "@/lib/stories";
-import { structureInfo } from "@/lib/structures";
+import { structureInfoAt } from "@/lib/structure-names";
 import { coverImage, getSite, hasOwnPhoto, heritageTypeName, regions } from "@/lib/sites";
 
 export const Route = createFileRoute("/kent/$slug")({
@@ -161,7 +161,7 @@ function SiteDetail() {
   }, [slug]);
 
   const visited = isVisited(slug);
-  const selectedStructure = openStructure ? structureInfo[openStructure] : undefined;
+  const selectedStructure = openStructure ? structureInfoAt(openStructure) : undefined;
   const structurePhoto = openStructure ? structurePhotoFor(slug, openStructure) : undefined;
   const structureCredit = structurePhoto ? creditLine(structurePhoto) : undefined;
 

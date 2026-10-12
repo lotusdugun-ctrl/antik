@@ -1,4 +1,4 @@
-﻿import { structureInfo } from "@/lib/structures";
+﻿import { structureInfoAt } from "@/lib/structure-names";
 
 /**
  * A photograph of one structure, at one city.
@@ -550,5 +550,6 @@ export const structurePhotos = photos;
  * decide what to show, and it has to say that what it shows is the city.
  */
 export function structurePhotoFor(slug: string, structureTr: string): string | undefined {
-  return photos[`${slug}|${structureTr}`] ?? structureInfo[structureTr]?.image;
+  // A shared name's curated photograph is of another site's building.
+  return photos[`${slug}|${structureTr}`] ?? structureInfoAt(structureTr)?.image;
 }
