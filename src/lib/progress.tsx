@@ -10,6 +10,7 @@ import {
 } from "react";
 import { sites, totalSites, type RegionId } from "@/lib/sites";
 import type { Localized } from "@/lib/i18n";
+import { mergeStates } from "@/lib/transfer";
 
 /**
  * Local-first progress store.
@@ -110,6 +111,8 @@ type Ctx = {
   exportBackup: () => string;
   /** Replaces the store from a backup document. Returns false if unreadable. */
   importBackup: (raw: string) => boolean;
+  /** Merges a record from another device into this one. */
+  mergeIn: (incoming: ProgressState) => void;
   reset: () => void;
   regionProgress: () => { region: RegionId; visited: number; total: number; percent: number }[];
   badges: () => Badge[];
@@ -254,6 +257,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           return false;
         }
       },
+      mergeIn: (incoming) => persist(mergeStates(state, incoming)),
       reset: () => persist(empty),
       regionProgress: () => {
         const map = new Map<RegionId, { visited: number; total: number }>();

@@ -3,6 +3,7 @@ import { guideForSite } from "@/lib/guide-sources";
 import { offlineUrls } from "@/lib/offline";
 import { checkStamp, distanceMetres, STAMP_RADIUS_M } from "@/lib/passport";
 import { routeGuide } from "@/lib/route-guide";
+import { decodeTransfer, encodeTransfer, mergeStates } from "@/lib/transfer";
 import { getSite, sitesByRegion } from "@/lib/sites";
 
 const efes = getSite("efes")!;
@@ -84,5 +85,46 @@ describe("offline packs", () => {
     const urls = offlineUrls([efes], "tr", "https://antik.test");
     expect(urls).toContain("https://antik.test/rekonstruksiyon/celsus-kutuphanesi");
     expect(urls).toContain("https://antik.test/scans/celsus-sophia.glb");
+  });
+});
+
+describe("device transfer", () => {
+  const base = {
+    visited: ["efes"],
+    favorites: ["milet"],
+    recent: ["efes"],
+    xp: 75,
+    gamesPlayed: 2,
+    correctAnswers: 1,
+    visits: {
+      efes: {
+        slug: "efes",
+        date: "2026-10-12",
+        note: "harika",
+        photo: "data:image/jpeg;base64,AAAA",
+      },
+    },
+    stamps: { efes: { slug: "efes", at: "2026-10-12T09:00:00Z", distance: 12 } },
+  };
+
+  test("round-trips without the photos", async () => {
+    const code = await encodeTransfer(base);
+    expect(code).toMatch(/^1\.[A-Za-z0-9_-]+$/);
+    const back = await decodeTransfer(code);
+    if (!back) throw new Error("decode failed");
+    expect(back.visited).toEqual(["efes"]);
+    expect(back.visits["efes"]?.note).toBe("harika");
+    expect(back.visits["efes"]?.photo).toBeUndefined();
+    expect(back.stamps["efes"]?.distance).toBe(12);
+    expect(await decodeTransfer("1.not-valid")).toBeNull();
+  });
+
+  test("merging loses nothing and does not double-count", () => {
+    const other = { ...base, visited: ["milet", "efes"], xp: 120, visits: {}, stamps: {} };
+    const merged = mergeStates(base, other);
+    expect(merged.visited.sort()).toEqual(["efes", "milet"]);
+    expect(merged.xp).toBe(120);
+    expect(merged.visits["efes"]?.photo).toBe(base.visits.efes.photo);
+    expect(merged.stamps["efes"]).toBeDefined();
   });
 });

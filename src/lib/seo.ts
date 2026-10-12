@@ -281,3 +281,25 @@ export function websiteTags(options: {
     }),
   ];
 }
+
+/** A historical person's page, as a schema.org Person. */
+export function personTags(options: {
+  lang: Lang;
+  pathname: string;
+  name: string;
+  description: string;
+  sameAs: string[];
+}): ScriptTag[] {
+  const origin = siteOrigin();
+  if (!origin) return [];
+  return [
+    jsonLd({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: options.name,
+      description: options.description,
+      url: urlFor(options.pathname, options.lang, origin),
+      sameAs: options.sameAs,
+    }),
+  ];
+}

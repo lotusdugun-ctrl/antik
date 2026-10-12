@@ -90,6 +90,17 @@ export type Site = {
 export const OFFICIAL_INFO_URL = "https://muze.gov.tr";
 
 /**
+ * When the fees and visiting notes were last reviewed as a whole. Not a claim
+ * that any one tariff is current — the panel shows this date and warns once
+ * it is more than a year old, so stale numbers announce themselves. Move it
+ * forward only after actually re-checking the figures.
+ */
+export const VISITING_INFO_AS_OF = "2026-08-15";
+
+/** Where readers report a wrong fact: a prefilled issue on the public repository. */
+export const REPORT_ISSUE_URL = "https://github.com/lotusdugun-ctrl/antik/issues/new";
+
+/**
  * The Ministry of Culture and Tourism's seasonal timetable for state-run sites.
  *
  * This is a *rule*, not a fact about any one site, and the UI labels it that

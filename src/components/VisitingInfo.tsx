@@ -1,6 +1,9 @@
-import { Clock, ExternalLink, Info, Ticket } from "lucide-react";
+import { CalendarCheck, Clock, ExternalLink, Info, Ticket, TriangleAlert } from "lucide-react";
+import { ReportIssue } from "@/components/ReportIssue";
 import { useI18n } from "@/lib/i18n";
-import { MINISTRY_HOURS, OFFICIAL_INFO_URL, type Site } from "@/lib/sites";
+import { MINISTRY_HOURS, OFFICIAL_INFO_URL, VISITING_INFO_AS_OF, type Site } from "@/lib/sites";
+
+const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
 /**
  * What we can honestly tell a visitor about getting in.
@@ -13,7 +16,11 @@ import { MINISTRY_HOURS, OFFICIAL_INFO_URL, type Site } from "@/lib/sites";
  * admission — identical across all hundred sites, and unverifiable.
  */
 export function VisitingInfo({ site }: { site: Site }) {
-  const { t, L } = useI18n();
+  const { t, L, lang } = useI18n();
+  const asOf = new Date(VISITING_INFO_AS_OF);
+  // Compared at render: on the server and on first paint this is the build's
+  // clock, which is fine — a year is not a boundary anyone races.
+  const stale = Date.now() - asOf.getTime() > YEAR_MS;
   // Three states, not two: free, a known indicative price, and no idea. The
   // third used to be rendered as "0 ₺", which is a confident wrong answer.
   const free = site.fee === 0;
@@ -67,6 +74,17 @@ export function VisitingInfo({ site }: { site: Site }) {
           )}
         </div>
 
+        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <CalendarCheck className="h-3.5 w-3.5" />
+          {t("info_as_of")} {asOf.toLocaleDateString(lang, { month: "long", year: "numeric" })}
+        </p>
+        {stale && (
+          <p className="flex items-start gap-1.5 rounded-lg bg-secondary p-2 text-xs font-medium">
+            <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-destructive" />
+            {t("info_stale")}
+          </p>
+        )}
+
         <a
           href={OFFICIAL_INFO_URL}
           target="_blank"
@@ -75,6 +93,7 @@ export function VisitingInfo({ site }: { site: Site }) {
         >
           {t("official_check")} <ExternalLink className="h-3.5 w-3.5" />
         </a>
+        <ReportIssue subject={L(site.name)} className="block" />
       </div>
     </section>
   );

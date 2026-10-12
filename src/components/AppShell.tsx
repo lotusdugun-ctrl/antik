@@ -5,6 +5,7 @@ import {
   Building2,
   Castle,
   Check,
+  Clock,
   ChevronDown,
   Columns3,
   Compass,
@@ -21,6 +22,7 @@ import {
   Sparkles,
   Sun,
   User,
+  Users,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
@@ -54,6 +56,8 @@ const EXPLORE: NavGroup = {
     { to: "/muzeler", key: "nav_museums", desc: "nav_museums_d", icon: Building2 },
     { to: "/bolgeler", key: "nav_regions", desc: "nav_regions_d", icon: Columns3 },
     { to: "/koleksiyonlar", key: "nav_collections", desc: "nav_collections_d", icon: Layers },
+    { to: "/medeniyetler", key: "nav_history", desc: "nav_history_d", icon: Users },
+    { to: "/zaman-cizelgesi", key: "nav_timeline", desc: "nav_timeline_d", icon: Clock },
     { to: "/kentler", key: "nav_all_places", desc: "nav_all_places_d", icon: Search },
   ],
 };
@@ -85,6 +89,7 @@ const CHILDREN: Record<string, string[]> = {
   "/koleksiyonlar": ["/koleksiyon/"],
   "/rekonstruksiyonlar": ["/rekonstruksiyon/"],
   "/hikayeler": ["/hikaye/"],
+  "/medeniyetler": ["/medeniyet/", "/kisi/"],
 };
 
 function isActive(path: string, to: string) {

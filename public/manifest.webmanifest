@@ -6,11 +6,15 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#f7f4ee",
   "theme_color": "#f7f4ee",
   "lang": "tr",
-  "categories": ["travel", "education", "lifestyle"],
+  "categories": [
+    "travel",
+    "education",
+    "lifestyle"
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -35,6 +39,52 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Harita",
+      "short_name": "Harita",
+      "url": "/harita",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Rota oluştur",
+      "short_name": "Rota",
+      "url": "/rota",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Zaman çizelgesi",
+      "short_name": "Zaman",
+      "url": "/zaman-cizelgesi",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Pasaportum",
+      "short_name": "Profil",
+      "url": "/profil",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

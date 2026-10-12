@@ -17,6 +17,7 @@ import { Route as HaritaRouteImport } from './routes/harita'
 import { Route as HikayelerRouteImport } from './routes/hikayeler'
 import { Route as KentlerRouteImport } from './routes/kentler'
 import { Route as KoleksiyonlarRouteImport } from './routes/koleksiyonlar'
+import { Route as MedeniyetlerRouteImport } from './routes/medeniyetler'
 import { Route as MuzelerRouteImport } from './routes/muzeler'
 import { Route as OyunlarRouteImport } from './routes/oyunlar'
 import { Route as ProfilRouteImport } from './routes/profil'
@@ -25,10 +26,14 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RotaRouteImport } from './routes/rota'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TarihiYerlerRouteImport } from './routes/tarihi-yerler'
+import { Route as ZamanCizelgesiRouteImport } from './routes/zaman-cizelgesi'
+import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
 import { Route as BolgeIdRouteImport } from './routes/bolge.$id'
 import { Route as HikayeIdRouteImport } from './routes/hikaye.$id'
 import { Route as KentSlugRouteImport } from './routes/kent.$slug'
+import { Route as KisiIdRouteImport } from './routes/kisi.$id'
 import { Route as KoleksiyonIdRouteImport } from './routes/koleksiyon.$id'
+import { Route as MedeniyetIdRouteImport } from './routes/medeniyet.$id'
 import { Route as RekonstruksiyonIdRouteImport } from './routes/rekonstruksiyon.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -71,6 +76,11 @@ const KoleksiyonlarRoute = KoleksiyonlarRouteImport.update({
   path: '/koleksiyonlar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MedeniyetlerRoute = MedeniyetlerRouteImport.update({
+  id: '/medeniyetler',
+  path: '/medeniyetler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MuzelerRoute = MuzelerRouteImport.update({
   id: '/muzeler',
   path: '/muzeler',
@@ -111,6 +121,17 @@ const TarihiYerlerRoute = TarihiYerlerRouteImport.update({
   path: '/tarihi-yerler',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ZamanCizelgesiRoute = ZamanCizelgesiRouteImport.update({
+  id: '/zaman-cizelgesi',
+  path: '/zaman-cizelgesi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotwellKnownAssetlinksDotjsonRoute =
+  DotwellKnownAssetlinksDotjsonRouteImport.update({
+    id: '/.well-known/assetlinks.json',
+    path: '/.well-known/assetlinks.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const BolgeIdRoute = BolgeIdRouteImport.update({
   id: '/bolge/$id',
   path: '/bolge/$id',
@@ -126,9 +147,19 @@ const KentSlugRoute = KentSlugRouteImport.update({
   path: '/kent/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KisiIdRoute = KisiIdRouteImport.update({
+  id: '/kisi/$id',
+  path: '/kisi/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KoleksiyonIdRoute = KoleksiyonIdRouteImport.update({
   id: '/koleksiyon/$id',
   path: '/koleksiyon/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MedeniyetIdRoute = MedeniyetIdRouteImport.update({
+  id: '/medeniyet/$id',
+  path: '/medeniyet/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RekonstruksiyonIdRoute = RekonstruksiyonIdRouteImport.update({
@@ -146,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/hikayeler': typeof HikayelerRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
+  '/medeniyetler': typeof MedeniyetlerRoute
   '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
@@ -154,10 +186,14 @@ export interface FileRoutesByFullPath {
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarihi-yerler': typeof TarihiYerlerRoute
+  '/zaman-cizelgesi': typeof ZamanCizelgesiRoute
+  '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
+  '/kisi/$id': typeof KisiIdRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
+  '/medeniyet/$id': typeof MedeniyetIdRoute
   '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
 }
 export interface FileRoutesByTo {
@@ -169,6 +205,7 @@ export interface FileRoutesByTo {
   '/hikayeler': typeof HikayelerRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
+  '/medeniyetler': typeof MedeniyetlerRoute
   '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
@@ -177,10 +214,14 @@ export interface FileRoutesByTo {
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarihi-yerler': typeof TarihiYerlerRoute
+  '/zaman-cizelgesi': typeof ZamanCizelgesiRoute
+  '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
+  '/kisi/$id': typeof KisiIdRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
+  '/medeniyet/$id': typeof MedeniyetIdRoute
   '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
 }
 export interface FileRoutesById {
@@ -193,6 +234,7 @@ export interface FileRoutesById {
   '/hikayeler': typeof HikayelerRoute
   '/kentler': typeof KentlerRoute
   '/koleksiyonlar': typeof KoleksiyonlarRoute
+  '/medeniyetler': typeof MedeniyetlerRoute
   '/muzeler': typeof MuzelerRoute
   '/oyunlar': typeof OyunlarRoute
   '/profil': typeof ProfilRoute
@@ -201,10 +243,14 @@ export interface FileRoutesById {
   '/rota': typeof RotaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tarihi-yerler': typeof TarihiYerlerRoute
+  '/zaman-cizelgesi': typeof ZamanCizelgesiRoute
+  '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
+  '/kisi/$id': typeof KisiIdRoute
   '/koleksiyon/$id': typeof KoleksiyonIdRoute
+  '/medeniyet/$id': typeof MedeniyetIdRoute
   '/rekonstruksiyon/$id': typeof RekonstruksiyonIdRoute
 }
 export interface FileRouteTypes {
@@ -218,6 +264,7 @@ export interface FileRouteTypes {
     | '/hikayeler'
     | '/kentler'
     | '/koleksiyonlar'
+    | '/medeniyetler'
     | '/muzeler'
     | '/oyunlar'
     | '/profil'
@@ -226,10 +273,14 @@ export interface FileRouteTypes {
     | '/rota'
     | '/sitemap.xml'
     | '/tarihi-yerler'
+    | '/zaman-cizelgesi'
+    | '/.well-known/assetlinks.json'
     | '/bolge/$id'
     | '/hikaye/$id'
     | '/kent/$slug'
+    | '/kisi/$id'
     | '/koleksiyon/$id'
+    | '/medeniyet/$id'
     | '/rekonstruksiyon/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -241,6 +292,7 @@ export interface FileRouteTypes {
     | '/hikayeler'
     | '/kentler'
     | '/koleksiyonlar'
+    | '/medeniyetler'
     | '/muzeler'
     | '/oyunlar'
     | '/profil'
@@ -249,10 +301,14 @@ export interface FileRouteTypes {
     | '/rota'
     | '/sitemap.xml'
     | '/tarihi-yerler'
+    | '/zaman-cizelgesi'
+    | '/.well-known/assetlinks.json'
     | '/bolge/$id'
     | '/hikaye/$id'
     | '/kent/$slug'
+    | '/kisi/$id'
     | '/koleksiyon/$id'
+    | '/medeniyet/$id'
     | '/rekonstruksiyon/$id'
   id:
     | '__root__'
@@ -264,6 +320,7 @@ export interface FileRouteTypes {
     | '/hikayeler'
     | '/kentler'
     | '/koleksiyonlar'
+    | '/medeniyetler'
     | '/muzeler'
     | '/oyunlar'
     | '/profil'
@@ -272,10 +329,14 @@ export interface FileRouteTypes {
     | '/rota'
     | '/sitemap.xml'
     | '/tarihi-yerler'
+    | '/zaman-cizelgesi'
+    | '/.well-known/assetlinks.json'
     | '/bolge/$id'
     | '/hikaye/$id'
     | '/kent/$slug'
+    | '/kisi/$id'
     | '/koleksiyon/$id'
+    | '/medeniyet/$id'
     | '/rekonstruksiyon/$id'
   fileRoutesById: FileRoutesById
 }
@@ -288,6 +349,7 @@ export interface RootRouteChildren {
   HikayelerRoute: typeof HikayelerRoute
   KentlerRoute: typeof KentlerRoute
   KoleksiyonlarRoute: typeof KoleksiyonlarRoute
+  MedeniyetlerRoute: typeof MedeniyetlerRoute
   MuzelerRoute: typeof MuzelerRoute
   OyunlarRoute: typeof OyunlarRoute
   ProfilRoute: typeof ProfilRoute
@@ -296,10 +358,14 @@ export interface RootRouteChildren {
   RotaRoute: typeof RotaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TarihiYerlerRoute: typeof TarihiYerlerRoute
+  ZamanCizelgesiRoute: typeof ZamanCizelgesiRoute
+  DotwellKnownAssetlinksDotjsonRoute: typeof DotwellKnownAssetlinksDotjsonRoute
   BolgeIdRoute: typeof BolgeIdRoute
   HikayeIdRoute: typeof HikayeIdRoute
   KentSlugRoute: typeof KentSlugRoute
+  KisiIdRoute: typeof KisiIdRoute
   KoleksiyonIdRoute: typeof KoleksiyonIdRoute
+  MedeniyetIdRoute: typeof MedeniyetIdRoute
   RekonstruksiyonIdRoute: typeof RekonstruksiyonIdRoute
 }
 
@@ -361,6 +427,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KoleksiyonlarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/medeniyetler': {
+      id: '/medeniyetler'
+      path: '/medeniyetler'
+      fullPath: '/medeniyetler'
+      preLoaderRoute: typeof MedeniyetlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/muzeler': {
       id: '/muzeler'
       path: '/muzeler'
@@ -417,6 +490,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TarihiYerlerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/zaman-cizelgesi': {
+      id: '/zaman-cizelgesi'
+      path: '/zaman-cizelgesi'
+      fullPath: '/zaman-cizelgesi'
+      preLoaderRoute: typeof ZamanCizelgesiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/assetlinks.json': {
+      id: '/.well-known/assetlinks.json'
+      path: '/.well-known/assetlinks.json'
+      fullPath: '/.well-known/assetlinks.json'
+      preLoaderRoute: typeof DotwellKnownAssetlinksDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bolge/$id': {
       id: '/bolge/$id'
       path: '/bolge/$id'
@@ -438,11 +525,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KentSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kisi/$id': {
+      id: '/kisi/$id'
+      path: '/kisi/$id'
+      fullPath: '/kisi/$id'
+      preLoaderRoute: typeof KisiIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/koleksiyon/$id': {
       id: '/koleksiyon/$id'
       path: '/koleksiyon/$id'
       fullPath: '/koleksiyon/$id'
       preLoaderRoute: typeof KoleksiyonIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/medeniyet/$id': {
+      id: '/medeniyet/$id'
+      path: '/medeniyet/$id'
+      fullPath: '/medeniyet/$id'
+      preLoaderRoute: typeof MedeniyetIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rekonstruksiyon/$id': {
@@ -464,6 +565,7 @@ const rootRouteChildren: RootRouteChildren = {
   HikayelerRoute: HikayelerRoute,
   KentlerRoute: KentlerRoute,
   KoleksiyonlarRoute: KoleksiyonlarRoute,
+  MedeniyetlerRoute: MedeniyetlerRoute,
   MuzelerRoute: MuzelerRoute,
   OyunlarRoute: OyunlarRoute,
   ProfilRoute: ProfilRoute,
@@ -472,10 +574,14 @@ const rootRouteChildren: RootRouteChildren = {
   RotaRoute: RotaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TarihiYerlerRoute: TarihiYerlerRoute,
+  ZamanCizelgesiRoute: ZamanCizelgesiRoute,
+  DotwellKnownAssetlinksDotjsonRoute: DotwellKnownAssetlinksDotjsonRoute,
   BolgeIdRoute: BolgeIdRoute,
   HikayeIdRoute: HikayeIdRoute,
   KentSlugRoute: KentSlugRoute,
+  KisiIdRoute: KisiIdRoute,
   KoleksiyonIdRoute: KoleksiyonIdRoute,
+  MedeniyetIdRoute: MedeniyetIdRoute,
   RekonstruksiyonIdRoute: RekonstruksiyonIdRoute,
 }
 export const routeTree = rootRouteImport

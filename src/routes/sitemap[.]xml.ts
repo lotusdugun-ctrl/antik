@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { civilizations } from "@/lib/civilizations";
 import { collections } from "@/lib/collections";
+import { people } from "@/lib/people";
+import { reconstructions } from "@/lib/reconstructions";
 import { DEFAULT_LANG, LANGS } from "@/lib/i18n";
 import { regions, sites } from "@/lib/sites";
 import { stories } from "@/lib/stories";
@@ -28,6 +31,9 @@ const staticPaths = [
   "/rota",
   "/oyunlar",
   "/hikayeler",
+  "/rekonstruksiyonlar",
+  "/medeniyetler",
+  "/zaman-cizelgesi",
   "/gorseller",
 ];
 
@@ -71,6 +77,9 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...collections.map((c) => urlEntry(origin, `/koleksiyon/${c.id}`, "0.7")),
           ...sites.map((site) => urlEntry(origin, `/kent/${site.slug}`, "0.9")),
           ...stories.map((story) => urlEntry(origin, `/hikaye/${story.id}`, "0.6")),
+          ...reconstructions.map((item) => urlEntry(origin, `/rekonstruksiyon/${item.id}`, "0.7")),
+          ...civilizations.map((civ) => urlEntry(origin, `/medeniyet/${civ.id}`, "0.7")),
+          ...people.map((person) => urlEntry(origin, `/kisi/${person.id}`, "0.6")),
         ];
 
         const xml = [

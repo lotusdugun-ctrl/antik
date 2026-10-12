@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { LayoutGrid, MapIcon, Search, X } from "lucide-react";
 import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
+import { civilizationFor } from "@/lib/history-index";
 import { useI18n, type TKey } from "@/lib/i18n";
 import {
   allCivilizations,
@@ -80,7 +81,7 @@ function ScopeTabs({ active }: { active: Scope }) {
               : "border-border bg-card text-muted-foreground hover:text-foreground"
           }`}
         >
-          {t(tab.key)} <span className="opacity-70">{scopeSites(tab.scope).length}</span>
+          {t(tab.key)} <span className="opacity-90">{scopeSites(tab.scope).length}</span>
         </Link>
       ))}
     </nav>
@@ -188,6 +189,7 @@ export function HeritageIndex({
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <select
           value={search.region ?? ""}
+          aria-label={t("region")}
           onChange={(e) => setParam({ region: (e.target.value || undefined) as RegionId })}
           className="h-9 rounded-full border border-border bg-card px-3 text-xs font-medium outline-none focus:ring-2 focus:ring-ring"
         >
@@ -202,6 +204,7 @@ export function HeritageIndex({
         </select>
         <select
           value={search.province ?? ""}
+          aria-label={t("province")}
           onChange={(e) => setParam({ province: e.target.value || undefined })}
           className="h-9 rounded-full border border-border bg-card px-3 text-xs font-medium outline-none focus:ring-2 focus:ring-ring"
         >
@@ -216,21 +219,28 @@ export function HeritageIndex({
         </select>
         <select
           value={search.civ ?? ""}
+          aria-label={t("civilization")}
           onChange={(e) => setParam({ civ: e.target.value || undefined })}
           className="h-9 rounded-full border border-border bg-card px-3 text-xs font-medium outline-none focus:ring-2 focus:ring-ring"
         >
           <option value="">
             {t("civilization")}: {t("all")}
           </option>
-          {allCivilizations().map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
+          {allCivilizations().map((c) => {
+            // The filter keeps the data's own values; where one has a page of
+            // its own, the reader sees that page's name in their language.
+            const civ = civilizationFor(c);
+            return (
+              <option key={c} value={c}>
+                {civ && civ.matches.length === 1 ? L(civ.name) : c}
+              </option>
+            );
+          })}
         </select>
         {types.length > 1 && (
           <select
             value={search.type ?? ""}
+            aria-label={t("type")}
             onChange={(e) => setParam({ type: (e.target.value || undefined) as HeritageType })}
             className="h-9 rounded-full border border-border bg-card px-3 text-xs font-medium outline-none focus:ring-2 focus:ring-ring"
           >
