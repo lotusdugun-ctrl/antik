@@ -1,3 +1,4 @@
+import type { ScanId } from "@/lib/scans";
 import type {
   GreatAltarSpec,
   IonicDipterosSpec,
@@ -98,9 +99,24 @@ export type Carving = {
   blend?: "colour" | "depth";
 };
 
+/**
+ * A photogrammetric scan of the real piece, standing in for this part's own
+ * geometry (see `scans.ts`). The part keeps its place in the list — its
+ * bounds still frame the camera, and the data it carries still counts — but
+ * what is drawn there is the scan, fitted into the space the part describes:
+ * a figure's height, a panel's rectangle, or a column drum's diameter.
+ */
+export type ScanFit = {
+  id: ScanId;
+  /** For a drum wrapped round a column: the column's axis at the drum's base. */
+  centre?: Vec3;
+  diameter?: number;
+};
+
 type Base = {
   material: Material;
   carving?: Carving;
+  scan?: ScanFit;
   /**
    * Scenery rather than building: loose stone on the ground, and anything else
    * that sets the scene without being part of what is being reconstructed.
@@ -735,10 +751,18 @@ const relief = (
   material: Material,
   at: Vec3,
   size: [number, number],
-  carving: Carving,
+  carving: Carving | undefined,
   rotY = 0,
   rotX?: number,
-): Part => ({ kind: "relief", material, at, size, rotY, carving, ...(rotX ? { rotX } : {}) });
+): Part => ({
+  kind: "relief",
+  material,
+  at,
+  size,
+  rotY,
+  ...(carving ? { carving } : {}),
+  ...(rotX ? { rotX } : {}),
+});
 
 /** A mosaic floor: a panel laid flat, its near edge at `at`, running back. */
 const floorPanel = (material: Material, at: Vec3, size: [number, number], carving: Carving): Part =>
@@ -1863,7 +1887,14 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     parts.push(
       box("paintRed", [centre, base + pedestal, 0.02], [spread * 1.5, statueHeight + 1.3, 0.1]),
     );
-    parts.push(person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, who));
+    // Sophia and Arete stand in the scans of their copies in the niches; the
+    // other two copies are too blurred in the only free scan to be used.
+    const scanned =
+      who.name === "Sophia" ? "celsus-sophia" : who.name === "Arete" ? "celsus-arete" : null;
+    parts.push({
+      ...person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, who),
+      ...(scanned ? { scan: { id: scanned } } : {}),
+    });
     for (const side of [-1, 1]) {
       parts.push(
         box(
@@ -2492,15 +2523,18 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
         [gridWidth * 0.62, friezeHeight, 0.5],
       ),
     );
-    parts.push(
-      relief(
+    // The block itself, from its scan; the photograph stays as the fallback
+    // the part carries, and is what the credits list for it.
+    parts.push({
+      ...relief(
         "marble",
         [0, beamTop + spec.entablatureHeight, friezeZ - 0.27],
         [friezeHeight * 1.6, friezeHeight],
         CARVINGS.medusa,
         Math.PI,
       ),
-    );
+      scan: { id: "didyma-medusa" },
+    });
   } else {
     /*
      * The columnae caelatae: Pliny counts 36 columns carved in relief at the
@@ -2512,15 +2546,22 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
       for (const z of [-(gridLength / 2), -(gridLength / 2 - stepZ)]) {
         if (carved >= (spec.reliefColumns ?? 0)) break;
         const x = -gridWidth / 2 + (gridWidth * i) / (spec.outerColumnsShort - 1);
-        parts.push(
-          relief(
+        // The surviving drum itself, scanned in the round and wrapped about
+        // the column's axis rather than laid on its face.
+        parts.push({
+          ...relief(
             "marble",
             [x, y0 + spec.columnHeight * 0.035, z - spec.columnDiameter * 0.48],
             [spec.columnDiameter * 0.92, spec.columnHeight * 0.1],
             CARVINGS.artemisionDrum,
             Math.PI,
           ),
-        );
+          scan: {
+            id: "artemision-drum",
+            centre: [x, y0 + spec.columnHeight * 0.035, z],
+            diameter: spec.columnDiameter * 1.16,
+          },
+        });
         carved += 1;
       }
     }
@@ -3009,6 +3050,25 @@ export function greatAltarParts(spec: GreatAltarSpec): Part[] {
   };
 
   podiumBlock(0, halfD - backDepth / 2, spec.baseWidth, backDepth);
+  /*
+   * The Athena group, from a cast of it, on the east face where it belongs —
+   * a little right of the middle as seen from the east, beside Zeus. It is
+   * set just proud of the photographed frieze, which carries on either side.
+   */
+  {
+    const eastFace = halfD - backDepth / 2 + (backDepth + 0.5) / 2 + 0.02;
+    const athenaWidth = spec.friezeHeight * 1.64;
+    parts.push({
+      ...relief(
+        "marble",
+        [-spec.baseWidth * 0.08, friezeBase, eastFace],
+        [athenaWidth, spec.friezeHeight],
+        undefined,
+        0,
+      ),
+      scan: { id: "pergamon-athena" },
+    });
+  }
   for (const side of [-1, 1]) {
     const wingWidth = halfW - halfStair;
     podiumBlock(side * (halfStair + wingWidth / 2), -halfD + stairRun / 2, wingWidth, stairRun);
@@ -3329,6 +3389,50 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
     parts.push(...cornice("marble", [0, y + tierHeight - band, 0], w + 0.5, d + 0.5, band));
   }
   const podiumTop = spec.podiumHeight;
+
+  /*
+   * The Amazon frieze, from scans of slabs in the British Museum, run round
+   * the top tier under its crowning moulding. Where on the building it ran is
+   * argued over; the podium crown is one of the readings. Only two scans are
+   * free, so they alternate — the real frieze never repeated.
+   */
+  {
+    const friezeH = 0.9;
+    const w = spec.baseWidth - 4 * setback;
+    const d = spec.baseDepth - 4 * setback;
+    const y = podiumTop - band - friezeH - 0.05;
+    const slabs = [
+      { id: "mausoleum-amazon-1" as const, aspect: 2.95 },
+      { id: "mausoleum-amazon-2" as const, aspect: 2.03 },
+    ];
+    const faces: { length: number; at: (u: number) => Vec3; rotY: number }[] = [
+      { length: w, at: (u) => [u, y, -d / 2 - 0.02], rotY: Math.PI },
+      { length: w, at: (u) => [-u, y, d / 2 + 0.02], rotY: 0 },
+      { length: d, at: (u) => [w / 2 + 0.02, y, u], rotY: Math.PI / 2 },
+      { length: d, at: (u) => [-w / 2 - 0.02, y, -u], rotY: -Math.PI / 2 },
+    ];
+    let k = 0;
+    for (const face of faces) {
+      const widths: number[] = [];
+      let used = 0;
+      for (;;) {
+        const next = friezeH * slabs[(k + widths.length) % 2]!.aspect;
+        if (used + next > face.length - 0.4) break;
+        widths.push(next);
+        used += next;
+      }
+      let u = -used / 2;
+      for (const width of widths) {
+        const slab = slabs[k % 2]!;
+        parts.push({
+          ...relief("marble", face.at(u + width / 2), [width, friezeH], undefined, face.rotY),
+          scan: { id: slab.id },
+        });
+        u += width;
+        k += 1;
+      }
+    }
+  }
 
   // The lions, pacing the ledge below the top tier, all facing outwards.
   const ledgeY = 2 * tierHeight;

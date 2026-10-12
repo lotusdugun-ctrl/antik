@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Award, BookOpen, Lock, MapPin, RotateCcw, Trash2, Trophy } from "lucide-react";
 import { BackupPanel } from "@/components/BackupPanel";
 import { OfflinePanel } from "@/components/OfflinePanel";
+import { PassportPanel } from "@/components/Passport";
+import { TransferPanel } from "@/components/TransferPanel";
 import { Photo } from "@/components/Photo";
 import { SiteCard } from "@/components/SiteCard";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
@@ -70,6 +72,8 @@ function ProfilePage() {
         ))}
       </section>
 
+      <PassportPanel />
+
       {/* Region progress */}
       <section className="mt-8">
         <h2 className="mb-3 font-display text-xl font-semibold">{t("progress")}</h2>
@@ -106,7 +110,7 @@ function ProfilePage() {
             <div
               key={badge.id}
               className={`flex items-start gap-3 rounded-2xl border p-4 ${
-                badge.earned ? "border-gold bg-secondary" : "border-border opacity-60"
+                badge.earned ? "border-gold bg-secondary" : "border-dashed border-border bg-card"
               }`}
             >
               <span
@@ -211,6 +215,7 @@ function ProfilePage() {
       </section>
 
       <OfflinePanel />
+      <TransferPanel />
       <BackupPanel />
     </div>
   );

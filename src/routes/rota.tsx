@@ -10,8 +10,11 @@ import {
   Route as RouteIcon,
   TriangleAlert,
 } from "lucide-react";
+import { AudioGuide } from "@/components/AudioGuide";
+import { OfflinePanel } from "@/components/OfflinePanel";
 import { SiteMap } from "@/components/SiteMap";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { routeGuide } from "@/lib/route-guide";
 import { buildRouteServerFn } from "@/lib/routing";
 import { seoTags } from "@/lib/seo";
 import { getSite, sites, type Site } from "@/lib/sites";
@@ -41,6 +44,7 @@ function RouteBuilderPage() {
     : sites[0]!.slug;
   const [startSlug, setStartSlug] = useState(initialSlug);
   const [days, setDays] = useState(1);
+  const [highlights, setHighlights] = useState(true);
 
   const { data, isLoading, isFetching, isError } = useQuery({
     queryKey: ["route", startSlug, days],
@@ -60,6 +64,11 @@ function RouteBuilderPage() {
           ordered.reduce((sum, s) => sum + s.lng, 0) / ordered.length,
         ]
       : [39.2, 33.5];
+
+  const guide = useMemo(
+    () => (data && ordered.length > 0 ? routeGuide(ordered, data.legs, { highlights }) : undefined),
+    [data, ordered, highlights],
+  );
 
   const daysArr = useMemo(() => {
     if (ordered.length === 0) return [];
@@ -212,6 +221,39 @@ function RouteBuilderPage() {
               </section>
             ))}
           </div>
+
+          {guide && (
+            <section className="space-y-3 rounded-2xl surface-panel p-5 lg:col-span-2 lg:order-first">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <p className="min-w-0 flex-1 text-sm text-muted-foreground">
+                  {t("route_audio_sub")}
+                </p>
+                <div className="flex shrink-0 items-center rounded-full border border-border bg-card p-0.5">
+                  {([true, false] as const).map((on) => (
+                    <button
+                      key={String(on)}
+                      onClick={() => setHighlights(on)}
+                      className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                        highlights === on
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {on ? t("route_audio_short") : t("route_audio_full")}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <AudioGuide guide={guide} title={t("route_audio_title")} compact />
+              <OfflinePanel
+                compact
+                sites={ordered}
+                packId={`route:${startSlug}:${days}`}
+                sub={t("offline_route_sub")}
+                label={t("offline_download_route")}
+              />
+            </section>
+          )}
 
           <div className="lg:sticky lg:top-20 lg:self-start">
             <SiteMap

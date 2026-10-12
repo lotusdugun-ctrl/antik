@@ -1,4 +1,6 @@
+import { pick } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
 import { recordingFor } from "@/lib/audio-manifest";
 import type { Lang } from "@/lib/i18n";
 import { speakableChunks, type Guide } from "@/lib/narration";
@@ -15,7 +17,7 @@ export type VoiceInfo = {
   name?: string | undefined;
 };
 
-const BCP47: Record<Lang, string> = { tr: "tr-TR", en: "en-GB" };
+const BCP47: Record<Lang, string> = { tr: "tr-TR", en: "en-GB", de: "de-DE", ru: "ru-RU" };
 
 /**
  * The best voice the device has for a language. On-device voices first — the
@@ -117,7 +119,12 @@ export function useAudioGuide(
         playFrom(index + 1);
       };
 
-      const recorded = recordingFor(guide.key, lang, current.id);
+      const recorded = recordingFor(
+        current.source?.key ?? guide.key,
+        lang,
+        current.source?.id ?? current.id,
+        pick(current.text, lang),
+      );
       if (recorded) {
         const audio = new Audio(recorded);
         audio.playbackRate = state.current.rate;
@@ -138,7 +145,7 @@ export function useAudioGuide(
           setStatus("idle");
           return;
         }
-        const chunks = speakableChunks(current.text[lang]);
+        const chunks = speakableChunks(pick(current.text, lang));
         const say = (i: number) => {
           if (state.current.token !== token) return;
           if (i >= chunks.length) {
@@ -165,6 +172,7 @@ export function useAudioGuide(
   );
 
   const play = useCallback(() => {
+    if (status === "idle") track("Guide played", { guide: guide.key, lang });
     if (status === "paused") {
       if (audioRef.current) {
         void audioRef.current.play();
@@ -175,7 +183,7 @@ export function useAudioGuide(
       return;
     }
     playFrom(status === "ended" ? 0 : state.current.chapter);
-  }, [playFrom, status]);
+  }, [playFrom, status, guide.key, lang]);
 
   const pause = useCallback(() => {
     if (audioRef.current) {
@@ -221,7 +229,9 @@ export function useAudioGuide(
     return silence;
   }, [guide.key, lang, stop, silence]);
 
-  const recorded = guide.chapters.some((c) => recordingFor(guide.key, lang, c.id));
+  const recorded = guide.chapters.some((c) =>
+    recordingFor(c.source?.key ?? guide.key, lang, c.source?.id ?? c.id, pick(c.text, lang)),
+  );
 
   return {
     status,

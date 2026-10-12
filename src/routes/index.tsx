@@ -2,7 +2,12 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   ArrowRight,
+  BookOpen,
   Box,
+  Building2,
+  Castle,
+  Landmark,
+  Map as MapIcon,
   Layers,
   MapPin,
   Navigation,
@@ -14,7 +19,7 @@ import {
 import { Photo } from "@/components/Photo";
 import { SiteCard } from "@/components/SiteCard";
 import { collections, collectionSites } from "@/lib/collections";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, type TKey } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
 import { reconstructions } from "@/lib/reconstructions";
 import { seoTags } from "@/lib/seo";
@@ -72,8 +77,38 @@ function Index() {
 
   // All three arrive sorted by popularity from the data layer.
   const topCities = ancientCities.slice(0, 8);
-  const topPlaces = historicPlaces.slice(0, 4);
-  const topMuseums = museums.slice(0, 4);
+  const SHORTCUTS: { to: string; key: TKey; desc: TKey; icon: typeof Landmark; count?: string }[] =
+    [
+      {
+        to: "/antik-kentler",
+        key: "nav_ancient",
+        desc: "nav_ancient_d",
+        icon: Landmark,
+        count: `${ancientCities.length} ${t("heritage_sites")}`,
+      },
+      {
+        to: "/tarihi-yerler",
+        key: "nav_places",
+        desc: "nav_places_d",
+        icon: Castle,
+        count: `${historicPlaces.length} ${t("heritage_sites")}`,
+      },
+      {
+        to: "/muzeler",
+        key: "nav_museums",
+        desc: "nav_museums_d",
+        icon: Building2,
+        count: `${museums.length} ${t("heritage_sites")}`,
+      },
+      { to: "/harita", key: "nav_map", desc: "nav_map_d", icon: MapIcon },
+      {
+        to: "/rekonstruksiyonlar",
+        key: "nav_reconstructions",
+        desc: "nav_reconstructions_d",
+        icon: Box,
+      },
+      { to: "/hikayeler", key: "nav_stories", desc: "nav_stories_d", icon: BookOpen },
+    ];
   const recent = state.recent.map(getSite).filter(Boolean).slice(0, 4);
   const nearby = useMemo(() => {
     if (!coords) return [];
@@ -144,29 +179,30 @@ function Index() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl space-y-14 px-4 py-12 sm:px-6">
-        {/* Route builder */}
-        <section>
-          <div className="relative overflow-hidden rounded-3xl surface-panel p-6 sm:p-8">
-            <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-primary/10 blur-2xl" />
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="min-w-0">
-                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-                  <RouteIcon className="h-3.5 w-3.5" /> {t("route_title")}
-                </p>
-                <h3 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
-                  {t("route_sub")}
-                </h3>
-              </div>
+      <div className="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6">
+        {/* Shortcuts: the six places most visits start from, one tap each,
+            so the sections below can stay few. */}
+        <nav aria-label={t("nav_group_explore")}>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            {SHORTCUTS.map((item) => (
               <Link
-                to="/rota"
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+                key={item.to}
+                to={item.to}
+                className="flex items-start gap-3 rounded-2xl surface-panel p-3.5 lift sm:p-4"
               >
-                {t("route_build")} <ArrowRight className="h-4 w-4" />
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                  <item.icon className="h-5 w-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold leading-tight">{t(item.key)}</span>
+                  <span className="mt-0.5 line-clamp-2 text-xs leading-snug text-muted-foreground">
+                    {item.count ?? t(item.desc)}
+                  </span>
+                </span>
               </Link>
-            </div>
+            ))}
           </div>
-        </section>
+        </nav>
 
         {/* Recently viewed */}
         {recent.length > 0 && (
@@ -177,6 +213,16 @@ function Index() {
             </div>
           </section>
         )}
+
+        {/* Popular ancient cities */}
+        <section>
+          <SectionTitle title={t("popular")} action={t("view_all")} to="/antik-kentler" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {topCities.map((site) => (
+              <SiteCard key={site.slug} site={site} />
+            ))}
+          </div>
+        </section>
 
         {/* Nearby */}
         <section>
@@ -201,6 +247,64 @@ function Index() {
               ))}
             </div>
           )}
+        </section>
+
+        {/* 3D reconstructions. They have no photograph to lead with — the point
+            of them is the buildings no photograph could show — so the card
+            leads with the measurements instead. */}
+        <section>
+          <SectionTitle title={t("recon_title")} action={t("view_all")} to="/rekonstruksiyonlar" />
+          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {t("recon_sub")}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {reconstructions.slice(0, 4).map((item) => {
+              const site = getSite(item.siteSlug);
+              return (
+                <Link
+                  key={item.id}
+                  to="/rekonstruksiyon/$id"
+                  params={{ id: item.id }}
+                  className="flex flex-col rounded-2xl surface-panel p-4 lift"
+                >
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
+                    <Box className="h-3 w-3" /> {t("recon_badge")}
+                  </span>
+                  <h3 className="mt-2 font-display text-base font-semibold">{L(item.title)}</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {site ? L(site.name) : item.siteSlug} · {L(item.period)}
+                  </p>
+                  <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                    <Ruler className="h-3.5 w-3.5" />
+                    {item.measures.length} {t("recon_measure_count")}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Route builder */}
+        <section>
+          <div className="relative overflow-hidden rounded-3xl surface-panel p-6 sm:p-8">
+            <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-primary/10 blur-2xl" />
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="min-w-0">
+                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                  <RouteIcon className="h-3.5 w-3.5" /> {t("route_title")}
+                </p>
+                <h3 className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
+                  {t("route_sub")}
+                </h3>
+              </div>
+              <Link
+                to="/rota"
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+              >
+                {t("route_build")} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
         </section>
 
         {/* Regions */}
@@ -270,78 +374,6 @@ function Index() {
                 </Link>
               );
             })}
-          </div>
-        </section>
-
-        {/* 3D reconstructions. They have no photograph to lead with — the point
-            of them is the buildings no photograph could show — so the card
-            leads with the measurements instead. */}
-        <section>
-          <SectionTitle title={t("recon_title")} action={t("view_all")} to="/rekonstruksiyonlar" />
-          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            {t("recon_sub")}
-          </p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {reconstructions.slice(0, 4).map((item) => {
-              const site = getSite(item.siteSlug);
-              return (
-                <Link
-                  key={item.id}
-                  to="/rekonstruksiyon/$id"
-                  params={{ id: item.id }}
-                  className="flex flex-col rounded-2xl surface-panel p-4 lift"
-                >
-                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
-                    <Box className="h-3 w-3" /> {t("recon_badge")}
-                  </span>
-                  <h3 className="mt-2 font-display text-base font-semibold">{L(item.title)}</h3>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {site ? L(site.name) : item.siteSlug} · {L(item.period)}
-                  </p>
-                  <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-primary">
-                    <Ruler className="h-3.5 w-3.5" />
-                    {item.measures.length} {t("recon_measure_count")}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Historic places — the heritage that is still a building, kept apart
-            from the ruins so it is not buried under a hundred ancient cities. */}
-        <section>
-          <SectionTitle title={t("nav_places")} action={t("view_all")} to="/tarihi-yerler" />
-          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            {t("places_sub")}
-          </p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {topPlaces.map((site) => (
-              <SiteCard key={site.slug} site={site} />
-            ))}
-          </div>
-        </section>
-
-        {/* Museums */}
-        <section>
-          <SectionTitle title={t("nav_museums")} action={t("view_all")} to="/muzeler" />
-          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            {t("museums_sub")}
-          </p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {topMuseums.map((site) => (
-              <SiteCard key={site.slug} site={site} />
-            ))}
-          </div>
-        </section>
-
-        {/* Popular ancient cities */}
-        <section>
-          <SectionTitle title={t("popular")} action={t("view_all")} to="/antik-kentler" />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {topCities.map((site) => (
-              <SiteCard key={site.slug} site={site} />
-            ))}
           </div>
         </section>
       </div>

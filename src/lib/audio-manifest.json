@@ -1,0 +1,2002 @@
+{
+ "recon:aizanoi-zeus-tapinagi": {
+  "en": {
+   "intro": {
+    "hash": "30db3f5b",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "ce452fa5",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "21aca355",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "4cb1b9b7",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "198df1d8",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "8e4a082b",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "a196914f",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "251885e7",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "85105c07",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "82533fcd",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "f49b9d08",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "0d8db9b2",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "69b681a4",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "12a73a2f",
+    "url": "/audio/recon-aizanoi-zeus-tapinagi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:aphrodisias-stadyumu": {
+  "en": {
+   "intro": {
+    "hash": "4db03b3d",
+    "url": "/audio/recon-aphrodisias-stadyumu/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "f5cb4e86",
+    "url": "/audio/recon-aphrodisias-stadyumu/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "4ae56faa",
+    "url": "/audio/recon-aphrodisias-stadyumu/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "8fa309b5",
+    "url": "/audio/recon-aphrodisias-stadyumu/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "77ff0c31",
+    "url": "/audio/recon-aphrodisias-stadyumu/en/spot-4.mp3"
+   },
+   "uncertainty": {
+    "hash": "2b43b0de",
+    "url": "/audio/recon-aphrodisias-stadyumu/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "48e424e6",
+    "url": "/audio/recon-aphrodisias-stadyumu/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "26a1555f",
+    "url": "/audio/recon-aphrodisias-stadyumu/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "969e15dd",
+    "url": "/audio/recon-aphrodisias-stadyumu/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "ae39751f",
+    "url": "/audio/recon-aphrodisias-stadyumu/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "0bbbf753",
+    "url": "/audio/recon-aphrodisias-stadyumu/tr/spot-4.mp3"
+   },
+   "uncertainty": {
+    "hash": "b4b98735",
+    "url": "/audio/recon-aphrodisias-stadyumu/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:artemis-tapinagi": {
+  "en": {
+   "intro": {
+    "hash": "e2c4af61",
+    "url": "/audio/recon-artemis-tapinagi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "23031517",
+    "url": "/audio/recon-artemis-tapinagi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "c1c2d33a",
+    "url": "/audio/recon-artemis-tapinagi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "7879f59f",
+    "url": "/audio/recon-artemis-tapinagi/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "53f0f33e",
+    "url": "/audio/recon-artemis-tapinagi/en/spot-4.mp3"
+   },
+   "uncertainty": {
+    "hash": "646b8f96",
+    "url": "/audio/recon-artemis-tapinagi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "42cfc89e",
+    "url": "/audio/recon-artemis-tapinagi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "bab00450",
+    "url": "/audio/recon-artemis-tapinagi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "1b05fa61",
+    "url": "/audio/recon-artemis-tapinagi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "5326ac24",
+    "url": "/audio/recon-artemis-tapinagi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "8bad1894",
+    "url": "/audio/recon-artemis-tapinagi/tr/spot-4.mp3"
+   },
+   "uncertainty": {
+    "hash": "0a257dd3",
+    "url": "/audio/recon-artemis-tapinagi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:aspendos-tiyatrosu": {
+  "en": {
+   "intro": {
+    "hash": "138f0527",
+    "url": "/audio/recon-aspendos-tiyatrosu/en/intro.mp3"
+   },
+   "spot-2": {
+    "hash": "bb979c41",
+    "url": "/audio/recon-aspendos-tiyatrosu/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "d0af4703",
+    "url": "/audio/recon-aspendos-tiyatrosu/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "135974ea",
+    "url": "/audio/recon-aspendos-tiyatrosu/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "0326b391",
+    "url": "/audio/recon-aspendos-tiyatrosu/en/spot-5.mp3"
+   },
+   "spot-6": {
+    "hash": "76d53b6e",
+    "url": "/audio/recon-aspendos-tiyatrosu/en/spot-6.mp3"
+   },
+   "uncertainty": {
+    "hash": "ceefaff5",
+    "url": "/audio/recon-aspendos-tiyatrosu/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "5bfc18d1",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "665b8d4a",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "4418111a",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "63adedb3",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "8aed9dd9",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "76e01a86",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/spot-5.mp3"
+   },
+   "spot-6": {
+    "hash": "d6a58a65",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/spot-6.mp3"
+   },
+   "uncertainty": {
+    "hash": "15d7b2a6",
+    "url": "/audio/recon-aspendos-tiyatrosu/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:celsus-kutuphanesi": {
+  "en": {
+   "intro": {
+    "hash": "b567e360",
+    "url": "/audio/recon-celsus-kutuphanesi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "7e28197f",
+    "url": "/audio/recon-celsus-kutuphanesi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "2dbdd97a",
+    "url": "/audio/recon-celsus-kutuphanesi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "494d1f1f",
+    "url": "/audio/recon-celsus-kutuphanesi/en/spot-3.mp3"
+   },
+   "spot-5": {
+    "hash": "18d9fc68",
+    "url": "/audio/recon-celsus-kutuphanesi/en/spot-5.mp3"
+   },
+   "spot-6": {
+    "hash": "51ca9994",
+    "url": "/audio/recon-celsus-kutuphanesi/en/spot-6.mp3"
+   },
+   "uncertainty": {
+    "hash": "7372370c",
+    "url": "/audio/recon-celsus-kutuphanesi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "6582c901",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "91825188",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "62c9ef73",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "056ccfb0",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "3cbd3822",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "1939a371",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/spot-5.mp3"
+   },
+   "spot-6": {
+    "hash": "73ed306a",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/spot-6.mp3"
+   },
+   "uncertainty": {
+    "hash": "cb332668",
+    "url": "/audio/recon-celsus-kutuphanesi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:didyma-apollon-tapinagi": {
+  "en": {
+   "intro": {
+    "hash": "62614ded",
+    "url": "/audio/recon-didyma-apollon-tapinagi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "3c4bbf05",
+    "url": "/audio/recon-didyma-apollon-tapinagi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "8a550442",
+    "url": "/audio/recon-didyma-apollon-tapinagi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "dadbc09c",
+    "url": "/audio/recon-didyma-apollon-tapinagi/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "bb06ad21",
+    "url": "/audio/recon-didyma-apollon-tapinagi/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "142046f2",
+    "url": "/audio/recon-didyma-apollon-tapinagi/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "aafa4f25",
+    "url": "/audio/recon-didyma-apollon-tapinagi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "41dbabd8",
+    "url": "/audio/recon-didyma-apollon-tapinagi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "ed571a61",
+    "url": "/audio/recon-didyma-apollon-tapinagi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "fbafa217",
+    "url": "/audio/recon-didyma-apollon-tapinagi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "8f27f317",
+    "url": "/audio/recon-didyma-apollon-tapinagi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "f44cb7a2",
+    "url": "/audio/recon-didyma-apollon-tapinagi/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "61fe97a7",
+    "url": "/audio/recon-didyma-apollon-tapinagi/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "46d9af6e",
+    "url": "/audio/recon-didyma-apollon-tapinagi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:efes-buyuk-tiyatro": {
+  "en": {
+   "intro": {
+    "hash": "fb1883f2",
+    "url": "/audio/recon-efes-buyuk-tiyatro/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "0683d672",
+    "url": "/audio/recon-efes-buyuk-tiyatro/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "8ebbdf93",
+    "url": "/audio/recon-efes-buyuk-tiyatro/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "02b98370",
+    "url": "/audio/recon-efes-buyuk-tiyatro/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "c4d54b65",
+    "url": "/audio/recon-efes-buyuk-tiyatro/en/spot-4.mp3"
+   },
+   "spot-6": {
+    "hash": "37136ddb",
+    "url": "/audio/recon-efes-buyuk-tiyatro/en/spot-6.mp3"
+   },
+   "uncertainty": {
+    "hash": "79aab66b",
+    "url": "/audio/recon-efes-buyuk-tiyatro/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "52c7bcbe",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "a7787817",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "90c1e6e8",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "26d2eb70",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "7e2f25c5",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "0f6ee3c9",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/spot-5.mp3"
+   },
+   "spot-6": {
+    "hash": "ffc7787b",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/spot-6.mp3"
+   },
+   "uncertainty": {
+    "hash": "4bea46b5",
+    "url": "/audio/recon-efes-buyuk-tiyatro/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:efes-yamac-evler": {
+  "en": {
+   "intro": {
+    "hash": "dbfac0e8",
+    "url": "/audio/recon-efes-yamac-evler/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "b4febd55",
+    "url": "/audio/recon-efes-yamac-evler/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "e6451307",
+    "url": "/audio/recon-efes-yamac-evler/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "7d34a30c",
+    "url": "/audio/recon-efes-yamac-evler/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "c77ccc0b",
+    "url": "/audio/recon-efes-yamac-evler/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "2d83c351",
+    "url": "/audio/recon-efes-yamac-evler/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "f63d5195",
+    "url": "/audio/recon-efes-yamac-evler/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "ec746a92",
+    "url": "/audio/recon-efes-yamac-evler/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "1752b3fd",
+    "url": "/audio/recon-efes-yamac-evler/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "38eacea0",
+    "url": "/audio/recon-efes-yamac-evler/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "c04943ad",
+    "url": "/audio/recon-efes-yamac-evler/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "fd6f2b42",
+    "url": "/audio/recon-efes-yamac-evler/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "aae52c2e",
+    "url": "/audio/recon-efes-yamac-evler/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "da9db71e",
+    "url": "/audio/recon-efes-yamac-evler/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:gobeklitepe-d-yapisi": {
+  "en": {
+   "intro": {
+    "hash": "935e707c",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "75217ce0",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "362ca691",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "fc4433f2",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "042dffc9",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/en/spot-4.mp3"
+   },
+   "uncertainty": {
+    "hash": "082ae2bb",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "bd4eb3d8",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "1fe842ac",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "878892d7",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "2ddea50c",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "721cc6f8",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "4ca4d3b0",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "13b74a0f",
+    "url": "/audio/recon-gobeklitepe-d-yapisi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:halikarnas-mozolesi": {
+  "en": {
+   "intro": {
+    "hash": "78c386c7",
+    "url": "/audio/recon-halikarnas-mozolesi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "f978f869",
+    "url": "/audio/recon-halikarnas-mozolesi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "8bfb86c1",
+    "url": "/audio/recon-halikarnas-mozolesi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "b514a624",
+    "url": "/audio/recon-halikarnas-mozolesi/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "83917e06",
+    "url": "/audio/recon-halikarnas-mozolesi/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "d05d73b0",
+    "url": "/audio/recon-halikarnas-mozolesi/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "da5653c8",
+    "url": "/audio/recon-halikarnas-mozolesi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "9d857691",
+    "url": "/audio/recon-halikarnas-mozolesi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "c8c52861",
+    "url": "/audio/recon-halikarnas-mozolesi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "bd960768",
+    "url": "/audio/recon-halikarnas-mozolesi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "3f179e7c",
+    "url": "/audio/recon-halikarnas-mozolesi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "d840f944",
+    "url": "/audio/recon-halikarnas-mozolesi/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "37adfd5c",
+    "url": "/audio/recon-halikarnas-mozolesi/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "eab8171f",
+    "url": "/audio/recon-halikarnas-mozolesi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:hierapolis-tiyatrosu": {
+  "en": {
+   "intro": {
+    "hash": "f45330b1",
+    "url": "/audio/recon-hierapolis-tiyatrosu/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "b8651b85",
+    "url": "/audio/recon-hierapolis-tiyatrosu/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "a55fd0bd",
+    "url": "/audio/recon-hierapolis-tiyatrosu/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "cdc7a1f2",
+    "url": "/audio/recon-hierapolis-tiyatrosu/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "d028c920",
+    "url": "/audio/recon-hierapolis-tiyatrosu/en/spot-4.mp3"
+   },
+   "uncertainty": {
+    "hash": "1067c40f",
+    "url": "/audio/recon-hierapolis-tiyatrosu/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "dbad868d",
+    "url": "/audio/recon-hierapolis-tiyatrosu/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "50f34e9a",
+    "url": "/audio/recon-hierapolis-tiyatrosu/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "15565264",
+    "url": "/audio/recon-hierapolis-tiyatrosu/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "6b51e079",
+    "url": "/audio/recon-hierapolis-tiyatrosu/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "91a2e47a",
+    "url": "/audio/recon-hierapolis-tiyatrosu/tr/spot-4.mp3"
+   },
+   "uncertainty": {
+    "hash": "5900c896",
+    "url": "/audio/recon-hierapolis-tiyatrosu/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:milet-buyuk-tiyatro": {
+  "en": {
+   "intro": {
+    "hash": "8b404ab4",
+    "url": "/audio/recon-milet-buyuk-tiyatro/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "6738dfad",
+    "url": "/audio/recon-milet-buyuk-tiyatro/en/spot-1.mp3"
+   },
+   "spot-3": {
+    "hash": "9a177dc3",
+    "url": "/audio/recon-milet-buyuk-tiyatro/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "05929c9d",
+    "url": "/audio/recon-milet-buyuk-tiyatro/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "af02204b",
+    "url": "/audio/recon-milet-buyuk-tiyatro/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "979ff3ca",
+    "url": "/audio/recon-milet-buyuk-tiyatro/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "spot-1": {
+    "hash": "c1c11fab",
+    "url": "/audio/recon-milet-buyuk-tiyatro/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "3c7c7cd6",
+    "url": "/audio/recon-milet-buyuk-tiyatro/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "cf384ec3",
+    "url": "/audio/recon-milet-buyuk-tiyatro/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "337b192c",
+    "url": "/audio/recon-milet-buyuk-tiyatro/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "463a945b",
+    "url": "/audio/recon-milet-buyuk-tiyatro/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "601cd917",
+    "url": "/audio/recon-milet-buyuk-tiyatro/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:nemrut-dogu-terasi": {
+  "en": {
+   "intro": {
+    "hash": "ee87050a",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "86e2dbe7",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "5e1a784e",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "253a0b4b",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "6b255f23",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "bd1d9d91",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/spot-5.mp3"
+   },
+   "spot-6": {
+    "hash": "9ccaeec2",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/spot-6.mp3"
+   },
+   "spot-7": {
+    "hash": "a9b04fc6",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/spot-7.mp3"
+   },
+   "uncertainty": {
+    "hash": "3ad28745",
+    "url": "/audio/recon-nemrut-dogu-terasi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "aebd56f3",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "88818ba6",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "2a3a8c96",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "d5e96ced",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "7cac3203",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "b27979ce",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/spot-5.mp3"
+   },
+   "spot-6": {
+    "hash": "fb5c7b8d",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/spot-6.mp3"
+   },
+   "spot-7": {
+    "hash": "18c4d12a",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/spot-7.mp3"
+   },
+   "uncertainty": {
+    "hash": "5d211b4f",
+    "url": "/audio/recon-nemrut-dogu-terasi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:pergamon-zeus-sunagi": {
+  "en": {
+   "intro": {
+    "hash": "8b431f6e",
+    "url": "/audio/recon-pergamon-zeus-sunagi/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "1949121b",
+    "url": "/audio/recon-pergamon-zeus-sunagi/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "13705d2d",
+    "url": "/audio/recon-pergamon-zeus-sunagi/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "1cddfff5",
+    "url": "/audio/recon-pergamon-zeus-sunagi/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "84782dda",
+    "url": "/audio/recon-pergamon-zeus-sunagi/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "ca88671f",
+    "url": "/audio/recon-pergamon-zeus-sunagi/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "c83eecfd",
+    "url": "/audio/recon-pergamon-zeus-sunagi/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "95d66a70",
+    "url": "/audio/recon-pergamon-zeus-sunagi/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "50827bfb",
+    "url": "/audio/recon-pergamon-zeus-sunagi/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "b142f13f",
+    "url": "/audio/recon-pergamon-zeus-sunagi/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "8e56f825",
+    "url": "/audio/recon-pergamon-zeus-sunagi/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "c602033b",
+    "url": "/audio/recon-pergamon-zeus-sunagi/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "8b712087",
+    "url": "/audio/recon-pergamon-zeus-sunagi/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "ceea23d5",
+    "url": "/audio/recon-pergamon-zeus-sunagi/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:perge-stadyumu": {
+  "en": {
+   "intro": {
+    "hash": "447cab3e",
+    "url": "/audio/recon-perge-stadyumu/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "3095724f",
+    "url": "/audio/recon-perge-stadyumu/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "e4e4e707",
+    "url": "/audio/recon-perge-stadyumu/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "49f07275",
+    "url": "/audio/recon-perge-stadyumu/en/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "c03bc959",
+    "url": "/audio/recon-perge-stadyumu/en/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "ce0020c4",
+    "url": "/audio/recon-perge-stadyumu/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "9c375b82",
+    "url": "/audio/recon-perge-stadyumu/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "intro": {
+    "hash": "35f45e4f",
+    "url": "/audio/recon-perge-stadyumu/tr/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "6a6a3fb9",
+    "url": "/audio/recon-perge-stadyumu/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "b1744c17",
+    "url": "/audio/recon-perge-stadyumu/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "70c98aaf",
+    "url": "/audio/recon-perge-stadyumu/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "35b29610",
+    "url": "/audio/recon-perge-stadyumu/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "d0739e95",
+    "url": "/audio/recon-perge-stadyumu/tr/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "645549fb",
+    "url": "/audio/recon-perge-stadyumu/tr/uncertainty.mp3"
+   }
+  }
+ },
+ "recon:side-tiyatrosu": {
+  "en": {
+   "intro": {
+    "hash": "affaa633",
+    "url": "/audio/recon-side-tiyatrosu/en/intro.mp3"
+   },
+   "spot-1": {
+    "hash": "b399e96c",
+    "url": "/audio/recon-side-tiyatrosu/en/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "29c972ad",
+    "url": "/audio/recon-side-tiyatrosu/en/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "25c72212",
+    "url": "/audio/recon-side-tiyatrosu/en/spot-3.mp3"
+   },
+   "spot-5": {
+    "hash": "bf8c34b6",
+    "url": "/audio/recon-side-tiyatrosu/en/spot-5.mp3"
+   },
+   "uncertainty": {
+    "hash": "267cd29d",
+    "url": "/audio/recon-side-tiyatrosu/en/uncertainty.mp3"
+   }
+  },
+  "tr": {
+   "spot-1": {
+    "hash": "d868e717",
+    "url": "/audio/recon-side-tiyatrosu/tr/spot-1.mp3"
+   },
+   "spot-2": {
+    "hash": "17bc2dfd",
+    "url": "/audio/recon-side-tiyatrosu/tr/spot-2.mp3"
+   },
+   "spot-3": {
+    "hash": "d8e0233b",
+    "url": "/audio/recon-side-tiyatrosu/tr/spot-3.mp3"
+   },
+   "spot-4": {
+    "hash": "17f002bd",
+    "url": "/audio/recon-side-tiyatrosu/tr/spot-4.mp3"
+   },
+   "spot-5": {
+    "hash": "1efe8eb0",
+    "url": "/audio/recon-side-tiyatrosu/tr/spot-5.mp3"
+   }
+  }
+ },
+ "site:ani": {
+  "en": {
+   "facts": {
+    "hash": "56203ae3",
+    "url": "/audio/site-ani/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "787c316f",
+    "url": "/audio/site-ani/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "2a160577",
+    "url": "/audio/site-ani/en/history.mp3"
+   },
+   "intro": {
+    "hash": "3211e3f0",
+    "url": "/audio/site-ani/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "5161c30e",
+    "url": "/audio/site-ani/en/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "987d1915",
+    "url": "/audio/site-ani/en/structure-1.mp3"
+   },
+   "structure-2": {
+    "hash": "a14ca31b",
+    "url": "/audio/site-ani/en/structure-2.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "62ea5858",
+    "url": "/audio/site-ani/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "8e490362",
+    "url": "/audio/site-ani/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "13b21d22",
+    "url": "/audio/site-ani/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "afb3139f",
+    "url": "/audio/site-ani/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "9b08b4c0",
+    "url": "/audio/site-ani/tr/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "07c4f3dd",
+    "url": "/audio/site-ani/tr/structure-1.mp3"
+   },
+   "structure-2": {
+    "hash": "60a628fa",
+    "url": "/audio/site-ani/tr/structure-2.mp3"
+   }
+  }
+ },
+ "site:aphrodisias": {
+  "en": {
+   "facts": {
+    "hash": "91e98a73",
+    "url": "/audio/site-aphrodisias/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "8175b634",
+    "url": "/audio/site-aphrodisias/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "ab4840e9",
+    "url": "/audio/site-aphrodisias/en/history.mp3"
+   },
+   "intro": {
+    "hash": "7e9d8b19",
+    "url": "/audio/site-aphrodisias/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "04d2c5a3",
+    "url": "/audio/site-aphrodisias/en/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "367e934d",
+    "url": "/audio/site-aphrodisias/en/structure-1.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "d388be78",
+    "url": "/audio/site-aphrodisias/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "f36bbc0c",
+    "url": "/audio/site-aphrodisias/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "a9712f7f",
+    "url": "/audio/site-aphrodisias/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "ea57f791",
+    "url": "/audio/site-aphrodisias/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "1855b419",
+    "url": "/audio/site-aphrodisias/tr/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "9704fcae",
+    "url": "/audio/site-aphrodisias/tr/structure-1.mp3"
+   }
+  }
+ },
+ "site:aspendos": {
+  "en": {
+   "facts": {
+    "hash": "aaf0f044",
+    "url": "/audio/site-aspendos/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "8ef3bccc",
+    "url": "/audio/site-aspendos/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "8c4b5a14",
+    "url": "/audio/site-aspendos/en/history.mp3"
+   },
+   "intro": {
+    "hash": "e74e6cec",
+    "url": "/audio/site-aspendos/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "cf0b2225",
+    "url": "/audio/site-aspendos/en/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "c245cb0f",
+    "url": "/audio/site-aspendos/en/structure-1.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "bdc09d7c",
+    "url": "/audio/site-aspendos/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "a5a2970d",
+    "url": "/audio/site-aspendos/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "a4ebcd20",
+    "url": "/audio/site-aspendos/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "8aababaf",
+    "url": "/audio/site-aspendos/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "4aee94fd",
+    "url": "/audio/site-aspendos/tr/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "5df4e6f8",
+    "url": "/audio/site-aspendos/tr/structure-1.mp3"
+   }
+  }
+ },
+ "site:ayasofya": {
+  "en": {
+   "facts": {
+    "hash": "1e9d0933",
+    "url": "/audio/site-ayasofya/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "e4b875a0",
+    "url": "/audio/site-ayasofya/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "67efdf1c",
+    "url": "/audio/site-ayasofya/en/history.mp3"
+   },
+   "intro": {
+    "hash": "a4315dad",
+    "url": "/audio/site-ayasofya/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "7901b30c",
+    "url": "/audio/site-ayasofya/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "6d08ffb5",
+    "url": "/audio/site-ayasofya/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "266ee3af",
+    "url": "/audio/site-ayasofya/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "84ba5cb9",
+    "url": "/audio/site-ayasofya/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "a3016f8f",
+    "url": "/audio/site-ayasofya/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "c6594203",
+    "url": "/audio/site-ayasofya/tr/outro.mp3"
+   }
+  }
+ },
+ "site:dolmabahce-sarayi": {
+  "en": {
+   "facts": {
+    "hash": "55d25435",
+    "url": "/audio/site-dolmabahce-sarayi/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "fa7552f0",
+    "url": "/audio/site-dolmabahce-sarayi/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "c7092489",
+    "url": "/audio/site-dolmabahce-sarayi/en/history.mp3"
+   },
+   "intro": {
+    "hash": "41112b96",
+    "url": "/audio/site-dolmabahce-sarayi/en/intro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "e3e48ab0",
+    "url": "/audio/site-dolmabahce-sarayi/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "f73000db",
+    "url": "/audio/site-dolmabahce-sarayi/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "19932b46",
+    "url": "/audio/site-dolmabahce-sarayi/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "8cc61513",
+    "url": "/audio/site-dolmabahce-sarayi/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "b0928ec7",
+    "url": "/audio/site-dolmabahce-sarayi/tr/outro.mp3"
+   }
+  }
+ },
+ "site:efes": {
+  "en": {
+   "facts": {
+    "hash": "0307396c",
+    "url": "/audio/site-efes/en/facts.mp3"
+   },
+   "history": {
+    "hash": "0ee527d4",
+    "url": "/audio/site-efes/en/history.mp3"
+   },
+   "outro": {
+    "hash": "52a6cc2b",
+    "url": "/audio/site-efes/en/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "269c40b3",
+    "url": "/audio/site-efes/en/structure-1.mp3"
+   },
+   "structure-2": {
+    "hash": "cb38373f",
+    "url": "/audio/site-efes/en/structure-2.mp3"
+   },
+   "structure-3": {
+    "hash": "5865ddac",
+    "url": "/audio/site-efes/en/structure-3.mp3"
+   },
+   "structure-4": {
+    "hash": "af90304a",
+    "url": "/audio/site-efes/en/structure-4.mp3"
+   },
+   "structure-5": {
+    "hash": "89126594",
+    "url": "/audio/site-efes/en/structure-5.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "eee90f5e",
+    "url": "/audio/site-efes/tr/facts.mp3"
+   },
+   "history": {
+    "hash": "cd9bfd01",
+    "url": "/audio/site-efes/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "e3b80c92",
+    "url": "/audio/site-efes/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "983077d1",
+    "url": "/audio/site-efes/tr/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "50d7f405",
+    "url": "/audio/site-efes/tr/structure-1.mp3"
+   },
+   "structure-2": {
+    "hash": "71ae0d5a",
+    "url": "/audio/site-efes/tr/structure-2.mp3"
+   },
+   "structure-4": {
+    "hash": "8f979529",
+    "url": "/audio/site-efes/tr/structure-4.mp3"
+   },
+   "structure-5": {
+    "hash": "796fd132",
+    "url": "/audio/site-efes/tr/structure-5.mp3"
+   }
+  }
+ },
+ "site:galata-kulesi": {
+  "en": {
+   "facts": {
+    "hash": "38b9ee10",
+    "url": "/audio/site-galata-kulesi/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "ad55450f",
+    "url": "/audio/site-galata-kulesi/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "093240f8",
+    "url": "/audio/site-galata-kulesi/en/history.mp3"
+   },
+   "intro": {
+    "hash": "17790d00",
+    "url": "/audio/site-galata-kulesi/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "60f94da7",
+    "url": "/audio/site-galata-kulesi/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "7972dcc6",
+    "url": "/audio/site-galata-kulesi/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "b502230d",
+    "url": "/audio/site-galata-kulesi/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "11def52a",
+    "url": "/audio/site-galata-kulesi/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "4fa160e9",
+    "url": "/audio/site-galata-kulesi/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "543d8537",
+    "url": "/audio/site-galata-kulesi/tr/outro.mp3"
+   }
+  }
+ },
+ "site:gobeklitepe": {
+  "en": {
+   "facts": {
+    "hash": "f7538a90",
+    "url": "/audio/site-gobeklitepe/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "e46c4c2b",
+    "url": "/audio/site-gobeklitepe/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "245fa116",
+    "url": "/audio/site-gobeklitepe/en/history.mp3"
+   },
+   "intro": {
+    "hash": "1438d03b",
+    "url": "/audio/site-gobeklitepe/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "a28615c0",
+    "url": "/audio/site-gobeklitepe/en/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "ded2fac0",
+    "url": "/audio/site-gobeklitepe/en/structure-1.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "3a83c12f",
+    "url": "/audio/site-gobeklitepe/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "1c11a5e3",
+    "url": "/audio/site-gobeklitepe/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "90affbb4",
+    "url": "/audio/site-gobeklitepe/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "94af4595",
+    "url": "/audio/site-gobeklitepe/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "e8073a64",
+    "url": "/audio/site-gobeklitepe/tr/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "23583a16",
+    "url": "/audio/site-gobeklitepe/tr/structure-1.mp3"
+   }
+  }
+ },
+ "site:goreme": {
+  "en": {
+   "facts": {
+    "hash": "52bc8440",
+    "url": "/audio/site-goreme/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "cde751ae",
+    "url": "/audio/site-goreme/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "73d5039c",
+    "url": "/audio/site-goreme/en/history.mp3"
+   },
+   "intro": {
+    "hash": "e49e5852",
+    "url": "/audio/site-goreme/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "f4c7e274",
+    "url": "/audio/site-goreme/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "fe2b5ea7",
+    "url": "/audio/site-goreme/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "8747f850",
+    "url": "/audio/site-goreme/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "3aee44dc",
+    "url": "/audio/site-goreme/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "00d90b3f",
+    "url": "/audio/site-goreme/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "f44f607e",
+    "url": "/audio/site-goreme/tr/outro.mp3"
+   }
+  }
+ },
+ "site:hattusa": {
+  "en": {
+   "facts": {
+    "hash": "f19bcb69",
+    "url": "/audio/site-hattusa/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "b3419db2",
+    "url": "/audio/site-hattusa/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "52c9e8e4",
+    "url": "/audio/site-hattusa/en/history.mp3"
+   },
+   "intro": {
+    "hash": "4a3e0568",
+    "url": "/audio/site-hattusa/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "57f031ea",
+    "url": "/audio/site-hattusa/en/outro.mp3"
+   },
+   "structure-2": {
+    "hash": "5844e142",
+    "url": "/audio/site-hattusa/en/structure-2.mp3"
+   },
+   "structure-3": {
+    "hash": "c4c65cd0",
+    "url": "/audio/site-hattusa/en/structure-3.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "f52f12cd",
+    "url": "/audio/site-hattusa/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "8ca4dd2a",
+    "url": "/audio/site-hattusa/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "7c5ec5df",
+    "url": "/audio/site-hattusa/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "179d0a15",
+    "url": "/audio/site-hattusa/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "60617d90",
+    "url": "/audio/site-hattusa/tr/outro.mp3"
+   },
+   "structure-2": {
+    "hash": "6bd5726e",
+    "url": "/audio/site-hattusa/tr/structure-2.mp3"
+   },
+   "structure-3": {
+    "hash": "7ae84cca",
+    "url": "/audio/site-hattusa/tr/structure-3.mp3"
+   }
+  }
+ },
+ "site:hierapolis": {
+  "en": {
+   "facts": {
+    "hash": "1ce46dc3",
+    "url": "/audio/site-hierapolis/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "74946fcb",
+    "url": "/audio/site-hierapolis/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "b35e36a5",
+    "url": "/audio/site-hierapolis/en/history.mp3"
+   },
+   "intro": {
+    "hash": "b0f45d42",
+    "url": "/audio/site-hierapolis/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "6e8b4900",
+    "url": "/audio/site-hierapolis/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "a17c1654",
+    "url": "/audio/site-hierapolis/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "80f31911",
+    "url": "/audio/site-hierapolis/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "8635f5c3",
+    "url": "/audio/site-hierapolis/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "3465fe33",
+    "url": "/audio/site-hierapolis/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "58a96696",
+    "url": "/audio/site-hierapolis/tr/outro.mp3"
+   },
+   "structure-2": {
+    "hash": "ce0c8d5c",
+    "url": "/audio/site-hierapolis/tr/structure-2.mp3"
+   }
+  }
+ },
+ "site:nemrut": {
+  "en": {
+   "facts": {
+    "hash": "93d45c92",
+    "url": "/audio/site-nemrut/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "8ea17ad9",
+    "url": "/audio/site-nemrut/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "f8de7d78",
+    "url": "/audio/site-nemrut/en/history.mp3"
+   },
+   "intro": {
+    "hash": "5ae2e60e",
+    "url": "/audio/site-nemrut/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "89ec7fce",
+    "url": "/audio/site-nemrut/en/outro.mp3"
+   },
+   "structure-3": {
+    "hash": "f78fad91",
+    "url": "/audio/site-nemrut/en/structure-3.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "fb56427e",
+    "url": "/audio/site-nemrut/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "83838342",
+    "url": "/audio/site-nemrut/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "79531087",
+    "url": "/audio/site-nemrut/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "81aaabb4",
+    "url": "/audio/site-nemrut/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "68481cb0",
+    "url": "/audio/site-nemrut/tr/outro.mp3"
+   },
+   "structure-1": {
+    "hash": "ce3bccf7",
+    "url": "/audio/site-nemrut/tr/structure-1.mp3"
+   },
+   "structure-3": {
+    "hash": "46a3e5a8",
+    "url": "/audio/site-nemrut/tr/structure-3.mp3"
+   }
+  }
+ },
+ "site:pergamon": {
+  "en": {
+   "facts": {
+    "hash": "f4f3bb64",
+    "url": "/audio/site-pergamon/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "c8f3e983",
+    "url": "/audio/site-pergamon/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "b82ed7c2",
+    "url": "/audio/site-pergamon/en/history.mp3"
+   },
+   "intro": {
+    "hash": "82b3accd",
+    "url": "/audio/site-pergamon/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "aa70f009",
+    "url": "/audio/site-pergamon/en/outro.mp3"
+   },
+   "structure-2": {
+    "hash": "fc8b386b",
+    "url": "/audio/site-pergamon/en/structure-2.mp3"
+   },
+   "structure-5": {
+    "hash": "ef6910db",
+    "url": "/audio/site-pergamon/en/structure-5.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "76f451c8",
+    "url": "/audio/site-pergamon/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "3c86a41a",
+    "url": "/audio/site-pergamon/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "2c38aee9",
+    "url": "/audio/site-pergamon/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "bc37e5e9",
+    "url": "/audio/site-pergamon/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "21bf5f0d",
+    "url": "/audio/site-pergamon/tr/outro.mp3"
+   },
+   "structure-2": {
+    "hash": "ee3f5d68",
+    "url": "/audio/site-pergamon/tr/structure-2.mp3"
+   },
+   "structure-5": {
+    "hash": "0df98b03",
+    "url": "/audio/site-pergamon/tr/structure-5.mp3"
+   }
+  }
+ },
+ "site:selimiye": {
+  "en": {
+   "facts": {
+    "hash": "0a35aa58",
+    "url": "/audio/site-selimiye/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "dbce6459",
+    "url": "/audio/site-selimiye/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "d934d07c",
+    "url": "/audio/site-selimiye/en/history.mp3"
+   },
+   "intro": {
+    "hash": "8b5e32d0",
+    "url": "/audio/site-selimiye/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "abd5146f",
+    "url": "/audio/site-selimiye/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "9aba9170",
+    "url": "/audio/site-selimiye/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "5eecf46d",
+    "url": "/audio/site-selimiye/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "5239bdde",
+    "url": "/audio/site-selimiye/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "ca851fea",
+    "url": "/audio/site-selimiye/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "2982ef92",
+    "url": "/audio/site-selimiye/tr/outro.mp3"
+   }
+  }
+ },
+ "site:suleymaniye": {
+  "en": {
+   "facts": {
+    "hash": "66599e3f",
+    "url": "/audio/site-suleymaniye/en/facts.mp3"
+   },
+   "history": {
+    "hash": "4bdf3f18",
+    "url": "/audio/site-suleymaniye/en/history.mp3"
+   },
+   "intro": {
+    "hash": "cec4ecb2",
+    "url": "/audio/site-suleymaniye/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "4ad642ea",
+    "url": "/audio/site-suleymaniye/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "dd7b8f8c",
+    "url": "/audio/site-suleymaniye/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "ca4b4ed1",
+    "url": "/audio/site-suleymaniye/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "8c793c4c",
+    "url": "/audio/site-suleymaniye/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "ebd9869d",
+    "url": "/audio/site-suleymaniye/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "e5143ad7",
+    "url": "/audio/site-suleymaniye/tr/outro.mp3"
+   }
+  }
+ },
+ "site:sultanahmet-camii": {
+  "en": {
+   "facts": {
+    "hash": "12ea8e1b",
+    "url": "/audio/site-sultanahmet-camii/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "03bb4a33",
+    "url": "/audio/site-sultanahmet-camii/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "9da672c3",
+    "url": "/audio/site-sultanahmet-camii/en/history.mp3"
+   },
+   "intro": {
+    "hash": "612125b1",
+    "url": "/audio/site-sultanahmet-camii/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "9e8244f4",
+    "url": "/audio/site-sultanahmet-camii/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "0d6a2c2a",
+    "url": "/audio/site-sultanahmet-camii/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "c2b2a2cd",
+    "url": "/audio/site-sultanahmet-camii/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "c60fc685",
+    "url": "/audio/site-sultanahmet-camii/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "bfa6a06e",
+    "url": "/audio/site-sultanahmet-camii/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "45c7f591",
+    "url": "/audio/site-sultanahmet-camii/tr/outro.mp3"
+   }
+  }
+ },
+ "site:sumela": {
+  "en": {
+   "facts": {
+    "hash": "20980ce8",
+    "url": "/audio/site-sumela/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "38052c09",
+    "url": "/audio/site-sumela/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "a70b1058",
+    "url": "/audio/site-sumela/en/history.mp3"
+   },
+   "intro": {
+    "hash": "b5742ee6",
+    "url": "/audio/site-sumela/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "c646b5e3",
+    "url": "/audio/site-sumela/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "7d8ae4e3",
+    "url": "/audio/site-sumela/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "859cd146",
+    "url": "/audio/site-sumela/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "188fd32b",
+    "url": "/audio/site-sumela/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "19a05a95",
+    "url": "/audio/site-sumela/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "3dfc411c",
+    "url": "/audio/site-sumela/tr/outro.mp3"
+   }
+  }
+ },
+ "site:topkapi": {
+  "en": {
+   "facts": {
+    "hash": "ad9d0040",
+    "url": "/audio/site-topkapi/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "2c90ab7f",
+    "url": "/audio/site-topkapi/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "97f6124c",
+    "url": "/audio/site-topkapi/en/history.mp3"
+   },
+   "intro": {
+    "hash": "a95d57b1",
+    "url": "/audio/site-topkapi/en/intro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "7a18eef1",
+    "url": "/audio/site-topkapi/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "b3defe76",
+    "url": "/audio/site-topkapi/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "840b7fdc",
+    "url": "/audio/site-topkapi/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "0c10b53e",
+    "url": "/audio/site-topkapi/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "7895901d",
+    "url": "/audio/site-topkapi/tr/outro.mp3"
+   }
+  }
+ },
+ "site:troya": {
+  "en": {
+   "facts": {
+    "hash": "2ba84bb2",
+    "url": "/audio/site-troya/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "ec325ac5",
+    "url": "/audio/site-troya/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "1b1fb192",
+    "url": "/audio/site-troya/en/history.mp3"
+   },
+   "intro": {
+    "hash": "5c52b54a",
+    "url": "/audio/site-troya/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "cae17904",
+    "url": "/audio/site-troya/en/outro.mp3"
+   },
+   "structure-5": {
+    "hash": "96025e00",
+    "url": "/audio/site-troya/en/structure-5.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "8d99cc7c",
+    "url": "/audio/site-troya/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "7b026138",
+    "url": "/audio/site-troya/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "7a75d6dd",
+    "url": "/audio/site-troya/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "73e4ca33",
+    "url": "/audio/site-troya/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "ae9b4cf1",
+    "url": "/audio/site-troya/tr/outro.mp3"
+   },
+   "structure-5": {
+    "hash": "62cb009f",
+    "url": "/audio/site-troya/tr/structure-5.mp3"
+   }
+  }
+ },
+ "site:yerebatan-sarnici": {
+  "en": {
+   "facts": {
+    "hash": "26f87391",
+    "url": "/audio/site-yerebatan-sarnici/en/facts.mp3"
+   },
+   "highlights": {
+    "hash": "26c1e6a1",
+    "url": "/audio/site-yerebatan-sarnici/en/highlights.mp3"
+   },
+   "history": {
+    "hash": "15bbb13d",
+    "url": "/audio/site-yerebatan-sarnici/en/history.mp3"
+   },
+   "intro": {
+    "hash": "59ad32b8",
+    "url": "/audio/site-yerebatan-sarnici/en/intro.mp3"
+   },
+   "outro": {
+    "hash": "7b786daa",
+    "url": "/audio/site-yerebatan-sarnici/en/outro.mp3"
+   }
+  },
+  "tr": {
+   "facts": {
+    "hash": "f75e540c",
+    "url": "/audio/site-yerebatan-sarnici/tr/facts.mp3"
+   },
+   "highlights": {
+    "hash": "bd7fc522",
+    "url": "/audio/site-yerebatan-sarnici/tr/highlights.mp3"
+   },
+   "history": {
+    "hash": "0c67617b",
+    "url": "/audio/site-yerebatan-sarnici/tr/history.mp3"
+   },
+   "intro": {
+    "hash": "15915d1b",
+    "url": "/audio/site-yerebatan-sarnici/tr/intro.mp3"
+   },
+   "outro": {
+    "hash": "86a6bd94",
+    "url": "/audio/site-yerebatan-sarnici/tr/outro.mp3"
+   }
+  }
+ }
+}

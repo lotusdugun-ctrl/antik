@@ -102,6 +102,7 @@ function SiteMarkers({
   renderPopup: (site: Site) => React.ReactNode;
 }) {
   const map = useMap();
+  const { t, L: label } = useI18n();
   const { isVisited } = useProgress();
   const groups = useClusters(sites, cluster);
 
@@ -115,6 +116,10 @@ function SiteMarkers({
               key={first.slug}
               position={[first.lat, first.lng]}
               icon={pinIcon(isVisited(first.slug))}
+              // Leaflet's markers are focusable buttons; without a title a
+              // screen reader announces each of them as just "button".
+              title={label(first.name)}
+              alt={label(first.name)}
             >
               <Popup>{renderPopup(first)}</Popup>
             </Marker>
@@ -131,6 +136,10 @@ function SiteMarkers({
               group.length,
               group.every((s) => isVisited(s.slug)),
             )}
+            title={`${group.length} ${t("civs_places")}: ${group
+              .slice(0, 3)
+              .map((s) => label(s.name))
+              .join(", ")}${group.length > 3 ? "…" : ""}`}
             eventHandlers={{
               click: () =>
                 // Zoom to the group. `maxZoom` stops a pile of sites that share

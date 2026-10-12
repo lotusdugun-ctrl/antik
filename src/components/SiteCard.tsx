@@ -51,9 +51,9 @@ export function SiteCard({
             </span>
           )}
           <div className="absolute inset-x-0 bottom-0 p-4">
-            <h3 className="font-display text-lg font-semibold leading-tight text-white">
+            <h2 className="font-display text-lg font-semibold leading-tight text-white">
               {L(site.name)}
-            </h3>
+            </h2>
             <p className="mt-0.5 flex items-center gap-1 text-xs text-white/90">
               <MapPin className="h-3 w-3" />
               {L(site.province)}

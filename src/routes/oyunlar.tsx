@@ -28,6 +28,7 @@ const modes: { id: Mode; title: TKey; desc: TKey }[] = [
   { id: "tf", title: "game_tf", desc: "game_tf_d" },
   { id: "map", title: "game_map", desc: "game_map_d" },
   { id: "structure", title: "game_structure", desc: "game_structure_d" },
+  { id: "story", title: "game_story", desc: "game_story_d" },
 ];
 
 /** How many recent subjects to keep off the board before they can return. */

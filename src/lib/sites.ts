@@ -90,6 +90,17 @@ export type Site = {
 export const OFFICIAL_INFO_URL = "https://muze.gov.tr";
 
 /**
+ * When the fees and visiting notes were last reviewed as a whole. Not a claim
+ * that any one tariff is current — the panel shows this date and warns once
+ * it is more than a year old, so stale numbers announce themselves. Move it
+ * forward only after actually re-checking the figures.
+ */
+export const VISITING_INFO_AS_OF = "2026-08-15";
+
+/** Where readers report a wrong fact: a prefilled issue on the public repository. */
+export const REPORT_ISSUE_URL = "https://github.com/lotusdugun-ctrl/antik/issues/new";
+
+/**
  * The Ministry of Culture and Tourism's seasonal timetable for state-run sites.
  *
  * This is a *rule*, not a fact about any one site, and the UI labels it that
@@ -2352,9 +2363,9 @@ export const sites: Site[] = [
     "4th millennium BC (Liman Tepe); 8th century BC (city)",
     "none",
     30,
-    "Urla'daki İon kenti; filozof Anaksimandros'un doğum yeri ve erken dönem endüstriyel zeytinyağı üretiminin merkezi.",
-    "An Ionian city at Urla; birthplace of the philosopher Anaximander and a centre of early industrial olive oil production.",
-    ["Anaksimandros", "Anaksagoras", "Hermotimos"],
+    "Urla'daki İon kenti; filozof Anaksagoras'ın doğum yeri ve erken dönem endüstriyel zeytinyağı üretiminin merkezi.",
+    "An Ionian city at Urla; birthplace of the philosopher Anaxagoras and a centre of early industrial olive oil production.",
+    ["Anaksagoras", "Hermotimos"],
     3,
   ),
   s(

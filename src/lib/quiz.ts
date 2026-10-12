@@ -1,10 +1,11 @@
 import { siteDetails } from "@/lib/site-details";
 import { coverImage, sites, type Site } from "@/lib/sites";
 import type { Localized } from "@/lib/i18n";
+import { storyQuestions } from "@/lib/stories-more";
 
 const structuresOf = (site: Site): Localized[] => siteDetails[site.slug]?.structures ?? [];
 
-export type QuizMode = "photo" | "who" | "tf" | "map" | "structure";
+export type QuizMode = "photo" | "who" | "tf" | "map" | "structure" | "story";
 
 export type Question = {
   mode: QuizMode;
@@ -183,6 +184,24 @@ export function buildQuestion(
       prompt: byName(target),
       options: shuffle([target, ...distractors].map(byProvince), rng),
       answer: byProvince(target),
+    };
+  }
+
+  /*
+   * Questions on the history behind the stories. They are written by hand,
+   * one right answer and three wrong ones, and keyed by their index so the
+   * no-repeat window works on them like it does on sites.
+   */
+  if (mode === "story") {
+    const pool = storyQuestions.map((question, index) => ({ question, key: `story-${index}` }));
+    const fresh = pool.filter((entry) => !recent.has(entry.key));
+    const { question, key } = choose(fresh.length > 0 ? fresh : pool, rng);
+    return {
+      mode,
+      slug: key,
+      prompt: L(question.prompt),
+      options: shuffle([question.correct, ...question.wrong].map(L), rng),
+      answer: L(question.correct),
     };
   }
 

@@ -16,6 +16,7 @@ import {
   TagsIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import { track } from "@/lib/analytics";
 import { createAmbience, type Ambience } from "@/lib/ambience";
 import { partsFor } from "@/lib/reconstruction-parts";
 import type { Reconstruction } from "@/lib/reconstructions";
@@ -89,7 +90,14 @@ export function Reconstruction3D({
      a desktop GPU — and off on touch devices, where it costs battery. */
   const [quality, setQuality] = useState(false);
   useEffect(() => {
-    setQuality(!window.matchMedia("(pointer: coarse)").matches);
+    // Desktop-class only: a fine pointer, and enough cores and memory that
+    // the extra pass costs frames rather than the whole page.
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const capable =
+      !window.matchMedia("(pointer: coarse)").matches &&
+      (navigator.hardwareConcurrency ?? 4) >= 6 &&
+      (nav.deviceMemory ?? 8) >= 4;
+    setQuality(capable);
   }, []);
 
   /* Ambient sound. Created on the first press: an AudioContext may only
@@ -147,6 +155,7 @@ export function Reconstruction3D({
   const launchAR = () => {
     const data = arDataRef.current;
     if (!data) return;
+    track("AR started", { model: item.id, mode: arMode ?? "none" });
     const launch =
       arMode === "quicklook"
         ? openQuickLook(data, item.id)

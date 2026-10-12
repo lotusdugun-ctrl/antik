@@ -17,21 +17,12 @@ export type AmbienceScene = {
 
 type Layer = { gain: GainNode; level: (scene: AmbienceScene) => number };
 
-function noiseBuffer(ctx: AudioContext, seconds: number, brown: boolean) {
+function noiseBuffer(ctx: AudioContext, seconds: number) {
   const length = Math.floor(ctx.sampleRate * seconds);
   const buffer = ctx.createBuffer(2, length, ctx.sampleRate);
   for (let channel = 0; channel < 2; channel += 1) {
     const data = buffer.getChannelData(channel);
-    let last = 0;
-    for (let i = 0; i < length; i += 1) {
-      const white = Math.random() * 2 - 1;
-      if (brown) {
-        last = (last + 0.02 * white) / 1.02;
-        data[i] = last * 3.5;
-      } else {
-        data[i] = white;
-      }
-    }
+    for (let i = 0; i < length; i += 1) data[i] = Math.random() * 2 - 1;
   }
   return buffer;
 }
@@ -46,8 +37,7 @@ export function createAmbience() {
   master.gain.value = 0;
   master.connect(ctx.destination);
 
-  const white = noiseBuffer(ctx, 4, false);
-  const brown = noiseBuffer(ctx, 6, true);
+  const white = noiseBuffer(ctx, 4);
   const loop = (buffer: AudioBuffer) => {
     const source = ctx.createBufferSource();
     source.buffer = buffer;
@@ -66,6 +56,23 @@ export function createAmbience() {
     return osc;
   };
 
+  /*
+   * A slow, irregular modulator: noise smoothed down to a fraction of a hertz.
+   * Sine LFOs were the first try, and a sine at a few hertz on a low band of
+   * noise is exactly the sound of an idling engine — regular, mechanical, the
+   * one thing wind and a crowd are not.
+   */
+  const drift = (smoothHz: number, depth: number, target: AudioParam) => {
+    const smoother = ctx.createBiquadFilter();
+    smoother.type = "lowpass";
+    smoother.frequency.value = smoothHz;
+    smoother.Q.value = 0.5;
+    const amount = ctx.createGain();
+    // Low-passed noise is quiet; this brings it back to roughly ±1 first.
+    amount.gain.value = depth * (6 / Math.sqrt(smoothHz));
+    loop(white).connect(smoother).connect(amount).connect(target);
+  };
+
   const layers: Layer[] = [];
   const timers: number[] = [];
   const layer = (level: Layer["level"]) => {
@@ -76,18 +83,28 @@ export function createAmbience() {
     return gain;
   };
 
-  /* Wind: brown noise through a low-pass whose cutoff and level both breathe. */
-  {
-    const out = layer((s) => (s.exposed ? 0.55 : 0.32));
-    const filter = ctx.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 420;
-    filter.Q.value = 0.7;
-    const swell = ctx.createGain();
-    swell.gain.value = 0.7;
-    loop(brown).connect(filter).connect(swell).connect(out);
-    lfo(0.07, 220, filter.frequency);
-    lfo(0.11, 0.3, swell.gain);
+  /*
+   * Wind: no sub-bass at all — rumble under 150 Hz is what made the first
+   * version read as a car. Two bands of hiss, one airy and one through the
+   * stones, each gusting on its own irregular schedule.
+   */
+  for (const [centre, q, level] of [
+    [700, 0.6, 0.55],
+    [2600, 0.9, 0.25],
+  ] as const) {
+    const out = layer((s) => (s.exposed ? 0.5 : 0.28) * level * 2);
+    const high = ctx.createBiquadFilter();
+    high.type = "highpass";
+    high.frequency.value = 160;
+    const band = ctx.createBiquadFilter();
+    band.type = "bandpass";
+    band.frequency.value = centre;
+    band.Q.value = q;
+    const gust = ctx.createGain();
+    gust.gain.value = 0.45;
+    loop(white).connect(high).connect(band).connect(gust).connect(out);
+    drift(0.12, 0.35, gust.gain);
+    drift(0.08, centre * 0.35, band.frequency);
   }
 
   /*
@@ -175,19 +192,29 @@ export function createAmbience() {
    * one of them being a word.
    */
   {
-    const out = layer((s) => (s.crowd ? (s.time === "night" ? 0.05 : 0.16) : 0));
-    for (let i = 0; i < 12; i += 1) {
-      const band = ctx.createBiquadFilter();
-      band.type = "bandpass";
-      band.frequency.value = 280 + Math.random() * 1400;
-      band.Q.value = 3 + Math.random() * 3;
+    const out = layer((s) => (s.crowd ? (s.time === "night" ? 0.04 : 0.12) : 0));
+    const high = ctx.createBiquadFilter();
+    high.type = "highpass";
+    high.frequency.value = 220;
+    high.connect(out);
+    for (let i = 0; i < 16; i += 1) {
+      // Two formant-like bands per voice, in the range of speech vowels.
       const voice = ctx.createGain();
-      voice.gain.value = 0.5;
+      voice.gain.value = 0.35;
       const pan = ctx.createStereoPanner();
-      pan.pan.value = Math.random() * 1.6 - 0.8;
-      loop(white).connect(band).connect(voice).connect(pan).connect(out);
-      lfo(2.5 + Math.random() * 4, 0.5, voice.gain);
-      lfo(0.1 + Math.random() * 0.3, 260, band.frequency);
+      pan.pan.value = Math.random() * 1.8 - 0.9;
+      const source = loop(white);
+      for (const f of [450 + Math.random() * 450, 1300 + Math.random() * 1100]) {
+        const band = ctx.createBiquadFilter();
+        band.type = "bandpass";
+        band.frequency.value = f;
+        band.Q.value = 6 + Math.random() * 4;
+        source.connect(band).connect(voice);
+        drift(1.5 + Math.random() * 2, f * 0.18, band.frequency);
+      }
+      voice.connect(pan).connect(high);
+      // Syllable-ish loudness that never repeats.
+      drift(3 + Math.random() * 3, 0.32, voice.gain);
     }
   }
 

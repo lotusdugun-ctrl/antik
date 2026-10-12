@@ -33,3 +33,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw 3D scans downloaded for processing (the processed copies live in public/scans)
+/scans/

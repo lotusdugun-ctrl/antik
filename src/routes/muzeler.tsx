@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HeritageIndex, parseIndexSearch, type IndexSearch } from "@/components/HeritageIndex";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 import { museums } from "@/lib/sites";
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/muzeler")({
       }),
       scripts: [
         ...itemListTags(
-          museums.map((site) => ({ name: site.name[lang], pathname: `/kent/${site.slug}` })),
+          museums.map((site) => ({ name: pick(site.name, lang), pathname: `/kent/${site.slug}` })),
           { lang, name: translate("nav_museums", lang) },
         ),
         ...breadcrumbTags(

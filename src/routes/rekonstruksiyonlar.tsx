@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Box, MapPin, Ruler } from "lucide-react";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { reconstructions } from "@/lib/reconstructions";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 import { getSite } from "@/lib/sites";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/rekonstruksiyonlar")({
       scripts: [
         ...itemListTags(
           reconstructions.map((item) => ({
-            name: item.title[lang],
+            name: pick(item.title, lang),
             pathname: `/rekonstruksiyon/${item.id}`,
           })),
           { lang, name: translate("recon_title", lang), description },

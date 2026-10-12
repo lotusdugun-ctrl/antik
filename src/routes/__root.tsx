@@ -19,6 +19,7 @@ import { AppShell } from "@/components/AppShell";
 import {
   DEFAULT_LANG,
   LanguageProvider,
+  loadContentTranslations,
   parseLang,
   translate,
   useI18n,
@@ -28,6 +29,7 @@ import { websiteTags } from "@/lib/seo";
 import { ProgressProvider } from "@/lib/progress";
 import { ThemeProvider } from "@/lib/theme";
 import { Toaster } from "@/components/ui/sonner";
+import { analyticsScripts } from "@/lib/analytics";
 
 function NotFoundComponent() {
   return (
@@ -95,8 +97,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
    * default and stays absent, which keeps every existing Turkish address
    * unchanged; only English adds `?lang=en`.
    */
-  validateSearch: (search: Record<string, unknown>): { lang?: "en" | undefined } =>
-    search["lang"] === "en" ? { lang: "en" } : {},
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { lang?: Exclude<Lang, typeof DEFAULT_LANG> | undefined } => {
+    const lang = parseLang(search["lang"]);
+    return lang === DEFAULT_LANG ? {} : { lang };
+  },
+  // German and Russian content is fetched before the first render in them.
+  beforeLoad: async ({ search }) => {
+    const lang = parseLang((search as { lang?: string }).lang);
+    if (lang === "de" || lang === "ru") await loadContentTranslations();
+  },
   // Without this, following any <Link> would silently drop the language.
   search: { middlewares: [retainSearchParams(["lang"])] },
   head: ({ match }) => {
@@ -104,11 +115,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     return {
       // Site-level identity, emitted once. Per-page structured data (the site
       // itself, breadcrumbs, list pages) is added by the route that owns it.
-      scripts: websiteTags({
-        lang,
-        name: translate("appName", lang),
-        description: translate("seo_home_desc", lang),
-      }),
+      scripts: [
+        ...websiteTags({
+          lang,
+          name: translate("appName", lang),
+          description: translate("seo_home_desc", lang),
+        }),
+        ...analyticsScripts(),
+      ],
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -194,7 +208,7 @@ function RootComponent() {
           delete rest["lang"];
           // Turkish is the default, so it is expressed by the absence of the
           // param rather than `?lang=tr`.
-          return next === DEFAULT_LANG ? rest : { ...rest, lang: "en" as const };
+          return next === DEFAULT_LANG ? rest : { ...rest, lang: next };
         },
         replace: true,
       }),

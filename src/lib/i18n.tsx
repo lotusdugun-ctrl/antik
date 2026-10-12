@@ -1,9 +1,69 @@
 import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
+import { de as deStrings } from "@/lib/locales/de";
+import { ru as ruStrings } from "@/lib/locales/ru";
 
-export type Lang = "tr" | "en";
-export type Localized = { tr: string; en: string };
+export type Lang = "tr" | "en" | "de" | "ru";
+/**
+ * Turkish and English are complete; German and Russian are filled in where
+ * they have been translated and fall back to English everywhere else — a
+ * German visitor reading an English paragraph is better served than one
+ * reading nothing.
+ */
+export type Localized = { tr: string; en: string; de?: string; ru?: string };
 
-export const LANGS: Lang[] = ["tr", "en"];
+export const LANGS: Lang[] = ["tr", "en", "de", "ru"];
+
+/**
+ * German and Russian for the content live in translation memories keyed by
+ * the English text, registered by the module that owns the content (so the
+ * site data's translations ship with the site data, not with every page).
+ * Keying by English means a corrected English sentence quietly falls back
+ * to English until it is translated again, rather than showing a translation
+ * of what it used to say.
+ */
+type Memory = Record<string, [string, string]>;
+const memories: Memory[] = [];
+export function registerTranslations(memory: Memory) {
+  if (!memories.includes(memory)) memories.push(memory);
+}
+/**
+ * The content translations are a few hundred kilobytes that a Turkish or
+ * English reader never needs, so they are fetched only when German or
+ * Russian is chosen — and awaited by the root route before it renders, on
+ * the server and in the browser alike, so a German page is German in its
+ * very first HTML.
+ */
+let contentTranslations: Promise<void> | null = null;
+export function loadContentTranslations(): Promise<void> {
+  contentTranslations ??= Promise.all([
+    import("@/lib/locales/tm-sites"),
+    import("@/lib/locales/tm-details"),
+    import("@/lib/locales/tm-recon"),
+    import("@/lib/locales/tm-stories"),
+  ]).then((modules) => modules.forEach((module) => registerTranslations(module.tm)));
+  return contentTranslations;
+}
+
+function remembered(en: string, lang: "de" | "ru"): string | undefined {
+  const slot = lang === "de" ? 0 : 1;
+  for (const memory of memories) {
+    const hit = memory[en];
+    if (hit) return hit[slot];
+  }
+  return undefined;
+}
+
+/** Read one language out of a value, falling back to English. */
+export function pick(value: Localized, lang: Lang): string {
+  if (lang === "tr" || lang === "en") return value[lang];
+  return value[lang] ?? remembered(value.en, lang) ?? value.en;
+}
+
+/** Whether a value is really written in a language, rather than falling back. */
+export function hasLang(value: Localized, lang: Lang): boolean {
+  if (lang === "tr" || lang === "en") return true;
+  return Boolean(value[lang] ?? remembered(value.en, lang));
+}
 
 /**
  * Turkish is the default and carries no search param, so every Turkish URL
@@ -18,7 +78,7 @@ export const LANGS: Lang[] = ["tr", "en"];
 export const DEFAULT_LANG = "tr" satisfies Lang;
 
 export function parseLang(value: unknown): Lang {
-  return value === "en" ? "en" : "tr";
+  return value === "en" || value === "de" || value === "ru" ? value : "tr";
 }
 
 const dict = {
@@ -164,6 +224,11 @@ const dict = {
   game_tf_d: { tr: "Bilgi kartlarını sına.", en: "Test the facts." },
   game_map: { tr: "Haritada bul", en: "Find it on the map" },
   game_map_d: { tr: "Hangi ilde olduğunu bil.", en: "Guess the province." },
+  game_story: { tr: "Hikâyelerin tarihi", en: "History of the stories" },
+  game_story_d: {
+    tr: "Antik bir günde hikâyelerinin arkasındaki gerçek tarih üzerine sorular.",
+    en: "Questions on the real history behind the A day in antiquity stories.",
+  },
   game_structure: { tr: "Yapıyı tanı", en: "Name the structure" },
   game_structure_d: {
     tr: "Yapıyı hangi kentte olduğunu bul.",
@@ -175,6 +240,440 @@ const dict = {
   notif_title: { tr: "Bildirimler", en: "Notifications" },
   notif_empty: { tr: "Yeni bildirim yok.", en: "No new notifications." },
   nav_route: { tr: "Rota", en: "Route" },
+
+  // ——— History: civilizations, people, timeline ———
+  nav_history: {
+    tr: "Medeniyetler",
+    en: "Civilizations",
+    de: "Kulturen",
+    ru: "Цивилизации",
+  },
+  nav_history_d: {
+    tr: "Anadolu'nun halkları ve tarihi kişiler",
+    en: "The peoples of Anatolia and its historical figures",
+    de: "Die Völker Anatoliens und seine historischen Gestalten",
+    ru: "Народы Анатолии и исторические личности",
+  },
+  nav_timeline: {
+    tr: "Zaman Çizelgesi",
+    en: "Timeline",
+    de: "Zeitleiste",
+    ru: "Хронология",
+  },
+  nav_timeline_d: {
+    tr: "Bir yıl seç, o dönemin Anadolu'sunu gör",
+    en: "Pick a year and see Anatolia at that time",
+    de: "Wähle ein Jahr und sieh Anatolien zu jener Zeit",
+    ru: "Выберите год и увидьте Анатолию того времени",
+  },
+  civs_sub: {
+    tr: "On binlerce yıl boyunca Anadolu'da yaşamış halklar ve devletler, en eskiden en yeniye. Her birinin sayfasında o döneme ait yerleri ve kişileri bulabilirsin.",
+    en: "The peoples and states of Anatolia over tens of thousands of years, oldest first. Each page gathers the places and people of that age.",
+    de: "Die Völker und Staaten Anatoliens über Zehntausende von Jahren, die ältesten zuerst. Jede Seite versammelt die Orte und Menschen jener Zeit.",
+    ru: "Народы и государства Анатолии за десятки тысяч лет, от древнейших к поздним. На каждой странице — места и люди той эпохи.",
+  },
+  civs_people: {
+    tr: "Tarihi kişiler",
+    en: "Historical figures",
+    de: "Historische Persönlichkeiten",
+    ru: "Исторические личности",
+  },
+  civs_places: { tr: "yer", en: "places", de: "Orte", ru: "мест" },
+  civ_period: { tr: "Dönem", en: "Period", de: "Zeitraum", ru: "Период" },
+  civ_capital: { tr: "Merkez", en: "Centre", de: "Zentrum", ru: "Центр" },
+  civ_highlights: { tr: "Öne çıkanlar", en: "Highlights", de: "Wissenswertes", ru: "Главное" },
+  civ_sites: {
+    tr: "Bu döneme ait yerler",
+    en: "Places from this age",
+    de: "Orte aus dieser Zeit",
+    ru: "Места этой эпохи",
+  },
+  civ_people: { tr: "İlgili kişiler", en: "People", de: "Personen", ru: "Личности" },
+  civ_back: {
+    tr: "Tüm medeniyetler",
+    en: "All civilizations",
+    de: "Alle Kulturen",
+    ru: "Все цивилизации",
+  },
+  civ_prev: { tr: "Önceki", en: "Earlier", de: "Früher", ru: "Раньше" },
+  civ_next: { tr: "Sonraki", en: "Later", de: "Später", ru: "Позже" },
+  history_sources: { tr: "Kaynaklar", en: "Sources", de: "Quellen", ru: "Источники" },
+  person_sites: {
+    tr: "İlgili yerler",
+    en: "Related places",
+    de: "Zugehörige Orte",
+    ru: "Связанные места",
+  },
+  person_civs: { tr: "Dönemi", en: "Era", de: "Epoche", ru: "Эпоха" },
+  timeline_sub: {
+    tr: "Kaydırıcıyı hareket ettir: seçtiğin yılda Anadolu'da hangi medeniyetler vardı ve bugün hangi yerlerini gezebilirsin?",
+    en: "Move the slider: which civilizations were in Anatolia in the year you pick, and which of their places can you visit today?",
+    de: "Bewege den Regler: Welche Kulturen gab es im gewählten Jahr in Anatolien, und welche ihrer Orte kannst du heute besuchen?",
+    ru: "Двигайте ползунок: какие цивилизации были в Анатолии в выбранном году и какие их места можно посетить сегодня?",
+  },
+  timeline_year: { tr: "Yıl", en: "Year", de: "Jahr", ru: "Год" },
+  timeline_active: {
+    tr: "Bu yılda Anadolu'da",
+    en: "In Anatolia this year",
+    de: "In diesem Jahr in Anatolien",
+    ru: "В Анатолии в этом году",
+  },
+  timeline_none: {
+    tr: "Bu yıl için kayıtlı bir medeniyet yok.",
+    en: "No civilization is recorded for this year.",
+    de: "Für dieses Jahr ist keine Kultur verzeichnet.",
+    ru: "Для этого года цивилизации не отмечены.",
+  },
+  timeline_sites: {
+    tr: "Bu dönemden bugün gezilebilen yerler",
+    en: "Places from this time you can visit today",
+    de: "Orte aus dieser Zeit, die man heute besuchen kann",
+    ru: "Места этого времени, которые можно посетить сегодня",
+  },
+  timeline_note: {
+    tr: "Dönemler yaklaşıktır ve yerler, etiketlendikleri medeniyetin tüm süresi boyunca gösterilir; bir yerin o yıl gerçekten kullanımda olduğu anlamına gelmeyebilir.",
+    en: "Periods are approximate, and a place is shown for the whole span of the civilizations it is tagged with; that does not always mean it was in use that very year.",
+    de: "Die Zeiträume sind ungefähr, und ein Ort wird über die gesamte Dauer der ihm zugeordneten Kulturen gezeigt; das heißt nicht immer, dass er genau in diesem Jahr genutzt wurde.",
+    ru: "Периоды приблизительны, а место показывается на всём отрезке связанных с ним цивилизаций; это не всегда значит, что оно использовалось именно в этом году.",
+  },
+  timeline_more: {
+    tr: "Tümünü göster",
+    en: "Show all",
+    de: "Alle anzeigen",
+    ru: "Показать все",
+  },
+  seo_history_title: {
+    tr: "Anadolu Medeniyetleri ve Tarihi Kişiler | Antik Türkiye",
+    en: "Civilizations of Anatolia and Historical Figures | Ancient Türkiye",
+    de: "Kulturen Anatoliens und historische Persönlichkeiten | Antike Türkei",
+    ru: "Цивилизации Анатолии и исторические личности | Древняя Турция",
+  },
+  seo_timeline_title: {
+    tr: "Anadolu Tarihi Zaman Çizelgesi | Antik Türkiye",
+    en: "Timeline of Anatolian History | Ancient Türkiye",
+    de: "Zeitleiste der Geschichte Anatoliens | Antike Türkei",
+    ru: "Хронология истории Анатолии | Древняя Турция",
+  },
+
+  info_as_of: {
+    tr: "Bilgilerin tarihi:",
+    en: "Information as of",
+    de: "Stand der Angaben:",
+    ru: "Данные на",
+  },
+  info_stale: {
+    tr: "Bu bilgiler bir yıldan eski; saatler ve ücretler değişmiş olabilir.",
+    en: "This information is over a year old; hours and fees may have changed.",
+    de: "Diese Angaben sind über ein Jahr alt; Zeiten und Preise können sich geändert haben.",
+    ru: "Этим данным больше года; часы работы и цены могли измениться.",
+  },
+  report_issue: {
+    tr: "Hatalı bilgi bildir",
+    en: "Report a mistake",
+    de: "Fehler melden",
+    ru: "Сообщить об ошибке",
+  },
+  report_title_prefix: {
+    tr: "Bilgi düzeltme",
+    en: "Correction",
+    de: "Korrektur",
+    ru: "Исправление",
+  },
+  report_body: {
+    tr: "Hangi bilgi yanlış, doğrusu ne ve kaynağı nedir?",
+    en: "What is wrong, what is correct, and what is the source?",
+    de: "Was ist falsch, was ist richtig, und was ist die Quelle?",
+    ru: "Что неверно, как правильно и каков источник?",
+  },
+
+  transfer_title: {
+    tr: "Başka cihaza aktar",
+    en: "Move to another device",
+    de: "Auf ein anderes Gerät übertragen",
+    ru: "Перенести на другое устройство",
+  },
+  transfer_sub: {
+    tr: "Hesap gerekmez: ilerlemen, damgaların ve notların bir bağlantının içine sıkıştırılır. Bağlantıyı diğer cihazında aç ya da QR kodu okut. Veriler hiçbir sunucuya gönderilmez; ziyaret fotoğrafları bağlantıya sığmadığı için aktarılmaz (onlar için yedek dosyasını kullan).",
+    en: "No account needed: your progress, stamps and notes are packed into a link. Open it on the other device or scan the QR code. Nothing is sent to any server; visit photos are too large for a link and stay behind (use the backup file for those).",
+    de: "Kein Konto nötig: Fortschritt, Stempel und Notizen werden in einen Link gepackt. Öffne ihn auf dem anderen Gerät oder scanne den QR-Code. Nichts wird an einen Server gesendet; Besuchsfotos sind zu groß für einen Link und bleiben hier (dafür die Sicherungsdatei verwenden).",
+    ru: "Без аккаунта: прогресс, штампы и заметки упаковываются в ссылку. Откройте её на другом устройстве или отсканируйте QR-код. Ничего не отправляется на сервер; фото визитов слишком велики для ссылки и не переносятся (для них используйте файл резервной копии).",
+  },
+  transfer_create: {
+    tr: "Aktarma bağlantısı oluştur",
+    en: "Create a transfer link",
+    de: "Übertragungslink erstellen",
+    ru: "Создать ссылку для переноса",
+  },
+  transfer_hint: {
+    tr: "Diğer cihazın kamerasıyla QR kodu okut ya da bağlantıyı kendine gönder. Bağlantıyı başkalarıyla paylaşma: içinde ziyaret notların var.",
+    en: "Scan the code with the other device's camera or send the link to yourself. Do not share it with others: it contains your visit notes.",
+    de: "Scanne den Code mit der Kamera des anderen Geräts oder schick dir den Link selbst. Teile ihn nicht mit anderen: Er enthält deine Besuchsnotizen.",
+    ru: "Отсканируйте код камерой другого устройства или отправьте ссылку себе. Не делитесь ею с другими: в ней ваши заметки.",
+  },
+  transfer_copy: {
+    tr: "Bağlantıyı kopyala",
+    en: "Copy link",
+    de: "Link kopieren",
+    ru: "Копировать ссылку",
+  },
+  transfer_share: {
+    tr: "Kendine gönder",
+    en: "Send to yourself",
+    de: "An dich senden",
+    ru: "Отправить себе",
+  },
+  transfer_qr_alt: {
+    tr: "Aktarma bağlantısının QR kodu",
+    en: "QR code of the transfer link",
+    de: "QR-Code des Übertragungslinks",
+    ru: "QR-код ссылки для переноса",
+  },
+  transfer_arrived: {
+    tr: "Başka bir cihazdan ilerleme geldi. Bu cihazdakiyle birleştirilsin mi?",
+    en: "Progress has arrived from another device. Merge it with this one?",
+    de: "Fortschritt von einem anderen Gerät ist angekommen. Mit diesem zusammenführen?",
+    ru: "Получен прогресс с другого устройства. Объединить с этим?",
+  },
+  transfer_merge: { tr: "Birleştir", en: "Merge", de: "Zusammenführen", ru: "Объединить" },
+  transfer_merged: {
+    tr: "İlerleme birleştirildi.",
+    en: "Progress merged.",
+    de: "Fortschritt zusammengeführt.",
+    ru: "Прогресс объединён.",
+  },
+  transfer_invalid: {
+    tr: "Bu aktarma bağlantısı okunamadı.",
+    en: "This transfer link could not be read.",
+    de: "Dieser Übertragungslink konnte nicht gelesen werden.",
+    ru: "Не удалось прочитать ссылку для переноса.",
+  },
+
+  ask_title: { tr: "Rehbere sor", en: "Ask the guide", de: "Frag den Guide", ru: "Спросите гида" },
+  ask_sub: {
+    tr: "Yaz ya da söyle. Cevaplar yalnızca uygulamadaki bilgilerden gelir; bilmediğini söyler, uydurmaz.",
+    en: "Type or say it. Answers come only from what the app holds; it says when it doesn't know rather than guessing.",
+    de: "Schreib oder sprich. Antworten stammen nur aus den Daten der App; was sie nicht weiß, sagt sie, statt zu raten.",
+    ru: "Напишите или скажите. Ответы берутся только из данных приложения: если ответа нет, гид так и скажет.",
+  },
+  ask_placeholder: {
+    tr: "Ör. Tiyatro kaç kişilikti?",
+    en: "e.g. How many people did the theatre hold?",
+    de: "z. B. Wie viele Zuschauer fasste das Theater?",
+    ru: "Напр.: сколько зрителей вмещал театр?",
+  },
+  ask_listen: {
+    tr: "Sesle sor",
+    en: "Ask by voice",
+    de: "Per Stimme fragen",
+    ru: "Спросить голосом",
+  },
+  ask_send: { tr: "Sor", en: "Ask", de: "Fragen", ru: "Спросить" },
+  ask_speak: {
+    tr: "Cevabı dinle",
+    en: "Hear the answer",
+    de: "Antwort anhören",
+    ru: "Прослушать ответ",
+  },
+
+  news_title: {
+    tr: "Kazı haberleri",
+    en: "Excavation news",
+    de: "Grabungsnachrichten",
+    ru: "Новости раскопок",
+  },
+  news_sub: {
+    tr: "Türkiye'deki kazılardan son bir yılın haber başlıkları. Haberler yayıncıların sitelerinde açılır.",
+    en: "Headlines from excavations in Türkiye over the past year. Stories open on the publishers' sites.",
+    de: "Schlagzeilen von Ausgrabungen in der Türkei aus dem letzten Jahr. Die Artikel öffnen sich auf den Seiten der Verlage.",
+    ru: "Заголовки новостей о раскопках в Турции за последний год. Статьи открываются на сайтах изданий.",
+  },
+  news_note: {
+    tr: "Başlıklar Google Haberler'den otomatik gelir; içerikleri yayıncılara aittir.",
+    en: "Headlines come automatically from Google News; the stories belong to their publishers.",
+    de: "Die Schlagzeilen kommen automatisch von Google News; die Artikel gehören ihren Verlagen.",
+    ru: "Заголовки автоматически берутся из Google Новостей; статьи принадлежат издателям.",
+  },
+  news_empty: {
+    tr: "Şu an haber alınamadı. Daha sonra tekrar dene.",
+    en: "No news could be loaded right now. Try again later.",
+    de: "Gerade konnten keine Nachrichten geladen werden. Versuche es später erneut.",
+    ru: "Сейчас не удалось загрузить новости. Попробуйте позже.",
+  },
+  nav_news_d: {
+    tr: "Kazılardan son başlıklar",
+    en: "Latest headlines from the digs",
+    de: "Neueste Schlagzeilen von den Grabungen",
+    ru: "Свежие заголовки с раскопок",
+  },
+
+  teacher_title: {
+    tr: "Öğretmen modu",
+    en: "Teacher mode",
+    de: "Lehrermodus",
+    ru: "Режим учителя",
+  },
+  teacher_sub: {
+    tr: "Seçtiğin yerler için yazdırılabilir bir çalışma kâğıdı hazırla: kısa okuma metinleri, gezi sırası, çoktan seçmeli sorular ve ayrı sayfada cevap anahtarı. Sorular yalnızca verideki kesin bilgilerden üretilir.",
+    en: "Make a printable worksheet for the places you choose: short readings, a trip order, multiple-choice questions and an answer key on its own page. Questions are built only from facts the data states plainly.",
+    de: "Erstelle ein druckbares Arbeitsblatt für die gewählten Orte: kurze Lesetexte, eine Reiseroute, Multiple-Choice-Fragen und ein Lösungsblatt auf eigener Seite. Die Fragen beruhen nur auf eindeutigen Angaben der Daten.",
+    ru: "Создайте печатный рабочий лист для выбранных мест: короткие тексты для чтения, порядок поездки, тест с вариантами ответов и ключ на отдельной странице. Вопросы строятся только на однозначных данных.",
+  },
+  teacher_set: {
+    tr: "Hazır set",
+    en: "Ready-made set",
+    de: "Fertige Auswahl",
+    ru: "Готовый набор",
+  },
+  teacher_set_pick: {
+    tr: "Bölge, koleksiyon ya da medeniyet seç…",
+    en: "Pick a region, collection or civilization…",
+    de: "Region, Sammlung oder Kultur wählen…",
+    ru: "Выберите регион, подборку или цивилизацию…",
+  },
+  teacher_add: { tr: "Yer ekle", en: "Add a place", de: "Ort hinzufügen", ru: "Добавить место" },
+  teacher_sheet_title: {
+    tr: "Kâğıt başlığı",
+    en: "Sheet title",
+    de: "Titel des Blatts",
+    ru: "Заголовок листа",
+  },
+  teacher_default_title: {
+    tr: "Antik Anadolu Çalışma Kâğıdı",
+    en: "Ancient Anatolia Worksheet",
+    de: "Arbeitsblatt Antikes Anatolien",
+    ru: "Рабочий лист: Древняя Анатолия",
+  },
+  teacher_per_site: {
+    tr: "Yer başına soru",
+    en: "Questions per place",
+    de: "Fragen pro Ort",
+    ru: "Вопросов на место",
+  },
+  teacher_reading: { tr: "Okuma metni", en: "Reading", de: "Lesetext", ru: "Текст для чтения" },
+  teacher_trip: {
+    tr: "Gezi sırası",
+    en: "Trip order",
+    de: "Reihenfolge der Reise",
+    ru: "Порядок поездки",
+  },
+  teacher_key: { tr: "Cevap anahtarı", en: "Answer key", de: "Lösungen", ru: "Ключ ответов" },
+  teacher_print: { tr: "Yazdır / PDF", en: "Print / PDF", de: "Drucken / PDF", ru: "Печать / PDF" },
+  teacher_new_questions: {
+    tr: "Soruları karıştır",
+    en: "Shuffle questions",
+    de: "Fragen mischen",
+    ru: "Перемешать вопросы",
+  },
+  teacher_preview: { tr: "Önizleme", en: "Preview", de: "Vorschau", ru: "Предпросмотр" },
+  teacher_name: { tr: "Ad Soyad", en: "Name", de: "Name", ru: "Имя" },
+  teacher_class: { tr: "Sınıf", en: "Class", de: "Klasse", ru: "Класс" },
+  teacher_date: { tr: "Tarih", en: "Date", de: "Datum", ru: "Дата" },
+  teacher_questions: { tr: "Sorular", en: "Questions", de: "Fragen", ru: "Вопросы" },
+  teacher_open: {
+    tr: "Gezide en çok neyi merak ettin? Neden?",
+    en: "What did you most want to know on the trip? Why?",
+    de: "Was wolltest du auf der Reise am meisten wissen? Warum?",
+    ru: "Что вам больше всего хотелось узнать в поездке? Почему?",
+  },
+  teacher_trip_total: { tr: "Toplam", en: "Total", de: "Gesamt", ru: "Всего" },
+  teacher_trip_note: {
+    tr: "kuş uçuşu mesafe; yol daha uzundur",
+    en: "straight-line distance; the road is longer",
+    de: "Luftlinie; die Straße ist länger",
+    ru: "по прямой; по дороге дальше",
+  },
+  teacher_footer: {
+    tr: "Bilgiler eğitim amaçlıdır; ziyaret saatleri ve ücretler için muze.gov.tr'ye bakın.",
+    en: "For teaching use; check muze.gov.tr for opening hours and fees.",
+    de: "Für den Unterricht; Öffnungszeiten und Preise auf muze.gov.tr.",
+    ru: "Для учебных целей; часы работы и цены — на muze.gov.tr.",
+  },
+  nav_teacher_d: {
+    tr: "Yazdırılabilir çalışma kâğıdı ve gezi planı",
+    en: "Printable worksheet and trip plan",
+    de: "Druckbares Arbeitsblatt und Reiseplan",
+    ru: "Печатный лист и план поездки",
+  },
+
+  // ——— Menu groups ———
+  nav_group_explore: { tr: "Keşfet", en: "Explore", de: "Entdecken", ru: "Обзор" },
+  nav_group_experience: { tr: "Deneyim", en: "Experience", de: "Erleben", ru: "Впечатления" },
+  nav_group_tools: { tr: "Araçlar", en: "Tools", de: "Werkzeuge", ru: "Инструменты" },
+  nav_menu: { tr: "Menü", en: "Menu", de: "Menü", ru: "Меню" },
+  nav_all_places: {
+    tr: "Tüm yerlerde ara",
+    en: "Search all places",
+    de: "Alle Orte durchsuchen",
+    ru: "Поиск по всем местам",
+  },
+  nav_ancient_d: {
+    tr: "Ören yerleri ve antik şehirler",
+    en: "Ruins and ancient cities",
+    de: "Ruinenstätten und antike Städte",
+    ru: "Руины и античные города",
+  },
+  nav_places_d: {
+    tr: "Camiler, kaleler, kiliseler, hanlar",
+    en: "Mosques, castles, churches, caravanserais",
+    de: "Moscheen, Burgen, Kirchen, Karawansereien",
+    ru: "Мечети, крепости, церкви, караван-сараи",
+  },
+  nav_museums_d: {
+    tr: "Buluntuların sergilendiği müzeler",
+    en: "Where the finds are on show",
+    de: "Wo die Funde ausgestellt sind",
+    ru: "Где выставлены находки",
+  },
+  nav_all_places_d: {
+    tr: "Ada, ile ya da döneme göre filtrele",
+    en: "Filter by name, province or period",
+    de: "Nach Name, Provinz oder Epoche filtern",
+    ru: "Фильтр по названию, провинции или эпохе",
+  },
+  nav_regions_d: {
+    tr: "Yedi coğrafi bölge",
+    en: "The seven geographical regions",
+    de: "Die sieben geografischen Regionen",
+    ru: "Семь географических регионов",
+  },
+  nav_collections_d: {
+    tr: "Temalı seçkiler",
+    en: "Themed selections",
+    de: "Thematische Auswahl",
+    ru: "Тематические подборки",
+  },
+  nav_reconstructions_d: {
+    tr: "Yapıların ilk hâli, 3D ve AR",
+    en: "Buildings as they stood, in 3D and AR",
+    de: "Bauten, wie sie einst standen, in 3D und AR",
+    ru: "Здания такими, какими были, в 3D и AR",
+  },
+  nav_stories_d: {
+    tr: "Antik çağda bir gün, seçimli hikâyeler",
+    en: "A day in antiquity, choose your path",
+    de: "Ein Tag in der Antike, mit Entscheidungen",
+    ru: "Один день в древности, с выбором пути",
+  },
+  nav_games_d: {
+    tr: "Bilgi yarışmaları ve XP",
+    en: "Quizzes and XP",
+    de: "Quiz und XP",
+    ru: "Викторины и XP",
+  },
+  nav_route_d: {
+    tr: "Gezi planı ve yol boyu rehber",
+    en: "Trip plan and audio for the road",
+    de: "Reiseplan und Audioguide für unterwegs",
+    ru: "План поездки и аудиогид в дорогу",
+  },
+  nav_map_d: {
+    tr: "Tüm yerler tek haritada",
+    en: "Every place on one map",
+    de: "Alle Orte auf einer Karte",
+    ru: "Все места на одной карте",
+  },
+  nav_language: { tr: "Dil", en: "Language", de: "Sprache", ru: "Язык" },
+  nav_close: { tr: "Kapat", en: "Close", de: "Schließen", ru: "Закрыть" },
   route_title: { tr: "Rota Oluşturucu", en: "Route Builder" },
   route_sub: {
     tr: "Bir başlangıç kenti seç ve gün sayısını belirle; sana en yakın kentlerden akıllı bir güzergâh önerelim.",
@@ -241,6 +740,12 @@ const dict = {
   photo_placeholder: {
     tr: "Bu görsel temsilidir — buranın fotoğrafı henüz yok, bölgeyi anlatan bir manzara gösteriliyor.",
     en: "This image is a stand-in — there is no photograph of this place yet, so a view of the region is shown instead.",
+  },
+  photo_contribute: {
+    tr: "Oradaysan Wikimedia Commons'a özgür lisanslı bir fotoğraf ekleyebilirsin.",
+    en: "Been there? Add a freely licensed photo to Wikimedia Commons.",
+    de: "Warst du dort? Lade ein frei lizenziertes Foto auf Wikimedia Commons hoch.",
+    ru: "Были там? Добавьте фото со свободной лицензией на Викисклад.",
   },
   structure_general_view: {
     tr: "Bu fotoğraf kentin genel görünümüdür; yapının kendisine ait bir görsel henüz yok.",
@@ -356,6 +861,154 @@ const dict = {
   offline_needs_favorites: {
     tr: "Önce birkaç kenti favorilerine ekle.",
     en: "Add a few cities to your favourites first.",
+  },
+  offline_download_pack: {
+    tr: "Bölge paketini indir",
+    en: "Download the region pack",
+    de: "Regionspaket herunterladen",
+    ru: "Скачать пакет региона",
+  },
+  offline_download_route: {
+    tr: "Rotayı indir",
+    en: "Download the route",
+    de: "Route herunterladen",
+    ru: "Скачать маршрут",
+  },
+  offline_update: {
+    tr: "Paketi güncelle",
+    en: "Update the pack",
+    de: "Paket aktualisieren",
+    ru: "Обновить пакет",
+  },
+  offline_saved_on: {
+    tr: "İndirildi:",
+    en: "Downloaded:",
+    de: "Heruntergeladen:",
+    ru: "Скачано:",
+  },
+  offline_region_title: {
+    tr: "Bölge paketi",
+    en: "Region pack",
+    de: "Regionspaket",
+    ru: "Пакет региона",
+  },
+  offline_region_sub: {
+    tr: "Bu bölgedeki {n} yerin sayfalarını, fotoğraflarını, kayıtlı sesli rehberini ve 3D taramalarını bir kerede indir; yolda şebeke olmasa da çalışır.",
+    en: "Download the pages, photographs, recorded audio guide and 3D scans of the {n} places in this region in one go; they keep working with no signal on the road.",
+    de: "Lade Seiten, Fotos, aufgenommenen Audioguide und 3D-Scans der {n} Orte dieser Region auf einmal herunter; unterwegs funktionieren sie auch ohne Netz.",
+    ru: "Скачайте сразу страницы, фотографии, записанный аудиогид и 3D-сканы {n} мест этого региона — они будут работать в дороге и без связи.",
+  },
+  offline_route_sub: {
+    tr: "Rotadaki kentleri sesli rehberleriyle birlikte indir; yolda şebeke olmasa da dinleyebilirsin.",
+    en: "Download the cities on this route with their audio guides, so they play on the road with no signal.",
+    de: "Lade die Städte dieser Route samt Audioguides herunter, damit sie unterwegs auch ohne Netz laufen.",
+    ru: "Скачайте города маршрута вместе с аудиогидами, чтобы слушать их в дороге без связи.",
+  },
+
+  // ——— Passport ———
+  passport_title: {
+    tr: "Dijital pasaport",
+    en: "Digital passport",
+    de: "Digitaler Reisepass",
+    ru: "Цифровой паспорт",
+  },
+  passport_sub: {
+    tr: "Ören yerine gittiğinde konumunla damga al. Damgalar yalnızca bu cihazda saklanır.",
+    en: "Collect a stamp with your location when you are at the site. Stamps are kept on this device only.",
+    de: "Hol dir vor Ort mit deinem Standort einen Stempel. Stempel werden nur auf diesem Gerät gespeichert.",
+    ru: "Получите штамп по геолокации, когда будете на месте. Штампы хранятся только на этом устройстве.",
+  },
+  passport_stamp: {
+    tr: "Pasaport damgası al",
+    en: "Get a passport stamp",
+    de: "Passstempel holen",
+    ru: "Получить штамп",
+  },
+  passport_checking: {
+    tr: "Konum kontrol ediliyor…",
+    en: "Checking your location…",
+    de: "Standort wird geprüft…",
+    ru: "Проверяем местоположение…",
+  },
+  passport_stamped: {
+    tr: "Damgalandı",
+    en: "Stamped",
+    de: "Gestempelt",
+    ru: "Штамп получен",
+  },
+  passport_stamp_ok: {
+    tr: "Damga pasaportuna eklendi.",
+    en: "Stamp added to your passport.",
+    de: "Stempel in deinen Pass eingetragen.",
+    ru: "Штамп добавлен в паспорт.",
+  },
+  passport_too_far: {
+    tr: "Damga için ören yerinde olman gerekiyor. Şu an yaklaşık {km} km uzaktasın.",
+    en: "You need to be at the site for a stamp. You are about {km} km away.",
+    de: "Für einen Stempel musst du vor Ort sein. Du bist etwa {km} km entfernt.",
+    ru: "Для штампа нужно быть на месте. Сейчас вы примерно в {km} км.",
+  },
+  passport_no_location: {
+    tr: "Konum alınamadı. Konum iznini açıp tekrar dene.",
+    en: "Could not get your location. Allow location access and try again.",
+    de: "Standort nicht verfügbar. Erlaube den Standortzugriff und versuche es erneut.",
+    ru: "Не удалось определить местоположение. Разрешите доступ и попробуйте снова.",
+  },
+  passport_empty: {
+    tr: "Henüz damga yok. Bir ören yerine gittiğinde kent sayfasından damga al.",
+    en: "No stamps yet. When you are at a site, collect one from its page.",
+    de: "Noch keine Stempel. Hol dir vor Ort einen auf der Seite des Ortes.",
+    ru: "Штампов пока нет. Получите штамп на странице места, когда будете там.",
+  },
+  passport_stamps: {
+    tr: "damga",
+    en: "stamps",
+    de: "Stempel",
+    ru: "штампов",
+  },
+  passport_share: {
+    tr: "Kartımı paylaş",
+    en: "Share my card",
+    de: "Meine Karte teilen",
+    ru: "Поделиться карточкой",
+  },
+  passport_card_visited: {
+    tr: "ziyaret edilen yer",
+    en: "places visited",
+    de: "besuchte Orte",
+    ru: "посещённых мест",
+  },
+  passport_card_badges: {
+    tr: "rozet",
+    en: "badges",
+    de: "Abzeichen",
+    ru: "значков",
+  },
+
+  // ——— Route audio ———
+  route_audio_title: {
+    tr: "Yol boyu sesli rehber",
+    en: "Audio guide for the road",
+    de: "Audioguide für unterwegs",
+    ru: "Аудиогид в дорогу",
+  },
+  route_audio_sub: {
+    tr: "Rotadaki her durağın rehberi sırayla çalar; duraklar arasında sıradaki yeri ve mesafeyi söyler.",
+    en: "Each stop's guide plays in order, with the next place and the distance announced between stops.",
+    de: "Die Führungen der Stationen laufen nacheinander; dazwischen werden der nächste Ort und die Entfernung angesagt.",
+    ru: "Гиды всех остановок звучат по порядку, а между ними объявляются следующее место и расстояние.",
+  },
+  route_audio_short: {
+    tr: "Öne çıkanlar",
+    en: "Highlights",
+    de: "Höhepunkte",
+    ru: "Главное",
+  },
+  route_audio_full: {
+    tr: "Tam rehber",
+    en: "Full guide",
+    de: "Vollständig",
+    ru: "Полностью",
   },
 
   // ——— Page titles and descriptions ———
@@ -579,6 +1232,18 @@ const dict = {
     en: "Couldn't get your location. Check the browser permissions.",
   },
 
+  // ————— Real scans —————
+  scans_title: { tr: "Gerçek eserin 3B taraması", en: "3D scans of the real pieces" },
+  scans_intro: {
+    tr: "Modelde kullanılan heykel ve kabartmalar, gerçek eserlerin fotogrametri taramalarıdır. Burada her birini tek başına çevirip inceleyebilirsiniz.",
+    en: "The sculpture set into the model comes from photogrammetry scans of the real pieces. Here each can be turned on its own.",
+  },
+  scans_by: { tr: "Tarama:", en: "Scan:" },
+  scans_reduced: {
+    tr: " · web için küçültüldü ve kırpıldı",
+    en: " · reduced and cropped for the web",
+  },
+
   // ————— Ambient sound —————
   ambience_on: { tr: "Ortam sesi", en: "Ambient sound" },
   ambience_off: { tr: "Sesi kapat", en: "Mute ambience" },
@@ -649,19 +1314,28 @@ const dict = {
     en: "A Day in Antiquity — Interactive History Stories | Ancient Türkiye",
   },
   seo_stories_desc: {
-    tr: "Efes, Aspendos, Göbeklitepe, Pergamon ve Aphrodisias'ta geçen, seçimlerinizle ilerleyen ve her sahnesinin tarihsel arka planı verilen kısa hikâyeler.",
-    en: "Short branching stories set in Ephesus, Aspendos, Göbeklitepe, Pergamon and Aphrodisias, each scene with its historical background.",
+    tr: "Efes, Aspendos, Göbeklitepe, Pergamon, Troya, Hattuşa, Aphrodisias ve Göreme'de geçen, seçimlerinizle ilerleyen ve her sahnesinin tarihsel arka planı verilen kısa hikâyeler.",
+    en: "Short branching stories set in Ephesus, Aspendos, Göbeklitepe, Pergamon, Troy, Hattusa, Aphrodisias and Göreme, each scene with its historical background.",
   },
 } satisfies Record<string, Localized>;
 
 export type TKey = keyof typeof dict;
 
 /**
+ * The German and Russian interface. Kept out of `dict` so that adding a key
+ * stays a two-language edit: a key missing here simply shows in English.
+ */
+const translations: Partial<Record<Lang, Partial<Record<TKey, string>>>> = {
+  de: deStrings,
+  ru: ruStrings,
+};
+
+/**
  * Translation outside React, for `head()` and anything else that runs before
  * (or without) a component tree.
  */
 export function translate(key: TKey, lang: Lang): string {
-  return dict[key][lang];
+  return translations[lang]?.[key] ?? pick(dict[key] as Localized, lang);
 }
 
 type Ctx = {
@@ -687,8 +1361,8 @@ export function LanguageProvider({
   setLang: (l: Lang) => void;
   children: ReactNode;
 }) {
-  const t = useCallback((key: TKey) => dict[key][lang], [lang]);
-  const L = useCallback((value: Localized) => value[lang], [lang]);
+  const t = useCallback((key: TKey) => translate(key, lang), [lang]);
+  const L = useCallback((value: Localized) => pick(value, lang), [lang]);
   const value = useMemo(() => ({ lang, setLang, t, L }), [lang, setLang, t, L]);
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;

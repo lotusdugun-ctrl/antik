@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   ArrowLeft,
   Award,
@@ -34,19 +34,38 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick, type Lang, type Localized } from "@/lib/i18n";
 import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
 import { creditLine } from "@/lib/photo-credits";
 import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
+import { recordingFor } from "@/lib/audio-manifest";
+import { AskGuide } from "@/components/AskGuide";
+import { NewsList } from "@/components/NewsList";
+import { StampButton } from "@/components/Passport";
+import { civilizationFor } from "@/lib/history-index";
+import { personFor } from "@/lib/history-index";
 import { guideForSite } from "@/lib/guide-sources";
 import { galleryImages, getSiteDetail } from "@/lib/site-details";
 import { factsFor } from "@/lib/site-facts";
 import { structurePhotoFor } from "@/lib/structure-photos";
 import { reconstructionForStructure } from "@/lib/reconstructions";
 import { storiesFor } from "@/lib/stories";
-import { structureInfo } from "@/lib/structures";
+import { structureInfoAt } from "@/lib/structure-names";
 import { coverImage, getSite, hasOwnPhoto, heritageTypeName, regions } from "@/lib/sites";
+
+/** What the audio guide offers this page, for its structured data. */
+function guideMeta(slug: string, lang: Lang) {
+  const guide = guideForSite(slug);
+  if (!guide) return undefined;
+  const intro = guide.chapters[0]!;
+  const spoken = guide.langs.includes(lang) ? lang : "en";
+  return {
+    languages: guide.langs,
+    chapters: guide.chapters.length,
+    recording: recordingFor(guide.key, spoken, intro.id, pick(intro.text, spoken)),
+  };
+}
 
 export const Route = createFileRoute("/kent/$slug")({
   loader: ({ params }) => {
@@ -70,7 +89,7 @@ export const Route = createFileRoute("/kent/$slug")({
         noIndex: true,
       });
     }
-    const name = loaderData.name[lang];
+    const name = pick(loaderData.name, lang);
     const image = imageAt(loaderData.image, 1280);
     const site = getSite(loaderData.slug);
     const region = site && regions.find((r) => r.id === site.region);
@@ -83,7 +102,7 @@ export const Route = createFileRoute("/kent/$slug")({
       title: typeName
         ? `${name} — ${typeName} | ${translate("seo_place_suffix", lang)}`
         : `${name} | ${translate("seo_place_suffix", lang)}`,
-      description: loaderData.summary[lang],
+      description: pick(loaderData.summary, lang),
       // Social cards want a large image, not the 330px card thumbnail.
       image,
       imageAlt: name,
@@ -96,9 +115,10 @@ export const Route = createFileRoute("/kent/$slug")({
         ? [
             ...siteTags(site, {
               lang,
-              description: loaderData.summary[lang],
+              description: pick(loaderData.summary, lang),
               image,
-              regionName: region.name[lang],
+              regionName: pick(region.name, lang),
+              guide: guideMeta(site.slug, lang),
             }),
             ...breadcrumbTags(
               [
@@ -116,21 +136,74 @@ export const Route = createFileRoute("/kent/$slug")({
   component: SiteDetail,
 });
 
-function Fact({ icon: Icon, label, value }: { icon: typeof Clock; label: string; value: string }) {
+function Fact({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Clock;
+  label: string;
+  value: ReactNode;
+}) {
   return (
     <div className="rounded-xl surface-panel p-4">
       <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
         <Icon className="h-3.5 w-3.5" /> {label}
       </p>
-      <p className="mt-1 text-sm font-medium">{value}</p>
+      <div className="mt-1 text-sm font-medium">{value}</div>
     </div>
+  );
+}
+
+/**
+ * A list of names where the ones with a page of their own are links. The
+ * data stores the Turkish name; a linked entry shows the name in the reader's
+ * language, an unlinked one stays as written.
+ */
+function LinkedNames({
+  values,
+  find,
+  to,
+}: {
+  values: string[];
+  find: (value: string) => { id: string; name: Localized } | undefined;
+  to: "/medeniyet/$id" | "/kisi/$id";
+}) {
+  const { L } = useI18n();
+  const seen = new Set<string>();
+  const items = values.flatMap((value) => {
+    const entry = find(value);
+    const key = entry?.id ?? value;
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{ value, entry }];
+  });
+  return (
+    <span className="flex flex-wrap gap-x-1 gap-y-1">
+      {items.map(({ value, entry }, i) => (
+        <span key={entry?.id ?? value}>
+          {entry ? (
+            <Link
+              to={to}
+              params={{ id: entry.id }}
+              className="text-primary underline-offset-2 hover:underline"
+            >
+              {L(entry.name)}
+            </Link>
+          ) : (
+            value
+          )}
+          {i < items.length - 1 && ","}
+        </span>
+      ))}
+    </span>
   );
 }
 
 function SiteDetail() {
   const { slug } = Route.useParams();
   const { t, L } = useI18n();
-  const { isVisited, isFavorite, toggleVisited, toggleFavorite, pushRecent } = useProgress();
+  const { ready, isVisited, isFavorite, toggleVisited, toggleFavorite, pushRecent } = useProgress();
   const site = getSite(slug)!;
   const detail = getSiteDetail(slug);
   const [activeImage, setActiveImage] = useState(0);
@@ -155,13 +228,15 @@ function SiteDetail() {
     ...(detail?.structures ?? []).map((s) => structurePhotoFor(slug, s.tr)),
   ].filter((url): url is string => typeof url === "string");
 
+  // Waits for the stored progress, so "recently viewed" is added to it rather
+  // than written over it.
   useEffect(() => {
-    pushRecent(slug);
+    if (ready) pushRecent(slug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  }, [slug, ready]);
 
   const visited = isVisited(slug);
-  const selectedStructure = openStructure ? structureInfo[openStructure] : undefined;
+  const selectedStructure = openStructure ? structureInfoAt(openStructure) : undefined;
   const structurePhoto = openStructure ? structurePhotoFor(slug, openStructure) : undefined;
   const structureCredit = structurePhoto ? creditLine(structurePhoto) : undefined;
 
@@ -238,7 +313,20 @@ function SiteDetail() {
         {!ownPhoto && (
           <p className="mb-6 flex items-start gap-2 rounded-xl surface-panel p-3 text-xs leading-relaxed text-muted-foreground">
             <ImageOff className="mt-0.5 h-4 w-4 shrink-0" />
-            {t("photo_placeholder")}
+            <span>
+              {t("photo_placeholder")}{" "}
+              {/* Commons holds no free photograph of these few places yet;
+                  the way to fix that is for someone who has been there to add
+                  one, under a licence the app can show. */}
+              <a
+                href="https://commons.wikimedia.org/wiki/Special:UploadWizard"
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-primary hover:underline"
+              >
+                {t("photo_contribute")}
+              </a>
+            </span>
           </p>
         )}
 
@@ -262,6 +350,7 @@ function SiteDetail() {
             />
             {isFavorite(slug) ? t("favorited") : t("favorite")}
           </button>
+          <StampButton site={site} />
           <Link
             to="/rota"
             search={{ start: slug }}
@@ -290,6 +379,10 @@ function SiteDetail() {
             <AudioGuide guide={guide} arrival={{ lat: site.lat, lng: site.lng }} />
           </div>
         )}
+
+        <div className="mt-4">
+          <AskGuide site={site} />
+        </div>
 
         {/* Gallery */}
         <section className="mt-8">
@@ -423,10 +516,20 @@ function SiteDetail() {
             </section>
           </div>
 
-          <aside className="space-y-3">
+          <div className="space-y-3">
             <VisitingInfo site={site} />
             <Fact icon={CalendarClock} label={t("era")} value={L(site.era)} />
-            <Fact icon={Users} label={t("civilizations")} value={site.civilizations.join(", ")} />
+            <Fact
+              icon={Users}
+              label={t("civilizations")}
+              value={
+                <LinkedNames
+                  values={site.civilizations}
+                  find={civilizationFor}
+                  to="/medeniyet/$id"
+                />
+              }
+            />
             <Fact
               icon={Award}
               label={t("unesco")}
@@ -439,9 +542,17 @@ function SiteDetail() {
               }
             />
             {site.figures.length > 0 && (
-              <Fact icon={Users} label={t("figures")} value={site.figures.join(", ")} />
+              <Fact
+                icon={Users}
+                label={t("figures")}
+                value={<LinkedNames values={site.figures} find={personFor} to="/kisi/$id" />}
+              />
             )}
-          </aside>
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <NewsList site={site.slug} />
         </div>
 
         <PhotoCredits urls={shownPhotos} className="mt-10 border-t border-border pt-6" />
