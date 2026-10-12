@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HeritageIndex, parseIndexSearch, type IndexSearch } from "@/components/HeritageIndex";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 import { historicPlaces } from "@/lib/sites";
 
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/tarihi-yerler")({
       scripts: [
         ...itemListTags(
           historicPlaces.map((site) => ({
-            name: site.name[lang],
+            name: pick(site.name, lang),
             pathname: `/kent/${site.slug}`,
           })),
           { lang, name: translate("nav_places", lang) },

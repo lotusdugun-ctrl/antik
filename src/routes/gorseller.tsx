@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { Camera, ExternalLink } from "lucide-react";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { creditsFor, photoCredits } from "@/lib/photo-credits";
 import { seoTags } from "@/lib/seo";
 import { siteGallery } from "@/lib/site-details";
@@ -35,10 +35,10 @@ function CreditsPage() {
   const perSite = useMemo(
     () =>
       [...sites]
-        .sort((a, b) => a.name[lang].localeCompare(b.name[lang], lang))
+        .sort((a, b) => pick(a.name, lang).localeCompare(pick(b.name, lang), lang))
         .map((site) => ({
           slug: site.slug,
-          name: site.name[lang],
+          name: pick(site.name, lang),
           credits: creditsFor([coverImage(site), ...(siteGallery[site.slug] ?? [])]),
         }))
         .filter((entry) => entry.credits.length > 0),

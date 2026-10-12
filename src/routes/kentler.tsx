@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { HeritageIndex, parseIndexSearch, type IndexSearch } from "@/components/HeritageIndex";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 import { sites } from "@/lib/sites";
 
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/kentler")({
       // URL even though the visible grid is filterable.
       scripts: [
         ...itemListTags(
-          sites.map((site) => ({ name: site.name[lang], pathname: `/kent/${site.slug}` })),
+          sites.map((site) => ({ name: pick(site.name, lang), pathname: `/kent/${site.slug}` })),
           { lang, name: translate("seo_explore_title", lang) },
         ),
         ...breadcrumbTags(

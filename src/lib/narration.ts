@@ -1,3 +1,4 @@
+import { hasLang, pick } from "@/lib/i18n";
 import type { Lang, Localized } from "@/lib/i18n";
 import type { Reconstruction } from "@/lib/reconstructions";
 import { heritageTypeName, type Site } from "@/lib/sites";
@@ -30,6 +31,13 @@ export type Guide = {
   key: string;
   title: Localized;
   chapters: Chapter[];
+  /**
+   * The languages this guide can really be read in. Turkish and English
+   * always; German and Russian only where every sentence it is built from has
+   * been translated — a German voice reading half the guide in English is
+   * worse than an English one reading all of it.
+   */
+  langs: Lang[];
 };
 
 const l = (tr: string, en: string): Localized => ({ tr, en });
@@ -48,9 +56,22 @@ function join(...parts: (string | undefined)[]): string {
     .join(" ");
 }
 
-function both(fn: (lang: Lang) => string): Localized {
-  return { tr: fn("tr"), en: fn("en") };
+type Extra = ("de" | "ru")[];
+
+function both(fn: (lang: Lang) => string, extra: Extra = []): Localized {
+  const value: Localized = { tr: fn("tr"), en: fn("en") };
+  for (const lang of extra) value[lang] = fn(lang);
+  return value;
 }
+
+/** Which of German and Russian every one of these texts is translated into. */
+function coverage(texts: (Localized | undefined)[]): Extra {
+  return (["de", "ru"] as const).filter((lang) =>
+    texts.every((text) => !text || hasLang(text, lang)),
+  );
+}
+
+const t4 = (tr: string, en: string, de: string, ru: string): Localized => ({ tr, en, de, ru });
 
 /** Lowercase the first letter, for a type name dropped mid-sentence. */
 function lower(text: string, lang: Lang): string {
@@ -60,7 +81,7 @@ function lower(text: string, lang: Lang): string {
 
 function list(items: string[], lang: Lang): string {
   if (items.length <= 1) return items.join("");
-  const and = lang === "tr" ? " ve " : " and ";
+  const and = { tr: " ve ", en: " and ", de: " und ", ru: " и " }[lang];
   return `${items.slice(0, -1).join(", ")}${and}${items.at(-1)}`;
 }
 
@@ -106,27 +127,48 @@ export function siteGuide(
 ): Guide {
   const chapters: Chapter[] = [];
   const type = heritageTypeName(site.heritageType);
+  const allFacts = distinct([...(detail ? [detail.funFact] : []), ...facts]);
+  const extra = coverage([
+    site.name,
+    site.province,
+    site.era,
+    site.summary,
+    detail?.history,
+    ...(detail?.structures ?? []),
+    ...(detail?.structures ?? []).map((structure) => blurbFor(structure)),
+    ...allFacts,
+  ]);
 
   const article = (name: string) => (/^[aeiou]/i.test(name) ? "an" : "a");
   chapters.push({
     id: "intro",
-    title: l("Hoş geldiniz", "Welcome"),
-    text: both((lang) =>
-      join(
-        lang === "tr"
-          ? `${site.name.tr} sesli rehberine hoş geldiniz. Burası ${site.province.tr} ilinde bir ${lower(type.tr, "tr")}`
-          : `Welcome to the audio guide to ${site.name.en}, ${article(type.en)} ${lower(type.en, "en")} in ${site.province.en} province`,
-        lang === "tr" ? `Dönemi: ${site.era.tr}` : `Its period: ${site.era.en}`,
-        site.summary[lang],
-      ),
+    title: t4("Hoş geldiniz", "Welcome", "Willkommen", "Добро пожаловать"),
+    text: both(
+      (lang) =>
+        join(
+          {
+            tr: `${site.name.tr} sesli rehberine hoş geldiniz. Burası ${site.province.tr} ilinde bir ${lower(type.tr, "tr")}`,
+            en: `Welcome to the audio guide to ${site.name.en}, ${article(type.en)} ${lower(type.en, "en")} in ${site.province.en} province`,
+            de: `Willkommen beim Audioguide für ${pick(site.name, "de")} in der Provinz ${pick(site.province, "de")}`,
+            ru: `Добро пожаловать в аудиогид: ${pick(site.name, "ru")}, провинция ${pick(site.province, "ru")}`,
+          }[lang],
+          {
+            tr: `Dönemi: ${site.era.tr}`,
+            en: `Its period: ${site.era.en}`,
+            de: `Epoche: ${pick(site.era, "de")}`,
+            ru: `Период: ${pick(site.era, "ru")}`,
+          }[lang],
+          pick(site.summary, lang),
+        ),
+      extra,
     ),
   });
 
   if (detail) {
     chapters.push({
       id: "history",
-      title: l("Tarihçe", "History"),
-      text: both((lang) => detail.history[lang]),
+      title: t4("Tarihçe", "History", "Geschichte", "История"),
+      text: both((lang) => pick(detail.history, lang), extra),
     });
 
     // A structure with something to say gets a chapter of its own; the rest
@@ -142,49 +184,82 @@ export function siteGuide(
       chapters.push({
         id: `structure-${index + 1}`,
         title: structure,
-        text: both((lang) => join(structure[lang], blurb[lang])),
+        text: both((lang) => join(pick(structure, lang), pick(blurb, lang)), extra),
       });
     });
     if (unspoken.length > 0) {
       chapters.push({
         id: "highlights",
-        title: l("Görülecekler", "What to see"),
-        text: both((lang) =>
-          join(
-            lang === "tr"
-              ? `${unspoken.length > 1 ? "Gezerken şunları kaçırmayın" : "Gezerken şunu kaçırmayın"}: ${list(
+        title: t4("Görülecekler", "What to see", "Sehenswert", "Что посмотреть"),
+        text: both(
+          (lang) =>
+            join(
+              {
+                tr: `${unspoken.length > 1 ? "Gezerken şunları kaçırmayın" : "Gezerken şunu kaçırmayın"}: ${list(
                   unspoken.map((u) => u.tr),
                   "tr",
-                )}`
-              : `As you walk round, don't miss ${list(
+                )}`,
+                en: `As you walk round, don't miss ${list(
                   unspoken.map((u) => `the ${u.en}`),
                   "en",
                 )}`,
-          ),
+                de: `Verpassen Sie beim Rundgang nicht: ${list(
+                  unspoken.map((u) => pick(u, "de")),
+                  "de",
+                )}`,
+                ru: `Во время прогулки не пропустите: ${list(
+                  unspoken.map((u) => pick(u, "ru")),
+                  "ru",
+                )}`,
+              }[lang],
+            ),
+          extra,
         ),
       });
     }
   }
 
-  const allFacts = distinct([...(detail ? [detail.funFact] : []), ...facts]);
   if (allFacts.length > 0) {
     chapters.push({
       id: "facts",
-      title: l("Biliyor muydunuz?", "Did you know?"),
-      text: both((lang) =>
-        join(
-          lang === "tr" ? "Biliyor muydunuz?" : "Did you know?",
-          ...allFacts.map((f) => f[lang]),
-        ),
+      title: t4("Biliyor muydunuz?", "Did you know?", "Wussten Sie schon?", "А вы знали?"),
+      text: both(
+        (lang) =>
+          join(
+            {
+              tr: "Biliyor muydunuz?",
+              en: "Did you know?",
+              de: "Wussten Sie schon?",
+              ru: "А вы знали?",
+            }[lang],
+            ...allFacts.map((f) => pick(f, lang)),
+          ),
+        extra,
       ),
     });
   }
 
   chapters.push({
     id: "outro",
-    title: l("Kapanış", "Farewell"),
+    title: t4("Kapanış", "Farewell", "Abschied", "Завершение"),
     text: both((lang) => {
       const museum = site.heritageType === "museum";
+      if (lang === "de") {
+        return join(
+          `Damit endet unser Rundgang durch ${pick(site.name, "de")}`,
+          museum
+            ? "Bitte berühren Sie die Exponate nicht und fotografieren Sie ohne Blitz. Viel Freude beim Besuch"
+            : "Bitte berühren Sie die Steine nicht, bleiben Sie auf den markierten Wegen und nehmen Sie Wasser mit. Viel Freude beim Besuch",
+        );
+      }
+      if (lang === "ru") {
+        return join(
+          "На этом наша экскурсия заканчивается",
+          museum
+            ? "Пожалуйста, не трогайте экспонаты и фотографируйте без вспышки. Приятного посещения"
+            : "Пожалуйста, не трогайте камни, держитесь отмеченных троп и берите с собой воду. Приятной прогулки",
+        );
+      }
       return lang === "tr"
         ? join(
             `${site.name.tr} turumuz burada sona eriyor`,
@@ -198,10 +273,10 @@ export function siteGuide(
               ? "Please leave the objects untouched and take photographs without flash. Enjoy your visit"
               : "Please leave the stones untouched, keep to the marked paths and carry water. Enjoy your visit",
           );
-    }),
+    }, extra),
   });
 
-  return { key: `site:${site.slug}`, title: site.name, chapters };
+  return { key: `site:${site.slug}`, title: site.name, chapters, langs: ["tr", "en", ...extra] };
 }
 
 /**
@@ -210,32 +285,47 @@ export function siteGuide(
  * aloud like everything else, what the model does not know.
  */
 export function reconstructionGuide(item: Reconstruction): Guide {
+  const extra = coverage([
+    item.title,
+    item.period,
+    item.blurb,
+    item.uncertainty,
+    ...item.hotspots.flatMap((spot) => [spot.label, spot.note]),
+  ]);
   const chapters: Chapter[] = [
     {
       id: "intro",
       title: item.title,
-      text: both((lang) => join(item.title[lang], item.period[lang], item.blurb[lang])),
+      text: both(
+        (lang) => join(pick(item.title, lang), pick(item.period, lang), pick(item.blurb, lang)),
+        extra,
+      ),
     },
     ...item.hotspots.map((spot, index): Chapter => ({
       id: `spot-${index + 1}`,
       title: spot.label,
-      text: both((lang) => join(spot.label[lang], spot.note[lang])),
+      text: both((lang) => join(pick(spot.label, lang), pick(spot.note, lang)), extra),
       hotspot: index,
     })),
     {
       id: "uncertainty",
-      title: l("Bilinmeyenler", "What we don't know"),
-      text: both((lang) =>
-        join(
-          lang === "tr"
-            ? "Son olarak, bu modelin bilmediği şeyler"
-            : "Finally, what this model does not know",
-          item.uncertainty[lang],
-        ),
+      title: t4("Bilinmeyenler", "What we don't know", "Was wir nicht wissen", "Чего мы не знаем"),
+      text: both(
+        (lang) =>
+          join(
+            {
+              tr: "Son olarak, bu modelin bilmediği şeyler",
+              en: "Finally, what this model does not know",
+              de: "Zum Schluss: was dieses Modell nicht weiß",
+              ru: "И напоследок — чего эта модель не знает",
+            }[lang],
+            pick(item.uncertainty, lang),
+          ),
+        extra,
       ),
     },
   ];
-  return { key: `recon:${item.id}`, title: item.title, chapters };
+  return { key: `recon:${item.id}`, title: item.title, chapters, langs: ["tr", "en", ...extra] };
 }
 
 /**

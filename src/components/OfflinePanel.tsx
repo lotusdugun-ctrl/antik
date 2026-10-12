@@ -60,7 +60,7 @@ export function OfflinePanel() {
       return;
     }
 
-    const suffix = lang === "tr" ? "" : "?lang=en";
+    const suffix = lang === "tr" ? "" : `?lang=${lang}`;
     const urls = favorites.flatMap((site) => [
       `${window.location.origin}/kent/${site.slug}${suffix}`,
       // The widths the page will actually request, not the stored ceiling:

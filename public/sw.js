@@ -79,7 +79,9 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(req.url);
 
   // Third-party imagery (city photos + map tiles): cache-first, update in background.
+  // The audio guide's recordings outside the app, served from GitHub Pages.
   if (
+    url.hostname === "lotusdugun-ctrl.github.io" ||
     url.hostname === "upload.wikimedia.org" ||
     url.hostname.endsWith(".tile.openstreetmap.org") ||
     url.hostname === "tile.openstreetmap.org"

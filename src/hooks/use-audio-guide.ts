@@ -1,3 +1,4 @@
+import { pick } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { recordingFor } from "@/lib/audio-manifest";
 import type { Lang } from "@/lib/i18n";
@@ -15,7 +16,7 @@ export type VoiceInfo = {
   name?: string | undefined;
 };
 
-const BCP47: Record<Lang, string> = { tr: "tr-TR", en: "en-GB" };
+const BCP47: Record<Lang, string> = { tr: "tr-TR", en: "en-GB", de: "de-DE", ru: "ru-RU" };
 
 /**
  * The best voice the device has for a language. On-device voices first — the
@@ -117,7 +118,7 @@ export function useAudioGuide(
         playFrom(index + 1);
       };
 
-      const recorded = recordingFor(guide.key, lang, current.id, current.text[lang]);
+      const recorded = recordingFor(guide.key, lang, current.id, pick(current.text, lang));
       if (recorded) {
         const audio = new Audio(recorded);
         audio.playbackRate = state.current.rate;
@@ -138,7 +139,7 @@ export function useAudioGuide(
           setStatus("idle");
           return;
         }
-        const chunks = speakableChunks(current.text[lang]);
+        const chunks = speakableChunks(pick(current.text, lang));
         const say = (i: number) => {
           if (state.current.token !== token) return;
           if (i >= chunks.length) {
@@ -221,7 +222,9 @@ export function useAudioGuide(
     return silence;
   }, [guide.key, lang, stop, silence]);
 
-  const recorded = guide.chapters.some((c) => recordingFor(guide.key, lang, c.id, c.text[lang]));
+  const recorded = guide.chapters.some((c) =>
+    recordingFor(guide.key, lang, c.id, pick(c.text, lang)),
+  );
 
   return {
     status,

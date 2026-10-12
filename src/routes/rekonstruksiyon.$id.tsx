@@ -3,7 +3,7 @@ import { ArrowLeft, Box, ExternalLink, MapPin, Ruler, TriangleAlert } from "luci
 import { PhotoCredits } from "@/components/PhotoCredits";
 import { ScanGallery } from "@/components/ScanGallery";
 import { Reconstruction3D } from "@/components/Reconstruction3D";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick, type Lang } from "@/lib/i18n";
 import { partsFor } from "@/lib/reconstruction-parts";
 import {
   getReconstruction,
@@ -33,13 +33,13 @@ export const Route = createFileRoute("/rekonstruksiyon/$id")({
         noIndex: true,
       });
     }
-    const title = loaderData.title[lang];
+    const title = pick(loaderData.title, lang);
     return {
       ...seoTags({
         lang,
         pathname: `/rekonstruksiyon/${loaderData.id}`,
         title: `${title} — ${translate("recon_title", lang)} | ${translate("appName", lang)}`,
-        description: loaderData.blurb[lang],
+        description: pick(loaderData.blurb, lang),
       }),
       scripts: breadcrumbTags(
         [
@@ -62,13 +62,17 @@ export const Route = createFileRoute("/rekonstruksiyon/$id")({
  * "14,23", and React threw the whole page away and re-rendered it on the
  * mismatch.
  */
-function measureValue(measure: Measure, lang: "tr" | "en") {
+function measureValue(measure: Measure, lang: Lang) {
   const [whole, fraction] = Math.abs(measure.value)
     .toFixed(2)
     .replace(/\.?0+$/, "")
     .split(".");
-  const grouped = (whole ?? "0").replace(/\B(?=(\d{3})+(?!\d))/g, lang === "tr" ? "." : ",");
-  const number = fraction ? `${grouped}${lang === "tr" ? "," : "."}${fraction}` : grouped;
+  const comma = lang !== "en";
+  const grouped = (whole ?? "0").replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    comma ? (lang === "ru" ? "\u00a0" : ".") : ",",
+  );
+  const number = fraction ? `${grouped}${comma ? "," : "."}${fraction}` : grouped;
   return measure.unit === "m" ? `${number} m` : number;
 }
 

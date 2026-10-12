@@ -5,6 +5,8 @@ import imgIcAnadolu from "@/assets/region-ic-anadolu.jpg";
 import imgGuneydogu from "@/assets/region-guneydogu.jpg";
 import imgKaradeniz from "@/assets/region-karadeniz.jpg";
 import type { Localized } from "@/lib/i18n";
+import { registerTranslations } from "@/lib/i18n";
+import { tm as translations } from "@/lib/locales/tm-sites";
 
 /**
  * Heritage data layer — the half of a site that a card, a map pin or a search
@@ -2352,9 +2354,9 @@ export const sites: Site[] = [
     "4th millennium BC (Liman Tepe); 8th century BC (city)",
     "none",
     30,
-    "Urla'daki İon kenti; filozof Anaksimandros'un doğum yeri ve erken dönem endüstriyel zeytinyağı üretiminin merkezi.",
-    "An Ionian city at Urla; birthplace of the philosopher Anaximander and a centre of early industrial olive oil production.",
-    ["Anaksimandros", "Anaksagoras", "Hermotimos"],
+    "Urla'daki İon kenti; filozof Anaksagoras'ın doğum yeri ve erken dönem endüstriyel zeytinyağı üretiminin merkezi.",
+    "An Ionian city at Urla; birthplace of the philosopher Anaxagoras and a centre of early industrial olive oil production.",
+    ["Anaksagoras", "Hermotimos"],
     3,
   ),
   s(
@@ -6152,3 +6154,5 @@ export function distanceKm(aLat: number, aLng: number, bLat: number, bLng: numbe
     Math.cos((aLat * Math.PI) / 180) * Math.cos((bLat * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
   return Math.round(2 * R * Math.asin(Math.sqrt(h)));
 }
+
+registerTranslations(translations);

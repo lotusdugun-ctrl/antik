@@ -1,3 +1,4 @@
+import { pick } from "@/lib/i18n";
 import { describe, expect, test } from "bun:test";
 import { recordedAudio } from "@/lib/audio-manifest";
 import { guideForSite, structureBlurbFor } from "@/lib/guide-sources";
@@ -16,11 +17,11 @@ describe("site audio guides", () => {
         expect(ids.has(chapter.id)).toBe(false);
         ids.add(chapter.id);
         for (const lang of ["tr", "en"] as const) {
-          const text = chapter.text[lang];
+          const text = pick(chapter.text, lang);
           expect(text.length).toBeGreaterThan(10);
           expect(text).not.toContain("undefined");
           expect(text).not.toContain("..");
-          expect(chapter.title[lang].length).toBeGreaterThan(0);
+          expect(pick(chapter.title, lang).length).toBeGreaterThan(0);
         }
       }
     }

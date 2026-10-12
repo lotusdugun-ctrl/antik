@@ -5,13 +5,19 @@ Record the audio guide with Microsoft's neural voices (the ones Edge's
     pip install edge-tts
     python scripts/generate_audio_edge.py
 
-Reads scripts/audio-script.json (written by export-audio-script.ts), writes
-public/audio/<guide>/<lang>/<chapter>.mp3 and src/lib/audio-manifest.json.
+Reads scripts/audio-script.json (written by export-audio-script.ts). Chapters
+marked "app" go to public/audio/ inside this project; chapters marked
+"remote" go to a sibling checkout of the audio repository
+(../antik-audio/audio/), which GitHub Pages serves. Both are listed in
+src/lib/audio-manifest.json.
 Only chapters that are missing, or whose text changed since they were
 recorded, are synthesised again, so re-running is cheap.
 
 Options:  --voice-tr tr-TR-AhmetNeural   --voice-en en-GB-RyanNeural
-          --rate -6%   --force   --only site:efes
+          --voice-de de-DE-ConradNeural --voice-ru ru-RU-DmitryNeural
+          --rate -6%   --force   --only site:efes   --lang de
+          --remote-dir ../antik-audio   --base-url https://<user>.github.io/antik-audio
+          --app-only (skip remote chapters)
 """
 import argparse
 import asyncio
@@ -28,6 +34,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "scripts" / "audio-script.json"
 MANIFEST = ROOT / "src" / "lib" / "audio-manifest.json"
 AUDIO = ROOT / "public" / "audio"
+BASE_URL = "https://lotusdugun-ctrl.github.io/antik-audio"
 
 
 def text_hash(text: str) -> str:
@@ -51,6 +58,12 @@ async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--voice-tr", default="tr-TR-EmelNeural")
     parser.add_argument("--voice-en", default="en-GB-SoniaNeural")
+    parser.add_argument("--voice-de", default="de-DE-KatjaNeural")
+    parser.add_argument("--voice-ru", default="ru-RU-SvetlanaNeural")
+    parser.add_argument("--remote-dir", default=str(ROOT.parent / "antik-audio"))
+    parser.add_argument("--base-url", default=BASE_URL)
+    parser.add_argument("--lang", help="only this language")
+    parser.add_argument("--app-only", action="store_true")
     parser.add_argument("--rate", default="-6%", help="a little slower reads more like a guide")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--only", help="a single guide key, e.g. site:efes")
@@ -58,17 +71,35 @@ async def main() -> None:
 
     script = json.loads(SCRIPT.read_text(encoding="utf-8"))
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
-    voices = {"tr": args.voice_tr, "en": args.voice_en}
+    voices = {"tr": args.voice_tr, "en": args.voice_en, "de": args.voice_de, "ru": args.voice_ru}
+    remote_audio = pathlib.Path(args.remote_dir) / "audio"
+    base_url = args.base_url.rstrip("/")
 
-    items = [i for i in script["items"] if not args.only or i["key"] == args.only]
+    items = [
+        i
+        for i in script["items"]
+        if (not args.only or i["key"] == args.only)
+        and (not args.lang or i["lang"] == args.lang)
+        and (not args.app_only or i.get("target", "app") == "app")
+    ]
     print(f"{len(items)} chapters to check. Voices: {voices['tr']} / {voices['en']}", flush=True)
     done = skipped = failed = 0
     for n, item in enumerate(items, 1):
         if text_hash(item["text"]) != item["hash"]:
             sys.exit("Hash mismatch between the exporter and this script; refusing to continue.")
-        target = AUDIO / item["folder"] / item["lang"] / f"{item['chapter']}.mp3"
+        remote = item.get("target", "app") == "remote"
+        relative = f"audio/{item['folder']}/{item['lang']}/{item['chapter']}.mp3"
+        target = (remote_audio.parent if remote else AUDIO.parent) / relative
+        url = f"{base_url}/{relative}" if remote else f"/{relative}"
         entry = manifest.get(item["key"], {}).get(item["lang"], {}).get(item["chapter"])
-        if not args.force and target.exists() and entry and entry["hash"] == item["hash"]:
+        if (
+            not args.force
+            and target.exists()
+            and target.stat().st_size > 0
+            and entry
+            and entry["hash"] == item["hash"]
+            and entry["url"] == url
+        ):
             skipped += 1
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -85,11 +116,13 @@ async def main() -> None:
             except Exception as error:  # network hiccups: try again, then move on
                 print(f"{label}  attempt {attempt + 1} failed: {type(error).__name__}: {error}", flush=True)
                 await asyncio.sleep(2 * (attempt + 1))
-        if not ok:
+        if not ok or target.stat().st_size == 0:
+            # An empty file is a failed download; never list it.
+            target.unlink(missing_ok=True)
             failed += 1
             continue
         manifest.setdefault(item["key"], {}).setdefault(item["lang"], {})[item["chapter"]] = {
-            "url": f"/audio/{item['folder']}/{item['lang']}/{item['chapter']}.mp3",
+            "url": url,
             "hash": item["hash"],
         }
         done += 1

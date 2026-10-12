@@ -95,8 +95,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
    * default and stays absent, which keeps every existing Turkish address
    * unchanged; only English adds `?lang=en`.
    */
-  validateSearch: (search: Record<string, unknown>): { lang?: "en" | undefined } =>
-    search["lang"] === "en" ? { lang: "en" } : {},
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { lang?: Exclude<Lang, typeof DEFAULT_LANG> | undefined } => {
+    const lang = parseLang(search["lang"]);
+    return lang === DEFAULT_LANG ? {} : { lang };
+  },
   // Without this, following any <Link> would silently drop the language.
   search: { middlewares: [retainSearchParams(["lang"])] },
   head: ({ match }) => {
@@ -194,7 +198,7 @@ function RootComponent() {
           delete rest["lang"];
           // Turkish is the default, so it is expressed by the absence of the
           // param rather than `?lang=tr`.
-          return next === DEFAULT_LANG ? rest : { ...rest, lang: "en" as const };
+          return next === DEFAULT_LANG ? rest : { ...rest, lang: next };
         },
         replace: true,
       }),

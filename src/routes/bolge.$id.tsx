@@ -3,7 +3,7 @@ import { useState } from "react";
 import { LayoutGrid, MapIcon } from "lucide-react";
 import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
 import { seoTags } from "@/lib/seo";
 import { regions, regionCoverImage, sitesByRegion, type RegionId } from "@/lib/sites";
@@ -28,10 +28,10 @@ export const Route = createFileRoute("/bolge/$id")({
     return seoTags({
       lang,
       pathname: match.pathname,
-      title: `${loaderData.name[lang]} ${translate("seo_region_suffix", lang)} | ${translate("appName", lang)}`,
-      description: loaderData.blurb[lang],
+      title: `${pick(loaderData.name, lang)} ${translate("seo_region_suffix", lang)} | ${translate("appName", lang)}`,
+      description: pick(loaderData.blurb, lang),
       image: regionCoverImage(loaderData.id),
-      imageAlt: loaderData.name[lang],
+      imageAlt: pick(loaderData.name, lang),
     });
   },
   component: RegionDetail,

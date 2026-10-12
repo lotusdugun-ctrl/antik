@@ -1,4 +1,6 @@
 import type { Localized } from "@/lib/i18n";
+import { registerTranslations } from "@/lib/i18n";
+import { tm as translations } from "@/lib/locales/tm-stories";
 
 /**
  * "A day in antiquity": short branching stories, one per site.
@@ -532,3 +534,5 @@ export function endingsOf(story: Story): string[] {
     .filter(([, scene]) => scene.ending)
     .map(([id]) => id);
 }
+
+registerTranslations(translations);

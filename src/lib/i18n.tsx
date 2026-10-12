@@ -1,9 +1,51 @@
 import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
+import { de as deStrings } from "@/lib/locales/de";
+import { ru as ruStrings } from "@/lib/locales/ru";
 
-export type Lang = "tr" | "en";
-export type Localized = { tr: string; en: string };
+export type Lang = "tr" | "en" | "de" | "ru";
+/**
+ * Turkish and English are complete; German and Russian are filled in where
+ * they have been translated and fall back to English everywhere else — a
+ * German visitor reading an English paragraph is better served than one
+ * reading nothing.
+ */
+export type Localized = { tr: string; en: string; de?: string; ru?: string };
 
-export const LANGS: Lang[] = ["tr", "en"];
+export const LANGS: Lang[] = ["tr", "en", "de", "ru"];
+
+/**
+ * German and Russian for the content live in translation memories keyed by
+ * the English text, registered by the module that owns the content (so the
+ * site data's translations ship with the site data, not with every page).
+ * Keying by English means a corrected English sentence quietly falls back
+ * to English until it is translated again, rather than showing a translation
+ * of what it used to say.
+ */
+type Memory = Record<string, [string, string]>;
+const memories: Memory[] = [];
+export function registerTranslations(memory: Memory) {
+  if (!memories.includes(memory)) memories.push(memory);
+}
+function remembered(en: string, lang: "de" | "ru"): string | undefined {
+  const slot = lang === "de" ? 0 : 1;
+  for (const memory of memories) {
+    const hit = memory[en];
+    if (hit) return hit[slot];
+  }
+  return undefined;
+}
+
+/** Read one language out of a value, falling back to English. */
+export function pick(value: Localized, lang: Lang): string {
+  if (lang === "tr" || lang === "en") return value[lang];
+  return value[lang] ?? remembered(value.en, lang) ?? value.en;
+}
+
+/** Whether a value is really written in a language, rather than falling back. */
+export function hasLang(value: Localized, lang: Lang): boolean {
+  if (lang === "tr" || lang === "en") return true;
+  return Boolean(value[lang] ?? remembered(value.en, lang));
+}
 
 /**
  * Turkish is the default and carries no search param, so every Turkish URL
@@ -18,7 +60,7 @@ export const LANGS: Lang[] = ["tr", "en"];
 export const DEFAULT_LANG = "tr" satisfies Lang;
 
 export function parseLang(value: unknown): Lang {
-  return value === "en" ? "en" : "tr";
+  return value === "en" || value === "de" || value === "ru" ? value : "tr";
 }
 
 const dict = {
@@ -669,11 +711,20 @@ const dict = {
 export type TKey = keyof typeof dict;
 
 /**
+ * The German and Russian interface. Kept out of `dict` so that adding a key
+ * stays a two-language edit: a key missing here simply shows in English.
+ */
+const translations: Partial<Record<Lang, Partial<Record<TKey, string>>>> = {
+  de: deStrings,
+  ru: ruStrings,
+};
+
+/**
  * Translation outside React, for `head()` and anything else that runs before
  * (or without) a component tree.
  */
 export function translate(key: TKey, lang: Lang): string {
-  return dict[key][lang];
+  return translations[lang]?.[key] ?? pick(dict[key] as Localized, lang);
 }
 
 type Ctx = {
@@ -699,8 +750,8 @@ export function LanguageProvider({
   setLang: (l: Lang) => void;
   children: ReactNode;
 }) {
-  const t = useCallback((key: TKey) => dict[key][lang], [lang]);
-  const L = useCallback((value: Localized) => value[lang], [lang]);
+  const t = useCallback((key: TKey) => translate(key, lang), [lang]);
+  const L = useCallback((value: Localized) => pick(value, lang), [lang]);
   const value = useMemo(() => ({ lang, setLang, t, L }), [lang, setLang, t, L]);
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;

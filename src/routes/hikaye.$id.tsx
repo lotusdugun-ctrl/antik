@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
 import { useStoryEndings } from "@/hooks/use-story-endings";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { hasLang, LANGS, parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import type { Guide } from "@/lib/narration";
 import { seoTags } from "@/lib/seo";
 import { getSite } from "@/lib/sites";
@@ -39,8 +39,8 @@ export const Route = createFileRoute("/hikaye/$id")({
     return seoTags({
       lang,
       pathname: `/hikaye/${loaderData.id}`,
-      title: `${loaderData.title[lang]} — ${translate("stories_title", lang)} | ${translate("appName", lang)}`,
-      description: loaderData.blurb[lang],
+      title: `${pick(loaderData.title, lang)} — ${translate("stories_title", lang)} | ${translate("appName", lang)}`,
+      description: pick(loaderData.blurb, lang),
     });
   },
   component: StoryPage,
@@ -55,10 +55,11 @@ function useSceneVoice(story: Story, sceneId: string) {
       key: `story:${story.id}:${sceneId}`,
       title: story.title,
       chapters: [{ id: sceneId, title: story.title, text: scene.text }],
+      langs: LANGS.filter((l) => hasLang(scene.text, l)),
     }),
     [story, sceneId, scene.text],
   );
-  return useAudioGuide(guide, lang);
+  return useAudioGuide(guide, guide.langs.includes(lang) ? lang : "en");
 }
 
 function StoryPage() {

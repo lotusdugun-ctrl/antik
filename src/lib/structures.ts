@@ -1,4 +1,6 @@
 import type { Localized } from "@/lib/i18n";
+import { registerTranslations } from "@/lib/i18n";
+import { tm as translations } from "@/lib/locales/tm-details";
 
 /**
  * Curated info for common structures found across the sites.
@@ -2309,3 +2311,5 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
 export function structureImage(name: string, fallback: string) {
   return structureInfo[name]?.image ?? fallback;
 }
+
+registerTranslations(translations);

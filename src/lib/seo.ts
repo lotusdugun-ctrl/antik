@@ -31,6 +31,8 @@ export function urlFor(pathname: string, lang: Lang, origin = siteOrigin()): str
 }
 
 type MetaTag = Record<string, string>;
+
+const OG_LOCALE: Record<Lang, string> = { tr: "tr_TR", en: "en_US", de: "de_DE", ru: "ru_RU" };
 type LinkTag = Record<string, string>;
 
 /**
@@ -56,7 +58,7 @@ export function seoTags(options: {
     { property: "og:title", content: title },
     { property: "og:description", content: description },
     { property: "og:type", content: "website" },
-    { property: "og:locale", content: lang === "tr" ? "tr_TR" : "en_US" },
+    { property: "og:locale", content: OG_LOCALE[lang] },
     { name: "twitter:card", content: image ? "summary_large_image" : "summary" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
@@ -212,7 +214,7 @@ export function websiteTags(options: {
       name: options.name,
       description: options.description,
       url: urlFor("/", options.lang, origin),
-      inLanguage: options.lang === "tr" ? "tr-TR" : "en-US",
+      inLanguage: OG_LOCALE[options.lang].replace("_", "-"),
       potentialAction: {
         "@type": "SearchAction",
         target: {

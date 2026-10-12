@@ -13,7 +13,7 @@ import {
   Sun,
   User,
 } from "lucide-react";
-import { useI18n, type TKey } from "@/lib/i18n";
+import { LANGS, useI18n, type TKey } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
@@ -35,7 +35,7 @@ function LangSwitch() {
   const { lang, setLang } = useI18n();
   return (
     <div className="flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-semibold">
-      {(["tr", "en"] as const).map((code) => (
+      {LANGS.map((code) => (
         <button
           key={code}
           onClick={() => setLang(code)}

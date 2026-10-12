@@ -34,7 +34,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
 import { creditLine } from "@/lib/photo-credits";
@@ -70,7 +70,7 @@ export const Route = createFileRoute("/kent/$slug")({
         noIndex: true,
       });
     }
-    const name = loaderData.name[lang];
+    const name = pick(loaderData.name, lang);
     const image = imageAt(loaderData.image, 1280);
     const site = getSite(loaderData.slug);
     const region = site && regions.find((r) => r.id === site.region);
@@ -83,7 +83,7 @@ export const Route = createFileRoute("/kent/$slug")({
       title: typeName
         ? `${name} — ${typeName} | ${translate("seo_place_suffix", lang)}`
         : `${name} | ${translate("seo_place_suffix", lang)}`,
-      description: loaderData.summary[lang],
+      description: pick(loaderData.summary, lang),
       // Social cards want a large image, not the 330px card thumbnail.
       image,
       imageAlt: name,
@@ -96,9 +96,9 @@ export const Route = createFileRoute("/kent/$slug")({
         ? [
             ...siteTags(site, {
               lang,
-              description: loaderData.summary[lang],
+              description: pick(loaderData.summary, lang),
               image,
-              regionName: region.name[lang],
+              regionName: pick(region.name, lang),
             }),
             ...breadcrumbTags(
               [

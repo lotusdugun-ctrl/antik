@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, pick, type Lang } from "@/lib/i18n";
 import { estimateSeconds, type Guide } from "@/lib/narration";
 import { distanceKm } from "@/lib/sites";
 
@@ -23,9 +23,9 @@ const RATES = [0.85, 1, 1.15, 1.3];
 /** How close counts as "arrived" for the hands-free start. */
 export const ARRIVAL_KM = 1;
 
-function formatKm(km: number, lang: "tr" | "en") {
+function formatKm(km: number, lang: Lang) {
   const text = km < 10 ? km.toFixed(1) : String(Math.round(km));
-  return lang === "tr" ? text.replace(".", ",") : text;
+  return lang === "en" ? text : text.replace(".", ",");
 }
 
 function clock(seconds: number) {
@@ -54,7 +54,10 @@ export function AudioGuide({
   compact?: boolean;
 }) {
   const { t, L, lang } = useI18n();
-  const player = useAudioGuide(guide, lang, { onChapter });
+  // A guide not yet translated into this language is read in English, by an
+  // English voice, rather than in a mixture.
+  const voiceLang = guide.langs.includes(lang) ? lang : "en";
+  const player = useAudioGuide(guide, voiceLang, { onChapter });
   const [mounted, setMounted] = useState(false);
   const [showText, setShowText] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -121,7 +124,10 @@ export function AudioGuide({
 
   if (!mounted) return null;
 
-  const total = guide.chapters.reduce((sum, c) => sum + estimateSeconds(c.text[lang]), 0);
+  const total = guide.chapters.reduce(
+    (sum, c) => sum + estimateSeconds(pick(c.text, voiceLang)),
+    0,
+  );
   const playing = player.status === "playing";
   const current = guide.chapters[player.chapter]!;
   // With no voice list at all (some engines never publish one) the engine
@@ -270,7 +276,7 @@ export function AudioGuide({
                   {L(c.title)}
                 </span>
                 <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                  {clock(estimateSeconds(c.text[lang]))}
+                  {clock(estimateSeconds(pick(c.text, voiceLang)))}
                 </span>
               </button>
             </li>
@@ -316,7 +322,7 @@ export function AudioGuide({
               }
             >
               <strong className="font-semibold text-foreground">{L(c.title)}.</strong>{" "}
-              {c.text[lang]}
+              {pick(c.text, voiceLang)}
             </p>
           ))}
         </div>

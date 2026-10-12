@@ -6,6 +6,8 @@ import imgGuneydogu from "@/assets/region-guneydogu.jpg";
 import imgKaradeniz from "@/assets/region-karadeniz.jpg";
 import { coverImage, type Site } from "@/lib/sites";
 import type { Localized } from "@/lib/i18n";
+import { registerTranslations } from "@/lib/i18n";
+import { tm as translations } from "@/lib/locales/tm-details";
 
 /**
  * Everything a city page shows and a city card does not: the history, the list
@@ -4095,3 +4097,5 @@ export function galleryImages(site: Site) {
   if (owned && owned.length > 0) return owned;
   return [coverImage(site)];
 }
+
+registerTranslations(translations);

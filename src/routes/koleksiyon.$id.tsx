@@ -3,7 +3,7 @@ import { ArrowLeft, MapPin } from "lucide-react";
 import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
 import { collectionSites, getCollection } from "@/lib/collections";
-import { parseLang, translate, useI18n } from "@/lib/i18n";
+import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 
@@ -30,8 +30,8 @@ export const Route = createFileRoute("/koleksiyon/$id")({
         noIndex: true,
       });
     }
-    const title = loaderData.title[lang];
-    const description = loaderData.blurb[lang];
+    const title = pick(loaderData.title, lang);
+    const description = pick(loaderData.blurb, lang);
     return {
       ...seoTags({
         lang,
@@ -42,7 +42,7 @@ export const Route = createFileRoute("/koleksiyon/$id")({
       scripts: [
         ...itemListTags(
           loaderData.items.map((item) => ({
-            name: item.name[lang],
+            name: pick(item.name, lang),
             pathname: `/kent/${item.slug}`,
           })),
           { lang, name: title, description },
