@@ -2,6 +2,7 @@ import type { TKey } from "@/lib/i18n";
 
 /** The interface in Russian. A key missing here shows in English. */
 export const ru: Partial<Record<TKey, string>> = {
+  appName: "Древняя Турция",
   tagline: "Открывайте, изучайте и отмечайте древние города Турции.",
   nav_home: "Главная",
   nav_explore: "Все",
@@ -25,7 +26,7 @@ export const ru: Partial<Record<TKey, string>> = {
   favorite: "Добавить в избранное",
   favorited: "В избранном",
   detail_page: "Подробнее",
-  directions: "Маршрут",
+  directions: "Как добраться",
   unesco: "ЮНЕСКО",
   unesco_listed: "Всемирное наследие ЮНЕСКО",
   unesco_tentative: "Предварительный список ЮНЕСКО",
