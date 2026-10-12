@@ -1,6 +1,4 @@
 import type { Localized } from "@/lib/i18n";
-import { registerTranslations } from "@/lib/i18n";
-import { tm as translations } from "@/lib/locales/tm-recon";
 
 /**
  * Measured reconstructions — the structures the app can show in three
@@ -2084,5 +2082,3 @@ export function reconstructionForStructure(
 export function sourceFor(item: Reconstruction, key: string): Source | undefined {
   return item.sources.find((source) => source.key === key);
 }
-
-registerTranslations(translations);

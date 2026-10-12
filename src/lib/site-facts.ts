@@ -1,6 +1,4 @@
 import type { Localized } from "@/lib/i18n";
-import { registerTranslations } from "@/lib/i18n";
-import { tm as translations } from "@/lib/locales/tm-details";
 
 /**
  * The striking facts — the line a visitor repeats to whoever they came with.
@@ -3317,5 +3315,3 @@ export const siteFacts: Record<string, Localized[]> = {
 export function factsFor(slug: string): Localized[] {
   return siteFacts[slug] ?? [];
 }
-
-registerTranslations(translations);

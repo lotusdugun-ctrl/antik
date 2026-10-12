@@ -492,8 +492,8 @@
    "folder": "site-efes",
    "lang": "de",
    "chapter": "structure-1",
-   "text": "Celsus-Bibliothek. Die Marmorfront in Ephesos ist nicht das Gesicht einer Bibliothek, sondern das eines Grabmals: Der Sarkophag des Celsus liegt noch immer in der Kammer unter der Apsis. Das Modell zeigt die 1970–78 wiedererrichtete Fassade in voller Höhe und den Saal dahinter nur so hoch, wie seine Mauern erhalten sind.",
-   "hash": "387c39ad",
+   "text": "Celsus-Bibliothek. Die Marmorfront in Ephesos ist nicht die Fassade einer Bibliothek, sondern die eines Grabmals: Der Sarkophag des Celsus liegt noch immer in der Kammer unter der Apsis. Das Modell zeigt die 1970–78 wieder aufgerichtete Fassade in voller Höhe und die Halle dahinter nur so hoch, wie ihre Mauern erhalten sind.",
+   "hash": "d6fd7106",
    "target": "remote"
   },
   {
@@ -501,8 +501,8 @@
    "folder": "site-efes",
    "lang": "de",
    "chapter": "structure-2",
-   "text": "Großes Theater. Eines der größten Theater der Antike: eine dreirangige Cavea, in den Hang des Berges Pion geschnitten, die die Hafenstraße hinab auf ein römisches Bühnengebäude blickt. Hier spielt der Aufstand der Silberschmiede aus der Apostelgeschichte.",
-   "hash": "5c838398",
+   "text": "Großes Theater. Eines der größten Theater der Antike: eine dreirangige Cavea, in den Hang des Berges Pion gehauen, die die Hafenstraße hinab auf ein römisches Bühnengebäude blickt. Hier spielt der Aufstand der Silberschmiede aus der Apostelgeschichte.",
+   "hash": "35718695",
    "target": "remote"
   },
   {
@@ -510,8 +510,8 @@
    "folder": "site-efes",
    "lang": "de",
    "chapter": "structure-3",
-   "text": "Hanghäuser. Sechs Luxuswohnungen am Hang gegenüber der Kuretenstraße, ihre Böden mit Mosaiken, ihre Wände mit Fresken ausgestattet. Mit Fußbodenheizung, geschlossenen Abwasserkanälen und verglasten Fenstern sind sie der eine Ort, der zeigt, wie das Haus eines reichen Römers im 1. Jahrhundert n. Chr. tatsächlich aussah. Das Modell zeigt das Innere einer Wohneinheit rund um ihren Säulenhof.",
-   "hash": "3b753aa4",
+   "text": "Hanghäuser. Sechs Luxuswohnhäuser am Hang gegenüber der Kuretenstraße, ihre Böden mit Mosaiken, ihre Wände mit Fresken. Mit Fußbodenheizung, geschlossenen Abwasserkanälen und verglasten Fenstern sind sie der einzige Ort, der zeigt, wie das Haus eines reichen Römers im ersten Jahrhundert n. Chr. tatsächlich aussah. Das Modell zeigt das Innere einer Wohneinheit rund um ihren Säulenhof.",
+   "hash": "b76561dc",
    "target": "remote"
   },
   {
@@ -519,8 +519,8 @@
    "folder": "site-efes",
    "lang": "de",
    "chapter": "structure-4",
-   "text": "Artemistempel. Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Marmorwald, auf sumpfigem Grund errichtet. Plinius zufolge waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
-   "hash": "deb9b635",
+   "text": "Tempel der Artemis. Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
+   "hash": "1fa97035",
    "target": "remote"
   },
   {
@@ -573,8 +573,8 @@
    "folder": "site-efes",
    "lang": "ru",
    "chapter": "structure-1",
-   "text": "Библиотека Цельса. Мраморный фасад в Эфесе — лицо не библиотеки, а гробницы: саркофаг Цельса до сих пор стоит в камере под апсидой. Модель показывает фасад, вновь возведённый в 1970–78 годах, во всю высоту, а зал за ним — лишь на ту высоту, на которую сохранились его стены.",
-   "hash": "bfdd87f3",
+   "text": "Библиотека Цельса. Мраморный фасад в Эфесе — это лицо не библиотеки, а гробницы: саркофаг Цельса до сих пор покоится в камере под апсидой. Модель показывает фасад, заново возведённый в 1970–78 годах, во всю высоту, а зал за ним — лишь на ту высоту, на которую сохранились его стены.",
+   "hash": "dda60ccd",
    "target": "remote"
   },
   {
@@ -582,8 +582,8 @@
    "folder": "site-efes",
    "lang": "ru",
    "chapter": "structure-2",
-   "text": "Большой театр. Один из крупнейших театров античности: трёхъярусная кавея, врезанная в склон горы Пион и обращённая вниз, вдоль Гаванской улицы, к римскому сценическому зданию. Именно здесь происходит бунт серебряников из Деяний апостолов.",
-   "hash": "95796110",
+   "text": "Большой театр. Один из крупнейших театров античности: трёхъярусная кавея, высеченная в склоне горы Пион, обращена вдоль Портовой улицы к римскому сценическому зданию. Именно здесь происходит бунт серебряных дел мастеров, описанный в Деяниях апостолов.",
+   "hash": "f7c267a2",
    "target": "remote"
   },
   {
@@ -591,8 +591,8 @@
    "folder": "site-efes",
    "lang": "ru",
    "chapter": "structure-3",
-   "text": "Склоновые дома. Шесть роскошных резиденций на склоне напротив улицы Куретов, с мозаичными полами и расписанными фресками стенами. С подпольным отоплением, закрытыми стоками и застеклёнными окнами они — единственное место, показывающее, каким на самом деле был дом богатого римлянина в I веке н. э. Модель показывает интерьер одного из жилищ вокруг его двора с колоннадой.",
-   "hash": "6f186a8c",
+   "text": "Террасные дома. Шесть роскошных жилищ на склоне напротив улицы Куретов, с мозаичными полами и расписанными фресками стенами. С подпольным отоплением, закрытой канализацией и застеклёнными окнами они — единственное место, которое показывает, каким на самом деле был дом богатого римлянина в I веке н. э. Модель показывает интерьер одного из домов вокруг его двора с колоннадой.",
+   "hash": "54c9a83a",
    "target": "remote"
   },
   {
@@ -600,8 +600,8 @@
    "folder": "site-efes",
    "lang": "ru",
    "chapter": "structure-4",
-   "text": "Храм Артемиды. Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефом у основания. Модель показывает третий храм, отстроенный в IV веке до н. э.",
-   "hash": "86c1f2f9",
+   "text": "Храм Артемиды. Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
+   "hash": "df737c47",
    "target": "remote"
   },
   {
@@ -780,8 +780,8 @@
    "folder": "site-pergamon",
    "lang": "de",
    "chapter": "structure-2",
-   "text": "Terrasse des Großen Altars. Weniger ein Altar als eine Bühne: Der 113 Meter lange Gigantomachiefries umhüllt den Bau mit einer in Stein erzählten Schlacht. Zwischen 1878 und 1886 wurde er abgebaut und nach Berlin verschifft; was heute in Pergamon steht, sind die Terrasse und die Fundamente.",
-   "hash": "7159cd6e",
+   "text": "Terrasse des Großen Altars. Weniger ein Altar als eine Bühne: Der 113 Meter lange Gigantomachie-Fries umhüllt den Bau mit einer in Stein erzählten Schlacht. Er wurde zwischen 1878 und 1886 abgebaut und nach Berlin verschifft; in Pergamon stehen heute nur noch die Terrasse und die Fundamente.",
+   "hash": "f06317f8",
    "target": "remote"
   },
   {
@@ -843,8 +843,8 @@
    "folder": "site-pergamon",
    "lang": "ru",
    "chapter": "structure-2",
-   "text": "Терраса Большого алтаря. Не столько алтарь, сколько сцена: 113-метровый фриз Гигантомахии опоясывает здание битвой, рассказанной в камне. Между 1878 и 1886 годами его разобрали и отправили морем в Берлин; в Пергаме сегодня стоят терраса и фундаменты.",
-   "hash": "868d41c3",
+   "text": "Терраса Большого алтаря. Не столько алтарь, сколько сцена: 113-метровый фриз Гигантомахии опоясывает здание битвой, рассказанной в камне. Его разобрали и вывезли в Берлин между 1878 и 1886 годами; в Пергаме сегодня остались лишь терраса и фундамент.",
+   "hash": "0f0df479",
    "target": "remote"
   },
   {
@@ -1014,8 +1014,8 @@
    "folder": "site-aphrodisias",
    "lang": "de",
    "chapter": "structure-1",
-   "text": "Stadion. Das besterhaltene Stadion der antiken Welt: Beide Enden stehen noch, dreißig Sitzreihen laufen ringsum. Es liegt innerhalb der Stadtmauern, an deren Nordrand geschmiegt.",
-   "hash": "5109980a",
+   "text": "Stadion. Das am besten erhaltene Stadion der antiken Welt: Beide Enden stehen noch, dreißig Sitzreihen laufen ringsum. Es liegt innerhalb der Stadtmauern, eng an ihren Nordrand geschmiegt.",
+   "hash": "d13148cd",
    "target": "remote"
   },
   {
@@ -1068,8 +1068,8 @@
    "folder": "site-aphrodisias",
    "lang": "ru",
    "chapter": "structure-1",
-   "text": "Стадион. Лучше всего сохранившийся стадион античного мира: оба торца ещё стоят, тридцать рядов сидений тянутся по всему кругу. Он находится внутри городских стен, прижавшись к их северному краю.",
-   "hash": "4ca8a176",
+   "text": "Стадион. Наиболее сохранившийся стадион античного мира: оба его торца всё ещё стоят, тридцать рядов сидений тянутся по всему кругу. Он расположен внутри городских стен, вплотную к их северному краю.",
+   "hash": "f0db6ffb",
    "target": "remote"
   },
   {
@@ -1230,8 +1230,8 @@
    "folder": "site-hierapolis",
    "lang": "de",
    "chapter": "structure-2",
-   "text": "Theater. Ein Theater für 15.000 Menschen, in den Hang über den Sinterterrassen von Pamukkale geschnitten. Seine Bühnenfront, drei Säulenreihen tief, ist zu großen Teilen erhalten und wurde zwischen 2004 und 2014 wiedererrichtet.",
-   "hash": "3831d232",
+   "text": "Theater. Ein Theater für 15.000 Menschen, in den Hang oberhalb der Travertinterrassen von Pamukkale gehauen. Seine Bühnenfront, drei Säulenreihen tief, ist zu großen Teilen erhalten und wurde zwischen 2004 und 2014 wieder aufgerichtet.",
+   "hash": "ab6a2212",
    "target": "remote"
   },
   {
@@ -1284,8 +1284,8 @@
    "folder": "site-hierapolis",
    "lang": "ru",
    "chapter": "structure-2",
-   "text": "Театр. Театр на 15 000 зрителей, врезанный в склон над травертинами Памуккале. Его сценический фасад глубиной в три ряда колонн в значительной части сохранился и был вновь возведён между 2004 и 2014 годами.",
-   "hash": "d191f690",
+   "text": "Театр. Театр на 15 000 зрителей, высеченный в склоне над травертинами Памуккале. Его сценический фасад глубиной в три ряда колонн в значительной части сохранился и был заново возведён между 2004 и 2014 годами.",
+   "hash": "fba00a87",
    "target": "remote"
   },
   {
@@ -3318,8 +3318,8 @@
    "folder": "site-aspendos",
    "lang": "de",
    "chapter": "structure-1",
-   "text": "Römisches Theater. Das am vollständigsten erhaltene Theater der Antike. Zuschauerraum und Bühnengebäude sind zu einem einzigen Block verbunden, und es ist uns unversehrt überliefert, weil die Seldschuken es als Karawanserei weiterbenutzten.",
-   "hash": "348d31e6",
+   "text": "Römisches Theater. Das vollständigste erhaltene Theater der Antike. Zuschauerraum und Bühnengebäude sind zu einem einzigen Block verbunden, und es ist unversehrt auf uns gekommen, weil die Seldschuken es als Karawanserei weiter nutzten.",
+   "hash": "7a3581e0",
    "target": "remote"
   },
   {
@@ -3372,8 +3372,8 @@
    "folder": "site-aspendos",
    "lang": "ru",
    "chapter": "structure-1",
-   "text": "Римский театр. Наиболее полно сохранившийся театр античности. Зрительные ряды и сценическое здание связаны в единый массив, и он дошёл до нас целым, потому что сельджуки продолжали использовать его как караван-сарай.",
-   "hash": "585c0bd8",
+   "text": "Римский театр. Наиболее полно сохранившийся театр античности. Зрительские ряды и сценическое здание соединены в единый блок, и он дошёл до нас нетронутым, потому что сельджуки продолжали использовать его как караван-сарай.",
+   "hash": "f8840d30",
    "target": "remote"
   },
   {
@@ -7800,8 +7800,8 @@
    "folder": "site-gobeklitepe",
    "lang": "de",
    "chapter": "structure-1",
-   "text": "Anlagen A–D. Eines der ältesten bekannten Monumentalbauwerke und der am frühesten datierte der Kreise. Die beiden Pfeiler in seiner Mitte haben Arme, Hände und einen Gürtel: Die Steine sind von menschlicher Gestalt, und sie blicken einander an.",
-   "hash": "3902d85d",
+   "text": "Anlagen A–D. Einer der ältesten bekannten Monumentalbauten und der am frühesten datierte der Kreise. Die beiden Pfeiler in seiner Mitte haben Arme, Hände und einen Gürtel: Die Steine sind menschengestaltig, und sie stehen einander gegenüber.",
+   "hash": "50fe6821",
    "target": "remote"
   },
   {
@@ -7854,8 +7854,8 @@
    "folder": "site-gobeklitepe",
    "lang": "ru",
    "chapter": "structure-1",
-   "text": "Сооружения A–D. Одно из древнейших известных монументальных сооружений и самый ранний по датировке из кругов. Два столба в его центре имеют руки, кисти и пояс: камни имеют человеческий облик и обращены друг к другу.",
-   "hash": "7e309367",
+   "text": "Сооружения A–D. Одно из древнейших известных монументальных сооружений и самый ранний по датировке из кругов. У двух столбов в его центре есть руки, кисти и пояс: камни имеют человеческий облик и обращены друг к другу.",
+   "hash": "426faa7b",
    "target": "remote"
   },
   {
@@ -8142,8 +8142,8 @@
    "folder": "site-nemrut",
    "lang": "de",
    "chapter": "structure-1",
-   "text": "Ostterrasse. Das Grabheiligtum, das König Antiochos I. von Kommagene auf 2.150 Metern Höhe erbauen ließ: Am Fuß eines Schottertumulus thronen acht bis neun Meter hohe Götter – der König, Kommagene, Zeus, Apollon und Herakles –, an beiden Enden ein Adler und ein Löwe, ihnen gegenüber ein Stufenaltar. Das Modell setzt die Köpfe wieder auf ihre Schultern.",
-   "hash": "b457a734",
+   "text": "Ostterrasse. Das Grabheiligtum, das König Antiochos I. von Kommagene auf 2.150 Metern errichten ließ: Am Fuß eines Geröllhügels thronen acht bis neun Meter hohe Götter – der König, Kommagene, Zeus, Apollon und Herakles –, an beiden Enden ein Adler und ein Löwe, ihnen gegenüber ein Stufenaltar. Das Modell setzt die Köpfe wieder auf ihre Schultern.",
+   "hash": "2146868f",
    "target": "remote"
   },
   {
@@ -8205,8 +8205,8 @@
    "folder": "site-nemrut",
    "lang": "ru",
    "chapter": "structure-1",
-   "text": "Восточная терраса. Гробница-святилище, которое царь Коммагены Антиох I построил на высоте 2150 метров: у подножия щебневого кургана восседают на тронах боги высотой восемь–девять метров — царь, Коммагена, Зевс, Аполлон и Геракл, — с орлом и львом на каждом конце и ступенчатым алтарём напротив. Модель возвращает головы на их плечи.",
-   "hash": "fcf1c430",
+   "text": "Восточная терраса. Гробница-святилище, которую царь Коммагены Антиох I возвёл на высоте 2150 метров: у подножия щебневого кургана восседают на тронах боги высотой восемь-девять метров — царь, Коммагена, Зевс, Аполлон и Геракл, — по краям орёл и лев, а напротив них ступенчатый алтарь. Модель возвращает головы на их плечи.",
+   "hash": "12139158",
    "target": "remote"
   },
   {
@@ -32208,8 +32208,8 @@
    "folder": "recon-celsus-kutuphanesi",
    "lang": "de",
    "chapter": "intro",
-   "text": "Die Celsus-Bibliothek. 110er Jahre n. Chr. – 135 n. Chr. Die Marmorfront in Ephesos ist nicht das Gesicht einer Bibliothek, sondern das eines Grabmals: Der Sarkophag des Celsus liegt noch immer in der Kammer unter der Apsis. Das Modell zeigt die 1970–78 wiedererrichtete Fassade in voller Höhe und den Saal dahinter nur so hoch, wie seine Mauern erhalten sind.",
-   "hash": "2a8feab2",
+   "text": "Die Celsus-Bibliothek. 110er Jahre n. Chr. – 135 n. Chr. Die Marmorfront in Ephesos ist nicht die Fassade einer Bibliothek, sondern die eines Grabmals: Der Sarkophag des Celsus liegt noch immer in der Kammer unter der Apsis. Das Modell zeigt die 1970–78 wieder aufgerichtete Fassade in voller Höhe und die Halle dahinter nur so hoch, wie ihre Mauern erhalten sind.",
+   "hash": "280d39cd",
    "target": "remote"
   },
   {
@@ -32280,8 +32280,8 @@
    "folder": "recon-celsus-kutuphanesi",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Библиотека Цельса. 110-е годы н. э. – 135 г. н. э. Мраморный фасад в Эфесе — лицо не библиотеки, а гробницы: саркофаг Цельса до сих пор стоит в камере под апсидой. Модель показывает фасад, вновь возведённый в 1970–78 годах, во всю высоту, а зал за ним — лишь на ту высоту, на которую сохранились его стены.",
-   "hash": "ccb77574",
+   "text": "Библиотека Цельса. 110-е годы н. э. – 135 г. н. э. Мраморный фасад в Эфесе — это лицо не библиотеки, а гробницы: саркофаг Цельса до сих пор покоится в камере под апсидой. Модель показывает фасад, заново возведённый в 1970–78 годах, во всю высоту, а зал за ним — лишь на ту высоту, на которую сохранились его стены.",
+   "hash": "45a1aa3a",
    "target": "remote"
   },
   {
@@ -32496,8 +32496,8 @@
    "folder": "recon-aspendos-tiyatrosu",
    "lang": "de",
    "chapter": "intro",
-   "text": "Das Theater von Aspendos. 155 n. Chr. Das am vollständigsten erhaltene Theater der Antike. Zuschauerraum und Bühnengebäude sind zu einem einzigen Block verbunden, und es ist uns unversehrt überliefert, weil die Seldschuken es als Karawanserei weiterbenutzten.",
-   "hash": "b54b584a",
+   "text": "Das Theater von Aspendos. 155 n. Chr. Das vollständigste erhaltene Theater der Antike. Zuschauerraum und Bühnengebäude sind zu einem einzigen Block verbunden, und es ist unversehrt auf uns gekommen, weil die Seldschuken es als Karawanserei weiter nutzten.",
+   "hash": "5accafec",
    "target": "remote"
   },
   {
@@ -32568,8 +32568,8 @@
    "folder": "recon-aspendos-tiyatrosu",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Театр Аспендоса. 155 г. н. э. Наиболее полно сохранившийся театр античности. Зрительные ряды и сценическое здание связаны в единый массив, и он дошёл до нас целым, потому что сельджуки продолжали использовать его как караван-сарай.",
-   "hash": "0e78e1b5",
+   "text": "Театр Аспендоса. 155 г. н. э. Наиболее полно сохранившийся театр античности. Зрительские ряды и сценическое здание соединены в единый блок, и он дошёл до нас нетронутым, потому что сельджуки продолжали использовать его как караван-сарай.",
+   "hash": "620e0f79",
    "target": "remote"
   },
   {
@@ -33018,8 +33018,8 @@
    "folder": "recon-gobeklitepe-d-yapisi",
    "lang": "de",
    "chapter": "intro",
-   "text": "Göbekli Tepe, Anlage D. Zweite Hälfte des 10. Jahrtausends v. Chr. Eines der ältesten bekannten Monumentalbauwerke und der am frühesten datierte der Kreise. Die beiden Pfeiler in seiner Mitte haben Arme, Hände und einen Gürtel: Die Steine sind von menschlicher Gestalt, und sie blicken einander an.",
-   "hash": "d79aeb92",
+   "text": "Göbekli Tepe, Anlage D. Zweite Hälfte des 10. Jahrtausends v. Chr. Einer der ältesten bekannten Monumentalbauten und der am frühesten datierte der Kreise. Die beiden Pfeiler in seiner Mitte haben Arme, Hände und einen Gürtel: Die Steine sind menschengestaltig, und sie stehen einander gegenüber.",
+   "hash": "589d6d14",
    "target": "remote"
   },
   {
@@ -33081,8 +33081,8 @@
    "folder": "recon-gobeklitepe-d-yapisi",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Гёбекли-Тепе, сооружение D. Вторая половина X тысячелетия до н. э. Одно из древнейших известных монументальных сооружений и самый ранний по датировке из кругов. Два столба в его центре имеют руки, кисти и пояс: камни имеют человеческий облик и обращены друг к другу.",
-   "hash": "ba26bafe",
+   "text": "Гёбекли-Тепе, сооружение D. Вторая половина X тысячелетия до н. э. Одно из древнейших известных монументальных сооружений и самый ранний по датировке из кругов. У двух столбов в его центре есть руки, кисти и пояс: камни имеют человеческий облик и обращены друг к другу.",
+   "hash": "035d83bc",
    "target": "remote"
   },
   {
@@ -33252,8 +33252,8 @@
    "folder": "recon-artemis-tapinagi",
    "lang": "de",
    "chapter": "intro",
-   "text": "Der Artemistempel von Ephesos. 4. Jahrhundert v. Chr. – 401 n. Chr. Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Marmorwald, auf sumpfigem Grund errichtet. Plinius zufolge waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
-   "hash": "25e19c3d",
+   "text": "Der Artemistempel von Ephesos. 4. Jahrhundert v. Chr. – 401 n. Chr. Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
+   "hash": "f6464b82",
    "target": "remote"
   },
   {
@@ -33306,8 +33306,8 @@
    "folder": "recon-artemis-tapinagi",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Храм Артемиды в Эфесе. IV век до н. э. – 401 г. н. э. Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефом у основания. Модель показывает третий храм, отстроенный в IV веке до н. э.",
-   "hash": "b80828b0",
+   "text": "Храм Артемиды в Эфесе. IV век до н. э. – 401 г. н. э. Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
+   "hash": "613cb252",
    "target": "remote"
   },
   {
@@ -33486,8 +33486,8 @@
    "folder": "recon-pergamon-zeus-sunagi",
    "lang": "de",
    "chapter": "intro",
-   "text": "Der Pergamonaltar. um 170 – 159 v. Chr. Weniger ein Altar als eine Bühne: Der 113 Meter lange Gigantomachiefries umhüllt den Bau mit einer in Stein erzählten Schlacht. Zwischen 1878 und 1886 wurde er abgebaut und nach Berlin verschifft; was heute in Pergamon steht, sind die Terrasse und die Fundamente.",
-   "hash": "6de74d67",
+   "text": "Der Pergamonaltar. um 170 – 159 v. Chr. Weniger ein Altar als eine Bühne: Der 113 Meter lange Gigantomachie-Fries umhüllt den Bau mit einer in Stein erzählten Schlacht. Er wurde zwischen 1878 und 1886 abgebaut und nach Berlin verschifft; in Pergamon stehen heute nur noch die Terrasse und die Fundamente.",
+   "hash": "fd41f453",
    "target": "remote"
   },
   {
@@ -33549,8 +33549,8 @@
    "folder": "recon-pergamon-zeus-sunagi",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Пергамский алтарь. ок. 170 – 159 гг. до н. э. Не столько алтарь, сколько сцена: 113-метровый фриз Гигантомахии опоясывает здание битвой, рассказанной в камне. Между 1878 и 1886 годами его разобрали и отправили морем в Берлин; в Пергаме сегодня стоят терраса и фундаменты.",
-   "hash": "3f98920c",
+   "text": "Пергамский алтарь. ок. 170 – 159 гг. до н. э. Не столько алтарь, сколько сцена: 113-метровый фриз Гигантомахии опоясывает здание битвой, рассказанной в камне. Его разобрали и вывезли в Берлин между 1878 и 1886 годами; в Пергаме сегодня остались лишь терраса и фундамент.",
+   "hash": "8a202a08",
    "target": "remote"
   },
   {
@@ -33720,8 +33720,8 @@
    "folder": "recon-aphrodisias-stadyumu",
    "lang": "de",
    "chapter": "intro",
-   "text": "Das Stadion von Aphrodisias. 1. Jahrhundert n. Chr. Das besterhaltene Stadion der antiken Welt: Beide Enden stehen noch, dreißig Sitzreihen laufen ringsum. Es liegt innerhalb der Stadtmauern, an deren Nordrand geschmiegt.",
-   "hash": "04539a2b",
+   "text": "Das Stadion von Aphrodisias. 1. Jahrhundert n. Chr. Das am besten erhaltene Stadion der antiken Welt: Beide Enden stehen noch, dreißig Sitzreihen laufen ringsum. Es liegt innerhalb der Stadtmauern, eng an ihren Nordrand geschmiegt.",
+   "hash": "5b5a3674",
    "target": "remote"
   },
   {
@@ -33774,8 +33774,8 @@
    "folder": "recon-aphrodisias-stadyumu",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Стадион Афродисиаса. I век н. э. Лучше всего сохранившийся стадион античного мира: оба торца ещё стоят, тридцать рядов сидений тянутся по всему кругу. Он находится внутри городских стен, прижавшись к их северному краю.",
-   "hash": "b4de43f2",
+   "text": "Стадион Афродисиаса. I век н. э. Наиболее сохранившийся стадион античного мира: оба его торца всё ещё стоят, тридцать рядов сидений тянутся по всему кругу. Он расположен внутри городских стен, вплотную к их северному краю.",
+   "hash": "502bc997",
    "target": "remote"
   },
   {
@@ -33936,8 +33936,8 @@
    "folder": "recon-hierapolis-tiyatrosu",
    "lang": "de",
    "chapter": "intro",
-   "text": "Das Theater von Hierapolis. 2. Jahrhundert n. Chr. Ein Theater für 15.000 Menschen, in den Hang über den Sinterterrassen von Pamukkale geschnitten. Seine Bühnenfront, drei Säulenreihen tief, ist zu großen Teilen erhalten und wurde zwischen 2004 und 2014 wiedererrichtet.",
-   "hash": "a79069dd",
+   "text": "Das Theater von Hierapolis. 2. Jahrhundert n. Chr. Ein Theater für 15.000 Menschen, in den Hang oberhalb der Travertinterrassen von Pamukkale gehauen. Seine Bühnenfront, drei Säulenreihen tief, ist zu großen Teilen erhalten und wurde zwischen 2004 und 2014 wieder aufgerichtet.",
+   "hash": "17224e17",
    "target": "remote"
   },
   {
@@ -33990,8 +33990,8 @@
    "folder": "recon-hierapolis-tiyatrosu",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Театр Иераполя. II век н. э. Театр на 15 000 зрителей, врезанный в склон над травертинами Памуккале. Его сценический фасад глубиной в три ряда колонн в значительной части сохранился и был вновь возведён между 2004 и 2014 годами.",
-   "hash": "b6083175",
+   "text": "Театр Иераполя. II век н. э. Театр на 15 000 зрителей, высеченный в склоне над травертинами Памуккале. Его сценический фасад глубиной в три ряда колонн в значительной части сохранился и был заново возведён между 2004 и 2014 годами.",
+   "hash": "a19b7b20",
    "target": "remote"
   },
   {
@@ -34422,8 +34422,8 @@
    "folder": "recon-efes-yamac-evler",
    "lang": "de",
    "chapter": "intro",
-   "text": "Die Hanghäuser von Ephesos. 1.–7. Jahrhundert n. Chr. Sechs Luxuswohnungen am Hang gegenüber der Kuretenstraße, ihre Böden mit Mosaiken, ihre Wände mit Fresken ausgestattet. Mit Fußbodenheizung, geschlossenen Abwasserkanälen und verglasten Fenstern sind sie der eine Ort, der zeigt, wie das Haus eines reichen Römers im 1. Jahrhundert n. Chr. tatsächlich aussah. Das Modell zeigt das Innere einer Wohneinheit rund um ihren Säulenhof.",
-   "hash": "ae9ebbc5",
+   "text": "Die Hanghäuser von Ephesos. 1.–7. Jahrhundert n. Chr. Sechs Luxuswohnhäuser am Hang gegenüber der Kuretenstraße, ihre Böden mit Mosaiken, ihre Wände mit Fresken. Mit Fußbodenheizung, geschlossenen Abwasserkanälen und verglasten Fenstern sind sie der einzige Ort, der zeigt, wie das Haus eines reichen Römers im ersten Jahrhundert n. Chr. tatsächlich aussah. Das Modell zeigt das Innere einer Wohneinheit rund um ihren Säulenhof.",
+   "hash": "ed68958b",
    "target": "remote"
   },
   {
@@ -34485,8 +34485,8 @@
    "folder": "recon-efes-yamac-evler",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Склоновые дома Эфеса. I–VII века н. э. Шесть роскошных резиденций на склоне напротив улицы Куретов, с мозаичными полами и расписанными фресками стенами. С подпольным отоплением, закрытыми стоками и застеклёнными окнами они — единственное место, показывающее, каким на самом деле был дом богатого римлянина в I веке н. э. Модель показывает интерьер одного из жилищ вокруг его двора с колоннадой.",
-   "hash": "43febf24",
+   "text": "Склоновые дома Эфеса. I–VII века н. э. Шесть роскошных жилищ на склоне напротив улицы Куретов, с мозаичными полами и расписанными фресками стенами. С подпольным отоплением, закрытой канализацией и застеклёнными окнами они — единственное место, которое показывает, каким на самом деле был дом богатого римлянина в I веке н. э. Модель показывает интерьер одного из домов вокруг его двора с колоннадой.",
+   "hash": "43cf0d0e",
    "target": "remote"
   },
   {
@@ -34692,8 +34692,8 @@
    "folder": "recon-efes-buyuk-tiyatro",
    "lang": "de",
    "chapter": "intro",
-   "text": "Das Große Theater von Ephesos. 3. Jahrhundert v. Chr. – 2. Jahrhundert n. Chr. Eines der größten Theater der Antike: eine dreirangige Cavea, in den Hang des Berges Pion geschnitten, die die Hafenstraße hinab auf ein römisches Bühnengebäude blickt. Hier spielt der Aufstand der Silberschmiede aus der Apostelgeschichte.",
-   "hash": "7580aca7",
+   "text": "Das Große Theater von Ephesos. 3. Jahrhundert v. Chr. – 2. Jahrhundert n. Chr. Eines der größten Theater der Antike: eine dreirangige Cavea, in den Hang des Berges Pion gehauen, die die Hafenstraße hinab auf ein römisches Bühnengebäude blickt. Hier spielt der Aufstand der Silberschmiede aus der Apostelgeschichte.",
+   "hash": "4d02c766",
    "target": "remote"
   },
   {
@@ -34764,8 +34764,8 @@
    "folder": "recon-efes-buyuk-tiyatro",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Большой театр Эфеса. III век до н. э. – II век н. э. Один из крупнейших театров античности: трёхъярусная кавея, врезанная в склон горы Пион и обращённая вниз, вдоль Гаванской улицы, к римскому сценическому зданию. Именно здесь происходит бунт серебряников из Деяний апостолов.",
-   "hash": "370b5401",
+   "text": "Большой театр Эфеса. III век до н. э. – II век н. э. Один из крупнейших театров античности: трёхъярусная кавея, высеченная в склоне горы Пион, обращена вдоль Портовой улицы к римскому сценическому зданию. Именно здесь происходит бунт серебряных дел мастеров, описанный в Деяниях апостолов.",
+   "hash": "392d23f1",
    "target": "remote"
   },
   {
@@ -36006,8 +36006,8 @@
    "folder": "recon-nemrut-dogu-terasi",
    "lang": "de",
    "chapter": "intro",
-   "text": "Nemrut Dağı, die Ostterrasse. Zweite Hälfte des 1. Jahrhunderts v. Chr. Das Grabheiligtum, das König Antiochos I. von Kommagene auf 2.150 Metern Höhe erbauen ließ: Am Fuß eines Schottertumulus thronen acht bis neun Meter hohe Götter – der König, Kommagene, Zeus, Apollon und Herakles –, an beiden Enden ein Adler und ein Löwe, ihnen gegenüber ein Stufenaltar. Das Modell setzt die Köpfe wieder auf ihre Schultern.",
-   "hash": "79c88f3b",
+   "text": "Nemrut Dağı, die Ostterrasse. Zweite Hälfte des 1. Jahrhunderts v. Chr. Das Grabheiligtum, das König Antiochos I. von Kommagene auf 2.150 Metern errichten ließ: Am Fuß eines Geröllhügels thronen acht bis neun Meter hohe Götter – der König, Kommagene, Zeus, Apollon und Herakles –, an beiden Enden ein Adler und ein Löwe, ihnen gegenüber ein Stufenaltar. Das Modell setzt die Köpfe wieder auf ihre Schultern.",
+   "hash": "d16e4a08",
    "target": "remote"
   },
   {
@@ -36087,8 +36087,8 @@
    "folder": "recon-nemrut-dogu-terasi",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Гора Немрут, восточная терраса. Вторая половина I века до н. э. Гробница-святилище, которое царь Коммагены Антиох I построил на высоте 2150 метров: у подножия щебневого кургана восседают на тронах боги высотой восемь–девять метров — царь, Коммагена, Зевс, Аполлон и Геракл, — с орлом и львом на каждом конце и ступенчатым алтарём напротив. Модель возвращает головы на их плечи.",
-   "hash": "0d23f312",
+   "text": "Гора Немрут, восточная терраса. Вторая половина I века до н. э. Гробница-святилище, которую царь Коммагены Антиох I возвёл на высоте 2150 метров: у подножия щебневого кургана восседают на тронах боги высотой восемь-девять метров — царь, Коммагена, Зевс, Аполлон и Геракл, — по краям орёл и лев, а напротив них ступенчатый алтарь. Модель возвращает головы на их плечи.",
+   "hash": "e342ab4a",
    "target": "remote"
   },
   {

@@ -26,6 +26,24 @@ const memories: Memory[] = [];
 export function registerTranslations(memory: Memory) {
   if (!memories.includes(memory)) memories.push(memory);
 }
+/**
+ * The content translations are a few hundred kilobytes that a Turkish or
+ * English reader never needs, so they are fetched only when German or
+ * Russian is chosen — and awaited by the root route before it renders, on
+ * the server and in the browser alike, so a German page is German in its
+ * very first HTML.
+ */
+let contentTranslations: Promise<void> | null = null;
+export function loadContentTranslations(): Promise<void> {
+  contentTranslations ??= Promise.all([
+    import("@/lib/locales/tm-sites"),
+    import("@/lib/locales/tm-details"),
+    import("@/lib/locales/tm-recon"),
+    import("@/lib/locales/tm-stories"),
+  ]).then((modules) => modules.forEach((module) => registerTranslations(module.tm)));
+  return contentTranslations;
+}
+
 function remembered(en: string, lang: "de" | "ru"): string | undefined {
   const slot = lang === "de" ? 0 : 1;
   for (const memory of memories) {

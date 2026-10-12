@@ -5,8 +5,6 @@ import imgIcAnadolu from "@/assets/region-ic-anadolu.jpg";
 import imgGuneydogu from "@/assets/region-guneydogu.jpg";
 import imgKaradeniz from "@/assets/region-karadeniz.jpg";
 import type { Localized } from "@/lib/i18n";
-import { registerTranslations } from "@/lib/i18n";
-import { tm as translations } from "@/lib/locales/tm-sites";
 
 /**
  * Heritage data layer — the half of a site that a card, a map pin or a search
@@ -6154,5 +6152,3 @@ export function distanceKm(aLat: number, aLng: number, bLat: number, bLng: numbe
     Math.cos((aLat * Math.PI) / 180) * Math.cos((bLat * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
   return Math.round(2 * R * Math.asin(Math.sqrt(h)));
 }
-
-registerTranslations(translations);

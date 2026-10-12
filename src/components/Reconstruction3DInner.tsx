@@ -2363,7 +2363,10 @@ export default function Reconstruction3DInner({
       const home = target.clone().addScaledVector(direction, distance);
       camera.position.copy(home);
 
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      // Phones draw at up to 3x; past 1.5x the difference is invisible on a
+      // small screen and the fill cost is not.
+      const touch = window.matchMedia("(pointer: coarse)").matches;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, touch ? 1.5 : 2));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;

@@ -1,5 +1,4 @@
-import { registerTranslations, type Localized } from "@/lib/i18n";
-import { tm as translations } from "@/lib/locales/tm-stories";
+import type { Localized } from "@/lib/i18n";
 import type { Choice, Story } from "@/lib/stories";
 
 /**
@@ -598,5 +597,3 @@ export const storyQuestions: StoryQuestion[] = [
     l("Hiç kapatılmazdı", "They were never sealed"),
   ),
 ];
-
-registerTranslations(translations);

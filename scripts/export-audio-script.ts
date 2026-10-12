@@ -12,7 +12,7 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { textHash } from "@/lib/audio-manifest";
-import { pick } from "@/lib/i18n";
+import { loadContentTranslations, pick } from "@/lib/i18n";
 import { guideForSite } from "@/lib/guide-sources";
 import { reconstructionGuide, type Guide } from "@/lib/narration";
 import { reconstructions } from "@/lib/reconstructions";
@@ -25,6 +25,8 @@ import { sites } from "@/lib/sites";
  * repository on GitHub Pages, because all of it together is several hundred
  * megabytes and has no business in the app's own history.
  */
+await loadContentTranslations();
+
 const TOP = 20;
 const args = process.argv.slice(2);
 const top = new Set(
