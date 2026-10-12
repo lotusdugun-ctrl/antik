@@ -11,12 +11,14 @@ import {
   Compass,
   Gamepad2,
   Globe,
+  GraduationCap,
   Home,
   Landmark,
   Layers,
   LayoutGrid,
   Map as MapIcon,
   Moon,
+  Newspaper,
   Route as RouteIcon,
   Search,
   Sparkles,
@@ -74,6 +76,8 @@ const EXPERIENCE: NavGroup = {
     },
     { to: "/hikayeler", key: "nav_stories", desc: "nav_stories_d", icon: BookOpen },
     { to: "/oyunlar", key: "nav_games", desc: "nav_games_d", icon: Gamepad2 },
+    { to: "/haberler", key: "news_title", desc: "nav_news_d", icon: Newspaper },
+    { to: "/ogretmen", key: "teacher_title", desc: "nav_teacher_d", icon: GraduationCap },
   ],
 };
 
@@ -345,7 +349,7 @@ function MobileTabs({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolea
     "flex flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[11px] font-medium transition-colors";
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-[1000] border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-[1000] print:hidden border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
       <div className="mx-auto flex max-w-xl items-stretch justify-between px-2 py-1.5">
         {tabs.slice(0, 2).map((item) => (
           <Link
@@ -393,7 +397,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-[1000] border-b border-border/70 bg-background/85 backdrop-blur-xl">
+      <header className="sticky top-0 z-[1000] print:hidden border-b border-border/70 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:px-6">
           <Link to="/" className="flex min-w-0 items-center gap-2.5">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
@@ -413,9 +417,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 pb-20 lg:pb-0">{children}</main>
+      <main className="flex-1 pb-20 print:pb-0 lg:pb-0">{children}</main>
 
-      <footer className="border-t border-border px-6 py-10 pb-24 lg:pb-10">
+      <footer className="border-t border-border px-6 py-10 pb-24 print:hidden lg:pb-10">
         <div className="mx-auto grid max-w-7xl gap-8 text-sm sm:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))]">
           <div>
             <p className="font-display text-base text-foreground">{t("appName")}</p>

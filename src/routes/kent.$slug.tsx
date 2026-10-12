@@ -40,6 +40,8 @@ import { useProgress, XP_PER_VISIT } from "@/lib/progress";
 import { creditLine } from "@/lib/photo-credits";
 import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
 import { recordingFor } from "@/lib/audio-manifest";
+import { AskGuide } from "@/components/AskGuide";
+import { NewsList } from "@/components/NewsList";
 import { StampButton } from "@/components/Passport";
 import { civilizationFor } from "@/lib/history-index";
 import { personFor } from "@/lib/history-index";
@@ -378,6 +380,10 @@ function SiteDetail() {
           </div>
         )}
 
+        <div className="mt-4">
+          <AskGuide site={site} />
+        </div>
+
         {/* Gallery */}
         <section className="mt-8">
           <h2 className="mb-3 font-display text-xl font-semibold">{t("gallery")}</h2>
@@ -543,6 +549,10 @@ function SiteDetail() {
               />
             )}
           </div>
+        </div>
+
+        <div className="mt-10">
+          <NewsList site={site.slug} />
         </div>
 
         <PhotoCredits urls={shownPhotos} className="mt-10 border-t border-border pt-6" />

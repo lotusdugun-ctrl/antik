@@ -108,3 +108,21 @@ describe("history index", () => {
     expect(peopleIndex).toEqual(slim(people));
   });
 });
+
+describe("teacher worksheet", () => {
+  test("questions have four distinct options and one right answer, and are reproducible", async () => {
+    const { worksheetQuestions, tripOrder } = await import("@/lib/worksheet");
+    const list = ["efes", "milet", "priene", "didim"]
+      .map((s) => getSite(s))
+      .filter((s) => s !== undefined);
+    const a = worksheetQuestions(list, 3, "tr", 7);
+    expect(a.length).toBeGreaterThan(list.length);
+    for (const q of a) {
+      expect(new Set(q.options).size).toBe(4);
+      expect(q.answer).toBeGreaterThanOrEqual(0);
+    }
+    expect(worksheetQuestions(list, 3, "tr", 7)).toEqual(a);
+    const trip = tripOrder(list);
+    expect(trip.map((s) => s.site.slug).sort()).toEqual(list.map((s) => s.slug).sort());
+  });
+});

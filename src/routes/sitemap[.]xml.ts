@@ -34,6 +34,8 @@ const staticPaths = [
   "/rekonstruksiyonlar",
   "/medeniyetler",
   "/zaman-cizelgesi",
+  "/haberler",
+  "/ogretmen",
   "/gorseller",
 ];
 
