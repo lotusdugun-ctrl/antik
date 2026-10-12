@@ -1459,7 +1459,7 @@ export const siteDetails: Record<string, SiteDetail> = {
     ["Yirmi kubbe", "Şadırvan", "Ceviz minber", "Hat levhaları", "İki minare"],
     ["Twenty domes", "Ablution fountain", "Walnut minbar", "Calligraphic panels", "Two minarets"],
     "Duvarlarındaki 190'ı aşkın hat levhası caminin bir hat müzesi gibi okunmasını sağlar; çoğu 19. yüzyılın ustalarının elinden çıkmadır.",
-    "The two hundred-odd calligraphic panels on its walls let the mosque be read as a museum of the art, most of them by nineteenth-century masters.",
+    "The more than 190 calligraphic panels on its walls let the mosque be read as a museum of the art, most of them by nineteenth-century masters.",
   ),
   ["yesil-turbe"]: d(
     "Çelebi Mehmed, Osmanlı'yı Fetret Devri'nden çıkaran padişah olarak 1421'de öldüğünde, Bursa'da kendi adına yaptırdığı külliyenin yamacına gömüldü. Türbeyi ve karşısındaki Yeşil Camii'yi vezir Hacı İvaz Paşa yürüttü; dış cepheyi kaplayan firuze çiniler yapıya adını verdi ve bugünkü kaplama 1855 depreminden sonra yenilendi.",
@@ -2072,7 +2072,7 @@ export const siteDetails: Record<string, SiteDetail> = {
     "The keystones carry lions, elephants, tulips and eagles, and none is repeated: every arch bears its own mark.",
   ),
   ["irgandi-koprusu"]: d(
-    "Bursalı tüccar Hoca Muslihiddin'in 1442'de yaptırdığı köprü, üzerinde otuz iki dükkânın sıralandığı bir çarşıydı. 1855 depreminde ve 1955'teki bir yangında ağır hasar gördü, sonunda yıkıldı ve 1949'da düz bir betonarme köprüyle değiştirildi. Özgün biçimi 2004'te yeniden inşa edildi ve dükkânlar zanaatkârlara verildi.",
+    "Bursalı tüccar Hoca Muslihiddin'in 1442'de yaptırdığı köprü, üzerinde otuz iki dükkânın sıralandığı bir çarşıydı. 1855 depreminde ve bir yangında ağır hasar gördü, sonunda yıkıldı ve 1949'da düz bir betonarme köprüyle değiştirildi. Özgün biçimi 2004'te yeniden inşa edildi ve dükkânlar zanaatkârlara verildi.",
     "Built in 1442 by the Bursa merchant Hoca Muslihiddin, the bridge carried a market of thirty-two shops. Wrecked by the earthquake of 1855 and a fire, it was finally demolished and replaced in 1949 by a flat concrete crossing. Its original form was rebuilt in 2004 and the shops handed back to craftspeople.",
     ["Çarşılı üst yapı", "Dükkân sırası", "Taş kemer", "Gökdere yatağı"],
     ["The market superstructure", "The row of shops", "The stone arch", "The Gökdere bed"],

@@ -398,3 +398,20 @@ describe("photography", () => {
     expect(blank.map(([file]) => file)).toEqual([]);
   });
 });
+
+describe("figures that once contradicted each other", () => {
+  test("Hattusa's Yerkapı tunnel is 70 m everywhere it is mentioned", async () => {
+    const { structureInfo } = await import("@/lib/structures");
+    const { getSiteDetail } = await import("@/lib/site-details");
+    const texts = [
+      structureInfo["Yerkapı tüneli"]?.blurb,
+      structureInfo["Yerkapı Tüneli"]?.blurb,
+      structureInfo["Yerkapı tunnel"]?.blurb,
+      getSiteDetail("hattusa")?.history,
+    ].filter(Boolean);
+    for (const text of texts) {
+      expect(text!.en).not.toMatch(/80[- ]metre/);
+      expect(text!.tr).not.toMatch(/80 metre/);
+    }
+  });
+});

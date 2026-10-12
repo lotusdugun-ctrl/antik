@@ -615,7 +615,7 @@ export const siteFacts: Record<string, Localized[]> = {
       "One of Byzantium's largest military bases in Anatolia, and the home town of a ruling dynasty.",
     ),
     f(
-      "838'de Halife Mutasım kenti kuşatıp yıktı. Teslim olmayı reddeden komutanların idamı, 'Amorium'un 42 Şehidi' olarak Bizans azizler takvimine girdi.",
+      "838'de Halife Mutasım kenti kuşatıp yıktı. İslam'a geçmeyi reddeden komutanların idamı, 'Amorium'un 42 Şehidi' olarak Bizans azizler takvimine girdi.",
       "In 838 the caliph al-Mu'tasim besieged and destroyed it. The execution of the officers who refused to convert entered the Byzantine calendar as the Forty-Two Martyrs of Amorium.",
     ),
   ],
@@ -1399,8 +1399,8 @@ export const siteFacts: Record<string, Localized[]> = {
       "The round stone doors between levels weigh over a tonne each and were designed to be opened only from the inside.",
     ),
     f(
-      "55 metre derinliğindeki havalandırma bacası aynı zamanda kuyudur; bacanın alt ucu kentin en derin katının da altındadır.",
-      "The 55-metre ventilation shaft doubles as a well, and its foot lies below even the deepest level of the city.",
+      "55 metre derinliğindeki havalandırma bacası aynı zamanda kuyu olarak da kullanılıyordu.",
+      "The 55-metre ventilation shaft also served as a well.",
     ),
   ],
   kaymakli: [

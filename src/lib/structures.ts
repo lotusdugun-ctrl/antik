@@ -568,14 +568,14 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Yerkapı tüneli": {
     blurb: {
-      tr: "Hattuşa surlarının altından geçen 80 metrelik anıtsal tünel.",
-      en: "The 80-metre monumental tunnel passing beneath the walls of Hattusa.",
+      tr: "Hattuşa surlarının altından geçen 70 metrelik anıtsal tünel.",
+      en: "The 70-metre monumental tunnel passing beneath the walls of Hattusa.",
     },
   },
   "Yerkapı tunnel": {
     blurb: {
-      tr: "Hattuşa surlarının altından geçen 80 metrelik tünel.",
-      en: "The 80-metre tunnel passing beneath the walls of Hattusa.",
+      tr: "Hattuşa surlarının altından geçen 70 metrelik tünel.",
+      en: "The 70-metre tunnel passing beneath the walls of Hattusa.",
     },
   },
   "Aslanlı Kapı": {

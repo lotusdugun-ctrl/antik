@@ -377,9 +377,9 @@ export const tm: Record<string, [string, string]> = {
   "Temple of Trajan": ["Trajanstempel", "Храм Траяна"],
   "Terrace Houses": ["Hanghäuser", "Террасные дома"],
   Tetrapylon: ["Tetrapylon", "Тетрапилон"],
-  "The 80-metre monumental tunnel passing beneath the walls of Hattusa.": [
-    "Der 80 Meter lange monumentale Tunnel, der unter den Mauern von Hattuša hindurchführt.",
-    "Монументальный 80-метровый туннель, проходящий под стенами Хаттусы.",
+  "The 70-metre monumental tunnel passing beneath the walls of Hattusa.": [
+    "Der 70 Meter lange monumentale Tunnel, der unter den Mauern von Hattuša hindurchführt.",
+    "Монументальный 70-метровый туннель, проходящий под стенами Хаттусы.",
   ],
   "The Dark Church is named for its single small window: because so little light gets in, its frescoes are the most vividly coloured in Cappadocia.":
     [
