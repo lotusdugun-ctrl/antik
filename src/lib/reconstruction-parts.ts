@@ -53,7 +53,17 @@ export type Material =
   | "paintBlue"
   | "paintGold"
   | "timber"
-  | "bronze";
+  | "bronze"
+  /*
+   * What the life of a scene is made of (see `scene-life.ts`): fired clay for
+   * jars, lamps and roof tiles, linen on a couch, the leaves of a laurel, the
+   * pale end of a rolled papyrus, a skin stretched to dry.
+   */
+  | "terracotta"
+  | "linen"
+  | "foliage"
+  | "papyrus"
+  | "hide";
 
 /**
  * A photograph of the real carving, wrapped onto the surface that carried it.
@@ -217,6 +227,14 @@ export type Part =
        * for Zeus, who wore a tiara, or for Herakles, who leaned on a club.
        */
       identity?: FigureIdentity;
+      /**
+       * The colour that was on the stone. Hellenistic and Roman marble
+       * statues were painted — the mantle coloured, the hem bordered, the
+       * hair and lips picked out — and analysis of surviving traces has
+       * shown how much. The tints here are kept faded, the way the traces
+       * read, so the marble still reads as marble.
+       */
+      paint?: FigurePaint;
     })
   /**
    * A silhouette cut in relief: an outline drawn in the plane of a face and
@@ -261,6 +279,19 @@ export type Part =
 /** One cross-section of a loft, in metres relative to the part's `at`. */
 export type LoftSection = { c: Vec3; rx: number; ry: number };
 
+/** Colours for a painted statue, as hex; anything left out stays bare marble. */
+export type FigurePaint = {
+  /** The chiton, peplos or tunic. */
+  cloth?: number;
+  /** The mantle, its roll and its falls. */
+  mantle?: number;
+  hair?: number;
+  /** Headgear, held things, borders. */
+  accent?: number;
+  /** Skin, very lightly: Greek sculpture tinted flesh rather than painting it. */
+  skin?: number;
+};
+
 /** What a statue wears on its head. */
 export type Headgear =
   /** The tall, rounded Persian cap with lappets: Zeus-Oromasdes at Nemrut. */
@@ -274,7 +305,11 @@ export type Headgear =
   /** A thin fillet round the brow. */
   | "diadem"
   /** A veil drawn up over the head and down the back. */
-  | "veil";
+  | "veil"
+  /** The crested Corinthian helmet pushed up off the face: Athena. */
+  | "helmet"
+  /** The tall mural crown of Artemis of Ephesus, with its veil behind. */
+  | "muralCrown";
 
 /** How the hair is worn. `bun` is the default for a woman, `short` for a man. */
 export type Hair = "bun" | "short" | "long" | "curls";
@@ -284,7 +319,17 @@ export type Hair = "bun" | "short" | "long" | "curls";
  * a `chiton` is the thinner tunic under a mantle; a `himation` is the heavy
  * mantle a Greek man wrapped himself in, and a `toga` the Roman one.
  */
-export type Dress = "peplos" | "chiton" | "himation" | "toga";
+export type Dress =
+  | "peplos"
+  | "chiton"
+  | "himation"
+  | "toga"
+  /**
+   * The close sheath of Artemis of Ephesus: the body from the waist down a
+   * tapering column banded with beasts, and the rows of egg-shaped pendants
+   * hung across the chest that are her best-known attribute.
+   */
+  | "ependytes";
 
 /** What a hand holds. */
 export type Held =
@@ -296,10 +341,25 @@ export type Held =
   | "barsom"
   | "sceptre"
   | "bow"
-  | "wheat";
+  | "wheat"
+  | "spear"
+  | "shield"
+  /** The shallow libation bowl, held out flat. */
+  | "phiale"
+  /** Zeus's thunderbolt, a double-ended bundle of flame. */
+  | "thunderbolt"
+  /** A wreath held out, for a victor or a god. */
+  | "wreath";
 
 /** What the right hand does when it holds nothing. */
-export type Gesture = "rest" | "chin" | "raised";
+export type Gesture =
+  | "rest"
+  | "chin"
+  | "raised"
+  /** The hand drawing the veil forward at the shoulder, the mourning woman's gesture. */
+  | "veil"
+  /** Both forearms held straight out, palms up, as Artemis of Ephesus holds hers. */
+  | "forward";
 
 /**
  * The particulars that tell one statue from another.
@@ -311,8 +371,29 @@ export type Gesture = "rest" | "chin" | "raised";
  * so they are what the identity carries. The `name` is for the tests and
  * the reader, not for rendering.
  */
+/**
+ * The particulars of a face, each around 1: a longer or shorter nose, a
+ * heavier brow, a wider jaw. Anything left out is dealt from the figure's
+ * own seed, so no two statues share a face by accident.
+ */
+export type FaceShape = {
+  nose?: number;
+  noseWidth?: number;
+  brow?: number;
+  jaw?: number;
+  chin?: number;
+  lips?: number;
+  cheek?: number;
+  eye?: number;
+  /** How long the face is, top to bottom. */
+  length?: number;
+  /** From 0, smooth and young, to 1, lined. */
+  age?: number;
+};
+
 export type FigureIdentity = {
   name: string;
+  face?: FaceShape;
   sex?: "female" | "male";
   bearded?: boolean;
   hair?: Hair;
@@ -396,6 +477,18 @@ export const IDENTITIES = {
   nemrutColossi: [
     {
       name: "Antiochos I",
+      face: {
+        nose: 1.28,
+        noseWidth: 1.0,
+        brow: 0.9,
+        jaw: 1.15,
+        chin: 1.2,
+        lips: 1.0,
+        cheek: 0.9,
+        eye: 1.05,
+        length: 1.1,
+        age: 0.25,
+      },
       sex: "male",
       bearded: false,
       hair: "short",
@@ -406,6 +499,18 @@ export const IDENTITIES = {
     },
     {
       name: "Kommagene",
+      face: {
+        nose: 0.9,
+        noseWidth: 0.85,
+        brow: 0.55,
+        jaw: 0.78,
+        chin: 0.9,
+        lips: 1.3,
+        cheek: 1.2,
+        eye: 1.18,
+        length: 1.0,
+        age: 0,
+      },
       sex: "female",
       hair: "long",
       headgear: "polos",
@@ -415,6 +520,18 @@ export const IDENTITIES = {
     },
     {
       name: "Zeus-Oromasdes",
+      face: {
+        nose: 1.15,
+        noseWidth: 1.25,
+        brow: 1.45,
+        jaw: 1.1,
+        chin: 1.0,
+        lips: 0.9,
+        cheek: 1.0,
+        eye: 0.95,
+        length: 1.12,
+        age: 0.85,
+      },
       sex: "male",
       bearded: true,
       hair: "long",
@@ -425,6 +542,18 @@ export const IDENTITIES = {
     },
     {
       name: "Apollon-Mithras-Helios-Hermes",
+      face: {
+        nose: 1.0,
+        noseWidth: 0.82,
+        brow: 0.75,
+        jaw: 0.9,
+        chin: 1.15,
+        lips: 1.25,
+        cheek: 1.1,
+        eye: 1.12,
+        length: 1.04,
+        age: 0,
+      },
       sex: "male",
       bearded: false,
       hair: "curls",
@@ -435,6 +564,18 @@ export const IDENTITIES = {
     },
     {
       name: "Herakles-Artagnes-Ares",
+      face: {
+        nose: 0.88,
+        noseWidth: 1.4,
+        brow: 1.35,
+        jaw: 1.4,
+        chin: 1.1,
+        lips: 1.05,
+        cheek: 1.25,
+        eye: 0.9,
+        length: 0.98,
+        age: 0.6,
+      },
       sex: "male",
       bearded: true,
       hair: "curls",
@@ -470,7 +611,157 @@ export const IDENTITIES = {
     left: "bow",
     gesture: "raised",
   },
+  /**
+   * The cult statue of the Artemision: not the huntress of the Greek
+   * mainland but the old goddess of Ephesus, known from the Roman marble
+   * copies in the Selçuk museum — the mural crown, the forearms held out,
+   * the egg-shaped pendants across the breast and the sheath of beasts.
+   */
+  artemisEphesia: {
+    name: "Artemis Ephesia",
+    sex: "female",
+    hair: "long",
+    headgear: "muralCrown",
+    dress: "ependytes",
+    gesture: "forward",
+  },
+  /** Zeus of Aizanoi, standing, with his sceptre and his thunderbolt. */
+  zeus: {
+    name: "Zeus",
+    sex: "male",
+    bearded: true,
+    hair: "long",
+    headgear: "diadem",
+    dress: "himation",
+    left: "sceptre",
+    right: "thunderbolt",
+  },
+  /**
+   * The family of the dynasty between the Mausoleum's columns. The statues
+   * found on the site are of men and women of the Hekatomnid house, in the
+   * dress and the poses of the fourth century — and no two alike: a veiled
+   * woman drawing her mantle forward, a man pouring a libation, one in
+   * thought, one with a spear.
+   */
+  hekatomnids: [
+    {
+      name: "Hekatomnid",
+      sex: "male",
+      bearded: true,
+      hair: "long",
+      dress: "himation",
+      gesture: "rest",
+    },
+    {
+      name: "Hekatomnid",
+      sex: "female",
+      hair: "long",
+      headgear: "veil",
+      dress: "chiton",
+      gesture: "veil",
+    },
+    {
+      name: "Hekatomnid",
+      sex: "male",
+      bearded: true,
+      hair: "short",
+      dress: "himation",
+      right: "phiale",
+    },
+    {
+      name: "Hekatomnid",
+      sex: "female",
+      hair: "bun",
+      headgear: "diadem",
+      dress: "peplos",
+      right: "wreath",
+    },
+    {
+      name: "Hekatomnid",
+      sex: "male",
+      bearded: true,
+      hair: "curls",
+      dress: "himation",
+      gesture: "chin",
+    },
+    {
+      name: "Hekatomnid",
+      sex: "female",
+      hair: "bun",
+      dress: "chiton",
+      left: "scroll",
+      gesture: "raised",
+    },
+    {
+      name: "Hekatomnid",
+      sex: "male",
+      bearded: false,
+      hair: "curls",
+      dress: "chiton",
+      right: "spear",
+    },
+    {
+      name: "Hekatomnid",
+      sex: "female",
+      hair: "long",
+      headgear: "veil",
+      dress: "peplos",
+      right: "phiale",
+    },
+  ],
 } satisfies Record<string, FigureIdentity | FigureIdentity[]>;
+
+/**
+ * The paint on the statues. Pigment survives as traces — Egyptian blue, red
+ * and yellow ochre, madder, gold leaf — and these follow the published
+ * colour reconstructions of Hellenistic and Roman marbles: coloured mantles
+ * over paler tunics, borders in a contrasting colour, hair in brown, a warm
+ * wash on the skin. All faded, because that is what the traces show, and
+ * because a statue painted at full strength reads as a doll.
+ */
+export const PAINT = {
+  celsusVirtues: [
+    { cloth: 0xe9e0cc, mantle: 0x7e98b4, hair: 0x6e4a2c, accent: 0xc8a24a, skin: 0xf2dcc6 },
+    { cloth: 0xead8b4, mantle: 0xb4644f, hair: 0x5a3a22, accent: 0xc8a24a, skin: 0xf2dcc6 },
+    { cloth: 0xdde4d0, mantle: 0x8a7a4a, hair: 0x6e4a2c, accent: 0x7e98b4, skin: 0xf2dcc6 },
+    { cloth: 0xefe2c8, mantle: 0x8a5a7e, hair: 0x4a3020, accent: 0xc8a24a, skin: 0xf2dcc6 },
+  ],
+  celsus: { cloth: 0xf2ece0, mantle: 0xf0e9dc, hair: 0x5a4a3a, accent: 0x8a4a6e, skin: 0xefd6be },
+  aquila: { cloth: 0xf2ece0, mantle: 0xf0e9dc, hair: 0x5a3a22, accent: 0x8a4a6e, skin: 0xefd6be },
+  artemisEphesia: {
+    cloth: 0xc9a24e,
+    mantle: 0xb88a48,
+    hair: 0x4a3020,
+    accent: 0xd4ae52,
+    skin: 0xe6c8a8,
+  },
+  zeus: { cloth: 0xe8dcc4, mantle: 0x8a5a7e, hair: 0x5a4a3a, accent: 0xc8a24a, skin: 0xeed2b6 },
+  apollo: { cloth: 0xe8dcc4, mantle: 0x7e98b4, hair: 0x8a6a3a, accent: 0xc8a24a, skin: 0xeed2b6 },
+  maussollos: {
+    cloth: 0xe8dcc4,
+    mantle: 0xa45a46,
+    hair: 0x4a3020,
+    accent: 0xc8a24a,
+    skin: 0xeed2b6,
+  },
+  artemisia: {
+    cloth: 0xe9e0cc,
+    mantle: 0x6e86a4,
+    hair: 0x4a3020,
+    accent: 0xc8a24a,
+    skin: 0xf2dcc6,
+  },
+  hekatomnids: [
+    { cloth: 0xe8dcc4, mantle: 0x9a5a46, hair: 0x4a3020, accent: 0xc8a24a, skin: 0xeed2b6 },
+    { cloth: 0xe9e0cc, mantle: 0x6e86a4, hair: 0x5a3a22, accent: 0xc8a24a, skin: 0xf2dcc6 },
+    { cloth: 0xeae4d4, mantle: 0x7a8a58, hair: 0x3a2a1c, accent: 0xb4644f, skin: 0xeed2b6 },
+    { cloth: 0xd8c08a, mantle: 0xc4806c, hair: 0x6e4a2c, accent: 0xc8a24a, skin: 0xf2dcc6 },
+    { cloth: 0xe8dcc4, mantle: 0x8a6a8e, hair: 0x5a4a3a, accent: 0xc8a24a, skin: 0xeed2b6 },
+    { cloth: 0xe4ecf0, mantle: 0xc9a24e, hair: 0x4a3020, accent: 0x6e86a4, skin: 0xf2dcc6 },
+    { cloth: 0xc4806c, mantle: 0xe9e0cc, hair: 0x8a6a3a, accent: 0xc8a24a, skin: 0xe6c8a8 },
+    { cloth: 0xe9e0cc, mantle: 0x5a6e8e, hair: 0x3a2a1c, accent: 0xc8a24a, skin: 0xf2dcc6 },
+  ],
+} satisfies Record<string, FigurePaint | FigurePaint[]>;
 
 const TAU = Math.PI * 2;
 
@@ -775,6 +1066,7 @@ const person = (
   material: Material = "human",
   /** A named statue, or just whether a nameless one wears a beard. */
   who?: FigureIdentity | boolean,
+  paint?: FigurePaint,
 ): Part => ({
   kind: "figure",
   material,
@@ -783,6 +1075,7 @@ const person = (
   rotY,
   ...(typeof who === "boolean" ? { bearded: who } : {}),
   ...(typeof who === "object" ? { identity: who } : {}),
+  ...(paint ? { paint } : {}),
 });
 
 /** A lofted skin: see the `loft` part kind. */
@@ -1292,7 +1585,7 @@ function animalCarving(
  * `scale` being a life-sized animal. The mane is a serrated crest cut along
  * the neck; the rider is a bearded figure astride, arm out in address.
  */
-function horseStatue(
+export function horseStatue(
   material: Material,
   at: Vec3,
   rotY: number,
@@ -1307,36 +1600,92 @@ function horseStatue(
   });
   const skin = (sections: LoftSection[]) => parts.push(loft(material, at, rotY, sections));
 
-  // The body, from the tail root forward to the breast.
+  /*
+   * The body, from the dock of the tail forward to the point of the breast:
+   * the croup rounding down behind, the back dipping a little behind the
+   * withers, the belly hanging lower than the girth, the chest deep and
+   * narrow between the forelegs.
+   */
   skin([
-    S([0, 1.06, 0.82], 0.1, 0.13),
-    S([0, 1.06, 0.62], 0.25, 0.28),
-    S([0, 1.04, 0.32], 0.3, 0.34),
-    S([0, 1.01, 0.0], 0.31, 0.37),
-    S([0, 1.02, -0.36], 0.3, 0.37),
-    S([0, 1.07, -0.66], 0.25, 0.33),
-    S([0, 1.12, -0.86], 0.17, 0.24),
-    S([0, 1.14, -0.96], 0.08, 0.12),
+    S([0, 1.12, 0.86], 0.06, 0.08),
+    S([0, 1.12, 0.78], 0.17, 0.2),
+    S([0, 1.1, 0.62], 0.26, 0.3),
+    S([0, 1.06, 0.42], 0.29, 0.34),
+    S([0, 1.0, 0.2], 0.3, 0.38),
+    S([0, 0.98, 0.0], 0.31, 0.4),
+    S([0, 1.0, -0.22], 0.31, 0.39),
+    S([0, 1.04, -0.44], 0.29, 0.38),
+    S([0, 1.06, -0.62], 0.24, 0.36),
+    S([0, 1.06, -0.78], 0.17, 0.3),
+    S([0, 1.06, -0.9], 0.1, 0.2),
+    S([0, 1.06, -0.95], 0.04, 0.08),
   ]);
-  // The neck, carried up from the withers to the poll.
+  // The muscles that make a horse a horse rather than a tube: the shoulder
+  // blade and the forearm on each side, and the great mass of the quarters.
+  for (const side of [-1, 1]) {
+    skin([
+      S([side * 0.12, 1.32, -0.5], 0.06, 0.08),
+      S([side * 0.2, 1.18, -0.62], 0.1, 0.16),
+      S([side * 0.21, 0.98, -0.72], 0.1, 0.15),
+      S([side * 0.19, 0.82, -0.7], 0.08, 0.1),
+      S([side * 0.17, 0.74, -0.68], 0.04, 0.05),
+    ]);
+    skin([
+      S([side * 0.1, 1.3, 0.36], 0.08, 0.1),
+      S([side * 0.2, 1.22, 0.52], 0.13, 0.18),
+      S([side * 0.21, 1.02, 0.6], 0.13, 0.19),
+      S([side * 0.19, 0.82, 0.6], 0.1, 0.13),
+      S([side * 0.17, 0.66, 0.62], 0.05, 0.06),
+    ]);
+  }
+  // The neck, arched from the withers to the poll, thick at the base and
+  // fine at the throat.
   skin([
-    S([0, 1.18, -0.6], 0.2, 0.3),
-    S([0, 1.4, -0.86], 0.18, 0.3),
-    S([0, 1.64, -1.08], 0.15, 0.26),
-    S([0, 1.84, -1.26], 0.12, 0.2),
-    S([0, 1.97, -1.38], 0.1, 0.15),
-    S([0, 2.02, -1.44], 0.09, 0.12),
+    S([0, 1.14, -0.56], 0.22, 0.36),
+    S([0, 1.32, -0.78], 0.2, 0.36),
+    S([0, 1.52, -0.98], 0.17, 0.32),
+    S([0, 1.72, -1.16], 0.14, 0.26),
+    S([0, 1.88, -1.3], 0.115, 0.2),
+    S([0, 1.98, -1.39], 0.1, 0.15),
+    S([0, 2.03, -1.44], 0.09, 0.12),
   ]);
-  // The head, lowered a little against the rein, forehead to muzzle.
+  /*
+   * The head, lowered against the rein: the flat forehead, the long face
+   * narrowing down the nose, the soft muzzle — and laid over it the round
+   * plates of the cheek, the eyes set out at the side, the flared nostrils.
+   */
   skin([
-    S([0, 2.02, -1.4], 0.1, 0.12),
-    S([0, 1.96, -1.54], 0.115, 0.15),
-    S([0, 1.86, -1.68], 0.1, 0.13),
-    S([0, 1.74, -1.82], 0.085, 0.11),
-    S([0, 1.64, -1.94], 0.078, 0.095),
-    S([0, 1.58, -2.02], 0.07, 0.08),
-    S([0, 1.56, -2.06], 0.05, 0.06),
+    S([0, 2.04, -1.4], 0.095, 0.13),
+    S([0, 1.98, -1.49], 0.115, 0.18),
+    S([0, 1.9, -1.58], 0.11, 0.17),
+    S([0, 1.8, -1.68], 0.09, 0.13),
+    S([0, 1.72, -1.77], 0.08, 0.11),
+    S([0, 1.65, -1.85], 0.082, 0.1),
+    S([0, 1.6, -1.91], 0.08, 0.092),
+    S([0, 1.575, -1.95], 0.068, 0.075),
+    S([0, 1.565, -1.97], 0.035, 0.04),
   ]);
+  for (const side of [-1, 1]) {
+    // The jowl.
+    skin([
+      S([side * 0.05, 1.92, -1.45], 0.03, 0.05),
+      S([side * 0.07, 1.86, -1.52], 0.055, 0.12),
+      S([side * 0.065, 1.81, -1.6], 0.045, 0.09),
+      S([side * 0.04, 1.78, -1.68], 0.015, 0.03),
+    ]);
+    // The eye, and the bone ridge over it.
+    skin([
+      S([side * 0.085, 2.0, -1.55], 0.012, 0.02),
+      S([side * 0.098, 2.0, -1.575], 0.02, 0.022),
+      S([side * 0.09, 2.0, -1.6], 0.012, 0.016),
+    ]);
+    // The nostril, flared.
+    skin([
+      S([side * 0.045, 1.63, -1.88], 0.012, 0.015),
+      S([side * 0.055, 1.62, -1.91], 0.026, 0.03),
+      S([side * 0.045, 1.6, -1.95], 0.012, 0.016),
+    ]);
+  }
   // Ears pricked forward.
   for (const side of [-1, 1]) {
     skin([
@@ -1345,51 +1694,91 @@ function horseStatue(
       S([side * 0.1, 2.22, -1.46], 0.006, 0.006),
     ]);
   }
+  // The forelock, falling between the ears onto the forehead.
+  skin([
+    S([0, 2.08, -1.42], 0.03, 0.02),
+    S([0, 2.05, -1.5], 0.04, 0.02),
+    S([0, 1.98, -1.56], 0.03, 0.015),
+  ]);
+
+  /*
+   * The legs. Each has a forearm or gaskin full of muscle, a bony knee or
+   * hock, a slender cannon, the knob of the fetlock, a short sloping
+   * pastern and a hoof that flares to the ground.
+   */
+  const leg = (x: number, path: [Vec3, number, number][]) =>
+    skin(path.map(([c, rx, ry]) => S([x + c[0], c[1], c[2]], rx * 1.15, ry * 1.12)));
   for (const side of [-1, 1]) {
     const x = side * 0.17;
     if (side === raised) {
       // The near foreleg lifted: knee brought up and forward, cannon hanging.
-      skin([
-        S([x, 1.05, -0.64], 0.11, 0.14),
-        S([x, 0.84, -0.78], 0.085, 0.1),
-        S([x, 0.66, -0.98], 0.06, 0.07),
-        S([x, 0.5, -0.96], 0.045, 0.055),
-        S([x, 0.36, -0.9], 0.05, 0.06),
-        S([x, 0.28, -0.86], 0.06, 0.065),
-        S([x, 0.24, -0.84], 0.055, 0.06),
+      leg(x, [
+        [[0, 1.02, -0.66], 0.11, 0.14],
+        [[0, 0.86, -0.78], 0.085, 0.1],
+        [[0, 0.72, -0.92], 0.06, 0.07],
+        [[0, 0.66, -0.98], 0.058, 0.066],
+        [[0, 0.52, -0.97], 0.04, 0.05],
+        [[0, 0.4, -0.93], 0.04, 0.05],
+        [[0, 0.34, -0.9], 0.05, 0.058],
+        [[0, 0.28, -0.84], 0.042, 0.048],
+        [[0, 0.22, -0.82], 0.058, 0.064],
+        [[0, 0.17, -0.81], 0.066, 0.07],
       ]);
     } else {
-      skin([
-        S([x, 1.05, -0.64], 0.11, 0.14),
-        S([x, 0.8, -0.68], 0.085, 0.1),
-        S([x, 0.56, -0.68], 0.06, 0.07),
-        S([x, 0.3, -0.67], 0.045, 0.055),
-        S([x, 0.12, -0.66], 0.05, 0.06),
-        S([x, 0.04, -0.68], 0.062, 0.068),
-        S([x, 0.0, -0.69], 0.065, 0.07),
+      leg(x, [
+        [[0, 1.02, -0.64], 0.11, 0.14],
+        [[0, 0.8, -0.67], 0.085, 0.1],
+        [[0, 0.6, -0.68], 0.06, 0.07],
+        [[0, 0.52, -0.68], 0.058, 0.068],
+        [[0, 0.4, -0.67], 0.042, 0.052],
+        [[0, 0.24, -0.66], 0.042, 0.05],
+        [[0, 0.17, -0.665], 0.052, 0.06],
+        [[0, 0.1, -0.69], 0.044, 0.05],
+        [[0, 0.05, -0.71], 0.06, 0.066],
+        [[0, 0.0, -0.72], 0.068, 0.074],
       ]);
     }
-    // The hind leg: thigh into the body, gaskin, hock set back, cannon down.
     const hx = side * 0.16;
-    skin([
-      S([hx, 1.0, 0.42], 0.14, 0.17),
-      S([hx, 0.74, 0.54], 0.1, 0.12),
-      S([hx, 0.52, 0.66], 0.06, 0.08),
-      S([hx, 0.3, 0.6], 0.045, 0.055),
-      S([hx, 0.1, 0.56], 0.05, 0.06),
-      S([hx, 0.04, 0.57], 0.062, 0.068),
-      S([hx, 0.0, 0.58], 0.065, 0.07),
+    leg(hx, [
+      [[0, 1.0, 0.44], 0.14, 0.17],
+      [[0, 0.76, 0.56], 0.1, 0.13],
+      [[0, 0.56, 0.68], 0.06, 0.09],
+      [[0, 0.5, 0.7], 0.055, 0.08],
+      [[0, 0.4, 0.64], 0.045, 0.055],
+      [[0, 0.22, 0.6], 0.042, 0.05],
+      [[0, 0.15, 0.59], 0.052, 0.06],
+      [[0, 0.09, 0.6], 0.044, 0.05],
+      [[0, 0.05, 0.6], 0.06, 0.066],
+      [[0, 0.0, 0.6], 0.068, 0.074],
     ]);
   }
-  // The tail, from the dock, falling behind the hocks.
+  // The tail: a thick dock, then the hair falling in three locks.
   skin([
-    S([0, 1.08, 0.8], 0.05, 0.06),
-    S([0, 1.0, 0.92], 0.07, 0.08),
-    S([0, 0.78, 1.0], 0.08, 0.09),
-    S([0, 0.52, 0.98], 0.07, 0.08),
-    S([0, 0.3, 0.92], 0.045, 0.05),
-    S([0, 0.2, 0.88], 0.02, 0.02),
+    S([0, 1.12, 0.84], 0.05, 0.06),
+    S([0, 1.06, 0.94], 0.07, 0.08),
+    S([0, 0.94, 1.0], 0.08, 0.09),
   ]);
+  for (const k of [-1, 0, 1]) {
+    skin([
+      S([k * 0.02, 0.96, 0.99], 0.04, 0.05),
+      S([k * 0.04, 0.72, 1.03], 0.05, 0.05),
+      S([k * 0.05, 0.48, 1.0 + k * 0.02], 0.04, 0.04),
+      S([k * 0.05, 0.28, 0.96], 0.02, 0.02),
+    ]);
+  }
+
+  // The mane, falling over the off side of the neck in heavy locks.
+  for (let i = 0; i < 9; i += 1) {
+    const t = i / 8;
+    const z = -0.6 - t * 0.82;
+    const y = 1.42 + t * 0.66 - t * t * 0.06;
+    const fall = 0.2 - t * 0.08;
+    skin([
+      S([0.0, y + 0.04, z], 0.03, 0.03),
+      S([0.07, y - fall * 0.4, z - 0.01], 0.045, 0.035),
+      S([0.12, y - fall, z + 0.01], 0.025, 0.02),
+    ]);
+  }
 
   /*
    * The mane: a crest of clipped tufts standing along the top of the neck,
@@ -1455,8 +1844,16 @@ function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1
       at: placed(at, rotY, [0, 1.38 * scale, -0.3 * scale]),
       height: 1.85 * scale,
       rotY: rotY + Math.PI,
-      bearded: true,
       pose: "riding",
+      // A benefactor of the city, laurelled, in the cuirass of command.
+      identity: {
+        name: "Horseman",
+        sex: "male",
+        bearded: true,
+        hair: "curls",
+        headgear: "diadem",
+        face: { brow: 1.2, jaw: 1.15, nose: 1.1, age: 0.5 },
+      },
     },
   ];
 }
@@ -1838,6 +2235,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     robe: Material,
     /** Which of the eight this niche holds. */
     who: FigureIdentity,
+    paint?: FigurePaint,
   ) => {
     const pedestal = height * 0.26;
     const shaft = height * 0.58;
@@ -1892,7 +2290,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     const scanned =
       who.name === "Sophia" ? "celsus-sophia" : who.name === "Arete" ? "celsus-arete" : null;
     parts.push({
-      ...person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, who),
+      ...person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, who, paint),
       ...(scanned ? { scan: { id: scanned } } : {}),
     });
     for (const side of [-1, 1]) {
@@ -1984,6 +2382,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       1.0,
       robes[index % robes.length]!,
       IDENTITIES.celsusVirtues[index % IDENTITIES.celsusVirtues.length]!,
+      PAINT.celsusVirtues[index % PAINT.celsusVirtues.length]!,
     );
   });
   // The upper order is set back and drawn in, which is what makes the front
@@ -2002,6 +2401,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       0.72,
       "marbleWorn",
       index % 2 === 0 ? IDENTITIES.celsus : IDENTITIES.aquila,
+      index % 2 === 0 ? PAINT.celsus : PAINT.aquila,
     );
   });
 
@@ -2667,7 +3067,16 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
         6,
         Math.PI,
         "marbleWorn",
-        IDENTITIES.didymaApollo,
+        spec.cultStatue === "artemis"
+          ? IDENTITIES.artemisEphesia
+          : spec.cultStatue === "zeus"
+            ? IDENTITIES.zeus
+            : IDENTITIES.didymaApollo,
+        spec.cultStatue === "artemis"
+          ? PAINT.artemisEphesia
+          : spec.cultStatue === "zeus"
+            ? PAINT.zeus
+            : PAINT.apollo,
       ),
     );
   } else {
@@ -3496,9 +3905,8 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
         2.6,
         facing + Math.PI,
         "marble",
-        placed % 2 === 0
-          ? { name: "Hekatomnid", sex: "male", bearded: true, hair: "short", dress: "himation" }
-          : { name: "Hekatomnid", sex: "female", hair: "bun", dress: "chiton", left: "scroll" },
+        IDENTITIES.hekatomnids[placed % IDENTITIES.hekatomnids.length]!,
+        PAINT.hekatomnids[(placed * 3) % PAINT.hekatomnids.length]!,
       ),
     );
     placed += 1;
@@ -3581,6 +3989,7 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       Math.PI,
       "marble",
       IDENTITIES.maussollos,
+      PAINT.maussollos,
     ),
   );
   parts.push(
@@ -3590,6 +3999,7 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       Math.PI,
       "marble",
       IDENTITIES.artemisia,
+      PAINT.artemisia,
     ),
   );
 

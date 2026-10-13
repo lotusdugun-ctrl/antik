@@ -116,6 +116,11 @@ export type IonicDipterosSpec = {
   /** Modelled. */
   interior: "open-court" | "cella";
   /**
+   * Who stands in the cella. Each temple housed its own god: the old goddess
+   * at Ephesus, Zeus at Aizanoi — not one statue for all of them.
+   */
+  cultStatue?: "apollo" | "artemis" | "zeus";
+  /**
    * Rings of columns round the building: two for a true dipteros, one for a
    * pseudodipteros, which keeps the second ring's spacing and leaves its
    * place empty. Two unless said otherwise.
@@ -916,6 +921,7 @@ export const reconstructions: Reconstruction[] = [
       naiskosWidth: 9,
       naiskosLength: 14,
       interior: "cella",
+      cultStatue: "artemis",
       courtWidth: 22,
       courtLength: 70,
       columnDiameter: 1.8,
@@ -1771,6 +1777,7 @@ export const reconstructions: Reconstruction[] = [
       naiskosWidth: 6,
       naiskosLength: 8,
       interior: "cella",
+      cultStatue: "zeus",
       rings: 1,
       courtWidth: 14,
       courtLength: 30,

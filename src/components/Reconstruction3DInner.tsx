@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { SCANS } from "@/lib/scans";
 import { buildLandscape, type Biome } from "./scene/landscape";
+import type { LifeHandle } from "./scene/life";
+import type { SceneLife } from "@/lib/scene-life";
 import type * as THREE_NS from "three";
 import {
   boundsOf,
   type Dress,
+  type FaceShape,
   type Gesture,
   type Headgear,
   type Held,
@@ -108,6 +111,10 @@ type Props = {
   onCaptured?: ((dataUrl: string) => void) | undefined;
   /** Leave the ground disc out of the export (AR stands the model on a real floor). */
   exportWithoutGround?: boolean | undefined;
+  /** The people, fires and furniture of the place; see `scene-life.ts`. */
+  life?: SceneLife | undefined;
+  /** Whether that life is shown. Toggling it does not rebuild the scene. */
+  showLife?: boolean | undefined;
 };
 
 type Palette = {
@@ -195,6 +202,19 @@ const MATERIALS: Record<Material, Palette> = {
     sheenRoughness: 0.6,
     sheenColor: 0xb8a878,
   },
+  // The life of the scene: fired clay, linen, leaves, papyrus, hide.
+  terracotta: { color: 0xa65f3c, roughness: 0.82, metalness: 0 },
+  linen: {
+    color: 0xe6dcc6,
+    roughness: 0.9,
+    metalness: 0,
+    sheen: 0.4,
+    sheenRoughness: 0.7,
+    sheenColor: 0xffffff,
+  },
+  foliage: { color: 0x56683a, roughness: 0.9, metalness: 0 },
+  papyrus: { color: 0xd9c591, roughness: 0.8, metalness: 0 },
+  hide: { color: 0x8a6a48, roughness: 0.95, metalness: 0 },
 };
 
 /*
@@ -313,6 +333,8 @@ export default function Reconstruction3DInner({
   captureToken = 0,
   onCaptured,
   exportWithoutGround = false,
+  life,
+  showLife = true,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<{
@@ -325,7 +347,10 @@ export default function Reconstruction3DInner({
     exportGLB: (withGround: boolean) => Promise<ArrayBuffer>;
     setQuality: (on: boolean) => void;
     capture: () => string;
+    setLife: (on: boolean) => void;
   } | null>(null);
+  const showLifeRef = useRef(showLife);
+  showLifeRef.current = showLife;
   const captureRef = useRef(onCaptured);
   captureRef.current = onCaptured;
   const groundRef = useRef(!exportWithoutGround);
@@ -351,6 +376,7 @@ export default function Reconstruction3DInner({
       const THREE = await import("three");
       const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
       const { mergeGeometries } = await import("three/addons/utils/BufferGeometryUtils.js");
+      const { buildLife } = await import("./scene/life");
       if (disposed) return;
 
       let renderer: THREE_NS.WebGLRenderer;
@@ -523,6 +549,14 @@ export default function Reconstruction3DInner({
         const rand = mulberry(seed);
         const n1 = valueNoise(seed);
         const pieces: THREE_NS.BufferGeometry[] = [];
+        /*
+         * Which piece is what, for the paint. Each mark says "from this piece
+         * on, it is cloth" (or skin, or hair…), so the builders below only
+         * have to announce a change of role, not tag every primitive.
+         */
+        type PaintRole = "plain" | "skin" | "cloth" | "mantle" | "hair" | "accent";
+        const marks: [number, PaintRole][] = [[0, "plain"]];
+        const mark = (role: PaintRole) => marks.push([pieces.length, role]);
         const statue = part.material !== "human";
         const riding = part.pose === "riding";
         const seated = part.pose === "seated";
@@ -605,11 +639,44 @@ export default function Reconstruction3DInner({
         };
 
         /** An arm in three joints, and the hand at the end of it. */
+        /**
+         * A limb as one smooth skin through its joints, swelling where the
+         * muscle is and narrowing at the joint: what turns a jointed doll into
+         * an arm. `radii` gives the girth at each point.
+         */
+        const limbSkin = (points: P[], radii: number[], around = 16) => {
+          const sections: LoftSection[] = [];
+          for (let i = 0; i < points.length; i += 1) {
+            sections.push(section(points[i]!, radii[i]!, radii[i]! * 0.92));
+          }
+          const geometry = loftGeometry(sections, around, 5);
+          pieces.push(geometry);
+          return geometry;
+        };
+        const lerpP = (a: P, b: P, t: number, push: P = [0, 0, 0]): P => [
+          a[0] + (b[0] - a[0]) * t + push[0],
+          a[1] + (b[1] - a[1]) * t + push[1],
+          a[2] + (b[2] - a[2]) * t + push[2],
+        ];
+
         const arm = (shoulder: P, elbow: P, wrist: P, spread = 1) => {
-          pieces.push(limb(shoulder, elbow, h * 0.037, h * 0.031));
-          pieces.push(joint(elbow, h * 0.032));
-          pieces.push(limb(elbow, wrist, h * 0.028, h * 0.022));
+          mark("skin");
+          // Deltoid, biceps, the elbow, the swell of the forearm, the wrist.
+          limbSkin(
+            [
+              shoulder,
+              lerpP(shoulder, elbow, 0.35, [0, 0, h * 0.006]),
+              lerpP(shoulder, elbow, 0.75),
+              elbow,
+              lerpP(elbow, wrist, 0.3, [0, 0, h * 0.004]),
+              lerpP(elbow, wrist, 0.85),
+              wrist,
+            ],
+            [h * 0.044, h * 0.04, h * 0.034, h * 0.029, h * 0.03, h * 0.022, h * 0.019],
+          );
           pieces.push(...hand(wrist, h * 0.026, spread));
+          // Whatever the hand is given next is an object, not the hand.
+          mark("accent");
         };
 
         /**
@@ -618,15 +685,55 @@ export default function Reconstruction3DInner({
          * — the way a sculptor adds clay and takes it away. Recomputed normals
          * afterwards make it read as carved marble, not as a mask stuck on.
          */
+        /*
+         * The face this statue gets. A named figure can carry its own; every
+         * other one is dealt a face from a seed, within the range of what a
+         * Greek sculptor cut — so the five gods of Nemrut, or twenty
+         * Hekatomnids, are five or twenty people rather than one face cloned.
+         */
+        const faceRand = mulberry(hashString(`${id?.name ?? ""}|${JSON.stringify(part.at)}|face`));
+        const vary = (base: number, spread: number) => base + (faceRand() - 0.5) * 2 * spread;
+        const face: Required<FaceShape> = {
+          nose: id?.face?.nose ?? vary(1, 0.18),
+          noseWidth: id?.face?.noseWidth ?? vary(male ? 1.05 : 0.9, 0.15),
+          brow: id?.face?.brow ?? vary(male ? 1.1 : 0.75, 0.2),
+          jaw: id?.face?.jaw ?? vary(male ? 1.1 : 0.85, 0.15),
+          chin: id?.face?.chin ?? vary(1, 0.2),
+          lips: id?.face?.lips ?? vary(male ? 0.95 : 1.15, 0.15),
+          cheek: id?.face?.cheek ?? vary(1, 0.2),
+          eye: id?.face?.eye ?? vary(1, 0.15),
+          length: id?.face?.length ?? vary(male ? 1.06 : 1.02, 0.04),
+          age: id?.face?.age ?? (bearded ? vary(0.7, 0.3) : vary(0.2, 0.2)),
+        };
+
+        /**
+         * Sculpt a head out of a sphere, the way clay is worked: first the
+         * mass — narrower than it is deep, the jaw tapering to the chin, the
+         * back of the skull swelling, the face a flattened plane — then the
+         * features pushed and cut into it along the surface normal: brow and
+         * glabella, sockets with the eyeball and its upper lid inside them,
+         * the bridge and wings of the nose, the two lips and the line between,
+         * the chin, the cheekbones, the hollow of the temples, the angle of the
+         * jaw, the folds an older face carries, and the ears. Each feature is
+         * scaled by this statue's own `face`.
+         */
         const sculptHead = (geo: THREE_NS.BufferGeometry, r0: number) => {
           const pos = geo.attributes["position"]!;
+          const f = face;
           for (let i = 0; i < pos.count; i += 1) {
-            const x = pos.getX(i);
-            const y = pos.getY(i);
-            const z = pos.getZ(i);
-            const a = x / r0;
-            const b = y / r0;
-            const c = z / r0;
+            let a = pos.getX(i) / r0;
+            let b = pos.getY(i) / r0;
+            let c = pos.getZ(i) / r0;
+            // The mass of the head.
+            a *= 0.84;
+            if (b < 0) {
+              const down = Math.pow(-b, 1.3);
+              a *= 1 - 0.3 * down * (2 - f.jaw);
+              if (c > 0) c += 0.1 * -b * c * f.chin;
+            }
+            if (c < -0.3 && b > -0.3) c *= 1.06;
+            if (c > 0.62) c -= (c - 0.62) * 0.3;
+            b *= f.length;
             const rr = Math.hypot(a, b, c) || 1;
             const ux = a / rr;
             const uy = b / rr;
@@ -649,40 +756,80 @@ export default function Reconstruction3DInner({
               );
             };
             let disp = 0;
-            // The nose, and its bulbous tip.
-            disp += bump(0, -0.05, 0.82, 0.16, 0.4, 0.34, 0.52);
-            disp += bump(0, -0.12, 0.87, 0.12, 0.16, 0.2, 0.3);
-            // The sockets, cut in rather than built up.
-            disp += bump(-0.156, 0.04, 0.7, 0.15, 0.12, 0.15, -0.42);
-            disp += bump(0.156, 0.04, 0.7, 0.15, 0.12, 0.15, -0.42);
-            // The brow over each eye.
-            disp += bump(-0.16, 0.2, 0.78, 0.2, 0.14, 0.3, 0.26);
-            disp += bump(0.16, 0.2, 0.78, 0.2, 0.14, 0.3, 0.26);
-            // The cheekbones.
-            disp += bump(-0.42, -0.04, 0.42, 0.3, 0.24, 0.28, 0.18);
-            disp += bump(0.42, -0.04, 0.42, 0.3, 0.24, 0.28, 0.18);
-            // The mouth: lips, and the crease between them.
-            disp += bump(0, -0.26, 0.8, 0.22, 0.12, 0.2, 0.16);
-            disp += bump(0, -0.31, 0.77, 0.12, 0.045, 0.11, -0.14);
-            // The chin and the jaw that carries it.
-            disp += bump(0, -0.52, 0.52, 0.26, 0.26, 0.32, 0.28);
-            disp += bump(0, -0.62, 0.3, 0.36, 0.24, 0.42, 0.2);
+            const front = c > 0;
+            if (front) {
+              // Brow ridge and glabella.
+              for (const side of [-1, 1]) {
+                disp += bump(side * 0.16, 0.22 * f.length, 0.74, 0.16, 0.07, 0.22, 0.11 * f.brow);
+              }
+              disp += bump(0, 0.2 * f.length, 0.8, 0.07, 0.08, 0.2, 0.05 * f.brow);
+              for (const side of [-1, 1]) {
+                const ex = side * 0.15;
+                const ey = 0.08 * f.length;
+                // The socket, cut back under the brow.
+                disp += bump(ex, ey, 0.72, 0.12 * f.eye, 0.085 * f.eye, 0.2, -0.17);
+                // The eyeball, bulging inside it, and the upper lid over it.
+                disp += bump(ex, ey - 0.005, 0.74, 0.075 * f.eye, 0.05 * f.eye, 0.15, 0.1);
+                disp += bump(ex, ey + 0.045, 0.75, 0.085 * f.eye, 0.022, 0.15, 0.035);
+                disp += bump(ex, ey - 0.06, 0.75, 0.07 * f.eye, 0.018, 0.15, 0.015);
+                // The hollow of the temple.
+                disp += bump(side * 0.6, 0.22, 0.45, 0.12, 0.14, 0.2, -0.05);
+                // The cheekbone.
+                disp += bump(side * 0.38, -0.03, 0.56, 0.17, 0.11, 0.2, 0.07 * f.cheek);
+                // The angle of the jaw.
+                disp += bump(side * 0.56, -0.42 * f.length, 0.2, 0.14, 0.12, 0.25, 0.045 * f.jaw);
+                // The wing of the nostril.
+                disp += bump(
+                  side * 0.06 * f.noseWidth,
+                  -0.19 * f.length,
+                  0.86,
+                  0.045,
+                  0.035,
+                  0.1,
+                  0.06,
+                );
+                // The fold from nose to mouth that age deepens.
+                disp += bump(side * 0.14, -0.24 * f.length, 0.8, 0.03, 0.1, 0.1, -0.035 * f.age);
+                // The corner of the mouth.
+                disp += bump(side * 0.13, -0.33 * f.length, 0.79, 0.04, 0.03, 0.12, -0.04);
+              }
+              // The nose: bridge, the length of it, the tip.
+              const n = f.nose;
+              disp += bump(0, 0.06 * f.length, 0.86, 0.045 * f.noseWidth, 0.12, 0.15, 0.06 * n);
+              disp += bump(0, -0.08 * f.length, 0.9, 0.055 * f.noseWidth, 0.13 * n, 0.2, 0.2 * n);
+              disp += bump(0, -0.17 * f.length, 0.95, 0.05 * f.noseWidth, 0.05, 0.12, 0.09 * n);
+              // The groove under it, the two lips and the line between them.
+              disp += bump(0, -0.24 * f.length, 0.9, 0.05, 0.03, 0.1, -0.025);
+              disp += bump(0, -0.285 * f.length, 0.86, 0.11, 0.032, 0.12, 0.05 * f.lips);
+              disp += bump(0, -0.37 * f.length, 0.84, 0.09, 0.035, 0.12, 0.06 * f.lips);
+              disp += bump(0, -0.325 * f.length, 0.87, 0.11, 0.008, 0.08, -0.04);
+              // Under the lower lip, and the chin.
+              disp += bump(0, -0.44 * f.length, 0.83, 0.1, 0.03, 0.12, -0.03);
+              disp += bump(0, -0.55 * f.length, 0.74, 0.13, 0.08, 0.22, 0.08 * f.chin);
+            }
             // The ears.
-            disp += bump(-0.98, -0.02, 0, 0.1, 0.22, 0.17, 0.3);
-            disp += bump(0.98, -0.02, 0, 0.1, 0.22, 0.17, 0.3);
+            for (const side of [-1, 1]) {
+              disp += bump(side * 0.84, 0, -0.02, 0.07, 0.2, 0.14, 0.18);
+              disp += bump(side * 0.86, 0.02, 0.0, 0.03, 0.12, 0.06, -0.06);
+            }
             if (bearded) {
-              // The beard, massed under the jaw, rugged with hair.
-              disp += bump(0, -0.42, 0.32, 0.36, 0.5, 0.5, 0.4);
-              if (b < -0.2) disp += (n1(a * 14, b * 14, c * 14) - 0.5) * 0.28;
+              // The beard, massed under the jaw and round the chin in curls.
+              disp += bump(0, -0.5, 0.42, 0.42, 0.42, 0.5, 0.26);
+              disp += bump(0, -0.68, 0.5, 0.24, 0.24, 0.3, 0.16);
+              if (b < -0.18 || (b < 0.05 && Math.abs(a) > 0.5)) {
+                disp += (n1(a * 16, b * 16, c * 16) - 0.5) * 0.16;
+              }
+              // The moustache over the upper lip.
+              disp += bump(0, -0.25, 0.86, 0.15, 0.03, 0.1, 0.03);
             }
             if (hair === "bun" || hair === "long") {
-              // Hair drawn up off the crown, rough where the surface is high.
-              if (b > 0.3) disp += 0.24 + (n1(a * 12, b * 12, c * 12) - 0.5) * 0.24;
+              if (b > 0.32) disp += 0.12 + (n1(a * 14, b * 14, c * 14) - 0.5) * 0.12;
             }
-            disp *= r0;
-            pos.setX(i, x + ux * disp);
-            pos.setY(i, y + uy * disp);
-            pos.setZ(i, z + uz * disp);
+            disp *= 1;
+            a += ux * disp;
+            b += uy * disp;
+            c += uz * disp;
+            pos.setXYZ(i, a * r0, b * r0, c * r0);
           }
           pos.needsUpdate = true;
         };
@@ -723,7 +870,10 @@ export default function Reconstruction3DInner({
 
         /** A cap of hair over the skull, flattened, and roughened if asked. */
         const hairCap = (headY: number, rough: boolean) => {
-          const cap = new THREE.SphereGeometry(h * 0.107, 24, 16);
+          // Only the crown: a cap open below the brow line, tipped so it sits
+          // high on the forehead and low at the nape — a full sphere here
+          // used to come down over the eyes like a pair of goggles.
+          const cap = new THREE.SphereGeometry(h * 0.106, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.6);
           if (rough) {
             const pos = cap.attributes["position"]!;
             for (let i = 0; i < pos.count; i += 1) {
@@ -737,8 +887,9 @@ export default function Reconstruction3DInner({
             pos.needsUpdate = true;
             cap.computeVertexNormals();
           }
-          cap.scale(1, rough ? 0.7 : 0.62, 1);
-          cap.translate(0, headY + h * 0.03, h * 0.01);
+          cap.scale(0.9, rough ? 0.95 : 0.88, 1.02);
+          cap.rotateX(-0.42);
+          cap.translate(0, headY + h * 0.012, -h * 0.008);
           pieces.push(cap);
         };
 
@@ -891,6 +1042,71 @@ export default function Reconstruction3DInner({
               drape(veil, () => 0.01 * h, 10, rand() * Math.PI * 2);
               break;
             }
+            case "helmet": {
+              // The Corinthian helmet worn pushed back off the face, the way
+              // Athena wears it: a bowl over the crown, the cheek-pieces and
+              // the empty eye-holes tipped up over the brow, a horsehair crest.
+              const bowl = new THREE.SphereGeometry(
+                h * 0.112,
+                22,
+                14,
+                0,
+                Math.PI * 2,
+                0,
+                Math.PI * 0.55,
+              );
+              bowl.scale(1, 0.95, 1.12);
+              bowl.translate(0, headY + h * 0.02, -h * 0.005);
+              pieces.push(bowl);
+              const visor = new THREE.CylinderGeometry(
+                h * 0.09,
+                h * 0.1,
+                h * 0.05,
+                18,
+                1,
+                true,
+                -Math.PI * 0.45,
+                Math.PI * 0.9,
+              );
+              visor.rotateX(-0.9);
+              visor.translate(0, headY + h * 0.1, h * 0.06);
+              pieces.push(visor);
+              skin(
+                [
+                  section([0, headY + h * 0.12, h * 0.11], h * 0.012, h * 0.02),
+                  section([0, headY + h * 0.2, h * 0.03], h * 0.016, h * 0.05),
+                  section([0, headY + h * 0.19, -h * 0.08], h * 0.016, h * 0.05),
+                  section([0, headY + h * 0.08, -h * 0.17], h * 0.012, h * 0.04),
+                  section([0, headY - h * 0.05, -h * 0.17], h * 0.006, h * 0.02),
+                ],
+                12,
+                6,
+              );
+              break;
+            }
+            case "muralCrown": {
+              // A tall crown built as a city wall, towers and all, and the
+              // round veil standing behind the head like a halo.
+              const crown = new THREE.CylinderGeometry(h * 0.088, h * 0.098, h * 0.12, 24);
+              crown.translate(0, headY + h * 0.11, 0);
+              pieces.push(crown);
+              for (let i = 0; i < 8; i += 1) {
+                const angle = (i / 8) * Math.PI * 2;
+                const tower = new THREE.BoxGeometry(h * 0.03, h * 0.04, h * 0.03);
+                tower.rotateY(-angle);
+                tower.translate(
+                  Math.sin(angle) * h * 0.085,
+                  headY + h * 0.185,
+                  Math.cos(angle) * h * 0.085,
+                );
+                pieces.push(tower);
+              }
+              const halo = new THREE.CylinderGeometry(h * 0.2, h * 0.2, h * 0.012, 32);
+              halo.rotateX(Math.PI / 2);
+              halo.translate(0, headY + h * 0.02, -h * 0.11);
+              pieces.push(halo);
+              break;
+            }
             default:
               break;
           }
@@ -898,25 +1114,49 @@ export default function Reconstruction3DInner({
 
         /** The head, on its neck, with its hair and whatever it wears. */
         const headAt = (neckBase: number, neckHeight: number, headY: number) => {
+          mark("skin");
+          const firstHeadPiece = pieces.length + 1;
           const neck = new THREE.CylinderGeometry(h * 0.045, h * 0.055, neckHeight, 14);
           neck.translate(0, neckBase + neckHeight / 2, 0);
           pieces.push(neck);
-          const head = new THREE.SphereGeometry(h * 0.1, 32, 26);
+          // Fine enough for a face to read on a colossus, coarser on a small
+          // figure nobody will walk up to.
+          const fine = h > 2.4 ? [72, 56] : [52, 40];
+          const head = new THREE.SphereGeometry(h * 0.1, fine[0], fine[1]);
           sculptHead(head, h * 0.1);
           head.computeVertexNormals();
           head.translate(0, headY, 0);
           pieces.push(head);
+          mark("hair");
           hairAt(headY);
+          mark("accent");
           headgearAt(headY);
+          /*
+           * The head was sized at a fifth of the figure, which is a doll's
+           * proportion; a Greek statue's head is nearer an eighth. So the
+           * head, its hair and whatever it wears are drawn in together
+           * towards the chin, narrowed to the face, and the neck is left
+           * where it was.
+           */
+          const k = 0.76;
+          const chin = headY - h * 0.1;
+          for (let i = firstHeadPiece; i < pieces.length; i += 1) {
+            const g = pieces[i]!;
+            g.translate(0, -chin, 0);
+            g.scale(k * 0.94, k, k);
+            g.translate(0, chin + h * 0.012, 0);
+          }
         };
 
         /** The rolled edge of a mantle, run through the points given. */
-        const roll = (points: P[], rx: number, ry: number) =>
-          skin(
+        const roll = (points: P[], rx: number, ry: number) => {
+          mark("mantle");
+          return skin(
             points.map((p) => section(p, rx, ry)),
             12,
             5,
           );
+        };
 
         /* --------------------------------------------------------------
          * Things held. Each is drawn at the hand it is in, and where it
@@ -1034,9 +1274,73 @@ export default function Reconstruction3DInner({
           );
         };
 
+        /** A spear, upright, its butt on the ground and its blade above the head. */
+        const spearAt = (grip: P, ground: number) => {
+          const top = h * 1.18;
+          const shaft = new THREE.CylinderGeometry(h * 0.009, h * 0.011, top - ground, 8);
+          shaft.translate(grip[0], (top + ground) / 2, grip[2]);
+          pieces.push(shaft);
+          const blade = new THREE.ConeGeometry(h * 0.02, h * 0.1, 8);
+          blade.scale(1, 1, 0.35);
+          blade.translate(grip[0], top + h * 0.05, grip[2]);
+          pieces.push(blade);
+        };
+
+        /** A round shield resting on its rim at the side, its face turned out. */
+        const shieldAt = (centre: P, side: number) => {
+          const disc = new THREE.CylinderGeometry(h * 0.21, h * 0.21, h * 0.025, 32);
+          disc.rotateZ(Math.PI / 2);
+          disc.rotateY(side * 0.25);
+          disc.translate(...centre);
+          pieces.push(disc);
+          const boss = new THREE.SphereGeometry(h * 0.05, 14, 10);
+          boss.scale(0.5, 1, 1);
+          boss.translate(centre[0] + side * h * 0.015, centre[1], centre[2]);
+          pieces.push(boss);
+          const rim = new THREE.TorusGeometry(h * 0.205, h * 0.012, 6, 32);
+          rim.rotateY(Math.PI / 2 + side * 0.25);
+          rim.translate(...centre);
+          pieces.push(rim);
+        };
+
+        /** A shallow libation bowl, held out flat on the palm. */
+        const phialeAt = (p: P) => {
+          const bowl = new THREE.CylinderGeometry(h * 0.055, h * 0.035, h * 0.015, 18);
+          bowl.translate(p[0], p[1] + h * 0.012, p[2]);
+          pieces.push(bowl);
+        };
+
+        /** A thunderbolt: a double-ended spindle of flame, gripped in the middle. */
+        const thunderboltAt = (p: P) => {
+          const bolt = loftGeometry(
+            [
+              section([0, -h * 0.14, 0], h * 0.004, h * 0.004),
+              section([0, -h * 0.08, 0], h * 0.03, h * 0.03),
+              section([0, -h * 0.02, 0], h * 0.014, h * 0.014),
+              section([0, h * 0.02, 0], h * 0.014, h * 0.014),
+              section([0, h * 0.08, 0], h * 0.03, h * 0.03),
+              section([0, h * 0.14, 0], h * 0.004, h * 0.004),
+            ],
+            12,
+            4,
+          );
+          bolt.rotateZ(0.35);
+          bolt.translate(...p);
+          pieces.push(bolt);
+        };
+
+        /** A wreath, held out. */
+        const wreathAt = (p: P) => {
+          const ring = new THREE.TorusGeometry(h * 0.05, h * 0.012, 6, 18);
+          ring.rotateY(0.4);
+          ring.translate(...p);
+          pieces.push(ring);
+        };
+
         if (statue && !riding && !seated) {
           // A two-step pedestal: the wider base and the narrower cap that the
           // figure actually stands on.
+          mark("plain");
           const base = new THREE.CylinderGeometry(h * 0.2, h * 0.225, h * 0.035, 24);
           base.translate(0, h * 0.0175, 0);
           pieces.push(base);
@@ -1045,6 +1349,7 @@ export default function Reconstruction3DInner({
           pieces.push(cap);
           const ground = h * 0.065;
           // Feet, peeking out from beneath the hem.
+          mark("skin");
           for (const side of [-1, 1]) {
             const foot = new THREE.SphereGeometry(h * 0.038, 10, 7);
             foot.scale(1.25, 0.72, 1.5);
@@ -1060,15 +1365,27 @@ export default function Reconstruction3DInner({
            */
           const hip = (male ? 0.012 : 0.02) * h;
           const broad = male ? 1.12 : 1;
+          const sheath = dress === "ependytes";
+          mark("cloth");
           const robe = skin(
-            [
-              section([0, h * 0.055, 0], h * 0.165, h * 0.125),
-              section([0, h * 0.16, 0], h * 0.15, h * 0.115),
-              section([0.004 * h, h * 0.3, 0.006 * h], h * 0.135, h * 0.105),
-              section([0.012 * h, h * 0.42, 0.004 * h], h * 0.14, h * 0.108),
-              section([hip, h * 0.5, 0], h * 0.15, h * 0.115),
-              section([hip * 0.7, h * 0.57, 0], h * 0.115, h * 0.09),
-            ],
+            sheath
+              ? [
+                  // Artemis of Ephesus stands stiff and frontal, the sheath
+                  // a tapering column from the waist to the feet.
+                  section([0, h * 0.055, 0], h * 0.09, h * 0.08),
+                  section([0, h * 0.2, 0], h * 0.1, h * 0.09),
+                  section([0, h * 0.4, 0], h * 0.12, h * 0.1),
+                  section([0, h * 0.5, 0], h * 0.13, h * 0.105),
+                  section([0, h * 0.57, 0], h * 0.115, h * 0.09),
+                ]
+              : [
+                  section([0, h * 0.055, 0], h * 0.165, h * 0.125),
+                  section([0, h * 0.16, 0], h * 0.15, h * 0.115),
+                  section([0.004 * h, h * 0.3, 0.006 * h], h * 0.135, h * 0.105),
+                  section([0.012 * h, h * 0.42, 0.004 * h], h * 0.14, h * 0.108),
+                  section([hip, h * 0.5, 0], h * 0.15, h * 0.115),
+                  section([hip * 0.7, h * 0.57, 0], h * 0.115, h * 0.09),
+                ],
             36,
             6,
           );
@@ -1089,16 +1406,38 @@ export default function Reconstruction3DInner({
           }
           // A chiton is thin linen and falls in many fine pleats; the heavy
           // wool of a peplos or a himation hangs in fewer, deeper ones.
-          const fine = dress === "chiton";
+          const fine = dress === "chiton" || sheath;
           const folds = (fine ? 15 : 9) + Math.floor(rand() * 4);
           const phase = rand() * Math.PI * 2;
-          drape(
-            robe,
-            (y) =>
-              (fine ? 0.02 : 0.03) * h * Math.max(0.25, Math.min(1, (h * 0.57 - y) / (h * 0.5))),
-            folds,
-            phase,
-          );
+          if (sheath) {
+            // The sheath is panelled, not draped: bands of beasts and
+            // rosettes round it, each a raised ring.
+            mark("accent");
+            for (let i = 0; i < 5; i += 1) {
+              const y = h * (0.12 + i * 0.085);
+              const r = h * (0.092 + i * 0.006);
+              const band = new THREE.TorusGeometry(r, h * 0.008, 6, 28);
+              band.rotateX(Math.PI / 2);
+              band.scale(1, 1, 0.88);
+              band.translate(0, y, 0);
+              pieces.push(band);
+              for (let k = 0; k < 6; k += 1) {
+                const angle = -Math.PI / 2 + (k / 5) * Math.PI;
+                const boss = new THREE.SphereGeometry(h * 0.014, 8, 6);
+                boss.translate(Math.sin(angle) * r, y + h * 0.04, Math.cos(angle) * r * 0.88);
+                pieces.push(boss);
+              }
+            }
+            mark("cloth");
+          }
+          if (!sheath)
+            drape(
+              robe,
+              (y) =>
+                (fine ? 0.02 : 0.03) * h * Math.max(0.25, Math.min(1, (h * 0.57 - y) / (h * 0.5))),
+              folds,
+              phase,
+            );
           if (dress === "peplos") {
             // The overfold of the peplos, turned down from the shoulders, its
             // hem breaking across the hips.
@@ -1126,7 +1465,22 @@ export default function Reconstruction3DInner({
             5,
           );
           drape(torso, () => (fine ? 0.005 : 0.008) * h, fine ? 20 : 14, rand() * Math.PI * 2);
-          if (!male) {
+          if (sheath) {
+            // The egg-shaped pendants hung in rows across the breast — the
+            // attribute nobody has agreed on the meaning of, and nobody
+            // fails to recognise.
+            mark("accent");
+            for (let row = 0; row < 3; row += 1) {
+              const count = 5 - (row === 2 ? 1 : 0);
+              for (let k = 0; k < count; k += 1) {
+                const x = (k - (count - 1) / 2) * h * 0.04;
+                const y = h * (0.71 - row * 0.045);
+                const z = h * 0.098 - Math.abs(x) * 0.35 - row * h * 0.004;
+                ball([x, y, z], h * 0.02, [1, 1.3, 0.85]);
+              }
+            }
+            mark("cloth");
+          } else if (!male) {
             // The hint of the breasts beneath the cloth, just enough to read.
             for (const side of [-1, 1]) {
               ball([side * h * 0.052, h * 0.665, h * 0.095], h * 0.036, [1, 0.85, 1.2]);
@@ -1142,19 +1496,20 @@ export default function Reconstruction3DInner({
            */
           const heavy = dress === "himation" || dress === "toga";
           const rollR = heavy ? h * 0.068 : h * 0.05;
-          roll(
-            [
-              [-0.15 * h, 0.8 * h, 0],
-              [-0.1 * h, 0.73 * h, 0.1 * h],
-              [0, 0.63 * h, 0.125 * h],
-              [0.1 * h, 0.54 * h, 0.11 * h],
-              [0.16 * h, 0.485 * h, 0.03 * h],
-              [0.14 * h, 0.47 * h, -0.08 * h],
-              [0, 0.5 * h, -0.125 * h],
-            ],
-            rollR,
-            rollR * 0.7,
-          );
+          if (!sheath)
+            roll(
+              [
+                [-0.15 * h, 0.8 * h, 0],
+                [-0.1 * h, 0.73 * h, 0.1 * h],
+                [0, 0.63 * h, 0.125 * h],
+                [0.1 * h, 0.54 * h, 0.11 * h],
+                [0.16 * h, 0.485 * h, 0.03 * h],
+                [0.14 * h, 0.47 * h, -0.08 * h],
+                [0, 0.5 * h, -0.125 * h],
+              ],
+              rollR,
+              rollR * 0.7,
+            );
           if (heavy) {
             const fall = roll(
               [
@@ -1197,6 +1552,27 @@ export default function Reconstruction3DInner({
             const wrist: P = [h * 0.13, h * 0.55, h * 0.13];
             arm(shoulderR, [h * 0.16, h * 0.6, h * 0.03], wrist, 0.5);
             wheatAt(wrist);
+          } else if (right === "spear") {
+            const wrist: P = [h * 0.2, h * 0.66, h * 0.06];
+            arm(shoulderR, [h * 0.22, h * 0.68, h * 0.0], wrist, 0.5);
+            spearAt(wrist, ground);
+          } else if (right === "phiale") {
+            const wrist: P = [h * 0.15, h * 0.55, h * 0.2];
+            arm(shoulderR, [h * 0.17, h * 0.6, h * 0.04], wrist, 1.3);
+            phialeAt([wrist[0], wrist[1] - h * 0.02, wrist[2] + h * 0.03]);
+          } else if (right === "thunderbolt") {
+            const wrist: P = [h * 0.17, h * 0.47, h * 0.08];
+            arm(shoulderR, [h * 0.18, h * 0.6, h * 0.03], wrist, 0.5);
+            thunderboltAt([wrist[0], wrist[1] - h * 0.04, wrist[2] + h * 0.02]);
+          } else if (right === "wreath") {
+            const wrist: P = [h * 0.16, h * 0.66, h * 0.2];
+            arm(shoulderR, [h * 0.18, h * 0.62, h * 0.04], wrist, 1.2);
+            wreathAt([wrist[0], wrist[1] + h * 0.03, wrist[2] + h * 0.04]);
+          } else if (gesture === "forward") {
+            arm(shoulderR, [h * 0.17, h * 0.6, h * 0.03], [h * 0.16, h * 0.6, h * 0.24], 1.1);
+          } else if (gesture === "veil") {
+            // Drawing the edge of the veil forward at the shoulder.
+            arm(shoulderR, [h * 0.17, h * 0.62, h * 0.06], [h * 0.09, h * 0.8, h * 0.07], 0.5);
           } else if (right === "scroll") {
             const wrist: P = [h * 0.15, h * 0.46, h * 0.07];
             arm(shoulderR, [h * 0.16, h * 0.6, h * 0.03], wrist, 0.6);
@@ -1246,6 +1622,12 @@ export default function Reconstruction3DInner({
             const wrist: P = [-h * 0.13, h * 0.55, h * 0.13];
             arm(shoulderL, [-h * 0.16, h * 0.6, h * 0.03], wrist, 0.5);
             wheatAt(wrist);
+          } else if (left === "shield") {
+            const wrist: P = [-h * 0.2, h * 0.47, h * 0.08];
+            arm(shoulderL, [-h * 0.18, h * 0.6, h * 0.03], wrist, 0.6);
+            shieldAt([-h * 0.25, ground + h * 0.21, h * 0.06], -1);
+          } else if (gesture === "forward") {
+            arm(shoulderL, [-h * 0.17, h * 0.6, h * 0.03], [-h * 0.16, h * 0.6, h * 0.24], 1.1);
           } else {
             arm(shoulderL, [-h * 0.16, h * 0.6, h * 0.03], [-h * 0.15, h * 0.46, h * 0.07]);
           }
@@ -1257,6 +1639,7 @@ export default function Reconstruction3DInner({
            * back — and the right arm out in the gesture of address the
            * Capitoline horseman makes, the left holding the rein.
            */
+          mark("cloth");
           const tunic = skin(
             [
               section([0, 0.16 * h, 0], 0.115 * h, 0.09 * h),
@@ -1268,18 +1651,51 @@ export default function Reconstruction3DInner({
             5,
           );
           drape(tunic, () => 0.012 * h, 10, rand() * Math.PI * 2);
+          mark("skin");
           for (const side of [-1, 1]) {
-            const hipP: P = [side * 0.07 * h, 0, 0.02 * h];
-            const knee: P = [side * 0.19 * h, -0.13 * h, 0.22 * h];
-            const ankle: P = [side * 0.21 * h, -0.45 * h, 0.15 * h];
-            pieces.push(limb(hipP, knee, h * 0.058, h * 0.042));
-            pieces.push(joint(knee, h * 0.045));
-            pieces.push(limb(knee, ankle, h * 0.04, h * 0.026));
-            const foot = new THREE.SphereGeometry(h * 0.035, 10, 7);
-            foot.scale(1, 0.7, 1.8);
-            foot.translate(ankle[0], ankle[1] - 0.02 * h, ankle[2] + 0.03 * h);
+            // Thighs down and forward round the barrel, gripping, the knee
+            // turned in against the horse, the lower leg hanging straight
+            // with the toe down — no stirrups yet.
+            const hipP: P = [side * 0.075 * h, 0.01 * h, 0.01 * h];
+            const knee: P = [side * 0.2 * h, -0.17 * h, 0.16 * h];
+            const ankle: P = [side * 0.19 * h, -0.45 * h, 0.1 * h];
+            limbSkin(
+              [
+                hipP,
+                lerpP(hipP, knee, 0.4, [side * 0.02 * h, 0, 0]),
+                lerpP(hipP, knee, 0.8),
+                knee,
+                lerpP(knee, ankle, 0.3, [0, 0, -0.012 * h]),
+                lerpP(knee, ankle, 0.8),
+                ankle,
+              ],
+              [h * 0.07, h * 0.066, h * 0.052, h * 0.042, h * 0.043, h * 0.03, h * 0.024],
+            );
+            const foot = new THREE.SphereGeometry(h * 0.032, 14, 10);
+            foot.scale(0.9, 0.75, 2.0);
+            foot.rotateX(0.7);
+            foot.translate(ankle[0], ankle[1] - 0.035 * h, ankle[2] + 0.025 * h);
             pieces.push(foot);
           }
+          /*
+           * A general's muscled cuirass: the breastplate modelled as the body
+           * it covers — pectorals, the arch of the ribs, the navel — over a
+           * fringe of leather straps falling across the thighs.
+           */
+          mark("accent");
+          for (let i = 0; i < 12; i += 1) {
+            const a = -Math.PI * 0.85 + (i / 11) * Math.PI * 1.7;
+            const strap = new THREE.BoxGeometry(h * 0.032, h * 0.075, h * 0.012);
+            strap.rotateX(-0.35);
+            strap.rotateY(a);
+            strap.translate(Math.sin(a) * h * 0.115, h * 0.05, Math.cos(a) * h * 0.09 + h * 0.01);
+            pieces.push(strap);
+          }
+          for (const side of [-1, 1]) {
+            ball([side * h * 0.05, h * 0.255, h * 0.07], h * 0.045, [1.1, 0.75, 0.6]);
+          }
+          ball([0, h * 0.17, h * 0.072], h * 0.06, [1.3, 0.9, 0.35]);
+          mark("cloth");
           skin(
             [
               section([0, 0.08 * h, 0], 0.105 * h, 0.08 * h),
@@ -1291,14 +1707,18 @@ export default function Reconstruction3DInner({
             28,
             5,
           );
+          mark("mantle");
+          // The cloak, pinned at the right shoulder, hanging round the back
+          // and spreading over the horse's quarters.
           const cloak = skin(
             [
-              section([0, 0.33 * h, -0.05 * h], 0.19 * h, 0.03 * h),
-              section([0, 0.2 * h, -0.09 * h], 0.22 * h, 0.035 * h),
-              section([0, 0.02 * h, -0.12 * h], 0.24 * h, 0.04 * h),
-              section([0, -0.14 * h, -0.14 * h], 0.23 * h, 0.045 * h),
+              section([0, 0.34 * h, -0.02 * h], 0.16 * h, 0.06 * h),
+              section([0, 0.24 * h, -0.06 * h], 0.18 * h, 0.07 * h),
+              section([0, 0.08 * h, -0.1 * h], 0.2 * h, 0.07 * h),
+              section([0, -0.06 * h, -0.15 * h], 0.22 * h, 0.06 * h),
+              section([0, -0.12 * h, -0.2 * h], 0.2 * h, 0.03 * h),
             ],
-            20,
+            24,
             5,
           );
           drape(cloak, () => 0.01 * h, 9, rand() * Math.PI * 2);
@@ -1325,31 +1745,70 @@ export default function Reconstruction3DInner({
            * with her horn of plenty, Herakles with his club against his knee.
            */
           const fine = dress === "chiton";
-          const lap = skin(
-            [
-              section([0, 0.14 * h, 0], 0.12 * h, 0.09 * h),
-              section([0, 0.06 * h, 0.04 * h], 0.15 * h, 0.1 * h),
-              section([0, 0.03 * h, 0.16 * h], 0.16 * h, 0.07 * h),
-              section([0, 0.03 * h, 0.27 * h], 0.16 * h, 0.06 * h),
-            ],
-            28,
-            5,
-          );
-          drape(lap, () => (fine ? 0.008 : 0.012) * h, fine ? 16 : 10, rand() * Math.PI * 2);
+          /*
+           * The lower body as the sculptors of Nemrut cut it: one mass of
+           * cloth swept from the hips forward over the two knees and down to
+           * the ankles, the legs read through it — a valley between the
+           * thighs, the knees standing proud, the fall between the shins
+           * breaking into vertical folds, the hem lying across the feet.
+           */
+          mark("cloth");
+          {
+            const robe = skin(
+              [
+                section([0, 0.13 * h, -0.01 * h], 0.13 * h, 0.09 * h),
+                section([0, 0.06 * h, 0.03 * h], 0.165 * h, 0.1 * h),
+                section([0, 0.035 * h, 0.15 * h], 0.18 * h, 0.075 * h),
+                section([0, 0.03 * h, 0.27 * h], 0.185 * h, 0.065 * h),
+                section([0, -0.03 * h, 0.315 * h], 0.18 * h, 0.06 * h),
+                section([0, -0.13 * h, 0.325 * h], 0.18 * h, 0.055 * h),
+                section([0, -0.25 * h, 0.335 * h], 0.195 * h, 0.06 * h),
+                section([0, -0.27 * h, 0.335 * h], 0.17 * h, 0.04 * h),
+              ],
+              40,
+              6,
+            );
+            const pos = robe.attributes["position"]!;
+            const legX = 0.095 * h;
+            for (let i = 0; i < pos.count; i += 1) {
+              const x = pos.getX(i);
+              const y = pos.getY(i);
+              const z = pos.getZ(i);
+              const between = Math.exp(-((x / (0.035 * h)) ** 2));
+              const onLeg = Math.exp(-(((Math.abs(x) - legX) / (0.05 * h)) ** 2));
+              let dy = 0;
+              let dz = 0;
+              if (z > 0.06 * h && z < 0.3 * h && y > 0) {
+                // The valley between the thighs, and each thigh rounded.
+                dy += -between * 0.03 * h + onLeg * 0.012 * h;
+              }
+              if (y < 0.06 * h && y > -0.06 * h && z > 0.27 * h) {
+                // The knees, standing out of the cloth.
+                dz += onLeg * 0.022 * h;
+              }
+              if (y < -0.04 * h && z > 0.3 * h) {
+                // Shins pressing the cloth forward, the fall sinking between
+                // them in deep folds.
+                const fold = Math.cos((x / h) * 120) * 0.006 * h * (1 - onLeg);
+                dz += onLeg * 0.012 * h - between * 0.022 * h + fold;
+              }
+              pos.setY(i, y + dy);
+              pos.setZ(i, z + dz);
+            }
+            pos.needsUpdate = true;
+            robe.computeVertexNormals();
+          }
           for (const side of [-1, 1]) {
-            const hipP: P = [side * 0.07 * h, 0, 0.02 * h];
-            const knee: P = [side * 0.09 * h, 0.02 * h, 0.28 * h];
-            const ankle: P = [side * 0.09 * h, -0.25 * h, 0.3 * h];
-            pieces.push(limb(hipP, knee, h * 0.06, h * 0.045));
-            pieces.push(joint(knee, h * 0.048));
-            pieces.push(limb(knee, ankle, h * 0.042, h * 0.03));
-            const foot = new THREE.SphereGeometry(h * 0.04, 10, 7);
-            foot.scale(1, 0.6, 1.9);
-            foot.translate(ankle[0], ankle[1] - 0.015 * h, ankle[2] + 0.05 * h);
+            // The shoes, their toes showing under the hem.
+            mark("accent");
+            const foot = new THREE.SphereGeometry(h * 0.036, 18, 10);
+            foot.scale(1, 0.55, 1.8);
+            foot.translate(side * 0.1 * h, -0.255 * h, 0.39 * h);
             pieces.push(foot);
           }
           const footstool = -0.27 * h;
           const broad = male ? 1.1 : 1;
+          mark("cloth");
           const torso = skin(
             [
               section([0, 0.1 * h, 0], 0.11 * h, 0.085 * h),
@@ -1441,6 +1900,32 @@ export default function Reconstruction3DInner({
         // Every primitive here is indexed and a loft is too, but a merge only
         // holds when the lists agree, so everything is flattened first.
         const flat = pieces.map((piece) => (piece.index ? piece.toNonIndexed() : piece));
+        const paint = part.paint;
+        if (paint) {
+          const roleAt = (index: number): PaintRole => {
+            let role: PaintRole = "plain";
+            for (const [from, r] of marks) if (from <= index) role = r;
+            return role;
+          };
+          const tint = new THREE.Color();
+          flat.forEach((piece, index) => {
+            const role = roleAt(index);
+            const hex = role === "plain" ? undefined : paint[role === "accent" ? "accent" : role];
+            tint.set(hex ?? 0xffffff);
+            // Painted marble keeps the stone's own colour underneath, so the
+            // tint is mixed towards white rather than laid on at full strength.
+            if (hex !== undefined)
+              tint.lerp(new THREE.Color(0xffffff), role === "skin" ? 0.35 : 0.12);
+            const count = piece.attributes["position"]!.count;
+            const colours = new Float32Array(count * 3);
+            for (let i = 0; i < count; i += 1) {
+              colours[i * 3] = tint.r;
+              colours[i * 3 + 1] = tint.g;
+              colours[i * 3 + 2] = tint.b;
+            }
+            piece.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+          });
+        }
         const merged = mergeGeometries(flat, false)!;
         pieces.forEach((piece) => piece.dispose());
         flat.forEach((piece) => piece.dispose());
@@ -2083,76 +2568,123 @@ export default function Reconstruction3DInner({
         );
       }
 
-      const byMaterial = new Map<Material, THREE_NS.BufferGeometry[]>();
-      for (const part of parts) {
-        if (part.carving || part.scan) continue;
-        const list = byMaterial.get(part.material) ?? [];
-        list.push(flatten(geometryFor(part)));
-        byMaterial.set(part.material, list);
-      }
+      /**
+       * Everything of one material becomes one mesh. The building goes into
+       * the scene; the props of its life go into their own group, so they can
+       * be hidden with the people without rebuilding anything.
+       */
+      const addMerged = (source: Part[], parent: THREE_NS.Object3D) => {
+        const byMaterial = new Map<Material, THREE_NS.BufferGeometry[]>();
+        for (const part of source) {
+          if (part.carving || part.scan) continue;
+          const list = byMaterial.get(part.material) ?? [];
+          list.push(flatten(geometryFor(part)));
+          byMaterial.set(part.material, list);
+        }
 
-      for (const [name, list] of byMaterial) {
-        // Normals come from the primitives themselves and survive the merge;
-        // recomputing them here would flat-shade every column.
-        const merged = list.length === 1 ? list[0]! : mergeGeometries(list, false);
-        if (!merged) continue;
-        if (list.length > 1) list.forEach((geometry) => geometry.dispose());
-        worldUVs(merged);
-        // The ambient occlusion map is read from the second UV channel, so the
-        // same world-projected coordinates are duplicated there for it.
-        const uv = merged.getAttribute("uv");
-        if (uv) merged.setAttribute("uv1", uv.clone());
-        const palette = MATERIALS[name];
-        const isStone = name !== "shadow" && name !== "human";
-        const stone = name === "marble" || name === "marbleWorn" ? stoneSet : blockSet;
-        /*
-         * MeshPhysicalMaterial over MeshStandardMaterial on purpose: the palette
-         * files a thin clearcoat layer onto Roman marble (see `Palette`), and
-         * only the physical material actually renders it — its `clearcoat`
-         * term is the tight, bright highlight that polish puts back on the
-         * stone. Standard material would silently drop it and leave every
-         * façade reading as matte plaster, which is a reconstruction that never
-         * happened (Roman façades were polished, the Celsus front famously so).
-         */
-        const material = new THREE.MeshPhysicalMaterial({
-          color: palette.color,
-          roughness: palette.roughness,
-          metalness: palette.metalness,
-          // The same grain on everything, tinted by each material's own colour
-          // and roughened by it too, so marble reads polished and limestone
-          // does not. The PBR channels are baked from the very same height, so
-          // grain, shine and shadow agree about where every pit is.
-          map: isStone ? stone.map : null,
-          roughnessMap: isStone ? stone.map : null,
-          normalMap: isStone ? stone.normal : null,
-          aoMap: isStone ? stone.ao : null,
-          aoMapIntensity: isStone ? 0.75 : 1,
-          ...(palette.sheen
-            ? {
-                sheen: palette.sheen,
-                sheenRoughness: palette.sheenRoughness ?? 0.4,
-                sheenColor: new THREE.Color(palette.sheenColor ?? 0xffffff),
-              }
-            : {}),
-          // The polish layer, if the palette declared one. Kept just off a
-          // mirror so the carving still reads as carved rather than as glass.
-          ...(palette.clearcoat !== undefined
-            ? {
-                clearcoat: palette.clearcoat,
-                clearcoatRoughness: palette.clearcoatRoughness ?? 0.35,
-              }
-            : {}),
-        });
-        const mesh = new THREE.Mesh(merged, material);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        scene.add(mesh);
-        // The scale figure is a teaching device, not a find. It goes when the
-        // labels go, which is what leaves the clean archaeological view.
-        if (name === "human") scaleFigure = mesh;
-        materialsOwned.push(material);
-        geometriesOwned.push(merged);
+        for (const [name, list] of byMaterial) {
+          /*
+           * A painted statue carries a colour per vertex, and a merge only holds
+           * when every geometry in it has the same attributes — so once one of
+           * them is painted, every other piece of that stone is given plain
+           * white, which leaves its colour exactly as it was.
+           */
+          const painted = list.some((geometry) => geometry.getAttribute("color"));
+          if (painted) {
+            for (const geometry of list) {
+              if (geometry.getAttribute("color")) continue;
+              const count = geometry.attributes["position"]!.count;
+              geometry.setAttribute(
+                "color",
+                new THREE.BufferAttribute(new Float32Array(count * 3).fill(1), 3),
+              );
+            }
+          }
+          // Normals come from the primitives themselves and survive the merge;
+          // recomputing them here would flat-shade every column.
+          const merged = list.length === 1 ? list[0]! : mergeGeometries(list, false);
+          if (!merged) continue;
+          if (list.length > 1) list.forEach((geometry) => geometry.dispose());
+          worldUVs(merged);
+          // The ambient occlusion map is read from the second UV channel, so the
+          // same world-projected coordinates are duplicated there for it.
+          const uv = merged.getAttribute("uv");
+          if (uv) merged.setAttribute("uv1", uv.clone());
+          const palette = MATERIALS[name];
+          const isStone = !["shadow", "human", "linen", "foliage", "papyrus", "hide"].includes(
+            name,
+          );
+          const stone = name === "marble" || name === "marbleWorn" ? stoneSet : blockSet;
+          /*
+           * MeshPhysicalMaterial over MeshStandardMaterial on purpose: the palette
+           * files a thin clearcoat layer onto Roman marble (see `Palette`), and
+           * only the physical material actually renders it — its `clearcoat`
+           * term is the tight, bright highlight that polish puts back on the
+           * stone. Standard material would silently drop it and leave every
+           * façade reading as matte plaster, which is a reconstruction that never
+           * happened (Roman façades were polished, the Celsus front famously so).
+           */
+          const material = new THREE.MeshPhysicalMaterial({
+            color: palette.color,
+            roughness: palette.roughness,
+            metalness: palette.metalness,
+            // The same grain on everything, tinted by each material's own colour
+            // and roughened by it too, so marble reads polished and limestone
+            // does not. The PBR channels are baked from the very same height, so
+            // grain, shine and shadow agree about where every pit is.
+            map: isStone ? stone.map : null,
+            roughnessMap: isStone ? stone.map : null,
+            normalMap: isStone ? stone.normal : null,
+            aoMap: isStone ? stone.ao : null,
+            aoMapIntensity: isStone ? 0.75 : 1,
+            ...(palette.sheen
+              ? {
+                  sheen: palette.sheen,
+                  sheenRoughness: palette.sheenRoughness ?? 0.4,
+                  sheenColor: new THREE.Color(palette.sheenColor ?? 0xffffff),
+                }
+              : {}),
+            // The polish layer, if the palette declared one. Kept just off a
+            // mirror so the carving still reads as carved rather than as glass.
+            ...(palette.clearcoat !== undefined
+              ? {
+                  clearcoat: palette.clearcoat,
+                  clearcoatRoughness: palette.clearcoatRoughness ?? 0.35,
+                }
+              : {}),
+          });
+          if (painted) material.vertexColors = true;
+          const mesh = new THREE.Mesh(merged, material);
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          parent.add(mesh);
+          // The scale figure is a teaching device, not a find. It goes when the
+          // labels go, which is what leaves the clean archaeological view.
+          if (name === "human") scaleFigure = mesh;
+          materialsOwned.push(material);
+          geometriesOwned.push(merged);
+        }
+      };
+      addMerged(parts, scene);
+
+      /*
+       * The life of the place: its furniture merged like the building, its
+       * people and fires animated. All of it in one group, so the switch in
+       * the viewer only has to hide that group.
+       */
+      const lifeGroup = new THREE.Group();
+      lifeGroup.name = "life";
+      scene.add(lifeGroup);
+      let lifeHandle: LifeHandle | null = null;
+      if (life) {
+        addMerged(life.props, lifeGroup);
+        lifeHandle = buildLife(THREE, life);
+        lifeGroup.add(lifeHandle.group);
       }
+      lifeGroup.visible = showLifeRef.current;
+      // How much the fires light the scene: a little by day, fully at night.
+      let glowTarget = atmos === "night" ? 1 : atmos === "golden" ? 0.45 : 0.08;
+      let glow = glowTarget;
 
       // A wide apron under everything, so the model does not float in a void.
       const apron = new THREE.CircleGeometry(span * 2.2, 64);
@@ -2633,6 +3165,7 @@ export default function Reconstruction3DInner({
       // The decorations are the model's surroundings, not the model. They drop
       // out of a model export the way they would drop out of a section drawing.
       const decorations = [
+        lifeGroup,
         stars,
         landscape.group,
         ...clouds.map((c) => c.group),
@@ -2862,6 +3395,8 @@ export default function Reconstruction3DInner({
           bird.wings.rotation.z = Math.sin(now * bird.flap + bird.phase * 7) * 0.65;
         }
         repaintSkyIfChanged();
+        glow += (glowTarget - glow) * Math.min(1, dt / 1.8);
+        lifeHandle?.update(now, dt, glow, camera);
         if (flight) {
           const t = Math.min(1, (now - flight.start) / flight.duration);
           const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -2885,6 +3420,10 @@ export default function Reconstruction3DInner({
       apiRef.current = {
         setAtmos: (light: "light" | "dark", mode: AtmosMode) => {
           atmosTarget = makeLive(paletteFor(light, mode));
+          glowTarget = mode === "night" ? 1 : mode === "golden" ? 0.45 : 0.08;
+        },
+        setLife: (on) => {
+          lifeGroup.visible = on;
         },
         setAutoRotate: (on) => {
           controls.autoRotate = on;
@@ -2979,6 +3518,7 @@ export default function Reconstruction3DInner({
         apron.dispose();
         apronMaterial.dispose();
         landscape.dispose();
+        lifeHandle?.dispose();
         scanResources.forEach((resource) => resource.dispose());
         composer?.dispose();
         controls.removeEventListener("start", cancelFlight);
@@ -2992,7 +3532,11 @@ export default function Reconstruction3DInner({
       cleanup();
     };
     // `biome` is fixed per model, so it rebuilding the scene costs nothing.
-  }, [parts, kind, label, biome]);
+  }, [parts, kind, label, biome, life]);
+
+  useEffect(() => {
+    apiRef.current?.setLife(showLife);
+  }, [showLife, ready]);
 
   useEffect(() => {
     apiRef.current?.setQuality(quality);

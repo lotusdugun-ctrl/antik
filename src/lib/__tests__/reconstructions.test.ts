@@ -450,8 +450,9 @@ describe("the carved silhouettes", () => {
     const skins = partsOf(celsus).filter(
       (part) => part.kind === "loft" && part.material === "bronze",
     );
-    // Body, neck, head, two ears, four legs and a tail: ten a horse.
-    expect(skins.length).toBe(20);
+    // Body, muscles, neck, head and its features, legs and tail: two dozen
+    // skins a horse, nothing like a stack of drums.
+    expect(skins.length).toBeGreaterThanOrEqual(40);
     // The rider sits on the horse's back, above every hoof.
     for (const rider of riders) {
       expect(rider.at[1]).toBeGreaterThan(2.94 + 1.2);

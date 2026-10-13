@@ -1253,6 +1253,16 @@ const dict = {
   },
 
   // ————— Realism / AR / compare —————
+  recon_life_show: { tr: "Yaşamı göster", en: "Show daily life" },
+  recon_life_hide: { tr: "Yaşamı gizle", en: "Hide daily life" },
+  recon_life_hint: {
+    tr: "Dönemin kıyafetleriyle insanlar, meşaleler, sunak ateşleri ve eşyalar. Gece ışığında meşaleler yanar.",
+    en: "People in period dress, torches, altar fires and furnishings. Switch to night to see the torches lit.",
+  },
+  recon_life_note: {
+    tr: "İnsanlar, ateşler ve eşyalar dönemin giyim ve kullanımına göre canlandırılmış bir sahnedir; ölçülmüş yapının parçası değildir.",
+    en: "The people, fires and furnishings are an illustration based on the dress and customs of the period, not part of the measured building.",
+  },
   recon_quality: { tr: "Yüksek kalite", en: "High quality" },
   recon_quality_hint: {
     tr: "Ortam gölgelemesi: taş derzlerinde, saçak altlarında ve oturma sıraları arasında gerçekçi temas gölgesi. Güçlü cihazlar için.",
