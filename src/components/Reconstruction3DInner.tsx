@@ -2845,6 +2845,18 @@ export default function Reconstruction3DInner({
               : {}),
           });
           if (painted) material.vertexColors = true;
+          /*
+           * Paint, shadowed openings and dark trim are laid on a surface, often
+           * flush with it: a band of colour on a frieze, a door's dark void in
+           * a wall. Two faces in one plane fight over every pixel and shimmer
+           * as the camera moves, so these are drawn a hair in front.
+           */
+          const DECALS = ["paintRed", "paintBlue", "paintGold", "shadow", "stoneDark", "timber"];
+          if (DECALS.includes(name)) {
+            material.polygonOffset = true;
+            material.polygonOffsetFactor = -1;
+            material.polygonOffsetUnits = -2 - DECALS.indexOf(name) * 0.5;
+          }
           const mesh = new THREE.Mesh(merged, material);
           mesh.castShadow = true;
           mesh.receiveShadow = true;
@@ -2982,6 +2994,7 @@ export default function Reconstruction3DInner({
             });
             void id;
           }
+          const tintedScans = new Map<string, THREE_NS.MeshStandardMaterial>();
           for (const { part, into } of placed) {
             const fit = part.scan!;
             const root = loaded.get(fit.id);
@@ -2991,6 +3004,28 @@ export default function Reconstruction3DInner({
             const holder = new THREE.Group();
             holder.name = `scan:${fit.id}`;
             const copy = root.clone(true);
+            /*
+             * A scan takes the stone of the part it stands in for: the lions at
+             * Nemrut are the limestone of the terrace, not a white cast set
+             * down among them.
+             */
+            if (part.material !== "marble") {
+              copy.traverse((object) => {
+                const mesh = object as THREE_NS.Mesh;
+                if (!mesh.isMesh) return;
+                const base = mesh.material as THREE_NS.MeshStandardMaterial;
+                if (base.map) return;
+                const key = `${fit.id}|${part.material}`;
+                let tinted = tintedScans.get(key);
+                if (!tinted) {
+                  tinted = base.clone();
+                  tinted.color.set(MATERIALS[part.material].color);
+                  tintedScans.set(key, tinted);
+                  scanResources.push(tinted);
+                }
+                mesh.material = tinted;
+              });
+            }
             copy.rotation.y = SCANS[fit.id].facing ?? 0;
             holder.add(copy);
             let scale = 1;
@@ -3038,9 +3073,15 @@ export default function Reconstruction3DInner({
       const shadowSize = window.matchMedia("(pointer: coarse)").matches ? 1024 : 2048;
       sun.shadow.mapSize.set(shadowSize, shadowSize);
       sun.shadow.bias = -0.0006;
-      sun.shadow.normalBias = 0.03;
       sun.shadow.radius = 2.5;
       const shadowSpan = span * 0.85;
+      /*
+       * Each texel of the shadow map covers more ground on a 140 m theatre
+       * than on a 20 m tomb. A bias smaller than a texel leaves the long
+       * curved seat rows striped with their own shadow ("acne"), stripes that
+       * crawl as the camera zooms; the bias is sized to the texel instead.
+       */
+      sun.shadow.normalBias = Math.max(0.03, ((shadowSpan * 2) / shadowSize) * 1.4);
       sun.shadow.camera.left = -shadowSpan;
       sun.shadow.camera.right = shadowSpan;
       sun.shadow.camera.top = shadowSpan;

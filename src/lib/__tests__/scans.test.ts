@@ -42,7 +42,11 @@ describe("scans", () => {
         .length;
     expect(count("celsus-kutuphanesi", "celsus-sophia")).toBe(1);
     expect(count("celsus-kutuphanesi", "celsus-arete")).toBe(1);
-    expect(count("celsus-kutuphanesi", "arringatore")).toBe(4);
+    // The four lost statues of the upper storey are four different stand-ins.
+    for (const id of ["tiberius-velatus", "arringatore", "ephesus-portrait", "augustus"] as const)
+      expect(count("celsus-kutuphanesi", id)).toBe(1);
+    expect(count("celsus-kutuphanesi", "muse-polyhymnia")).toBe(1);
+    expect(count("celsus-kutuphanesi", "caryatid")).toBe(1);
     expect(count("aizanoi-zeus-tapinagi", "neptune")).toBe(1);
     expect(count("didyma-apollon-tapinagi", "didyma-medusa")).toBe(1);
     expect(count("pergamon-zeus-sunagi", "pergamon-athena")).toBe(1);
@@ -51,5 +55,15 @@ describe("scans", () => {
       count("halikarnas-mozolesi", "mausoleum-amazon-1") +
         count("halikarnas-mozolesi", "mausoleum-amazon-2"),
     ).toBeGreaterThan(20);
+  });
+
+  test("no stage front repeats one statue more than twice", () => {
+    for (const item of reconstructions.filter((r) => r.model.kind === "roman-theatre")) {
+      const tally: Record<string, number> = {};
+      for (const part of lifeFor(item).props)
+        if (part.scan) tally[part.scan.id] = (tally[part.scan.id] ?? 0) + 1;
+      expect(Math.max(...Object.values(tally))).toBeLessThanOrEqual(2);
+      expect(Object.keys(tally).length).toBeGreaterThanOrEqual(8);
+    }
   });
 });

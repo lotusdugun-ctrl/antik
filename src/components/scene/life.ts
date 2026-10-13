@@ -1002,7 +1002,9 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     return t;
   };
   const glowTexture = softTexture("rgba(255,190,110,0.9)", "rgba(255,120,40,0)");
-  const smokeTexture = softTexture("rgba(150,145,140,0.55)", "rgba(150,145,140,0)");
+  // Pale, not grey: under the scene's tone mapping a mid-grey puff against a
+  // bright sky came out nearly black, which reads as a rendering fault.
+  const smokeTexture = softTexture("rgba(226,222,216,0.5)", "rgba(226,222,216,0)");
 
   const flameMaterial = new THREE.SpriteMaterial({
     map: flameTexture,
@@ -1070,6 +1072,8 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         depthWrite: false,
         transparent: true,
         opacity: 0,
+        toneMapped: false,
+        fog: false,
       });
       materials.push(material);
       const sprite = new THREE.Sprite(material);
@@ -2448,7 +2452,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       const size = puff.size * (0.8 + k * 4);
       puff.sprite.scale.set(size, size, 1);
       (puff.sprite.material as THREE_NS.SpriteMaterial).opacity =
-        Math.sin(k * Math.PI) * (0.45 - glow * 0.2);
+        Math.sin(k * Math.PI) * (1 - k) * (0.4 - glow * 0.15);
     }
     void camera;
   };

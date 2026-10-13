@@ -530,18 +530,31 @@ class Cast {
  * emperor or magistrate in the Arringatore. Bronze and gilt figures keep their
  * own geometry, since the scans are of marble and plaster.
  */
-const SCAN_OF: Partial<Record<string, ScanId>> = {
-  Athena: "athena-arezzo",
-  Zeus: "neptune",
-  Emperor: "arringatore",
-  Apollon: "efebo",
-  Dionysos: "magdalensberg-youth",
-  Hermes: "hermes-sandal",
-  Herakles: "herakles-lansdowne",
-  Pan: "pan",
-  Hermanubis: "hermanubis",
+const SCAN_OF: Partial<Record<string, ScanId[]>> = {
+  Athena: ["athena-arezzo"],
+  Zeus: ["neptune"],
+  Emperor: ["arringatore", "augustus", "tiberius-velatus", "hadrian-troy"],
+  Apollon: ["efebo", "apollo-kitharoidos"],
+  Dionysos: ["magdalensberg-youth", "antinous"],
+  Hermes: ["hermes-sandal"],
+  Herakles: ["herakles-lansdowne"],
+  Pan: ["pan"],
+  Hermanubis: ["hermanubis"],
+  Asklepios: ["asklepios"],
+  Nike: ["nike"],
+  /** Tyche wore the same mural crown as the Cybele of Pergamon. */
+  Tyche: ["cybele"],
+  Amazon: ["amazon-wounded"],
   /** The Muse who sits with her hand to her chin, as the "Penelope" does. */
-  "Muse (thinking)": "penelope",
+  "Muse (thinking)": ["penelope", "muse-clio"],
+  "Muse (with tablet)": ["muse-polyhymnia"],
+  "Muse (veiled)": ["muse-thalia"],
+};
+
+/** The same statue type need not be the same statue: pick one by place. */
+const pickScan = (choices: ScanId[], at: Vec3): ScanId => {
+  const h = Math.abs(Math.round(at[0] * 7.3 + at[1] * 3.1 + at[2] * 5.7));
+  return choices[h % choices.length]!;
 };
 
 const decor = (part: Part): Part => {
@@ -552,7 +565,8 @@ const decor = (part: Part): Part => {
     part.identity
       ? SCAN_OF[part.identity.name]
       : undefined;
-  return { ...part, decor: true, ...(scan ? { scan: { id: scan } } : {}) };
+  const scanId = scan ? pickScan(scan, part.at) : undefined;
+  return { ...part, decor: true, ...(scanId ? { scan: { id: scanId } } : {}) };
 };
 
 const box = (material: Material, at: Vec3, size: Vec3, rotY = 0): Part =>
@@ -1413,7 +1427,7 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
   layout.statueSlots.forEach((slot, i) => {
     const special =
       egyptian && i === Math.floor(layout.statueSlots.length / 2) ? HERMANUBIS : undefined;
-    statue(b, slot.at, slot.height, 0, i * 5 + seed, "marble", true, special);
+    statue(b, slot.at, slot.height, 0, i * 7 + seed, "marble", true, special);
   });
   return finish(b);
 }
@@ -2672,7 +2686,7 @@ const PANTHEON: FigureIdentity[] = [
     gesture: "raised",
   },
   {
-    name: "Muse",
+    name: "Muse (with tablet)",
     sex: "female",
     hair: "long",
     headgear: "diadem",
@@ -2692,7 +2706,15 @@ const PANTHEON: FigureIdentity[] = [
     left: "sceptre",
     right: "thunderbolt",
   },
-  { name: "Muse", sex: "female", hair: "bun", headgear: "veil", dress: "chiton", gesture: "veil" },
+  {
+    name: "Muse (veiled)",
+    sex: "female",
+    hair: "bun",
+    headgear: "veil",
+    dress: "chiton",
+    gesture: "veil",
+  },
+  { name: "Amazon", sex: "female", hair: "bun", dress: "chiton" },
   {
     name: "Asklepios",
     sex: "male",

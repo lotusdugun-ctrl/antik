@@ -2027,6 +2027,18 @@ function eagleStatue(material: Material, at: Vec3, rotY: number, scale = 1): Par
  * The hall behind stops at the height its masonry actually survives to.
  */
 export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
+  /*
+   * Celsus and Aquila above are lost, and so are two of the virtues below.
+   * Each empty place takes a different real statue of the period, so the
+   * front does not repeat one figure four times.
+   */
+  const upperStandIns: ScanId[] = [
+    "tiberius-velatus",
+    "arringatore",
+    "ephesus-portrait",
+    "augustus",
+  ];
+  let upperIndex = 0;
   const parts: Part[] = [];
   const w = spec.facadeWidth;
   const stepRise = 0.18;
@@ -2144,7 +2156,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
   for (const door of doors) {
     // The painted panel over each door, framed in gilded moulding.
     parts.push(
-      box("paintRed", [door.centre, y0 + doorHeight + 0.75, 0.06], [door.width * 1.15, 1.5, 0.12]),
+      box("paintRed", [door.centre, y0 + doorHeight + 0.75, 0.03], [door.width * 1.15, 1.5, 0.12]),
     );
     parts.push(
       box("paintGold", [door.centre, y0 + doorHeight + 0.68, 0.02], [door.width * 1.3, 0.09, 0.08]),
@@ -2276,21 +2288,25 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     parts.push(
       box("paintRed", [centre, base + pedestal, 0.02], [spread * 1.5, statueHeight + 1.3, 0.1]),
     );
-    // Sophia and Arete stand in the scans of their copies in the niches; the
-    // other two copies are too blurred in the only free scan to be used.
-    // Celsus and Aquila above are lost; a real togate portrait statue of the
-    // period, the Arringatore, stands in for both.
+    // Sophia and Arete stand in the scans of their copies in the niches.
+    // Ennoia's place takes a Muse wrapped in her mantle, Episteme's a
+    // caryatid; above, one of the stand-ins is a portrait statue found at
+    // Ephesus and carved in the very years the library was built.
     const scanned: ScanId | null =
       who.name === "Sophia"
         ? "celsus-sophia"
         : who.name === "Arete"
           ? "celsus-arete"
-          : who.dress === "toga"
-            ? "arringatore"
-            : null;
-    // The Arringatore leans back from his raised arm: he is stood further out
-    // of the niche, or his shoulders would be in its back wall.
-    const out = scanned === "arringatore" ? 0.42 : 0;
+          : who.name === "Ennoia"
+            ? "muse-polyhymnia"
+            : who.name === "Episteme"
+              ? "caryatid"
+              : who.dress === "toga"
+                ? upperStandIns[upperIndex++ % upperStandIns.length]!
+                : null;
+    // Statues with a raised arm lean back from it: they stand further out of
+    // the niche, or their shoulders would be in its back wall.
+    const out = scanned === "arringatore" || scanned === "augustus" ? 0.42 : scanned ? 0.15 : 0;
     parts.push({
       ...person(
         [centre, base + pedestal - 0.02, -0.045 - out],
@@ -3013,10 +3029,10 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     for (const side of [-1, 1]) {
       const x = side * (podiumOuter + spec.lowerRows * spec.seatTread * 0.5);
       parts.push(
-        box(wallStone, [x, 0, -1.2], [spec.lowerRows * spec.seatTread * 0.8, rowAt(6).y, 2.4]),
+        box(wallStone, [x, 0, -1.3], [spec.lowerRows * spec.seatTread * 0.8, rowAt(6).y, 2.4]),
       );
       parts.push(
-        box("marbleWorn", [x, rowAt(6).y, -1.2], [spec.lowerRows * spec.seatTread * 0.8, 1.1, 2.6]),
+        box("marbleWorn", [x, rowAt(6).y, -1.3], [spec.lowerRows * spec.seatTread * 0.8, 1.1, 2.6]),
       );
     }
   } else if (ch.box === "exedra" || ch.box === "canopy") {
@@ -3056,7 +3072,7 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   // The stage floor, and the front of it the actors played above.
   const floorWidth = Math.min(stageWidth * 0.94, spec.caveaDiameter * 0.62);
   parts.push(box("timber", [0, 0, wallZ / 2], [floorWidth, stageTop, spec.stageDepth]));
-  parts.push(box(screenStone, [0, 0, -0.2], [floorWidth, stageTop - 0.05, 0.4]));
+  parts.push(box(screenStone, [0, 0, -0.18], [floorWidth - 0.04, stageTop - 0.05, 0.4]));
   // Niches in the low stage front: square and round in turn.
   const niches = Math.round(floorWidth / 4);
   for (let i = 0; i < niches; i += 1) {
@@ -3205,43 +3221,11 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     parts.push(prism(screenStone, [0, crown, wallZ + 1.4], [16, 3, 2.6]));
   }
   if (ch.screen === "aspendos") {
-    // The pediment over the middle bay of the upper storey, with Dionysos
-    // rising out of acanthus in the gable.
-    const upper = storeys[1]!;
+    // Dionysos rising out of acanthus, in the gable of the central pediment.
+    // (The timber roof over the stage is left out: only the sockets of its
+    // beams survive, and a dark lid over the stage hid the wall it sheltered.)
     parts.push(
-      prism(
-        screenStone,
-        [0, upper.base + upper.height * 0.72, wallZ + 2.0],
-        [bayWidth * 1.8, 2.2, 1.4],
-      ),
-    );
-    parts.push(
-      cyl(
-        "marble",
-        [0, upper.base + upper.height * 0.72 + 0.6, wallZ + 2.72],
-        0.55,
-        0.55,
-        0.2,
-        14,
-        { rotX: Math.PI / 2 },
-      ),
-    );
-    /*
-     * The roof over the stage: a timber ceiling sloping down from the top of
-     * the wall towards the audience. It is gone, but the sockets of its beams
-     * are still in the wall.
-     */
-    const reach = spec.stageDepth + 0.5;
-    const drop = 3.2;
-    parts.push(
-      relief(
-        "timber",
-        [0, crown + 1.2 - drop / 2, wallZ + reach / 2],
-        [floorWidth, Math.hypot(reach, drop)],
-        undefined,
-        0,
-        Math.PI / 2 - Math.atan2(drop, reach),
-      ),
+      cyl("marble", [0, crown + 1.0, wallZ + 2.75], 0.75, 0.75, 0.2, 16, { rotX: Math.PI / 2 }),
     );
   }
 
@@ -5227,15 +5211,15 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
   for (const side of [-1, 1]) {
     const eagleZ = side * (edge + 1.6);
     const lionZ = side * (edge + 4.6);
-    parts.push(box("limestone", [-1.0, seatY, eagleZ], [2.6, 0.6, 2.4]));
-    parts.push(
-      ...eagleStatue(
-        "limestone",
-        [-1.0, seatY + 0.6, eagleZ],
-        -Math.PI / 2,
-        spec.guardianHeight / 0.8,
-      ),
-    );
+    parts.push(box("limestone", [-1.0, seatY, eagleZ], [3.0, 0.6, 3.0]));
+    parts.push({
+      kind: "figure",
+      material: "limestone",
+      at: [-1.0, seatY + 0.6, eagleZ],
+      height: spec.guardianHeight,
+      rotY: Math.PI / 2,
+      scan: { id: "eagle" },
+    });
     parts.push(box("limestone", [-1.0, seatY, lionZ], [3.2, 0.6, 3.0]));
     parts.push({
       kind: "figure",
