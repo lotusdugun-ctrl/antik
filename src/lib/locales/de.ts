@@ -317,6 +317,12 @@ export const de: Partial<Record<TKey, string>> = {
   ambience_off: "Umgebungsklang aus",
   ambience_hint:
     "Wind, Zikaden, nächtliche Grillen und Publikum in den Theatern – im Browser erzeugt.",
+  recon_life_show: "Alltag zeigen",
+  recon_life_hide: "Alltag ausblenden",
+  recon_life_hint:
+    "Menschen in zeitgenössischer Kleidung, Fackeln, Altarfeuer und Einrichtung. Bei Nacht brennen die Fackeln.",
+  recon_life_note:
+    "Menschen, Feuer und Einrichtung sind eine Illustration nach Kleidung und Bräuchen der Zeit, kein Teil des vermessenen Bauwerks.",
   recon_quality: "Hohe Qualität",
   recon_quality_hint:
     "Ambient Occlusion: echte Kontaktschatten in Steinfugen, unter Gesimsen und zwischen Sitzreihen. Für leistungsstarke Geräte.",

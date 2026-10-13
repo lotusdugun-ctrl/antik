@@ -14,11 +14,13 @@ import {
   Sunset,
   Tag,
   TagsIcon,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
 import { createAmbience, type Ambience } from "@/lib/ambience";
 import { partsFor } from "@/lib/reconstruction-parts";
+import { lifeFor } from "@/lib/scene-life";
 import type { Reconstruction } from "@/lib/reconstructions";
 import { useI18n } from "@/lib/i18n";
 import { reconstructionGuide } from "@/lib/narration";
@@ -178,6 +180,9 @@ export function Reconstruction3D({
   const onCaptured = useCallback((url: string) => setStill(url), []);
   // Rebuilding the geometry on every render would rebuild the whole scene.
   const parts = useMemo(() => partsFor(item.model), [item.model]);
+  // The people, fires and furniture of the place, and whether they are shown.
+  const life = useMemo(() => lifeFor(item), [item]);
+  const [showLife, setShowLife] = useState(true);
   // Same for the labels: a new array every render would rebuild every pin.
   const labels = useMemo(
     () => item.hotspots.map((spot) => ({ text: L(spot.label), at: spot.at })),
@@ -246,6 +251,8 @@ export function Reconstruction3D({
               quality={quality}
               captureToken={captureToken}
               onCaptured={onCaptured}
+              life={life}
+              showLife={showLife}
             />
           </Suspense>
         ) : (
@@ -273,6 +280,15 @@ export function Reconstruction3D({
         >
           <TagsIcon className="h-4 w-4" />
           {showLabels ? t("recon_labels_hide") : t("recon_labels_show")}
+        </button>
+        <button
+          onClick={() => setShowLife((on) => !on)}
+          aria-pressed={showLife}
+          title={t("recon_life_hint")}
+          className={control}
+        >
+          <Users className="h-4 w-4" />
+          {showLife ? t("recon_life_hide") : t("recon_life_show")}
         </button>
         <button
           onClick={() => setSpinning((on) => !on)}
@@ -403,7 +419,7 @@ export function Reconstruction3D({
         )}
       </div>
       <p className="mt-2 text-xs text-muted-foreground">
-        {t("recon_scale")} {t("recon_landscape_note")}
+        {t("recon_scale")} {t("recon_landscape_note")} {t("recon_life_note")}
       </p>
 
       {still && todayPhoto && (
