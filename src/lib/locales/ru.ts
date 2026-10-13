@@ -268,7 +268,7 @@ export const ru: Partial<Record<TKey, string>> = {
   recon_spin_stop: "Стоп",
   recon_reset: "Сбросить вид",
   recon_loading: "Строим модель…",
-  recon_scale: "Синяя фигура — человек ростом 1,75 м, для масштаба.",
+  recon_scale: "Люди в сцене задают масштаб: по ним видно настоящий размер здания.",
   recon_unavailable: "Этот браузер не поддерживает 3D (WebGL). Размеры и источники приведены ниже.",
   recon_measure_count: "размеров с источниками",
   seo_reconstructions_title:
@@ -314,6 +314,8 @@ export const ru: Partial<Record<TKey, string>> = {
   recon_life_hint: "Люди в одежде эпохи, факелы, огонь на алтарях и утварь. Ночью факелы горят.",
   recon_life_note:
     "Люди, огонь и утварь — иллюстрация по одежде и обычаям эпохи, а не часть измеренного здания.",
+  recon_face_credit:
+    "Лица статуй построены на настоящем 3D-скане головы: «Infinite, 3D Head Scan», Lee Perry-Smith (ir-ltd.net), CC BY 3.0. Каждая статуя придаёт ему свои черты.",
   recon_quality: "Высокое качество",
   recon_quality_hint:
     "Ambient occlusion: реалистичные контактные тени в швах кладки, под карнизами и между рядами сидений. Для мощных устройств.",

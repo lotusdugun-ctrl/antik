@@ -1167,8 +1167,8 @@ const dict = {
   recon_reset: { tr: "Görünümü sıfırla", en: "Reset the view" },
   recon_loading: { tr: "Model hazırlanıyor…", en: "Building the model…" },
   recon_scale: {
-    tr: "Mavi figür 1,75 m boyunda bir insan — ölçek için orada.",
-    en: "The blue figure is a person 1.75 m tall, standing there for scale.",
+    tr: "Sahnedeki insanlar ölçek verir: yapının gerçek boyutunu onlara bakarak okuyabilirsin.",
+    en: "The people in the scene give the scale: read the building's real size against them.",
   },
   recon_unavailable: {
     tr: "Tarayıcın 3B görüntülemeyi (WebGL) desteklemiyor. Ölçüler ve kaynaklar aşağıda.",
@@ -1262,6 +1262,10 @@ const dict = {
   recon_life_note: {
     tr: "İnsanlar, ateşler ve eşyalar dönemin giyim ve kullanımına göre canlandırılmış bir sahnedir; ölçülmüş yapının parçası değildir.",
     en: "The people, fires and furnishings are an illustration based on the dress and customs of the period, not part of the measured building.",
+  },
+  recon_face_credit: {
+    tr: "Heykel yüzlerinin temeli gerçek bir insan başı taramasıdır: “Infinite, 3D Head Scan”, Lee Perry-Smith (ir-ltd.net), CC BY 3.0. Her heykel bu yüzü kendine göre yeniden biçimlendirir.",
+    en: "The statues' faces are built on a real head scan: “Infinite, 3D Head Scan” by Lee Perry-Smith (ir-ltd.net), CC BY 3.0. Each statue reshapes it into its own face.",
   },
   recon_quality: { tr: "Yüksek kalite", en: "High quality" },
   recon_quality_hint: {

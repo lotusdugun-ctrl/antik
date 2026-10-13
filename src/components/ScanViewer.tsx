@@ -70,6 +70,7 @@ export default function ScanViewer({ id, label }: { id: ScanId; label: string })
       root.traverse((object) => {
         const mesh = object as InstanceType<typeof THREE.Mesh>;
         if (!mesh.isMesh) return;
+        if (!mesh.geometry.attributes["normal"]) mesh.geometry.computeVertexNormals();
         const material = mesh.material as InstanceType<typeof THREE.MeshStandardMaterial>;
         material.side = THREE.DoubleSide;
         if (!material.map) material.color.set(0xe9e2d6);

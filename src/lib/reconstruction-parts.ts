@@ -63,7 +63,11 @@ export type Material =
   | "linen"
   | "foliage"
   | "papyrus"
-  | "hide";
+  | "hide"
+  /** Coloured marbles and granite for show columns. */
+  | "granite"
+  | "gialloAntico"
+  | "pavonazzetto";
 
 /**
  * A photograph of the real carving, wrapped onto the surface that carried it.
@@ -1177,18 +1181,52 @@ function column(
   const shaft = height - baseHeight - capitalHeight;
   const flutes = fluting ?? (diameter > 1.2 ? 24 : 20);
 
-  // Base: a plinth and the torus above it.
+  // Base: a plinth, then — for the Ionic order — the Attic profile of a
+  // lower torus, the hollow scotia and an upper torus; a plain torus else.
   parts.push(box(material, [x, y, z], [diameter * 1.25, baseHeight * 0.45, diameter * 1.25]));
-  parts.push(
-    cyl(
-      material,
-      [x, y + baseHeight * 0.45, z],
-      radius * 1.16,
-      radius * 1.04,
-      baseHeight * 0.55,
-      20,
-    ),
-  );
+  if (order === "ionic") {
+    parts.push(
+      cyl(
+        material,
+        [x, y + baseHeight * 0.45, z],
+        radius * 1.2,
+        radius * 1.18,
+        baseHeight * 0.2,
+        24,
+      ),
+    );
+    parts.push(
+      cyl(
+        material,
+        [x, y + baseHeight * 0.65, z],
+        radius * 1.0,
+        radius * 0.96,
+        baseHeight * 0.14,
+        24,
+      ),
+    );
+    parts.push(
+      cyl(
+        material,
+        [x, y + baseHeight * 0.79, z],
+        radius * 1.1,
+        radius * 1.04,
+        baseHeight * 0.21,
+        24,
+      ),
+    );
+  } else {
+    parts.push(
+      cyl(
+        material,
+        [x, y + baseHeight * 0.45, z],
+        radius * 1.16,
+        radius * 1.04,
+        baseHeight * 0.55,
+        20,
+      ),
+    );
+  }
 
   /*
    * The shaft, built as the drums it was actually built from.
@@ -1233,6 +1271,25 @@ function column(
     cyl(material, [x, capitalBase, z], radius * 0.82, radius * 0.95, capitalHeight * 0.4, 20),
   );
   if (order === "ionic") {
+    // The egg-and-dart round the echinus: a ring of ovolo eggs.
+    const eggs = 16;
+    for (let i = 0; i < eggs; i += 1) {
+      const theta = (TAU * i) / eggs;
+      parts.push(
+        cyl(
+          material,
+          [
+            x + Math.cos(theta) * radius * 0.93,
+            capitalBase + capitalHeight * 0.08,
+            z + Math.sin(theta) * radius * 0.93,
+          ],
+          radius * 0.09,
+          radius * 0.06,
+          capitalHeight * 0.3,
+          6,
+        ),
+      );
+    }
     /*
      * The volutes, wound rather than stamped: each is four drums of shrinking
      * radius stepped along a spiral, so the scroll actually curls inwards and
@@ -1363,11 +1420,42 @@ function cornice(
 ): Part[] {
   const [x, y, z] = at;
   const course = height / 3;
-  return [
+  const parts: Part[] = [
     box(material, [x, y, z], [width, course, depth]),
     box(material, [x, y + course, z], [width * 1.02, course, depth * 1.08]),
     box(material, [x, y + course * 2, z], [width * 1.05, course, depth * 1.16]),
   ];
+  /*
+   * The dentils: the row of small square blocks under the crown of an Ionic
+   * or Corinthian cornice, the stone memory of the ends of roof joists. They
+   * are what turns a stepped slab into a Greek cornice, because they break
+   * its shadow into a row of teeth.
+   */
+  const tooth = course * 0.55;
+  const spacing = Math.max(tooth * 1.7, 0.1);
+  const lip = course * 0.18;
+  const dentils = (length: number, along: "x" | "z", offset: number) => {
+    const count = Math.min(140, Math.floor(length / spacing));
+    for (let i = 0; i < count; i += 1) {
+      const t = -length / 2 + spacing * (i + 0.5) + (length - count * spacing) / 2;
+      parts.push(
+        box(
+          material,
+          along === "x"
+            ? [x + t, y + course * 2 - tooth * 0.9, z + offset]
+            : [x + offset, y + course * 2 - tooth * 0.9, z + t],
+          along === "x" ? [tooth, tooth, lip * 2] : [lip * 2, tooth, tooth],
+        ),
+      );
+    }
+  };
+  if (course > 0.08) {
+    for (const side of [-1, 1]) {
+      dentils(width * 1.02, "x", side * ((depth * 1.08) / 2 + lip));
+      dentils(depth * 1.08, "z", side * ((width * 1.02) / 2 + lip));
+    }
+  }
+  return parts;
 }
 
 /* ------------------------------------------------------------------ *
@@ -2287,10 +2375,28 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     );
     // Sophia and Arete stand in the scans of their copies in the niches; the
     // other two copies are too blurred in the only free scan to be used.
-    const scanned =
-      who.name === "Sophia" ? "celsus-sophia" : who.name === "Arete" ? "celsus-arete" : null;
+    // Celsus and Aquila above are lost; a real togate portrait statue of the
+    // period, the Arringatore, stands in for both.
+    const scanned: ScanId | null =
+      who.name === "Sophia"
+        ? "celsus-sophia"
+        : who.name === "Arete"
+          ? "celsus-arete"
+          : who.dress === "toga"
+            ? "arringatore"
+            : null;
+    // The Arringatore leans back from his raised arm: he is stood further out
+    // of the niche, or his shoulders would be in its back wall.
+    const out = scanned === "arringatore" ? 0.42 : 0;
     parts.push({
-      ...person([centre, base + pedestal - 0.02, -0.045], statueHeight, Math.PI, robe, who, paint),
+      ...person(
+        [centre, base + pedestal - 0.02, -0.045 - out],
+        statueHeight,
+        Math.PI,
+        robe,
+        who,
+        paint,
+      ),
       ...(scanned ? { scan: { id: scanned } } : {}),
     });
     for (const side of [-1, 1]) {
@@ -2544,7 +2650,6 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
    * and Bülbül Dağı well back on the skyline.
    */
   parts.push(...setting(w * 0.62, 4101, { stone: 0.35, grass: 0.12, hills: 0.55 }));
-  parts.push(person([w * 0.3, 0, -spec.steps * stepTread - 1.6]));
   return parts;
 }
 
@@ -2734,7 +2839,13 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   const bayWidth = screenSpan / screenBays;
   const stageTop = 1.5;
 
-  const aediculaPair = (x: number, base: number, height: number, project: number) => {
+  const aediculaPair = (
+    x: number,
+    base: number,
+    height: number,
+    project: number,
+    shaft: Material = "marbleWorn",
+  ) => {
     const diameter = height * 0.11;
     parts.push(
       box(
@@ -2743,16 +2854,20 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
         [diameter * 2.4, height * 0.09, diameter * 2.4],
       ),
     );
-    parts.push(
-      ...column(
-        "marbleWorn",
-        [x, base + height * 0.09, wallZ + project],
-        diameter,
-        height * 0.78,
-        "composite",
-        0,
-      ),
+    // The shaft in coloured stone, the base and capital in white marble.
+    const made = column(
+      "marbleWorn",
+      [x, base + height * 0.09, wallZ + project],
+      diameter,
+      height * 0.78,
+      "composite",
+      0,
     );
+    for (const piece of made) {
+      parts.push(
+        piece.kind === "cylinder" && piece.segments >= 28 ? { ...piece, material: shaft } : piece,
+      );
+    }
     parts.push(
       ...cornice(
         "marbleWorn",
@@ -2766,8 +2881,8 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
 
   for (let i = 0; i <= screenBays; i += 1) {
     const x = -(screenSpan / 2) + i * bayWidth;
-    aediculaPair(x, stageTop, screenLower, 1.2);
-    aediculaPair(x, stageTop + screenLower, screenUpper, 1.6);
+    aediculaPair(x, stageTop, screenLower, 1.2, i % 2 === 0 ? "granite" : "pavonazzetto");
+    aediculaPair(x, stageTop + screenLower, screenUpper, 1.6, "gialloAntico");
   }
   // The continuous cornices the aediculae break forward from.
   parts.push(
@@ -2816,7 +2931,6 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   // Both these theatres are cut into a hillside above a plain, so the ground
   // rises behind the seating and falls away in front of the stage.
   parts.push(...setting(outerRadius, 8803, { stone: 0.7, grass: 0.8, hills: 0.75 }));
-  parts.push(person([6, 0.12, orchestraRadius * 0.45], 1.75, Math.PI));
   return parts;
 }
 
@@ -2886,6 +3000,87 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
   // Architrave, frieze and cornice, carried only over the colonnade: the court
   // inside was open to the sky and never took a roof.
   const beamTop = y0 + spec.columnHeight;
+  /*
+   * The outer entablature, as an Ionic one is built: an architrave of three
+   * stepped fasciae, a frieze painted blue behind its ornament, a row of
+   * dentils, the cornice, and the sima along the top with its lion-head
+   * waterspouts. The inner one is left a plain beam, since it is seen only
+   * from below.
+   */
+  const ionicBeam = (halfW: number, halfL: number) => {
+    const H = spec.entablatureHeight;
+    const t = radius * 2.6;
+    const runs: { c: Vec3; len: number; along: "x" | "z"; out: Vec3 }[] = [];
+    for (const side of [-1, 1]) {
+      runs.push({ c: [side * halfW, 0, 0], len: halfL * 2 + t, along: "z", out: [side, 0, 0] });
+      runs.push({ c: [0, 0, side * halfL], len: halfW * 2 + t, along: "x", out: [0, 0, side] });
+    }
+    for (const r of runs) {
+      const course = (y: number, h: number, depth: number, material: Material = "marble") => {
+        const grow = depth - t;
+        parts.push(
+          box(
+            material,
+            [r.c[0] + (r.out[0] * grow) / 2, y, r.c[2] + (r.out[2] * grow) / 2],
+            r.along === "z" ? [depth, h, r.len + grow] : [r.len + grow, h, depth],
+          ),
+        );
+      };
+      // The three fasciae, each a little proud of the one below.
+      course(beamTop, H * 0.13, t);
+      course(beamTop + H * 0.13, H * 0.13, t + 0.06);
+      course(beamTop + H * 0.26, H * 0.13, t + 0.12);
+      // The frieze, and its painted ground.
+      course(beamTop + H * 0.39, H * 0.24, t);
+      course(beamTop + H * 0.42, H * 0.18, t + 0.04, "paintBlue");
+      // A gilded moulding, the dentils, the cornice and the sima.
+      course(beamTop + H * 0.63, H * 0.04, t + 0.18, "paintGold");
+      const toothH = H * 0.09;
+      const spacing = toothH * 1.6;
+      const count = Math.min(240, Math.floor(r.len / spacing));
+      for (let i = 0; i < count; i += 1) {
+        const u = -r.len / 2 + spacing * (i + 0.5);
+        const off = (t + 0.3) / 2;
+        parts.push(
+          box(
+            "marble",
+            r.along === "z"
+              ? [r.c[0] + r.out[0] * off, beamTop + H * 0.67, u]
+              : [u, beamTop + H * 0.67, r.c[2] + r.out[2] * off],
+            r.along === "z" ? [0.18, toothH, toothH] : [toothH, toothH, 0.18],
+          ),
+        );
+      }
+      course(beamTop + H * 0.67, H * 0.09, t + 0.12);
+      course(beamTop + H * 0.76, H * 0.14, t + 0.6);
+      course(beamTop + H * 0.9, H * 0.1, t + 0.56, "paintRed");
+      // Lion-head spouts along the sima of the long sides.
+      if (r.along === "z") {
+        const spouts = Math.floor(r.len / 3.2);
+        for (let i = 0; i < spouts; i += 1) {
+          const u = -r.len / 2 + 3.2 * (i + 0.5);
+          const px = r.c[0] + r.out[0] * ((t + 0.56) / 2 + 0.1);
+          parts.push(
+            cyl("marble", [px, beamTop + H * 0.95, u], H * 0.06, H * 0.05, 0.25, 10, {
+              rotX: Math.PI / 2,
+              rotY: r.out[0] * (Math.PI / 2),
+            }),
+          );
+          parts.push(
+            cyl(
+              "marble",
+              [px + r.out[0] * 0.05, beamTop + H * 0.9, u],
+              H * 0.025,
+              H * 0.02,
+              0.35,
+              6,
+              { rotX: Math.PI / 2, rotY: r.out[0] * (Math.PI / 2) },
+            ),
+          );
+        }
+      }
+    }
+  };
   const beam = (halfW: number, halfL: number) => {
     for (const side of [-1, 1]) {
       parts.push(
@@ -2904,7 +3099,7 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
       );
     }
   };
-  beam(gridWidth / 2, gridLength / 2);
+  ionicBeam(gridWidth / 2, gridLength / 2);
   if (dipteral) beam(gridWidth / 2 - stepX, gridLength / 2 - stepZ);
 
   if (spec.interior === "open-court") {
@@ -3061,8 +3256,8 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
     }
     // The cult statue, standing in the dark at the back of the cella.
     parts.push(box("marbleWorn", [0, y0, courtCentre + halfCL - 6], [4, 1.2, 4]));
-    parts.push(
-      person(
+    parts.push({
+      ...person(
         [0, y0 + 1.2, courtCentre + halfCL - 6],
         6,
         Math.PI,
@@ -3078,7 +3273,9 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
             ? PAINT.zeus
             : PAINT.apollo,
       ),
-    );
+      // Zeus stands in a real Roman scan of the bearded god of the type.
+      ...(spec.cultStatue === "zeus" ? { scan: { id: "neptune" as const } } : {}),
+    });
   } else {
     // The naiskos: a small temple standing alone in the open court, over the
     // spring the oracle answered from.
@@ -3107,7 +3304,6 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
       hills: 0.45,
     }),
   );
-  parts.push(person([gridWidth / 2 + 4, 0, -gridLength / 2 - 2], 1.75, 0));
   return parts;
 }
 
@@ -3363,7 +3559,6 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
   // A limestone plateau above the Harran plain: bare rock through thin soil,
   // burnt grass, and the Germuş ridges close on the skyline.
   parts.push(...setting(outer, 2207, { stone: 1.3, grass: 1, hills: 1 }));
-  parts.push(person([4.6, 0.14, 3.2], 1.75, -2.2));
   return parts;
 }
 
@@ -3531,12 +3726,11 @@ export function greatAltarParts(spec: GreatAltarSpec): Part[] {
     parts.push(box("marbleWorn", [side * half, terrace, 2], [0.9, courtHeight, spec.courtSide]));
   }
   parts.push(box("marbleWorn", [0, terrace, 2 + half], [spec.courtSide + 1.8, courtHeight, 0.9]));
-  parts.push(box("stoneDark", [0, terrace, 2], [4.4, 1.8, 4.4]));
+  parts.push(...ornateAltar([0, terrace, 2], 4.4, 3.2, 2.0));
 
   // The altar stood on a terrace cut into the acropolis, high above the plain,
   // so the skyline is close and the ground is rock.
   parts.push(...setting(spec.baseWidth * 0.55, 6607, { stone: 0.8, grass: 0.5, hills: 0.9 }));
-  parts.push(person([halfStair + 3, 0, -halfD - spec.steps * stepRun - 1.5], 1.75, 0));
   return parts;
 }
 
@@ -3545,16 +3739,195 @@ export function greatAltarParts(spec: GreatAltarSpec): Part[] {
  * ------------------------------------------------------------------ */
 
 /** The long axis runs along z; both ends are curved, as at Aphrodisias. */
-export function stadiumParts(spec: StadiumSpec): Part[] {
+/**
+ * The plan of a stadium, shared with the scene that fills it: where the curved
+ * ends are centred, how far the long sides bow out at a given point, where
+ * the arena wall stands if there is one, and how much of the track is left
+ * for racing.
+ */
+/**
+ * A Greek altar dressed as the surviving ones are: a step to stand on in
+ * front, a moulded base, the die hung with garlands swung between ox-skulls,
+ * a crowning moulding, and on top the two rolled bolsters at the sides with
+ * the fire-tray between them. `rotY` turns the front (the `-z` face) round.
+ */
+export function ornateAltar(
+  at: Vec3,
+  width: number,
+  depth: number,
+  height: number,
+  rotY = 0,
+): Part[] {
   const parts: Part[] = [];
+  const turn = (x: number, y: number, z: number): Vec3 => [
+    at[0] + x * Math.cos(rotY) + z * Math.sin(rotY),
+    at[1] + y,
+    at[2] - x * Math.sin(rotY) + z * Math.cos(rotY),
+  ];
+  const step = height * 0.14;
+  parts.push(box("marbleWorn", turn(0, 0, -depth * 0.28), [width * 1.25, step, depth * 1.7], rotY));
+  parts.push(
+    box("marbleWorn", turn(0, step, 0), [width * 1.12, height * 0.08, depth * 1.12], rotY),
+  );
+  parts.push(
+    box(
+      "marble",
+      turn(0, step + height * 0.08, 0),
+      [width * 1.05, height * 0.05, depth * 1.05],
+      rotY,
+    ),
+  );
+  const dieBase = step + height * 0.13;
+  const dieH = height * 0.58;
+  parts.push(box("marble", turn(0, dieBase, 0), [width, dieH, depth], rotY));
+  // Garlands and bucrania along the front and back.
+  for (const face of [-1, 1]) {
+    const zf = face * (depth / 2 + 0.02);
+    const skulls = 4;
+    for (let i = 0; i < skulls; i += 1) {
+      const u = -width / 2 + (width * (i + 0.5)) / skulls;
+      parts.push(
+        box(
+          "marbleWorn",
+          turn(u, dieBase + dieH * 0.62, zf),
+          [width * 0.06, dieH * 0.22, 0.08],
+          rotY,
+        ),
+      );
+      if (i < skulls - 1) {
+        const u1 = u + width / skulls;
+        parts.push({
+          kind: "loft",
+          material: "marble",
+          at: turn(0, 0, 0),
+          rotY,
+          sections: [
+            { c: [u, dieBase + dieH * 0.7, zf], rx: 0.03, ry: 0.03 },
+            {
+              c: [(u + u1) / 2, dieBase + dieH * 0.42, zf + face * 0.04],
+              rx: dieH * 0.07,
+              ry: dieH * 0.07,
+            },
+            { c: [u1, dieBase + dieH * 0.7, zf], rx: 0.03, ry: 0.03 },
+          ],
+        });
+        // A ribbon hanging from each swag.
+        parts.push(
+          box(
+            "paintRed",
+            turn((u + u1) / 2, dieBase + dieH * 0.18, zf + face * 0.03),
+            [0.04, dieH * 0.2, 0.02],
+            rotY,
+          ),
+        );
+      }
+    }
+  }
+  const crown = dieBase + dieH;
+  parts.push(box("marble", turn(0, crown, 0), [width * 1.06, height * 0.05, depth * 1.06], rotY));
+  parts.push(
+    box(
+      "marbleWorn",
+      turn(0, crown + height * 0.05, 0),
+      [width * 1.12, height * 0.06, depth * 1.12],
+      rotY,
+    ),
+  );
+  // The bolsters, rolled along the sides, their ends carved as volutes.
+  const top = crown + height * 0.11;
+  for (const side of [-1, 1]) {
+    parts.push(
+      cyl(
+        "marble",
+        turn(side * width * 0.46, top + height * 0.07, -depth * 0.53),
+        height * 0.07,
+        height * 0.07,
+        depth * 1.06,
+        16,
+        {
+          rotX: Math.PI / 2,
+          rotY,
+        },
+      ),
+    );
+    for (const end of [-1, 1]) {
+      parts.push(
+        cyl(
+          "paintGold",
+          turn(side * width * 0.46, top + height * 0.07, end * depth * 0.53 - (end > 0 ? 0 : 0.03)),
+          height * 0.04,
+          height * 0.04,
+          0.03,
+          12,
+          {
+            rotX: Math.PI / 2,
+            rotY,
+          },
+        ),
+      );
+    }
+  }
+  parts.push(box("bronze", turn(0, top, 0), [width * 0.6, height * 0.05, depth * 0.7], rotY));
+  return parts;
+}
+
+export function stadiumLayout(spec: StadiumSpec) {
   const halfWidth = spec.overallWidth / 2;
   const arenaHalf = spec.arenaWidth / 2;
-  const depth = halfWidth - arenaHalf;
-  const tread = depth / spec.rows;
-  // The curved ends are semicircles on the arena's own half-width.
   const endCentre = spec.overallLength / 2 - halfWidth;
+  const bow = spec.bow ?? 0;
+  const bowAt = (z: number) => bow * Math.max(0, 1 - (z / endCentre) ** 2);
+  const arenaWall = spec.arenaEnd
+    ? { z: endCentre - spec.arenaWidth * 1.4, radius: arenaHalf }
+    : null;
+  return {
+    halfWidth,
+    arenaHalf,
+    endCentre,
+    tread: (halfWidth - arenaHalf) / spec.rows,
+    bowAt,
+    arenaWall,
+    // The stretch of track the races use, kept clear of the arena wall.
+    trackMin: -endCentre * 0.62,
+    trackMax: arenaWall ? arenaWall.z - arenaWall.radius - 10 : endCentre * 0.62,
+  };
+}
 
-  parts.push(box("stone", [0, 0, 0], [spec.arenaWidth, 0.12, endCentre * 2]));
+export function stadiumParts(spec: StadiumSpec): Part[] {
+  const parts: Part[] = [];
+  const L = stadiumLayout(spec);
+  const { halfWidth, arenaHalf, endCentre, tread, bowAt } = L;
+  const bowed = (spec.bow ?? 0) > 0;
+  // A bowed side is laid as a run of short straight pieces following the curve.
+  const pieces = bowed ? 18 : 1;
+
+  /** A straight run along one long side, following the bow if there is one. */
+  const run = (
+    material: Material,
+    side: number,
+    inner: number,
+    width: number,
+    y: number,
+    height: number,
+  ) => {
+    for (let k = 0; k < pieces; k += 1) {
+      const z0 = -endCentre + (2 * endCentre * k) / pieces;
+      const z1 = -endCentre + (2 * endCentre * (k + 1)) / pieces;
+      const zc = (z0 + z1) / 2;
+      const slope = (bowAt(z1) - bowAt(z0)) / (z1 - z0);
+      const length = (z1 - z0) * Math.hypot(1, slope) * (bowed ? 1.015 : 1);
+      parts.push(
+        box(
+          material,
+          [side * (inner + width / 2 + bowAt(zc)), y, zc],
+          [width, height, length],
+          side * Math.atan(slope),
+        ),
+      );
+    }
+  };
+
+  parts.push(box("stone", [0, 0, 0], [spec.arenaWidth + 2 * (spec.bow ?? 0), 0.12, endCentre * 2]));
   for (const side of [-1, 1]) {
     if (spec.openEnd && side < 0) continue;
     parts.push(
@@ -3562,21 +3935,13 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
     );
   }
 
+  // The podium wall round the track, with a painted coping, and the seats.
+  for (const side of [-1, 1]) run("marbleWorn", side, arenaHalf - 0.35, 0.35, 0, 1.3);
   for (let row = 0; row < spec.rows; row += 1) {
     const inner = arenaHalf + row * tread;
     const outer = inner + tread;
     const y = row * spec.seatRise;
-    // The two straight banks.
-    for (const side of [-1, 1]) {
-      parts.push(
-        box(
-          "stone",
-          [side * (inner + tread / 2), y, 0],
-          [tread, spec.seatRise + 0.06, endCentre * 2],
-        ),
-      );
-    }
-    // And the curved ends that close them — or the one end, at Perge.
+    for (const side of [-1, 1]) run("stone", side, inner, tread, y, spec.seatRise + 0.06);
     for (const side of [-1, 1]) {
       if (spec.openEnd && side < 0) continue;
       parts.push(
@@ -3585,6 +3950,23 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
           side * endCentre,
         ]),
       );
+    }
+  }
+  // Stairs climbing the banks, every so often, in a darker stone.
+  const stairs = Math.round((2 * endCentre) / 22);
+  for (let i = 0; i < stairs; i += 1) {
+    const z = -endCentre + (2 * endCentre * (i + 0.5)) / stairs;
+    for (const side of [-1, 1]) {
+      for (let row = 0; row < spec.rows; row += 1) {
+        const inner = arenaHalf + row * tread + bowAt(z);
+        parts.push(
+          box(
+            "stoneDark",
+            [side * (inner + tread / 2), row * spec.seatRise + 0.02, z],
+            [tread, spec.seatRise + 0.08, 1.0],
+          ),
+        );
+      }
     }
   }
 
@@ -3597,35 +3979,249 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
   for (let i = 0; i < spec.entrances; i += 1) {
     const z = -endCentre + (2 * endCentre * (i + 0.5)) / spec.entrances;
     for (const side of [-1, 1]) {
-      parts.push(box("shadow", [side * (arenaHalf + 0.6), 0, z], [1.4, 2.6, 3.2]));
+      parts.push(box("shadow", [side * (arenaHalf + 0.6 + bowAt(z)), 0, z], [1.4, 2.6, 3.2]));
     }
   }
 
   // The outer wall, and the walkway along the top of the seating.
   const outerRadius = halfWidth;
-  for (const side of [-1, 1]) {
+  const wallT = 1.2;
+  if (spec.vaults) {
+    /*
+     * Perge: the seats carried on vaulted chambers, each opening outwards
+     * under an arch as a shop. Piers between the arches, the barrel vault
+     * turned over each opening, and the wall carried on up to the walkway.
+     */
+    const bays = spec.vaults;
+    const bay = (2 * endCentre) / bays;
+    const opening = bay * 0.62;
+    const spring = bankTop * 0.42;
+    const r = opening / 2;
+    for (const side of [-1, 1]) {
+      const x = side * (outerRadius + wallT / 2);
+      for (let i = 0; i < bays; i += 1) {
+        const zc = -endCentre + bay * (i + 0.5);
+        parts.push(
+          box(
+            "stoneDark",
+            [x, 0, zc - bay / 2 + (bay - opening) / 4],
+            [wallT, bankTop + 1.2, (bay - opening) / 2],
+          ),
+        );
+        parts.push(
+          box(
+            "stoneDark",
+            [x, 0, zc + bay / 2 - (bay - opening) / 4],
+            [wallT, bankTop + 1.2, (bay - opening) / 2],
+          ),
+        );
+        /*
+         * The wall over the opening, cut as one outline with the arch taken
+         * out of it, so the opening really is round-headed instead of a
+         * rectangle with a half-drum stuck in its top.
+         */
+        const top = bankTop + 1.2;
+        const outline: [number, number][] = [
+          [-opening / 2, spring],
+          [-opening / 2, top],
+          [opening / 2, top],
+          [opening / 2, spring],
+        ];
+        for (let k = 1; k < 16; k += 1) {
+          const a = (k / 16) * Math.PI;
+          outline.push([Math.cos(a) * r, spring + Math.sin(a) * r]);
+        }
+        parts.push({
+          kind: "carving",
+          material: "stoneDark",
+          at: [x, 0, zc],
+          outline,
+          depth: wallT,
+          sink: 0.5,
+          rotY: side * (Math.PI / 2),
+        });
+        // The dark of the chamber behind the opening.
+        parts.push(
+          box("shadow", [side * (outerRadius + 0.05), 0, zc], [0.1, spring + r * 0.9, opening]),
+        );
+      }
+      // A projecting cornice along the top of the arcade.
+      parts.push(
+        box(
+          "stone",
+          [side * (outerRadius + wallT / 2), bankTop + 1.2, 0],
+          [wallT + 0.4, 0.35, endCentre * 2 + 0.4],
+        ),
+      );
+    }
+    // The closed north end, on its own arches.
     parts.push(
-      box("stoneDark", [side * (outerRadius + 0.6), 0, 0], [1.2, bankTop + 1.2, endCentre * 2]),
-    );
-    if (spec.openEnd && side < 0) continue;
-    parts.push(
-      ring(
-        "stoneDark",
+      ring("stoneDark", 0, outerRadius, outerRadius + wallT, bankTop + 1.2, 0, Math.PI, [
         0,
-        outerRadius,
-        outerRadius + 1.2,
-        bankTop + 1.2,
-        side > 0 ? 0 : Math.PI,
-        Math.PI,
-        [0, side * endCentre],
-      ),
+        endCentre,
+      ]),
     );
+    /*
+     * The open south end, where the track met the city: a gateway of piers
+     * and a lintel across the width of the track, double timber doors in its
+     * middle passage.
+     */
+    const gz = -endCentre;
+    for (const x of [-arenaHalf, -arenaHalf / 3, arenaHalf / 3, arenaHalf]) {
+      parts.push(box("marble", [x, 0, gz], [1.4, 6.4, 1.6]));
+      parts.push(box("marbleWorn", [x, 6.4, gz], [1.7, 0.4, 1.9]));
+    }
+    parts.push(...cornice("marble", [0, 6.8, gz], spec.arenaWidth + 2, 2.0, 1.1));
+    for (const side of [-1, 1]) {
+      parts.push(
+        box(
+          "timber",
+          [side * (arenaHalf / 6), 0, gz + 0.2],
+          [arenaHalf / 3 - 1.5, 4.6, 0.14],
+          side * 0.6,
+        ),
+      );
+    }
+  } else {
+    for (const side of [-1, 1])
+      run("stoneDark", side, outerRadius - (spec.bow ?? 0) * 0, wallT, 0, bankTop + 1.2);
+    for (const side of [-1, 1]) {
+      if (spec.openEnd && side < 0) continue;
+      parts.push(
+        ring(
+          "stoneDark",
+          0,
+          outerRadius,
+          outerRadius + wallT,
+          bankTop + 1.2,
+          side > 0 ? 0 : Math.PI,
+          Math.PI,
+          [0, side * endCentre],
+        ),
+      );
+    }
+    // A colonnade along the top of the seating, as the walkway carried.
+    for (const side of [-1, 1]) {
+      const count = Math.round((2 * endCentre) / 6);
+      for (let i = 0; i <= count; i += 1) {
+        const z = -endCentre + (2 * endCentre * i) / count;
+        parts.push(
+          ...column(
+            "marbleWorn",
+            [side * (outerRadius + 0.5 + bowAt(z)), bankTop + 1.2, z],
+            0.42,
+            3.2,
+            "plain",
+            0,
+          ),
+        );
+      }
+    }
+  }
+
+  if (L.arenaWall) {
+    /*
+     * Aphrodisias, late in its life: when the theatre was ruined, the east end
+     * of the track was walled off into an oval arena for the shows the
+     * theatre had held. A podium wall high enough to keep beasts off the
+     * crowd, with a gate in the middle of it.
+     */
+    const { z, radius } = L.arenaWall;
+    const r = radius + bowAt(z);
+    for (const half of [0, 1]) {
+      parts.push(
+        ring(
+          "marbleWorn",
+          0,
+          r - 0.8,
+          r,
+          3.0,
+          Math.PI + half * (Math.PI / 2 + 0.08),
+          Math.PI / 2 - 0.08,
+          [0, z],
+        ),
+      );
+    }
+    parts.push(box("marble", [0, 3.0, z - r + 0.4], [5, 0.6, 1.2]));
+  }
+
+  if (spec.cityWall) {
+    /*
+     * The north side of the stadium was the city wall: the late-antique
+     * circuit was run up to it and along it, towers and all, so the bank of
+     * seats is also the rampart.
+     */
+    // On the far side from the view, so the rampart backs the seats rather
+    // than hiding them.
+    const x = -(outerRadius + wallT + 1.0);
+    const reach = spec.overallLength / 2 + 70;
+    parts.push(
+      scenery(worn(box("limestone", [x - 1.2, 0, 0], [2.4, bankTop + 3, reach * 2]), 0.08)),
+    );
+    const towers = Math.round((reach * 2) / 34);
+    for (let i = 0; i <= towers; i += 1) {
+      const z = -reach + (reach * 2 * i) / towers;
+      parts.push(scenery(worn(box("limestone", [x - 3, 0, z], [6, bankTop + 6, 6.5]), 0.08)));
+      for (let k = 0; k < 4; k += 1) {
+        parts.push(
+          scenery(box("limestone", [x - 0.4 - k * 1.7, bankTop + 6, z - 2.6], [0.8, 0.9, 0.8])),
+        );
+        parts.push(
+          scenery(box("limestone", [x - 0.4 - k * 1.7, bankTop + 6, z + 2.6], [0.8, 0.9, 0.8])),
+        );
+      }
+    }
+    for (let i = 0; i < reach / 1.6; i += 1) {
+      const z = -reach + i * 3.2;
+      parts.push(scenery(box("limestone", [x - 2.2, bankTop + 3, z], [0.5, 0.8, 1.4])));
+    }
+  }
+
+  if (spec.hillside) {
+    /*
+     * Perge's stadium lies at the foot of the hill whose slope carries the
+     * theatre, so one side looks onto rising ground: a ridge of rock and
+     * scrub climbing away from the long side.
+     */
+    const ridge = seeded(4417);
+    for (let i = 0; i < 16; i += 1) {
+      const z = -endCentre * 1.6 + (endCentre * 3.2 * i) / 15;
+      const back = 44 + ridge() * 14;
+      parts.push(
+        scenery(
+          worn(
+            cyl(
+              "grass",
+              [-(outerRadius + back), -2, z],
+              30 + ridge() * 14,
+              8 + ridge() * 6,
+              16 + ridge() * 12,
+              18,
+            ),
+            3,
+          ),
+        ),
+      );
+      // Rock breaking through the slope.
+      parts.push(
+        scenery(
+          worn(
+            box(
+              "limestone",
+              [-(outerRadius + back - 12 + ridge() * 6), 4 + ridge() * 6, z + ridge() * 8],
+              [6 + ridge() * 5, 3, 4 + ridge() * 4],
+              ridge() * 3,
+            ),
+            0.6,
+          ),
+        ),
+      );
+    }
   }
 
   // The stadium sits against the city wall on flat ground, with the Baba Dağı
   // ridge behind it and dry scrub either side.
   parts.push(...setting(spec.overallWidth * 0.62, 9203, { stone: 0.5, grass: 1.2, hills: 0.6 }));
-  parts.push(person([0, 0.12, -endCentre * 0.5], 1.75, 0));
   return parts;
 }
 
@@ -3763,9 +4359,126 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
   }
   parts.push(box("stoneDark", [0, beam + 0.34, 0], [spec.courtWidth + wall * 2, 0.16, wall]));
 
+  /*
+   * What makes it a house. The court's roof drained inwards: a ring of
+   * terracotta eaves sloping down towards the open sky, cover tiles laid in
+   * ridges over the joints and an antefix at the end of each. The walls that
+   * face the court were painted in panels — red fields framed in ochre — as
+   * the plaster in the terrace houses still is. The back wall carried the
+   * upper storey with its windows and a timber balcony over the court, and
+   * the rooms opened off the court through panelled doors.
+   */
+  const eaveTop = spec.wallHeight + 0.1;
+  const eaveWidth = 1.3;
+  const courses = 4;
+  for (const side of [-1, 1]) {
+    for (let c = 0; c < courses; c += 1) {
+      const inset = (eaveWidth * (c + 0.5)) / courses;
+      const y = eaveTop - ((c * 0.28) / courses) * 2;
+      parts.push(
+        box(
+          "terracotta",
+          [0, y, side * (halfD + wall - inset)],
+          [spec.courtWidth + wall * 2, 0.06, eaveWidth / courses + 0.02],
+        ),
+      );
+      parts.push(
+        box(
+          "terracotta",
+          [side * (halfW + wall - inset), y, 0],
+          [eaveWidth / courses + 0.02, 0.06, spec.courtDepth + wall * 2],
+        ),
+      );
+    }
+    // Cover tiles running down the slope, and the antefix at each eave end.
+    const along = Math.floor((spec.courtWidth + wall * 2) / 0.45);
+    for (let i = 0; i < along; i += 1) {
+      const x = -(spec.courtWidth / 2 + wall) + 0.45 * (i + 0.5);
+      parts.push(
+        cyl("terracotta", [x, eaveTop + 0.04, side * (halfD + wall)], 0.06, 0.06, eaveWidth, 6, {
+          rotX: Math.PI / 2,
+          rotY: side > 0 ? Math.PI : 0,
+        }),
+      );
+      parts.push(
+        prism(
+          "terracotta",
+          [x, eaveTop - 0.56, side * (halfD + wall - eaveWidth - 0.02)],
+          [0.22, 0.24, 0.04],
+        ),
+      );
+    }
+    const across = Math.floor((spec.courtDepth + wall * 2) / 0.45);
+    for (let i = 0; i < across; i += 1) {
+      const z = -(spec.courtDepth / 2 + wall) + 0.45 * (i + 0.5);
+      parts.push(
+        cyl("terracotta", [side * (halfW + wall), eaveTop + 0.04, z], 0.06, 0.06, eaveWidth, 6, {
+          rotX: Math.PI / 2,
+          rotY: side > 0 ? -Math.PI / 2 : Math.PI / 2,
+        }),
+      );
+      parts.push(
+        prism(
+          "terracotta",
+          [side * (halfW + wall - eaveWidth - 0.02), eaveTop - 0.56, z],
+          [0.22, 0.24, 0.04],
+          Math.PI / 2,
+        ),
+      );
+    }
+  }
+
+  // Painted panels on the court faces of the side piers.
+  for (const side of [-1, 1]) {
+    const face = side * (halfW + 0.005);
+    const panels = 3;
+    for (let i = 0; i < panels; i += 1) {
+      const z = -halfD + (spec.courtDepth * (i + 0.5)) / panels;
+      const w = (spec.courtDepth / panels) * 0.7;
+      parts.push(box("paintGold", [face, 0.55, z], [0.03, spec.wallHeight * 0.62, w + 0.12]));
+      parts.push(
+        box("paintRed", [face - side * 0.01, 0.61, z], [0.03, spec.wallHeight * 0.62 - 0.12, w]),
+      );
+    }
+    // A dark dado along the foot of the wall, as Roman walls had.
+    parts.push(box("stoneDark", [face, 0, 0], [0.03, 0.55, spec.courtDepth]));
+  }
+
+  // Doors from the court into the back room.
+  for (const x of [-halfW * 0.5, halfW * 0.5]) {
+    const z = halfD + 0.02;
+    parts.push(box("marble", [x, 0, z - 0.04], [1.5, 2.6, 0.08]));
+    parts.push(box("timber", [x, 0, z - 0.1], [1.2, 2.4, 0.08]));
+    for (const dy of [0.35, 1.35]) {
+      parts.push(box("timber", [x - 0.3, dy, z - 0.16], [0.42, 0.8, 0.04]));
+      parts.push(box("timber", [x + 0.3, dy, z - 0.16], [0.42, 0.8, 0.04]));
+    }
+    parts.push(box("bronze", [x + 0.48, 1.15, z - 0.17], [0.05, 0.12, 0.04]));
+  }
+
+  // The upper storey: its windows in the back wall, over the court.
+  const floorY = spec.wallHeight + 0.4;
+  for (let i = 0; i < 4; i += 1) {
+    const x = -halfW * 0.75 + (halfW * 1.5 * i) / 3;
+    parts.push(box("shadow", [x, floorY + 0.9, shellBack - 0.02], [0.9, 1.3, 0.06]));
+    parts.push(box("timber", [x, floorY + 0.85, shellBack - 0.06], [1.05, 0.08, 0.12]));
+  }
+  // Water in the pool, and a marble Eros over it as the fountain.
+  parts.push(box("paintBlue", [0, 0.17, 0], [pool - 0.05, 0.04, pool - 0.05]));
+  parts.push(cyl("marble", [0, 0.2, 0], 0.25, 0.3, 0.7, 14));
+  parts.push(
+    person([0, 0.9, 0], 0.95, Math.PI, "marble", {
+      name: "Eros",
+      sex: "male",
+      bearded: false,
+      hair: "curls",
+      dress: "chiton",
+      right: "phiale",
+    }),
+  );
+
   // Someone standing in the court, because a room is the one place where the
   // scale figure is the whole point.
-  parts.push(person([halfW * 0.55, 0.02, -halfD * 0.45], 1.75, 2.4));
   return parts;
 }
 
@@ -4005,7 +4718,6 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
 
   // On the low ground of the city, with the harbour hills behind.
   parts.push(...setting(spec.baseDepth * 0.7, 3531, { stone: 0.5, grass: 0.9, hills: 0.45 }));
-  parts.push(person([spec.baseWidth * 0.5 + 4, 0, -spec.baseDepth * 0.5 - 3], 1.75, 0.4));
   return parts;
 }
 
@@ -4111,6 +4823,49 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
     for (let i = 0; i < 6; i += 1) {
       const x = 5 + i * 3.2;
       parts.push(worn(box("limestone", [x, 0, side * (halfCourt + 1)], [1.5, 2.6, 0.4]), 0.03));
+      /*
+       * Each stele carried a relief: the king shaking hands with a god, or
+       * an ancestor in his regalia. Cut here as two low silhouettes facing
+       * each other with their right hands joined — the dexiosis that is the
+       * signature image of Commagene.
+       */
+      const face = side * (halfCourt + 1) - side * 0.2;
+      const scale = 1.75;
+      const figure = (flip: number, tall: boolean): [number, number][] => {
+        const pts: [number, number][] = [
+          [-0.1, 0],
+          [0.1, 0],
+          [0.12, 0.45],
+          [0.16, 0.62],
+          [0.3, 0.66],
+          [0.31, 0.7],
+          [0.15, 0.74],
+          [0.11, 0.8],
+          [0.07, 0.82],
+          [0.1, 0.9],
+          [0.06, tall ? 1.08 : 1.0],
+          [-0.04, tall ? 1.1 : 1.0],
+          [-0.09, 0.92],
+          [-0.07, 0.83],
+          [-0.15, 0.78],
+          [-0.17, 0.5],
+          [-0.12, 0.45],
+        ];
+        return pts.map(([u, v]) => [u * flip * scale * 0.55, v * scale * 0.95 + 0.25]);
+      };
+      for (const [offset, flip, tall] of [
+        [-0.32, 1, true],
+        [0.32, -1, i % 2 === 0],
+      ] as const) {
+        parts.push({
+          kind: "carving",
+          material: "limestone",
+          at: [x + offset * (side > 0 ? -1 : 1), 0, face],
+          outline: figure(flip * (side > 0 ? -1 : 1), tall),
+          depth: 0.05,
+          rotY: side > 0 ? Math.PI : 0,
+        });
+      }
       parts.push(box("limestone", [x, 0, side * (halfCourt + 1)], [2.0, 0.4, 1.0]));
     }
   }
@@ -4124,7 +4879,6 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
       ground: "stone",
     }),
   );
-  parts.push(person([spec.courtDepth * 0.45, 0, -halfCourt * 0.5], 1.75, 2.0));
   return parts;
 }
 

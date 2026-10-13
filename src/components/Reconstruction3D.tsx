@@ -419,7 +419,8 @@ export function Reconstruction3D({
         )}
       </div>
       <p className="mt-2 text-xs text-muted-foreground">
-        {t("recon_scale")} {t("recon_landscape_note")} {t("recon_life_note")}
+        {t("recon_scale")} {t("recon_landscape_note")} {t("recon_life_note")}{" "}
+        {t("recon_face_credit")}
       </p>
 
       {still && todayPhoto && (

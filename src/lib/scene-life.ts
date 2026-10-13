@@ -1,11 +1,14 @@
 import {
   horseStatue,
+  ornateAltar,
+  stadiumLayout,
   type FigureIdentity,
   type FigurePaint,
   type Material,
   type Part,
   type Vec3,
 } from "@/lib/reconstruction-parts";
+import type { ScanId } from "@/lib/scans";
 import type {
   GreatAltarSpec,
   IonicDipterosSpec,
@@ -519,7 +522,29 @@ class Cast {
  * Props, built from the same primitives as the buildings
  * ------------------------------------------------------------------ */
 
-const decor = (part: Part): Part => ({ ...part, decor: true });
+/**
+ * Statues for which a real scan of an ancient statue of the same type exists
+ * stand in that scan rather than in the procedural figure: Athena in the
+ * Minerva of Arezzo, Zeus in the bearded Neptune of Nîmes, and a togate
+ * emperor or magistrate in the Arringatore. Bronze and gilt figures keep their
+ * own geometry, since the scans are of marble and plaster.
+ */
+const SCAN_OF: Partial<Record<string, ScanId>> = {
+  Athena: "athena-arezzo",
+  Zeus: "neptune",
+  Emperor: "arringatore",
+};
+
+const decor = (part: Part): Part => {
+  const scan =
+    part.kind === "figure" &&
+    !part.scan &&
+    (part.material === "marble" || part.material === "marbleWorn") &&
+    part.identity
+      ? SCAN_OF[part.identity.name]
+      : undefined;
+  return { ...part, decor: true, ...(scan ? { scan: { id: scan } } : {}) };
+};
 
 const box = (material: Material, at: Vec3, size: Vec3, rotY = 0): Part =>
   decor({ kind: "box", material, at, size, rotY });
@@ -840,7 +865,7 @@ function stall(at: Vec3, rotY: number, rand: Rand, goods: "pottery" | "fruit" | 
   return parts;
 }
 
-/** A plain stone altar, and the fire on it. */
+/** A dressed stone altar — garlands, bolsters, fire-tray — and its fire. */
 function altar(
   at: Vec3,
   w: number,
@@ -849,12 +874,8 @@ function altar(
   rotY = 0,
 ): { parts: Part[]; flame: Vec3 } {
   return {
-    parts: [
-      box("marbleWorn", at, [w + 0.3, 0.2, d + 0.3], rotY),
-      box("marble", [at[0], at[1] + 0.2, at[2]], [w, h - 0.4, d], rotY),
-      box("marbleWorn", [at[0], at[1] + h - 0.2, at[2]], [w + 0.2, 0.2, d + 0.2], rotY),
-    ],
-    flame: [at[0], at[1] + h, at[2]],
+    parts: ornateAltar(at, w, d, h, rotY).map(decor),
+    flame: [at[0], at[1] + h * 0.98, at[2]],
   };
 }
 
@@ -1769,7 +1790,7 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
   const courtZ = 2;
   const foot = -halfD - spec.steps * 0.55;
 
-  b.flames.push({ at: [0, terrace + 1.8, courtZ], size: 1.6, light: true, smoke: true });
+  b.flames.push({ at: [0, terrace + 1.95, courtZ], size: 1.6, light: true, smoke: true });
   for (let i = 0; i < 5; i += 1) {
     const a = -Math.PI / 2 + (i - 2) * 0.62;
     const at: Vec3 = [Math.cos(a) * 3.4, terrace, courtZ + Math.sin(a) * 3.4];
@@ -1914,97 +1935,108 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
 function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
   const b = make(era, seed);
   const { cast, rand } = b;
-  const halfWidth = spec.overallWidth / 2;
-  const arenaHalf = spec.arenaWidth / 2;
-  const tread = (halfWidth - arenaHalf) / spec.rows;
-  const endCentre = spec.overallLength / 2 - halfWidth;
+  const L = stadiumLayout(spec);
+  const { arenaHalf, endCentre, tread, bowAt } = L;
 
-  const budget = 2400;
+  /*
+   * The crowd along both banks, following the curve of the sides where they
+   * bow, thickest opposite the finish.
+   */
+  const budget = 1900;
   const perRow = (2 * endCentre) / 0.55;
   const total = perRow * 2 * spec.rows;
   const density = Math.min(0.55, budget / total);
+  const finishZ = L.trackMax - 6;
   for (let row = 0; row < spec.rows; row += 1) {
     const r = arenaHalf + row * tread + tread * 0.42;
     const y = row * spec.seatRise + spec.seatRise + 0.06;
     for (const side of [-1, 1]) {
       for (let k = 0; k < perRow; k += 1) {
         const z = -endCentre + (k + 0.5) * 0.55;
-        // Thickest at the finish, which is where everyone wanted to sit.
-        const near = 1 - Math.abs(z - endCentre * 0.5) / (endCentre * 2);
+        const near = 1 - Math.abs(z - finishZ) / (endCentre * 2);
         if (rand() > density * (0.6 + near)) continue;
-        seat(b, [side * r, y, z], side > 0 ? -Math.PI / 2 : Math.PI / 2);
+        const slope = (bowAt(z + 0.5) - bowAt(z - 0.5)) * side;
+        seat(b, [side * (r + bowAt(z)), y, z], (side > 0 ? -Math.PI / 2 : Math.PI / 2) - slope);
       }
     }
   }
-  // The race, four runners abreast, going round the turning posts.
-  // The footrace runs the length of the middle of the track, there and
-  // back, inside the line the chariots take.
-  const lane = (x: number): Vec3[] => [
-    [x, 0.12, -endCentre * 0.5],
-    [x, 0.12, endCentre * 0.5],
-  ];
+
+  // The footrace, there and back down the middle, inside the chariots' line.
+  const mid = (L.trackMin + L.trackMax) / 2;
+  const half = (L.trackMax - L.trackMin) / 2 - 6;
   for (let i = 0; i < 4; i += 1) {
     const x = arenaHalf * (-0.22 + i * 0.12);
-    cast.walk(lane(x), { role: "athlete", speed: between(rand, 5.2, 6.4) });
+    cast.walk(
+      [
+        [x, 0.12, mid - half * 0.8],
+        [x, 0.12, mid + half * 0.8],
+      ],
+      { role: "athlete", speed: between(rand, 5.2, 6.4) },
+    );
   }
-  // Turning posts and the starting line.
-  for (const z of [-endCentre * 0.6, endCentre * 0.6]) {
+  // Turning posts, the starting line and the finishZ.
+  for (const z of [L.trackMin, L.trackMax]) {
     b.props.push(cyl("marble", [0, 0.12, z], 0.3, 0.25, 2.4, 10));
+    b.props.push(cyl("paintGold", [0, 2.52, z], 0.14, 0.02, 0.5, 8));
   }
-  b.props.push(box("marbleWorn", [0, 0.12, endCentre * 0.5], [spec.arenaWidth * 0.8, 0.04, 0.3]));
-  // The judges in purple at the finish, a trumpeter, an athlete waiting.
+  b.props.push(box("marbleWorn", [0, 0.12, finishZ], [spec.arenaWidth * 0.8, 0.04, 0.3]));
+  // The judges in purple at the finishZ, on a little dais, and a trumpeter.
+  b.props.push(box("marbleWorn", [arenaHalf - 2.2, 0.12, finishZ], [1.6, 0.4, 3]));
   for (let i = 0; i < 3; i += 1) {
     cast.add({
-      at: [arenaHalf - 2, 0.12, endCentre * 0.5 + (i - 1) * 0.8],
+      at: [arenaHalf - 2.2, 0.52, finishZ + (i - 1) * 0.8],
       rotY: -Math.PI / 2,
       action: i === 1 ? "talk" : "stand",
       role: "official",
     });
   }
   cast.add({
-    at: [-arenaHalf + 2.5, 0.12, endCentre * 0.5],
+    at: [-arenaHalf + 2.5, 0.12, finishZ],
     rotY: Math.PI / 2,
     action: "play",
     role: "musician",
     carry: "aulos",
   });
-  cast.group([-arenaHalf + 3, 0.12, -endCentre * 0.75], 3, 0.7, "athlete");
-  // Torches along the track; braziers at the posts.
+  cast.group([-arenaHalf + 3, 0.12, L.trackMin + 4], 3, 0.7, "athlete");
   for (let i = 0; i < 6; i += 1) {
-    const z = -endCentre * 0.8 + (i * endCentre * 1.6) / 5;
+    const z = L.trackMin + (i * (L.trackMax - L.trackMin)) / 5;
     for (const side of [-1, 1])
-      fire(b, torchStand([side * (arenaHalf - 0.6), 0.12, z], 1.8), 0.3, i === 2 && side > 0);
+      fire(
+        b,
+        torchStand([side * (arenaHalf - 0.8 + bowAt(z)), 0.12, z], 1.8),
+        0.3,
+        i === 2 && side > 0,
+      );
   }
+
   /*
-   * The races. Roman stadiums in Asia were built for athletes, but they took
-   * in everything a crowd would pay for — so here the chariots are out too,
-   * driven round the turning posts in the colours of their factions, and a
-   * pair of riders on horseback.
+   * The races: chariots in the colours of their factions, round the turning
+   * posts, and a pair of riders on horseback.
    */
   b.cheerFor = "racers";
   const factions = [0x9c3a2c, 0x2f5b86, 0x4f7a3a, 0xe8e0d0];
   const track = (x: number): Vec3[] => {
     const pts: Vec3[] = [];
-    const reach = endCentre * 0.62;
     const turn = 10;
     for (let k = 0; k <= turn; k += 1) {
       const a = Math.PI + (k / turn) * Math.PI;
-      pts.push([Math.cos(a) * x, 0.12, reach + Math.sin(-a) * x * 0.6]);
+      pts.push([Math.cos(a) * x, 0.12, L.trackMax + Math.sin(-a) * x * 0.6]);
     }
     for (let k = 0; k <= turn; k += 1) {
       const a = (k / turn) * Math.PI;
-      pts.push([Math.cos(a) * x, 0.12, -reach - Math.sin(a) * x * 0.6]);
+      pts.push([Math.cos(a) * x, 0.12, L.trackMin - Math.sin(a) * x * 0.6]);
     }
     return pts;
   };
-  const teams = spec.overallWidth > 50 ? 4 : 3;
+  const big = spec.overallWidth > 50;
+  const teams = big ? 4 : 3;
   for (let i = 0; i < teams; i += 1) {
     const lane = arenaHalf * (0.38 + i * 0.12);
     b.chariots.push({
       route: track(lane),
       speed: between(rand, 9, 11),
       phase: i * 0.8,
-      team: spec.overallWidth > 50 ? 4 : 2,
+      team: big ? 4 : 2,
       horses: Array.from({ length: 4 }, () => pick(rand, COATS.horse)),
       driver: { ...dress(rand, b.era, "athlete"), main: factions[i]!, trim: factions[i]! },
       colour: factions[i]!,
@@ -2017,6 +2049,87 @@ function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
       speed: between(rand, 10, 12),
       rider: { ...dress(rand, b.era, "athlete"), main: factions[(i + 2) % 4]! },
       dressed: factions[(i + 2) % 4]!,
+    });
+  }
+
+  if (L.arenaWall) {
+    // In the arena at the east end, two gladiators circle each other, the
+    // referee between them with his staff.
+    const z = L.arenaWall.z + 16;
+    cast.add({
+      at: [-1.4, 0.12, z],
+      rotY: Math.PI / 2,
+      action: "perform",
+      role: "soldier",
+      carry: "spear",
+      carryLeft: "shield",
+    });
+    cast.add({
+      at: [1.4, 0.12, z + 0.4],
+      rotY: -Math.PI / 2,
+      action: "perform",
+      role: "soldier",
+      carry: "spear",
+      carryLeft: "shield",
+    });
+    cast.add({
+      at: [0, 0.12, z + 3],
+      rotY: Math.PI,
+      action: "talk",
+      role: "official",
+      carry: "staff",
+    });
+  }
+
+  if (spec.vaults) {
+    /*
+     * Perge's chambers under the seats were shops, opening outwards under
+     * their arches — the inscriptions on them still name who sold what.
+     * Awnings over a few of them, goods set out, shopkeepers and customers.
+     */
+    const bay = (2 * endCentre) / spec.vaults;
+    const outer = L.halfWidth + 1.2;
+    const goods = ["pottery", "fruit", "pottery", "fruit"] as const;
+    for (const side of [-1, 1]) {
+      for (let i = 2; i < spec.vaults - 2; i += 3) {
+        const z = -endCentre + bay * (i + 0.5);
+        const x = side * (outer + 1.4);
+        b.props.push(
+          ...stall([x, 0, z], side > 0 ? -Math.PI / 2 : Math.PI / 2, rand, goods[i % 4]!),
+        );
+        cast.add({
+          at: [side * (outer + 0.5), 0, z],
+          rotY: side > 0 ? Math.PI / 2 : -Math.PI / 2,
+          action: "talk",
+          role: "worker",
+        });
+        if (rand() < 0.7) {
+          cast.add({
+            at: [side * (outer + 2.6), 0, z + between(rand, -0.6, 0.6)],
+            rotY: side > 0 ? -Math.PI / 2 : Math.PI / 2,
+            action: rand() < 0.5 ? "talk" : "stand",
+            ...(rand() < 0.4 ? { carry: "basket" as const } : {}),
+          });
+        }
+      }
+      cast.walk(
+        [
+          [side * (outer + 4), 0, -endCentre],
+          [side * (outer + 4), 0, endCentre],
+        ],
+        {
+          speed: 1,
+          ...(rand() < 0.5 ? { carry: "amphora" as const, role: "worker" as const } : {}),
+        },
+      );
+    }
+    animal(b, "donkey", [outer + 5, 0, 0], 0, "walk", {
+      route: [
+        [outer + 5, 0, -endCentre * 0.8],
+        [outer + 5, 0, endCentre * 0.8],
+      ],
+      speed: 0.7,
+      load: true,
     });
   }
   return finish(b);
@@ -2155,6 +2268,73 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
   b.props.push(...amphora([halfW - 0.9, 0, -halfD - 1.8], 0.95));
   void backZ;
   dog(b, [spec.poolWidth / 2 + 0.9, 0, 1.3]);
+  /*
+   * The rest of the household. In the left-hand room, behind the loom: the
+   * kitchen hearth with its pots, shelves of jars, a bed with its bolster in
+   * the far corner, and the lararium — the little painted shrine of the
+   * household gods, a lamp burning in front of it.
+   */
+  const ox = -sideX;
+  const wallX = -(sideX + spec.roomDepth / 2) + 0.35;
+  // Hearth.
+  b.props.push(box("stone", [ox + 0.6, 0, -halfD + 1.4], [1.6, 0.8, 0.9]));
+  b.props.push(box("stoneDark", [ox + 0.6, 0.8, -halfD + 1.4], [1.3, 0.04, 0.7]));
+  b.props.push(...jar([ox + 0.2, 0.84, -halfD + 1.4], 0.32));
+  b.props.push(cyl("bronze", [ox + 0.95, 0.84, -halfD + 1.3], 0.16, 0.2, 0.18, 12));
+  b.flames.push({ at: [ox + 0.85, 0.86, -halfD + 1.5], size: 0.25, light: true, smoke: true });
+  cast.add({ at: [ox + 0.6, 0, -halfD + 2.4], rotY: Math.PI, action: "tend", female: true });
+  // Shelves of jars and bowls on the outer wall.
+  for (const y of [0.9, 1.6]) {
+    b.props.push(box("timber", [wallX, y, -halfD + 3.3], [0.35, 0.05, 2.2]));
+    for (let k = 0; k < 5; k += 1)
+      b.props.push(...jar([wallX, y + 0.05, -halfD + 2.4 + k * 0.45], 0.18 + (k % 2) * 0.05));
+  }
+  // The bed.
+  b.props.push(box("timber", [wallX + 0.6, 0, halfD - 1.4], [1.0, 0.5, 2.0]));
+  b.props.push(box("linen", [wallX + 0.6, 0.5, halfD - 1.4], [0.95, 0.14, 1.95]));
+  b.props.push(box("paintBlue", [wallX + 0.6, 0.64, halfD - 1.0], [0.9, 0.06, 1.1]));
+  b.props.push(
+    cyl("paintRed", [wallX + 0.6 - 0.4, 0.72, halfD - 2.25], 0.1, 0.1, 0.8, 10, {
+      rotX: Math.PI / 2,
+      rotY: Math.PI / 2,
+    }),
+  );
+  // The lararium.
+  const lz = 1.6;
+  b.props.push(box("marble", [wallX, 1.0, lz], [0.4, 0.12, 1.0]));
+  b.props.push(box("paintRed", [wallX - 0.12, 1.12, lz], [0.04, 0.8, 0.9]));
+  for (const dz of [-0.38, 0.38])
+    b.props.push(cyl("marble", [wallX + 0.1, 1.12, lz + dz], 0.04, 0.035, 0.7, 10));
+  b.props.push(
+    decor({
+      kind: "prism",
+      material: "marble",
+      at: [wallX + 0.05, 1.82, lz],
+      size: [1.0, 0.25, 0.35],
+      rotY: Math.PI / 2,
+    }),
+  );
+  for (const dz of [-0.18, 0.18]) {
+    b.props.push(
+      decor({
+        kind: "figure",
+        material: "bronze",
+        at: [wallX + 0.05, 1.12, lz + dz],
+        height: 0.32,
+        rotY: Math.PI / 2,
+        identity: {
+          name: "Lar",
+          sex: "male",
+          bearded: false,
+          hair: "curls",
+          dress: "chiton",
+          right: "phiale",
+          left: "cornucopia",
+        },
+      }),
+    );
+  }
+  fire(b, lampstand([wallX + 0.45, 0, lz], 1.15), 0.08, false);
   return finish(b);
 }
 

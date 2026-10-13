@@ -35,6 +35,11 @@ describe("the life of each scene", () => {
     }
   });
 
+  /**
+   * Scale is the whole argument of a reconstruction. The people of the
+   * scene are what give it now — a 19.7 m column next to a crowd of
+   * ordinary people cannot be read as an ordinary column.
+   */
   test("people are people-sized, and stand on or above the ground", () => {
     for (const { item, life } of lives) {
       for (const person of life.people) {

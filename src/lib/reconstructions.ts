@@ -186,6 +186,24 @@ export type StadiumSpec = {
   entrances: number;
   /** One end left open, as at Perge, instead of both closed. */
   openEnd?: boolean;
+  /**
+   * How far the long sides bow outwards at the middle, in metres. The long
+   * sides at Aphrodisias are not straight but slightly curved, so that the
+   * spectators along them could see the whole track.
+   */
+  bow?: number;
+  /**
+   * Vaulted chambers carrying the seats along each long side, opening to the
+   * outside as shops — Perge's thirty a side, their shopkeepers named in
+   * inscriptions on the arches.
+   */
+  vaults?: number;
+  /** The late-antique wall that closed the east end off as an arena. */
+  arenaEnd?: boolean;
+  /** Built into the city's fortification wall along one long side. */
+  cityWall?: boolean;
+  /** Set at the foot of a hill that rises behind one long side. */
+  hillside?: boolean;
 };
 
 /** A Pre-Pottery Neolithic enclosure: a ring of T-shaped pillars in a wall. */
@@ -1104,6 +1122,9 @@ export const reconstructions: Reconstruction[] = [
       arenaWidth: 30,
       seatRise: 0.33,
       entrances: 4,
+      bow: 4.5,
+      arenaEnd: true,
+      cityWall: true,
     },
   },
   {
@@ -1680,6 +1701,8 @@ export const reconstructions: Reconstruction[] = [
       seatRise: 0.436,
       entrances: 12,
       openEnd: true,
+      vaults: 30,
+      hillside: true,
     },
   },
   {

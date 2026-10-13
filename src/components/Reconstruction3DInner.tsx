@@ -187,6 +187,30 @@ const MATERIALS: Record<Material, Palette> = {
   paintBlue: { color: 0x2f5b86, roughness: 0.62, metalness: 0 },
   paintGold: { color: 0xc19a3e, roughness: 0.38, metalness: 0.48 },
   timber: { color: 0x6f4426, roughness: 0.76, metalness: 0 },
+  // The coloured stones Roman builders shipped across the empire for their
+  // showpiece columns: grey-pink granite from the Troad, yellow giallo
+  // antico from Numidia, purple-veined pavonazzetto from Phrygia.
+  granite: {
+    color: 0x9a8a86,
+    roughness: 0.42,
+    metalness: 0,
+    clearcoat: 0.3,
+    clearcoatRoughness: 0.3,
+  },
+  gialloAntico: {
+    color: 0xdcc58e,
+    roughness: 0.4,
+    metalness: 0,
+    clearcoat: 0.35,
+    clearcoatRoughness: 0.3,
+  },
+  pavonazzetto: {
+    color: 0xe4d6d6,
+    roughness: 0.4,
+    metalness: 0,
+    clearcoat: 0.35,
+    clearcoatRoughness: 0.3,
+  },
   /*
    * Weathered bronze, kept well off full metalness on purpose. A physically
    * correct metal has almost no diffuse colour — it is only a mirror — so at
@@ -302,8 +326,10 @@ const VIEWPOINT: Record<ModelSpec["kind"], [number, number, number]> = {
   "neolithic-enclosure": [0.6, 0.4, 0.7],
   // Facing the stair, a little to one side: the altar was climbed, not circled.
   "great-altar": [0.45, 0.34, -1],
-  // Down the long axis, the view from the closed end of the track.
-  stadium: [0.5, 0.26, 1],
+  // Across the long side and towards the closed end: the whole length of the
+  // banks, and what each stadium has along its flank — Perge's shops, the
+  // curve of Aphrodisias' sides.
+  stadium: [1, 0.42, 0.55],
   // Low and close, from the open side: this one is a room, not a monument.
   "peristyle-house": [0.5, 0.32, -1],
   // Three-quarters and a little above: the pyramid and the podium both show.
@@ -377,6 +403,41 @@ export default function Reconstruction3DInner({
       const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
       const { mergeGeometries } = await import("three/addons/utils/BufferGeometryUtils.js");
       const { buildLife } = await import("./scene/life");
+      /*
+       * The face the statues are carved from: a real human head, scanned
+       * (Infinite, by Lee Perry-Smith, CC BY 3.0), cropped to the head and a
+       * stub of neck and reduced for the web. Each statue reshapes it to its
+       * own face. If it cannot be fetched the sculpted sphere stands in.
+       */
+      let headTemplate: THREE_NS.BufferGeometry | null = null;
+      try {
+        const response = await Promise.race([
+          fetch("/scans/statue-head.bin"),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), 5000)),
+        ]);
+        if (response.ok) {
+          const buffer = await response.arrayBuffer();
+          const view = new DataView(buffer);
+          const vertices = view.getUint32(0, true);
+          const indices = view.getUint32(4, true);
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute(
+            "position",
+            new THREE.BufferAttribute(new Float32Array(buffer, 8, vertices * 3).slice(), 3),
+          );
+          geometry.setIndex(
+            new THREE.BufferAttribute(
+              new Uint16Array(buffer, 8 + vertices * 12, indices).slice(),
+              1,
+            ),
+          );
+          // Every piece of a figure has to carry the same attributes to merge.
+          geometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(vertices * 2), 2));
+          headTemplate = geometry;
+        }
+      } catch {
+        headTemplate = null;
+      }
       if (disposed) return;
 
       let renderer: THREE_NS.WebGLRenderer;
@@ -835,6 +896,83 @@ export default function Reconstruction3DInner({
         };
 
         /**
+         * The scanned head, made this statue's own: the jaw widened or drawn
+         * in, the face lengthened, the nose, brow, lips, chin and cheekbones
+         * pushed out or back by the statue's `face`, a woman's features
+         * softened — and for a bearded man the beard built up over the jaw
+         * and cheeks in curls, with the moustache over the lip.
+         */
+        const scanHead = (r0: number) => {
+          const geometry = headTemplate!.clone();
+          const pos = geometry.attributes["position"]!;
+          const f = face;
+          const female = !male;
+          const g = (
+            x: number,
+            y: number,
+            z: number,
+            cx: number,
+            cy: number,
+            cz: number,
+            sx: number,
+            sy: number,
+            sz: number,
+          ) =>
+            Math.exp(
+              -((x - cx) ** 2) / (sx * sx) - (y - cy) ** 2 / (sy * sy) - (z - cz) ** 2 / (sz * sz),
+            );
+          for (let i = 0; i < pos.count; i += 1) {
+            let x = pos.getX(i);
+            let y = pos.getY(i);
+            let z = pos.getZ(i);
+            const lower = Math.max(0, -y);
+            x *= (female ? 0.95 : 1) * (1 + (f.jaw - 1) * 0.5 * Math.min(1, lower * 1.2));
+            if (female) x *= 1 - 0.05 * Math.min(1, lower * 1.4);
+            const ax = Math.abs(x);
+            z += (f.nose - 1) * 0.22 * g(x, y, z, 0, -0.05, 0.95, 0.12, 0.25, 0.3);
+            x *= 1 + (f.noseWidth - 1) * 0.35 * g(x, y, z, 0, -0.18, 0.9, 0.16, 0.12, 0.25);
+            z +=
+              (f.brow - 1 - (female ? 0.25 : 0)) *
+              0.07 *
+              g(x, y, z, 0, 0.25, 0.85, 0.42, 0.1, 0.25);
+            z += (f.chin - 1) * 0.12 * g(x, y, z, 0, -0.88, 0.6, 0.25, 0.15, 0.35);
+            z += (f.lips - 1) * 0.05 * g(x, y, z, 0, -0.45, 0.85, 0.2, 0.08, 0.2);
+            x +=
+              Math.sign(x) *
+              (f.cheek - 1) *
+              0.05 *
+              g(ax, y, z, 0.42, -0.05, 0.55, 0.15, 0.14, 0.25);
+            y *= f.length / 1.05;
+            pos.setXYZ(i, x, y, z);
+          }
+          geometry.computeVertexNormals();
+          if (bearded) {
+            const normal = geometry.attributes["normal"]!;
+            for (let i = 0; i < pos.count; i += 1) {
+              const x = pos.getX(i);
+              const y = pos.getY(i);
+              const z = pos.getZ(i);
+              const ax = Math.abs(x);
+              // Jaw, chin and the sides of the face below the cheekbones.
+              let w = 0;
+              if (z > -0.35 && y < -0.28) w = Math.min(1, (-0.28 - y) * 3 + 0.4);
+              if (z > -0.25 && y < 0.05 && ax > 0.52) w = Math.max(w, Math.min(1, (ax - 0.52) * 6));
+              // Leave the lips clear, and add the moustache over them.
+              const lips = g(x, y, z, 0, -0.45, 0.85, 0.2, 0.06, 0.2);
+              w *= 1 - lips * 0.9;
+              const moustache = g(x, y, z, 0, -0.33, 0.9, 0.2, 0.04, 0.15) * 0.06;
+              const curl = (n1(x * 18, y * 18, z * 18) - 0.5) * 0.09;
+              const d = w * (0.16 + curl) + moustache + (y < -0.75 ? w * (-0.75 - y) * 0.4 : 0);
+              if (d <= 0) continue;
+              pos.setXYZ(i, x + normal.getX(i) * d, y + normal.getY(i) * d, z + normal.getZ(i) * d);
+            }
+            geometry.computeVertexNormals();
+          }
+          geometry.scale(r0, r0, r0);
+          return geometry;
+        };
+
+        /**
          * Cloth. Folds are pushed into a lofted skin after it is built: a
          * primary set of ridges round the body, a finer set that drifts as
          * it climbs, and a seeded wander so the pleats are never regular —
@@ -897,7 +1035,8 @@ export default function Reconstruction3DInner({
         const hairAt = (headY: number) => {
           switch (hair) {
             case "bun":
-              // The bun at the back of the head.
+              // Hair waved back from the brow, and the bun at the back.
+              hairCap(headY, true);
               ball([0, headY + h * 0.075, -h * 0.083], h * 0.055);
               break;
             case "short":
@@ -1122,8 +1261,13 @@ export default function Reconstruction3DInner({
           // Fine enough for a face to read on a colossus, coarser on a small
           // figure nobody will walk up to.
           const fine = h > 2.4 ? [72, 56] : [52, 40];
-          const head = new THREE.SphereGeometry(h * 0.1, fine[0], fine[1]);
-          sculptHead(head, h * 0.1);
+          let head: THREE_NS.BufferGeometry;
+          if (headTemplate) {
+            head = scanHead(h * 0.1);
+          } else {
+            head = new THREE.SphereGeometry(h * 0.1, fine[0], fine[1]);
+            sculptHead(head, h * 0.1);
+          }
           head.computeVertexNormals();
           head.translate(0, headY, 0);
           pieces.push(head);
@@ -1457,12 +1601,16 @@ export default function Reconstruction3DInner({
             [
               section([hip * 0.6, h * 0.6, 0], h * 0.125, h * 0.095),
               section([hip * 0.4, h * 0.68, 0.004 * h], h * 0.145 * broad, h * 0.11),
-              section([hip * 0.2, h * 0.75, 0], h * 0.155 * broad, h * 0.095),
-              section([0, h * 0.79, 0], h * 0.17 * broad, h * 0.085),
-              section([0, h * 0.815, 0], h * 0.085, h * 0.07),
+              section([hip * 0.2, h * 0.745, 0.002 * h], h * 0.156 * broad, h * 0.1),
+              // The shoulders rounding over into the slope of the trapezius
+              // and the root of the neck, rather than a flat yoke.
+              section([0, h * 0.775, 0], h * 0.165 * broad, h * 0.09),
+              section([0, h * 0.795, -0.004 * h], h * 0.15 * broad, h * 0.078),
+              section([0, h * 0.808, -0.006 * h], h * 0.115 * broad, h * 0.068),
+              section([0, h * 0.818, -0.004 * h], h * 0.075, h * 0.058),
             ],
-            28,
-            5,
+            32,
+            6,
           );
           drape(torso, () => (fine ? 0.005 : 0.008) * h, fine ? 20 : 14, rand() * Math.PI * 2);
           if (sheath) {
@@ -1495,7 +1643,8 @@ export default function Reconstruction3DInner({
            * knot pulled out of it at the chest.
            */
           const heavy = dress === "himation" || dress === "toga";
-          const rollR = heavy ? h * 0.068 : h * 0.05;
+          // The rolled edge of the mantle: a flattened band of cloth, not a tube.
+          const rollR = heavy ? h * 0.05 : h * 0.038;
           if (!sheath)
             roll(
               [
@@ -1508,7 +1657,7 @@ export default function Reconstruction3DInner({
                 [0, 0.5 * h, -0.125 * h],
               ],
               rollR,
-              rollR * 0.7,
+              rollR * 0.5,
             );
           if (heavy) {
             const fall = roll(
@@ -2589,15 +2738,48 @@ export default function Reconstruction3DInner({
            * them is painted, every other piece of that stone is given plain
            * white, which leaves its colour exactly as it was.
            */
-          const painted = list.some((geometry) => geometry.getAttribute("color"));
+          /*
+           * And stone is never one colour. Every block was quarried from its
+           * own bed and has weathered its own way, so each piece of masonry
+           * is given a tint of its own — a little lighter or darker, a little
+           * warmer or cooler. A wall of identical blocks is the surest sign
+           * of a computer; a wall of slightly different ones reads as built.
+           */
+          const masonry = ![
+            "shadow",
+            "human",
+            "paintRed",
+            "paintBlue",
+            "paintGold",
+            "bronze",
+            "foliage",
+            "linen",
+          ].includes(name);
+          const painted = masonry || list.some((geometry) => geometry.getAttribute("color"));
           if (painted) {
+            let n = 0;
             for (const geometry of list) {
+              n += 1;
               if (geometry.getAttribute("color")) continue;
               const count = geometry.attributes["position"]!.count;
-              geometry.setAttribute(
-                "color",
-                new THREE.BufferAttribute(new Float32Array(count * 3).fill(1), 3),
-              );
+              const colours = new Float32Array(count * 3);
+              let r = 1;
+              let gr = 1;
+              let bl = 1;
+              if (masonry) {
+                const k = hashString(`${name}|${n}`);
+                const shade = 0.9 + ((k & 255) / 255) * 0.16;
+                const warm = (((k >> 8) & 255) / 255 - 0.5) * 0.05;
+                r = shade + warm;
+                gr = shade;
+                bl = shade - warm;
+              }
+              for (let i = 0; i < count; i += 1) {
+                colours[i * 3] = r;
+                colours[i * 3 + 1] = gr;
+                colours[i * 3 + 2] = bl;
+              }
+              geometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
             }
           }
           // Normals come from the primitives themselves and survive the merge;
@@ -2614,7 +2796,14 @@ export default function Reconstruction3DInner({
           const isStone = !["shadow", "human", "linen", "foliage", "papyrus", "hide"].includes(
             name,
           );
-          const stone = name === "marble" || name === "marbleWorn" ? stoneSet : blockSet;
+          const stone =
+            name === "marble" ||
+            name === "marbleWorn" ||
+            name === "pavonazzetto" ||
+            name === "gialloAntico" ||
+            name === "granite"
+              ? stoneSet
+              : blockSet;
           /*
            * MeshPhysicalMaterial over MeshStandardMaterial on purpose: the palette
            * files a thin clearcoat layer onto Roman marble (see `Palette`), and
@@ -2722,10 +2911,18 @@ export default function Reconstruction3DInner({
        * rest of the model, so the building appears at once and its carvings
        * a moment later.
        */
-      const scanned = parts.filter((part) => part.scan);
       const scanGroup = new THREE.Group();
       scanGroup.name = "scans";
       scene.add(scanGroup);
+      // The statues of the scene's life stand in their scans too, in the life
+      // group, so they come and go with the rest of it.
+      const placed = [
+        ...parts.filter((part) => part.scan).map((part) => ({ part, into: scanGroup })),
+        ...(life?.props ?? [])
+          .filter((part) => part.scan)
+          .map((part) => ({ part, into: lifeGroup })),
+      ];
+      const scanned = placed.map(({ part }) => part);
       const scanResources: { dispose: () => void }[] = [];
       if (scanned.length > 0) {
         void (async () => {
@@ -2757,6 +2954,8 @@ export default function Reconstruction3DInner({
               // not receive its own, which on a shell is acne all over.
               mesh.castShadow = true;
               mesh.receiveShadow = false;
+              // The free-archive scans come as bare surface, without normals.
+              if (!mesh.geometry.attributes["normal"]) mesh.geometry.computeVertexNormals();
               scanResources.push(mesh.geometry);
               const original = mesh.material as THREE_NS.MeshStandardMaterial;
               // A scan's own texture already holds the light it was
@@ -2781,13 +2980,14 @@ export default function Reconstruction3DInner({
             });
             void id;
           }
-          for (const part of scanned) {
+          for (const { part, into } of placed) {
             const fit = part.scan!;
             const root = loaded.get(fit.id);
             if (!root) continue;
             const box3 = new THREE.Box3().setFromObject(root);
             const size = box3.getSize(new THREE.Vector3());
             const holder = new THREE.Group();
+            holder.name = `scan:${fit.id}`;
             const copy = root.clone(true);
             copy.rotation.y = SCANS[fit.id].facing ?? 0;
             holder.add(copy);
@@ -2818,7 +3018,7 @@ export default function Reconstruction3DInner({
               continue;
             }
             holder.scale.setScalar(scale);
-            scanGroup.add(holder);
+            into.add(holder);
           }
         })();
       }

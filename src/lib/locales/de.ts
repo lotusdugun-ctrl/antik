@@ -274,7 +274,8 @@ export const de: Partial<Record<TKey, string>> = {
   recon_spin_stop: "Stopp",
   recon_reset: "Ansicht zurücksetzen",
   recon_loading: "Modell wird erstellt…",
-  recon_scale: "Die blaue Figur ist ein 1,75 m großer Mensch – als Größenvergleich.",
+  recon_scale:
+    "Die Menschen in der Szene geben den Maßstab: An ihnen lässt sich die wahre Größe des Bauwerks ablesen.",
   recon_unavailable: "Dieser Browser kann kein 3D (WebGL) anzeigen. Maße und Quellen stehen unten.",
   recon_measure_count: "belegte Maße",
   seo_reconstructions_title: "3D-Rekonstruktionen – Modelle mit belegten Maßen | Antike Türkei",
@@ -323,6 +324,8 @@ export const de: Partial<Record<TKey, string>> = {
     "Menschen in zeitgenössischer Kleidung, Fackeln, Altarfeuer und Einrichtung. Bei Nacht brennen die Fackeln.",
   recon_life_note:
     "Menschen, Feuer und Einrichtung sind eine Illustration nach Kleidung und Bräuchen der Zeit, kein Teil des vermessenen Bauwerks.",
+  recon_face_credit:
+    "Die Gesichter der Statuen beruhen auf einem echten Kopfscan: „Infinite, 3D Head Scan“ von Lee Perry-Smith (ir-ltd.net), CC BY 3.0. Jede Statue formt ihn zu ihrem eigenen Gesicht um.",
   recon_quality: "Hohe Qualität",
   recon_quality_hint:
     "Ambient Occlusion: echte Kontaktschatten in Steinfugen, unter Gesimsen und zwischen Sitzreihen. Für leistungsstarke Geräte.",

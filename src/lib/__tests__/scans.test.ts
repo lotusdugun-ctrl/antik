@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { partsFor } from "@/lib/reconstruction-parts";
 import { reconstructions } from "@/lib/reconstructions";
+import { lifeFor } from "@/lib/scene-life";
 import { SCANS, scansFor, type ScanId } from "@/lib/scans";
 
 const root = join(import.meta.dir, "..", "..", "..");
@@ -12,8 +13,13 @@ describe("scans", () => {
     for (const [id, scan] of Object.entries(SCANS)) {
       expect(existsSync(join(root, "public", scan.url))).toBe(true);
       expect(scan.author.length).toBeGreaterThan(0);
-      expect(scan.source).toStartWith("https://sketchfab.com/3d-models/");
-      expect(scan.licenseUrl).toStartWith("https://creativecommons.org/licenses/");
+      const free = scan.license === "Free archive";
+      expect(scan.source).toStartWith(
+        free ? "https://threedscans.com/" : "https://sketchfab.com/3d-models/",
+      );
+      expect(scan.licenseUrl).toStartWith(
+        free ? "https://threedscans.com/" : "https://creativecommons.org/licenses/",
+      );
       expect(scan.title.tr && scan.title.en && scan.note.tr && scan.note.en).toBeTruthy();
       expect(scan.url).toBe(`/scans/${id}.glb`);
     }
@@ -22,7 +28,8 @@ describe("scans", () => {
   test("a scan set into a model is credited on that model's page", () => {
     for (const item of reconstructions) {
       const used = new Set<ScanId>();
-      for (const part of partsFor(item.model)) if (part.scan) used.add(part.scan.id);
+      for (const part of [...partsFor(item.model), ...lifeFor(item).props])
+        if (part.scan) used.add(part.scan.id);
       const shown = new Set(scansFor(item.id));
       for (const id of used)
         expect(`${item.id}:${id}:${shown.has(id)}`).toBe(`${item.id}:${id}:true`);
@@ -35,6 +42,8 @@ describe("scans", () => {
         .length;
     expect(count("celsus-kutuphanesi", "celsus-sophia")).toBe(1);
     expect(count("celsus-kutuphanesi", "celsus-arete")).toBe(1);
+    expect(count("celsus-kutuphanesi", "arringatore")).toBe(4);
+    expect(count("aizanoi-zeus-tapinagi", "neptune")).toBe(1);
     expect(count("didyma-apollon-tapinagi", "didyma-medusa")).toBe(1);
     expect(count("pergamon-zeus-sunagi", "pergamon-athena")).toBe(1);
     expect(count("artemis-tapinagi", "artemision-drum")).toBeGreaterThan(0);

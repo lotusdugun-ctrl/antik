@@ -24,14 +24,22 @@ export type ScanId =
   | "pergamon-athena"
   | "mausoleum-amazon-1"
   | "mausoleum-amazon-2"
-  | "nemrut-head";
+  | "nemrut-head"
+  | "athena-arezzo"
+  | "neptune"
+  | "arringatore";
 
 export type Scan = {
   url: string;
   title: Localized;
   author: string;
   source: string;
-  license: "CC BY 4.0" | "CC BY-NC-SA 4.0";
+  /**
+   * Three D Scans (Oliver Laric) publishes its scans of public-domain
+   * sculpture as a free archive, with no licence terms attached; it is
+   * credited all the same.
+   */
+  license: "CC BY 4.0" | "CC BY-NC-SA 4.0" | "Free archive";
   licenseUrl: string;
   /** Turn about y that makes the carved face look along +z. */
   facing?: number;
@@ -41,6 +49,7 @@ export type Scan = {
 
 const BY = "https://creativecommons.org/licenses/by/4.0/";
 const BY_NC_SA = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
+const TDS = "https://threedscans.com/info/";
 const l = (tr: string, en: string): Localized => ({ tr, en });
 
 export const SCANS: Record<ScanId, Scan> = {
@@ -141,6 +150,42 @@ export const SCANS: Record<ScanId, Scan> = {
       "A scan of a bearded Nemrut head in a tall tiara. The colossi's bodies are ruined, so it is not set into the model; it can be turned on its own below.",
     ),
   },
+  "athena-arezzo": {
+    url: "/scans/athena-arezzo.glb",
+    title: l("Arezzo Minerva'sı (Athena)", "The Minerva of Arezzo (Athena)"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/museo-archeologico-nazionale/athena/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Floransa Arkeoloji Müzesi'ndeki, Yunan özgününden yapılmış Roma dönemi bronz Athena'nın taraması. Bu yapıda Athena'nın gerçek heykeli kayıp; modelde onun yerine, dönemin bu tipteki bir Athena'sı duruyor.",
+      "A scan of the Roman bronze Athena after a Greek original, in the Archaeological Museum of Florence. The Athena that stood here is lost; the model sets a real Athena of the type in her place.",
+    ),
+  },
+  neptune: {
+    url: "/scans/neptune.glb",
+    title: l("Nîmes Neptün'ü (Zeus tipi)", "The Neptune of Nîmes (a Zeus type)"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/uncategorized/neptune/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Nîmes'taki Musée de la Romanité'de duran, sakallı, yarı çıplak, mantolu bir tanrının Roma heykeli. Zeus ile Poseidon aynı kalıptan yontulurdu; kült heykeli kayıp olduğu için modelde Zeus'un yerine bu tarama kullanıldı. Ayağının dibindeki yunus Poseidon'dan kalma.",
+      "A Roman statue of a bearded, half-draped god in the Musée de la Romanité, Nîmes. Zeus and Poseidon were carved to the same type; the cult statue is lost, so this scan stands in for Zeus. The dolphin at his foot is Poseidon's.",
+    ),
+  },
+  arringatore: {
+    url: "/scans/arringatore.glb",
+    title: l("Arringatore (Aule Meteli)", "The Arringatore (Aule Meteli)"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/museo-archeologico-nazionale/aule/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "MÖ 1. yüzyıldan, togalı, kolunu kaldırarak konuşan bir adamın bronz heykelinin taraması. Celsus ile oğlu Aquila'nın heykelleri ve imparator heykelleri kayıp; modelde onların yerine dönemin bu togalı portre heykeli duruyor.",
+      "A scan of the 1st-century BC bronze of a man in a toga, raising his arm to speak. The statues of Celsus, his son Aquila and the emperors are lost; the model sets this real togate portrait of the period in their place.",
+    ),
+  },
 };
 
 /**
@@ -148,10 +193,16 @@ export const SCANS: Record<ScanId, Scan> = {
  * that are only shown alongside it.
  */
 export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
-  "celsus-kutuphanesi": ["celsus-sophia", "celsus-arete"],
+  "celsus-kutuphanesi": ["celsus-sophia", "celsus-arete", "arringatore", "athena-arezzo"],
+  "aspendos-tiyatrosu": ["arringatore"],
   "didyma-apollon-tapinagi": ["didyma-medusa"],
-  "artemis-tapinagi": ["artemision-drum"],
-  "pergamon-zeus-sunagi": ["pergamon-athena"],
+  "artemis-tapinagi": ["artemision-drum", "arringatore"],
+  "pergamon-zeus-sunagi": ["pergamon-athena", "athena-arezzo", "neptune", "arringatore"],
+  "hierapolis-tiyatrosu": ["neptune", "arringatore"],
+  "milet-buyuk-tiyatro": ["neptune", "arringatore"],
+  "efes-buyuk-tiyatro": ["arringatore", "neptune"],
+  "side-tiyatrosu": ["arringatore", "neptune"],
+  "aizanoi-zeus-tapinagi": ["neptune", "arringatore"],
   "halikarnas-mozolesi": ["mausoleum-amazon-1", "mausoleum-amazon-2"],
   "nemrut-dogu-terasi": ["nemrut-head"],
 };

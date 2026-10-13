@@ -225,23 +225,6 @@ describe("the geometry", () => {
     }
   });
 
-  /**
-   * Scale is the whole argument of a reconstruction, so each model carries a
-   * 1.75 m person. If the figure went missing, 19.7 m columns would read as
-   * ordinary ones.
-   */
-  test("every model puts a person in it for scale", () => {
-    for (const item of reconstructions) {
-      const figures = partsOf(item).filter(
-        (part) => part.kind === "figure" && part.material === "human",
-      );
-      expect(figures.length).toBeGreaterThan(0);
-      expect(figures.every((f) => f.kind === "figure" && f.height > 1.5 && f.height < 2)).toBe(
-        true,
-      );
-    }
-  });
-
   test("the façade rises to the height its measurement claims", () => {
     const celsus = reconstructions.find((r) => r.id === "celsus-kutuphanesi")!;
     const spec = celsus.model;
