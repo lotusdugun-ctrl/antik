@@ -8,6 +8,7 @@ import type {
   PeristyleHouseSpec,
   RomanFacadeSpec,
   RomanTheatreSpec,
+  TheatreCharacter,
   StadiumSpec,
   TumulusSanctuarySpec,
 } from "@/lib/reconstructions";
@@ -67,7 +68,11 @@ export type Material =
   /** Coloured marbles and granite for show columns. */
   | "granite"
   | "gialloAntico"
-  | "pavonazzetto";
+  | "pavonazzetto"
+  /** The warm, pebbly conglomerate Aspendos is built of. */
+  | "conglomerate"
+  /** Open water: a harbour basin. */
+  | "water";
 
 /**
  * A photograph of the real carving, wrapped onto the surface that carried it.
@@ -1947,110 +1952,8 @@ function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1
 }
 
 /* ------------------------------------------------------------------ *
- * Animals in the round: a lion and an eagle
+ * Animals in the round: an eagle (the lions are scans; see scans.ts)
  * ------------------------------------------------------------------ */
-
-/**
- * A lion, lofted the way the horse is. Standing, it is the guardian that
- * lined the podium of the Mausoleum — twenty of them were found; sitting on
- * its haunches with its forelegs straight, it is the lion that closes each
- * row of colossi on Nemrut Dağı. About 1.5 m at the top of the mane at a
- * scale of one, facing `-z` before `rotY` turns it.
- */
-function lionStatue(
-  material: Material,
-  at: Vec3,
-  rotY: number,
-  scale = 1,
-  pose: "standing" | "seated" = "standing",
-): Part[] {
-  const parts: Part[] = [];
-  const S = (c: Vec3, rx: number, ry: number): LoftSection => ({
-    c: [c[0] * scale, c[1] * scale, c[2] * scale],
-    rx: rx * scale,
-    ry: ry * scale,
-  });
-  const skin = (sections: LoftSection[]) => parts.push(loft(material, at, rotY, sections));
-  // Where the head sits depends on the pose: level with the back standing,
-  // lifted when the animal sits up.
-  const lift = pose === "seated" ? 0.25 : 0;
-  const back = pose === "seated" ? 0.2 : 0;
-  if (pose === "standing") {
-    skin([
-      S([0, 0.78, 0.9], 0.14, 0.16),
-      S([0, 0.8, 0.6], 0.28, 0.32),
-      S([0, 0.78, 0.2], 0.3, 0.34),
-      S([0, 0.8, -0.2], 0.31, 0.36),
-      S([0, 0.86, -0.55], 0.3, 0.38),
-      S([0, 0.9, -0.75], 0.2, 0.26),
-    ]);
-    for (const side of [-1, 1]) {
-      for (const z of [-0.55, 0.6]) {
-        const x = side * 0.18;
-        skin([
-          S([x, 0.8, z], 0.12, 0.14),
-          S([x, 0.45, z], 0.09, 0.1),
-          S([x, 0.1, z], 0.09, 0.1),
-          S([x, 0.0, z - 0.06], 0.12, 0.12),
-        ]);
-      }
-    }
-    skin([
-      S([0, 0.82, 0.95], 0.05, 0.05),
-      S([0, 0.6, 1.3], 0.045, 0.045),
-      S([0, 0.3, 1.5], 0.04, 0.04),
-      S([0, 0.25, 1.6], 0.07, 0.07),
-    ]);
-  } else {
-    // Rump on the ground, the back rising to the shoulders.
-    skin([
-      S([0, 0.35, 0.7], 0.35, 0.35),
-      S([0, 0.5, 0.4], 0.36, 0.42),
-      S([0, 0.75, 0.05], 0.32, 0.4),
-      S([0, 0.95, -0.3], 0.3, 0.36),
-      S([0, 1.05, -0.5], 0.24, 0.28),
-    ]);
-    for (const side of [-1, 1]) {
-      // The folded haunch, and the straight foreleg.
-      skin([
-        S([side * 0.32, 0.4, 0.55], 0.16, 0.28),
-        S([side * 0.3, 0.15, 0.4], 0.12, 0.16),
-        S([side * 0.28, 0.02, 0.1], 0.11, 0.1),
-      ]);
-      skin([
-        S([side * 0.2, 1.0, -0.45], 0.12, 0.14),
-        S([side * 0.2, 0.5, -0.5], 0.09, 0.1),
-        S([side * 0.2, 0.05, -0.55], 0.11, 0.12),
-      ]);
-    }
-    skin([
-      S([0, 0.3, 1.0], 0.05, 0.05),
-      S([0, 0.15, 1.3], 0.045, 0.045),
-      S([0, 0.08, 1.5], 0.06, 0.06),
-    ]);
-  }
-  // The mane, massed round the neck, and the head coming out of it.
-  skin([
-    S([0, 0.92 + lift, -0.6 + back], 0.3, 0.34),
-    S([0, 1.0 + lift, -0.85 + back], 0.42, 0.46),
-    S([0, 1.02 + lift, -1.05 + back], 0.4, 0.44),
-    S([0, 1.0 + lift, -1.2 + back], 0.28, 0.3),
-  ]);
-  skin([
-    S([0, 1.02 + lift, -1.0 + back], 0.2, 0.22),
-    S([0, 1.0 + lift, -1.25 + back], 0.2, 0.2),
-    S([0, 0.95 + lift, -1.45 + back], 0.15, 0.15),
-    S([0, 0.9 + lift, -1.55 + back], 0.11, 0.1),
-  ]);
-  for (const side of [-1, 1]) {
-    skin([
-      S([side * 0.13, 1.14 + lift, -1.1 + back], 0.05, 0.04),
-      S([side * 0.16, 1.24 + lift, -1.12 + back], 0.03, 0.03),
-      S([side * 0.17, 1.28 + lift, -1.13 + back], 0.005, 0.005),
-    ]);
-  }
-  return parts;
-}
 
 /**
  * An eagle standing with its wings folded, the bird that guards the rows of
@@ -2657,22 +2560,27 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
  * A Roman theatre
  * ------------------------------------------------------------------ */
 
-/** Seat rows fan over +z; the stage building closes the theatre across -z. */
-export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
-  const parts: Part[] = [];
+/**
+ * The plan of a theatre, shared by the stone (here) and its life
+ * (`scene-life.ts`), so that the audience sits on the seats that are built
+ * and the statues stand in the bays of the stage front that is built.
+ */
+export function theatreLayout(spec: RomanTheatreSpec) {
+  const character: TheatreCharacter = spec.character ?? {
+    stone: "limestone",
+
+    ground: "plain",
+    facade: "arcade",
+    screen: "aspendos",
+    storeys: 2,
+    topGallery: true,
+  };
   const outerRadius = spec.caveaDiameter / 2;
   const orchestraRadius = spec.orchestraDiameter / 2;
   const middle = spec.middleRows ?? 0;
   const rows = spec.lowerRows + middle + spec.upperRows;
   const diazoma = 1.8;
-
-  // The orchestra floor. The ground under it all is the renderer's to lay.
-  parts.push(ring("stone", 0, 0, orchestraRadius, 0.12, 0, Math.PI));
-
-  // The podium wall that separated the orchestra from the first row.
   const podiumOuter = orchestraRadius + 0.7;
-  parts.push(ring("stone", 0, orchestraRadius, podiumOuter, spec.podiumHeight, 0, Math.PI));
-
   const rowAt = (index: number) => {
     // One walkway above the lower tier, and another above the middle one.
     const walkways =
@@ -2681,10 +2589,143 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     const inner = podiumOuter + index * spec.seatTread + walkways;
     return { inner, outer: inner + spec.seatTread, y: spec.podiumHeight + index * spec.seatRise };
   };
+  /*
+   * A Roman theatre closes its seating with a semicircle and bonds its stage
+   * building to the ends of it, across the full width. One built on a Greek
+   * theatre keeps the Greek horseshoe: the seating wraps further round, and
+   * the stage building is a shorter block standing inside the wings.
+   */
+  const sweep = ((character.sweep ?? 0) * Math.PI) / 180;
+  const stageWidth =
+    sweep > 0 ? Math.min(spec.caveaDiameter, spec.orchestraDiameter * 2.3) : spec.caveaDiameter;
+  const rowSpan = (index: number): [number, number] =>
+    rowAt(index).inner > stageWidth / 2 + 2 ? [-sweep, Math.PI + 2 * sweep] : [0, Math.PI];
+  const wallZ = -spec.stageDepth;
+  const stageTop = character.stageHeight ?? 1.5;
+  const fractions = character.storeys === 3 ? [0.4, 0.32, 0.28] : [0.55, 0.45];
+  const storeys = fractions.map((f, i) => ({
+    base: stageTop + fractions.slice(0, i).reduce((a, c) => a + c, 0) * spec.scaenaeHeight,
+    height: f * spec.scaenaeHeight,
+  }));
+  const bays = character.bays ?? 10;
+  const screenSpan = stageWidth * 0.86;
+  const bayWidth = screenSpan / bays;
+  const doors: [number, number, number][] = [
+    [0, 4.2, 8],
+    [-stageWidth * 0.16, 2.8, 6.4],
+    [stageWidth * 0.16, 2.8, 6.4],
+    [-stageWidth * 0.36, 2.4, 5.6],
+    [stageWidth * 0.36, 2.4, 5.6],
+  ].map(([x, w, h]) => [x!, w!, Math.min(h!, storeys[0]!.height * 0.82)]);
+  /** Where the stage front's statues stand: in the bays, clear of the doors. */
+  const statueSlots: { at: Vec3; height: number }[] = [];
+  storeys.forEach((storey, s) => {
+    for (let i = 0; i < bays; i += 1) {
+      const x = -(screenSpan / 2) + (i + 0.5) * bayWidth;
+      if (s === 0 && doors.some(([d, w]) => Math.abs(d - x) < w / 2 + 1.6)) continue;
+      statueSlots.push({
+        at: [x, storey.base, wallZ + 0.7 + 0.2 * s],
+        height: storey.height * (s === 0 ? 0.42 : 0.55),
+      });
+    }
+  });
+  return {
+    character,
+    outerRadius,
+    orchestraRadius,
+    middle,
+    rows,
+    diazoma,
+    podiumOuter,
+    rowAt,
+    rowSpan,
+    sweep,
+    stageWidth,
+    wallZ,
+    stageTop,
+    storeys,
+    bays,
+    screenSpan,
+    bayWidth,
+    doors,
+    statueSlots,
+  };
+}
+
+/** Seat rows fan over +z; the stage building closes the theatre across -z. */
+export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
+  const parts: Part[] = [];
+  const layout = theatreLayout(spec);
+  const {
+    character: ch,
+    outerRadius,
+    orchestraRadius,
+    middle,
+    rows,
+    diazoma,
+    podiumOuter,
+    rowAt,
+    rowSpan,
+    sweep,
+    stageWidth,
+    wallZ,
+    stageTop,
+    storeys,
+    bays,
+    screenSpan,
+    bayWidth,
+    doors,
+  } = layout;
+  // The stone each theatre is built of: the warm conglomerate of Aspendos,
+  // the white Dokimeion marble of Hierapolis, the marble seats of Ephesus.
+  const seatStone: Material =
+    ch.stone === "marble" ? "marbleWorn" : ch.stone === "conglomerate" ? "conglomerate" : "stone";
+  const wallStone: Material =
+    ch.stone === "conglomerate" ? "conglomerate" : ch.stone === "marble" ? "limestone" : "stone";
+  const screenStone: Material = ch.stone === "marble" ? "marble" : "marbleWorn";
+  const fullStart = -sweep;
+  const fullLength = Math.PI + 2 * sweep;
+
+  // The orchestra floor. The ground under it all is the renderer's to lay.
+  parts.push(ring("stone", 0, 0, orchestraRadius, 0.12, 0, Math.PI));
+  // The podium wall that separated the orchestra from the first row — raised
+  // into a parapet where the theatre was later used for beast fights.
+  const podiumHeight = ch.arenaWall ? Math.max(spec.podiumHeight, 2.2) : spec.podiumHeight;
+  parts.push(ring(wallStone, 0, orchestraRadius, podiumOuter, podiumHeight, 0, Math.PI));
+  if (ch.arenaWall) {
+    parts.push(
+      ring(
+        "stoneDark",
+        podiumHeight,
+        orchestraRadius - 0.05,
+        orchestraRadius + 0.3,
+        0.25,
+        0,
+        Math.PI,
+      ),
+    );
+  }
 
   for (let i = 0; i < rows; i += 1) {
     const { inner, outer, y } = rowAt(i);
-    parts.push(ring("stone", y, inner, outer, spec.seatRise + 0.06, 0, Math.PI));
+    const [start, length] = rowSpan(i);
+    parts.push(ring(seatStone, y, inner, outer, spec.seatRise + 0.06, start, length));
+  }
+  /*
+   * What the seats rest on: earth where the theatre lies in a hillside, the
+   * vaulted mass of the substructure where it stands up out of a plain. Seen
+   * from the end of a wing, the bank is solid, not a flight of floating rings.
+   */
+  const fill: Material = ch.ground === "hillside" ? "ground" : "stoneDark";
+  for (const [first, last] of [
+    [0, spec.lowerRows - 1],
+    ...(middle > 0 ? [[spec.lowerRows, spec.lowerRows + middle - 1]] : []),
+    [spec.lowerRows + middle, rows - 1],
+  ] as [number, number][]) {
+    const lo = rowAt(first);
+    const hi = rowAt(last);
+    const [start, length] = rowSpan(last);
+    parts.push(ring(fill, 0, lo.inner, hi.outer + diazoma, lo.y, start, length));
   }
 
   // The walkways that split the bank: one, or two where there are three tiers.
@@ -2692,6 +2733,7 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     ? [spec.lowerRows - 1, spec.lowerRows + middle - 1]
     : [spec.lowerRows - 1]) {
     const below = rowAt(last);
+    const [start, length] = rowSpan(last + 1);
     parts.push(
       ring(
         "stoneDark",
@@ -2699,8 +2741,8 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
         below.outer,
         below.outer + diazoma,
         0.12,
-        0,
-        Math.PI,
+        start,
+        length,
       ),
     );
   }
@@ -2708,9 +2750,10 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   // Radial stairs, laid over the rows rather than cut into them.
   const top = rowAt(rows - 1);
   for (let s = 0; s < spec.stairways; s += 1) {
-    const theta = (Math.PI * (s + 0.5)) / spec.stairways;
     for (let i = 0; i < rows; i += 1) {
       const { inner, outer, y } = rowAt(i);
+      const [start, length] = rowSpan(i);
+      const theta = start + (length * (s + 0.5)) / spec.stairways;
       const width = 1.1 / inner;
       parts.push(
         ring("stoneDark", y + 0.02, inner, outer, spec.seatRise + 0.08, theta - width / 2, width),
@@ -2718,95 +2761,241 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     }
   }
 
-  // The vaulted gallery around the rim, and the outer wall holding it up.
+  // The rim above the top row, and the outer wall holding it up.
   const galleryInner = top.outer;
   const galleryTop = top.y + spec.seatRise;
-  parts.push(ring("stone", galleryTop, galleryInner, outerRadius, 0.3, 0, Math.PI));
+  parts.push(ring(wallStone, galleryTop, galleryInner, outerRadius, 0.3, fullStart, fullLength));
 
   /*
-   * The outer face, as an arcade rather than a drum. Each bay is two piers with
-   * a barrel vault turned between them: the vault is a half drum whose axis is
-   * laid along the radius, which is why the cylinder needs a yaw as well as a
-   * tilt. A blank retaining wall would read as a modern stadium.
+   * The outer face. Side stands free in a flat town, so its whole curve is
+   * two storeys of arches; Aspendos shows a tall plain wall pierced by doors
+   * and small windows; Miletus heaped its seating on an artificial mound and
+   * only the top tier stands on vaults. A theatre cut into a hill has no
+   * outer face at all — the slope runs on up behind it.
    */
-  const bays = 30;
   const wallThickness = 1.4;
-  const archSpring = galleryTop * 0.62;
-  const archRadius = ((Math.PI * outerRadius) / bays) * 0.34;
-  for (let i = 0; i < bays; i += 1) {
-    const centreTheta = (Math.PI * (i + 0.5)) / bays;
-    const bayWidth = Math.PI / bays;
-    const openingWidth = bayWidth * 0.56;
-    // Pier between this opening and the next.
+  const arcade = (y0: number, height: number, bays: number) => {
+    const spring = y0 + height * 0.55;
+    const archRadius = ((fullLength * outerRadius) / bays) * 0.3;
+    for (let i = 0; i < bays; i += 1) {
+      const centreTheta = fullStart + (fullLength * (i + 0.5)) / bays;
+      const bayAngle = fullLength / bays;
+      const opening = bayAngle * 0.56;
+      parts.push(
+        ring(
+          wallStone,
+          y0,
+          outerRadius,
+          outerRadius + wallThickness,
+          height,
+          centreTheta + opening / 2,
+          bayAngle - opening,
+        ),
+      );
+      parts.push(
+        ring(
+          wallStone,
+          spring + archRadius,
+          outerRadius,
+          outerRadius + wallThickness,
+          y0 + height - spring - archRadius,
+          centreTheta - opening / 2,
+          opening,
+        ),
+      );
+      parts.push(
+        cyl(
+          "stoneDark",
+          [Math.cos(centreTheta) * outerRadius, spring, Math.sin(centreTheta) * outerRadius],
+          archRadius,
+          archRadius,
+          wallThickness,
+          14,
+          {
+            rotX: Math.PI / 2,
+            rotY: Math.PI / 2 - centreTheta,
+            thetaStart: Math.PI / 2,
+            thetaLength: Math.PI,
+          },
+        ),
+      );
+      // The pilaster on the pier, and the string course over the storey.
+      const pier = centreTheta + bayAngle / 2;
+      parts.push(
+        box(
+          wallStone,
+          [
+            Math.cos(pier) * (outerRadius + wallThickness + 0.15),
+            y0,
+            Math.sin(pier) * (outerRadius + wallThickness + 0.15),
+          ],
+          [0.9, height, 0.3],
+          Math.PI / 2 - pier,
+        ),
+      );
+    }
     parts.push(
       ring(
-        "stone",
+        wallStone,
+        y0 + height - 0.5,
+        outerRadius + wallThickness,
+        outerRadius + wallThickness + 0.35,
+        0.5,
+        fullStart,
+        fullLength,
+      ),
+    );
+  };
+  /** Earth banked against the outer wall, falling away in shallow steps. */
+  const slope = (from: number, height: number, reach: number, start: number, length: number) => {
+    const steps = 40;
+    const out: Part[] = [];
+    for (let k = 0; k < steps; k += 1) {
+      const t = k / steps;
+      // An easing curve: steep at the wall, flattening out into the plain.
+      const h = height * (1 - t) ** 1.6;
+      out.push(
+        scenery(
+          ring(
+            "ground",
+            0,
+            from + reach * t - 0.2,
+            from + reach * (t + 1 / steps),
+            h,
+            start,
+            length,
+          ),
+        ),
+      );
+    }
+    return out;
+  };
+  if (ch.facade === "arcade") {
+    if (ch.ground === "mound") {
+      // The mound, and only the top third carried on vaults.
+      const mound = galleryTop * 0.62;
+      parts.push(...slope(outerRadius, mound, 34, fullStart, fullLength));
+      arcade(mound, galleryTop - mound, 28);
+    } else {
+      const bays = Math.round(outerRadius / 1.9);
+      arcade(0, galleryTop / 2, bays);
+      arcade(galleryTop / 2, galleryTop / 2, bays);
+    }
+  } else if (ch.facade === "wall") {
+    parts.push(
+      ring(
+        wallStone,
         0,
         outerRadius,
         outerRadius + wallThickness,
         galleryTop,
-        centreTheta + openingWidth / 2,
-        bayWidth - openingWidth,
+        fullStart,
+        fullLength,
       ),
     );
-    // Wall over the opening, above the arch.
+    // Two rows of openings: doors to the corridors, small windows above.
+    const openings = 22;
+    for (let i = 0; i < openings; i += 1) {
+      const theta = fullStart + (fullLength * (i + 0.5)) / openings;
+      const r = outerRadius + wallThickness + 0.02;
+      for (const [y, w, h] of [
+        [0, 1.8, 3.2],
+        [galleryTop * 0.62, 1.0, 1.6],
+      ] as const) {
+        parts.push(
+          box(
+            "shadow",
+            [Math.cos(theta) * r, y, Math.sin(theta) * r],
+            [w, h, 0.1],
+            Math.PI / 2 - theta,
+          ),
+        );
+      }
+    }
     parts.push(
       ring(
-        "stone",
-        archSpring + archRadius,
-        outerRadius,
+        wallStone,
+        galleryTop * 0.58,
         outerRadius + wallThickness,
-        galleryTop - archSpring - archRadius,
-        centreTheta - openingWidth / 2,
-        openingWidth,
+        outerRadius + wallThickness + 0.3,
+        0.4,
+        fullStart,
+        fullLength,
       ),
     );
-    // The vault turned over the opening, its axis laid along the radius.
+  }
+  if (ch.ground === "hillside") {
+    // The hill the seating is laid into, falling away from the rim.
+    parts.push(...slope(outerRadius, galleryTop + 0.3, 48, fullStart - 0.3, fullLength + 0.6));
+  } else if (ch.facade === "wall") {
+    // At Aspendos only the back of the bank leans on the citadel hill.
     parts.push(
-      cyl(
-        "stoneDark",
-        [Math.cos(centreTheta) * outerRadius, archSpring, Math.sin(centreTheta) * outerRadius],
-        archRadius,
-        archRadius,
-        wallThickness,
-        14,
-        {
-          rotX: Math.PI / 2,
-          rotY: Math.PI / 2 - centreTheta,
-          thetaStart: Math.PI / 2,
-          thetaLength: Math.PI,
-        },
-      ),
+      ...slope(outerRadius + wallThickness, galleryTop * 0.55, 30, Math.PI * 0.3, Math.PI * 0.4),
     );
   }
 
-  const arcadeColumns = 34;
-  for (let i = 0; i <= arcadeColumns; i += 1) {
-    const theta = (Math.PI * i) / arcadeColumns;
-    const r = galleryInner + 0.5;
+  if (ch.topGallery) {
+    // The colonnaded gallery round the top of the seating.
+    const arcadeColumns = Math.round(fullLength * 11);
+    for (let i = 0; i <= arcadeColumns; i += 1) {
+      const theta = fullStart + (fullLength * i) / arcadeColumns;
+      const r = galleryInner + 0.5;
+      parts.push(
+        ...column(
+          screenStone,
+          [Math.cos(theta) * r, galleryTop + 0.3, Math.sin(theta) * r],
+          0.72,
+          3.6,
+          "plain",
+        ),
+      );
+    }
     parts.push(
-      ...column(
-        "stone",
-        [Math.cos(theta) * r, galleryTop + 0.3, Math.sin(theta) * r],
-        0.72,
+      ring(
+        wallStone,
+        galleryTop + 3.9,
+        galleryInner,
+        outerRadius + wallThickness,
+        0.6,
+        fullStart,
+        fullLength,
+      ),
+    );
+    parts.push(
+      ring(
+        wallStone,
+        galleryTop + 0.3,
+        outerRadius - 0.6,
+        outerRadius + 0.2,
         3.6,
-        "plain",
+        fullStart,
+        fullLength,
+      ),
+    );
+  } else {
+    // A plain parapet; at Side, a row of benches with backs along it.
+    parts.push(
+      ring(
+        wallStone,
+        galleryTop + 0.3,
+        outerRadius - 0.5,
+        outerRadius + 0.2,
+        1.1,
+        fullStart,
+        fullLength,
       ),
     );
   }
-  parts.push(
-    ring("stone", galleryTop + 3.9, galleryInner, outerRadius + wallThickness, 0.6, 0, Math.PI),
-  );
 
   // Post holes for the awning masts, one mast each, around the rim.
   const masts = spec.velariumMasts ?? 0;
   for (let i = 0; i < masts; i += 1) {
-    const theta = (Math.PI * (i + 0.5)) / masts;
+    const theta = fullStart + (fullLength * (i + 0.5)) / masts;
     const r = outerRadius + 0.6;
     parts.push(
       cyl(
         "stoneDark",
-        [Math.cos(theta) * r, galleryTop + 4.5, Math.sin(theta) * r],
+        [Math.cos(theta) * r, galleryTop + (ch.topGallery ? 4.5 : 1.4), Math.sin(theta) * r],
         0.12,
         0.1,
         3,
@@ -2815,48 +3004,87 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     );
   }
 
-  /* The stage building. It is bonded to the seating bank across the full width
-     of the theatre, which is exactly why this one still has its roof line. */
-  const stageWidth = spec.caveaDiameter;
-  const wallZ = -spec.stageDepth;
-  const wallHeight = spec.scaenaeHeight + 3.3;
-  parts.push(box("stone", [0, 0, wallZ - 0.9], [stageWidth, wallHeight, 1.8]));
-  parts.push(box("stone", [0, 0, wallZ - 5.4], [stageWidth, wallHeight, 7.2]));
-  // The stage floor itself.
-  parts.push(box("stone", [0, 0, wallZ / 2], [stageWidth * 0.62, 1.5, spec.stageDepth]));
+  /*
+   * Boxes for the magistrates: the two tribunalia over the side entrances at
+   * Aspendos, the imperial exedra on the axis at Hierapolis, and at Miletus
+   * the box in the seating marked by four columns and a canopy.
+   */
+  if (ch.box === "tribunalia") {
+    for (const side of [-1, 1]) {
+      const x = side * (podiumOuter + spec.lowerRows * spec.seatTread * 0.5);
+      parts.push(
+        box(wallStone, [x, 0, -1.2], [spec.lowerRows * spec.seatTread * 0.8, rowAt(6).y, 2.4]),
+      );
+      parts.push(
+        box("marbleWorn", [x, rowAt(6).y, -1.2], [spec.lowerRows * spec.seatTread * 0.8, 1.1, 2.6]),
+      );
+    }
+  } else if (ch.box === "exedra" || ch.box === "canopy") {
+    const row = rowAt(Math.floor(spec.lowerRows * 0.55));
+    const r = row.inner + spec.seatTread * 2;
+    const at: Vec3 = [0, row.y + spec.seatRise, r];
+    parts.push(box("marble", at, [7, 0.4, 5]));
+    if (ch.box === "canopy") {
+      for (const [dx, dz] of [
+        [-3, -2],
+        [3, -2],
+        [-3, 2],
+        [3, 2],
+      ] as const) {
+        parts.push(...column("marble", [dx, at[1] + 0.4, r + dz], 0.45, 4.2, "composite", 0));
+      }
+      parts.push(box("marble", [0, at[1] + 4.6, r], [7.4, 0.6, 5.2]));
+      parts.push(prism("paintRed", [0, at[1] + 5.2, r], [7.6, 1.2, 5.4]));
+    } else {
+      parts.push(
+        cyl("marble", [0, at[1] + 0.4, r + 1.5], 3.2, 3.2, 2.2, 20, {
+          thetaStart: Math.PI / 2,
+          thetaLength: Math.PI,
+        }),
+      );
+      parts.push(box("marble", [0, at[1] + 0.4, r - 0.5], [6.6, 1.1, 0.6]));
+    }
+  }
+
+  /* The stage building. A Roman one is bonded to the seating bank across the
+     full width of the theatre; on a Greek horseshoe it stands inside the
+     wings, and the side entrances run between the two. */
+  const wallHeight = storeys[storeys.length - 1]!.base + storeys[storeys.length - 1]!.height + 1.8;
+  const backWall: Material = ch.stone === "conglomerate" ? "conglomerate" : wallStone;
+  parts.push(box(backWall, [0, 0, wallZ - 0.9], [stageWidth, wallHeight, 1.8]));
+  parts.push(box(backWall, [0, 0, wallZ - 5.4], [stageWidth, wallHeight, 7.2]));
+  // The stage floor, and the front of it the actors played above.
+  const floorWidth = Math.min(stageWidth * 0.94, spec.caveaDiameter * 0.62);
+  parts.push(box("timber", [0, 0, wallZ / 2], [floorWidth, stageTop, spec.stageDepth]));
+  parts.push(box(screenStone, [0, 0, -0.2], [floorWidth, stageTop - 0.05, 0.4]));
+  // Niches in the low stage front: square and round in turn.
+  const niches = Math.round(floorWidth / 4);
+  for (let i = 0; i < niches; i += 1) {
+    const x = -floorWidth / 2 + (i + 0.5) * (floorWidth / niches);
+    if (i % 2 === 0) {
+      parts.push(
+        cyl("shadow", [x, 0.25, 0.02], 0.7, 0.7, stageTop * 0.6, 12, {
+          thetaStart: Math.PI / 2,
+          thetaLength: Math.PI,
+        }),
+      );
+    } else {
+      parts.push(box("shadow", [x, 0.25, 0.02], [1.2, stageTop * 0.55, 0.06]));
+    }
+  }
 
   /*
-   * The scaenae frons, laid out from photographs of the wall at Aspendos: two
-   * storeys of aediculae standing clear of the wall on their own bases, five
-   * doorways at stage level, and — the detail that dates the building — a row
-   * of square beam sockets along each storey, left by the timbers that carried
-   * the roof over the stage.
+   * The scaenae frons. Two storeys of aediculae at Aspendos and Side, three
+   * at Hierapolis and Ephesus; at Miletus the columns stand in pairs on one
+   * long podium. Each pair stands clear of the wall on its own base.
    */
-  const screenLower = spec.scaenaeHeight * 0.55;
-  const screenUpper = spec.scaenaeHeight - screenLower;
-  const screenBays = 10;
-  const screenSpan = stageWidth * 0.86;
-  const bayWidth = screenSpan / screenBays;
-  const stageTop = 1.5;
-
-  const aediculaPair = (
-    x: number,
-    base: number,
-    height: number,
-    project: number,
-    shaft: Material = "marbleWorn",
-  ) => {
+  const aedicula = (x: number, base: number, height: number, project: number, shaft: Material) => {
     const diameter = height * 0.11;
     parts.push(
-      box(
-        "marbleWorn",
-        [x, base, wallZ + project],
-        [diameter * 2.4, height * 0.09, diameter * 2.4],
-      ),
+      box(screenStone, [x, base, wallZ + project], [diameter * 2.4, height * 0.09, diameter * 2.4]),
     );
-    // The shaft in coloured stone, the base and capital in white marble.
     const made = column(
-      "marbleWorn",
+      screenStone,
       [x, base + height * 0.09, wallZ + project],
       diameter,
       height * 0.78,
@@ -2870,7 +3098,7 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     }
     parts.push(
       ...cornice(
-        "marbleWorn",
+        screenStone,
         [x, base + height * 0.87, wallZ + project],
         diameter * 2.6,
         diameter * 2.6,
@@ -2878,59 +3106,258 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
       ),
     );
   };
+  const shafts: Material[][] =
+    ch.screen === "hierapolis"
+      ? [["marble"], ["pavonazzetto"], ["marble"]]
+      : ch.screen === "ephesus"
+        ? [["granite"], ["marble", "pavonazzetto"], ["marble"]]
+        : ch.screen === "side"
+          ? [["granite", "gialloAntico"], ["marble"]]
+          : ch.screen === "miletus"
+            ? [["pavonazzetto"], ["marble"]]
+            : [["granite", "pavonazzetto"], ["gialloAntico"]];
+  storeys.forEach((storey, s) => {
+    const project = 1.2 + s * 0.3;
+    for (let i = 0; i <= bays; i += 1) {
+      const x = -(screenSpan / 2) + i * bayWidth;
+      const pick = shafts[s]!;
+      const shaft = pick[i % pick.length]!;
+      if (ch.screen === "miletus") {
+        // Paired columns, close together.
+        aedicula(x - bayWidth * 0.14, storey.base, storey.height, project, shaft);
+        aedicula(x + bayWidth * 0.14, storey.base, storey.height, project, shaft);
+      } else {
+        aedicula(x, storey.base, storey.height, project, shaft);
+      }
+    }
+    // The continuous cornice the aediculae break forward from.
+    parts.push(
+      ...cornice(
+        screenStone,
+        [0, storey.base + storey.height - 0.7, wallZ + 0.5],
+        stageWidth * 0.94,
+        1.5,
+        0.7,
+      ),
+    );
+    // Windows in the upper storeys at Ephesus, where the wall was long and low.
+    if (ch.screen === "ephesus" && s > 0) {
+      for (let i = 0; i < bays; i += 1) {
+        const x = -(screenSpan / 2) + (i + 0.5) * bayWidth;
+        parts.push(
+          box(
+            "shadow",
+            [x, storey.base + storey.height * 0.3, wallZ + 0.02],
+            [bayWidth * 0.35, storey.height * 0.42, 0.12],
+          ),
+        );
+      }
+    }
+  });
+  const crown = storeys[storeys.length - 1]!.base + storeys[storeys.length - 1]!.height;
 
-  for (let i = 0; i <= screenBays; i += 1) {
-    const x = -(screenSpan / 2) + i * bayWidth;
-    aediculaPair(x, stageTop, screenLower, 1.2, i % 2 === 0 ? "granite" : "pavonazzetto");
-    aediculaPair(x, stageTop + screenLower, screenUpper, 1.6, "gialloAntico");
+  /*
+   * The carved friezes. At Hierapolis the bands between the storeys ran with
+   * the myths of Apollo and Artemis, Dionysos and Demeter; at Side the base
+   * of the wall carried the childhood of Dionysos and a row of masks. Shown
+   * as a band of figures in low relief — the scenes themselves are not
+   * modelled.
+   */
+  if (ch.screen === "hierapolis" || ch.screen === "side") {
+    const bands =
+      ch.screen === "hierapolis"
+        ? storeys.slice(0, 2).map((s) => s.base + s.height - 1.6)
+        : [stageTop + 0.1];
+    for (const y of bands) {
+      parts.push(box(screenStone, [0, y, wallZ + 0.35], [screenSpan, 0.9, 0.5]));
+      const figures = Math.floor(screenSpan / 0.55);
+      const random = seeded(Math.round(y * 100));
+      for (let i = 0; i < figures; i += 1) {
+        const x = -screenSpan / 2 + (i + 0.5) * (screenSpan / figures);
+        const h = 0.45 + random() * 0.35;
+        parts.push(
+          box(screenStone, [x, y + 0.08, wallZ + 0.64], [0.16 + random() * 0.12, h, 0.14]),
+        );
+        if (random() > 0.5)
+          parts.push(cyl(screenStone, [x, y + 0.08 + h, wallZ + 0.66], 0.07, 0.07, 0.12, 6));
+      }
+    }
+    if (ch.screen === "side") {
+      // The masks along the stage front.
+      for (let i = 0; i < 18; i += 1) {
+        const x = -floorWidth / 2 + (i + 0.5) * (floorWidth / 18);
+        parts.push(
+          cyl(screenStone, [x, stageTop - 0.55, 0.05], 0.22, 0.22, 0.12, 12, { rotX: Math.PI / 2 }),
+        );
+      }
+    }
   }
-  // The continuous cornices the aediculae break forward from.
-  parts.push(
-    ...cornice(
-      "marbleWorn",
-      [0, stageTop + screenLower - 0.7, wallZ + 0.5],
-      stageWidth * 0.94,
-      1.5,
-      0.7,
-    ),
-  );
-  parts.push(
-    ...cornice(
-      "marbleWorn",
-      [0, stageTop + spec.scaenaeHeight - 0.8, wallZ + 0.7],
-      stageWidth * 0.94,
-      1.8,
-      0.8,
-    ),
-  );
-  parts.push(prism("marbleWorn", [0, stageTop + spec.scaenaeHeight, wallZ + 1.4], [16, 3, 2.6]));
 
-  // Beam sockets: two rows of small square holes across the wall.
-  for (const row of [stageTop + screenLower * 0.62, stageTop + screenLower + screenUpper * 0.6]) {
+  // The crowning cornice, and what stood over the middle of it.
+  parts.push(...cornice(screenStone, [0, crown - 0.8, wallZ + 0.7], stageWidth * 0.94, 1.8, 0.8));
+  if (ch.screen === "side") {
+    // A round pediment with a head crowned by Victories.
+    parts.push(segmentalPediment(screenStone, [0, crown + 0.2, wallZ + 1.4], 4.2, 2.4));
+    parts.push(
+      cyl(screenStone, [0, crown + 1.4, wallZ + 2.65], 0.9, 0.9, 0.3, 18, { rotX: Math.PI / 2 }),
+    );
+  } else {
+    parts.push(prism(screenStone, [0, crown, wallZ + 1.4], [16, 3, 2.6]));
+  }
+  if (ch.screen === "aspendos") {
+    // The pediment over the middle bay of the upper storey, with Dionysos
+    // rising out of acanthus in the gable.
+    const upper = storeys[1]!;
+    parts.push(
+      prism(
+        screenStone,
+        [0, upper.base + upper.height * 0.72, wallZ + 2.0],
+        [bayWidth * 1.8, 2.2, 1.4],
+      ),
+    );
+    parts.push(
+      cyl(
+        "marble",
+        [0, upper.base + upper.height * 0.72 + 0.6, wallZ + 2.72],
+        0.55,
+        0.55,
+        0.2,
+        14,
+        { rotX: Math.PI / 2 },
+      ),
+    );
+    /*
+     * The roof over the stage: a timber ceiling sloping down from the top of
+     * the wall towards the audience. It is gone, but the sockets of its beams
+     * are still in the wall.
+     */
+    const reach = spec.stageDepth + 0.5;
+    const drop = 3.2;
+    parts.push(
+      relief(
+        "timber",
+        [0, crown + 1.2 - drop / 2, wallZ + reach / 2],
+        [floorWidth, Math.hypot(reach, drop)],
+        undefined,
+        0,
+        Math.PI / 2 - Math.atan2(drop, reach),
+      ),
+    );
+  }
+
+  // Beam sockets: a row of small square holes across each storey.
+  for (const storey of storeys) {
     for (let i = 0; i < 26; i += 1) {
       const x = -(stageWidth * 0.44) + (stageWidth * 0.88 * i) / 25;
-      parts.push(box("shadow", [x, row, wallZ + 0.02], [0.55, 0.55, 0.12]));
+      parts.push(
+        box("shadow", [x, storey.base + storey.height * 0.62, wallZ + 0.02], [0.55, 0.55, 0.12]),
+      );
     }
   }
 
   // Five doorways at stage level: the royal door in the middle, the guest
   // doors either side of it, and one at each end of the wall.
-  for (const [x, width, height] of [
-    [0, 4.2, 8],
-    [-stageWidth * 0.16, 2.8, 6.4],
-    [stageWidth * 0.16, 2.8, 6.4],
-    [-stageWidth * 0.36, 2.4, 5.6],
-    [stageWidth * 0.36, 2.4, 5.6],
-  ] as const) {
+  for (const [x, width, height] of doors) {
     parts.push(box("shadow", [x, stageTop, wallZ + 0.02], [width, height, 0.14]));
-    parts.push(
-      ...cornice("marbleWorn", [x, stageTop + height, wallZ + 0.3], width + 1.4, 1.1, 0.7),
-    );
+    parts.push(...cornice(screenStone, [x, stageTop + height, wallZ + 0.3], width + 1.4, 1.1, 0.7));
   }
 
-  // Both these theatres are cut into a hillside above a plain, so the ground
-  // rises behind the seating and falls away in front of the stage.
-  parts.push(...setting(outerRadius, 8803, { stone: 0.7, grass: 0.8, hills: 0.75 }));
+  /*
+   * In front of the Hellenistic stage at Ephesus stood the proskenion, a low
+   * colonnade the Roman stage kept. Its columns are a row along the front.
+   */
+  if (ch.screen === "ephesus") {
+    const count = Math.round(floorWidth / 2.6);
+    for (let i = 0; i <= count; i += 1) {
+      const x = -floorWidth / 2 + (i * floorWidth) / count;
+      parts.push(...column("marbleWorn", [x, 0, -0.5], 0.42, stageTop - 0.3, "plain", 0));
+    }
+  }
+
+  /*
+   * What lay beyond the stage building. At Side the stage backs straight on
+   * to the square colonnaded agora, with the round temple of Tyche in the
+   * middle of it; at Ephesus the theatre looks down Harbour Street, the
+   * Arkadiane, colonnaded all the way to the harbour; at Miletus the theatre
+   * stood over the Theatre Harbour itself.
+   */
+  const behind = wallZ - 9;
+  if (ch.annex === "agora") {
+    const side = 72;
+    const cz = behind - side / 2 - 2;
+    parts.push(scenery(box("terrazzo", [0, 0, cz], [side, 0.08, side])));
+    const step = 4.5;
+    const n = Math.round(side / step);
+    for (let i = 0; i <= n; i += 1) {
+      const u = -side / 2 + i * step;
+      for (const [x, z] of [
+        [u, cz - side / 2],
+        [u, cz + side / 2],
+        [-side / 2, cz + u],
+        [side / 2, cz + u],
+      ] as const) {
+        for (const piece of column("marbleWorn", [x, 0.08, z], 0.6, 5.4, "ionic"))
+          parts.push(scenery(piece));
+      }
+    }
+    for (const [x, z, w, d] of [
+      [0, cz - side / 2 - 3, side + 8, 0.8],
+      [-side / 2 - 3, cz, 0.8, side],
+      [side / 2 + 3, cz, 0.8, side],
+    ] as const) {
+      parts.push(scenery(box("stone", [x, 0, z], [w, 6, d])));
+    }
+    // The tholos of Tyche, twelve columns in a ring on a stepped base.
+    parts.push(scenery(cyl("marbleWorn", [0, 0, cz], 5.2, 5.2, 1, 24)));
+    for (let i = 0; i < 12; i += 1) {
+      const a = (TAU * i) / 12;
+      for (const piece of column(
+        "marble",
+        [Math.cos(a) * 4.3, 1, cz + Math.sin(a) * 4.3],
+        0.55,
+        5.5,
+        "composite",
+        0,
+      )) {
+        parts.push(scenery(piece));
+      }
+    }
+    parts.push(scenery(cyl("marble", [0, 6.5, cz], 4.9, 4.9, 0.8, 24)));
+    parts.push(scenery(cyl("terracotta", [0, 7.3, cz], 5, 0.4, 2.4, 24)));
+  } else if (ch.annex === "harbour-street") {
+    const length = 160;
+    const width = 11;
+    parts.push(scenery(box("marbleWorn", [0, 0, behind - length / 2], [width, 0.1, length])));
+    for (let i = 0; i <= length / 5; i += 1) {
+      const z = behind - i * 5;
+      for (const x of [-width / 2 - 0.6, width / 2 + 0.6]) {
+        for (const piece of column("marbleWorn", [x, 0.1, z], 0.55, 5.2, "composite", 0))
+          parts.push(scenery(piece));
+      }
+    }
+    for (const x of [-width / 2 - 5, width / 2 + 5]) {
+      parts.push(scenery(box("stone", [x, 0, behind - length / 2], [0.8, 6.2, length])));
+      parts.push(
+        scenery(box("terracotta", [x * 0.82, 5.3, behind - length / 2], [4.6, 0.3, length])),
+      );
+    }
+  } else if (ch.annex === "harbour") {
+    const cz = behind - 70;
+    parts.push(scenery(box("water", [0, 0.02, cz], [spec.caveaDiameter * 1.8, 0.05, 110])));
+    parts.push(scenery(box("stone", [0, 0, behind - 13], [spec.caveaDiameter * 1.8, 1.0, 4])));
+  }
+
+  /*
+   * The country round it: a hillside rising behind Ephesus and Hierapolis,
+   * the flat town round Side, the coastal plain under Aspendos and Miletus.
+   */
+  parts.push(
+    ...setting(outerRadius, 8803 + Math.round(spec.caveaDiameter), {
+      stone: ch.ground === "plain" ? 0.4 : 0.7,
+      grass: ch.ground === "plain" ? 0.5 : 0.8,
+      hills: ch.ground === "hillside" ? 0.9 : 0.55,
+    }),
+  );
   return parts;
 }
 
@@ -4579,7 +5006,16 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       at = [-lw + s, ledgeY, -ld];
       rotY = 0;
     }
-    parts.push(...lionStatue("marbleWorn", at, rotY, 0.9));
+    // From the scan of a Greek tomb lion of the same tradition (see scans.ts).
+    // The procedural lion faces -z, a scan +z: hence the half turn.
+    parts.push({
+      kind: "figure",
+      material: "marbleWorn",
+      at,
+      height: 1.15,
+      rotY: rotY + Math.PI,
+      scan: { id: "lion-met" },
+    });
   }
 
   // Thirty-six columns, nine by eleven, one intercolumniation in from the edge.
@@ -4801,15 +5237,14 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
       ),
     );
     parts.push(box("limestone", [-1.0, seatY, lionZ], [3.2, 0.6, 3.0]));
-    parts.push(
-      ...lionStatue(
-        "limestone",
-        [-1.0, seatY + 0.6, lionZ],
-        -Math.PI / 2,
-        spec.guardianHeight / 1.55,
-        "seated",
-      ),
-    );
+    parts.push({
+      kind: "figure",
+      material: "limestone",
+      at: [-1.0, seatY + 0.6, lionZ],
+      height: spec.guardianHeight,
+      rotY: -Math.PI / 2 + Math.PI,
+      scan: { id: "lion-delos" },
+    });
   }
 
   // The stepped altar across the court from the gods.

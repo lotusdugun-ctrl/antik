@@ -84,6 +84,36 @@ export type RomanTheatreSpec = {
   upperRows: number;
   /** A third tier between the two, as at Ephesus; one walkway more. */
   middleRows?: number;
+  /** What makes this theatre itself rather than a copy of the next one. */
+  character?: TheatreCharacter;
+};
+
+/**
+ * The particulars of one theatre, from its photographs and the theatrum.de
+ * survey: no two of the five were built alike.
+ */
+export type TheatreCharacter = {
+  /** What the seats and walls are built of. */
+  stone: "conglomerate" | "limestone" | "marble";
+  /** Degrees the seating wraps past a semicircle at each end: a Greek horseshoe. */
+  sweep?: number;
+  /** Laid into a hillside, standing on a plain, or heaped on an artificial mound. */
+  ground: "hillside" | "plain" | "mound";
+  /** The outer face: arcades, a tall pierced wall, or none (the hill runs on). */
+  facade: "arcade" | "wall" | "none";
+  /** Whose stage front this is. */
+  screen: "aspendos" | "hierapolis" | "ephesus" | "side" | "miletus";
+  storeys: 2 | 3;
+  bays?: number;
+  /** Height of the stage platform, where it is known. */
+  stageHeight?: number;
+  /** A colonnaded gallery round the top of the seating. */
+  topGallery: boolean;
+  box?: "tribunalia" | "exedra" | "canopy";
+  /** A parapet round the orchestra, for the beast fights of later centuries. */
+  arenaWall?: boolean;
+  /** What lay beyond the stage building. */
+  annex?: "agora" | "harbour-street" | "harbour";
 };
 
 /**
@@ -587,6 +617,15 @@ export const reconstructions: Reconstruction[] = [
       stairways: 10,
       lowerRows: 21,
       upperRows: 19,
+      character: {
+        stone: "conglomerate",
+        ground: "plain",
+        facade: "wall",
+        screen: "aspendos",
+        storeys: 2,
+        topGallery: true,
+        box: "tribunalia",
+      },
     },
   },
   {
@@ -1208,6 +1247,16 @@ export const reconstructions: Reconstruction[] = [
       stairways: 8,
       lowerRows: 20,
       upperRows: 25,
+      character: {
+        stone: "marble",
+        ground: "hillside",
+        facade: "none",
+        screen: "hierapolis",
+        storeys: 3,
+        stageHeight: 3.66,
+        topGallery: true,
+        box: "exedra",
+      },
     },
   },
   {
@@ -1301,6 +1350,18 @@ export const reconstructions: Reconstruction[] = [
       stairways: 11,
       lowerRows: 30,
       upperRows: 26,
+      character: {
+        stone: "marble",
+        sweep: 12,
+        ground: "mound",
+        facade: "arcade",
+        screen: "miletus",
+        storeys: 2,
+        bays: 8,
+        topGallery: false,
+        box: "canopy",
+        annex: "harbour",
+      },
     },
   },
   {
@@ -1498,6 +1559,19 @@ export const reconstructions: Reconstruction[] = [
       lowerRows: 24,
       middleRows: 22,
       upperRows: 21,
+      character: {
+        stone: "marble",
+        sweep: 14,
+        ground: "hillside",
+        facade: "none",
+        screen: "ephesus",
+        storeys: 3,
+        bays: 12,
+        stageHeight: 2.6,
+        topGallery: false,
+        arenaWall: true,
+        annex: "harbour-street",
+      },
     },
   },
   {
@@ -1621,6 +1695,16 @@ export const reconstructions: Reconstruction[] = [
       stairways: 10,
       lowerRows: 30,
       upperRows: 25,
+      character: {
+        stone: "limestone",
+        ground: "plain",
+        facade: "arcade",
+        screen: "side",
+        storeys: 2,
+        topGallery: false,
+        arenaWall: true,
+        annex: "agora",
+      },
     },
   },
   {

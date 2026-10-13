@@ -27,7 +27,22 @@ export type ScanId =
   | "nemrut-head"
   | "athena-arezzo"
   | "neptune"
-  | "arringatore";
+  | "arringatore"
+  | "efebo"
+  | "magdalensberg-youth"
+  | "penelope"
+  | "hermes-sandal"
+  | "herakles-lansdowne"
+  | "pan"
+  | "hermanubis"
+  | "centaur"
+  | "glykon"
+  | "herm-thucydides-herodotus"
+  | "herm-epicurus-metrodorus"
+  | "herm-socrates-seneca"
+  | "herm-plato"
+  | "lion-met"
+  | "lion-delos";
 
 export type Scan = {
   url: string;
@@ -186,6 +201,186 @@ export const SCANS: Record<ScanId, Scan> = {
       "A scan of the 1st-century BC bronze of a man in a toga, raising his arm to speak. The statues of Celsus, his son Aquila and the emperors are lost; the model sets this real togate portrait of the period in their place.",
     ),
   },
+  efebo: {
+    url: "/scans/efebo.glb",
+    title: l("Idolino (Pesaro Efebi)", "The Idolino (Ephebe of Pesaro)"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/museo-archeologico-nazionale/efebo/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Floransa Arkeoloji Müzesi'ndeki, MÖ 30 dolayına tarihlenen bronz genç heykeli. Modelde sahne cephelerindeki genç Apollon heykellerinin yerine duruyor; o heykellerin kendileri kayıp.",
+      "The bronze youth of about 30 BC in the Archaeological Museum of Florence. In the model it stands in for the youthful Apollos of the stage fronts, which are lost.",
+    ),
+  },
+  "magdalensberg-youth": {
+    url: "/scans/magdalensberg-youth.glb",
+    title: l("Magdalensberg Genci", "The Youth of the Magdalensberg"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/kunsthistorisches-museum-wien/jungling/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Viyana Sanat Tarihi Müzesi'ndeki bronz genç: 1502'de bulunan Roma heykelinin 16. yüzyılda yapılmış dökümü. Modelde genç Dionysos heykellerinin yerine kullanıldı.",
+      "The bronze youth in the Kunsthistorisches Museum, Vienna: a 16th-century cast of the Roman statue found in 1502. In the model it stands in for the youthful Dionysos.",
+    ),
+  },
+  penelope: {
+    url: "/scans/penelope.glb",
+    title: l("Penelope tipi oturan kadın", "The seated 'Penelope'"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/vienna/penelope/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "MÖ 5. yüzyıl Yunan tipinin Roma kopyasından alınmış, Viyana'daki alçı kalıp: elini çenesine dayamış, düşünceli oturan bir kadın. Modelde sahne cephelerindeki düşünceli Muse heykellerinin yerine duruyor.",
+      "A plaster cast in Vienna from a Roman copy of a 5th-century BC Greek type: a woman seated in thought, hand to her chin. In the model it stands in for the thoughtful Muse of the stage fronts.",
+    ),
+  },
+  "hermes-sandal": {
+    url: "/scans/hermes-sandal.glb",
+    title: l("Sandalını bağlayan Hermes", "Hermes fastening his sandal"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/vienna/hermes-fastening-his-sandals/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Lysippos'a atfedilen tipin Roma kopyasından alınmış, Viyana'daki alçı kalıp. Modelde sahne cephelerindeki Hermes heykellerinin yerine duruyor.",
+      "A plaster cast in Vienna from a Roman copy of the type attributed to Lysippos. In the model it stands in for the Hermes of the stage fronts.",
+    ),
+  },
+  "herakles-lansdowne": {
+    url: "/scans/herakles-lansdowne.glb",
+    title: l("Lansdowne Herakles'i", "The Lansdowne Herakles"),
+    author: "Ancient World 3D",
+    source: "https://sketchfab.com/3d-models/37474f59a3f04487900d8144548e4d69",
+    license: "CC BY-NC-SA 4.0",
+    licenseUrl: BY_NC_SA,
+    note: l(
+      "Getty Müzesi'ndeki, MS 125 dolayına tarihlenen Roma heykelinin Kopenhag'daki alçı kalıbı: postunu kolunda, sopasını omzunda taşıyan Herakles.",
+      "A cast in Copenhagen of the Roman marble of about AD 125 in the Getty Museum: Herakles with his lion skin over one arm and his club on his shoulder.",
+    ),
+  },
+  pan: {
+    url: "/scans/pan.glb",
+    title: l("Pan", "Pan"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/uncategorized/pan/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Kandiye (Heraklion) Arkeoloji Müzesi'ndeki mermer Pan heykeli; tarama, kırık yerleri dijital olarak tamamlanmış. Tiyatro Dionysos'un alanıydı; keçi ayaklı Pan da onun maiyetindendi.",
+      "The marble Pan in the Heraklion Archaeological Museum, scanned and completed digitally where it is broken. The theatre was Dionysos' ground, and goat-legged Pan was of his company.",
+    ),
+  },
+  hermanubis: {
+    url: "/scans/hermanubis.glb",
+    title: l("Hermanubis", "Hermanubis"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/vatican-museums/hermanubis/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Vatikan Müzeleri'ndeki MS 1.-2. yüzyıla ait heykel: Hermes ile Mısır tanrısı Anubis'in birleşimi. Efes'te büyük bir Serapis tapınağı vardı; Mısır tanrıları kentin tanrıları arasındaydı. Tiyatro cephesindeki yeri modelin yorumu.",
+      "The statue of the 1st-2nd century AD in the Vatican Museums: Hermes merged with the Egyptian Anubis. Ephesus had a great temple of Serapis, and Egypt's gods were among the city's. Its place on the stage front is the model's reading.",
+    ),
+  },
+  centaur: {
+    url: "/scans/centaur.glb",
+    title: l("Kentaur", "Centaur"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/uncategorized/centaur/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Oplontis'teki Poppaea Villası'nın bahçesinden MS 1. yüzyıla ait bir kentaur; tarama, eksik yerleri dijital olarak tamamlanmış. Modelde evin bahçesine, zengin Roma evlerinin bahçe heykellerine örnek olarak kondu.",
+      "A centaur of the 1st century AD from the garden of the Villa of Poppaea at Oplontis, scanned and completed digitally. In the model it stands in the house's garden, as the garden sculpture of a wealthy Roman house.",
+    ),
+  },
+  glykon: {
+    url: "/scans/glykon.glb",
+    title: l("Glykon", "Glykon"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/uncategorized/glycon/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Köstence Müzesi'ndeki MS 2. yüzyıla ait yılan tanrı Glykon. Kültü Paphlagonia'daki Abonuteichos'ta, bugünkü İnebolu'da doğdu ve Roma Anadolusu'na yayıldı. Ev sunağındaki yeri modelin yorumu.",
+      "The 2nd-century AD snake god Glykon in the museum at Constan\u021ba. His cult was born at Abonoteichos in Paphlagonia, today's \u0130nebolu, and spread through Roman Asia Minor. His place in the house shrine is the model's reading.",
+    ),
+  },
+  "herm-thucydides-herodotus": {
+    url: "/scans/herm-thucydides-herodotus.glb",
+    title: l("Thukydides ile Halikarnaslı Herodot", "Thucydides and Herodotus of Halicarnassus"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/institut-fur-klassische-archaologie/thucydides-and-herodotus/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "İki tarihçinin sırt sırta duran çift hermesi; Napoli'deki Roma eserinin Viyana'daki alçı kalıbı. Roma kütüphaneleri yazarların portreleriyle donatılırdı.",
+      "The double herm of the two historians, back to back: a plaster cast in Vienna of the Roman piece in Naples. Roman libraries were furnished with portraits of their authors.",
+    ),
+  },
+  "herm-epicurus-metrodorus": {
+    url: "/scans/herm-epicurus-metrodorus.glb",
+    title: l("Epikuros ile Metrodoros", "Epicurus and Metrodorus"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/vienna/epicurus-and-metrodorus/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Filozof Epikuros ile öğrencisi Metrodoros'un çift hermesi; Viyana'daki alçı kalıp.",
+      "The double herm of the philosopher Epicurus and his pupil Metrodorus: a plaster cast in Vienna.",
+    ),
+  },
+  "herm-socrates-seneca": {
+    url: "/scans/herm-socrates-seneca.glb",
+    title: l("Sokrates ile Seneca", "Socrates and Seneca"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/vienna/socrates-and-seneca/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Berlin'deki MS 3. yüzyıla ait Roma çift hermesinin alçı kalıbı: Sokrates ile Romalı filozof Seneca.",
+      "A cast of the Roman double herm of the 3rd century AD in Berlin: Socrates and the Roman philosopher Seneca.",
+    ),
+  },
+  "herm-plato": {
+    url: "/scans/herm-plato.glb",
+    title: l("Platon hermesi", "Herm of Plato"),
+    author: "Three D Scans (Oliver Laric)",
+    source: "https://threedscans.com/uncategorized/herm-of-plato/",
+    license: "Free archive",
+    licenseUrl: TDS,
+    note: l(
+      "Platon portresinin Viyana'daki alçı kalıbı.",
+      "A plaster cast in Vienna of the portrait of Plato.",
+    ),
+  },
+  "lion-met": {
+    url: "/scans/lion-met.glb",
+    title: l("Yunan mermer aslanı (MÖ 400 dolayı)", "Greek marble lion (about 400 BC)"),
+    author: "cachgill",
+    source: "https://sketchfab.com/3d-models/d5131a4f3cad4e2ea93be4d0231072da",
+    license: "CC BY 4.0",
+    licenseUrl: BY,
+    note: l(
+      "New York Metropolitan Müzesi'ndeki, MÖ 400-390 dolayına tarihlenen mezar aslanı: Mozole aslanlarından yarım yüzyıl önceki, aynı Yunan geleneğinden bir aslan. Modelde Mozole'nin bütün aslanlarında tekrarlanıyor; gerçekte her biri ayrı yontulmuştu.",
+      "The tomb lion of about 400-390 BC in the Metropolitan Museum, New York: half a century older than the Mausoleum's lions and of the same Greek tradition. The model repeats it for all the Mausoleum's lions; in reality each was carved separately.",
+    ),
+  },
+  "lion-delos": {
+    url: "/scans/lion-delos.glb",
+    title: l("Delos aslanı", "A lion of Delos"),
+    author: "iedu360.eu",
+    source: "https://sketchfab.com/3d-models/8581d34e85be4d7ba4353c93bdd4036d",
+    license: "CC BY 4.0",
+    licenseUrl: BY,
+    note: l(
+      "Delos'taki kutsal yolu bekleyen, oturan arkaik mermer aslanlardan biri. Nemrut'un aslanları Kommagene'nin kendi üslubundaydı; modelde onların yerinde gerçekçi bir oturan aslan olarak kullanıldı.",
+      "One of the seated archaic marble lions that guarded the sacred way on Delos. Nemrut's lions were in Commagene's own style; the model uses this as a realistic seated lion in their place.",
+    ),
+  },
 };
 
 /**
@@ -193,18 +388,100 @@ export const SCANS: Record<ScanId, Scan> = {
  * that are only shown alongside it.
  */
 export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
-  "celsus-kutuphanesi": ["celsus-sophia", "celsus-arete", "arringatore", "athena-arezzo"],
-  "aspendos-tiyatrosu": ["arringatore"],
+  "celsus-kutuphanesi": [
+    "celsus-sophia",
+    "celsus-arete",
+    "arringatore",
+    "athena-arezzo",
+    "herm-thucydides-herodotus",
+    "herm-plato",
+    "herm-socrates-seneca",
+    "herm-epicurus-metrodorus",
+  ],
+  "aspendos-tiyatrosu": [
+    "hermes-sandal",
+    "neptune",
+    "pan",
+    "arringatore",
+    "magdalensberg-youth",
+    "penelope",
+    "herakles-lansdowne",
+    "efebo",
+  ],
   "didyma-apollon-tapinagi": ["didyma-medusa"],
-  "artemis-tapinagi": ["artemision-drum", "arringatore"],
-  "pergamon-zeus-sunagi": ["pergamon-athena", "athena-arezzo", "neptune", "arringatore"],
-  "hierapolis-tiyatrosu": ["neptune", "arringatore"],
-  "milet-buyuk-tiyatro": ["neptune", "arringatore"],
-  "efes-buyuk-tiyatro": ["arringatore", "neptune"],
-  "side-tiyatrosu": ["arringatore", "neptune"],
-  "aizanoi-zeus-tapinagi": ["neptune", "arringatore"],
-  "halikarnas-mozolesi": ["mausoleum-amazon-1", "mausoleum-amazon-2"],
-  "nemrut-dogu-terasi": ["nemrut-head"],
+  "artemis-tapinagi": [
+    "artemision-drum",
+    "magdalensberg-youth",
+    "herakles-lansdowne",
+    "hermes-sandal",
+    "penelope",
+    "arringatore",
+    "pan",
+    "efebo",
+    "neptune",
+  ],
+  "pergamon-zeus-sunagi": [
+    "pergamon-athena",
+    "magdalensberg-youth",
+    "penelope",
+    "arringatore",
+    "herakles-lansdowne",
+    "hermes-sandal",
+    "pan",
+    "efebo",
+    "neptune",
+    "athena-arezzo",
+  ],
+  "hierapolis-tiyatrosu": [
+    "herakles-lansdowne",
+    "efebo",
+    "hermes-sandal",
+    "neptune",
+    "pan",
+    "arringatore",
+    "magdalensberg-youth",
+    "penelope",
+  ],
+  "milet-buyuk-tiyatro": [
+    "magdalensberg-youth",
+    "penelope",
+    "herakles-lansdowne",
+    "efebo",
+    "hermes-sandal",
+  ],
+  "efes-yamac-evler": ["centaur", "glykon"],
+  "efes-buyuk-tiyatro": [
+    "efebo",
+    "hermes-sandal",
+    "neptune",
+    "pan",
+    "arringatore",
+    "magdalensberg-youth",
+    "penelope",
+    "herakles-lansdowne",
+    "hermanubis",
+  ],
+  "side-tiyatrosu": [
+    "penelope",
+    "herakles-lansdowne",
+    "efebo",
+    "hermes-sandal",
+    "neptune",
+    "pan",
+    "arringatore",
+    "magdalensberg-youth",
+  ],
+  "aizanoi-zeus-tapinagi": [
+    "neptune",
+    "herakles-lansdowne",
+    "hermes-sandal",
+    "penelope",
+    "arringatore",
+    "pan",
+    "efebo",
+  ],
+  "halikarnas-mozolesi": ["mausoleum-amazon-1", "mausoleum-amazon-2", "lion-met"],
+  "nemrut-dogu-terasi": ["lion-delos", "nemrut-head"],
 };
 
 export function scansFor(reconstructionId: string): ScanId[] {

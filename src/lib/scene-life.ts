@@ -1,4 +1,5 @@
 import {
+  theatreLayout,
   horseStatue,
   ornateAltar,
   stadiumLayout,
@@ -533,6 +534,14 @@ const SCAN_OF: Partial<Record<string, ScanId>> = {
   Athena: "athena-arezzo",
   Zeus: "neptune",
   Emperor: "arringatore",
+  Apollon: "efebo",
+  Dionysos: "magdalensberg-youth",
+  Hermes: "hermes-sandal",
+  Herakles: "herakles-lansdowne",
+  Pan: "pan",
+  Hermanubis: "hermanubis",
+  /** The Muse who sits with her hand to her chin, as the "Penelope" does. */
+  "Muse (thinking)": "penelope",
 };
 
 const decor = (part: Part): Part => {
@@ -1155,6 +1164,33 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
       paint: { cloth: 0xe7dcc4, mantle: 0x8fa4b8, hair: 0x7a5a3c, accent: 0xc8a24a },
     }),
   );
+  /*
+   * Portraits of the authors, as Roman libraries had them: herms of the
+   * historians and philosophers on pillars along the hall — Herodotus of
+   * Halicarnassus among them, from just down the coast.
+   */
+  const herms: ScanId[] = [
+    "herm-thucydides-herodotus",
+    "herm-plato",
+    "herm-socrates-seneca",
+    "herm-epicurus-metrodorus",
+  ];
+  herms.forEach((id, i) => {
+    const side = i % 2 === 0 ? -1 : 1;
+    const x = side * (halfHall - 1.7);
+    const z = hallFront + (i < 2 ? 1.4 : spec.hallDepth - 1.8);
+    b.props.push(box("marbleWorn", [x, floor, z], [0.5, 1.15, 0.5]));
+    b.props.push(
+      decor({
+        kind: "figure",
+        material: "marble",
+        at: [x, floor + 1.15, z],
+        height: 0.62,
+        rotY: side < 0 ? Math.PI / 2 : -Math.PI / 2,
+        scan: { id },
+      }),
+    );
+  });
   // Reading tables down the middle of the hall, and lamps between them.
   for (const [tz, tx] of [
     [hallFront + 2.6, -2.6],
@@ -1238,18 +1274,9 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
 function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife {
   const b = make(era, seed);
   const { cast, rand } = b;
-  const orchestra = spec.orchestraDiameter / 2;
-  const middle = spec.middleRows ?? 0;
-  const rows = spec.lowerRows + middle + spec.upperRows;
-  const diazoma = 1.8;
-  const podiumOuter = orchestra + 0.7;
-  const rowAt = (index: number) => {
-    const walkways =
-      (index >= spec.lowerRows ? diazoma : 0) +
-      (middle > 0 && index >= spec.lowerRows + middle ? diazoma : 0);
-    const inner = podiumOuter + index * spec.seatTread + walkways;
-    return { inner, y: spec.podiumHeight + index * spec.seatRise };
-  };
+  const layout = theatreLayout(spec);
+  const orchestra = layout.orchestraRadius;
+  const { rows, diazoma, rowAt, rowSpan } = layout;
 
   /*
    * The audience. Fuller near the front, thinner at the back and the ends,
@@ -1259,26 +1286,27 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
   const budget = 2600;
   const totalSeats = Array.from(
     { length: rows },
-    (_, i) => (Math.PI * rowAt(i).inner) / 0.55,
+    (_, i) => (rowSpan(i)[1] * rowAt(i).inner) / 0.55,
   ).reduce((a, c) => a + c, 0);
   const density = Math.min(0.62, budget / totalSeats);
   const stairWidthAngle = (r: number) => 1.3 / r;
   for (let i = 0; i < rows; i += 1) {
     const { inner, y } = rowAt(i);
     const r = inner + spec.seatTread * 0.42;
-    const count = Math.floor((Math.PI * r) / 0.55);
+    const [start, length] = rowSpan(i);
+    const count = Math.floor((length * r) / 0.55);
     const frontBias = 1.15 - (i / rows) * 0.55;
     for (let k = 0; k < count; k += 1) {
-      const t = (Math.PI * (k + 0.5)) / count;
+      const t = start + (length * (k + 0.5)) / count;
       // Keep the stairs clear.
       let onStair = false;
       for (let s = 0; s < spec.stairways; s += 1) {
-        const theta = (Math.PI * (s + 0.5)) / spec.stairways;
+        const theta = start + (length * (s + 0.5)) / spec.stairways;
         if (Math.abs(t - theta) < stairWidthAngle(r)) onStair = true;
       }
       if (onStair) continue;
       // Wedges that are emptier than the rest.
-      const wedge = Math.floor((t / Math.PI) * spec.stairways);
+      const wedge = Math.floor(((t - start) / length) * spec.stairways);
       const wedgeFill = 0.55 + 0.45 * Math.sin(wedge * 2.3 + seed);
       if (rand() > density * frontBias * wedgeFill * 1.25) continue;
       const at: Vec3 = [Math.cos(t) * r, y + spec.seatRise + 0.06, Math.sin(t) * r];
@@ -1287,7 +1315,7 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
   }
 
   // The stage: three actors in masks, and a fourth waiting at the royal door.
-  const stageY = 1.5;
+  const stageY = layout.stageTop;
   const stageZ = -spec.stageDepth * 0.45;
   cast.add({
     at: [-2.2, stageY, stageZ],
@@ -1366,7 +1394,7 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
   cast.walk([...arc].reverse(), { role: "worker", carry: "amphora", speed: 0.6 });
 
   // Torches along the front of the stage, and braziers at its ends.
-  const stageHalf = spec.caveaDiameter * 0.31;
+  const stageHalf = Math.min(layout.stageWidth, spec.caveaDiameter * 0.62) / 2;
   for (let i = 0; i < 6; i += 1) {
     const x = -stageHalf * 0.8 + (stageHalf * 1.6 * i) / 5;
     fire(b, torchStand([x, stageY, -0.4], 1.6), 0.3, i === 1 || i === 4);
@@ -1376,22 +1404,17 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
   }
   /*
    * The stage front was a gallery of statues: gods, Muses, the emperor and
-   * the city's benefactors stood between the columns of both storeys.
+   * the city's benefactors stood between the columns of every storey. Which
+   * god stands where is dealt from this theatre's own seed, so no two stage
+   * fronts carry the same company in the same order.
    */
-  const stageWidth = spec.caveaDiameter;
-  const wallZ = -spec.stageDepth;
-  const screenLower = spec.scaenaeHeight * 0.55;
-  const screenUpper = spec.scaenaeHeight - screenLower;
-  const span = stageWidth * 0.86;
-  const bay = span / 10;
-  const doors = [0, -stageWidth * 0.16, stageWidth * 0.16, -stageWidth * 0.36, stageWidth * 0.36];
-  for (let i = 0; i < 10; i += 1) {
-    const x = -(span / 2) + (i + 0.5) * bay;
-    statue(b, [x, stageY + screenLower, wallZ + 0.9], screenUpper * 0.55, 0, i + seed);
-    if (doors.every((d) => Math.abs(d - x) > 3.2)) {
-      statue(b, [x, stageY, wallZ + 0.7], screenLower * 0.42, 0, i + seed + 5);
-    }
-  }
+  // Ephesus kept a great temple of Serapis: one of its gods stands with them.
+  const egyptian = layout.character.screen === "ephesus";
+  layout.statueSlots.forEach((slot, i) => {
+    const special =
+      egyptian && i === Math.floor(layout.statueSlots.length / 2) ? HERMANUBIS : undefined;
+    statue(b, slot.at, slot.height, 0, i * 5 + seed, "marble", true, special);
+  });
   return finish(b);
 }
 
@@ -2234,8 +2257,19 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
     { role: "worker", speed: 0.5 },
   );
   // Plants in pots round the pool, and lamps on stands for the evening.
+  // A garden statue on its plinth in one corner: a centaur, as at Oplontis.
+  b.props.push(box("marbleWorn", [-halfW + 1, 0, -halfD + 1], [0.7, 0.4, 0.9]));
+  b.props.push(
+    decor({
+      kind: "figure",
+      material: "marble",
+      at: [-halfW + 1, 0.4, -halfD + 1],
+      height: 1.0,
+      rotY: Math.PI / 4,
+      scan: { id: "centaur" },
+    }),
+  );
   for (const [x, z] of [
-    [-halfW + 1, -halfD + 1],
     [halfW - 1, -halfD + 1],
     [-halfW + 1, halfD - 1],
     [halfW - 1, halfD - 1],
@@ -2301,6 +2335,17 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
   );
   // The lararium.
   const lz = 1.6;
+  // Glykon, the snake god of Abonoteichos, coiled in front of the Lares.
+  b.props.push(
+    decor({
+      kind: "figure",
+      material: "marble",
+      at: [wallX + 0.22, 1.12, lz],
+      height: 0.24,
+      rotY: Math.PI / 2,
+      scan: { id: "glykon" },
+    }),
+  );
   b.props.push(box("marble", [wallX, 1.0, lz], [0.4, 0.12, 1.0]));
   b.props.push(box("paintRed", [wallX - 0.12, 1.12, lz], [0.04, 0.8, 0.9]));
   for (const dz of [-0.38, 0.38])
@@ -2590,7 +2635,14 @@ const PANTHEON: FigureIdentity[] = [
     right: "phiale",
     left: "sceptre",
   },
-  { name: "Muse", sex: "female", hair: "bun", dress: "chiton", left: "scroll", gesture: "chin" },
+  {
+    name: "Muse (thinking)",
+    sex: "female",
+    hair: "bun",
+    dress: "chiton",
+    left: "scroll",
+    gesture: "chin",
+  },
   {
     name: "Apollon",
     sex: "male",
@@ -2658,7 +2710,18 @@ const PANTHEON: FigureIdentity[] = [
     right: "phiale",
     gesture: "rest",
   },
+  { name: "Hermes", sex: "male", bearded: false, hair: "curls", dress: "chiton" },
+  { name: "Pan", sex: "male", bearded: true, hair: "curls", dress: "himation" },
 ];
+
+/** The Egyptian god Ephesus honoured beside its own: Hermes with Anubis' head. */
+const HERMANUBIS: FigureIdentity = {
+  name: "Hermanubis",
+  sex: "male",
+  bearded: false,
+  hair: "short",
+  dress: "himation",
+};
 
 const PALETTES: FigurePaint[] = [
   { cloth: 0xe9e0cc, mantle: 0x7e98b4, hair: 0x6e4a2c, accent: 0xc8a24a, skin: 0xf2dcc6 },
@@ -2678,8 +2741,9 @@ function statue(
   index: number,
   material: Material = "marble",
   plinth = true,
+  identity?: FigureIdentity,
 ) {
-  const who = PANTHEON[index % PANTHEON.length]!;
+  const who = identity ?? PANTHEON[index % PANTHEON.length]!;
   const base = plinth ? height * 0.08 : 0;
   if (plinth) b.props.push(box("marbleWorn", at, [height * 0.36, base, height * 0.32], rotY));
   b.props.push(

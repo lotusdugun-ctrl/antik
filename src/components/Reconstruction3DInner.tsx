@@ -211,6 +211,8 @@ const MATERIALS: Record<Material, Palette> = {
     clearcoat: 0.35,
     clearcoatRoughness: 0.3,
   },
+  conglomerate: { color: 0xcfa57c, roughness: 0.92, metalness: 0 },
+  water: { color: 0x3f7088, roughness: 0.18, metalness: 0.05, clearcoat: 0.6 },
   /*
    * Weathered bronze, kept well off full metalness on purpose. A physically
    * correct metal has almost no diffuse colour — it is only a mirror — so at

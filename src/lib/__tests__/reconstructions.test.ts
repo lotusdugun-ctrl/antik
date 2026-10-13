@@ -469,9 +469,11 @@ describe("the six models added in September 2026", () => {
       (part) => part.kind === "cylinder" && part.flutes !== undefined && part.height > drumHeight,
     );
     expect(drums.length / SHAFT_DRUMS).toBe(spec.columns);
-    // Four horses on the summit, each ten lofts, and twenty lions on the ledge.
+    // Four horses on the summit, each ten lofts, and twenty lions on the
+    // ledge, each standing in the scan of a Greek tomb lion.
     const lofts = partsOf(tomb).filter((part) => part.kind === "loft");
-    expect(lofts.length).toBeGreaterThanOrEqual(40 + spec.lions * 10);
+    expect(lofts.length).toBeGreaterThanOrEqual(40);
+    expect(partsOf(tomb).filter((part) => part.scan?.id === "lion-met").length).toBe(spec.lions);
     expect(spec.columnsShort * 2 + spec.columnsLong * 2 - 4).toBe(spec.columns);
   });
 
@@ -516,5 +518,16 @@ describe("the six models added in September 2026", () => {
     if (spec.kind !== "ionic-dipteros") throw new Error("expected a temple");
     expect(spec.rings).toBe(1);
     expect(2 * spec.outerColumnsShort + 2 * spec.outerColumnsLong - 4).toBe(spec.totalColumns);
+  });
+});
+
+describe("the theatres", () => {
+  test("no two theatres are built alike", () => {
+    const theatres = reconstructions.filter((r) => r.model.kind === "roman-theatre");
+    const looks = theatres.map((r) =>
+      r.model.kind === "roman-theatre" ? JSON.stringify(r.model.character) : "",
+    );
+    expect(theatres.every((r) => r.model.kind === "roman-theatre" && r.model.character)).toBe(true);
+    expect(new Set(looks).size).toBe(theatres.length);
   });
 });
