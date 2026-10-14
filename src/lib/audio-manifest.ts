@@ -13,7 +13,7 @@ import manifest from "./audio-manifest.json";
  *
  * Shape: guide key (`site:efes`) → language → chapter id → { url, hash }.
  */
-export type Recording = { url: string; hash: string };
+export type Recording = { url: string; hash: string; v?: number };
 export type RecordedAudio = Record<string, Partial<Record<Lang, Record<string, Recording>>>>;
 
 export const recordedAudio = manifest as RecordedAudio;

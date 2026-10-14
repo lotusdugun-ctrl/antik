@@ -17,7 +17,7 @@ Options:  --voice-tr tr-TR-AhmetNeural   --voice-en en-GB-RyanNeural
           --voice-de de-DE-ConradNeural --voice-ru ru-RU-DmitryNeural
           --rate -6%   --force   --only site:efes   --lang de
           --remote-dir ../antik-audio   --base-url https://<user>.github.io/antik-audio
-          --app-only (skip remote chapters)
+          --app-only (skip remote chapters)   --jobs 4 (chapters at once)
 """
 import argparse
 import asyncio
@@ -35,6 +35,9 @@ SCRIPT = ROOT / "scripts" / "audio-script.json"
 MANIFEST = ROOT / "src" / "lib" / "audio-manifest.json"
 AUDIO = ROOT / "public" / "audio"
 BASE_URL = "https://lotusdugun-ctrl.github.io/antik-audio"
+# Bumped when the spoken form changes without the page text changing (as when
+# "MÖ" began to be read as "milattan önce"): every chapter is re-recorded.
+SPEECH_VERSION = 2
 
 
 def text_hash(text: str) -> str:
@@ -66,6 +69,7 @@ async def main() -> None:
     parser.add_argument("--app-only", action="store_true")
     parser.add_argument("--rate", default="-6%", help="a little slower reads more like a guide")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--jobs", type=int, default=4, help="chapters recorded at once")
     parser.add_argument("--only", help="a single guide key, e.g. site:efes")
     args = parser.parse_args()
 
@@ -83,8 +87,11 @@ async def main() -> None:
         and (not args.app_only or i.get("target", "app") == "app")
     ]
     print(f"{len(items)} chapters to check. Voices: {voices['tr']} / {voices['en']}", flush=True)
-    done = skipped = failed = 0
-    for n, item in enumerate(items, 1):
+    counts = {"done": 0, "skipped": 0, "failed": 0}
+    lock = asyncio.Lock()
+    gate = asyncio.Semaphore(args.jobs)
+
+    async def record(n: int, item: dict) -> None:
         if text_hash(item["text"]) != item["hash"]:
             sys.exit("Hash mismatch between the exporter and this script; refusing to continue.")
         remote = item.get("target", "app") == "remote"
@@ -99,38 +106,47 @@ async def main() -> None:
             and entry
             and entry["hash"] == item["hash"]
             and entry["url"] == url
+            and entry.get("v") == SPEECH_VERSION
         ):
-            skipped += 1
-            continue
+            counts["skipped"] += 1
+            return
         target.parent.mkdir(parents=True, exist_ok=True)
         label = f"[{n}/{len(items)}] {item['key']} {item['lang']} {item['chapter']}"
-        print(f"{label}  ...", flush=True)
+        # The spoken form: abbreviations, units and year ranges written out.
+        speech = item.get("speech") or item["text"]
         ok = False
-        for attempt in range(3):
-            try:
-                communicate = edge_tts.Communicate(item["text"], voices[item["lang"]], rate=args.rate)
-                # A stalled connection must fail and be retried, not hang the run.
-                await asyncio.wait_for(communicate.save(str(target)), timeout=90)
-                ok = True
-                break
-            except Exception as error:  # network hiccups: try again, then move on
-                print(f"{label}  attempt {attempt + 1} failed: {type(error).__name__}: {error}", flush=True)
-                await asyncio.sleep(2 * (attempt + 1))
-        if not ok or target.stat().st_size == 0:
+        async with gate:
+            for attempt in range(4):
+                try:
+                    communicate = edge_tts.Communicate(speech, voices[item["lang"]], rate=args.rate)
+                    # A stalled connection must fail and be retried, not hang the run.
+                    await asyncio.wait_for(communicate.save(str(target)), timeout=120)
+                    ok = True
+                    break
+                except Exception as error:  # network hiccups: try again, then move on
+                    print(f"{label}  attempt {attempt + 1} failed: {type(error).__name__}: {error}", flush=True)
+                    await asyncio.sleep(3 * (attempt + 1))
+        if not ok or not target.exists() or target.stat().st_size == 0:
             # An empty file is a failed download; never list it.
             target.unlink(missing_ok=True)
-            failed += 1
-            continue
-        manifest.setdefault(item["key"], {}).setdefault(item["lang"], {})[item["chapter"]] = {
-            "url": url,
-            "hash": item["hash"],
-        }
-        done += 1
+            counts["failed"] += 1
+            return
+        async with lock:
+            manifest.setdefault(item["key"], {}).setdefault(item["lang"], {})[item["chapter"]] = {
+                "url": url,
+                "hash": item["hash"],
+                "v": SPEECH_VERSION,
+            }
+            counts["done"] += 1
+            if counts["done"] % 25 == 0:
+                save(manifest)  # as we go, so an interrupted run keeps what it made
         print(f"{label}  ok", flush=True)
-        save(manifest)  # as we go, so an interrupted run keeps what it made
 
+    await asyncio.gather(*(record(n, item) for n, item in enumerate(items, 1)))
     save(manifest)
-    print(f"\nRecorded {done}, unchanged {skipped}, failed {failed}.")
+    print(
+        f"\nRecorded {counts['done']}, unchanged {counts['skipped']}, failed {counts['failed']}."
+    )
 
 
 asyncio.run(main())

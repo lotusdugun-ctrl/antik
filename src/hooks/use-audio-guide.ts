@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { recordingFor } from "@/lib/audio-manifest";
 import type { Lang } from "@/lib/i18n";
-import { speakableChunks, type Guide } from "@/lib/narration";
+import { speakableChunks, spokenText, type Guide } from "@/lib/narration";
 
 export type GuideStatus = "idle" | "playing" | "paused" | "ended";
 
@@ -29,9 +29,13 @@ function pickVoice(voices: SpeechSynthesisVoice[], lang: Lang): SpeechSynthesisV
   const matching = voices.filter((voice) => voice.lang.toLowerCase().startsWith(prefix));
   if (matching.length === 0) return undefined;
   const score = (voice: SpeechSynthesisVoice) => {
+    // A neural voice (Edge's "Online (Natural)" ones, Apple's premium ones)
+    // first, then Google's, and the old robotic local voices only as a last
+    // resort: on Windows those are what made the guide sound like a machine.
     let s = 0;
-    if (voice.localService) s += 4;
-    if (/natural|neural|enhanced|premium|google|yelda|siri/i.test(voice.name)) s += 2;
+    if (/natural|neural|enhanced|premium|siri|yelda/i.test(voice.name)) s += 6;
+    if (/google/i.test(voice.name)) s += 4;
+    if (voice.localService) s += 1;
     if (voice.lang.replace("_", "-") === BCP47[lang]) s += 1;
     return s;
   };
@@ -145,7 +149,7 @@ export function useAudioGuide(
           setStatus("idle");
           return;
         }
-        const chunks = speakableChunks(pick(current.text, lang));
+        const chunks = speakableChunks(spokenText(pick(current.text, lang), lang));
         const say = (i: number) => {
           if (state.current.token !== token) return;
           if (i >= chunks.length) {

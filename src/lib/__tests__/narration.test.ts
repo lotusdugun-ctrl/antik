@@ -2,7 +2,9 @@ import { pick } from "@/lib/i18n";
 import { describe, expect, test } from "bun:test";
 import { recordedAudio } from "@/lib/audio-manifest";
 import { guideForSite, structureBlurbFor } from "@/lib/guide-sources";
-import { reconstructionGuide, speakableChunks } from "@/lib/narration";
+import { reconstructionGuide, speakableChunks, spokenText } from "@/lib/narration";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { reconstructions } from "@/lib/reconstructions";
 import { sites } from "@/lib/sites";
 
@@ -92,5 +94,30 @@ describe("recorded audio manifest", () => {
         for (const id of Object.keys(chapters ?? {})) expect(ids.has(id)).toBe(true);
       }
     }
+  });
+});
+
+describe("what the voice says", () => {
+  test("abbreviations, ranges and regnal numbers are written out", () => {
+    const tr = spokenText("Dönemi: MÖ 250-225. MS 2. yüzyılda II. Antiokhos, 113 m — BM", "tr");
+    expect(tr).toContain("milattan önce 250 ile 225");
+    expect(tr).toContain("milattan sonra 2. yüzyılda");
+    expect(tr).toContain("İkinci Antiokhos");
+    expect(tr).toContain("113 metre");
+    expect(tr).toContain("Birleşmiş Milletler");
+    expect(tr).not.toMatch(/\bM[ÖS]\b/);
+    expect(spokenText("c. 8400–8100 BC", "en")).toBe("around 8400 to 8100 BC");
+    expect(spokenText("300 v. Chr.", "de")).toBe("300 vor Christus");
+    expect(spokenText("155 г. н. э.", "ru")).toBe("155 год нашей эры");
+  });
+
+  test("nothing in the recorded script still says MÖ or MS", () => {
+    const script = JSON.parse(
+      readFileSync(join(import.meta.dir, "../../../scripts/audio-script.json"), "utf8"),
+    );
+    const left = script.items.filter(
+      (i: { lang: string; speech: string }) => i.lang === "tr" && /\bM[ÖS]\b/.test(i.speech),
+    );
+    expect(left.length).toBe(0);
   });
 });

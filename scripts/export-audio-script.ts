@@ -14,7 +14,7 @@ import { join } from "node:path";
 import { textHash } from "@/lib/audio-manifest";
 import { loadContentTranslations, pick } from "@/lib/i18n";
 import { guideForSite } from "@/lib/guide-sources";
-import { reconstructionGuide, type Guide } from "@/lib/narration";
+import { reconstructionGuide, spokenText, type Guide } from "@/lib/narration";
 import { reconstructions } from "@/lib/reconstructions";
 import { sites } from "@/lib/sites";
 
@@ -57,6 +57,9 @@ const items = guides.flatMap((guide) =>
         lang,
         chapter: chapter.id,
         text,
+        // What the voice is given: the same text with abbreviations, units
+        // and year ranges written out (see spokenText).
+        speech: spokenText(text, lang),
         hash: textHash(text),
         target: bundled(guide.key, lang) ? "app" : "remote",
       };

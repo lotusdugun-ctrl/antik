@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { answer, suggestions, type Answer } from "@/lib/ask";
 import { useI18n, type Lang } from "@/lib/i18n";
+import { spokenText } from "@/lib/narration";
 import type { Site } from "@/lib/sites";
 
 const BCP47: Record<Lang, string> = { tr: "tr-TR", en: "en-GB", de: "de-DE", ru: "ru-RU" };
@@ -80,7 +81,7 @@ export function AskGuide({ site }: { site: Site }) {
   function speak(text: string) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
+    const u = new SpeechSynthesisUtterance(spokenText(text, lang));
     u.lang = BCP47[lang];
     window.speechSynthesis.speak(u);
   }

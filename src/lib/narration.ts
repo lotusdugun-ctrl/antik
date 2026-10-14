@@ -378,3 +378,110 @@ export function speakableChunks(text: string, max = 220): string[] {
 export function estimateSeconds(text: string, rate = 1): number {
   return Math.max(3, Math.round(text.length / 14 / rate));
 }
+
+/* ------------------------------------------------------------------ *
+ * What the voice says, as opposed to what the page shows
+ * ------------------------------------------------------------------ */
+
+const ROMAN: Record<string, number> = { I: 1, V: 5, X: 10, L: 50, C: 100 };
+const romanValue = (numeral: string): number => {
+  let total = 0;
+  for (let i = 0; i < numeral.length; i += 1) {
+    const value = ROMAN[numeral[i]!]!;
+    const next = ROMAN[numeral[i + 1] ?? ""] ?? 0;
+    total += value < next ? -value : value;
+  }
+  return total;
+};
+const TR_ORDINALS = [
+  "",
+  "Birinci",
+  "İkinci",
+  "Üçüncü",
+  "Dördüncü",
+  "Beşinci",
+  "Altıncı",
+  "Yedinci",
+  "Sekizinci",
+  "Dokuzuncu",
+  "Onuncu",
+  "On birinci",
+  "On ikinci",
+  "On üçüncü",
+  "On dördüncü",
+  "On beşinci",
+  "On altıncı",
+  "On yedinci",
+  "On sekizinci",
+  "On dokuzuncu",
+  "Yirminci",
+];
+
+/**
+ * The page's text made speakable. A reader sees "MÖ 250–225" and reads
+ * "milattan önce 250 ile 225"; a speech engine, given the letters, spells
+ * out "em ö". Abbreviations, units, year ranges and regnal numbers are
+ * written out the way a guide would say them. Used for the recorded voice
+ * and the device voice alike.
+ */
+export function spokenText(text: string, lang: Lang): string {
+  let t = ` ${text} `;
+  // "1878-86" is 1878 to 1886.
+  t = t.replace(/\b(1\d|20)(\d\d)\s*[-–—]\s*(\d\d)\b(?!\d)/g, "$1$2-$1$3");
+  if (lang === "tr") {
+    t = t
+      .replace(/\bM\.?\s?Ö\.?(?=\s|\d)/g, "milattan önce")
+      .replace(/\bM\.?\s?S\.?(?=\s|\d)/g, "milattan sonra")
+      .replace(/\bBM\b/g, "Birleşmiş Milletler")
+      .replace(/\bHz\.\s/g, "Hazreti ")
+      .replace(/\bvb\./g, "ve benzeri")
+      .replace(/\byy\./g, "yüzyıl")
+      .replace(/\bT biçimli/g, "Te biçimli")
+      .replace(/\b([IVXLC]{1,5})\.\s(?=\p{Lu})/gu, (all, numeral: string) => {
+        const n = romanValue(numeral);
+        return TR_ORDINALS[n] ? `${TR_ORDINALS[n]} ` : all;
+      })
+      .replace(/(\d)\s*[-–—]\s*(\d)/g, "$1 ile $2")
+      .replace(/(\d)\s?km²/g, "$1 kilometrekare")
+      .replace(/(\d)\s?m²/g, "$1 metrekare")
+      .replace(/(\d)\s?km\b/g, "$1 kilometre")
+      .replace(/(\d)\s?cm\b/g, "$1 santimetre")
+      .replace(/(\d)\s?m\b/g, "$1 metre")
+      .replace(/(\d)\s?ha\b/g, "$1 hektar")
+      .replace(/%\s?(\d)/g, "yüzde $1");
+  } else if (lang === "en") {
+    t = t
+      .replace(/\bc\.\s(?=\d)/g, "around ")
+      .replace(/(\d)\s*[-–—]\s*(\d)/g, "$1 to $2")
+      .replace(/(\d)\s?km²/g, "$1 square kilometres")
+      .replace(/(\d)\s?m²/g, "$1 square metres")
+      .replace(/(\d)\s?km\b/g, "$1 kilometres")
+      .replace(/(\d)\s?cm\b/g, "$1 centimetres")
+      .replace(/(\d)\s?m\b/g, "$1 metres")
+      .replace(/(\d)\s?ha\b/g, "$1 hectares");
+  } else if (lang === "de") {
+    t = t
+      .replace(/\bv\.\s?Chr\./g, "vor Christus")
+      .replace(/\bn\.\s?Chr\./g, "nach Christus")
+      .replace(/\bca\.\s/g, "circa ")
+      .replace(/\bJh\./g, "Jahrhundert")
+      .replace(/(\d)\s*[-–—]\s*(\d)/g, "$1 bis $2")
+      .replace(/(\d)\s?km\b/g, "$1 Kilometer")
+      .replace(/(\d)\s?cm\b/g, "$1 Zentimeter")
+      .replace(/(\d)\s?m\b/g, "$1 Meter");
+  } else if (lang === "ru") {
+    t = t
+      .replace(/до\s?н\.\s?э\./g, "до нашей эры")
+      .replace(/н\.\s?э\./g, "нашей эры")
+      .replace(/(\d)\s?гг\./g, "$1 годах")
+      .replace(/(\d)\s?г\./g, "$1 год")
+      .replace(/([IVXLC])\s?в\./g, "$1 век")
+      .replace(/(^|\s)ок\.\s/g, "$1около ")
+      .replace(/(\d)\s*[-–—]\s*(\d)/g, "$1-$2")
+      .replace(/(\d)\s?км(?=[\s.,;]|$)/g, "$1 километров")
+      .replace(/(\d)\s?м(?=[\s.,;]|$)/g, "$1 метров");
+  }
+  // A dash in running text is a pause, not a word.
+  t = t.replace(/\s[—–]\s/g, ", ");
+  return t.replace(/\s+/g, " ").trim();
+}
