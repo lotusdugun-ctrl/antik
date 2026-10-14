@@ -194,9 +194,23 @@ const PRIORITY: Intent[] = [
   "count",
 ];
 
-function intentsOf(question: string): Intent[] {
+/*
+ * A cue matches at the start of a word, never inside one: "wer" is German for
+ * "who", but it is also the end of "tower", and "век" (century) is the middle
+ * of "человек" (person). A cue's own leading space was an older way of saying
+ * the same thing; a trailing one ("wo ") still means "the whole word".
+ */
+const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const CUE_PATTERNS = Object.fromEntries(
+  Object.entries(CUES).map(([intent, cues]) => [
+    intent,
+    cues.map((cue) => new RegExp(`(^|[^\\p{L}\\p{N}])${escape(cue.trimStart())}`, "u")),
+  ]),
+) as Record<Intent, RegExp[]>;
+
+export function intentsOf(question: string): Intent[] {
   const q = ` ${fold(question)} `;
-  return PRIORITY.filter((intent) => CUES[intent].some((cue) => q.includes(cue)));
+  return PRIORITY.filter((intent) => CUE_PATTERNS[intent].some((cue) => cue.test(q)));
 }
 
 function fmt(value: number, lang: Lang) {

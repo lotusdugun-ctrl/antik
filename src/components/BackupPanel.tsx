@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Download, Upload, Save } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
-import { useProgress } from "@/lib/progress";
+import { localDate, useProgress } from "@/lib/progress";
 
 /**
  * Export and restore, because the store is a localStorage record and nothing
@@ -20,9 +20,11 @@ export function BackupPanel() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `antik-turkiye-${new Date().toISOString().slice(0, 10)}.json`;
+    link.download = `antik-turkiye-${localDate()}.json`;
     link.click();
-    URL.revokeObjectURL(url);
+    // Revoking straight after `click()` can cancel the download before the
+    // browser has read the blob (seen in Safari and Firefox).
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   async function restore(event: React.ChangeEvent<HTMLInputElement>) {

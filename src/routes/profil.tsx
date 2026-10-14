@@ -27,7 +27,7 @@ export const Route = createFileRoute("/profil")({
 });
 
 function ProfilePage() {
-  const { t, L } = useI18n();
+  const { t, L, lang } = useI18n();
   const { state, badges, regionProgress, reset, visitEntries, removeVisit } = useProgress();
   const lvl = levelFromXp(state.xp);
   const visitedSites = state.visited.map(getSite).filter(Boolean);
@@ -45,7 +45,12 @@ function ProfilePage() {
           <p className="mt-1 text-sm text-muted-foreground">{t("profile_sub")}</p>
         </div>
         <button
-          onClick={reset}
+          onClick={() => {
+            // Everything goes, photos included, and nothing can bring it back
+            // short of a backup file, so one stray tap must not be enough.
+            if (window.confirm(`${t("reset_confirm_title")}\n\n${t("reset_confirm_body")}`))
+              reset();
+          }}
           className="flex shrink-0 items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-semibold text-destructive"
         >
           <RotateCcw className="h-3.5 w-3.5" /> {t("reset_progress")}
@@ -164,7 +169,10 @@ function ProfilePage() {
                     </Link>
                     <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                       <MapPin className="h-3 w-3" />
-                      {entry.date ? new Date(entry.date).toLocaleDateString() : t("visit_no_date")}
+                      {entry.date
+                        ? // Local midnight: `new Date("YYYY-MM-DD")` is UTC and can show the day before.
+                          new Date(`${entry.date}T00:00:00`).toLocaleDateString(lang)
+                        : t("visit_no_date")}
                     </p>
                     {entry.note && (
                       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">

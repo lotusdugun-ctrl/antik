@@ -23,6 +23,17 @@ export function siteOrigin(): string {
   return "";
 }
 
+/**
+ * An image address crawlers can fetch. Open Graph and schema.org want absolute
+ * URLs; sites without a Commons photo fall back to bundled artwork, whose
+ * address is a bare `/assets/…` path.
+ */
+function absoluteImage(image: string | undefined, origin: string): string | undefined {
+  if (!image) return undefined;
+  if (/^https?:\/\//.test(image)) return image;
+  return origin ? new URL(image, origin).href : undefined;
+}
+
 /** The address a given page has in a given language. */
 export function urlFor(pathname: string, lang: Lang, origin = siteOrigin()): string {
   const path = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
@@ -56,8 +67,9 @@ export function seoTags(options: {
   imageAlt?: string;
   noIndex?: boolean;
 }): { meta: MetaTag[]; links: LinkTag[] } {
-  const { lang, pathname, title, description, image, imageAlt, noIndex } = options;
+  const { lang, pathname, title, description, imageAlt, noIndex } = options;
   const origin = siteOrigin();
+  const image = absoluteImage(options.image, origin);
 
   const meta: MetaTag[] = [
     { title },
@@ -157,6 +169,7 @@ export function siteTags(
   const origin = siteOrigin();
   if (!origin) return [];
   const name = pick(site.name, options.lang);
+  const image = absoluteImage(options.image, origin);
 
   return [
     jsonLd({
@@ -165,7 +178,7 @@ export function siteTags(
       name,
       description: options.description,
       url: urlFor(`/kent/${site.slug}`, options.lang, origin),
-      ...(options.image ? { image: options.image } : {}),
+      ...(image ? { image } : {}),
       geo: {
         "@type": "GeoCoordinates",
         latitude: site.lat,

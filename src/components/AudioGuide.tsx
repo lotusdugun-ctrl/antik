@@ -114,7 +114,11 @@ export function AudioGuide({
           stopWatching();
         }
       },
-      () => {
+      (err) => {
+        // Only a refusal is final. A timeout or a lost fix (common among
+        // ruins, under trees, in a valley) is temporary, and the watch keeps
+        // trying on its own.
+        if (err.code !== err.PERMISSION_DENIED) return;
         toast.error(t("guide_geo_denied"));
         stopWatching();
       },
@@ -129,7 +133,9 @@ export function AudioGuide({
     0,
   );
   const playing = player.status === "playing";
-  const current = guide.chapters[player.chapter]!;
+  // The hook resets to chapter 0 when the guide changes, but a guide can
+  // also be empty; never index past the end of it.
+  const current = guide.chapters[player.chapter] ?? guide.chapters[0];
   // With no voice list at all (some engines never publish one) the engine
   // still speaks with its default; with a list that lacks the language, it
   // would read Turkish in an English voice, which is worse than not reading.
@@ -230,7 +236,7 @@ export function AudioGuide({
             </label>
           </div>
 
-          {player.status !== "idle" && (
+          {player.status !== "idle" && current && (
             <p className="mt-3 text-sm" aria-live="polite">
               <span className="font-semibold">
                 {player.chapter + 1}/{guide.chapters.length}

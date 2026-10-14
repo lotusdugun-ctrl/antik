@@ -75,6 +75,10 @@ export function createAmbience() {
 
   const layers: Layer[] = [];
   const timers: number[] = [];
+  // Off, nothing is scheduled: the chirp and call timers check this, and the
+  // context itself is suspended once the fade-out has finished (see stop()).
+  let running = false;
+  let suspendTimer: number | undefined;
   const layer = (level: Layer["level"]) => {
     const gain = ctx.createGain();
     gain.gain.value = 0;
@@ -134,6 +138,7 @@ export function createAmbience() {
   {
     const out = layer((s) => (s.time === "night" ? 0.05 : s.time === "golden" ? 0.012 : 0));
     const chirp = () => {
+      if (!running) return;
       const pan = ctx.createStereoPanner();
       pan.pan.value = Math.random() * 1.6 - 0.8;
       pan.connect(out);
@@ -160,7 +165,7 @@ export function createAmbience() {
   {
     const out = layer((s) => (s.time === "night" ? 0 : s.exposed ? 0.02 : 0.035));
     const call = () => {
-      if (Math.random() < 0.4) return;
+      if (!running || Math.random() < 0.4) return;
       const pan = ctx.createStereoPanner();
       pan.pan.value = Math.random() * 1.8 - 0.9;
       pan.connect(out);
@@ -219,7 +224,6 @@ export function createAmbience() {
   }
 
   let scene: AmbienceScene = { time: "day", crowd: false, exposed: false };
-  let running = false;
   let ducked = false;
   const level = () => (ducked ? 0.35 : 0.9);
   const apply = (fade: number) => {
@@ -236,14 +240,25 @@ export function createAmbience() {
       apply(1.2);
     },
     async start() {
-      await ctx.resume();
+      window.clearTimeout(suspendTimer);
       running = true;
+      await ctx.resume();
+      // Turned off again while the context was waking up.
+      if (!running) return;
       apply(0.01);
       master.gain.setTargetAtTime(level(), ctx.currentTime, 0.8);
     },
     stop() {
       running = false;
       master.gain.setTargetAtTime(0, ctx.currentTime, 0.3);
+      // A running context at zero gain still renders every noise source and
+      // filter, which on a phone is battery for silence. Suspend it once the
+      // fade (a time constant of 0.3 s, so inaudible by ~1.5 s) is done —
+      // unless it was turned back on in the meantime.
+      window.clearTimeout(suspendTimer);
+      suspendTimer = window.setTimeout(() => {
+        if (!running) void ctx.suspend();
+      }, 1500);
     },
     /** Duck under a voice, so the guide is never fighting the cicadas. */
     duck(on: boolean) {
@@ -251,6 +266,8 @@ export function createAmbience() {
       if (running) master.gain.setTargetAtTime(level(), ctx.currentTime, 0.4);
     },
     dispose() {
+      running = false;
+      window.clearTimeout(suspendTimer);
       timers.forEach((id) => window.clearInterval(id));
       void ctx.close();
     },

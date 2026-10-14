@@ -1,5 +1,6 @@
 import { MessageCircleQuestion, Mic, Send, Volume2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { claimSpeech } from "@/hooks/use-audio-guide";
 import { track } from "@/lib/analytics";
 import { answer, suggestions, type Answer } from "@/lib/ask";
 import { useI18n, type Lang } from "@/lib/i18n";
@@ -80,6 +81,9 @@ export function AskGuide({ site }: { site: Site }) {
 
   function speak(text: string) {
     if (!("speechSynthesis" in window)) return;
+    // Tell the audio guide first: the cancel below silences it too, and it
+    // should show "paused", not "playing" over nothing.
+    claimSpeech("ask");
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(spokenText(text, lang));
     u.lang = BCP47[lang];

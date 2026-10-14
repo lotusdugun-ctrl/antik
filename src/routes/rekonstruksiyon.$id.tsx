@@ -17,7 +17,10 @@ import { getSite } from "@/lib/sites";
 import { structurePhotoFor } from "@/lib/structure-photos";
 
 export const Route = createFileRoute("/rekonstruksiyon/$id")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    // Imported here rather than at the top: whatever `head()` and a
+    // synchronous loader touch stays in the entry bundle every page downloads.
+    const { getReconstruction } = await import("@/lib/reconstructions");
     const item = getReconstruction(params.id);
     if (!item) throw notFound();
     return { id: item.id, title: item.title, blurb: item.blurb };
@@ -122,7 +125,7 @@ function ReconstructionPage() {
       </header>
 
       <div className="mt-6">
-        <Reconstruction3D item={item} />
+        <Reconstruction3D key={item.id} item={item} />
       </div>
 
       {/* The carvings on the model are other people's photographs, and nearly

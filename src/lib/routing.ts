@@ -4,6 +4,9 @@ import { distanceKm, sites } from "@/lib/sites";
 type Cell = { km: number; min: number };
 
 const PER_DAY = 3;
+/** The day picker on /rota offers 1–3; anything else is not a request the UI makes. */
+const MIN_DAYS = 1;
+const MAX_DAYS = 3;
 
 /**
  * How many candidate sites go into the driving matrix. A trip is at most
@@ -41,6 +44,21 @@ async function fetchDrivingMatrix(points: { lat: number; lng: number }[]) {
 }
 
 /**
+ * Great-circle distance without the whole-kilometre rounding of
+ * `distanceKm`: the nearest-neighbour walk compares legs, and rounding turned
+ * every pair of neighbouring sites into a tie (or a 0 km leg).
+ */
+function exactKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const rad = Math.PI / 180;
+  const dLat = (b.lat - a.lat) * rad;
+  const dLng = (b.lng - a.lng) * rad;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+/**
  * Straight-line stand-in for when OSRM is unreachable. The kilometres are
  * honest; the durations are left at 0 so the caller can tell this apart from
  * real driving data instead of presenting a guess as a measurement.
@@ -49,19 +67,28 @@ function haversineMatrix(points: { lat: number; lng: number }[]) {
   const n = points.length;
   return Array.from({ length: n }, (_, i) =>
     Array.from({ length: n }, (_, j) => {
-      const a = points[i]!;
-      const b = points[j]!;
-      return { km: distanceKm(a.lat, a.lng, b.lat, b.lng), min: 0 };
+      return { km: exactKm(points[i]!, points[j]!), min: 0 };
     }),
   );
 }
 
 export const buildRouteServerFn = createServerFn({ method: "GET" })
-  .validator((input: { startSlug: string; days: number }) => input)
+  // A server function is a public endpoint: the input is whatever a request
+  // carries, not what the type says. An unchecked `days` of 1e6 used to size
+  // the candidate list and the OSRM table from it.
+  .validator((input: { startSlug: string; days: number }) => {
+    const raw = (input ?? {}) as { startSlug?: unknown; days?: unknown };
+    const startSlug = typeof raw.startSlug === "string" ? raw.startSlug.slice(0, 100) : "";
+    const days =
+      typeof raw.days === "number" && Number.isFinite(raw.days)
+        ? Math.min(MAX_DAYS, Math.max(MIN_DAYS, Math.round(raw.days)))
+        : MIN_DAYS;
+    return { startSlug, days };
+  })
   .handler(async ({ data }) => {
     const { startSlug, days } = data;
     const start = sites.find((s) => s.slug === startSlug) ?? (sites[0] as (typeof sites)[number]);
-    const maxSites = Math.max(1, days) * PER_DAY;
+    const maxSites = days * PER_DAY;
 
     /*
      * Shortlist by straight-line distance before asking OSRM anything. The
@@ -100,9 +127,11 @@ export const buildRouteServerFn = createServerFn({ method: "GET" })
       let best = -1;
       let bestKm = Infinity;
       for (let i = 0; i < points.length; i++) {
-        if (used.has(i)) continue;
+        // Skip by index, not by a zero distance: two sites can share a spot
+        // (or round to 0 km), and `d > 0` dropped them from the route.
+        if (i === current || used.has(i)) continue;
         const d = legKm(current, i);
-        if (d > 0 && d < bestKm) {
+        if (d < bestKm) {
           bestKm = d;
           best = i;
         }

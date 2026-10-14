@@ -9,7 +9,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(KEY) as Theme | null;
+    // Storage access throws outright when it is blocked (Safari with "Block
+    // all cookies", some embedded browsers). This runs at the app root, so an
+    // unguarded read took the whole app down; the system theme will do.
+    let stored: Theme | null = null;
+    try {
+      const raw = window.localStorage.getItem(KEY);
+      if (raw === "light" || raw === "dark") stored = raw;
+    } catch {
+      /* storage unavailable */
+    }
     const initial =
       stored ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     setTheme(initial);
@@ -19,7 +28,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggle = useCallback(() => {
     setTheme((prev) => {
       const next = prev === "dark" ? "light" : "dark";
-      window.localStorage.setItem(KEY, next);
+      try {
+        window.localStorage.setItem(KEY, next);
+      } catch {
+        /* storage unavailable — the choice lasts for this visit only */
+      }
       document.documentElement.classList.toggle("dark", next === "dark");
       return next;
     });

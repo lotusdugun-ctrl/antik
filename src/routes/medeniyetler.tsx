@@ -7,20 +7,30 @@ import { people } from "@/lib/people";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 
 export const Route = createFileRoute("/medeniyetler")({
-  head: ({ match }) => {
+  loaderDeps: ({ search }) => ({ lang: parseLang(search.lang) }),
+  loader: async ({ deps }) => {
+    // Imported here rather than at the top: whatever `head()` and a
+    // synchronous loader touch stays in the entry bundle every page downloads.
+    const { civilizations } = await import("@/lib/civilizations");
+    return {
+      items: civilizations.map((civ) => ({
+        name: pick(civ.name, deps.lang),
+        pathname: `/medeniyet/${civ.id}`,
+      })),
+    };
+  },
+  head: ({ match, loaderData }) => {
     const lang = parseLang(match.search.lang);
     const title = translate("seo_history_title", lang);
     const description = translate("civs_sub", lang);
     return {
       ...seoTags({ lang, pathname: "/medeniyetler", title, description }),
       scripts: [
-        ...itemListTags(
-          civilizations.map((civ) => ({
-            name: pick(civ.name, lang),
-            pathname: `/medeniyet/${civ.id}`,
-          })),
-          { lang, name: translate("nav_history", lang), description },
-        ),
+        ...itemListTags(loaderData?.items ?? [], {
+          lang,
+          name: translate("nav_history", lang),
+          description,
+        }),
         ...breadcrumbTags(
           [
             { name: translate("appName", lang), pathname: "/" },

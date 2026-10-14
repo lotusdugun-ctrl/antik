@@ -123,7 +123,9 @@ describe("device transfer", () => {
     const other = { ...base, visited: ["milet", "efes"], xp: 120, visits: {}, stamps: {} };
     const merged = mergeStates(base, other);
     expect(merged.visited.sort()).toEqual(["efes", "milet"]);
-    expect(merged.xp).toBe(120);
+    // Two visits (100) and the efes stamp (25), plus the other device's 20
+    // XP of quizzes; the old `Math.max` gave 120 and lost the stamp's worth.
+    expect(merged.xp).toBe(145);
     expect(merged.visits["efes"]?.photo).toBe(base.visits.efes.photo);
     expect(merged.stamps["efes"]).toBeDefined();
   });

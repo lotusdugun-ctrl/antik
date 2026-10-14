@@ -67,6 +67,13 @@ describe("speakable chunks", () => {
     for (const chunk of chunks) expect(chunk.length).toBeLessThanOrEqual(120);
   });
 
+  test("a thousands separator is not the end of a sentence", () => {
+    expect(speakableChunks("Tiyatro 25.000 kişilikti. Sonra genişletildi.", 30)).toEqual([
+      "Tiyatro 25.000 kişilikti.",
+      "Sonra genişletildi.",
+    ]);
+  });
+
   test("every real guide chunks into utterances a speech engine will finish", () => {
     for (const site of sites) {
       for (const chapter of guideForSite(site.slug)!.chapters) {

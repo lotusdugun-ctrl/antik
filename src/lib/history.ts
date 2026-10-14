@@ -3,6 +3,7 @@ import type { Civilization, Person } from "@/lib/history-types";
 import type { Lang } from "@/lib/i18n";
 import { people, personFor } from "@/lib/people";
 import { sites, type Site } from "@/lib/sites";
+import { STOPS, TIMELINE_END, TIMELINE_START } from "@/lib/timeline-scale";
 
 /**
  * The links between places, peoples and persons, and the timeline built on
@@ -87,23 +88,7 @@ export function formatYear(year: number, lang: Lang): string {
   return era.before ? `${label} ${n}` : `${n} ${label}`;
 }
 
-/*
- * The timeline's scale. Linear time would spend nine tenths of the width on
- * the Stone Age, so it is piecewise: prehistory is squeezed, the Bronze Age
- * onward gets the room. Position runs 0 → 1.
- */
-const STOPS: [year: number, pos: number][] = [
-  [-20000, 0],
-  [-10000, 0.06],
-  [-3000, 0.16],
-  [-1000, 0.36],
-  [0, 0.54],
-  [1000, 0.76],
-  [1923, 1],
-];
-
-export const TIMELINE_START = STOPS[0]![0];
-export const TIMELINE_END = STOPS[STOPS.length - 1]![0];
+export { TIMELINE_END, TIMELINE_START };
 
 export function yearToPos(year: number): number {
   const y = Math.min(TIMELINE_END, Math.max(TIMELINE_START, year));

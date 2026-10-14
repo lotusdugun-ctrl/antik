@@ -183,10 +183,14 @@ function PwaRegistration() {
     const host = window.location.hostname;
     const isDevLocal = host === "localhost" || host === "127.0.0.1";
     if (!import.meta.env.PROD && !isDevLocal) return;
-    navigator.serviceWorker.register("/sw.js").then((reg) => {
-      if (!navigator.serviceWorker.controller) return;
-      reg.addEventListener("updatefound", () => toast.success(t("pwa_offline_ready")));
-    });
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg) => {
+        if (!navigator.serviceWorker.controller) return;
+        reg.addEventListener("updatefound", () => toast.success(t("pwa_offline_ready")));
+      })
+      // Refused in some private modes; the app works without it, just not offline.
+      .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return null;

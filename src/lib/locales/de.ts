@@ -85,6 +85,11 @@ export const de: Partial<Record<TKey, string>> = {
   km_away: "km entfernt",
   profile_sub: "Dein Fortschritt wird auf diesem Gerät gespeichert.",
   reset_progress: "Fortschritt zurücksetzen",
+  reset_confirm_title: "Gesamten Fortschritt löschen?",
+  reset_confirm_body:
+    "Deine Besuche, Notizen, Fotos, Stempel und XP werden dauerhaft von diesem Gerät gelöscht. Das lässt sich nicht rückgängig machen.",
+  storage_full:
+    "Kein Speicherplatz mehr auf dem Gerät; die letzte Änderung konnte nicht gespeichert werden. Lösche am besten einige Besuchsfotos.",
   empty_visits: "Noch keine Besuche erfasst. Öffne eine Stadt und tippe auf „Besucht“.",
   empty_favorites: "Deine Favoritenliste ist leer.",
   game_photo: "Foto erraten",

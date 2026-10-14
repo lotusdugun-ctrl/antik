@@ -73,6 +73,24 @@ export async function openQuickLook(glb: ArrayBuffer, name: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
 
+/** Free the geometry, materials and textures under `root`. */
+function disposeTree(root: import("three").Object3D) {
+  root.traverse((object) => {
+    const mesh = object as import("three").Mesh;
+    if (!mesh.isMesh) return;
+    mesh.geometry.dispose();
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    for (const material of materials) {
+      for (const value of Object.values(material)) {
+        if (value && typeof value === "object" && (value as { isTexture?: boolean }).isTexture) {
+          (value as import("three").Texture).dispose();
+        }
+      }
+      material.dispose();
+    }
+  });
+}
+
 export type ARLabels = { realSize: string; tabletop: string; exit: string; hint: string };
 
 /** Android: a WebXR session with hit-testing against the real floor. */
@@ -104,22 +122,52 @@ export async function startWebXR(glb: ArrayBuffer, labels: ARLabels) {
   overlay.append(hint, bar);
   document.body.appendChild(overlay);
 
-  const session = await xr.requestSession("immersive-ar", {
-    requiredFeatures: ["hit-test"],
-    optionalFeatures: ["dom-overlay", "light-estimation"],
-    domOverlay: { root: overlay },
-  } as XRSessionInit);
+  /*
+   * Everything from here to the first frame can be refused — no camera
+   * permission, no hit-testing, a session that will not start — and each step
+   * has already put something on the page or on the GPU. On a refusal it is
+   * all taken down again before the error goes back to the caller, or every
+   * failed try would leave an invisible overlay and a WebGL context behind.
+   */
+  let session: XRSession | null = null;
+  let renderer: InstanceType<typeof THREE.WebGLRenderer> | null = null;
+  let hitSource: XRHitTestSource | undefined;
+  try {
+    session = await xr.requestSession("immersive-ar", {
+      requiredFeatures: ["hit-test"],
+      optionalFeatures: ["dom-overlay", "light-estimation"],
+      domOverlay: { root: overlay },
+    } as XRSessionInit);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.xr.enabled = true;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.domElement.style.display = "none";
-  document.body.appendChild(renderer.domElement);
-  renderer.xr.setReferenceSpaceType("local");
-  await renderer.xr.setSession(session);
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.xr.enabled = true;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.domElement.style.display = "none";
+    document.body.appendChild(renderer.domElement);
+    renderer.xr.setReferenceSpaceType("local");
+    await renderer.xr.setSession(session);
+
+    const viewer = await session.requestReferenceSpace("viewer");
+    hitSource = await session.requestHitTestSource!({ space: viewer });
+  } catch (error) {
+    hitSource?.cancel();
+    overlay.remove();
+    // The session first, while the renderer that holds it is still whole.
+    await session?.end().catch(() => {});
+    if (renderer) {
+      renderer.setAnimationLoop(null);
+      renderer.dispose();
+      renderer.forceContextLoss();
+      renderer.domElement.remove();
+    }
+    disposeTree(holder);
+    throw error;
+  }
+  const xrSession = session;
+  const xrRenderer = renderer;
 
   const scene = new THREE.Scene();
   scene.add(new THREE.HemisphereLight(0xffffff, 0x8d8264, 1.6));
@@ -147,10 +195,7 @@ export async function startWebXR(glb: ArrayBuffer, labels: ARLabels) {
     sizeButton.textContent = real ? labels.tabletop : labels.realSize;
   };
 
-  const viewer = await session.requestReferenceSpace("viewer");
-  const hitSource = await session.requestHitTestSource!({ space: viewer });
-
-  session.addEventListener("select", () => {
+  xrSession.addEventListener("select", () => {
     if (!reticle.visible) return;
     holder.position.setFromMatrixPosition(reticle.matrix);
     holder.visible = true;
@@ -158,26 +203,30 @@ export async function startWebXR(glb: ArrayBuffer, labels: ARLabels) {
   });
 
   const end = () => {
-    renderer.setAnimationLoop(null);
+    xrRenderer.setAnimationLoop(null);
     hitSource?.cancel();
-    renderer.dispose();
-    renderer.domElement.remove();
+    xrRenderer.dispose();
+    xrRenderer.forceContextLoss();
+    xrRenderer.domElement.remove();
     overlay.remove();
+    // The model and the ring were made for this session alone.
+    disposeTree(holder);
+    disposeTree(reticle);
   };
   exitButton.onclick = (event) => {
     event.stopPropagation();
-    void session.end();
+    void xrSession.end();
   };
-  session.addEventListener("end", end);
+  xrSession.addEventListener("end", end);
 
-  renderer.setAnimationLoop((_, frame?: XRFrame) => {
+  xrRenderer.setAnimationLoop((_, frame?: XRFrame) => {
     if (frame && hitSource) {
-      const space = renderer.xr.getReferenceSpace();
+      const space = xrRenderer.xr.getReferenceSpace();
       const hits = frame.getHitTestResults(hitSource);
       const pose = hits[0] && space ? hits[0].getPose(space) : undefined;
       reticle.visible = Boolean(pose);
       if (pose) reticle.matrix.fromArray(pose.transform.matrix);
     }
-    renderer.render(scene, camera);
+    xrRenderer.render(scene, camera);
   });
 }

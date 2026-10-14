@@ -9,11 +9,10 @@ import {
   formatYear,
   posToYear,
   sitesAt,
-  TIMELINE_END,
-  TIMELINE_START,
   TIMELINE_TICKS,
   yearToPos,
 } from "@/lib/history";
+import { TIMELINE_END, TIMELINE_START } from "@/lib/timeline-scale";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { seoTags } from "@/lib/seo";
 

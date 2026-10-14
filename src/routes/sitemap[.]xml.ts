@@ -4,14 +4,17 @@ import { collections } from "@/lib/collections";
 import { people } from "@/lib/people";
 import { reconstructions } from "@/lib/reconstructions";
 import { DEFAULT_LANG, LANGS } from "@/lib/i18n";
+import { siteOrigin } from "@/lib/seo";
 import { regions, sites } from "@/lib/sites";
 import { stories } from "@/lib/stories";
 
 /**
  * The sitemap is generated per request rather than committed as a static file
  * so it always matches the data layer — a hand-maintained list would drift the
- * first time a site is added — and so the origin comes from the request itself
- * instead of an environment variable that has to be right on every host.
+ * first time a site is added. The origin is the configured one when there is
+ * one — the same one canonical and hreflang use, so a `*.vercel.app` alias does
+ * not list URLs every page then canonicalises elsewhere — and the request's own
+ * otherwise.
  *
  * Each entry carries `xhtml:link` alternates for both languages. That pairing
  * is what tells a crawler `/kent/efes` and `/kent/efes?lang=en` are the same
@@ -71,7 +74,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: ({ request }) => {
-        const origin = new URL(request.url).origin;
+        const origin = siteOrigin() || new URL(request.url).origin;
 
         const entries = [
           ...staticPaths.map((path) => urlEntry(origin, path, path === "/" ? "1.0" : "0.8")),

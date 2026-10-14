@@ -104,15 +104,27 @@ export function PassportPanel() {
       if (!blob) throw new Error("canvas");
       const file = new File([blob], "antik-pasaport.png", { type: "image/png" });
       track("Passport shared");
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: t("passport_title") });
-      } else {
+      const download = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.download = file.name;
         link.click();
-        URL.revokeObjectURL(url);
+        // Revoking straight after `click()` can cancel the download.
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+      if (navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: t("passport_title") });
+        } catch (error) {
+          // Safari wants the share sheet opened straight from the tap; after
+          // the awaits above it may refuse with NotAllowedError. The card is
+          // ready, so hand it over as a download instead of reporting failure.
+          if (error instanceof DOMException && error.name === "NotAllowedError") download();
+          else throw error;
+        }
+      } else {
+        download();
       }
     } catch (error) {
       // Closing the share sheet is not an error worth reporting.

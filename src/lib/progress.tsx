@@ -8,9 +8,18 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { toast } from "sonner";
 import { sites, totalSites, type RegionId } from "@/lib/sites";
-import type { Localized } from "@/lib/i18n";
-import { mergeStates } from "@/lib/transfer";
+import { useI18n, type Localized } from "@/lib/i18n";
+import {
+  mergeStates,
+  sanitizeState,
+  XP_PER_CORRECT,
+  XP_PER_STAMP,
+  XP_PER_VISIT,
+} from "@/lib/transfer";
+
+export { XP_PER_CORRECT, XP_PER_STAMP, XP_PER_VISIT } from "@/lib/transfer";
 
 /**
  * Local-first progress store.
@@ -64,10 +73,18 @@ const empty: ProgressState = {
 const BACKUP_VERSION = 1;
 const BACKUP_KIND = "antik-tr-backup";
 
-export const XP_PER_VISIT = 50;
-export const XP_PER_CORRECT = 10;
-/** On top of the visit itself: being there is worth more than ticking a box. */
-export const XP_PER_STAMP = 25;
+/**
+ * Today as `YYYY-MM-DD` in the device's own time zone. `toISOString()` is
+ * UTC, so between midnight and 03:00 in Turkey it logged a visit on the day
+ * before.
+ */
+export function localDate(date = new Date()): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/** How often a failed save may be announced, so a full disk is not a toast storm. */
+const STORAGE_WARN_INTERVAL_MS = 30_000;
 
 export function levelFromXp(xp: number) {
   const level = Math.floor(Math.sqrt(xp / 100)) + 1;
@@ -121,35 +138,91 @@ type Ctx = {
 const ProgressCtx = createContext<Ctx | null>(null);
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
   const [state, setState] = useState<ProgressState>(empty);
   const [ready, setReady] = useState(false);
   const loaded = useRef(false);
+  /** The newest state, including updates React has not rendered yet. */
+  const latest = useRef<ProgressState>(empty);
+  /** Set by `update`, so loads and other tabs' changes are not written back. */
+  const dirty = useRef(false);
+  const lastWarned = useRef(0);
+  const tRef = useRef(t);
+  useEffect(() => {
+    tRef.current = t;
+  }, [t]);
 
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(KEY);
-      if (raw) setState({ ...empty, ...(JSON.parse(raw) as Partial<ProgressState>) });
+      if (raw) {
+        const stored = sanitizeState(JSON.parse(raw));
+        latest.current = stored;
+        setState(stored);
+      }
     } catch {
       /* corrupted storage — start fresh */
     }
     loaded.current = true;
     setReady(true);
+
+    // Another tab saved: adopt its record rather than overwriting it with
+    // this tab's older copy on the next click.
+    function onStorage(event: StorageEvent) {
+      if (event.key !== KEY || event.storageArea !== window.localStorage) return;
+      let next = empty;
+      try {
+        if (event.newValue) next = sanitizeState(JSON.parse(event.newValue));
+      } catch {
+        return;
+      }
+      latest.current = next;
+      setState(next);
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  const persist = useCallback((next: ProgressState) => {
+  /*
+   * Every change is a function of the previous state, never of the `state`
+   * this render saw. The mutators used to spread the render-time `state`, so
+   * anything that finished later — a location fix for a stamp can take 20
+   * seconds — wrote back a stale copy and silently undid whatever had changed
+   * in between (a favourite toggled, a note saved).
+   */
+  const update = useCallback((fn: (prev: ProgressState) => ProgressState) => {
     // Before the stored record is read, `state` is the empty default, and a
     // write built from it would replace everything on disk. Child effects run
     // before this provider's, so a page that records itself on mount (the
     // city page's "recently viewed") used to wipe the whole store whenever a
     // city was opened straight from a link or a refresh.
     if (!loaded.current) return;
+    // Computed here rather than inside a setState updater, so `latest` is
+    // current the moment this returns: a second tap queued before React
+    // renders builds on the first instead of repeating it.
+    const prev = latest.current;
+    const next = fn(prev);
+    if (next === prev) return;
+    latest.current = next;
+    dirty.current = true;
     setState(next);
-    try {
-      window.localStorage.setItem(KEY, JSON.stringify(next));
-    } catch {
-      /* storage full or unavailable — keep in-memory state */
-    }
   }, []);
+
+  useEffect(() => {
+    if (!dirty.current) return;
+    dirty.current = false;
+    try {
+      window.localStorage.setItem(KEY, JSON.stringify(state));
+    } catch {
+      // Storage full (almost always visit photos) or unavailable. The change
+      // still holds in memory, but it would be gone on reload, so say so.
+      const now = Date.now();
+      if (now - lastWarned.current > STORAGE_WARN_INTERVAL_MS) {
+        lastWarned.current = now;
+        toast.error(tRef.current("storage_full"));
+      }
+    }
+  }, [state]);
 
   const value = useMemo<Ctx>(() => {
     const isVisited = (slug: string) => state.visited.includes(slug);
@@ -161,77 +234,84 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       isVisited,
       isFavorite,
       toggleVisited: (slug) => {
-        const on = !isVisited(slug);
-        const visits = { ...state.visits };
-        if (on) {
-          visits[slug] = visits[slug] ?? { slug, date: new Date().toISOString().slice(0, 10) };
-        } else {
-          delete visits[slug];
-        }
-        persist({
-          ...state,
-          visited: on ? [...state.visited, slug] : state.visited.filter((x) => x !== slug),
-          xp: Math.max(0, state.xp + (on ? XP_PER_VISIT : -XP_PER_VISIT)),
-          visits,
+        const on = !latest.current.visited.includes(slug);
+        update((prev) => {
+          if (prev.visited.includes(slug) === on) return prev;
+          return {
+            ...prev,
+            visited: on ? [...prev.visited, slug] : prev.visited.filter((x) => x !== slug),
+            xp: Math.max(0, prev.xp + (on ? XP_PER_VISIT : -XP_PER_VISIT)),
+            // Un-ticking keeps the visit's note and photo: a mis-tap used to
+            // delete them for good. Nothing shows them while the site is not
+            // visited; ticking it again brings them back, dated today.
+            visits: on
+              ? { ...prev.visits, [slug]: { ...prev.visits[slug], slug, date: localDate() } }
+              : prev.visits,
+          };
         });
         return on;
       },
       toggleFavorite: (slug) =>
-        persist({
-          ...state,
-          favorites: isFavorite(slug)
-            ? state.favorites.filter((x) => x !== slug)
-            : [...state.favorites, slug],
-        }),
-      pushRecent: (slug) => {
-        if (state.recent[0] === slug) return;
-        persist({
-          ...state,
-          recent: [slug, ...state.recent.filter((x) => x !== slug)].slice(0, 8),
-        });
-      },
+        update((prev) => ({
+          ...prev,
+          favorites: prev.favorites.includes(slug)
+            ? prev.favorites.filter((x) => x !== slug)
+            : [...prev.favorites, slug],
+        })),
+      pushRecent: (slug) =>
+        update((prev) =>
+          prev.recent[0] === slug
+            ? prev
+            : { ...prev, recent: [slug, ...prev.recent.filter((x) => x !== slug)].slice(0, 8) },
+        ),
       addGameResult: (correct) =>
-        persist({
-          ...state,
-          gamesPlayed: state.gamesPlayed + 1,
-          correctAnswers: state.correctAnswers + (correct ? 1 : 0),
-          xp: state.xp + (correct ? XP_PER_CORRECT : 0),
-        }),
+        update((prev) => ({
+          ...prev,
+          gamesPlayed: prev.gamesPlayed + 1,
+          correctAnswers: prev.correctAnswers + (correct ? 1 : 0),
+          xp: prev.xp + (correct ? XP_PER_CORRECT : 0),
+        })),
       getVisit: (slug) => state.visits[slug],
-      saveVisit: (slug, entry) => {
-        const prev = state.visits[slug] ?? {
-          slug,
-          date: new Date().toISOString().slice(0, 10),
-        };
-        persist({
-          ...state,
-          visits: { ...state.visits, [slug]: { ...prev, ...entry, slug } },
-        });
-      },
-      removeVisit: (slug) => {
-        const visits = { ...state.visits };
-        delete visits[slug];
-        persist({ ...state, visits });
-      },
+      saveVisit: (slug, entry) =>
+        update((prev) => {
+          const before = prev.visits[slug] ?? { slug, date: localDate() };
+          return { ...prev, visits: { ...prev.visits, [slug]: { ...before, ...entry, slug } } };
+        }),
+      removeVisit: (slug) =>
+        update((prev) => {
+          const visits = { ...prev.visits };
+          delete visits[slug];
+          return { ...prev, visits };
+        }),
       getStamp: (slug) => state.stamps[slug],
-      addStamp: (slug, distance) => {
-        if (state.stamps[slug]) return;
-        const date = new Date().toISOString();
-        const wasVisited = isVisited(slug);
-        persist({
-          ...state,
-          visited: wasVisited ? state.visited : [...state.visited, slug],
-          visits: wasVisited
-            ? state.visits
-            : { ...state.visits, [slug]: { slug, date: date.slice(0, 10) } },
-          stamps: { ...state.stamps, [slug]: { slug, at: date, distance: Math.round(distance) } },
-          xp: state.xp + XP_PER_STAMP + (wasVisited ? 0 : XP_PER_VISIT),
-        });
-      },
+      addStamp: (slug, distance) =>
+        update((prev) => {
+          if (prev.stamps[slug]) return prev;
+          const now = new Date();
+          const wasVisited = prev.visited.includes(slug);
+          return {
+            ...prev,
+            visited: wasVisited ? prev.visited : [...prev.visited, slug],
+            // A visit kept from an un-ticked site counts again from today.
+            visits:
+              wasVisited && prev.visits[slug]
+                ? prev.visits
+                : {
+                    ...prev.visits,
+                    [slug]: { ...prev.visits[slug], slug, date: localDate(now) },
+                  },
+            stamps: {
+              ...prev.stamps,
+              [slug]: { slug, at: now.toISOString(), distance: Math.round(distance) },
+            },
+            xp: prev.xp + XP_PER_STAMP + (wasVisited ? 0 : XP_PER_VISIT),
+          };
+        }),
       stampList: () => Object.values(state.stamps).sort((a, b) => b.at.localeCompare(a.at)),
       visitEntries: () =>
         Object.values(state.visits)
-          .filter((v) => v.slug)
+          // A visit kept from an un-ticked site is not part of the log.
+          .filter((v) => v.slug && state.visited.includes(v.slug))
           .sort((a, b) => (b.date || "").localeCompare(a.date || "")),
       exportBackup: () =>
         JSON.stringify(
@@ -241,24 +321,20 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         ),
       importBackup: (raw) => {
         try {
-          const parsed = JSON.parse(raw) as { kind?: string; state?: Partial<ProgressState> };
+          const parsed = JSON.parse(raw) as { kind?: string; state?: { visited?: unknown } };
           // Checked rather than trusted: dropping an unrelated JSON file onto
           // the restore button would otherwise wipe the store with nothing.
-          if (parsed.kind !== BACKUP_KIND || !parsed.state) return false;
+          if (parsed?.kind !== BACKUP_KIND || !parsed.state) return false;
           if (!Array.isArray(parsed.state.visited)) return false;
-          persist({
-            ...empty,
-            ...parsed.state,
-            visits: parsed.state.visits ?? {},
-            stamps: parsed.state.stamps ?? {},
-          });
+          const restored = sanitizeState(parsed.state);
+          update(() => restored);
           return true;
         } catch {
           return false;
         }
       },
-      mergeIn: (incoming) => persist(mergeStates(state, incoming)),
-      reset: () => persist(empty),
+      mergeIn: (incoming) => update((prev) => mergeStates(prev, sanitizeState(incoming))),
+      reset: () => update(() => empty),
       regionProgress: () => {
         const map = new Map<RegionId, { visited: number; total: number }>();
         for (const site of sites) {
@@ -435,7 +511,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         ];
       },
     };
-  }, [state, ready, persist]);
+  }, [state, ready, update]);
 
   return <ProgressCtx.Provider value={value}>{children}</ProgressCtx.Provider>;
 }

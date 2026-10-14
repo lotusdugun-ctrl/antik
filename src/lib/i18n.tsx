@@ -205,6 +205,15 @@ const dict = {
     en: "Your progress is stored on this device.",
   },
   reset_progress: { tr: "İlerlemeyi sıfırla", en: "Reset progress" },
+  reset_confirm_title: { tr: "Tüm ilerleme silinsin mi?", en: "Delete all progress?" },
+  reset_confirm_body: {
+    tr: "Ziyaretlerin, notların, fotoğrafların, damgaların ve XP'n bu cihazdan kalıcı olarak silinecek. Bu işlem geri alınamaz.",
+    en: "Your visits, notes, photos, stamps and XP will be permanently deleted from this device. This cannot be undone.",
+  },
+  storage_full: {
+    tr: "Cihazda yer kalmadı; son değişiklik kaydedilemedi. Bazı ziyaret fotoğraflarını silmeyi deneyin.",
+    en: "This device is out of storage; your last change could not be saved. Try deleting some visit photos.",
+  },
   empty_visits: {
     tr: "Henüz ziyaret kaydın yok. Bir antik kent aç ve 'Ziyaret Ettim' de.",
     en: "No visits logged yet. Open a city and tap 'Visited'.",
@@ -446,6 +455,24 @@ const dict = {
     en: "This transfer link could not be read.",
     de: "Dieser Übertragungslink konnte nicht gelesen werden.",
     ru: "Не удалось прочитать ссылку для переноса.",
+  },
+  transfer_failed: {
+    tr: "Bu tarayıcı aktarma bağlantısı oluşturamadı. Bunun yerine yedek dosyasını kullan.",
+    en: "This browser could not create a transfer link. Use a backup file instead.",
+    de: "Dieser Browser konnte keinen Übertragungslink erstellen. Nutze stattdessen eine Sicherungsdatei.",
+    ru: "Этот браузер не смог создать ссылку для переноса. Используйте файл резервной копии.",
+  },
+  transfer_qr_failed: {
+    tr: "Bağlantı QR kod için fazla uzun; kopyala ya da paylaş.",
+    en: "The link is too long for a QR code; copy or share it instead.",
+    de: "Der Link ist für einen QR-Code zu lang; kopiere oder teile ihn stattdessen.",
+    ru: "Ссылка слишком длинная для QR-кода; скопируйте её или поделитесь ею.",
+  },
+  transfer_copy_failed: {
+    tr: "Kopyalanamadı. Bağlantıyı seçip elle kopyala.",
+    en: "Could not copy. Select the link and copy it by hand.",
+    de: "Kopieren fehlgeschlagen. Markiere den Link und kopiere ihn von Hand.",
+    ru: "Не удалось скопировать. Выделите ссылку и скопируйте её вручную.",
   },
 
   ask_title: { tr: "Rehbere sor", en: "Ask the guide", de: "Frag den Guide", ru: "Спросите гида" },

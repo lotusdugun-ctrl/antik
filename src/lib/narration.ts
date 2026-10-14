@@ -338,10 +338,14 @@ export function reconstructionGuide(item: Reconstruction): Guide {
  * Speech engines cut long utterances short (Chrome stops after about fifteen
  * seconds of one), and a pause button that can only act between chapters is
  * useless. So a chapter is spoken a sentence or two at a time, never more than
- * `max` characters.
+ * `max` characters — 160 is about eleven seconds at normal speed, and still
+ * under fifteen at the slowest rate the player offers.
+ *
+ * A sentence ends at punctuation followed by a space: "25.000" and "3.5" are
+ * numbers, not two sentences.
  */
-export function speakableChunks(text: string, max = 220): string[] {
-  const sentences = text.match(/[^.!?…]+[.!?…]+["'”’)]*\s*|[^.!?…]+$/g) ?? [text];
+export function speakableChunks(text: string, max = 160): string[] {
+  const sentences = text.split(/(?<=[.!?…]["'”’)]*)\s+/);
   const chunks: string[] = [];
   let current = "";
   for (const raw of sentences) {

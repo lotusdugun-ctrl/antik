@@ -540,7 +540,7 @@ const photos: Record<string, string> = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Zeugma_Mosaic_Museum%2C_Gaziantep%2C_Turkey_%2852414721257%29.jpg/1280px-Zeugma_Mosaic_Museum%2C_Gaziantep%2C_Turkey_%2852414721257%29.jpg",
 };
 
-/** Keys are `${slug}|${structure.tr}` â€” the Turkish name is the stable one. */
+/** Keys are `${slug}|${structure.tr}` — the Turkish name is the stable one. */
 export const structurePhotos = photos;
 
 /**

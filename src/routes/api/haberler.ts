@@ -31,23 +31,36 @@ export const Route = createFileRoute("/api/haberler")({
         const key = `${lang}:${subject}`;
         const hit = cache.get(key);
         let items: NewsItem[] = [];
+        // Only a feed that answered is worth keeping: caching a 429 or a
+        // timeout would pin "no news" for six hours here and a day at the edge.
+        let fresh = false;
         if (hit && Date.now() - hit.at < TTL) {
           items = hit.items;
+          fresh = true;
         } else {
           try {
             const res = await fetch(newsFeedUrl(subject, lang), {
               headers: { "user-agent": "AntikTurkiye/1.0 (+news headlines)" },
               signal: AbortSignal.timeout(6000),
             });
-            if (res.ok) items = parseRss(await res.text());
-            cache.set(key, { at: Date.now(), items });
+            if (res.ok) {
+              items = parseRss(await res.text());
+              fresh = true;
+              cache.set(key, { at: Date.now(), items });
+            }
           } catch {
             items = [];
           }
         }
         return Response.json(
           { items },
-          { headers: { "cache-control": "public, s-maxage=21600, stale-while-revalidate=86400" } },
+          {
+            headers: {
+              "cache-control": fresh
+                ? "public, s-maxage=21600, stale-while-revalidate=86400"
+                : "public, s-maxage=300",
+            },
+          },
         );
       },
     },

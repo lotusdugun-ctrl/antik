@@ -39,7 +39,6 @@ import { imageAt } from "@/lib/images";
 import { useProgress, XP_PER_VISIT } from "@/lib/progress";
 import { creditLine } from "@/lib/photo-credits";
 import { breadcrumbTags, seoTags, siteTags } from "@/lib/seo";
-import { recordingFor } from "@/lib/audio-manifest";
 import { AskGuide } from "@/components/AskGuide";
 import { NewsList } from "@/components/NewsList";
 import { StampButton } from "@/components/Passport";
@@ -54,28 +53,22 @@ import { storiesFor } from "@/lib/stories";
 import { structureInfoAt } from "@/lib/structure-names";
 import { coverImage, getSite, hasOwnPhoto, heritageTypeName, regions } from "@/lib/sites";
 
-/** What the audio guide offers this page, for its structured data. */
-function guideMeta(slug: string, lang: Lang) {
-  const guide = guideForSite(slug);
-  if (!guide) return undefined;
-  const intro = guide.chapters[0]!;
-  const spoken = guide.langs.includes(lang) ? lang : "en";
-  return {
-    languages: guide.langs,
-    chapters: guide.chapters.length,
-    recording: recordingFor(guide.key, spoken, intro.id, pick(intro.text, spoken)),
-  };
-}
-
 export const Route = createFileRoute("/kent/$slug")({
-  loader: ({ params }) => {
+  loaderDeps: ({ search }) => ({ lang: parseLang(search.lang) }),
+  loader: async ({ params, deps }) => {
     const site = getSite(params.slug);
     if (!site) throw notFound();
+    // The guide's summary needs the narration, the site texts and the
+    // recording manifest — several hundred KB that every other page would
+    // otherwise download as part of the entry bundle, because whatever
+    // `head()` touches stays there. Loaded here, it ships with this route.
+    const { guideMeta } = await import("@/lib/guide-meta");
     return {
       slug: site.slug,
       name: site.name,
       summary: site.summary,
       image: coverImage(site),
+      guide: guideMeta(site.slug, deps.lang),
     };
   },
   head: ({ match, loaderData }) => {
@@ -118,7 +111,7 @@ export const Route = createFileRoute("/kent/$slug")({
               description: pick(loaderData.summary, lang),
               image,
               regionName: pick(region.name, lang),
-              guide: guideMeta(site.slug, lang),
+              guide: loaderData.guide,
             }),
             ...breadcrumbTags(
               [

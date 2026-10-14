@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { answer, fold, suggestions } from "@/lib/ask";
+import { answer, fold, intentsOf, suggestions } from "@/lib/ask";
 import { getSite } from "@/lib/sites";
 
 const aspendos = getSite("aspendos")!;
@@ -21,6 +21,14 @@ describe("ask the guide", () => {
     expect(answer(efes, "Ne zaman kuruldu?", "tr").text).toContain("MÖ 10");
     expect(answer(efes, "Where is it?", "en").text).toContain("İzmir");
     expect(answer(efes, "Giriş ücreti ne kadar?", "tr").text).toMatch(/₺|ücretsiz|ücret/);
+  });
+
+  test("cue words match at the start of a word, not inside one", () => {
+    // "wer" (German "who") is inside "tower"; "век" (century) inside "человек".
+    expect(intentsOf("How tall is the tower?")).not.toContain("who");
+    expect(intentsOf("Сколько человек вмещал театр?")).not.toContain("when");
+    expect(intentsOf("Wer hat das gebaut?")).toContain("who");
+    expect(intentsOf("В каком веке построен?")).toContain("when");
   });
 
   test("says it does not know rather than guessing", () => {

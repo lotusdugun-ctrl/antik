@@ -10,7 +10,13 @@ import { coverImage, type Site } from "@/lib/sites";
 /** The message the service worker answers precache jobs on (see public/sw.js). */
 export const PRECACHE_MESSAGE = "antik-tr-precache";
 
-export type PrecacheReport = { done: number; total: number; failed: number; finished?: boolean };
+export type PrecacheReport = {
+  done: number;
+  /** Grows as the job runs: a page's scripts and stylesheets are added to it. */
+  total: number;
+  failed: number;
+  finished?: boolean;
+};
 
 /**
  * Everything a set of cities needs to work with no signal: the city pages,
@@ -79,8 +85,12 @@ export function usePrecache(packId: string) {
   useEffect(() => {
     if (!busy || !("serviceWorker" in navigator)) return;
     const onMessage = (event: MessageEvent) => {
-      const data = event.data as (PrecacheReport & { type?: string }) | undefined;
+      const data = event.data as (PrecacheReport & { type?: string; packId?: string }) | undefined;
+      // Every panel on the page hears every job; follow only this pack's.
       if (!data || data.type !== PRECACHE_MESSAGE) return;
+      // A worker from before this release sends no packId; accept its reports
+      // rather than leave the panel spinning until the new worker takes over.
+      if (data.packId !== undefined && data.packId !== packId) return;
       setReport(data);
       if (data.finished) {
         setBusy(false);
@@ -94,15 +104,18 @@ export function usePrecache(packId: string) {
     return () => navigator.serviceWorker.removeEventListener("message", onMessage);
   }, [busy, packId]);
 
-  const start = useCallback(async (urls: string[]): Promise<boolean> => {
-    if (!("serviceWorker" in navigator) || urls.length === 0) return false;
-    const registration = await navigator.serviceWorker.ready;
-    if (!registration.active) return false;
-    setBusy(true);
-    setReport({ done: 0, total: urls.length, failed: 0 });
-    registration.active.postMessage({ type: PRECACHE_MESSAGE, urls });
-    return true;
-  }, []);
+  const start = useCallback(
+    async (urls: string[]): Promise<boolean> => {
+      if (!("serviceWorker" in navigator) || urls.length === 0) return false;
+      const registration = await navigator.serviceWorker.ready;
+      if (!registration.active) return false;
+      setBusy(true);
+      setReport({ done: 0, total: urls.length, failed: 0 });
+      registration.active.postMessage({ type: PRECACHE_MESSAGE, urls, packId });
+      return true;
+    },
+    [packId],
+  );
 
   const percent = report && report.total > 0 ? Math.round((report.done / report.total) * 100) : 0;
   return { supported, report, busy, percent, savedOn, start };

@@ -5,6 +5,7 @@ import { SiteCard } from "@/components/SiteCard";
 import { SiteMap } from "@/components/SiteMap";
 import { civilizationFor } from "@/lib/history-index";
 import { useI18n, type TKey } from "@/lib/i18n";
+import { foldForSearch, type IndexSearch } from "@/lib/index-search";
 import {
   allCivilizations,
   allProvinces,
@@ -24,37 +25,8 @@ import {
  * standing landmarks — under labels a visitor could not tell apart, while the
  * ancient cities, which are most of the data and most of the reason to be
  * here, had no address of their own. One list, four scopes, one tab bar.
- *
- * Every filter is optional, and declared optional rather than
- * always-present-but-undefined: the router reads a required key as one the
- * caller must supply, which would force every partial `navigate({ search })`
- * to spell out all eight of them.
+ * Its search params live in `@/lib/index-search`.
  */
-export type IndexSearch = {
-  q?: string | undefined;
-  region?: RegionId | undefined;
-  province?: string | undefined;
-  civ?: string | undefined;
-  /** Ancient city, museum, mosque, cave… — see `HeritageType`. */
-  type?: HeritageType | undefined;
-  unesco?: boolean | undefined;
-  free?: boolean | undefined;
-  view?: "list" | "map" | undefined;
-};
-
-/** Shared by all four routes, so their URLs stay interchangeable. */
-export function parseIndexSearch(search: Record<string, unknown>): IndexSearch {
-  return {
-    q: typeof search["q"] === "string" && search["q"] ? search["q"] : undefined,
-    region: typeof search["region"] === "string" ? (search["region"] as RegionId) : undefined,
-    province: typeof search["province"] === "string" ? search["province"] : undefined,
-    civ: typeof search["civ"] === "string" ? search["civ"] : undefined,
-    type: typeof search["type"] === "string" ? (search["type"] as HeritageType) : undefined,
-    unesco: search["unesco"] === true || search["unesco"] === "true" ? true : undefined,
-    free: search["free"] === true || search["free"] === "true" ? true : undefined,
-    view: search["view"] === "map" ? "map" : undefined,
-  };
-}
 
 const TABS: { scope: Scope; to: string; key: TKey }[] = [
   { scope: "hepsi", to: "/kentler", key: "nav_explore" },
@@ -108,11 +80,32 @@ export function HeritageIndex({
   setParam: (patch: Partial<IndexSearch>) => void;
   clearFilters: () => void;
 }) {
-  const { t, L, lang } = useI18n();
+  const { t, L } = useI18n();
   const pool = scopeSites(scope);
 
+  // Folded once per tab rather than on every keystroke.
+  const haystacks = useMemo(
+    () =>
+      new Map(
+        pool.map((site) => [
+          site.slug,
+          foldForSearch(
+            [
+              site.name.tr,
+              site.name.en,
+              site.province.tr,
+              site.province.en,
+              ...site.civilizations,
+              ...site.figures,
+            ].join(" "),
+          ),
+        ]),
+      ),
+    [pool],
+  );
+
   const filtered = useMemo(() => {
-    const q = search.q?.toLocaleLowerCase(lang === "tr" ? "tr" : "en") ?? "";
+    const q = search.q ? foldForSearch(search.q.trim()) : "";
     return pool.filter((site) => {
       if (search.region && site.region !== search.region) return false;
       if (search.province && site.province.tr !== search.province) return false;
@@ -121,19 +114,9 @@ export function HeritageIndex({
       if (search.unesco && site.unesco !== "listed") return false;
       if (search.free && site.fee !== 0) return false;
       if (!q) return true;
-      const haystack = [
-        site.name.tr,
-        site.name.en,
-        site.province.tr,
-        site.province.en,
-        ...site.civilizations,
-        ...site.figures,
-      ]
-        .join(" ")
-        .toLocaleLowerCase(lang === "tr" ? "tr" : "en");
-      return haystack.includes(q);
+      return haystacks.get(site.slug)?.includes(q) ?? false;
     });
-  }, [pool, search, lang]);
+  }, [pool, search, haystacks]);
 
   const hasFilters = Boolean(
     search.q ||

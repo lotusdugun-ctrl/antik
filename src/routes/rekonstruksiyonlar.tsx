@@ -6,20 +6,30 @@ import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 import { getSite } from "@/lib/sites";
 
 export const Route = createFileRoute("/rekonstruksiyonlar")({
-  head: ({ match }) => {
+  loaderDeps: ({ search }) => ({ lang: parseLang(search.lang) }),
+  loader: async ({ deps }) => {
+    // Imported here rather than at the top: whatever `head()` and a
+    // synchronous loader touch stays in the entry bundle every page downloads.
+    const { reconstructions } = await import("@/lib/reconstructions");
+    return {
+      items: reconstructions.map((item) => ({
+        name: pick(item.title, deps.lang),
+        pathname: `/rekonstruksiyon/${item.id}`,
+      })),
+    };
+  },
+  head: ({ match, loaderData }) => {
     const lang = parseLang(match.search.lang);
     const title = translate("seo_reconstructions_title", lang);
     const description = translate("seo_reconstructions_desc", lang);
     return {
       ...seoTags({ lang, pathname: "/rekonstruksiyonlar", title, description }),
       scripts: [
-        ...itemListTags(
-          reconstructions.map((item) => ({
-            name: pick(item.title, lang),
-            pathname: `/rekonstruksiyon/${item.id}`,
-          })),
-          { lang, name: translate("recon_title", lang), description },
-        ),
+        ...itemListTags(loaderData?.items ?? [], {
+          lang,
+          name: translate("recon_title", lang),
+          description,
+        }),
         ...breadcrumbTags(
           [
             { name: translate("appName", lang), pathname: "/" },

@@ -9,14 +9,24 @@ import { getPerson } from "@/lib/people";
 import { breadcrumbTags, personTags, seoTags } from "@/lib/seo";
 
 export const Route = createFileRoute("/kisi/$id")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    // Imported here rather than at the top: whatever `head()` and a
+    // synchronous loader touch stays in the entry bundle every page downloads.
+    const { getPerson } = await import("@/lib/people");
     const person = getPerson(params.id);
     if (!person) throw notFound();
-    return { id: person.id };
+    return {
+      id: person.id,
+      name: person.name,
+      role: person.role,
+      lifeLabel: person.lifeLabel,
+      bio: person.bio,
+      sources: person.sources.map((source) => ({ url: source.url })),
+    };
   },
   head: ({ match, loaderData }) => {
     const lang = parseLang(match.search.lang);
-    const person = loaderData ? getPerson(loaderData.id) : undefined;
+    const person = loaderData;
     if (!person) {
       return seoTags({
         lang,

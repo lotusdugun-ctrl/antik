@@ -12,7 +12,35 @@ import { useProgress } from "@/lib/progress";
 /** Pin footprint in screen pixels; two sites closer than this would overlap. */
 const CLUSTER_CELL_PX = 56;
 
+/*
+ * Icons are made once per look and kept. react-leaflet calls `setIcon` — which
+ * throws the marker's DOM away and builds it again — whenever the `icon` prop
+ * is a different object, so a fresh `divIcon` per render rebuilt every pin on
+ * the map at each zoom, each visit ticked and each language switch.
+ */
+const clusterIcons = new Map<string, L.DivIcon>();
+const pinIcons = new Map<boolean, L.DivIcon>();
+
 function clusterIcon(count: number, allVisited: boolean) {
+  const key = `${count}:${allVisited}`;
+  let icon = clusterIcons.get(key);
+  if (!icon) {
+    icon = makeClusterIcon(count, allVisited);
+    clusterIcons.set(key, icon);
+  }
+  return icon;
+}
+
+function pinIcon(visited: boolean) {
+  let icon = pinIcons.get(visited);
+  if (!icon) {
+    icon = makePinIcon(visited);
+    pinIcons.set(visited, icon);
+  }
+  return icon;
+}
+
+function makeClusterIcon(count: number, allVisited: boolean) {
   // Grow with the count, but slowly — a 40-site cluster should not be a blob.
   const size = Math.round(34 + Math.min(count, 40) * 0.45);
   return L.divIcon({
@@ -29,7 +57,7 @@ function clusterIcon(count: number, allVisited: boolean) {
   });
 }
 
-function pinIcon(visited: boolean) {
+function makePinIcon(visited: boolean) {
   return L.divIcon({
     className: "",
     html: `<span style="
@@ -92,6 +120,45 @@ function useClusters(sites: Site[], enabled: boolean) {
   }, [sites, enabled, map, version]);
 }
 
+/**
+ * One cluster pin. Its own component so the bounds and the click handler are
+ * made once per group: react-leaflet rebinds `eventHandlers` whenever it gets
+ * a new object, which an inline literal is on every render.
+ */
+function ClusterMarker({
+  group,
+  allVisited,
+  title,
+}: {
+  group: Site[];
+  allVisited: boolean;
+  title: string;
+}) {
+  const map = useMap();
+  const bounds = useMemo(
+    () => L.latLngBounds(group.map((s) => [s.lat, s.lng] as [number, number])),
+    [group],
+  );
+  const centre = useMemo(() => bounds.getCenter(), [bounds]);
+  const eventHandlers = useMemo(
+    () => ({
+      click: () =>
+        // Zoom to the group. `maxZoom` stops a pile of sites that share
+        // one hilltop from throwing the map to street level.
+        map.flyToBounds(bounds.pad(0.25), { maxZoom: 13, duration: 0.6 }),
+    }),
+    [map, bounds],
+  );
+  return (
+    <Marker
+      position={centre}
+      icon={clusterIcon(group.length, allVisited)}
+      title={title}
+      eventHandlers={eventHandlers}
+    />
+  );
+}
+
 function SiteMarkers({
   sites,
   cluster,
@@ -101,7 +168,6 @@ function SiteMarkers({
   cluster: boolean;
   renderPopup: (site: Site) => React.ReactNode;
 }) {
-  const map = useMap();
   const { t, L: label } = useI18n();
   const { isVisited } = useProgress();
   const groups = useClusters(sites, cluster);
@@ -126,26 +192,15 @@ function SiteMarkers({
           );
         }
 
-        const bounds = L.latLngBounds(group.map((s) => [s.lat, s.lng] as [number, number]));
-        const centre = bounds.getCenter();
         return (
-          <Marker
+          <ClusterMarker
             key={`cluster-${first.slug}-${group.length}`}
-            position={centre}
-            icon={clusterIcon(
-              group.length,
-              group.every((s) => isVisited(s.slug)),
-            )}
+            group={group}
+            allVisited={group.every((s) => isVisited(s.slug))}
             title={`${group.length} ${t("civs_places")}: ${group
               .slice(0, 3)
               .map((s) => label(s.name))
               .join(", ")}${group.length > 3 ? "…" : ""}`}
-            eventHandlers={{
-              click: () =>
-                // Zoom to the group. `maxZoom` stops a pile of sites that share
-                // one hilltop from throwing the map to street level.
-                map.flyToBounds(bounds.pad(0.25), { maxZoom: 13, duration: 0.6 }),
-            }}
           />
         );
       })}

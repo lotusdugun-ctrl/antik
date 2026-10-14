@@ -2,14 +2,14 @@ import { useRef, useState } from "react";
 import { Camera, Calendar, ImageIcon, Save, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
-import { useProgress } from "@/lib/progress";
+import { localDate, useProgress } from "@/lib/progress";
 import { readImageFile } from "@/lib/visit-photo";
 
 export function VisitEditor({ slug, siteName }: { slug: string; siteName: string }) {
   const { t } = useI18n();
   const { getVisit, saveVisit, removeVisit } = useProgress();
   const entry = getVisit(slug);
-  const [date, setDate] = useState(entry?.date ?? new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(entry?.date ?? localDate());
   const [note, setNote] = useState(entry?.note ?? "");
   const [photo, setPhoto] = useState(entry?.photo);
   const fileRef = useRef<HTMLInputElement>(null);

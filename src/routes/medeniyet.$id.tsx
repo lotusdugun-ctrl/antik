@@ -9,14 +9,29 @@ import { parseLang, pick, translate, useI18n } from "@/lib/i18n";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 
 export const Route = createFileRoute("/medeniyet/$id")({
-  loader: ({ params }) => {
+  loaderDeps: ({ search }) => ({ lang: parseLang(search.lang) }),
+  loader: async ({ params, deps }) => {
+    // Imported here rather than at the top: whatever `head()` and a
+    // synchronous loader touch stays in the entry bundle every page downloads.
+    const [{ getCivilization }, { sitesOf }] = await Promise.all([
+      import("@/lib/civilizations"),
+      import("@/lib/history"),
+    ]);
     const civ = getCivilization(params.id);
     if (!civ) throw notFound();
-    return { id: civ.id };
+    return {
+      id: civ.id,
+      name: civ.name,
+      summary: civ.summary,
+      sites: sitesOf(civ).map((site) => ({
+        name: pick(site.name, deps.lang),
+        slug: site.slug,
+      })),
+    };
   },
   head: ({ match, loaderData }) => {
     const lang = parseLang(match.search.lang);
-    const civ = loaderData ? getCivilization(loaderData.id) : undefined;
+    const civ = loaderData;
     if (!civ) {
       return seoTags({
         lang,
@@ -37,8 +52,8 @@ export const Route = createFileRoute("/medeniyet/$id")({
       }),
       scripts: [
         ...itemListTags(
-          sitesOf(civ).map((site) => ({
-            name: pick(site.name, lang),
+          civ.sites.map((site) => ({
+            name: site.name,
             pathname: `/kent/${site.slug}`,
           })),
           { lang, name, description },

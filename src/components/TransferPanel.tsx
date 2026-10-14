@@ -19,6 +19,8 @@ export function TransferPanel() {
   const [qr, setQr] = useState<string | null>(null);
   const [incoming, setIncoming] = useState<ProgressState | null>(null);
   const [copied, setCopied] = useState(false);
+  /** Shows the link as text, for when the QR code or the clipboard let us down. */
+  const [showText, setShowText] = useState(false);
 
   // An arriving link: read it once the local record has loaded.
   useEffect(() => {
@@ -36,17 +38,39 @@ export function TransferPanel() {
   }
 
   async function create() {
-    const code = await encodeTransfer(state);
-    const url = transferLink(window.location.origin, code, lang);
+    let url: string;
+    try {
+      // `CompressionStream` is missing from older Safari and Firefox.
+      const code = await encodeTransfer(state);
+      url = transferLink(window.location.origin, code, lang);
+    } catch {
+      toast.error(t("transfer_failed"));
+      return;
+    }
     setLink(url);
-    // Long links make dense codes; error correction "L" keeps them scannable.
-    setQr(await QRCode.toDataURL(url, { errorCorrectionLevel: "L", margin: 1, width: 320 }));
     track("Transfer link");
+    try {
+      // Long links make dense codes; error correction "L" keeps them scannable.
+      setQr(await QRCode.toDataURL(url, { errorCorrectionLevel: "L", margin: 1, width: 320 }));
+    } catch {
+      // A long visit log can exceed what a QR code holds. The link itself
+      // still works, so offer that rather than nothing.
+      setQr(null);
+      setShowText(true);
+      toast.message(t("transfer_qr_failed"));
+    }
   }
 
   async function copy() {
     if (!link) return;
-    await navigator.clipboard.writeText(link);
+    try {
+      // Missing on plain-http pages and refused without a recent tap.
+      await navigator.clipboard.writeText(link);
+    } catch {
+      setShowText(true);
+      toast.error(t("transfer_copy_failed"));
+      return;
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -118,6 +142,15 @@ export function TransferPanel() {
             )}
             <div className="min-w-0 space-y-2">
               <p className="text-xs text-muted-foreground">{t("transfer_hint")}</p>
+              {showText && (
+                <input
+                  readOnly
+                  value={link}
+                  aria-label={t("transfer_title")}
+                  onFocus={(e) => e.currentTarget.select()}
+                  className="h-10 w-full rounded-xl border border-border bg-card px-3 text-xs outline-none focus:ring-2 focus:ring-ring"
+                />
+              )}
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={copy}

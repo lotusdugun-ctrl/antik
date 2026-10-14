@@ -101,7 +101,13 @@ type Props = {
   view: { name: "front" | "above" | "corner"; token: number } | null;
   /** Bumped by the caller to hand back the model as a .glb file. */
   exportToken: number;
-  onExported: (data: ArrayBuffer) => void;
+  /**
+   * The file, or `null` when there was none to give — the scene was not built
+   * yet, or the export threw — so the caller's button never sticks on "busy".
+   */
+  onExported: (data: ArrayBuffer | null) => void;
+  /** Told when the scene has been built (and again when it is torn down). */
+  onReady?: ((ready: boolean) => void) | undefined;
   /** What grows round the building; see `landscape.ts`. */
   biome?: Biome | undefined;
   /** Ambient occlusion on top of the shadows, for devices that can afford it. */
@@ -363,6 +369,7 @@ export default function Reconstruction3DInner({
   exportWithoutGround = false,
   life,
   showLife = true,
+  onReady,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<{
@@ -393,6 +400,15 @@ export default function Reconstruction3DInner({
   pickRef.current = onPickLabel;
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
+  /*
+   * What the scene starts from, read through a ref rather than listed as the
+   * build's dependencies: a theme switch or a label toggle must not tear down
+   * and rebuild the whole model. They are read again just before the scene is
+   * declared ready, so a change made while it was building is not lost, and
+   * the setter effects below keep them current after that.
+   */
+  const latestRef = useRef({ theme, atmos, labels, showLabels, activeLabel, autoRotate, label });
+  latestRef.current = { theme, atmos, labels, showLabels, activeLabel, autoRotate, label };
 
   useEffect(() => {
     const host = hostRef.current;
@@ -2886,7 +2902,8 @@ export default function Reconstruction3DInner({
       }
       lifeGroup.visible = showLifeRef.current;
       // How much the fires light the scene: a little by day, fully at night.
-      let glowTarget = atmos === "night" ? 1 : atmos === "golden" ? 0.45 : 0.08;
+      const startAtmos = latestRef.current.atmos;
+      let glowTarget = startAtmos === "night" ? 1 : startAtmos === "golden" ? 0.45 : 0.08;
       let glow = glowTarget;
 
       // A wide apron under everything, so the model does not float in a void.
@@ -3154,8 +3171,36 @@ export default function Reconstruction3DInner({
       renderer.domElement.style.display = "block";
       renderer.domElement.style.touchAction = "none";
       renderer.domElement.setAttribute("role", "img");
-      renderer.domElement.setAttribute("aria-label", label);
+      renderer.domElement.setAttribute("aria-label", latestRef.current.label);
       host.appendChild(renderer.domElement);
+      /*
+       * A browser keeps only so many WebGL contexts (Chrome: 16) and drops the
+       * oldest past that, and phones drop them routinely when the app goes to
+       * the background. `preventDefault` asks for the context back; three.js
+       * rebuilds its state when it returns, so drawing just resumes. Only a
+       * context that stays gone is swapped for the same message a browser
+       * without WebGL gets, rather than left as a dead rectangle.
+       */
+      let contextLost = false;
+      let lostTimer: ReturnType<typeof setTimeout> | undefined;
+      // Set once the render loop exists further down.
+      const loop: { resume?: () => void } = {};
+      const onContextLost = (event: Event) => {
+        event.preventDefault();
+        contextLost = true;
+        renderer.setAnimationLoop(null);
+        clearTimeout(lostTimer);
+        lostTimer = setTimeout(() => {
+          if (contextLost && !disposed) setFailed(true);
+        }, 5000);
+      };
+      const onContextRestored = () => {
+        contextLost = false;
+        clearTimeout(lostTimer);
+        loop.resume?.();
+      };
+      renderer.domElement.addEventListener("webglcontextlost", onContextLost);
+      renderer.domElement.addEventListener("webglcontextrestored", onContextRestored);
 
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.target.copy(target);
@@ -3374,7 +3419,7 @@ export default function Reconstruction3DInner({
         exposure: p.exposure,
       });
 
-      const liveAtmos = makeLive(paletteFor(theme, atmos));
+      const liveAtmos = makeLive(paletteFor(latestRef.current.theme, startAtmos));
       let atmosTarget = liveAtmos;
 
       const applyLive = () => {
@@ -3495,7 +3540,7 @@ export default function Reconstruction3DInner({
           : "0 1px 4px rgba(0,0,0,.25)";
       }
 
-      let labelsVisible = showLabels;
+      let labelsVisible = latestRef.current.showLabels;
       const placePins = () => {
         if (!pins.length) return;
         const width = host.clientWidth;
@@ -3522,7 +3567,8 @@ export default function Reconstruction3DInner({
         }
       };
 
-      buildPins(labels, activeLabel);
+      let pinList = latestRef.current.labels;
+      buildPins(pinList, latestRef.current.activeLabel);
 
       /*
        * Ambient occlusion: the darkening in the joints between blocks, under
@@ -3593,7 +3639,7 @@ export default function Reconstruction3DInner({
       controls.addEventListener("start", cancelFlight);
 
       let lastFrame = performance.now() / 1000;
-      renderer.setAnimationLoop(() => {
+      const frame = () => {
         const now = performance.now() / 1000;
         const dt = Math.min(0.1, now - lastFrame);
         lastFrame = now;
@@ -3651,7 +3697,28 @@ export default function Reconstruction3DInner({
         if (composer && qualityOn) composer.render();
         else renderer.render(scene, camera);
         placePins();
+      };
+
+      /*
+       * Draw only while the model is on screen. Scrolled away to the sources
+       * below it, the scene was still being drawn sixty times a second for no
+       * one. The clock is reset on the way back in, so the sky and the fires
+       * do not lurch to catch up on the time they were away.
+       */
+      let drawing = false;
+      loop.resume = () => {
+        if (!drawing) return;
+        lastFrame = performance.now() / 1000;
+        renderer.setAnimationLoop(frame);
+      };
+      const onScreen = new IntersectionObserver((entries) => {
+        const visible = entries[entries.length - 1]?.isIntersecting ?? true;
+        if (contextLost || visible === drawing) return;
+        drawing = visible;
+        if (visible) lastFrame = performance.now() / 1000;
+        renderer.setAnimationLoop(visible ? frame : null);
       });
+      onScreen.observe(host);
 
       /** The three views the model is worth seeing from, besides its own. */
       const viewpoints: Record<"front" | "above" | "corner", THREE_NS.Vector3> = {
@@ -3675,8 +3742,12 @@ export default function Reconstruction3DInner({
         setLabels: (list, visible, active) => {
           labelsVisible = visible;
           if (scaleFigure) scaleFigure.visible = visible;
-          if (list.length !== pins.length) buildPins(list, active);
-          else pins.forEach((pin, index) => styleLabel(pin.element, index === active));
+          // A new list — another language, say — is rebuilt even at the same
+          // length; the same list is only restyled.
+          if (list !== pinList || list.length !== pins.length) {
+            pinList = list;
+            buildPins(list, active);
+          } else pins.forEach((pin, index) => styleLabel(pin.element, index === active));
           placePins();
         },
         setView: (view) => {
@@ -3740,11 +3811,23 @@ export default function Reconstruction3DInner({
         },
       };
       apiRef.current.setQuality(qualityRef.current);
+      // Anything changed while the scene was building, applied now — the
+      // setter effects below only replay when `ready` flips.
+      const latest = latestRef.current;
+      apiRef.current.setAtmos(latest.theme, latest.atmos);
+      apiRef.current.setAutoRotate(latest.autoRotate);
+      apiRef.current.setLabels(latest.labels, latest.showLabels, latest.activeLabel);
+      apiRef.current.setLife(showLifeRef.current);
+      renderer.domElement.setAttribute("aria-label", latest.label);
       setReady(true);
 
       cleanup = () => {
         apiRef.current = null;
         observer.disconnect();
+        onScreen.disconnect();
+        renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
+        renderer.domElement.removeEventListener("webglcontextrestored", onContextRestored);
+        clearTimeout(lostTimer);
         layer.remove();
         renderer.setAnimationLoop(null);
         controls.dispose();
@@ -3766,6 +3849,10 @@ export default function Reconstruction3DInner({
         composer?.dispose();
         controls.removeEventListener("start", cancelFlight);
         renderer.dispose();
+        // `dispose` frees the buffers but leaves the context itself alive
+        // until garbage collection; give it back now, or a page that opens a
+        // few models runs into the browser's limit on contexts.
+        renderer.forceContextLoss();
         renderer.domElement.remove();
       };
     })();
@@ -3773,9 +3860,22 @@ export default function Reconstruction3DInner({
     return () => {
       disposed = true;
       cleanup();
+      // So the setter effects replay against the next scene when it is ready.
+      setReady(false);
     };
     // `biome` is fixed per model, so it rebuilding the scene costs nothing.
-  }, [parts, kind, label, biome, life]);
+    // Theme, light, labels and turntable are deliberately absent: they are
+    // read through `latestRef` and applied by the setter effects below.
+  }, [parts, kind, biome, life]);
+
+  useEffect(() => {
+    onReady?.(ready);
+  }, [ready, onReady]);
+
+  // The canvas's accessible name follows the language without a rebuild.
+  useEffect(() => {
+    hostRef.current?.querySelector("canvas")?.setAttribute("aria-label", label);
+  }, [label, ready]);
 
   useEffect(() => {
     apiRef.current?.setLife(showLife);
@@ -3819,7 +3919,17 @@ export default function Reconstruction3DInner({
 
   useEffect(() => {
     if (exportToken <= 0) return;
-    void apiRef.current?.exportGLB(groundRef.current).then((data) => exportRef.current(data));
+    const api = apiRef.current;
+    // Asked before the scene exists: say so, rather than leave the caller
+    // waiting on a file that will never come.
+    if (!api) {
+      exportRef.current(null);
+      return;
+    }
+    api.exportGLB(groundRef.current).then(
+      (data) => exportRef.current(data),
+      () => exportRef.current(null),
+    );
   }, [exportToken]);
 
   if (failed) {

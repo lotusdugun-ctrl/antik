@@ -21,10 +21,21 @@ import { getSite } from "@/lib/sites";
 import { endingsOf, getStory, type Story } from "@/lib/stories";
 
 export const Route = createFileRoute("/hikaye/$id")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    // Imported here rather than at the top: whatever `head()` and a
+    // synchronous loader touch stays in the entry bundle every page downloads.
+    const { getStory } = await import("@/lib/stories");
     const story = getStory(params.id);
     if (!story) throw notFound();
-    return { id: story.id, title: story.title, blurb: story.blurb };
+    const place = getSite(story.siteSlug);
+    return {
+      id: story.id,
+      title: story.title,
+      blurb: story.blurb,
+      period: story.period,
+      siteSlug: story.siteSlug,
+      placeName: place?.name,
+    };
   },
   head: ({ match, loaderData }) => {
     const lang = parseLang(match.search.lang);
@@ -37,8 +48,7 @@ export const Route = createFileRoute("/hikaye/$id")({
         noIndex: true,
       });
     }
-    const story = getStory(loaderData.id)!;
-    const place = getSite(story.siteSlug);
+    const story = loaderData;
     return {
       ...seoTags({
         lang,
@@ -51,7 +61,7 @@ export const Route = createFileRoute("/hikaye/$id")({
         pathname: `/hikaye/${loaderData.id}`,
         title: pick(story.title, lang),
         description: pick(story.blurb, lang),
-        placeName: place ? pick(place.name, lang) : story.siteSlug,
+        placeName: story.placeName ? pick(story.placeName, lang) : story.siteSlug,
         period: pick(story.period, lang),
       }),
     };

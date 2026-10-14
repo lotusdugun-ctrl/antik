@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { HeritageIndex, parseIndexSearch, type IndexSearch } from "@/components/HeritageIndex";
+import { HeritageIndex } from "@/components/HeritageIndex";
+import { parseIndexSearch, type IndexSearch } from "@/lib/index-search";
 import { parseLang, translate, useI18n, pick } from "@/lib/i18n";
 import { breadcrumbTags, itemListTags, seoTags } from "@/lib/seo";
 import { museums } from "@/lib/sites";

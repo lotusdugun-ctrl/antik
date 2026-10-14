@@ -29,7 +29,8 @@ function decode(text: string): string {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/&#(\d+);/g, (_, n: string) => String.fromCharCode(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h: string) => safeCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, n: string) => safeCodePoint(Number(n)))
     .replace(/&amp;/g, "&")
     .trim();
 }
@@ -51,8 +52,16 @@ export function parseRss(xml: string, limit = 8): NewsItem[] {
     const url = tag(block, "link");
     const date = tag(block, "pubDate");
     if (!title || !/^https:\/\//.test(url)) continue;
-    items.push({ title, source, url, date: date ? new Date(date).toISOString() : "" });
+    // One unparsable pubDate used to throw and drop the whole feed.
+    const when = date ? new Date(date) : undefined;
+    const iso = when && !Number.isNaN(when.getTime()) ? when.toISOString() : "";
+    items.push({ title, source, url, date: iso });
     if (items.length >= limit) break;
   }
   return items;
+}
+
+/** A numeric entity's character; anything out of range becomes nothing. */
+function safeCodePoint(code: number): string {
+  return Number.isInteger(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : "";
 }

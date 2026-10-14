@@ -27,7 +27,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -248,6 +248,7 @@ function DesktopNav() {
 function MenuSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t } = useI18n();
   const path = usePath();
+  const sheet = useRef<HTMLDivElement>(null);
 
   // Close on navigation and on Escape; keep the page behind from scrolling.
   useEffect(() => {
@@ -256,13 +257,51 @@ function MenuSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   }, [path]);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    /*
+     * `aria-modal` promises a modal, so behave like one for keyboard and
+     * screen-reader users: focus moves into the sheet, Tab cycles inside it,
+     * and closing hands focus back to whatever opened it (the Menu tab).
+     */
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    // Following a link closes the sheet too; then focus belongs to the new
+    // page, not back on the Menu tab.
+    const openedOn = window.location.pathname;
+    const focusables = () =>
+      Array.from(
+        sheet.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+    // The panel's own close button, not the full-screen backdrop button.
+    (sheet.current?.querySelector<HTMLElement>("[data-sheet-close]") ?? focusables()[0])?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0]!;
+      const last = items[items.length - 1]!;
+      const active = document.activeElement;
+      const inside = active instanceof Node && sheet.current?.contains(active);
+      if (e.shiftKey && (active === first || !inside)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !inside)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = overflow;
       window.removeEventListener("keydown", onKey);
+      if (opener?.isConnected && window.location.pathname === openedOn) opener.focus();
     };
   }, [open, onClose]);
 
@@ -295,6 +334,7 @@ function MenuSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
 
   return (
     <div
+      ref={sheet}
       className={cn("fixed inset-0 lg:hidden", LAYER)}
       role="dialog"
       aria-modal="true"
@@ -314,6 +354,7 @@ function MenuSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
           <button
             onClick={onClose}
             aria-label={t("nav_close")}
+            data-sheet-close
             className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card"
           >
             <X className="h-4 w-4" />

@@ -4,7 +4,7 @@
  * Most of these images are CC BY or CC BY-SA: showing them without naming the
  * author and the licence is a licence breach, not a nicety. So this file is
  * generated from the Commons API (`extmetadata`) rather than written by hand,
- * and `creditFor` is keyed off the photo URL itself â€” a photo added to the data
+ * and `creditFor` is keyed off the photo URL itself — a photo added to the data
  * layer without a matching entry here renders no credit, which is the signal to
  * regenerate rather than to ship it uncredited.
  */
@@ -5312,9 +5312,9 @@ export const photoCredits: Record<string, PhotoCredit> = {
 
 /**
  * The Commons file name inside a photo URL, or `undefined` for anything that is
- * not a Commons URL â€” the bundled region artwork, mainly.
+ * not a Commons URL — the bundled region artwork, mainly.
  *
- * Both shapes Commons serves are accepted: the `/thumb/<h>/<hh>/<file>/<w>px-â€¦`
+ * Both shapes Commons serves are accepted: the `/thumb/<h>/<hh>/<file>/<w>px-…`
  * form the data layer stores, and the plain `/<h>/<hh>/<file>` original.
  */
 export function commonsFileName(url: string): string | undefined {
@@ -5346,10 +5346,10 @@ export function creditFor(url: string): ResolvedCredit | undefined {
   };
 }
 
-/** "Bernard Gagnon Â· CC BY-SA 3.0" â€” the one-line form used under a photo. */
+/** "Bernard Gagnon · CC BY-SA 3.0" — the one-line form used under a photo. */
 export function creditLine(url: string): string | undefined {
   const credit = creditFor(url);
-  return credit ? `${credit.author} Â· ${credit.license}` : undefined;
+  return credit ? `${credit.author} · ${credit.license}` : undefined;
 }
 
 /**
