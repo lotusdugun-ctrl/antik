@@ -155,6 +155,12 @@ type Base = {
    * boxes is the one thing that most gives a reconstruction away.
    */
   weather?: number;
+  /**
+   * The statue this piece belongs to, when a statue is built of many pieces —
+   * the enthroned gods of Nemrut and their guardians. The renderer does not
+   * need it; the tests use it to find a statue again in the flat list.
+   */
+  statue?: string;
 };
 
 export type Part =
@@ -1952,54 +1958,658 @@ function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1
 }
 
 /* ------------------------------------------------------------------ *
- * Animals in the round: an eagle (the lions are scans; see scans.ts)
+ * The sculpture of Nemrut Dağı: enthroned gods, eagles and lions
  * ------------------------------------------------------------------ */
 
-/**
- * An eagle standing with its wings folded, the bird that guards the rows of
- * gods on Nemrut Dağı. About 0.8 m tall at a scale of one, facing `-z`.
+/*
+ * One workshop cut every figure on the terrace, out of the same local
+ * limestone, in the same manner: big, simple, rounded masses, the forms
+ * read from across the court rather than from arm's length. So the gods,
+ * the eagles and the lions here are built the same way — every one of them
+ * lofted from the same smooth skins, in the same stone, at one scale — and
+ * none of them is a scan. A photographed marble lion of Delos beside a
+ * lofted god read as two different sets, and that is not what stood here.
+ *
+ * Each builder works in its own frame — `+z` the way the statue looks, `y`
+ * up, the origin on the surface it rests on — and every piece is turned by
+ * `rotY` and moved to `at`, so a whole statue can be set down in one call.
+ * The pieces carry `statue`, naming the figure they belong to, so the tests
+ * can find a statue again in the flat list of parts.
  */
-function eagleStatue(material: Material, at: Vec3, rotY: number, scale = 1): Part[] {
+
+/** How high a colossus reaches above its seat, in heads: Zeus's tiara tip. */
+export const NEMRUT_CROWN = 4.98;
+/** How far below its seat a colossus's soles rest, in heads. */
+export const NEMRUT_SOLE = 2.0;
+
+/** The places a colossus's frame needs: lofts, rods and blocks, all turned together. */
+function sculptor(material: Material, at: Vec3, rotY: number, unit: number, statue: string) {
   const parts: Part[] = [];
-  const S = (c: Vec3, rx: number, ry: number): LoftSection => ({
-    c: [c[0] * scale, c[1] * scale, c[2] * scale],
-    rx: rx * scale,
-    ry: ry * scale,
+  const S = (x: number, y: number, z: number, rx: number, ry: number): LoftSection => ({
+    c: [x * unit, y * unit, z * unit],
+    rx: rx * unit,
+    ry: ry * unit,
   });
-  const skin = (sections: LoftSection[]) => parts.push(loft(material, at, rotY, sections));
-  // The body stands nearly upright, the breast forward, the tail low behind.
-  skin([
-    S([0, 0.12, 0.2], 0.14, 0.12),
-    S([0, 0.35, 0.1], 0.24, 0.22),
-    S([0, 0.55, 0.0], 0.22, 0.2),
-    S([0, 0.72, -0.08], 0.13, 0.12),
-  ]);
-  skin([
-    S([0, 0.74, -0.1], 0.1, 0.1),
-    S([0, 0.8, -0.2], 0.1, 0.1),
-    S([0, 0.78, -0.28], 0.06, 0.06),
-  ]);
-  // The hooked beak.
-  skin([
-    S([0, 0.78, -0.28], 0.04, 0.04),
-    S([0, 0.76, -0.34], 0.03, 0.03),
-    S([0, 0.72, -0.37], 0.01, 0.01),
-  ]);
-  for (const side of [-1, 1]) {
-    // A folded wing, lying along the flank and crossing over the tail.
+  const skin = (sections: LoftSection[]) => {
+    parts.push({ ...loft(material, at, rotY, sections), statue });
+  };
+  /** A small round mass — a curl, a fruit, a knuckle — as a three-ring loft. */
+  const ball = (x: number, y: number, z: number, r: number, squash = 1) =>
     skin([
-      S([side * 0.2, 0.66, -0.02], 0.06, 0.16),
-      S([side * 0.22, 0.5, 0.15], 0.05, 0.2),
-      S([side * 0.21, 0.3, 0.35], 0.03, 0.12),
-      S([side * 0.2, 0.2, 0.48], 0.01, 0.04),
+      S(x, y, z - r * 0.92, r * 0.35, r * 0.35 * squash),
+      S(x, y, z, r, r * squash),
+      S(x, y, z + r * 0.92, r * 0.35, r * 0.35 * squash),
+    ]);
+  /**
+   * A straight rod from A to B in the statue's frame: a sceptre, a rod of the
+   * barsom, the shaft of a club. A cylinder stood up, tipped by `rotX` and
+   * turned by `rotY` — the only turns a cylinder part has — so its axis lands
+   * on the line from A to B whatever the statue's own turn.
+   */
+  const rod = (a: Vec3, b: Vec3, r1: number, r2: number, segments = 8) => {
+    const d: Vec3 = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+    const length = Math.hypot(d[0], d[1], d[2]);
+    const tilt = Math.acos(Math.max(-1, Math.min(1, d[1] / length)));
+    const turn = Math.atan2(d[0], d[2]);
+    parts.push({
+      ...cyl(
+        material,
+        placed(at, rotY, [a[0] * unit, a[1] * unit, a[2] * unit]),
+        r1 * unit,
+        r2 * unit,
+        length * unit,
+        segments,
+        { rotX: tilt, rotY: rotY + turn },
+      ),
+      statue,
+    });
+  };
+  return { parts, S, skin, ball, rod };
+}
+
+/**
+ * One of the enthroned gods of the east terrace — or the king among them.
+ *
+ * The frame is the seat: the origin is on the throne under the middle of the
+ * hips, and `unit` is the height of the head from chin to crown. The figure
+ * is built to the proportions of the seated colossi themselves, which are a
+ * heroic body's rather than a man's: the head about a seventh of the height
+ * the figure would stand, shoulders two heads across, thighs level along the
+ * throne, the shins straight down to the footstool two heads below the seat,
+ * and both hands laid on the knees — the hieratic pose, the one every figure
+ * on the terrace shares — unless they hold the god's attribute.
+ *
+ * The heads are what the terrace is famous for, and what tells one god from
+ * the next: a broad, smooth face with heavy-lidded almond eyes under a ridge
+ * of brow, a straight nose, full lips; a beard for Zeus and for Herakles and
+ * none for the king or for Apollo; and over it the headdress — the king's
+ * Armenian tiara with its five points, Zeus's tall Persian cap, Apollo's
+ * Phrygian cap with its peak bent forward, the goddess's basket of fruit,
+ * and nothing on Herakles but his curls. Every cap has the lappets that hang
+ * down beside the face and over the neck.
+ *
+ * Read from across the court, a colossus is about fifteen thousand
+ * triangles: enough for the forms to turn smoothly in a raking light, few
+ * enough that five of them, two eagles and two lions are lighter together
+ * than one of the scans they replace.
+ */
+export function nemrutColossus(
+  material: Material,
+  at: Vec3,
+  rotY: number,
+  unit: number,
+  identity: FigureIdentity,
+): Part[] {
+  const { parts, S, skin, ball, rod } = sculptor(material, at, rotY, unit, identity.name);
+  const male = identity.sex !== "female";
+  const broad = male ? 1 : 0.88;
+
+  /*
+   * The body, seated upright: hips on the throne, a long column of trunk
+   * swelling to the chest, and the shoulders square and heavy — the cloth
+   * of the tunic is read in the masses, not in folds.
+   */
+  skin([
+    S(0, 0.04, -0.05, 0.8 * broad, 0.54),
+    S(0, 0.6, 0.0, 0.74 * broad, 0.5),
+    S(0, 1.2, 0.05, 0.8 * broad, 0.52),
+    S(0, 1.75, 0.05, 0.92 * broad, 0.55),
+    S(0, 2.18, -0.02, 1.0 * broad, 0.5),
+    S(0, 2.36, -0.03, 0.84 * broad, 0.45),
+    S(0, 2.48, -0.04, 0.45 * broad, 0.32),
+  ]);
+  // The neck, into the head.
+  const slim = male ? 1 : 0.85;
+  skin([
+    S(0, 2.3, 0.0, 0.34 * slim, 0.31 * slim),
+    S(0, 2.62, 0.03, 0.28 * slim, 0.26 * slim),
+    S(0, 2.94, 0.05, 0.23 * slim, 0.22 * slim),
+  ]);
+  if (!male) {
+    // The breasts under the chiton.
+    for (const side of [-1, 1]) ball(side * 0.33, 1.72, 0.48, 0.24, 0.9);
+  }
+  /*
+   * The legs. Thighs level along the throne, a little apart; the lap of the
+   * garment sagging between them; the shins straight down to the footstool
+   * with the hem flaring over the ankles; and between the shins the fall of
+   * the cloth, set back from them so the legs read through it.
+   */
+  for (const side of [-1, 1]) {
+    skin([
+      S(side * 0.42, 0.42, -0.1, 0.44, 0.42),
+      S(side * 0.48, 0.39, 1.3, 0.39, 0.36),
+      S(side * 0.5, 0.35, 1.92, 0.28, 0.28),
     ]);
     skin([
-      S([side * 0.08, 0.3, 0.0], 0.05, 0.05),
-      S([side * 0.08, 0.05, 0.0], 0.035, 0.035),
-      S([side * 0.08, 0.0, -0.08], 0.09, 0.03),
+      S(side * 0.52, 0.46, 1.9, 0.31, 0.32),
+      S(side * 0.52, -1.6, 2.0, 0.26, 0.26),
+      S(side * 0.53, -1.94, 2.0, 0.32, 0.3),
+    ]);
+    // The foot, its toes coming out under the hem onto the footstool.
+    skin([
+      S(side * 0.54, -1.88, 1.95, 0.17, 0.12),
+      S(side * 0.57, -1.9, 2.32, 0.19, 0.1),
+      S(side * 0.6, -1.94, 2.62, 0.09, 0.04),
+      S(side * 0.6, -1.95, 2.66, 0.02, 0.01),
     ]);
   }
-  skin([S([0, 0.2, 0.28], 0.12, 0.05), S([0, 0.1, 0.45], 0.16, 0.03)]);
+  skin([S(0, 0.58, 0.25, 0.4, 0.18), S(0, 0.48, 1.2, 0.34, 0.15), S(0, 0.4, 1.78, 0.28, 0.12)]);
+  skin([S(0, 0.3, 1.86, 0.3, 0.1), S(0, -1.0, 1.92, 0.28, 0.08), S(0, -1.95, 1.95, 0.36, 0.1)]);
+  // Three folds down the fall between the shins.
+  for (const x of [-0.14, 0, 0.14]) rod([x, -1.95, 2.02], [x * 0.8, 0.2, 1.97], 0.045, 0.03, 6);
+
+  /*
+   * The mantle: a heavy roll of cloth from the left shoulder across the chest
+   * to the right hip, the one line of drapery the sculptors of Nemrut cut on
+   * every god.
+   */
+  skin([
+    S(-0.78, 2.3, 0.12, 0.17, 0.15),
+    S(-0.32, 1.85, 0.5, 0.16, 0.14),
+    S(0.32, 1.18, 0.56, 0.15, 0.13),
+    S(0.78, 0.66, 0.36, 0.15, 0.13),
+  ]);
+
+  /*
+   * The arms: each one a single skin from the shoulder through the elbow to
+   * the wrist, so the bend is smooth, and a broad hand at the end of it laid
+   * over the knee — or closed round what the god holds.
+   */
+  const arm = (side: number, wrist: Vec3, elbow: Vec3) =>
+    skin([
+      S(side * 0.98 * broad, 2.16, -0.02, 0.33, 0.33),
+      S(side * 1.07 * broad, 1.6, 0.0, 0.29, 0.29),
+      S(elbow[0], elbow[1], elbow[2], 0.25, 0.25),
+      S(wrist[0], wrist[1], wrist[2], 0.17, 0.15),
+    ]);
+  const handOnKnee = (side: number) => {
+    arm(side, [side * 0.62, 0.86, 1.52], [side * 1.08, 1.0, 0.25]);
+    skin([
+      S(side * 0.6, 0.84, 1.55, 0.18, 0.1),
+      S(side * 0.58, 0.8, 1.85, 0.2, 0.08),
+      S(side * 0.56, 0.7, 2.1, 0.17, 0.06),
+    ]);
+  };
+  /** A fist, closed round a shaft standing at `grip`. */
+  const fistAt = (side: number, grip: Vec3) => {
+    arm(side, [grip[0] - side * 0.12, grip[1], grip[2] - 0.22], [side * 1.12, 1.05, 0.3]);
+    ball(grip[0], grip[1], grip[2], 0.2, 0.95);
+  };
+
+  const right = identity.right;
+  const left = identity.left;
+  if (right === "sceptre") {
+    // The sceptre stands on the footstool outside the right knee.
+    const grip: Vec3 = [0.98, 1.0, 1.72];
+    fistAt(1, grip);
+    rod([0.98, -1.98, 1.78], [0.98, 2.75, 1.68], 0.07, 0.06);
+    ball(0.98, 2.82, 1.68, 0.12);
+  } else if (right === "club") {
+    // Herakles's club, its heavy end on the footstool, the grip under his hand.
+    const grip: Vec3 = [0.98, 0.95, 1.7];
+    fistAt(1, grip);
+    skin([
+      S(0.98, -1.95, 1.95, 0.24, 0.24),
+      S(0.98, -1.2, 1.9, 0.22, 0.22),
+      S(0.98, 0.0, 1.8, 0.15, 0.15),
+      S(0.98, 1.2, 1.68, 0.1, 0.1),
+    ]);
+    // The knots where the branches were lopped off.
+    for (const [y, a] of [
+      [-1.5, 0.4],
+      [-0.9, 2.6],
+      [-0.3, 4.4],
+    ] as const)
+      ball(0.98 + Math.sin(a) * 0.21, y, 1.9 + Math.cos(a) * 0.21, 0.07);
+  } else if (right === "wheat") {
+    handOnKnee(1);
+    // Ears of wheat held in the hand on the knee, leaning out over it.
+    for (const lean of [-0.12, 0, 0.12])
+      rod([0.6, 0.8, 1.9], [0.78 + lean, 1.75, 2.05 + lean], 0.025, 0.02, 5);
+  } else {
+    handOnKnee(1);
+  }
+  if (left === "barsom") {
+    // The barsom: a bundle of rods held in the hand on the knee, against the chest.
+    handOnKnee(-1);
+    for (const [dx, dz] of [
+      [0, 0],
+      [0.07, 0.05],
+      [-0.07, 0.05],
+      [0.04, -0.06],
+      [-0.04, -0.06],
+    ] as const)
+      rod([-0.62 + dx, 0.72, 1.85 + dz], [-0.48 + dx, 2.05, 0.92 + dz], 0.035, 0.035, 5);
+  } else if (left === "cornucopia") {
+    // The horn of plenty in the crook of her left arm, heaped with fruit.
+    handOnKnee(-1);
+    skin([
+      S(-0.6, 0.86, 1.62, 0.07, 0.07),
+      S(-0.75, 1.45, 1.35, 0.13, 0.13),
+      S(-0.92, 2.15, 1.0, 0.2, 0.2),
+      S(-1.0, 2.6, 0.82, 0.27, 0.27),
+    ]);
+    for (const [dx, dz] of [
+      [0, 0],
+      [0.14, 0.08],
+      [-0.1, -0.1],
+    ] as const)
+      ball(-1.0 + dx, 2.72, 0.82 + dz, 0.13);
+  } else {
+    handOnKnee(-1);
+  }
+
+  /*
+   * The head. One skin from the chin to the crown, its front flattened into
+   * the broad face of the Nemrut heads; then the features laid onto it — the
+   * ridge of the brow, the almond eyes beneath it, the straight nose, the
+   * lips — each a small skin of its own.
+   */
+  skin([
+    S(0, 2.9, 0.3, 0.14 * slim, 0.12),
+    S(0, 3.0, 0.17, 0.28 * slim, 0.3),
+    S(0, 3.25, 0.12, 0.37 * (male ? 1 : 0.95), 0.4),
+    S(0, 3.5, 0.08, 0.4, 0.44),
+    S(0, 3.72, 0.04, 0.39, 0.44),
+    S(0, 3.88, 0.0, 0.31, 0.37),
+    S(0, 3.97, -0.02, 0.12, 0.15),
+  ]);
+  skin([S(0, 3.52, 0.49, 0.06, 0.05), S(0, 3.32, 0.58, 0.08, 0.07), S(0, 3.2, 0.6, 0.07, 0.05)]);
+  for (const side of [-1, 1])
+    skin([
+      S(side * 0.03, 3.56, 0.52, 0.03, 0.03),
+      S(side * 0.15, 3.585, 0.5, 0.045, 0.04),
+      S(side * 0.3, 3.55, 0.41, 0.025, 0.025),
+    ]);
+  for (const side of [-1, 1]) {
+    skin([
+      S(side * 0.07, 3.46, 0.47, 0.035, 0.035),
+      S(side * 0.16, 3.46, 0.49, 0.055, 0.05),
+      S(side * 0.26, 3.47, 0.44, 0.035, 0.035),
+    ]);
+  }
+  skin([
+    S(-0.09, 3.1, 0.45, 0.015, 0.014),
+    S(0, 3.1, 0.47, 0.03, 0.022),
+    S(0.09, 3.1, 0.45, 0.015, 0.014),
+  ]);
+  if (identity.bearded) {
+    // The beard, from the cheeks over the chin and down onto the chest, and
+    // the moustache over the lips.
+    skin([
+      S(0, 3.24, 0.24, 0.41, 0.28),
+      S(0, 2.98, 0.32, 0.37, 0.3),
+      S(0, 2.72, 0.36, 0.28, 0.24),
+      S(0, 2.5, 0.36, 0.13, 0.12),
+    ]);
+    skin([
+      S(-0.2, 3.13, 0.44, 0.035, 0.035),
+      S(0, 3.17, 0.53, 0.05, 0.04),
+      S(0.2, 3.13, 0.44, 0.035, 0.035),
+    ]);
+  }
+
+  /*
+   * The headdress. Every cap sits on the brow and covers the back of the
+   * head, and the Persian ones have lappets falling beside the face to the
+   * shoulders and a neck-guard behind.
+   */
+  const lappets = () => {
+    for (const side of [-1, 1]) {
+      skin([
+        S(side * 0.42, 3.62, 0.0, 0.07, 0.3),
+        S(side * 0.45, 3.0, -0.06, 0.07, 0.32),
+        S(side * 0.52, 2.5, -0.06, 0.06, 0.3),
+      ]);
+    }
+    skin([
+      S(0, 3.62, -0.36, 0.4, 0.08),
+      S(0, 3.0, -0.42, 0.44, 0.09),
+      S(0, 2.55, -0.42, 0.48, 0.08),
+    ]);
+  };
+  switch (identity.headgear) {
+    case "armenianTiara": {
+      // The king's tiara: upright, flat-topped, with five points round its crown.
+      skin([
+        S(0, 3.58, 0.0, 0.45, 0.48),
+        S(0, 4.0, -0.02, 0.46, 0.48),
+        S(0, 4.55, -0.04, 0.48, 0.5),
+        S(0, 4.62, -0.04, 0.4, 0.42),
+      ]);
+      for (let i = 0; i < 5; i += 1) {
+        const a = -Math.PI / 2 + (i * Math.PI) / 4;
+        const p: Vec3 = [Math.sin(a) * 0.4, 4.5, -0.04 + Math.cos(a) * 0.42];
+        rod(p, [p[0], 4.95, p[2]], 0.13, 0.0, 8);
+      }
+      lappets();
+      break;
+    }
+    case "persianTiara": {
+      // Zeus's cap: tall and rounded, its tip leaning a little forward.
+      skin([
+        S(0, 3.58, 0.0, 0.46, 0.49),
+        S(0, 4.1, -0.02, 0.47, 0.49),
+        S(0, 4.55, 0.02, 0.4, 0.42),
+        S(0, 4.85, 0.1, 0.24, 0.25),
+        S(0, 4.98, 0.16, 0.08, 0.08),
+      ]);
+      lappets();
+      break;
+    }
+    case "phrygianCap": {
+      // Apollo's soft cap, its peak bent forward over the brow.
+      skin([
+        S(0, 3.58, 0.0, 0.45, 0.48),
+        S(0, 4.0, 0.0, 0.44, 0.46),
+        S(0, 4.32, 0.1, 0.3, 0.32),
+        S(0, 4.48, 0.3, 0.15, 0.16),
+        S(0, 4.42, 0.46, 0.05, 0.05),
+      ]);
+      lappets();
+      break;
+    }
+    case "polos": {
+      // The goddess's basket-crown, heaped with fruit, over long hair.
+      skin([
+        S(0, 3.7, -0.15, 0.42, 0.3),
+        S(0, 3.2, -0.3, 0.47, 0.26),
+        S(0, 2.65, -0.34, 0.52, 0.2),
+        S(0, 2.38, -0.3, 0.46, 0.12),
+      ]);
+      skin([
+        S(0, 3.62, -0.02, 0.41, 0.45),
+        S(0, 4.05, -0.02, 0.45, 0.48),
+        S(0, 4.32, -0.02, 0.5, 0.52),
+        S(0, 4.36, -0.02, 0.44, 0.46),
+      ]);
+      for (let i = 0; i < 4; i += 1) {
+        const a = (i / 4) * TAU + Math.PI / 4;
+        ball(Math.sin(a) * 0.26, 4.42, -0.02 + Math.cos(a) * 0.28, 0.16);
+      }
+      ball(0, 4.55, -0.02, 0.18);
+      break;
+    }
+    default: {
+      // Bare-headed: a cap of short curls, ringed with a row of them over the brow.
+      skin([
+        S(0, 3.5, -0.03, 0.43, 0.46),
+        S(0, 3.78, 0.0, 0.42, 0.46),
+        S(0, 3.95, -0.02, 0.33, 0.38),
+        S(0, 4.04, -0.04, 0.12, 0.15),
+      ]);
+      for (let i = 0; i < 5; i += 1) {
+        const a = -1.1 + (i * 2.2) / 4;
+        ball(Math.sin(a) * 0.4, 3.72, 0.0 + Math.cos(a) * 0.44, 0.1);
+      }
+      break;
+    }
+  }
+  return parts;
+}
+
+/**
+ * A lion seated upright on its haunches, the guardian at each end of the
+ * row, looking straight out over the court: a deep chest, long straight
+ * forelegs ending in heavy paws with the toes cut, the haunches bunched at
+ * its sides and the tail curled round onto the base. The head is the lion of
+ * Commagene's own sculptors — a long muzzle ending in a flat nose, a heavy
+ * brow, the line of the closed jaw — and round it the mane, cut as rows of
+ * stiff flame-shaped locks that frame the face and fall over the chest.
+ * `size` is its height from the base to the top of the mane.
+ */
+export function nemrutLion(material: Material, at: Vec3, rotY: number, size: number): Part[] {
+  const { parts, S, skin, rod } = sculptor(material, at, rotY, size, "Lion");
+  /** One lock of the mane: a flame from its root to its point. */
+  const lock = (from: Vec3, to: Vec3, r: number, swell = true) =>
+    skin([
+      S(from[0], from[1], from[2], r, r * 0.85),
+      ...(swell
+        ? [S((from[0] + to[0]) / 2, (from[1] + to[1]) / 2, (from[2] + to[2]) / 2, r * 0.8, r * 0.7)]
+        : []),
+      S(to[0], to[1], to[2], r * 0.2, r * 0.18),
+    ]);
+  for (const side of [-1, 1]) {
+    // The haunch, bunched at the side, and the hind paw forward beside it.
+    skin([
+      S(side * 0.15, 0.15, -0.26, 0.08, 0.09),
+      S(side * 0.165, 0.18, -0.1, 0.12, 0.17),
+      S(side * 0.16, 0.14, 0.05, 0.1, 0.12),
+      S(side * 0.15, 0.07, 0.11, 0.05, 0.06),
+    ]);
+    skin([
+      S(side * 0.19, 0.035, 0.04, 0.05, 0.035),
+      S(side * 0.2, 0.03, 0.18, 0.055, 0.03),
+      S(side * 0.2, 0.025, 0.215, 0.02, 0.01),
+    ]);
+    // The foreleg, long and straight, and the paw with its four toes.
+    skin([
+      S(side * 0.085, 0.58, 0.11, 0.065, 0.08),
+      S(side * 0.085, 0.38, 0.15, 0.05, 0.06),
+      S(side * 0.085, 0.12, 0.17, 0.042, 0.05),
+      S(side * 0.085, 0.04, 0.175, 0.05, 0.05),
+    ]);
+    skin([S(side * 0.085, 0.032, 0.14, 0.055, 0.032), S(side * 0.085, 0.03, 0.235, 0.06, 0.03)]);
+    for (let toe = 0; toe < 4; toe += 1) {
+      const x = side * 0.085 + (toe - 1.5) * 0.028;
+      rod([x, 0.022, 0.225], [x, 0.016, 0.27], 0.017, 0.013, 6);
+    }
+  }
+  // The body, from the rump on the base up to the deep chest.
+  skin([
+    S(0, 0.15, -0.22, 0.15, 0.14),
+    S(0, 0.3, -0.12, 0.17, 0.18),
+    S(0, 0.48, 0.0, 0.16, 0.2),
+    S(0, 0.64, 0.05, 0.13, 0.15),
+  ]);
+  // The ruff the locks grow from, round the neck and behind the head.
+  skin([
+    S(0, 0.56, 0.04, 0.15, 0.13),
+    S(0, 0.72, 0.05, 0.21, 0.17),
+    S(0, 0.9, 0.03, 0.2, 0.16),
+    S(0, 0.99, 0.0, 0.03, 0.03),
+  ]);
+  // Two rings of locks round the face, the outer ones longer.
+  for (let i = 0; i < 11; i += 1) {
+    const a = -2.7 + (i * 5.4) / 10;
+    const c = 0.81;
+    lock(
+      [Math.sin(a) * 0.15, c + Math.cos(a) * 0.15, 0.18],
+      [Math.sin(a) * 0.23, c + Math.cos(a) * 0.23, 0.12],
+      0.06,
+    );
+  }
+  for (let i = 0; i < 8; i += 1) {
+    const a = -2.45 + (i * 4.9) / 7;
+    const c = 0.8;
+    lock(
+      [Math.sin(a) * 0.2, c + Math.cos(a) * 0.2, 0.08],
+      [Math.sin(a) * 0.29, c + Math.cos(a) * 0.29, 0.0],
+      0.075,
+      false,
+    );
+  }
+  // And the locks falling down over the chest.
+  for (const [x, y] of [
+    [-0.08, 0.64],
+    [0.08, 0.64],
+    [0, 0.6],
+  ] as const)
+    lock([x, y, 0.16], [x * 1.1, y - 0.08, 0.185], 0.06);
+  // The head: the skull, narrowing to the long muzzle and its flat nose.
+  skin([
+    S(0, 0.84, 0.1, 0.12, 0.12),
+    S(0, 0.85, 0.18, 0.12, 0.11),
+    S(0, 0.83, 0.25, 0.1, 0.09),
+    S(0, 0.8, 0.32, 0.075, 0.07),
+    S(0, 0.79, 0.38, 0.065, 0.058),
+    S(0, 0.792, 0.402, 0.05, 0.04),
+    S(0, 0.795, 0.412, 0.025, 0.018),
+  ]);
+  // The bridge of the nose, and the lower jaw closed under the muzzle.
+  skin([
+    S(0, 0.875, 0.24, 0.035, 0.03),
+    S(0, 0.84, 0.38, 0.03, 0.025),
+    S(0, 0.83, 0.41, 0.026, 0.02),
+  ]);
+  skin([
+    S(0, 0.735, 0.2, 0.07, 0.04),
+    S(0, 0.74, 0.33, 0.055, 0.035),
+    S(0, 0.748, 0.375, 0.03, 0.02),
+  ]);
+  // The heavy brow, an arch over each eye, and the small round ears.
+  for (const side of [-1, 1]) {
+    skin([
+      S(side * 0.015, 0.885, 0.275, 0.022, 0.02),
+      S(side * 0.06, 0.9, 0.27, 0.03, 0.03),
+      S(side * 0.11, 0.885, 0.22, 0.02, 0.02),
+    ]);
+    skin([S(side * 0.1, 0.95, 0.14, 0.04, 0.035), S(side * 0.11, 0.97, 0.17, 0.008, 0.008)]);
+  }
+  // The tail, round the right flank and onto the base, its tuft forward.
+  skin([
+    S(0.15, 0.06, -0.3, 0.03, 0.03),
+    S(0.27, 0.035, -0.12, 0.026, 0.026),
+    S(0.28, 0.035, 0.08, 0.024, 0.024),
+    S(0.26, 0.045, 0.17, 0.045, 0.04),
+    S(0.25, 0.045, 0.21, 0.008, 0.008),
+  ]);
+  return parts;
+}
+
+/**
+ * An eagle standing tall and upright with its wings folded, the bird that
+ * guards the rows of gods: the breast a keel tapering down to the legs, a
+ * ruff of feathers round the neck, and the head turned aside to show the
+ * short beak hooked sharply down under a jutting brow. The wings lie folded
+ * down the flanks, their flight feathers stepped along the lower edge and
+ * crossing behind over a fanned tail that rests on the base; the legs are
+ * feathered to the ankle and the talons grip the front edge of the base.
+ * `size` is its height from the base to the crown of the head.
+ */
+export function nemrutEagle(material: Material, at: Vec3, rotY: number, size: number): Part[] {
+  const { parts, S, skin, rod } = sculptor(material, at, rotY, size, "Eagle");
+  /** A tapering feather, from its root to its tip. */
+  const feather = (from: Vec3, to: Vec3, w: number, t: number) =>
+    skin([S(from[0], from[1], from[2], w, t), S(to[0], to[1], to[2], w * 0.15, t * 0.5)]);
+  // The breast, a keel tapering down, and the ridge of the keel itself.
+  skin([
+    S(0, 0.2, -0.06, 0.07, 0.08),
+    S(0, 0.36, -0.01, 0.1, 0.12),
+    S(0, 0.56, 0.05, 0.125, 0.16),
+    S(0, 0.7, 0.06, 0.115, 0.15),
+    S(0, 0.8, 0.05, 0.075, 0.09),
+  ]);
+  skin([S(0, 0.34, 0.08, 0.03, 0.03), S(0, 0.54, 0.17, 0.04, 0.035), S(0, 0.7, 0.17, 0.03, 0.025)]);
+  // The ruff of neck feathers.
+  for (let i = 0; i < 9; i += 1) {
+    const a = -2.4 + (i * 4.8) / 8;
+    feather(
+      [Math.sin(a) * 0.07, 0.83, 0.05 + Math.cos(a) * 0.075],
+      [Math.sin(a) * 0.1, 0.75, 0.05 + Math.cos(a) * 0.105],
+      0.04,
+      0.025,
+    );
+  }
+  /*
+   * The head, turned a third of the way to its right: the skull, the brow
+   * jutting over each eye, and the beak — short, deep at the root, and
+   * hooked sharply down at the tip.
+   */
+  const turn = 0.6;
+  const big = 1.3;
+  const along = (t: number, y: number, across = 0): Vec3 => [
+    (Math.sin(turn) * t + Math.cos(turn) * across) * big,
+    0.84 + (y - 0.84) * big,
+    0.05 + (Math.cos(turn) * t - Math.sin(turn) * across) * big,
+  ];
+  const H = (t: number, y: number, rx: number, ry: number, across = 0) => {
+    const [x, yy, z] = along(t, y, across);
+    return S(x, yy, z, rx * big, ry * big);
+  };
+  skin([
+    H(-0.07, 0.875, 0.045, 0.045),
+    H(-0.02, 0.888, 0.072, 0.07),
+    H(0.05, 0.888, 0.068, 0.064),
+    H(0.11, 0.878, 0.052, 0.054),
+  ]);
+  skin([
+    H(0.09, 0.876, 0.05, 0.056),
+    H(0.155, 0.872, 0.04, 0.046),
+    H(0.2, 0.86, 0.028, 0.035),
+    H(0.224, 0.836, 0.016, 0.021),
+    H(0.224, 0.81, 0.004, 0.006),
+  ]);
+  for (const side of [-1, 1])
+    skin([H(-0.01, 0.915, 0.02, 0.018, side * 0.05), H(0.09, 0.905, 0.006, 0.006, side * 0.035)]);
+
+  for (const side of [-1, 1]) {
+    /*
+     * The folded wing, lying close down the flank from the shoulder, its tip
+     * crossing behind the tail; a ridge where the coverts end, and below it
+     * the stepped primaries.
+     */
+    skin([
+      S(side * 0.095, 0.82, -0.02, 0.035, 0.05),
+      S(side * 0.13, 0.72, -0.02, 0.045, 0.09),
+      S(side * 0.14, 0.52, -0.06, 0.04, 0.1),
+      S(side * 0.1, 0.3, -0.13, 0.03, 0.07),
+      S(side * 0.02, 0.15, -0.22, 0.018, 0.04),
+      S(-side * 0.04, 0.08, -0.27, 0.006, 0.01),
+    ]);
+    skin([
+      S(side * 0.16, 0.52, 0.09, 0.015, 0.018),
+      S(side * 0.175, 0.48, -0.02, 0.02, 0.022),
+      S(side * 0.155, 0.44, -0.13, 0.012, 0.015),
+    ]);
+    for (let k = 0; k < 4; k += 1)
+      feather(
+        [side * 0.15, 0.42 - k * 0.04, 0.07 - k * 0.055],
+        [side * (0.12 - k * 0.025), 0.25 - k * 0.035, -0.02 - k * 0.06],
+        0.022,
+        0.035,
+      );
+    // The leg, feathered to the ankle, and the talons over the base's edge.
+    skin([
+      S(side * 0.06, 0.27, 0.0, 0.065, 0.07),
+      S(side * 0.065, 0.13, 0.03, 0.055, 0.06),
+      S(side * 0.06, 0.07, 0.05, 0.03, 0.032),
+    ]);
+    rod([side * 0.06, 0.07, 0.05], [side * 0.06, 0.03, 0.07], 0.022, 0.02, 6);
+    for (const k of [-1, 0, 1]) {
+      const tip: Vec3 = [side * 0.06 + k * 0.035, 0.008, 0.165];
+      rod([side * 0.06, 0.025, 0.07], tip, 0.018, 0.014, 6);
+      rod(tip, [tip[0], -0.03, tip[2] + 0.012], 0.013, 0.006, 6);
+    }
+    rod([side * 0.06, 0.025, 0.07], [side * 0.06, 0.01, 0.0], 0.016, 0.01, 6);
+  }
+  // The tail, fanned out behind and resting its tip on the base.
+  skin([
+    S(0, 0.22, -0.13, 0.05, 0.03),
+    S(0, 0.1, -0.22, 0.09, 0.022),
+    S(0, 0.012, -0.29, 0.12, 0.012),
+  ]);
   return parts;
 }
 
@@ -5179,56 +5789,73 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
   parts.push(box("limestone", [-1.2, plinthHeight, 0], [4.0, 0.5, rowWidth - 1]));
   const seatY = plinthHeight + 0.5;
 
-  // The colossi, facing east across the court; left to right as seen from
-  // the court, the king first and Herakles last. A viewer in the court looks
-  // west, so their left is +z and the row runs down it.
+  /*
+   * The colossi, facing east across the court; left to right as seen from
+   * the court, the king first and Herakles last. A viewer in the court looks
+   * west, so their left is +z and the row runs down it.
+   *
+   * One unit sizes every figure on the terrace: the head of a god, chin to
+   * crown, fixed so that Zeus — the one whose height is measured — reaches
+   * the cited height from the foot of his throne to the tip of his tiara.
+   * The others are cut to the same scale, so a bare-headed Herakles stands
+   * lower than a tiara'd king, as the real ones did.
+   */
   const colossi = IDENTITIES.nemrutColossi;
   const throne = spec.throneHeight;
-  const seated = spec.statueHeight - throne;
+  const unit = (spec.statueHeight - throne) / NEMRUT_CROWN;
+  const footstool = throne - NEMRUT_SOLE * unit;
   for (let i = 0; i < spec.colossi; i += 1) {
     const z = ((spec.colossi - 1) / 2 - i) * (spec.throneBase + 0.8);
+    // The throne: a block to sit on, and a slab for the god's back.
     parts.push(
       worn(box("limestone", [-1.0, seatY, z], [spec.throneBase, throne, spec.throneBase]), 0.04),
     );
-    // A low footstool in front of the throne.
     parts.push(
-      box("limestone", [spec.throneBase / 2 - 0.2, seatY, z], [1.6, 0.6, spec.throneBase * 0.7]),
+      worn(
+        box(
+          "limestone",
+          [-1.0 - spec.throneBase / 2 + 0.25, seatY + throne, z],
+          [0.5, unit * 2, spec.throneBase],
+        ),
+        0.03,
+      ),
     );
-    parts.push({
-      kind: "figure",
-      material: "limestone",
-      at: [-1.5, seatY + throne, z],
-      // A seated figure is measured from the seat to the crown.
-      height: seated / 0.52,
-      rotY: Math.PI / 2,
-      pose: "seated",
-      identity: colossi[i % colossi.length]!,
-    });
+    // The footstool in front of the throne, as wide as it, at the height the
+    // god's feet come down to.
+    parts.push(
+      box("limestone", [spec.throneBase / 2 - 0.2, seatY, z], [1.6, footstool, spec.throneBase]),
+    );
+    parts.push(
+      ...nemrutColossus(
+        "limestone",
+        [-1.5, seatY + throne, z],
+        Math.PI / 2,
+        unit,
+        colossi[i % colossi.length]!,
+      ),
+    );
   }
   // The guardians: an eagle then a lion beyond the last throne at each end,
-  // turned the other way from the figures because an animal faces -z.
+  // looking out over the court with the gods, in the same stone and cut in
+  // the same way.
   const edge = ((spec.colossi - 1) / 2) * (spec.throneBase + 0.8) + spec.throneBase / 2;
   for (const side of [-1, 1]) {
     const eagleZ = side * (edge + 1.6);
     const lionZ = side * (edge + 4.6);
     parts.push(box("limestone", [-1.0, seatY, eagleZ], [3.0, 0.6, 3.0]));
-    parts.push({
-      kind: "figure",
-      material: "limestone",
-      at: [-1.0, seatY + 0.6, eagleZ],
-      height: spec.guardianHeight,
-      rotY: Math.PI / 2,
-      scan: { id: "eagle" },
-    });
+    parts.push(
+      // Set forward so its talons grip the front edge of its base.
+      ...nemrutEagle(
+        "limestone",
+        [0.5 - 0.17 * spec.guardianHeight, seatY + 0.6, eagleZ],
+        Math.PI / 2,
+        spec.guardianHeight,
+      ),
+    );
     parts.push(box("limestone", [-1.0, seatY, lionZ], [3.2, 0.6, 3.0]));
-    parts.push({
-      kind: "figure",
-      material: "limestone",
-      at: [-1.0, seatY + 0.6, lionZ],
-      height: spec.guardianHeight,
-      rotY: -Math.PI / 2 + Math.PI,
-      scan: { id: "lion-delos" },
-    });
+    parts.push(
+      ...nemrutLion("limestone", [-1.3, seatY + 0.6, lionZ], Math.PI / 2, spec.guardianHeight),
+    );
   }
 
   // The stepped altar across the court from the gods.

@@ -261,7 +261,8 @@ export const de: Partial<Record<TKey, string>> = {
   recon_measures: "Maße, auf denen das Modell beruht",
   recon_uncertainty: "Was das Modell erschließt",
   recon_sources: "Herkunft der Maße",
-  recon_hint: "Ziehen zum Drehen, scrollen zum Zoomen.",
+  recon_hint:
+    "Ziehen zum Drehen, scrollen zum Heranzoomen an jede Stelle, Rechtsklick-Ziehen oder zwei Finger zum Verschieben. Doppelklick für Vollbild.",
   recon_views: "Ansichten",
   recon_export: "3D-Datei herunterladen (.glb)",
   recon_exporting: "Wird vorbereitet…",
@@ -278,6 +279,18 @@ export const de: Partial<Record<TKey, string>> = {
   recon_spin: "Drehen",
   recon_spin_stop: "Stopp",
   recon_reset: "Ansicht zurücksetzen",
+  recon_fullscreen: "Vollbild",
+  recon_fullscreen_exit: "Vollbild beenden",
+  recon_walk: "Begehen",
+  recon_walk_exit: "Rundgang beenden",
+  recon_walk_hint_keys:
+    "Mit W A S D oder den Pfeiltasten gehen, ziehen zum Umsehen, scrollen für einen Schritt vor oder zurück. E steigt, Q sinkt, Umschalt läuft.",
+  recon_walk_hint_touch:
+    "Mit einem Finger ziehen zum Umsehen, Pfeile gedrückt halten zum Gehen, mit zwei Fingern spreizen für vor und zurück.",
+  recon_move_forward: "Vorwärts",
+  recon_move_back: "Zurück",
+  recon_move_left: "Links",
+  recon_move_right: "Rechts",
   recon_loading: "Modell wird erstellt…",
   recon_scale:
     "Die Menschen in der Szene geben den Maßstab: An ihnen lässt sich die wahre Größe des Bauwerks ablesen.",
@@ -368,4 +381,9 @@ export const de: Partial<Record<TKey, string>> = {
   seo_stories_title: "Ein Tag in der Antike – Interaktive Geschichtserzählungen | Antike Türkei",
   seo_stories_desc:
     "Kurze verzweigte Geschichten aus Ephesos, Aspendos, Göbekli Tepe, Pergamon, Troja, Hattuša, Aphrodisias und Göreme, jede Szene mit ihrem historischen Hintergrund.",
+  ask_sub_ai:
+    "Schreib oder sprich. Der KI-Guide antwortet auf Grundlage der Daten der App; prüfe wichtige Details bei offiziellen Quellen.",
+  ask_thinking: "Der Guide denkt nach…",
+  ask_offline: "Offline-Antwort",
+  ask_ai_source: "KI-Guide",
 };

@@ -3,6 +3,9 @@ import {
   ANIMAL_SHAPES,
   boundsOf,
   CARVINGS,
+  IDENTITIES,
+  NEMRUT_CROWN,
+  NEMRUT_SOLE,
   partsFor,
   SHAFT_DRUMS,
   type Part,
@@ -481,21 +484,104 @@ describe("the six models added in September 2026", () => {
     const nemrut = reconstructions.find((r) => r.id === "nemrut-dogu-terasi")!;
     const spec = nemrut.model;
     if (spec.kind !== "tumulus-sanctuary") throw new Error("expected a sanctuary");
-    const enthroned = partsOf(nemrut).filter(
-      (part): part is Extract<Part, { kind: "figure" }> =>
-        part.kind === "figure" && part.pose === "seated",
-    );
-    expect(enthroned.length).toBe(spec.colossi);
-    for (const figure of enthroned) {
-      // Seated height plus the throne is the cited statue height.
-      expect(figure.height * 0.52 + spec.throneHeight).toBeCloseTo(spec.statueHeight, 5);
-      // Every one faces +x, out over the court.
-      expect(Math.sin(figure.rotY)).toBeCloseTo(1, 5);
+    const parts = partsOf(nemrut);
+    const statue = (name: string) => parts.filter((part) => part.statue === name);
+    const names = IDENTITIES.nemrutColossi.map((identity) => identity.name);
+    expect(names.length).toBe(spec.colossi);
+    // Left to right as seen from the court is +z to -z.
+    const middles = names.map((name) => {
+      const { min, max } = boundsOf(statue(name));
+      return (min[2] + max[2]) / 2;
+    });
+    for (let i = 1; i < middles.length; i += 1) expect(middles[i]!).toBeLessThan(middles[i - 1]!);
+    // The plinth and its step the thrones stand on.
+    const plinthTop = 1.4;
+    const unit = (spec.statueHeight - spec.throneHeight) / NEMRUT_CROWN;
+    const footstool = plinthTop + spec.throneHeight - NEMRUT_SOLE * unit;
+    /*
+     * How low a piece really reaches: a loft running level hangs its sections'
+     * `ry` below their centres, one running upright ends flat at its last
+     * centre, and a rod starts where it stands.
+     */
+    const reach = (part: Part, dir: 1 | -1): number => {
+      if (part.kind === "cylinder") {
+        const top = part.at[1] + part.height * Math.cos(part.rotX ?? 0);
+        return dir > 0 ? Math.max(part.at[1], top) : Math.min(part.at[1], top);
+      }
+      if (part.kind !== "loft") return part.at[1];
+      const ends = part.sections.map((section, i) => {
+        const a = part.sections[Math.max(0, i - 1)]!.c;
+        const b = part.sections[Math.min(part.sections.length - 1, i + 1)]!.c;
+        const d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+        const level = Math.abs(d[1]!) < 0.5 * Math.hypot(d[0]!, d[1]!, d[2]!);
+        return part.at[1] + section.c[1] + dir * (level ? section.ry : 0);
+      });
+      return dir > 0 ? Math.max(...ends) : Math.min(...ends);
+    };
+    for (const name of names) {
+      // The feet rest on the footstool: nothing sinks into it, nothing floats over it.
+      const feet = Math.min(...statue(name).map((part) => reach(part, -1)));
+      expect(feet).toBeGreaterThan(footstool - 0.03);
+      expect(feet).toBeLessThan(footstool + 0.08);
+      const height = Math.max(...statue(name).map((part) => reach(part, 1))) - plinthTop;
+      if (name === "Zeus-Oromasdes") {
+        // Zeus is the measured one: foot of the throne to the tip of his tiara.
+        expect(height).toBeCloseTo(spec.statueHeight, 1);
+      } else {
+        // The others at his scale, the bare-headed Herakles lowest of them.
+        expect(height).toBeGreaterThan(spec.statueHeight - 1.5);
+        expect(height).toBeLessThan(spec.statueHeight + 0.3);
+      }
     }
+    // The guardians are as tall as the cited 4.5-5 m, an eagle and a lion at each end.
+    for (const name of ["Eagle", "Lion"]) {
+      const pieces = statue(name);
+      for (const side of [-1, 1]) {
+        const half = pieces.filter((part) => Math.sign(part.at[2]) === side);
+        const tall =
+          Math.max(...half.map((part) => reach(part, 1))) -
+          Math.min(...half.map((part) => reach(part, -1)));
+        expect(tall).toBeGreaterThan(4.5);
+        expect(tall).toBeLessThan(5.1);
+        const { min } = boundsOf(half);
+        expect(Math.abs(side > 0 ? min[2] : boundsOf(half).max[2])).toBeGreaterThan(
+          Math.abs(middles[0]!),
+        );
+      }
+    }
+    // The eagle stands between the gods and the lion.
+    const eagleZ = Math.max(...statue("Eagle").map((part) => part.at[2]));
+    const lionZ = Math.max(...statue("Lion").map((part) => part.at[2]));
+    expect(lionZ).toBeGreaterThan(eagleZ);
     // The mound is scenery, so the camera frames the terrace and not 152 m of gravel.
-    const { max, min } = boundsOf(partsOf(nemrut));
+    const { max, min } = boundsOf(parts);
     expect(max[0] - min[0]).toBeLessThan(spec.tumulusDiameter);
     expect(max[1]).toBeLessThan(spec.tumulusHeight);
+  });
+
+  test("the sculpture of Nemrut is one set: one stone, one manner, one budget", () => {
+    const nemrut = reconstructions.find((r) => r.id === "nemrut-dogu-terasi")!;
+    const sculpture = partsOf(nemrut).filter((part) => part.statue);
+    expect(sculpture.length).toBeGreaterThan(100);
+    // The same limestone for every god, eagle and lion, and none of them a
+    // photographed marble set down among lofted stone.
+    expect(new Set(sculpture.map((part) => part.material))).toEqual(new Set(["limestone"]));
+    expect(partsOf(nemrut).filter((part) => part.scan)).toEqual([]);
+    expect(partsOf(nemrut).filter((part) => part.kind === "figure")).toEqual([]);
+    // Every piece is turned to look out over the court, +x.
+    for (const part of sculpture)
+      if (part.kind === "loft") expect(Math.sin(part.rotY)).toBeCloseTo(1, 5);
+    /*
+     * The triangles the renderer will make of them (a loft is 20 round and
+     * 6 rings between sections, capped; a cylinder is its sides and caps):
+     * all nine statues together stay well inside what a phone draws easily.
+     */
+    const triangles = sculpture.reduce((sum, part) => {
+      if (part.kind === "loft") return sum + 240 * (part.sections.length - 1) + 40;
+      if (part.kind === "cylinder") return sum + 4 * part.segments;
+      return sum + 12;
+    }, 0);
+    expect(triangles).toBeLessThan(170_000);
   });
 
   test("the open-ended stadium closes only its north end", () => {

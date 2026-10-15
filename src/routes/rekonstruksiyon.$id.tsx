@@ -20,10 +20,14 @@ export const Route = createFileRoute("/rekonstruksiyon/$id")({
   loader: async ({ params }) => {
     // Imported here rather than at the top: whatever `head()` and a
     // synchronous loader touch stays in the entry bundle every page downloads.
-    const { getReconstruction } = await import("@/lib/reconstructions");
+    const [{ getReconstruction }, { loadStories }] = await Promise.all([
+      import("@/lib/reconstructions"),
+      import("@/lib/narration-stories-load"),
+    ]);
     const item = getReconstruction(params.id);
     if (!item) throw notFound();
-    return { id: item.id, title: item.title, blurb: item.blurb };
+    const stories = await loadStories(`recon:${item.id}`);
+    return { id: item.id, title: item.title, blurb: item.blurb, stories };
   },
   head: ({ match, loaderData }) => {
     const lang = parseLang(match.search.lang);
@@ -91,6 +95,7 @@ function ReconstructionPage() {
   const { id } = Route.useParams();
   const { t, L, lang } = useI18n();
   const item = getReconstruction(id)!;
+  const { stories } = Route.useLoaderData();
   const site = getSite(item.siteSlug);
 
   return (
@@ -125,7 +130,7 @@ function ReconstructionPage() {
       </header>
 
       <div className="mt-6">
-        <Reconstruction3D key={item.id} item={item} />
+        <Reconstruction3D key={item.id} item={item} stories={stories} />
       </div>
 
       {/* The carvings on the model are other people's photographs, and nearly

@@ -62,13 +62,18 @@ export const Route = createFileRoute("/kent/$slug")({
     // recording manifest — several hundred KB that every other page would
     // otherwise download as part of the entry bundle, because whatever
     // `head()` touches stays there. Loaded here, it ships with this route.
-    const { guideMeta } = await import("@/lib/guide-meta");
+    const [{ guideMeta }, { loadStories }] = await Promise.all([
+      import("@/lib/guide-meta"),
+      import("@/lib/narration-stories-load"),
+    ]);
+    const stories = await loadStories(`site:${site.slug}`);
     return {
       slug: site.slug,
       name: site.name,
       summary: site.summary,
       image: coverImage(site),
-      guide: guideMeta(site.slug, deps.lang),
+      guide: guideMeta(site.slug, deps.lang, stories),
+      stories,
     };
   },
   head: ({ match, loaderData }) => {
@@ -212,7 +217,8 @@ function SiteDetail() {
   const ownPhoto = hasOwnPhoto(site);
   const region = regions.find((r) => r.id === site.region)!;
   const facts = factsFor(slug);
-  const guide = useMemo(() => guideForSite(slug), [slug]);
+  const { stories } = Route.useLoaderData();
+  const guide = useMemo(() => guideForSite(slug, stories), [slug, stories]);
   // Everything this page can put on screen, so the credit block below covers
   // the structure dialog's photo too and not just what is currently visible.
   const shownPhotos = [

@@ -477,9 +477,9 @@ export const tm: Record<string, [string, string]> = {
     "Das monumentale Königstor der Stadt, Sinnbild für den Einzug des Herrschers.",
     "Монументальные царские ворота города, символизирующие вход правителя.",
   ],
-  "The colossal heads lined up on Nemrut's north and east terraces.": [
-    "Die kolossalen Köpfe, aufgereiht auf der Nord- und Ostterrasse des Nemrut.",
-    "Колоссальные головы, выстроенные в ряд на северной и восточной террасах Немрута.",
+  "The colossal heads lined up on Nemrut's east and west terraces.": [
+    "Die kolossalen Köpfe, aufgereiht auf der Ost- und Westterrasse des Nemrut.",
+    "Колоссальные головы, выстроенные в ряд на восточной и западной террасах Немрута.",
   ],
   "The columns lying in the Antique Pool fell there during a 7th-century earthquake.": [
     "Die Säulen, die im Antiken Becken liegen, stürzten bei einem Erdbeben im 7. Jahrhundert hinein.",

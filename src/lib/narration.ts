@@ -7,12 +7,13 @@ import type { SiteDetail } from "@/lib/site-details";
 /**
  * The audio guide's script.
  *
- * Nothing in here is new writing about a site. Every sentence a visitor hears
- * is one the page already shows — the summary, the history, the structure
- * blurbs, the facts — put in the order a guide would say them and joined by a
- * few spoken connectives. That is deliberate: the page's text has been checked
- * and corrected over many commits, and a narration that paraphrased it would
- * be a second, unchecked version of the same claims.
+ * Nothing in here is new writing about a site. Every sentence is one the page
+ * already shows — the summary, the history, the structure blurbs, the facts —
+ * put in the order a guide would say them and joined by a few spoken
+ * connectives. A guide's chapters can then be replaced by versions written to
+ * be spoken (`narration-stories`); those keep every number and name of the
+ * chapter they replace, which `scripts/check-stories.ts` enforces in the
+ * tests, so they are not a second, unchecked version of the same claims.
  *
  * A guide is a list of chapters so the player can skip, show where it is, and
  * — on a reconstruction — turn the camera to the part being described.

@@ -36,3 +36,15 @@ dist-ssr
 
 # Raw 3D scans downloaded for processing (the processed copies live in public/scans)
 /scans/
+
+# Local secrets (GEMINI_API_KEY etc.); .env.example is the committed template
+.env
+.env.*
+!.env.example
+
+# Text-to-Speech key and local usage (scripts/generate_audio_chirp.py)
+scripts/.tts-key
+scripts/.tts-usage.json
+scripts/.tts-voice
+scripts/voice-samples/
+*.part

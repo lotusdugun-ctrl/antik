@@ -23,10 +23,10 @@ export const tm: Record<string, [string, string]> = {
   "5th century BC": ["5. Jahrhundert v. Chr.", "V век до н. э."],
   "6th century AD": ["6. Jahrhundert n. Chr.", "VI век н. э."],
   "9600 BC": ["9600 v. Chr.", "9600 год до н. э."],
-  "A 1.3-kilometre Roman diversion tunnel, cut through solid rock by hand to keep floodwater out of the harbour of Seleucia Pieria.":
+  "A 1.4-kilometre Roman diversion tunnel, cut through solid rock by hand to keep floodwater out of the harbour of Seleucia Pieria.":
     [
-      "Ein 1,3 Kilometer langer römischer Umleitungstunnel, von Hand durch massiven Fels gehauen, um Hochwasser vom Hafen von Seleukeia Pieria fernzuhalten.",
-      "Римский отводной тоннель длиной 1,3 километра, вручную высеченный в сплошной скале, чтобы защитить гавань Селевкии Пиерии от паводков.",
+      "Ein 1,4 Kilometer langer römischer Umleitungstunnel, von Hand durch massiven Fels gehauen, um Hochwasser vom Hafen von Seleukeia Pieria fernzuhalten.",
+      "Римский отводной тоннель длиной 1,4 километра, вручную высеченный в сплошной скале, чтобы защитить гавань Селевкии Пиерии от паводков.",
     ],
   "A Bithynian coastal city founded by Megarians, where the legend of Heracles is set.": [
     "Von Megarern gegründete bithynische Küstenstadt, Schauplatz der Herakles-Sage.",
@@ -609,10 +609,10 @@ export const tm: Record<string, [string, string]> = {
       "Es vereint die Funde aus den thrakischen Dolmen und Grabhügeln unter einem Dach mit der Volkskunde Edirnes, der osmanischen Hauptstadt.",
       "Музей объединяет под одной крышей находки из фракийских дольменов и курганов и этнографию Эдирне — османской столицы.",
     ],
-  "Built entirely by interlocking joinery without a single nail, its ceiling and capitals still carrying six-hundred-year-old original paintwork.":
+  "Built entirely by interlocking joinery without a single nail, its ceiling and capitals still carrying six-hundred-and-fifty-year-old original paintwork.":
     [
-      "Ganz ohne einen einzigen Nagel in Stecktechnik errichtet; Decke und Kapitelle tragen noch die originale, sechshundert Jahre alte Bemalung.",
-      "Построенная целиком на врубках без единого гвоздя, мечеть до сих пор сохраняет на потолке и капителях оригинальную роспись шестисотлетней давности.",
+      "Ganz ohne einen einzigen Nagel in Stecktechnik errichtet; Decke und Kapitelle tragen noch die originale, sechshundertfünfzig Jahre alte Bemalung.",
+      "Построенная целиком на врубках без единого гвоздя, мечеть до сих пор сохраняет на потолке и капителях оригинальную роспись шестисотпятидесятилетней давности.",
     ],
   "Built for the Saltukid ruler Mama Hatun, the tomb stands at the centre of a circular walled court — a plan with no other example in Anatolia.":
     [
@@ -624,10 +624,10 @@ export const tm: Record<string, [string, string]> = {
       "Für den Emir Celâleddin Karatay erbaut; sein Portal zeigt Figuren mit Menschenköpfen und Tierreliefs in der reichsten Folge seldschukischer Steinmetzkunst.",
       "Хан, построенный для эмира Джалаладдина Каратая; на его портале — фигуры с человеческими головами и рельефы животных, богатейший ряд сельджукской резьбы.",
     ],
-  "Built from Cappadocia's yellow stone, the last Seljuk han on this branch of the Silk Road, its two-tone portal set against a deliberately plain courtyard.":
+  "Built from Cappadocia's yellow stone, one of the last Seljuk hans on this branch of the Silk Road, its two-tone portal set against a deliberately plain courtyard.":
     [
-      "Aus dem gelben Stein Kappadokiens erbaut, der letzte seldschukische Han an diesem Zweig der Seidenstraße, dessen zweifarbiges Portal einem bewusst schlichten Hof gegenübersteht.",
-      "Построенный из жёлтого камня Каппадокии последний сельджукский хан на этой ветви Шёлкового пути, чей двухцветный портал контрастирует с нарочито простым двором.",
+      "Aus dem gelben Stein Kappadokiens erbaut, einer der letzten seldschukischen Hans an diesem Zweig der Seidenstraße, dessen zweifarbiges Portal einem bewusst schlichten Hof gegenübersteht.",
+      "Построенный из жёлтого камня Каппадокии один из последних сельджукских ханов на этой ветви Шёлкового пути, чей двухцветный портал контрастирует с нарочито простым двором.",
     ],
   "Built in four months at the narrowest point of the Bosphorus before the siege of Constantinople, to cut the city off from relief by sea.":
     [

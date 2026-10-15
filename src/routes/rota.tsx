@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
@@ -15,6 +15,8 @@ import { OfflinePanel } from "@/components/OfflinePanel";
 import { SiteMap } from "@/components/SiteMap";
 import { parseLang, translate, useI18n } from "@/lib/i18n";
 import { routeGuide } from "@/lib/route-guide";
+import type { StoryText } from "@/lib/narration-stories";
+import { loadStories } from "@/lib/narration-stories-load";
 import { buildRouteServerFn } from "@/lib/routing";
 import { seoTags } from "@/lib/seo";
 import { getSite, sites, type Site } from "@/lib/sites";
@@ -65,9 +67,27 @@ function RouteBuilderPage() {
         ]
       : [39.2, 33.5];
 
+  // Each stop's written chapters, fetched once the route is known; until they
+  // arrive the stops speak their assembled text.
+  const [stories, setStories] = useState<Record<string, StoryText | undefined>>({});
+  useEffect(() => {
+    let live = true;
+    void Promise.all(
+      ordered.map(async (s) => [s.slug, await loadStories(`site:${s.slug}`)] as const),
+    ).then((entries) => {
+      if (live) setStories(Object.fromEntries(entries));
+    });
+    return () => {
+      live = false;
+    };
+  }, [ordered]);
+
   const guide = useMemo(
-    () => (data && ordered.length > 0 ? routeGuide(ordered, data.legs, { highlights }) : undefined),
-    [data, ordered, highlights],
+    () =>
+      data && ordered.length > 0
+        ? routeGuide(ordered, data.legs, { highlights, stories })
+        : undefined,
+    [data, ordered, highlights, stories],
   );
 
   const daysArr = useMemo(() => {

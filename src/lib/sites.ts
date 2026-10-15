@@ -2635,8 +2635,8 @@ export const sites: Site[] = [
     era: { tr: "MS 1. yüzyıl", en: "1st century AD" },
     unesco: "tentative",
     summary: {
-      tr: "Seleukeia Pieria limanını sel sularından korumak için dağ kütlesi elle oyularak açılan, 1,3 kilometrelik Roma su tahliye tüneli.",
-      en: "A 1.3-kilometre Roman diversion tunnel, cut through solid rock by hand to keep floodwater out of the harbour of Seleucia Pieria.",
+      tr: "Seleukeia Pieria limanını sel sularından korumak için dağ kütlesi elle oyularak açılan, 1,4 kilometrelik Roma su tahliye tüneli.",
+      en: "A 1.4-kilometre Roman diversion tunnel, cut through solid rock by hand to keep floodwater out of the harbour of Seleucia Pieria.",
     },
     figures: ["Vespasianus", "Titus"],
     popularity: 6,
@@ -3154,8 +3154,8 @@ export const sites: Site[] = [
     era: { tr: "1249", en: "1249" },
     unesco: "tentative",
     summary: {
-      tr: "Kapadokya'nın sarı taşından yapılmış, İpek Yolu'nun bu kolundaki son Selçuklu hanı; taç kapısının iki renkli taş işçiliği avlunun sadeliğiyle tam bir karşıtlık kurar.",
-      en: "Built from Cappadocia's yellow stone, the last Seljuk han on this branch of the Silk Road, its two-tone portal set against a deliberately plain courtyard.",
+      tr: "Kapadokya'nın sarı taşından yapılmış, İpek Yolu'nun bu kolundaki son Selçuklu hanlarından biri; taç kapısının iki renkli taş işçiliği avlunun sadeliğiyle tam bir karşıtlık kurar.",
+      en: "Built from Cappadocia's yellow stone, one of the last Seljuk hans on this branch of the Silk Road, its two-tone portal set against a deliberately plain courtyard.",
     },
     popularity: 6,
   }),
@@ -4519,8 +4519,8 @@ export const sites: Site[] = [
     unesco: "listed",
     fee: 0,
     summary: {
-      tr: "Tek bir çivi kullanılmadan geçme tekniğiyle kurulan ahşap camide, tavan ve sütun başlıklarındaki altı yüz yıllık kalem işi boya hâlâ özgündür.",
-      en: "Built entirely by interlocking joinery without a single nail, its ceiling and capitals still carrying six-hundred-year-old original paintwork.",
+      tr: "Tek bir çivi kullanılmadan geçme tekniğiyle kurulan ahşap camide, tavan ve sütun başlıklarındaki altı yüz elli yıllık kalem işi boya hâlâ özgündür.",
+      en: "Built entirely by interlocking joinery without a single nail, its ceiling and capitals still carrying six-hundred-and-fifty-year-old original paintwork.",
     },
     popularity: 6,
   }),

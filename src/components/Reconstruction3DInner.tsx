@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { SCANS } from "@/lib/scans";
 import { buildLandscape, type Biome } from "./scene/landscape";
 import type { LifeHandle } from "./scene/life";
@@ -121,6 +128,18 @@ type Props = {
   life?: SceneLife | undefined;
   /** Whether that life is shown. Toggling it does not rebuild the scene. */
   showLife?: boolean | undefined;
+  /**
+   * First-person walking instead of orbiting: eye height above whatever floor
+   * is underfoot, keys or the on-screen pad to move, drag to look round.
+   */
+  walk?: boolean | undefined;
+  /**
+   * Told when the scene leaves walking by itself — a narrated tour or a label
+   * flying the camera somewhere — so the caller's button can follow.
+   */
+  onWalkEnd?: (() => void) | undefined;
+  /** Names for the on-screen walking pad's buttons, in the reader's language. */
+  padLabels?: { forward: string; back: string; left: string; right: string } | undefined;
 };
 
 type Palette = {
@@ -370,8 +389,20 @@ export default function Reconstruction3DInner({
   life,
   showLife = true,
   onReady,
+  walk = false,
+  onWalkEnd,
+  padLabels,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
+  /*
+   * The on-screen walking pad, read by the render loop every frame: how hard
+   * it is being pushed forward (+1) or back (-1), and to the right or left.
+   */
+  const padRef = useRef({ forward: 0, right: 0 });
+  const walkEndRef = useRef(onWalkEnd);
+  walkEndRef.current = onWalkEnd;
+  const walkRef = useRef(walk);
+  walkRef.current = walk;
   const apiRef = useRef<{
     setAtmos: (t: "light" | "dark", a: AtmosMode) => void;
     setAutoRotate: (on: boolean) => void;
@@ -383,6 +414,7 @@ export default function Reconstruction3DInner({
     setQuality: (on: boolean) => void;
     capture: () => string;
     setLife: (on: boolean) => void;
+    setWalk: (on: boolean) => void;
   } | null>(null);
   const showLifeRef = useRef(showLife);
   showLifeRef.current = showLife;
@@ -2735,6 +2767,68 @@ export default function Reconstruction3DInner({
         );
       }
 
+      /** Materials that are not stone, and take no grain. */
+      const NOT_STONE: Material[] = ["shadow", "human", "linen", "foliage", "papyrus", "hide"];
+      /** Marbles take the veined set; limestone and the rest the coarser block. */
+      const stoneSetFor = (name: Material) =>
+        name === "marble" ||
+        name === "marbleWorn" ||
+        name === "pavonazzetto" ||
+        name === "gialloAntico" ||
+        name === "granite"
+          ? stoneSet
+          : blockSet;
+      /**
+       * The surface of one material: its palette, and the stone's grain,
+       * normals and pits when it is stone. Shared by the merged building and by
+       * the scans that stand in its stone, so a statue and the plinth under it
+       * are visibly the same material.
+       */
+      const surfaceFor = (
+        name: Material,
+        maps: { map: THREE_NS.Texture; normal: THREE_NS.Texture; ao: THREE_NS.Texture } | null,
+      ) => {
+        const palette = MATERIALS[name];
+        /*
+         * MeshPhysicalMaterial over MeshStandardMaterial on purpose: the palette
+         * files a thin clearcoat layer onto Roman marble (see `Palette`), and
+         * only the physical material actually renders it — its `clearcoat`
+         * term is the tight, bright highlight that polish puts back on the
+         * stone. Standard material would silently drop it and leave every
+         * façade reading as matte plaster, which is a reconstruction that never
+         * happened (Roman façades were polished, the Celsus front famously so).
+         */
+        return new THREE.MeshPhysicalMaterial({
+          color: palette.color,
+          roughness: palette.roughness,
+          metalness: palette.metalness,
+          // The same grain on everything, tinted by each material's own colour
+          // and roughened by it too, so marble reads polished and limestone
+          // does not. The PBR channels are baked from the very same height, so
+          // grain, shine and shadow agree about where every pit is.
+          map: maps?.map ?? null,
+          roughnessMap: maps?.map ?? null,
+          normalMap: maps?.normal ?? null,
+          aoMap: maps?.ao ?? null,
+          aoMapIntensity: maps ? 0.75 : 1,
+          ...(palette.sheen
+            ? {
+                sheen: palette.sheen,
+                sheenRoughness: palette.sheenRoughness ?? 0.4,
+                sheenColor: new THREE.Color(palette.sheenColor ?? 0xffffff),
+              }
+            : {}),
+          // The polish layer, if the palette declared one. Kept just off a
+          // mirror so the carving still reads as carved rather than as glass.
+          ...(palette.clearcoat !== undefined
+            ? {
+                clearcoat: palette.clearcoat,
+                clearcoatRoughness: palette.clearcoatRoughness ?? 0.35,
+              }
+            : {}),
+        });
+      };
+
       /**
        * Everything of one material becomes one mesh. The building goes into
        * the scene; the props of its life go into their own group, so they can
@@ -2742,10 +2836,14 @@ export default function Reconstruction3DInner({
        */
       const addMerged = (source: Part[], parent: THREE_NS.Object3D) => {
         const byMaterial = new Map<Material, THREE_NS.BufferGeometry[]>();
+        // Which statue each geometry belongs to, if any, in step with `byMaterial`.
+        const statueOf = new Map<THREE_NS.BufferGeometry, string>();
         for (const part of source) {
           if (part.carving || part.scan) continue;
           const list = byMaterial.get(part.material) ?? [];
-          list.push(flatten(geometryFor(part)));
+          const geometry = flatten(geometryFor(part));
+          list.push(geometry);
+          if (part.statue) statueOf.set(geometry, part.statue);
           byMaterial.set(part.material, list);
         }
 
@@ -2785,7 +2883,13 @@ export default function Reconstruction3DInner({
               let gr = 1;
               let bl = 1;
               if (masonry) {
-                const k = hashString(`${name}|${n}`);
+                /*
+                 * A statue built of many pieces — an enthroned god's head,
+                 * body and throne — was carved from one block, so its pieces
+                 * share one tint; tinted piece by piece it came out patchy.
+                 */
+                const statue = statueOf.get(geometry);
+                const k = hashString(statue === undefined ? `${name}|${n}` : `statue|${statue}`);
                 const shade = 0.9 + ((k & 255) / 255) * 0.16;
                 const warm = (((k >> 8) & 255) / 255 - 0.5) * 0.05;
                 r = shade + warm;
@@ -2810,56 +2914,7 @@ export default function Reconstruction3DInner({
           // same world-projected coordinates are duplicated there for it.
           const uv = merged.getAttribute("uv");
           if (uv) merged.setAttribute("uv1", uv.clone());
-          const palette = MATERIALS[name];
-          const isStone = !["shadow", "human", "linen", "foliage", "papyrus", "hide"].includes(
-            name,
-          );
-          const stone =
-            name === "marble" ||
-            name === "marbleWorn" ||
-            name === "pavonazzetto" ||
-            name === "gialloAntico" ||
-            name === "granite"
-              ? stoneSet
-              : blockSet;
-          /*
-           * MeshPhysicalMaterial over MeshStandardMaterial on purpose: the palette
-           * files a thin clearcoat layer onto Roman marble (see `Palette`), and
-           * only the physical material actually renders it — its `clearcoat`
-           * term is the tight, bright highlight that polish puts back on the
-           * stone. Standard material would silently drop it and leave every
-           * façade reading as matte plaster, which is a reconstruction that never
-           * happened (Roman façades were polished, the Celsus front famously so).
-           */
-          const material = new THREE.MeshPhysicalMaterial({
-            color: palette.color,
-            roughness: palette.roughness,
-            metalness: palette.metalness,
-            // The same grain on everything, tinted by each material's own colour
-            // and roughened by it too, so marble reads polished and limestone
-            // does not. The PBR channels are baked from the very same height, so
-            // grain, shine and shadow agree about where every pit is.
-            map: isStone ? stone.map : null,
-            roughnessMap: isStone ? stone.map : null,
-            normalMap: isStone ? stone.normal : null,
-            aoMap: isStone ? stone.ao : null,
-            aoMapIntensity: isStone ? 0.75 : 1,
-            ...(palette.sheen
-              ? {
-                  sheen: palette.sheen,
-                  sheenRoughness: palette.sheenRoughness ?? 0.4,
-                  sheenColor: new THREE.Color(palette.sheenColor ?? 0xffffff),
-                }
-              : {}),
-            // The polish layer, if the palette declared one. Kept just off a
-            // mirror so the carving still reads as carved rather than as glass.
-            ...(palette.clearcoat !== undefined
-              ? {
-                  clearcoat: palette.clearcoat,
-                  clearcoatRoughness: palette.clearcoatRoughness ?? 0.35,
-                }
-              : {}),
-          });
+          const material = surfaceFor(name, NOT_STONE.includes(name) ? null : stoneSetFor(name));
           if (painted) material.vertexColors = true;
           /*
            * Paint, shadowed openings and dark trim are laid on a surface, often
@@ -2977,7 +3032,27 @@ export default function Reconstruction3DInner({
             }),
           );
           if (disposed) return;
+          /*
+           * How many metres one unit of a scan's own file comes to once it is
+           * fitted into its part — a figure's height, a panel's width, a drum's
+           * diameter — so its stone grain can be laid at the same size as the
+           * procedural stone's. The first part to use a scan sets it; every
+           * other use of a file is fitted to much the same size.
+           */
+          const fitScale = (part: Part, size: THREE_NS.Vector3) => {
+            const fit = part.scan!;
+            if (fit.centre && fit.diameter) return fit.diameter / Math.max(size.x, size.z);
+            if (part.kind === "figure") return part.height / size.y;
+            if (part.kind === "relief")
+              return Math.min(part.size[0] / size.x, part.size[1] / size.y);
+            return 1;
+          };
           for (const [id, root] of loaded) {
+            const first = placed.find(({ part }) => part.scan!.id === id)!.part;
+            const metres = fitScale(
+              first,
+              new THREE.Box3().setFromObject(root).getSize(new THREE.Vector3()),
+            );
             root.traverse((object) => {
               const mesh = object as THREE_NS.Mesh;
               if (!mesh.isMesh) return;
@@ -2987,6 +3062,17 @@ export default function Reconstruction3DInner({
               mesh.receiveShadow = false;
               // The free-archive scans come as bare surface, without normals.
               if (!mesh.geometry.attributes["normal"]) mesh.geometry.computeVertexNormals();
+              /*
+               * Nor do they carry texture coordinates, and those that do carry
+               * an atlas for their own photograph. Stone grain needs the same
+               * box projection the building gets, in metres, so it goes in a
+               * channel of its own (`uv1`) and leaves any photograph's alone.
+               */
+              if (!mesh.geometry.getAttribute("uv1")) {
+                worldUVs(mesh.geometry, "uv1");
+                const grain = mesh.geometry.getAttribute("uv1") as THREE_NS.BufferAttribute;
+                for (let i = 0; i < grain.array.length; i += 1) grain.array[i]! *= metres;
+              }
               scanResources.push(mesh.geometry);
               const original = mesh.material as THREE_NS.MeshStandardMaterial;
               // A scan's own texture already holds the light it was
@@ -3012,6 +3098,52 @@ export default function Reconstruction3DInner({
             void id;
           }
           const tintedScans = new Map<string, THREE_NS.MeshStandardMaterial>();
+          // The stones a scan can be made of, as opposed to paint or bronze.
+          const SCAN_STONES: Material[] = [
+            "marble",
+            "marbleWorn",
+            "limestone",
+            "stone",
+            "stoneDark",
+            "granite",
+            "gialloAntico",
+            "pavonazzetto",
+            "conglomerate",
+            "terrazzo",
+          ];
+          /*
+           * The stone textures again, reading the scans' own `uv1` channel. They
+           * share their canvases with the originals; only the channel differs.
+           */
+          const scanMaps = new Map<StoneSet, StoneSet>();
+          const scanStones = new Map<Material, THREE_NS.MeshPhysicalMaterial>();
+          const scanStoneFor = (name: Material) => {
+            let made = scanStones.get(name);
+            if (made) return made;
+            const set = stoneSetFor(name);
+            let maps = scanMaps.get(set);
+            if (!maps) {
+              const channelled = <T extends THREE_NS.Texture>(texture: T) => {
+                const copy = texture.clone();
+                copy.channel = 1;
+                copy.needsUpdate = true;
+                textures.push(copy);
+                return copy;
+              };
+              maps = {
+                map: channelled(set.map),
+                normal: channelled(set.normal),
+                ao: channelled(set.ao),
+              };
+              scanMaps.set(set, maps);
+            }
+            made = surfaceFor(name, maps);
+            // A scan is a shell, often open at the back or the base.
+            made.side = THREE.DoubleSide;
+            scanStones.set(name, made);
+            scanResources.push(made);
+            return made;
+          };
           for (const { part, into } of placed) {
             const fit = part.scan!;
             const root = loaded.get(fit.id);
@@ -3022,27 +3154,37 @@ export default function Reconstruction3DInner({
             holder.name = `scan:${fit.id}`;
             const copy = root.clone(true);
             /*
-             * A scan takes the stone of the part it stands in for: the lions at
-             * Nemrut are the limestone of the terrace, not a white cast set
-             * down among them.
+             * A scan takes the stone of the part it stands in for: the
+             * Mausoleum's lions are its weathered marble, a theatre's gods the
+             * marble of its stage front, not white casts set down among them.
+             * So a scan without a photograph of its own — nearly all of them,
+             * bare surface from a museum's scanner — is given the very surface
+             * the procedural stone has, grain, normals, pits and polish. One
+             * with a photograph keeps it, the carving's own stone, unless its
+             * part names a stone other than plain marble, which is a part
+             * explicitly asking for the stone of the building round it.
+             * Paint, bronze and the like are not stone and are only tinted.
              */
-            if (part.material !== "marble") {
-              copy.traverse((object) => {
-                const mesh = object as THREE_NS.Mesh;
-                if (!mesh.isMesh) return;
-                const base = mesh.material as THREE_NS.MeshStandardMaterial;
-                if (base.map) return;
-                const key = `${fit.id}|${part.material}`;
-                let tinted = tintedScans.get(key);
-                if (!tinted) {
-                  tinted = base.clone();
-                  tinted.color.set(MATERIALS[part.material].color);
-                  tintedScans.set(key, tinted);
-                  scanResources.push(tinted);
-                }
-                mesh.material = tinted;
-              });
-            }
+            const asksForStone = SCAN_STONES.includes(part.material);
+            copy.traverse((object) => {
+              const mesh = object as THREE_NS.Mesh;
+              if (!mesh.isMesh) return;
+              const base = mesh.material as THREE_NS.MeshStandardMaterial;
+              if (asksForStone && (!base.map || part.material !== "marble")) {
+                mesh.material = scanStoneFor(part.material);
+                return;
+              }
+              if (base.map || part.material === "marble") return;
+              const key = `${fit.id}|${part.material}`;
+              let tinted = tintedScans.get(key);
+              if (!tinted) {
+                tinted = base.clone();
+                tinted.color.set(MATERIALS[part.material].color);
+                tintedScans.set(key, tinted);
+                scanResources.push(tinted);
+              }
+              mesh.material = tinted;
+            });
             copy.rotation.y = SCANS[fit.id].facing ?? 0;
             holder.add(copy);
             let scale = 1;
@@ -3161,7 +3303,8 @@ export default function Reconstruction3DInner({
       // Phones draw at up to 3x; past 1.5x the difference is invisible on a
       // small screen and the fill cost is not.
       const touch = window.matchMedia("(pointer: coarse)").matches;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, touch ? 1.5 : 2));
+      const maxRatio = Math.min(window.devicePixelRatio, touch ? 1.5 : 2);
+      renderer.setPixelRatio(maxRatio);
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -3207,8 +3350,18 @@ export default function Reconstruction3DInner({
       controls.enableDamping = true;
       controls.dampingFactor = 0.07;
       controls.autoRotateSpeed = 0.55;
-      controls.minDistance = span * 0.18;
-      controls.maxDistance = span * 2.6;
+      /*
+       * Zoom as far in and out as anyone likes. The wheel or the pinch heads
+       * for the point under the cursor rather than the model's middle, so
+       * zooming is a way of going *to* a capital or a doorway, and the near
+       * limit is a hand's breadth rather than a fifth of the building. Two
+       * fingers (or the right mouse button) pan, in the plane of the screen.
+       */
+      controls.minDistance = span * 0.01;
+      controls.maxDistance = span * 6;
+      controls.zoomToCursor = true;
+      controls.screenSpacePanning = true;
+      controls.enablePan = true;
       // Never let the camera go under the ground the building stands on.
       controls.maxPolarAngle = Math.PI * 0.495;
       controls.update();
@@ -3474,6 +3627,15 @@ export default function Reconstruction3DInner({
         if (!clientWidth || !clientHeight) return;
         camera.aspect = clientWidth / clientHeight;
         camera.updateProjectionMatrix();
+        /*
+         * Full screen on a large monitor at 2x is some fifteen million pixels a
+         * frame, most of them invisible at that size. The cap above still
+         * applies, and on top of it the frame is held to a budget of about
+         * that of a 2560 x 1600 screen, so going full screen makes the model
+         * bigger rather than the frame rate smaller.
+         */
+        const budget = Math.sqrt(4_100_000 / (clientWidth * clientHeight));
+        renderer.setPixelRatio(Math.max(1, Math.min(maxRatio, budget)));
         renderer.setSize(clientWidth, clientHeight, false);
         composer?.setSize(clientWidth, clientHeight);
       };
@@ -3601,7 +3763,11 @@ export default function Reconstruction3DInner({
         made.setSize(clientWidth, clientHeight);
         composer = {
           render: () => made.render(),
-          setSize: (w, h) => made.setSize(w, h),
+          setSize: (w, h) => {
+            // The ratio may have moved with the frame budget in `resize`.
+            made.setPixelRatio(renderer.getPixelRatio());
+            made.setSize(w, h);
+          },
           dispose: () => {
             ao.dispose();
             made.dispose();
@@ -3637,6 +3803,379 @@ export default function Reconstruction3DInner({
         flight = null;
       };
       controls.addEventListener("start", cancelFlight);
+
+      /* ---- walking ---- */
+
+      /*
+       * Orbiting shows a building the way a model on a table is seen; walking
+       * shows it the way it was built to be seen, from a person's eye height
+       * on its own floor. The parts are in metres, so a person's eye is 1.6
+       * of them above whatever is underfoot.
+       */
+      const EYE = 1.6;
+      // The highest thing that can be stepped up onto without climbing: a
+      // theatre's seat row, a stair, a low plinth — not a wall or a podium.
+      const STEP = 1.1;
+      const groundY = bounds.min[1] - 0.06;
+      const apronRadius = span * 2.2;
+      // A stroll on a 20 m tomb, a brisk walk round a 140 m theatre.
+      const walkSpeed = Math.max(3, span * 0.05);
+
+      /*
+       * The ground outside the building is the landscape's terrain, a regular
+       * grid of heights, so it is read straight off the grid rather than hit
+       * with a ray: four lookups and a blend, cheap enough for every frame.
+       */
+      let terrainAt = (_x: number, _z: number) => groundY;
+      const terrainMesh = landscape.group.children.find(
+        (child) =>
+          (child as THREE_NS.Mesh).isMesh === true &&
+          (child as THREE_NS.Mesh).geometry.type === "PlaneGeometry",
+      ) as THREE_NS.Mesh | undefined;
+      if (terrainMesh) {
+        const plane = terrainMesh.geometry as THREE_NS.PlaneGeometry;
+        const { width, widthSegments } = plane.parameters;
+        const heights = plane.attributes["position"] as THREE_NS.BufferAttribute;
+        const row = widthSegments + 1;
+        const x0 = heights.getX(0);
+        const z0 = heights.getZ(0);
+        const stepX = (heights.getX(widthSegments) - x0) / widthSegments;
+        const stepZ = (heights.getZ(row * widthSegments) - z0) / widthSegments;
+        if (width > 0 && stepX !== 0 && stepZ !== 0) {
+          terrainAt = (x, z) => {
+            const fx = (x - x0) / stepX;
+            const fz = (z - z0) / stepZ;
+            if (!(fx >= 0 && fz >= 0 && fx < widthSegments && fz < widthSegments)) return groundY;
+            const ix = Math.floor(fx);
+            const iz = Math.floor(fz);
+            const u = fx - ix;
+            const v = fz - iz;
+            const i = iz * row + ix;
+            const near = heights.getY(i) * (1 - u) + heights.getY(i + 1) * u;
+            const far = heights.getY(i + row) * (1 - u) + heights.getY(i + row + 1) * u;
+            return near * (1 - v) + far * v;
+          };
+        }
+      }
+      /** The open ground at a point: the paved apron near the model, terrain beyond. */
+      const groundAt = (x: number, z: number) => {
+        const terrain = terrainAt(x, z);
+        const dx = x - centre.x;
+        const dz = z - centre.z;
+        return dx * dx + dz * dz < apronRadius * apronRadius ? Math.max(terrain, groundY) : terrain;
+      };
+
+      /*
+       * The building's own floors — pavements, steps, seat rows, a podium's
+       * top — are the faces of the model that lie roughly flat. They are
+       * sorted once into a grid over the plan the first time someone walks,
+       * so finding the floor underfoot means testing the few dozen triangles
+       * in one cell rather than the two hundred thousand in the model.
+       */
+      const FLOOR_GRID = 64;
+      const floorMinX = bounds.min[0] - 1;
+      const floorMinZ = bounds.min[2] - 1;
+      const floorCell =
+        (Math.max(bounds.max[0] - bounds.min[0], bounds.max[2] - bounds.min[2]) + 2) / FLOOR_GRID;
+      let floorTris: Float32Array | null = null;
+      let floorCells: number[][] = [];
+      const buildFloors = () => {
+        const a = new THREE.Vector3();
+        const b = new THREE.Vector3();
+        const c = new THREE.Vector3();
+        const ab = new THREE.Vector3();
+        const ac = new THREE.Vector3();
+        const flat: number[] = [];
+        const cells: number[][] = Array.from({ length: FLOOR_GRID * FLOOR_GRID }, () => []);
+        const cellOf = (value: number, min: number) =>
+          Math.min(FLOOR_GRID - 1, Math.max(0, Math.floor((value - min) / floorCell)));
+        // Only the building itself: not the scale figure, the scans, the
+        // furniture of its life or the landscape, none of which is a floor.
+        for (const object of scene.children) {
+          const mesh = object as THREE_NS.Mesh;
+          if (!mesh.isMesh || mesh === apronMesh || mesh === scaleFigure) continue;
+          const position = mesh.geometry.attributes["position"] as
+            THREE_NS.BufferAttribute | undefined;
+          if (!position) continue;
+          mesh.updateMatrixWorld();
+          const index = mesh.geometry.index;
+          const count = index ? index.count : position.count;
+          for (let i = 0; i + 2 < count; i += 3) {
+            a.fromBufferAttribute(position, index ? index.getX(i) : i).applyMatrix4(
+              mesh.matrixWorld,
+            );
+            b.fromBufferAttribute(position, index ? index.getX(i + 1) : i + 1).applyMatrix4(
+              mesh.matrixWorld,
+            );
+            c.fromBufferAttribute(position, index ? index.getX(i + 2) : i + 2).applyMatrix4(
+              mesh.matrixWorld,
+            );
+            ab.subVectors(b, a);
+            ac.subVectors(c, a);
+            ab.cross(ac);
+            const length = ab.length();
+            // Either winding: a slab's underside is harmless, since a ceiling
+            // is never within a step of the feet.
+            if (length < 1e-9 || Math.abs(ab.y) / length < 0.7) continue;
+            const id = flat.length / 9;
+            flat.push(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z);
+            const x1 = cellOf(Math.min(a.x, b.x, c.x), floorMinX);
+            const x2 = cellOf(Math.max(a.x, b.x, c.x), floorMinX);
+            const z1 = cellOf(Math.min(a.z, b.z, c.z), floorMinZ);
+            const z2 = cellOf(Math.max(a.z, b.z, c.z), floorMinZ);
+            for (let gz = z1; gz <= z2; gz += 1) {
+              for (let gx = x1; gx <= x2; gx += 1) cells[gz * FLOOR_GRID + gx]!.push(id);
+            }
+          }
+        }
+        floorTris = new Float32Array(flat);
+        floorCells = cells;
+      };
+      /** The highest floor at (x, z) that is no higher than `reach`. */
+      const floorAt = (x: number, z: number, reach: number) => {
+        let best = groundAt(x, z);
+        const tris = floorTris;
+        if (!tris) return best;
+        const gx = Math.floor((x - floorMinX) / floorCell);
+        const gz = Math.floor((z - floorMinZ) / floorCell);
+        if (gx < 0 || gz < 0 || gx >= FLOOR_GRID || gz >= FLOOR_GRID) return best;
+        for (const id of floorCells[gz * FLOOR_GRID + gx]!) {
+          const o = id * 9;
+          const ax = tris[o]!;
+          const az = tris[o + 2]!;
+          const bx = tris[o + 3]!;
+          const bz = tris[o + 5]!;
+          const cx = tris[o + 6]!;
+          const cz = tris[o + 8]!;
+          // Barycentric weights in plan; outside the triangle, one goes negative.
+          const d = (bz - cz) * (ax - cx) + (cx - bx) * (az - cz);
+          if (Math.abs(d) < 1e-12) continue;
+          const wa = ((bz - cz) * (x - cx) + (cx - bx) * (z - cz)) / d;
+          const wb = ((cz - az) * (x - cx) + (ax - cx) * (z - cz)) / d;
+          const wc = 1 - wa - wb;
+          if (wa < -1e-6 || wb < -1e-6 || wc < -1e-6) continue;
+          const y = wa * tris[o + 1]! + wb * tris[o + 4]! + wc * tris[o + 7]!;
+          if (y <= reach && y > best) best = y;
+        }
+        return best;
+      };
+
+      /*
+       * The walker. `feet` is the floor being stood on; `lift` is how far
+       * above eye height someone has risen with E/Q, for looking over a wall.
+       * Rising past a floor lands on it, which is also how an upper storey or
+       * a podium too tall to step onto is reached.
+       */
+      const walker = { on: false, yaw: 0, pitch: 0, feet: groundY, lift: 0, nudge: 0 };
+      const held = { forward: false, back: false, left: false, right: false };
+      const heldVertical = { up: false, down: false, run: false };
+      // Where the orbit camera was, to go back to when the walk ends.
+      const orbitPosition = new THREE.Vector3();
+      const orbitTarget = new THREE.Vector3();
+      const enterWalk = () => {
+        if (walker.on) return;
+        if (!floorTris) buildFloors();
+        flight = null;
+        orbitPosition.copy(camera.position);
+        orbitTarget.copy(controls.target);
+        controls.enabled = false;
+        /*
+         * Start in front of the building, a few paces outside it, facing its
+         * middle — where a visitor arriving would stand. "In front" is the
+         * side the model is first shown from.
+         */
+        let fx = direction.x;
+        let fz = direction.z;
+        const flatLength = Math.hypot(fx, fz) || 1;
+        fx /= flatLength;
+        fz /= flatLength;
+        const footprint = Math.hypot(
+          (bounds.max[0] - bounds.min[0]) / 2,
+          (bounds.max[2] - bounds.min[2]) / 2,
+        );
+        const away = footprint + Math.max(3, span * 0.08);
+        const x = centre.x + fx * away;
+        const z = centre.z + fz * away;
+        walker.feet = floorAt(x, z, groundY + STEP);
+        walker.lift = 0;
+        walker.nudge = 0;
+        walker.yaw = Math.atan2(fx, fz);
+        walker.pitch = Math.max(
+          -0.3,
+          Math.min(0.5, Math.atan2(target.y - walker.feet - EYE, away)),
+        );
+        camera.position.set(x, walker.feet + EYE, z);
+        camera.rotation.set(walker.pitch, walker.yaw, 0, "YXZ");
+        walker.on = true;
+      };
+      /** Back to orbiting: gliding to where the orbit left off, or staying put for a flight. */
+      const exitWalk = (returnToOrbit: boolean) => {
+        if (!walker.on) return;
+        walker.on = false;
+        held.forward = held.back = held.left = held.right = false;
+        heldVertical.up = heldVertical.down = heldVertical.run = false;
+        looking.clear();
+        controls.enabled = true;
+        if (returnToOrbit) flyTo(orbitPosition, orbitTarget);
+        else controls.target.copy(orbitTarget);
+      };
+
+      const isTyping = (event: KeyboardEvent) => {
+        const element = event.target as HTMLElement | null;
+        return (
+          !!element &&
+          (element.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(element.tagName))
+        );
+      };
+      const setKey = (event: KeyboardEvent, down: boolean) => {
+        if (!walker.on || event.metaKey || event.ctrlKey || event.altKey || isTyping(event)) return;
+        switch (event.code) {
+          case "KeyW":
+          case "ArrowUp":
+            held.forward = down;
+            break;
+          case "KeyS":
+          case "ArrowDown":
+            held.back = down;
+            break;
+          case "KeyA":
+          case "ArrowLeft":
+            held.left = down;
+            break;
+          case "KeyD":
+          case "ArrowRight":
+            held.right = down;
+            break;
+          case "KeyE":
+          case "Space":
+          case "PageUp":
+            heldVertical.up = down;
+            break;
+          case "KeyQ":
+          case "KeyC":
+          case "PageDown":
+            heldVertical.down = down;
+            break;
+          case "ShiftLeft":
+          case "ShiftRight":
+            heldVertical.run = down;
+            return;
+          default:
+            return;
+        }
+        // The arrows and the space bar would otherwise scroll the page.
+        event.preventDefault();
+      };
+      const onKeyDown = (event: KeyboardEvent) => setKey(event, true);
+      const onKeyUp = (event: KeyboardEvent) => setKey(event, false);
+      // A key released while the window was in the background never says so.
+      const onBlur = () => {
+        held.forward = held.back = held.left = held.right = false;
+        heldVertical.up = heldVertical.down = heldVertical.run = false;
+      };
+      window.addEventListener("keydown", onKeyDown);
+      window.addEventListener("keyup", onKeyUp);
+      window.addEventListener("blur", onBlur);
+
+      /*
+       * Looking round is a drag, not a captured pointer: nothing to escape
+       * from, and the same on a phone as with a mouse. One finger looks; two
+       * pinched apart walk forward, together walk back. The wheel steps.
+       */
+      const looking = new Map<number, { x: number; y: number }>();
+      let pinch = 0;
+      const pinchSpan = () => {
+        let i = 0;
+        let ax = 0;
+        let ay = 0;
+        let d = 0;
+        for (const point of looking.values()) {
+          if (i === 0) {
+            ax = point.x;
+            ay = point.y;
+          } else if (i === 1) d = Math.hypot(point.x - ax, point.y - ay);
+          i += 1;
+        }
+        return d;
+      };
+      const onLookDown = (event: PointerEvent) => {
+        if (!walker.on) return;
+        event.preventDefault();
+        renderer.domElement.setPointerCapture(event.pointerId);
+        looking.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        if (looking.size === 2) pinch = pinchSpan();
+      };
+      const onLookMove = (event: PointerEvent) => {
+        const last = looking.get(event.pointerId);
+        if (!walker.on || !last) return;
+        if (looking.size >= 2) {
+          last.x = event.clientX;
+          last.y = event.clientY;
+          const spread = pinchSpan();
+          walker.nudge += (spread - pinch) * 0.02 * (walkSpeed / 3);
+          pinch = spread;
+          return;
+        }
+        const turn = event.pointerType === "mouse" ? 0.0045 : 0.006;
+        walker.yaw -= (event.clientX - last.x) * turn;
+        walker.pitch = Math.max(
+          -1.45,
+          Math.min(1.45, walker.pitch - (event.clientY - last.y) * turn),
+        );
+        last.x = event.clientX;
+        last.y = event.clientY;
+      };
+      const onLookUp = (event: PointerEvent) => {
+        looking.delete(event.pointerId);
+        if (looking.size === 2) pinch = pinchSpan();
+      };
+      const onWalkWheel = (event: WheelEvent) => {
+        if (!walker.on) return;
+        event.preventDefault();
+        const lines = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 400 : 1;
+        walker.nudge -= event.deltaY * lines * 0.01 * (walkSpeed / 3);
+      };
+      renderer.domElement.addEventListener("pointerdown", onLookDown);
+      renderer.domElement.addEventListener("pointermove", onLookMove);
+      renderer.domElement.addEventListener("pointerup", onLookUp);
+      renderer.domElement.addEventListener("pointercancel", onLookUp);
+      renderer.domElement.addEventListener("wheel", onWalkWheel, { passive: false });
+
+      /** One frame of walking: move, find the floor, settle the eye onto it. */
+      const stepWalk = (dt: number) => {
+        const pad = padRef.current;
+        let forward = (held.forward ? 1 : 0) - (held.back ? 1 : 0) + pad.forward;
+        let right = (held.right ? 1 : 0) - (held.left ? 1 : 0) + pad.right;
+        const push = Math.hypot(forward, right);
+        if (push > 1) {
+          forward /= push;
+          right /= push;
+        }
+        const speed = walkSpeed * (heldVertical.run ? 2.5 : 1);
+        // The wheel and the pinch are spent over a few frames, not in one jump.
+        const glide = walker.nudge * Math.min(1, dt * 8);
+        walker.nudge -= glide;
+        const ahead = forward * speed * dt + glide;
+        const aside = right * speed * dt;
+        const sin = Math.sin(walker.yaw);
+        const cos = Math.cos(walker.yaw);
+        // Yaw 0 looks down -z; the right hand then points down +x.
+        camera.position.x += -sin * ahead + cos * aside;
+        camera.position.z += -cos * ahead - sin * aside;
+        const rise = (heldVertical.up ? 1 : 0) - (heldVertical.down ? 1 : 0);
+        walker.lift = Math.max(0, Math.min(span * 2, walker.lift + rise * speed * 0.7 * dt));
+        const floor = floorAt(
+          camera.position.x,
+          camera.position.z,
+          walker.feet + walker.lift + STEP,
+        );
+        // Landing on something higher spends the lift it took to get there.
+        if (floor > walker.feet) walker.lift = Math.max(0, walker.lift - (floor - walker.feet));
+        walker.feet = floor;
+        const eye = floor + EYE + walker.lift;
+        camera.position.y += (eye - camera.position.y) * Math.min(1, dt * 10);
+        camera.rotation.set(walker.pitch, walker.yaw, 0, "YXZ");
+      };
 
       let lastFrame = performance.now() / 1000;
       const frame = () => {
@@ -3686,14 +4225,38 @@ export default function Reconstruction3DInner({
         repaintSkyIfChanged();
         glow += (glowTarget - glow) * Math.min(1, dt / 1.8);
         lifeHandle?.update(now, dt, glow, camera);
-        if (flight) {
-          const t = Math.min(1, (now - flight.start) / flight.duration);
-          const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-          camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
-          controls.target.lerpVectors(flight.fromTarget, flight.toTarget, e);
-          if (t >= 1) flight = null;
+        if (walker.on) stepWalk(dt);
+        else {
+          if (flight) {
+            const t = Math.min(1, (now - flight.start) / flight.duration);
+            const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
+            controls.target.lerpVectors(flight.fromTarget, flight.toTarget, e);
+            if (t >= 1) flight = null;
+          }
+          controls.update();
+          /*
+           * The polar limit keeps the camera above its target, but a target
+           * zoomed onto a pavement or panned off across the hills can still
+           * lead it underground; the ground itself is the floor here.
+           */
+          const floor = groundAt(camera.position.x, camera.position.z) + 0.3;
+          if (camera.position.y < floor) camera.position.y = floor;
+          if (controls.target.y < groundY) controls.target.y = groundY;
         }
-        controls.update();
+        /*
+         * The near plane follows the camera in. Fixed at half a metre, it
+         * sliced through a column the moment the zoom got close enough to
+         * read its fluting; pulled in only as far as the distance needs, the
+         * depth buffer keeps its precision at the far end of the scene too.
+         */
+        const nearWanted = walker.on
+          ? 0.05
+          : Math.min(0.5, Math.max(0.02, camera.position.distanceTo(controls.target) * 0.02));
+        if (Math.abs(camera.near - nearWanted) > camera.near * 0.1) {
+          camera.near = nearWanted;
+          camera.updateProjectionMatrix();
+        }
         if (composer && qualityOn) composer.render();
         else renderer.render(scene, camera);
         placePins();
@@ -3720,6 +4283,17 @@ export default function Reconstruction3DInner({
       });
       onScreen.observe(host);
 
+      /*
+       * A tour chapter, a label or a named view flies the camera, and a flight
+       * is an orbit move: the walk ends where it stands, the flight starts
+       * from there, and the caller is told so its button follows.
+       */
+      const leaveWalkForFlight = () => {
+        if (!walker.on) return;
+        exitWalk(false);
+        walkEndRef.current?.();
+      };
+
       /** The three views the model is worth seeing from, besides its own. */
       const viewpoints: Record<"front" | "above" | "corner", THREE_NS.Vector3> = {
         front: new THREE.Vector3(0, 0.18, -1),
@@ -3738,7 +4312,14 @@ export default function Reconstruction3DInner({
         setAutoRotate: (on) => {
           controls.autoRotate = on;
         },
-        reset: () => flyTo(home, target),
+        setWalk: (on) => {
+          if (on) enterWalk();
+          else exitWalk(true);
+        },
+        reset: () => {
+          leaveWalkForFlight();
+          flyTo(home, target);
+        },
         setLabels: (list, visible, active) => {
           labelsVisible = visible;
           if (scaleFigure) scaleFigure.visible = visible;
@@ -3751,6 +4332,7 @@ export default function Reconstruction3DInner({
           placePins();
         },
         setView: (view) => {
+          leaveWalkForFlight();
           const direction = viewpoints[view].clone().normalize();
           flyTo(target.clone().addScaledVector(direction, distance), target);
         },
@@ -3790,6 +4372,7 @@ export default function Reconstruction3DInner({
           }
         },
         focus: (at) => {
+          leaveWalkForFlight();
           const point = new THREE.Vector3(...at);
           const direction = camera.position.clone().sub(controls.target).normalize();
           // Flatten the approach a little: coming in along a steep downward
@@ -3818,6 +4401,7 @@ export default function Reconstruction3DInner({
       apiRef.current.setAutoRotate(latest.autoRotate);
       apiRef.current.setLabels(latest.labels, latest.showLabels, latest.activeLabel);
       apiRef.current.setLife(showLifeRef.current);
+      apiRef.current.setWalk(walkRef.current);
       renderer.domElement.setAttribute("aria-label", latest.label);
       setReady(true);
 
@@ -3848,6 +4432,14 @@ export default function Reconstruction3DInner({
         scanResources.forEach((resource) => resource.dispose());
         composer?.dispose();
         controls.removeEventListener("start", cancelFlight);
+        window.removeEventListener("keydown", onKeyDown);
+        window.removeEventListener("keyup", onKeyUp);
+        window.removeEventListener("blur", onBlur);
+        renderer.domElement.removeEventListener("pointerdown", onLookDown);
+        renderer.domElement.removeEventListener("pointermove", onLookMove);
+        renderer.domElement.removeEventListener("pointerup", onLookUp);
+        renderer.domElement.removeEventListener("pointercancel", onLookUp);
+        renderer.domElement.removeEventListener("wheel", onWalkWheel);
         renderer.dispose();
         // `dispose` frees the buffers but leaves the context itself alive
         // until garbage collection; give it back now, or a page that opens a
@@ -3898,6 +4490,13 @@ export default function Reconstruction3DInner({
     apiRef.current?.setAutoRotate(autoRotate);
   }, [autoRotate, ready]);
 
+  // Declared ahead of the flights below: a tour chapter that ends the walk
+  // and flies somewhere in the same render must end it first.
+  useEffect(() => {
+    apiRef.current?.setWalk(walk);
+    if (!walk) padRef.current.forward = padRef.current.right = 0;
+  }, [walk, ready]);
+
   useEffect(() => {
     if (resetToken > 0) apiRef.current?.reset();
   }, [resetToken]);
@@ -3944,6 +4543,86 @@ export default function Reconstruction3DInner({
   }
 
   // `relative` so the label layer, which is absolutely positioned, has this
-  // box to sit in rather than the page.
-  return <div ref={hostRef} className="relative h-full w-full" style={{ height }} />;
+  // box to sit in rather than the page. The canvas and its labels go in their
+  // own box, which React leaves alone, beside the walking pad React draws.
+  return (
+    <div className="relative h-full w-full" style={{ height }}>
+      <div ref={hostRef} className="absolute inset-0" />
+      {walk && padLabels && <WalkPad pad={padRef} labels={padLabels} />}
+    </div>
+  );
+}
+
+/**
+ * Four arrows to hold down, for walking where there is no keyboard. Held, not
+ * tapped: each one pushes for as long as a finger stays on it, and lifting the
+ * finger — or sliding it off, or the browser taking the touch away — stops.
+ */
+function WalkPad({
+  pad,
+  labels,
+}: {
+  pad: { current: { forward: number; right: number } };
+  labels: { forward: string; back: string; left: string; right: string };
+}) {
+  const hold = (axis: "forward" | "right", amount: number) => ({
+    onPointerDown: (event: ReactPointerEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.currentTarget.setPointerCapture(event.pointerId);
+      pad.current[axis] = amount;
+    },
+    onPointerUp: () => {
+      pad.current[axis] = 0;
+    },
+    onPointerCancel: () => {
+      pad.current[axis] = 0;
+    },
+    onLostPointerCapture: () => {
+      pad.current[axis] = 0;
+    },
+    // A long press would otherwise open the phone's menu over the model.
+    onContextMenu: (event: ReactMouseEvent) => event.preventDefault(),
+  });
+  const button =
+    "grid h-12 w-12 select-none place-items-center rounded-full border border-white/30 bg-black/45 text-white shadow-lg backdrop-blur active:bg-black/70 [touch-action:none]";
+  return (
+    <div className="pointer-events-none absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.75rem,env(safe-area-inset-right))] z-[2] grid grid-cols-3 grid-rows-3 gap-1">
+      <button
+        type="button"
+        aria-label={labels.forward}
+        title={labels.forward}
+        className={`${button} pointer-events-auto col-start-2 row-start-1`}
+        {...hold("forward", 1)}
+      >
+        <ChevronUp className="h-6 w-6" />
+      </button>
+      <button
+        type="button"
+        aria-label={labels.left}
+        title={labels.left}
+        className={`${button} pointer-events-auto col-start-1 row-start-2`}
+        {...hold("right", -1)}
+      >
+        <ChevronLeft className="h-6 w-6" />
+      </button>
+      <button
+        type="button"
+        aria-label={labels.right}
+        title={labels.right}
+        className={`${button} pointer-events-auto col-start-3 row-start-2`}
+        {...hold("right", 1)}
+      >
+        <ChevronRight className="h-6 w-6" />
+      </button>
+      <button
+        type="button"
+        aria-label={labels.back}
+        title={labels.back}
+        className={`${button} pointer-events-auto col-start-2 row-start-3`}
+        {...hold("forward", -1)}
+      >
+        <ChevronDown className="h-6 w-6" />
+      </button>
+    </div>
+  );
 }

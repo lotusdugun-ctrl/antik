@@ -1,6 +1,7 @@
 import { guideForSite } from "@/lib/guide-sources";
 import { pick, type Lang, type Localized } from "@/lib/i18n";
 import type { Chapter, Guide } from "@/lib/narration";
+import type { StoryText } from "@/lib/narration-stories";
 import type { Site } from "@/lib/sites";
 
 export type Leg = { km: number; min: number };
@@ -43,13 +44,13 @@ function announce(index: number, site: Site, leg: Leg | undefined, first: boolea
 export function routeGuide(
   stops: Site[],
   legs: Leg[],
-  options: { highlights?: boolean } = {},
+  options: { highlights?: boolean; stories?: Record<string, StoryText | undefined> } = {},
 ): Guide {
   const chapters: Chapter[] = [];
   let langs = [...ALL];
 
   stops.forEach((site, i) => {
-    const guide = guideForSite(site.slug);
+    const guide = guideForSite(site.slug, options.stories?.[site.slug]);
     const own = guide
       ? options.highlights
         ? guide.chapters.slice(0, HIGHLIGHT_CHAPTERS)

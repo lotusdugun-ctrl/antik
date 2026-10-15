@@ -442,8 +442,8 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Dev tanrı başları": {
     blurb: {
-      tr: "Nemrut Dağı'nın kuzey ve doğu teraslarında sıralanan dev heykel başları.",
-      en: "The colossal heads lined up on Nemrut's north and east terraces.",
+      tr: "Nemrut Dağı'nın doğu ve batı teraslarında sıralanan dev heykel başları.",
+      en: "The colossal heads lined up on Nemrut's east and west terraces.",
     },
     image:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/001362_Nemrut_Da%C4%9F%C4%B1_-_T%C3%BCrkei.jpg/1280px-001362_Nemrut_Da%C4%9F%C4%B1_-_T%C3%BCrkei.jpg",
@@ -826,26 +826,26 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "A Yapısı (arşiv binası)": {
     blurb: {
-      tr: "Acemhöyük'te mühür ve arşiv belgelerinin bulunduğu yapı.",
-      en: "The building at Acemhöyük that held seals and archive documents.",
+      tr: "Sapinuwa'da çivi yazılı tabletlerin bulunduğu arşiv yapısı.",
+      en: "The archive building at Sapinuwa where the cuneiform tablets were found.",
     },
   },
   "Building A (archive building)": {
     blurb: {
-      tr: "Acemhöyük'te mühür ve arşiv belgelerinin bulunduğu yapı.",
-      en: "The building at Acemhöyük that held seals and archive documents.",
+      tr: "Sapinuwa'da çivi yazılı tabletlerin bulunduğu arşiv yapısı.",
+      en: "The archive building at Sapinuwa where the cuneiform tablets were found.",
     },
   },
   "B Yapısı (depo)": {
     blurb: {
-      tr: "Acemhöyük'te depolama amaçlı kullanılan yapı.",
-      en: "The storehouse building at Acemhöyük.",
+      tr: "Sapinuwa'da depolama amaçlı kullanılan yapı.",
+      en: "The storehouse building at Sapinuwa.",
     },
   },
   "Building B (storehouse)": {
     blurb: {
-      tr: "Acemhöyük'te depolama amaçlı kullanılan yapı.",
-      en: "The storehouse building at Acemhöyük.",
+      tr: "Sapinuwa'da depolama amaçlı kullanılan yapı.",
+      en: "The storehouse building at Sapinuwa.",
     },
   },
   "Yazılıkaya üsluplu orto statlı yapı": {
@@ -1786,8 +1786,8 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Balat Kilise": {
     blurb: {
-      tr: "Milet'in Balat Mahallesi'nde bulunan geç dönem kilisesi.",
-      en: "A late-period church in Miletus' Balat quarter.",
+      tr: "Sinop'ta, bir Roma yapısının kalıntıları üzerine kurulmuş Bizans dönemi kilisesi.",
+      en: "A Byzantine church in Sinop, built over the remains of a Roman building.",
     },
   },
   "Buzluk Mağarası": {
@@ -1834,8 +1834,8 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Diogenes Yazıtı": {
     blurb: {
-      tr: "Sinoplu filozof Diogenes'e ithaf edilen antik yazıt.",
-      en: "An ancient inscription honouring the philosopher Diogenes of Sinope.",
+      tr: "Epikürcü filozof Oinoandalı Diogenes'in öğretisini kentin agorasına kazıttığı dev taş yazıt.",
+      en: "The vast stone inscription in which the Epicurean philosopher Diogenes of Oenoanda set out his teaching in the city's agora.",
     },
   },
   "Erken Kilise": {
@@ -1846,14 +1846,14 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Eski Köprü": {
     blurb: {
-      tr: "Dicle üzerindeki tarihi köprü kalıntıları.",
-      en: "Remains of the historic bridge over the Tigris.",
+      tr: "Fırat'ın kolu Murat Nehri üzerindeki tarihi köprü kalıntıları.",
+      en: "Remains of the historic bridge over the Murat, a branch of the Euphrates.",
     },
   },
   "Faustina Kapısı": {
     blurb: {
-      tr: "Milet'te İmparator Marcus Aurelius'un eşi Faustina'ya adanan anıtsal kapı.",
-      en: "The monumental gate at Miletus dedicated to Faustina, wife of Emperor Marcus Aurelius.",
+      tr: "Smyrna agorasında, İmparator Marcus Aurelius'un eşi Faustina'ya adanan anıtsal kapı.",
+      en: "The monumental gate in the agora of Smyrna dedicated to Faustina, wife of Emperor Marcus Aurelius.",
     },
   },
   "Filyos Kalesi": {
@@ -2032,8 +2032,8 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Kutsal Tünel": {
     blurb: {
-      tr: "Arsameia'da kutsal alana ulaşan, kayaya oyulmuş 158 basamaklı tünel.",
-      en: "A rock-cut tunnel of 158 steps at Arsameia leading to the sacred precinct.",
+      tr: "Arsameia'da kutsal alandan inen, kayaya oyulmuş 158 metrelik basamaklı tünel.",
+      en: "A 158-metre stepped tunnel cut into the rock at Arsameia, leading down from the sacred precinct.",
     },
   },
   "Kuzey Kule": {

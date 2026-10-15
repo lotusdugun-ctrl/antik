@@ -501,6 +501,18 @@ const dict = {
     de: "Antwort anhören",
     ru: "Прослушать ответ",
   },
+  /**
+   * The box is now answered by a language model grounded in the app's data,
+   * so the old promise ("only from what the app holds") would be untrue; the
+   * offline note marks an answer that came from the local matcher instead.
+   */
+  ask_sub_ai: {
+    tr: "Yaz ya da söyle. Yapay zekâ rehber, uygulamadaki bilgilere dayanarak cevaplar; önemli ayrıntıları resmî kaynaklardan doğrula.",
+    en: "Type or say it. The AI guide answers from what the app holds; check important details with official sources.",
+  },
+  ask_thinking: { tr: "Rehber düşünüyor…", en: "The guide is thinking…" },
+  ask_offline: { tr: "Çevrimdışı yanıt", en: "Offline answer" },
+  ask_ai_source: { tr: "Yapay zekâ rehber", en: "AI guide" },
 
   news_title: {
     tr: "Kazı haberleri",
@@ -1170,8 +1182,8 @@ const dict = {
   recon_uncertainty: { tr: "Modelin tahmin ettiği yerler", en: "What the model infers" },
   recon_sources: { tr: "Ölçülerin kaynağı", en: "Where the measurements come from" },
   recon_hint: {
-    tr: "Sürükleyerek döndür, tekerlekle yaklaş.",
-    en: "Drag to orbit, scroll to zoom.",
+    tr: "Sürükleyerek döndür, tekerlekle istediğin noktaya yaklaş, sağ tık ya da iki parmakla kaydır. Çift tıkla tam ekran.",
+    en: "Drag to orbit, scroll to zoom into any spot, right-drag or two fingers to pan. Double-click for full screen.",
   },
   recon_views: { tr: "Bakış", en: "Views" },
   recon_export: { tr: "3B dosyayı indir (.glb)", en: "Download the 3D file (.glb)" },
@@ -1192,6 +1204,22 @@ const dict = {
   recon_spin: { tr: "Döndür", en: "Spin" },
   recon_spin_stop: { tr: "Durdur", en: "Stop" },
   recon_reset: { tr: "Görünümü sıfırla", en: "Reset the view" },
+  recon_fullscreen: { tr: "Tam ekran", en: "Full screen" },
+  recon_fullscreen_exit: { tr: "Tam ekrandan çık", en: "Exit full screen" },
+  recon_walk: { tr: "Gez", en: "Walk" },
+  recon_walk_exit: { tr: "Gezmeyi bitir", en: "Stop walking" },
+  recon_walk_hint_keys: {
+    tr: "W A S D ya da oklarla yürü, sürükleyerek etrafa bak, tekerlekle ileri-geri git. E yüksel, Q alçal, Shift koş.",
+    en: "Walk with W A S D or the arrow keys, drag to look around, scroll to step forward or back. E rises, Q sinks, Shift runs.",
+  },
+  recon_walk_hint_touch: {
+    tr: "Tek parmakla sürükleyerek etrafa bak, okları basılı tutarak yürü, iki parmakla açıp kapatarak ileri-geri git.",
+    en: "Drag one finger to look around, hold the arrows to walk, pinch to step forward or back.",
+  },
+  recon_move_forward: { tr: "İleri", en: "Forward" },
+  recon_move_back: { tr: "Geri", en: "Back" },
+  recon_move_left: { tr: "Sola", en: "Left" },
+  recon_move_right: { tr: "Sağa", en: "Right" },
   recon_loading: { tr: "Model hazırlanıyor…", en: "Building the model…" },
   recon_scale: {
     tr: "Sahnedeki insanlar ölçek verir: yapının gerçek boyutunu onlara bakarak okuyabilirsin.",

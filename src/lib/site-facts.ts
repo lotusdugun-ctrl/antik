@@ -781,7 +781,7 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   nemrut: [
     f(
-      "Kommagene Kralı I. Antiokhos, 2150 metre yükseklikte kendine bir mezar tümülüsü yaptırdı ve etrafına dev tanrı heykelleri dizdirdi. Depremler bütün başları yere indirdi; heykeller gövdesiz başlarıyla oturuyor.",
+      "Kommagene Kralı I. Antiokhos, 2150 metre yükseklikte kendine bir mezar tümülüsü yaptırdı ve etrafına dev tanrı heykelleri dizdirdi. Depremler bütün başları yere indirdi; heykeller bugün başsız oturuyor, başlar önlerinde yerde duruyor.",
       "King Antiochus I of Commagene raised a burial mound for himself at 2,150 metres and ringed it with colossal gods. Earthquakes brought every head to the ground, and they now sit apart from their bodies.",
     ),
     f(
@@ -1195,7 +1195,7 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   limyra: [
     f(
-      "Likya Kralı Perikle'nin başkentiydi ve kentin üzerindeki kayalıkta dört yüzden fazla mezar sıralanır.",
+      "Likya Kralı Perikles'in başkentiydi ve kentin üzerindeki kayalıkta dört yüzden fazla mezar sıralanır.",
       "Capital of the Lycian king Pericles, with more than four hundred tombs ranged on the cliff above it.",
     ),
     f(
@@ -1257,8 +1257,8 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   anemurium: [
     f(
-      "Anadolu'nun en güney ucundadır; açık havada Kıbrıs kıyıları altmış kilometre karşıda görünür.",
-      "It stands on the southernmost point of Anatolia; on a clear day the coast of Cyprus is visible sixty kilometres away.",
+      "Anadolu'nun en güney ucundadır; açık havada Kıbrıs kıyıları 64 kilometre karşıda görünür.",
+      "It stands on the southernmost point of Anatolia; on a clear day the coast of Cyprus is visible 64 kilometres away.",
     ),
     f(
       "Üç yüzden fazla anıt mezarıyla antik dünyanın en büyük nekropollerinden birine sahiptir; mezarların çoğu iki katlı ve tonozludur.",

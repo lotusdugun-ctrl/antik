@@ -126,7 +126,7 @@ export const siteDetails: Record<string, SiteDetail> = {
     "The astronomer Eudoxus built an observatory here and measured the year with striking accuracy.",
   ),
   ["smyrna"]: d(
-    "Yeni Smyrna, Büyük İskender'in komutanlarından Lysimakhos tarafından MÖ 4. yüzyılda Kadifekale çevresinde kuruldu. MÖ 178 depreminde yıkılan kentin agorası, imparator Marcus Aurelius döneminde yeniden inşa edildi.",
+    "Yeni Smyrna, Büyük İskender'in komutanlarından Lysimakhos tarafından MÖ 4. yüzyılda Kadifekale çevresinde kuruldu. MS 178 depreminde yıkılan kentin agorası, imparator Marcus Aurelius döneminde yeniden inşa edildi.",
     "New Smyrna was founded around Kadifekale in the 4th century BC by Alexander's general Lysimachus. Destroyed in an earthquake of AD 178, its agora was rebuilt under Emperor Marcus Aurelius.",
     ["Roma Agorası", "Bazilika", "Faustina Kapısı", "Agora Sütunları", "Kadifekale"],
     ["Roman Agora", "Basilica", "Gate of Faustina", "Agora Columns", "Kadifekale"],
@@ -548,7 +548,7 @@ export const siteDetails: Record<string, SiteDetail> = {
     "The mound dates back to the Early Bronze Age, became the capital of the kingdom of Sam'al in the Neo-Hittite period and flourished under Assyrian rule. Excavations uncovered city walls, hilani palaces and celebrated inscriptions.",
     ["Hilani Sarayı", "Çift Kapı Kabartmaları", "Aslanlı Kapı", "Kent Surları", "Kral Kitabesi"],
     ["Hilani Palace", "Double Gate Reliefs", "Gateway Lions", "City Walls", "Royal Inscription"],
-    "Kral Kilamuva'nın yazıtı, Anadolu'da bulunan en eski Sami dili yazıtlardan biridir.",
+    "Kral Kilamuwa'nın yazıtı, Anadolu'da bulunan en eski Sami dili yazıtlardan biridir.",
     "King Kilamuwa's inscription is one of the earliest Semitic-language texts found in Anatolia.",
   ),
   ["arsameia"]: d(
@@ -564,8 +564,8 @@ export const siteDetails: Record<string, SiteDetail> = {
     "Inhabited since the Neolithic era in its Tigris-side caves, Hasankeyf became a capital under the Artuqids and Akkoyunlu. In 2020 the waters of the Ilısu Dam covered part of the old town, but the citadel still stands.",
     ["Hasankeyf Kalesi", "Büyük Saray", "Ulu Cami", "Dicle Köprüsü", "Kaya Mezarları"],
     ["Hasankeyf Citadel", "Great Palace", "Great Mosque", "Tigris Bridge", "Rock-cut Tombs"],
-    "Hasankeyf'in Dicle kıyısındaki mağaralarında yaklaşık 10 bin yıllık yerleşim izleri bulundu.",
-    "Caves along the Tigris at Hasankeyf show evidence of settlement some 10,000 years old.",
+    "Hasankeyf'in Dicle kıyısındaki mağaralarında yaklaşık 12 bin yıllık yerleşim izleri bulundu.",
+    "Caves along the Tigris at Hasankeyf show evidence of settlement some 12,000 years old.",
   ),
   ["sogmatar"]: d(
     "MS 2. yüzyılda Abgar Krallığı döneminde Harranlıların ay ve gezegen tanrılarına tapındığı bir kült merkeziydi. Pognon Mağarası, tanrı kabartmalı Kutsal Tepe ve altı anıt mezarıyla dikkat çeker.",
@@ -622,8 +622,8 @@ export const siteDetails: Record<string, SiteDetail> = {
     "The dome of Harput's Great Mosque is among the oldest mosque domes in Anatolia.",
   ),
   ["palu"]: d(
-    "Urartu Krallığı'nın doğu sınırındaki Palu, Roma ve Bizans dönemlerinde de kale kenti olarak kullanıldı. Kalenin girişindeki Urartu yazıtı bugün de okunabilmektedir.",
-    "Palu guarded the eastern frontier of Urartu and remained a fortified town under Rome and Byzantium. The Urartian inscription at the castle gate is still legible today.",
+    "Urartu Krallığı'nın batı sınırındaki Palu, Roma ve Bizans dönemlerinde de kale kenti olarak kullanıldı. Kalenin girişindeki Urartu yazıtı bugün de okunabilmektedir.",
+    "Palu guarded the western frontier of Urartu and remained a fortified town under Rome and Byzantium. The Urartian inscription at the castle gate is still legible today.",
     ["Palu Kalesi", "Urartu Yazıtı", "Cimşit Bey Hamamı", "Ulu Cami", "Eski Köprü"],
     ["Palu Castle", "Urartian Inscription", "Cimşit Bey Bath", "Great Mosque", "Old Bridge"],
     "Palu Kalesi, Urartu Kralı Menua'ya ait olduğu düşünülen bir yazıt barındırır.",
@@ -962,7 +962,7 @@ export const siteDetails: Record<string, SiteDetail> = {
       "Sfenks Heykelleri",
     ],
     ["North Gate", "South Gate", "Storm God Statue", "Lion Statues", "Sphinx Statues"],
-    "Karatepe çift dilli yazıtı, Fenike alfabesiyle Luvi hiyerogliflerinin aynı metnini içerir ve 'Rasgele Taşı' gibi Anadolu hiyerogliflerinin çözülmesinde kilit rol oynamıştır.",
+    "Karatepe çift dilli yazıtı, Fenike alfabesiyle Luvi hiyerogliflerinin aynı metnini içerir ve bir 'Rosetta Taşı' gibi Anadolu hiyerogliflerinin çözülmesinde kilit rol oynamıştır.",
     "The Karatepe bilingual inscription carries the same text in Phoenician and Hieroglyphic Luwian and, like a 'Rosetta Stone', was pivotal in deciphering Anatolian hieroglyphs.",
   ),
   ["anavarza"]: d(

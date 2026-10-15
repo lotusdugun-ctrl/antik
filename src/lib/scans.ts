@@ -392,8 +392,8 @@ export const SCANS: Record<ScanId, Scan> = {
     license: "CC BY 4.0",
     licenseUrl: BY,
     note: l(
-      "Delos'taki kutsal yolu bekleyen, oturan arkaik mermer aslanlardan biri. Nemrut'un aslanları Kommagene'nin kendi üslubundaydı; modelde onların yerinde gerçekçi bir oturan aslan olarak kullanıldı.",
-      "One of the seated archaic marble lions that guarded the sacred way on Delos. Nemrut's lions were in Commagene's own style; the model uses this as a realistic seated lion in their place.",
+      "Delos'taki kutsal yolu bekleyen arkaik mermer aslanlardan biri, karşılaştırma için. Nemrut'un aslanları Kommagene'nin kendi üslubundaydı; modeldeki aslanlar yanlarındaki tanrılarla aynı kireçtaşından, aynı üslupta yontulmuş olarak çizildi.",
+      "One of the archaic marble lions that guarded the sacred way on Delos, for comparison. Nemrut's lions were in Commagene's own style; the model's lions are cut from the same limestone and in the same manner as the gods beside them.",
     ),
   },
   "ephesus-portrait": {
@@ -572,8 +572,8 @@ export const SCANS: Record<ScanId, Scan> = {
     license: "Free archive",
     licenseUrl: TDS,
     note: l(
-      "Saint Louis Sanat Müzesi'ndeki 16. yüzyıla ait mermer kartal. Nemrut'un kartalları Kommagene'nin kendi üslubundaydı ve kayıp parçaları çok; modelde yerlerinde gerçekçi bir taş kartal olarak kullanıldı.",
-      "A 16th-century marble eagle in the Saint Louis Art Museum. Nemrut's eagles were in Commagene's own style and are badly broken; the model uses this as a realistic stone eagle in their place.",
+      "Saint Louis Sanat Müzesi'ndeki 16. yüzyıla ait mermer kartal, karşılaştırma için. Nemrut'un kartalları Kommagene'nin kendi üslubundaydı ve kayıp parçaları çok; modeldeki kartallar tanrılarla aynı kireçtaşından, aynı üslupta yontulmuş olarak çizildi.",
+      "A 16th-century marble eagle in the Saint Louis Art Museum, for comparison. Nemrut's eagles were in Commagene's own style and are badly broken; the model's eagles are cut from the same limestone and in the same manner as the gods.",
     ),
   },
 };
