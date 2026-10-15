@@ -116,9 +116,11 @@ for (const lang of LANGS) {
       const invented = [...have].filter((n) => !known.has(n));
       if (invented.length) problems.push(`${chapter.id}: new number(s) ${invented.join(", ")}`);
       const names = [...new Set(midSentenceNames(written))].filter((n) => !knownNames.has(fold(n)));
-      if (names.length) problems.push(`${chapter.id}: name(s) not in the original: ${names.join(", ")}`);
+      if (names.length)
+        problems.push(`${chapter.id}: name(s) not in the original: ${names.join(", ")}`);
       const ratio = written.length / Math.max(1, original.length);
-      if (ratio < 0.8 && original.length > 80) problems.push(`${chapter.id}: too short (${ratio.toFixed(2)}×)`);
+      if (ratio < 0.8 && original.length > 80)
+        problems.push(`${chapter.id}: too short (${ratio.toFixed(2)}×)`);
       if (ratio > 1.6 && written.length - original.length > 350)
         problems.push(`${chapter.id}: too long (${ratio.toFixed(2)}×)`);
       if (/[*#_`]|\n\s*[-•]/.test(written)) problems.push(`${chapter.id}: markdown`);
