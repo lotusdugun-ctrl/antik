@@ -886,8 +886,8 @@ export const reconstructions: Reconstruction[] = [
     structure: l("Artemis Tapınağı", "Temple of Artemis"),
     title: l("Efes Artemis Tapınağı", "The Temple of Artemis at Ephesus"),
     blurb: l(
-      "Dünyanın Yedi Harikası'ndan biri ve bugün ayakta tek bir sütunu bile kalmayan tek yapı: bataklık bir arazide, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalıydı. Model, MÖ 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösterir.",
-      "One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
+      "Dünyanın Yedi Harikası'ndan biri; bugün yerinde, parçalarından yeniden dikilmiş tek bir sütunu duruyor: bataklık bir arazide, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalıydı. Model, MÖ 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösterir.",
+      "One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
     ),
     period: l("MÖ 4. yüzyıl - MS 401", "4th century BC - AD 401"),
     measures: [

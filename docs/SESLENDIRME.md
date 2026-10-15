@@ -1,5 +1,9 @@
 # Sesli rehberi seslendirme (Google Chirp 3 HD)
 
+> **Varsayılan yol artık ücretsiz Microsoft Edge sesi (Emel).** `SESLENDIR.bat`'a çift tıklamak yeter; kart, hesap ya da anahtar gerekmez. Değişen bölümleri kaydeder ve yayınlar.
+> Aşağıdaki Google Chirp 3 HD yolu isteğe bağlıdır ve `SESLENDIR-GOOGLE.bat` ile çalışır (faturalandırma hesabı ister).
+
+
 Sesli rehber artık Google'ın **Chirp 3 HD** sesleriyle kaydediliyor. Bu sesler
 eski seslerden çok daha doğal ve duygulu konuşur. Google her ay **1.000.000
 karakteri ücretsiz** seslendirir; bizim bütün rehberimiz (Türkçe, İngilizce,
@@ -42,9 +46,9 @@ karakterin altında kaldığınız sürece **hiçbir ücret alınmaz**.
    işaretleyin ve kaydedin. (Anahtar çalınsa bile başka bir işe yaramaz.)
 4. Anahtarı kopyalayın. **Kimseyle paylaşmayın, hiçbir yere yapıştırmayın.**
 
-## 5. SESLENDIR.bat'i çalıştırın
+## 5. SESLENDIR-GOOGLE.bat'i çalıştırın
 
-Proje klasöründeki **SESLENDIR.bat**'e çift tıklayın. İlk seferde anahtarı
+Proje klasöründeki **SESLENDIR-GOOGLE.bat**'e çift tıklayın. İlk seferde anahtarı
 sorar: yapıştırın (sağ tık) ve Enter'a basın. Anahtar bilgisayarınızda
 `scripts\.tts-key` dosyasında saklanır ve bir daha sorulmaz.
 
@@ -76,7 +80,7 @@ kişinin sesi olarak kullanılır.
 **3**'ü seçin. Önce Türkçe, sonra İngilizce, Almanca ve Rusça kaydedilir.
 Birkaç saat sürebilir.
 
-- Pencere kapanır ya da internet kesilirse sorun değil: **SESLENDIR.bat**'i
+- Pencere kapanır ya da internet kesilirse sorun değil: **SESLENDIR-GOOGLE.bat**'i
   yeniden çalıştırıp **3**'ü seçin, kaldığı yerden devam eder.
 - Aylık sınıra gelinirse program kendiliğinden durur ve
   "AYLIK SINIR" yazar. Kaydedilenler yayınlanır; kalanlar ay dönünce **3** ile

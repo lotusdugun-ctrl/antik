@@ -302,10 +302,10 @@ export const tm: Record<string, [string, string]> = {
       "Eine Marmorsäule unter der Muezzin-Empore trägt eine auf dem Kopf stehende Tulpe. Man erzählt, das Grundstück habe einem Tulpenzüchter gehört, der sich der Stiftung widersetzte, und das Motiv halte seinen Starrsinn fest.",
       "Одна мраморная колонна под площадкой муэдзина несёт перевёрнутый тюльпан. Рассказывают, что земля принадлежала разводчику тюльпанов, который сопротивлялся передаче её в вакф, и этот мотив запечатлел его упрямство.",
     ],
-  "One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.":
+  "One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.":
     [
-      "Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
-      "Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
+      "Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
+      "Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
     ],
   "One of the largest theatres of antiquity: a three-tiered cavea cut into the slope of Mount Pion, looking down the Harbour Street at a Roman stage building. The riot of the silversmiths in the Acts of the Apostles takes place here.":
     [

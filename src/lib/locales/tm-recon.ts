@@ -263,10 +263,10 @@ export const tm: Record<string, [string, string]> = {
       "Eines der Sieben Weltwunder und der Bau, nach dem jedes Mausoleum benannt ist: das Grabmal, das Artemisia für ihren Gemahl Mausolos, den Satrapen Kariens, errichten ließ. Ein hohes Podium, sechsunddreißig Säulen, eine Stufenpyramide und ein Viergespann auf dem Gipfel.",
       "Одно из семи чудес света и здание, по имени которого назван каждый мавзолей: гробница, воздвигнутая Артемисией для её мужа Мавсола, сатрапа Карии. Высокий подиум, тридцать шесть колонн, ступенчатая пирамида и четвёрка коней на вершине.",
     ],
-  "One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.":
+  "One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.":
     [
-      "Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Marmorwald, auf sumpfigem Grund errichtet. Plinius zufolge waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
-      "Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефом у основания. Модель показывает третий храм, отстроенный в IV веке до н. э.",
+      "Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Marmorwald, auf sumpfigem Grund errichtet. Plinius zufolge waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
+      "Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефом у основания. Модель показывает третий храм, отстроенный в IV веке до н. э.",
     ],
   "One of the best-preserved stadiums in Anatolia: the seating is carried on seventy vaults, every third one an entrance and the rest shops. The north end closes in a horseshoe; the south end is open.":
     [

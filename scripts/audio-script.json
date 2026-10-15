@@ -452,9 +452,9 @@
    "folder": "site-efes",
    "lang": "en",
    "chapter": "structure-4",
-   "text": "Temple of Artemis. One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
-   "speech": "Temple of Artemis. One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
-   "hash": "af90304a",
+   "text": "Temple of Artemis. One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
+   "speech": "Temple of Artemis. One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
+   "hash": "9dae012f",
    "target": "app"
   },
   {
@@ -542,9 +542,9 @@
    "folder": "site-efes",
    "lang": "de",
    "chapter": "structure-4",
-   "text": "Tempel der Artemis. Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
-   "speech": "Tempel der Artemis. Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert vor Christus neu errichtet wurde.",
-   "hash": "1fa97035",
+   "text": "Tempel der Artemis. Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
+   "speech": "Tempel der Artemis. Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert vor Christus neu errichtet wurde.",
+   "hash": "56466541",
    "target": "remote"
   },
   {
@@ -632,9 +632,9 @@
    "folder": "site-efes",
    "lang": "ru",
    "chapter": "structure-4",
-   "text": "Храм Артемиды. Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
-   "speech": "Храм Артемиды. Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до нашей эры",
-   "hash": "df737c47",
+   "text": "Храм Артемиды. Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
+   "speech": "Храм Артемиды. Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до нашей эры",
+   "hash": "2598b510",
    "target": "remote"
   },
   {
@@ -36792,9 +36792,9 @@
    "folder": "recon-artemis-tapinagi",
    "lang": "tr",
    "chapter": "intro",
-   "text": "Efes Artemis Tapınağı. Hikâyesi MÖ 4. yüzyıldan MS 401'e uzanıyor. Dünyanın Yedi Harikası'ndan biri ve bugün ayakta tek bir sütunu bile kalmayan tek yapı. Gözünüzün önüne getirin: bataklık bir arazinin üzerinde, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalarla süslüydü. Uygulamadaki model, MÖ 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösteriyor.",
-   "speech": "Efes Artemis Tapınağı. Hikâyesi milattan önce 4. yüzyıldan milattan sonra 401'e uzanıyor. Dünyanın Yedi Harikası'ndan biri ve bugün ayakta tek bir sütunu bile kalmayan tek yapı. Gözünüzün önüne getirin: bataklık bir arazinin üzerinde, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalarla süslüydü. Uygulamadaki model, milattan önce 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösteriyor.",
-   "hash": "0844c954",
+   "text": "Efes Artemis Tapınağı. Hikâyesi MÖ 4. yüzyıldan MS 401'e uzanıyor. Dünyanın Yedi Harikası'ndan biri; bugün yerinde, parçalarından yeniden dikilmiş tek bir sütunu duruyor. Gözünüzün önüne getirin: bataklık bir arazinin üzerinde, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalarla süslüydü. Uygulamadaki model, MÖ 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösteriyor.",
+   "speech": "Efes Artemis Tapınağı. Hikâyesi milattan önce 4. yüzyıldan milattan sonra 401'e uzanıyor. Dünyanın Yedi Harikası'ndan biri; bugün yerinde, parçalarından yeniden dikilmiş tek bir sütunu duruyor. Gözünüzün önüne getirin: bataklık bir arazinin üzerinde, 137 metre uzunluğunda bir mermer orman. Plinius'a göre 36 sütunun kaidesi kabartmalarla süslüydü. Uygulamadaki model, milattan önce 4. yüzyılda yeniden inşa edilen üçüncü tapınağı gösteriyor.",
+   "hash": "48ac829e",
    "target": "app"
   },
   {
@@ -36852,9 +36852,9 @@
    "folder": "recon-artemis-tapinagi",
    "lang": "en",
    "chapter": "intro",
-   "text": "The Temple of Artemis at Ephesus. 4th century BC - AD 401. One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
-   "speech": "The Temple of Artemis at Ephesus. 4th century BC - AD 401. One of the Seven Wonders, and the only one with not a single column left standing: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
-   "hash": "e2c4af61",
+   "text": "The Temple of Artemis at Ephesus. 4th century BC - AD 401. One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
+   "speech": "The Temple of Artemis at Ephesus. 4th century BC - AD 401. One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.",
+   "hash": "9b19efa8",
    "target": "app"
   },
   {
@@ -36912,9 +36912,9 @@
    "folder": "recon-artemis-tapinagi",
    "lang": "de",
    "chapter": "intro",
-   "text": "Der Artemistempel von Ephesos. 4. Jahrhundert v. Chr. – 401 n. Chr. Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
-   "speech": "Der Artemistempel von Ephesos. 4. Jahrhundert vor Christus, 401 nach Christus Eines der Sieben Weltwunder und das einzige, von dem keine einzige Säule mehr steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert vor Christus neu errichtet wurde.",
-   "hash": "f6464b82",
+   "text": "Der Artemistempel von Ephesos. 4. Jahrhundert v. Chr. – 401 n. Chr. Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
+   "speech": "Der Artemistempel von Ephesos. 4. Jahrhundert vor Christus, 401 nach Christus Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert vor Christus neu errichtet wurde.",
+   "hash": "5901b614",
    "target": "remote"
   },
   {
@@ -36972,9 +36972,9 @@
    "folder": "recon-artemis-tapinagi",
    "lang": "ru",
    "chapter": "intro",
-   "text": "Храм Артемиды в Эфесе. IV век до н. э. – 401 г. н. э. Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
-   "speech": "Храм Артемиды в Эфесе. IV век до нашей эры, 401 год нашей эры Одно из семи чудес света и единственное, от которого не осталось ни одной стоящей колонны: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до нашей эры",
-   "hash": "613cb252",
+   "text": "Храм Артемиды в Эфесе. IV век до н. э. – 401 г. н. э. Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
+   "speech": "Храм Артемиды в Эфесе. IV век до нашей эры, 401 год нашей эры Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до нашей эры",
+   "hash": "b1664c57",
    "target": "remote"
   },
   {

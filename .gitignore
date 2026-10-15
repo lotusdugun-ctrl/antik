@@ -48,3 +48,5 @@ scripts/.tts-usage.json
 scripts/.tts-voice
 scripts/voice-samples/
 *.part
+scripts/ses-ornekleri/
+scripts/__pycache__/
