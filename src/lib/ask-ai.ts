@@ -80,6 +80,13 @@ export const MAX_TURN_CHARS = 1200;
 export const MAX_CONTEXT = 12_000;
 export const DEFAULT_MODEL = "gemini-3.5-flash-lite";
 /**
+ * Tried in turn when the chosen model is out of quota, overloaded or gone.
+ * On the free tier each model has its own daily allowance, and a small one,
+ * so one model running dry should not leave every visitor with "busy". These
+ * aliases always point at Google's current models of that line.
+ */
+export const FALLBACK_MODELS = ["gemini-flash-lite-latest", "gemini-flash-latest"];
+/**
  * One deadline for the whole answer, retry included. A search-grounded answer
  * takes several seconds more than a plain one; the client waits longer still.
  */
@@ -494,14 +501,14 @@ export async function answerWithGemini(
   const key = env.GEMINI_API_KEY?.trim();
   if (!key) return { status: 503, body: { error: "not_configured" } };
   // A model name goes into the URL path, so only the characters model names use.
-  const model = /^[\w.-]{1,80}$/.test(env.GEMINI_MODEL?.trim() ?? "")
+  const primary = /^[\w.-]{1,80}$/.test(env.GEMINI_MODEL?.trim() ?? "")
     ? env.GEMINI_MODEL!.trim()
     : DEFAULT_MODEL;
   const wantSearch = searchEnabled(env);
   const context = buildContext(req.site, req.lang);
   const signal = AbortSignal.timeout(timeoutMs);
 
-  const call = (search: boolean) =>
+  const call = (model: string, search: boolean) =>
     fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
       method: "POST",
       headers: { "content-type": "application/json", "x-goog-api-key": key },
@@ -516,50 +523,92 @@ export async function answerWithGemini(
       signal,
     });
 
+  const models = [...new Set([primary, ...FALLBACK_MODELS])];
+  let lastStatus = 0;
   try {
-    let mode: SearchMode = wantSearch ? "used" : "off";
-    let res = await call(wantSearch);
-    if (wantSearch && (res.status === 400 || res.status === 403)) {
-      log(`search grounding refused (${res.status}, model ${model}); retrying without tools`);
-      await res.body?.cancel().catch(() => {});
-      mode = "fallback";
-      res = await call(false);
+    for (const model of models) {
+      let mode: SearchMode = wantSearch ? "used" : "off";
+      let res = await call(model, wantSearch);
+      /*
+       * 400/403: the model or tier refuses the search tool. 429 with search on:
+       * grounding has a quota of its own, often smaller, so a plain answer from
+       * the app's record may still go through.
+       */
+      if (wantSearch && (res.status === 400 || res.status === 403 || res.status === 429)) {
+        log(
+          `search refused (${res.status}${await reason(res)}, model ${model}); retrying without tools`,
+        );
+        mode = "fallback";
+        res = await call(model, false);
+      }
+      // 429 is the quota, 503 "model overloaded", 404 a retired model name:
+      // the next model in the chain may still answer.
+      if (res.status === 429 || res.status === 503 || res.status === 404) {
+        log(`gemini busy (${res.status}${await reason(res)}, model ${model}, search ${mode})`);
+        lastStatus = res.status;
+        continue;
+      }
+      if (!res.ok) {
+        log(`gemini failed (${res.status}${await reason(res)}, model ${model}, search ${mode})`);
+        return { status: 502, body: { error: "failed" } };
+      }
+      const json: unknown = await res.json();
+      const answer = parseGeminiResponse(json);
+      if (!answer) {
+        const data = json as GeminiJson | null;
+        const why =
+          data?.promptFeedback?.blockReason ?? data?.candidates?.[0]?.finishReason ?? "no text";
+        log(`gemini gave no answer (${String(why).slice(0, 40)}, model ${model}, search ${mode})`);
+        return { status: 502, body: { error: "failed" } };
+      }
+      const sources = mode === "used" ? parseGroundingSources(json) : [];
+      const entryPoint = mode === "used" ? parseSearchEntryPoint(json) : null;
+      return {
+        status: 200,
+        body: {
+          answer,
+          source: "ai",
+          sources,
+          search: mode,
+          ...(entryPoint ? { searchEntryPoint: entryPoint } : {}),
+        },
+      };
     }
-    // 429 is the quota; 503 is Google's "model overloaded". Both pass, so
-    // both are "busy" rather than "failed".
-    if (res.status === 429 || res.status === 503) {
-      log(`gemini busy (${res.status}, model ${model}, search ${mode})`);
-      return { status: 503, body: { error: "busy" } };
-    }
-    if (!res.ok) {
-      log(`gemini failed (${res.status}, model ${model}, search ${mode})`);
-      return { status: 502, body: { error: "failed" } };
-    }
-    const json: unknown = await res.json();
-    const answer = parseGeminiResponse(json);
-    if (!answer) {
-      const data = json as GeminiJson | null;
-      const why =
-        data?.promptFeedback?.blockReason ?? data?.candidates?.[0]?.finishReason ?? "no text";
-      log(`gemini gave no answer (${String(why).slice(0, 40)}, model ${model}, search ${mode})`);
-      return { status: 502, body: { error: "failed" } };
-    }
-    const sources = mode === "used" ? parseGroundingSources(json) : [];
-    const entryPoint = mode === "used" ? parseSearchEntryPoint(json) : null;
-    return {
-      status: 200,
-      body: {
-        answer,
-        source: "ai",
-        sources,
-        search: mode,
-        ...(entryPoint ? { searchEntryPoint: entryPoint } : {}),
-      },
-    };
+    // Every model tried: out of quota or overloaded is "busy"; names that no
+    // longer exist anywhere are a configuration fault.
+    return lastStatus === 404
+      ? { status: 502, body: { error: "failed" } }
+      : { status: 503, body: { error: "busy" } };
   } catch (error) {
     const timedOut = error instanceof Error && /timeout|abort/i.test(error.name + error.message);
     log(timedOut ? `gemini timed out after ${timeoutMs} ms` : "gemini request threw");
     return { status: 502, body: { error: "failed" } };
+  }
+}
+
+/**
+ * Why Google refused, for the log: only its status word and the name of the
+ * quota that ran out (e.g. "GenerateRequestsPerDayPerProjectPerModel-FreeTier"),
+ * each checked to be a bare identifier — never the message text, which can
+ * echo the request. Consumes the body.
+ */
+async function reason(res: Response): Promise<string> {
+  try {
+    const data = (await res.json()) as {
+      error?: { status?: unknown; details?: { violations?: { quotaId?: unknown }[] }[] };
+    };
+    const word = (v: unknown) => (typeof v === "string" && /^[\w-]{1,80}$/.test(v) ? v : null);
+    const status = word(data?.error?.status);
+    const quota = data?.error?.details
+      ?.flatMap((d) => d.violations ?? [])
+      .map((v) => word(v.quotaId))
+      .find(Boolean);
+    return [status, quota]
+      .filter(Boolean)
+      .map((v) => `, ${v}`)
+      .join("");
+  } catch {
+    return "";
   }
 }
 

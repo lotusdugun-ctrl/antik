@@ -5,6 +5,8 @@ import {
   clientIp,
   createRateLimiter,
   DEFAULT_LIMITS,
+  DEFAULT_MODEL,
+  FALLBACK_MODELS,
   geminiBody,
   GEMINI_TIMEOUT_MS,
   isSameOrigin,
@@ -300,6 +302,39 @@ describe("ask-ai response", () => {
     calls = mockFetch(() => new Response("bad", { status: 400 }));
     await answerWithGemini(request, { ...env, GEMINI_SEARCH: "0" });
     expect(calls).toHaveLength(1);
+  });
+
+  test("an exhausted model hands over to the next one in the chain", async () => {
+    const quota = () =>
+      Response.json(
+        {
+          error: {
+            status: "RESOURCE_EXHAUSTED",
+            message: "Quota exceeded for key test-key",
+            details: [
+              { violations: [{ quotaId: "GenerateRequestsPerDayPerProjectPerModel-FreeTier" }] },
+            ],
+          },
+        },
+        { status: 429 },
+      );
+    const warn = console.warn;
+    const logged: string[] = [];
+    console.warn = (line: string) => void logged.push(line);
+    try {
+      const calls = mockFetch((i) => (i < 2 ? quota() : geminiAnswer("Yedek modelden.")));
+      const r = await answerWithGemini(request, env);
+      expect(r.status).toBe(200);
+      expect(r.body).toMatchObject({ answer: "Yedek modelden." });
+      // Search, then plain, on the first model; then the second model.
+      expect(calls).toHaveLength(3);
+      expect(calls[0]!.url).toContain(DEFAULT_MODEL);
+      expect(calls[2]!.url).toContain(FALLBACK_MODELS[0]!);
+      expect(logged.join(" ")).toContain("FreeTier");
+      expect(logged.join(" ")).not.toContain("test-key");
+    } finally {
+      console.warn = warn;
+    }
   });
 
   test("429 → busy; other failures → failed, never upstream text", async () => {

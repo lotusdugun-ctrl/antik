@@ -38,7 +38,13 @@ Anahtar yoksa, kota dolduysa, istek zaman aşımına uğradıysa ya da kullanıc
    - **Value:** kopyaladığınız anahtar
    - **Environments:** `Production` ve `Preview` kutularını işaretleyin.
 3. İsteğe bağlı: `GEMINI_MODEL` (varsayılan `gemini-3.5-flash-lite`). Başka bir
-   Gemini modeli kullanmak isterseniz buraya adını yazın.
+   Gemini modeli kullanmak isterseniz buraya adını yazın. Seçilen modelin
+   kotası dolar, model meşgul olur ya da adı artık yoksa sunucu sırayla
+   `gemini-flash-lite-latest` ve `gemini-flash-latest` modellerini dener
+   (ücretsiz katmanda her modelin kendi günlük kotası vardır). Arama
+   kotası dolduğunda da aynı model önce aramasız denenir. Vercel
+   kayıtlarında (Logs) `[api/sor] gemini busy (429, RESOURCE_EXHAUSTED,
+   ...FreeTier ...)` gibi satırlar hangi kotanın dolduğunu gösterir.
 4. İsteğe bağlı: `GEMINI_SEARCH` — Google Arama temellendirmesi. Varsayılan
    **açık**; kapatmak için değeri `off` (ya da `0`, `false`, `no`) yapın ve
    yeniden dağıtın. Kapalıyken rehber yalnızca uygulama verisi ve genel
