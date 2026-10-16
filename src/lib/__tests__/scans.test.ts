@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { partsFor } from "@/lib/reconstruction-parts";
 import { reconstructions } from "@/lib/reconstructions";
@@ -64,6 +64,89 @@ describe("scans", () => {
         if (part.scan) tally[part.scan.id] = (tally[part.scan.id] ?? 0) + 1;
       expect(Math.max(...Object.values(tally))).toBeLessThanOrEqual(2);
       expect(Object.keys(tally).length).toBeGreaterThanOrEqual(8);
+    }
+  });
+});
+
+/*
+ * A scan is drawn once for every part that uses it, so a statue repeated down
+ * a stage front costs its triangles each time. Phones stutter well before
+ * two million, so each file has a budget and each model a total.
+ */
+type Gltf = {
+  accessors: { count: number; min?: number[]; max?: number[] }[];
+  meshes: { primitives: { indices?: number; attributes: Record<string, number> }[] }[];
+};
+
+function readGlb(id: ScanId): Gltf {
+  const file = readFileSync(join(root, "public", SCANS[id].url));
+  // 12-byte header, then the JSON chunk: its length, its type, its bytes.
+  expect(file.toString("latin1", 0, 4)).toBe("glTF");
+  const length = file.readUInt32LE(12);
+  return JSON.parse(file.toString("utf8", 20, 20 + length)) as Gltf;
+}
+
+function trianglesOf(gltf: Gltf): number {
+  let triangles = 0;
+  for (const mesh of gltf.meshes)
+    for (const primitive of mesh.primitives) {
+      const accessor = primitive.indices ?? primitive.attributes["POSITION"]!;
+      triangles += gltf.accessors[accessor]!.count / 3;
+    }
+  return triangles;
+}
+
+/** Pieces seen close up, once in their model, may keep more of their surface. */
+const HERO_BUDGET: Partial<Record<ScanId, number>> = {
+  "didyma-medusa": 60_000,
+  "nemrut-head": 55_000,
+  "pergamon-athena": 65_000,
+  caryatid: 45_000,
+  "ephesus-portrait": 45_000,
+  "herm-thucydides-herodotus": 35_000,
+  "herm-epicurus-metrodorus": 35_000,
+  "herm-socrates-seneca": 35_000,
+  "herm-plato": 35_000,
+  centaur: 35_000,
+  glykon: 35_000,
+  eagle: 35_000,
+  "lion-delos": 35_000,
+};
+const SCAN_BUDGET = 25_000;
+const MODEL_BUDGET = 1_200_000;
+
+describe("scan budgets", () => {
+  test("every scan file stays within its triangle budget", () => {
+    for (const id of Object.keys(SCANS) as ScanId[]) {
+      const triangles = trianglesOf(readGlb(id));
+      const budget = HERO_BUDGET[id] ?? SCAN_BUDGET;
+      expect(`${id}:${triangles <= budget}`).toBe(`${id}:true`);
+    }
+  });
+
+  test("no scan's surface is flattened to a line by re-quantising", () => {
+    for (const id of Object.keys(SCANS) as ScanId[]) {
+      const gltf = readGlb(id);
+      for (const mesh of gltf.meshes)
+        for (const primitive of mesh.primitives) {
+          const { min, max } = gltf.accessors[primitive.attributes["POSITION"]!]!;
+          const flat = [0, 1, 2].filter((axis) => min![axis] === max![axis]);
+          expect(`${id}:${flat.length}`).toBe(`${id}:0`);
+        }
+    }
+  });
+
+  test("the scans of one model stay within the model's triangle budget", () => {
+    const triangles = new Map<ScanId, number>();
+    for (const item of reconstructions) {
+      let total = 0;
+      for (const part of [...partsFor(item.model), ...lifeFor(item).props]) {
+        const id = part.scan?.id;
+        if (!id) continue;
+        if (!triangles.has(id)) triangles.set(id, trianglesOf(readGlb(id)));
+        total += triangles.get(id)!;
+      }
+      expect(`${item.id}:${total <= MODEL_BUDGET}`).toBe(`${item.id}:true`);
     }
   });
 });

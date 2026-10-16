@@ -116,3 +116,170 @@ describe("the statues", () => {
     );
   });
 });
+
+/*
+ * Where people walk. A route is a loop, so a walk drawn as a line of points
+ * comes back from its last point to its first in a straight line — which is
+ * how a seller came to fly across a cavea and a mourner to walk through the
+ * Mausoleum's podium. Every route is followed in half-metre steps, closing
+ * segment included, and at every step the walker's shins and chest must be
+ * clear of the building's stone, and their feet on something.
+ */
+type Point = [number, number, number];
+const TAU = Math.PI * 2;
+/** Paint, openings and the ground are not solid; nor is the scale figure. */
+const NOT_SOLID = new Set([
+  "shadow",
+  "paintRed",
+  "paintBlue",
+  "paintGold",
+  "human",
+  "water",
+  "ground",
+]);
+
+/** Turns a point into a part's own frame, undoing its `rotY`. */
+function local(part: { at: Point; rotY: number }, q: Point): [number, number] {
+  const dx = q[0] - part.at[0];
+  const dz = q[2] - part.at[2];
+  return [
+    dx * Math.cos(part.rotY) - dz * Math.sin(part.rotY),
+    dx * Math.sin(part.rotY) + dz * Math.cos(part.rotY),
+  ];
+}
+
+function inRing(part: Extract<Part, { kind: "ring" }>, q: Point, pad: number) {
+  const dx = q[0] - part.at[0];
+  const dz = q[2] - part.at[2];
+  const r = Math.hypot(dx, dz);
+  if (r < part.inner - pad || r > part.outer + pad) return false;
+  const turn = (((Math.atan2(dz, dx) - part.thetaStart) % TAU) + TAU) % TAU;
+  // `pad` widens the sector by that many metres at each end (narrows it if negative).
+  const slack = pad / Math.max(r, 1);
+  return turn <= part.thetaLength + slack || turn >= TAU - slack;
+}
+
+/** Whether a point is inside a part's solid, a few centimetres in from its faces. */
+function within(part: Part, q: Point): boolean {
+  if (part.decor || NOT_SOLID.has(part.material)) return false;
+  const m = 0.05;
+  if (part.kind === "box") {
+    const [u, v] = local(part, q);
+    return (
+      Math.abs(u) < part.size[0] / 2 - m &&
+      Math.abs(v) < part.size[2] / 2 - m &&
+      q[1] > part.at[1] + m &&
+      q[1] < part.at[1] + part.size[1] - m
+    );
+  }
+  if (part.kind === "cylinder" && !part.rotX && (part.thetaLength ?? TAU) >= TAU - 1e-6) {
+    const r = Math.min(part.radiusBottom, part.radiusTop) - m;
+    return (
+      Math.hypot(q[0] - part.at[0], q[2] - part.at[2]) < r &&
+      q[1] > part.at[1] + m &&
+      q[1] < part.at[1] + part.height - m
+    );
+  }
+  if (part.kind === "ring") {
+    return inRing(part, q, -m) && q[1] > part.at[1] + m && q[1] < part.at[1] + part.height - m;
+  }
+  return false;
+}
+
+/** The height of a part's top where a point stands over it, if it does. */
+function topUnder(part: Part, q: Point): number | null {
+  const pad = 0.05;
+  if (part.kind === "box") {
+    const [u, v] = local(part, q);
+    const over = Math.abs(u) <= part.size[0] / 2 + pad && Math.abs(v) <= part.size[2] / 2 + pad;
+    return over ? part.at[1] + part.size[1] : null;
+  }
+  if (part.kind === "cylinder" && !part.rotX) {
+    const reach = Math.max(part.radiusTop, part.radiusBottom) + pad;
+    return Math.hypot(q[0] - part.at[0], q[2] - part.at[2]) <= reach
+      ? part.at[1] + part.height
+      : null;
+  }
+  if (part.kind === "ring") return inRing(part, q, pad) ? part.at[1] + part.height : null;
+  return null;
+}
+
+/** Every half metre along a route, the closing segment back to the start included. */
+function along(route: Point[]): Point[] {
+  const loop = route.length > 2 ? [...route, route[0]!] : route;
+  const out: Point[] = [];
+  for (let i = 0; i < loop.length; i += 1) {
+    const a = loop[i]!;
+    out.push(a);
+    const b = loop[i + 1];
+    if (!b) continue;
+    const n = Math.ceil(Math.hypot(b[0] - a[0], b[2] - a[2]) / 0.5);
+    for (let k = 1; k < n; k += 1) {
+      const t = k / n;
+      out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]);
+    }
+  }
+  return out;
+}
+
+/** The parts whose footprint is near each 4 m square of the plan, to test only those. */
+function gridOf(parts: Part[]) {
+  const CELL = 4;
+  const cells = new Map<string, Part[]>();
+  for (const part of parts) {
+    let reach = 0;
+    if (part.kind === "box") reach = Math.hypot(part.size[0], part.size[2]) / 2;
+    else if (part.kind === "cylinder")
+      reach = Math.max(part.radiusBottom, part.radiusTop, part.height);
+    else if (part.kind === "ring") reach = part.outer;
+    else continue;
+    const [x, , z] = part.at;
+    for (let gx = Math.floor((x - reach) / CELL); gx <= Math.floor((x + reach) / CELL); gx += 1)
+      for (let gz = Math.floor((z - reach) / CELL); gz <= Math.floor((z + reach) / CELL); gz += 1) {
+        const key = `${gx},${gz}`;
+        cells.set(key, [...(cells.get(key) ?? []), part]);
+      }
+  }
+  return (q: Point) => cells.get(`${Math.floor(q[0] / CELL)},${Math.floor(q[2] / CELL)}`) ?? [];
+}
+
+describe("where people go", () => {
+  test("nobody walks through stone, and nobody stands on air", () => {
+    const wrong: string[] = [];
+    for (const { item, life } of lives) {
+      const near = gridOf(partsFor(item.model));
+      const nearSupport = gridOf(life.props);
+      const routes: [string, Point[]][] = [
+        ...life.people.map((p, i): [string, Point[]] => [
+          `person ${i}`,
+          [p.at, ...(p.route ?? [])],
+        ]),
+        ...life.animals.map((a, i): [string, Point[]] => [
+          `animal ${i}`,
+          [a.at, ...(a.route ?? [])],
+        ]),
+        ...life.chariots.map((c, i): [string, Point[]] => [`chariot ${i}`, c.route]),
+      ];
+      for (const [who, route] of routes) {
+        for (const q of along(route)) {
+          const solid = [0.3, 1].some((h) =>
+            near(q).some((part) => within(part, [q[0], q[1] + h, q[2]])),
+          );
+          const floating =
+            q[1] > 0.06 &&
+            ![...near(q), ...nearSupport(q)].some((part) => {
+              const top = topUnder(part, q);
+              return top !== null && top > q[1] - 0.3 && top < q[1] + 0.15;
+            });
+          if (solid || floating) {
+            wrong.push(
+              `${item.id} ${who} ${solid ? "in stone" : "on air"} at ${q.map((v) => v.toFixed(1))}`,
+            );
+            break;
+          }
+        }
+      }
+    }
+    expect(wrong).toEqual([]);
+  });
+});

@@ -269,6 +269,8 @@ export function buildLandscape(THREE: typeof THREE_NS, options: Options) {
 
   return {
     group,
+    /** The ground's own material, for the light of the hour to tint. */
+    terrain: terrainMaterial,
     dispose: () => owned.forEach((item) => item.dispose()),
   };
 }

@@ -15,10 +15,11 @@ export const tm: Record<string, [string, string]> = {
   ],
   "1st - 7th century AD": ["1.–7. Jahrhundert n. Chr.", "I–VII века н. э."],
   "1st century AD": ["1. Jahrhundert n. Chr.", "I век н. э."],
-  "24, 22 and 21 rows: 67 in all, for 21,500 people.": [
-    "24, 22 und 21 Reihen: insgesamt 67, für 21.500 Menschen.",
-    "24, 22 и 21 ряд: всего 67, на 21 500 человек.",
-  ],
+  "24, 22 and 21 rows: 67 in all. It is usually said to have seated about 24,000; some estimates give 21,500.":
+    [
+      "24, 22 und 21 Reihen: insgesamt 67. Meist wird ein Fassungsvermögen von etwa 24.000 Menschen angegeben; manche Schätzungen nennen 21.500.",
+      "24, 22 и 21 ряд: всего 67. Обычно вместимость оценивают примерно в 24 000 человек; по некоторым оценкам — 21 500.",
+    ],
   "250 BC - 3rd century AD": [
     "250 v. Chr. – 3. Jahrhundert n. Chr.",
     "250 г. до н. э. – III век н. э.",
@@ -45,10 +46,11 @@ export const tm: Record<string, [string, string]> = {
     "4. Jahrhundert v. Chr. – 401 n. Chr.",
     "IV век до н. э. – 401 г. н. э.",
   ],
-  "A barrel vault lit by windows runs beneath the temple, probably a cult room.": [
-    "Unter dem Tempel verläuft ein durch Fenster erhelltes Tonnengewölbe, wahrscheinlich ein Kultraum.",
-    "Под храмом проходит цилиндрический свод, освещённый окнами, — вероятно, культовое помещение.",
-  ],
+  "A barrel vault lit by windows runs beneath the temple, probably a cult room. It is not modelled; this marker only shows where it lies.":
+    [
+      "Unter dem Tempel verläuft ein durch Fenster erhelltes Tonnengewölbe, wahrscheinlich ein Kultraum. Im Modell ist es nicht dargestellt; diese Markierung zeigt nur, wo es liegt.",
+      "Под храмом проходит цилиндрический свод, освещённый окнами, — вероятно, культовое помещение. В модели он не показан; эта метка лишь указывает его место.",
+    ],
   "A dipteros: two rows of columns wrap the building, 127 in all.": [
     "Ein Dipteros: Zwei Säulenreihen umgeben den Bau, insgesamt 127.",
     "Диптер: два ряда колонн окружают здание, всего 127.",
@@ -73,9 +75,9 @@ export const tm: Record<string, [string, string]> = {
     "Ein Halbkreis von 27,34 m Durchmesser: der erhaltene Kern der griechischen Gründung von 250–225 v. Chr.",
     "Полукруг диаметром 27,34 м: сохранившийся массив греческого основания 250–225 гг. до н. э.",
   ],
-  "A half circle twenty metres across.": [
-    "Ein Halbkreis von zwanzig Metern Durchmesser.",
-    "Полукруг двадцати метров в поперечнике.",
+  "A half circle about twenty metres across in the model — a derived figure, not a measured one.": [
+    "Ein Halbkreis von im Modell etwa zwanzig Metern Durchmesser – ein abgeleiteter, kein gemessener Wert.",
+    "Полукруг около двадцати метров в поперечнике в модели — расчётная, а не измеренная величина.",
   ],
   "A roof rising seven metres in twenty-four steps.": [
     "Ein Dach, das in vierundzwanzig Stufen sieben Meter ansteigt.",
@@ -258,10 +260,10 @@ export const tm: Record<string, [string, string]> = {
     "Nemrut Dağı, die Ostterrasse",
     "Гора Немрут, восточная терраса",
   ],
-  "One of the Seven Wonders, and the building every mausoleum is named after: the tomb Artemisia raised for her husband Mausolus, satrap of Caria. A tall podium, thirty-six columns, a stepped pyramid and a four-horse chariot on the summit.":
+  "One of the Seven Wonders, and the building every mausoleum is named after: the tomb Artemisia, his sister and wife, raised for Mausolus, satrap of Caria. A tall podium, thirty-six columns, a stepped pyramid and a four-horse chariot on the summit.":
     [
-      "Eines der Sieben Weltwunder und der Bau, nach dem jedes Mausoleum benannt ist: das Grabmal, das Artemisia für ihren Gemahl Mausolos, den Satrapen Kariens, errichten ließ. Ein hohes Podium, sechsunddreißig Säulen, eine Stufenpyramide und ein Viergespann auf dem Gipfel.",
-      "Одно из семи чудес света и здание, по имени которого назван каждый мавзолей: гробница, воздвигнутая Артемисией для её мужа Мавсола, сатрапа Карии. Высокий подиум, тридцать шесть колонн, ступенчатая пирамида и четвёрка коней на вершине.",
+      "Eines der Sieben Weltwunder und der Bau, nach dem jedes Mausoleum benannt ist: das Grabmal, das Artemisia, seine Schwester und Gemahlin, für Mausolos, den Satrapen Kariens, errichten ließ. Ein hohes Podium, sechsunddreißig Säulen, eine Stufenpyramide und ein Viergespann auf dem Gipfel.",
+      "Одно из семи чудес света и здание, по имени которого назван каждый мавзолей: гробница, воздвигнутая для Мавсола, сатрапа Карии, Артемисией — его сестрой и женой. Высокий подиум, тридцать шесть колонн, ступенчатая пирамида и четвёрка коней на вершине.",
     ],
   "One of the Seven Wonders, of which a single column, re-erected from fragments, stands today: a marble forest 137 metres long, raised on marshy ground. Pliny says 36 of the columns were carved in relief at the base. The model shows the third temple, rebuilt in the 4th century BC.":
     [

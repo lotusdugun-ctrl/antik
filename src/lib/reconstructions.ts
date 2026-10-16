@@ -719,7 +719,7 @@ export const reconstructions: Reconstruction[] = [
         "The unroofed inner court: the oracle spring and the sacred laurel stood here.",
       ),
       spot(
-        [0, 9, 29.5],
+        [0, 11, 21.9],
         "Naiskos",
         "The naiskos",
         "Avlunun içindeki küçük tapınak; Apollon'un tunç kült heykelini barındırırdı.",
@@ -944,7 +944,7 @@ export const reconstructions: Reconstruction[] = [
         "A dipteros: two rows of columns wrap the building, 127 in all.",
       ),
       spot(
-        [0, 30, 45],
+        [0, 38.4, 45],
         "Beşik çatı",
         "The gabled roof",
         "İki ucunda alınlık bulunan çatı; modelde kademeli olarak kurulmuştur.",
@@ -1031,14 +1031,14 @@ export const reconstructions: Reconstruction[] = [
     ),
     hotspots: [
       spot(
-        [0, 4.6, -19],
+        [-13.9, 4, -17],
         "Gigantomakhia frizi",
         "The Gigantomachy frieze",
         "113 metrelik yüksek kabartma: tanrılarla devlerin savaşı, yapının çevresini dolaşır.",
         "113 metres of high relief: the gods against the giants, wrapping the whole building.",
       ),
       spot(
-        [0, 3.4, -21],
+        [0, 3.9, -13],
         "Ön merdiven",
         "The great stairway",
         "Yirmi metre genişliğinde; iki kanadın arasından terasa çıkar.",
@@ -1206,8 +1206,8 @@ export const reconstructions: Reconstruction[] = [
         [0, 0.8, 6],
         "Orkestra",
         "The orchestra",
-        "Yirmi metre çapında yarım daire.",
-        "A half circle twenty metres across.",
+        "Modelde yaklaşık yirmi metre çapında bir yarım daire; bu çap ölçülmüş değil, türetilmiştir.",
+        "A half circle about twenty metres across in the model — a derived figure, not a measured one.",
       ),
       spot(
         [0, 12, -7.8],
@@ -1528,8 +1528,8 @@ export const reconstructions: Reconstruction[] = [
         [-30, 12, 45],
         "Üç katlı cavea",
         "The three-tiered cavea",
-        "24, 22 ve 21 sıra: toplam 67 sıra, 21.500 kişi.",
-        "24, 22 and 21 rows: 67 in all, for 21,500 people.",
+        "24, 22 ve 21 sıra: toplam 67 sıra. Kapasitesi genellikle yaklaşık 24.000 kişi olarak verilir; bazı tahminler 21.500 der.",
+        "24, 22 and 21 rows: 67 in all. It is usually said to have seated about 24,000; some estimates give 21,500.",
       ),
       spot(
         [0, 26, 69],
@@ -1761,7 +1761,7 @@ export const reconstructions: Reconstruction[] = [
         "The end that closes in a horseshoe; the rows run round it unbroken.",
       ),
       spot(
-        [0, 1, -105],
+        [0, 1, -101.5],
         "Açık güney ucu",
         "The open south end",
         "Pistin bu ucu kapatılmamıştı; anıtsal giriş buradaydı.",
@@ -1862,8 +1862,8 @@ export const reconstructions: Reconstruction[] = [
         [0, 1.2, 20],
         "Tonozlu mahzen",
         "The vaulted chamber",
-        "Tapınağın altında ışık pencereli bir tonoz uzanır; kült için kullanıldığı sanılıyor.",
-        "A barrel vault lit by windows runs beneath the temple, probably a cult room.",
+        "Tapınağın altında ışık pencereli bir tonoz uzanır; kült için kullanıldığı sanılıyor. Mahzen modelde gösterilmez; bu işaret yalnızca yerini belirtir.",
+        "A barrel vault lit by windows runs beneath the temple, probably a cult room. It is not modelled; this marker only shows where it lies.",
       ),
     ],
     sources: [wiki("en", "en", "Aizanoi", "Wikipedia (İngilizce): Aizanoi", "Wikipedia: Aizanoi")],
@@ -1898,8 +1898,8 @@ export const reconstructions: Reconstruction[] = [
     structure: l("Mausoleion", "Mausoleum"),
     title: l("Halikarnas Mozolesi", "The Mausoleum at Halicarnassus"),
     blurb: l(
-      "Dünyanın Yedi Harikası'ndan biri ve 'mozole' sözcüğünün kaynağı: Karia satrapı Mausolos için karısı Artemisia'nın yaptırdığı mezar. Yüksek bir podyum, otuz altı sütun, basamaklı bir piramit ve tepede dört atlı bir araba.",
-      "One of the Seven Wonders, and the building every mausoleum is named after: the tomb Artemisia raised for her husband Mausolus, satrap of Caria. A tall podium, thirty-six columns, a stepped pyramid and a four-horse chariot on the summit.",
+      "Dünyanın Yedi Harikası'ndan biri ve 'mozole' sözcüğünün kaynağı: Karia satrapı Mausolos için kız kardeşi ve eşi Artemisia'nın yaptırdığı mezar. Yüksek bir podyum, otuz altı sütun, basamaklı bir piramit ve tepede dört atlı bir araba.",
+      "One of the Seven Wonders, and the building every mausoleum is named after: the tomb Artemisia, his sister and wife, raised for Mausolus, satrap of Caria. A tall podium, thirty-six columns, a stepped pyramid and a four-horse chariot on the summit.",
     ),
     period: l("MÖ 353 - 350", "353 - 350 BC"),
     measures: [

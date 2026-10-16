@@ -19,12 +19,16 @@ const reply = (body: AskResponse, status: number) =>
 
 /**
  * POST /api/sor — "Ask the guide" answered by Gemini, grounded in the app's
- * own record of the site. Body: { question, lang, slug?, history? }.
+ * own record of the site and (unless GEMINI_SEARCH is off) Google Search.
+ * Body: { question, lang, slug?, history? }. 200 answers
+ * { answer, source: "ai", sources: {title, url}[], search: "used"|"off"|"fallback",
+ * searchEntryPoint?: Google's Search Suggestions HTML (only when search was used) }.
  *
  * Every non-200 is a cue for the client to answer from `ask.ts` instead, so
  * the codes only need to be honest, not detailed: 400 bad input, 403 another
  * site, 429 this visitor is asking too fast, 503 not configured or quota,
- * 502 anything else. The key and Google's own error text never leave here.
+ * 502 anything else. The client tells the visitor about 429 and "busy" (it
+ * will work again shortly) rather than only showing the offline answer. The key and Google's own error text never leave here.
  */
 export const Route = createFileRoute("/api/sor")({
   server: {

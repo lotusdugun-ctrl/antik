@@ -1053,9 +1053,15 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
     -(spec.steps - i) * tread + tread * 0.55,
   ];
 
-  // The square in front: people crossing it, and stopping to talk.
+  /*
+   * The square in front: people crossing it, and stopping to talk. They
+   * cross in front of the horsemen's plinths (2.6 m before the stair, 3.4 m
+   * deep), not through them, which is where a crossing ending at x = ±12
+   * had walked a third of them.
+   */
+  const plinthFront = stairFoot - 2.6 - 1.7;
   for (let i = 0; i < 9; i += 1) {
-    const z = between(rand, stairFoot - 9, stairFoot - 3.2);
+    const z = between(rand, stairFoot - 9, plinthFront - 2);
     const dir = rand() < 0.5 ? 1 : -1;
     const x0 = dir * -12;
     cast.walk(
@@ -1074,16 +1080,30 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   cast.group([-4.5, 0, stairFoot - 2.4], 3);
   cast.group([5.2, 0, stairFoot - 4.2], 2, 0.6);
   cast.group([-8.5, 0, stairFoot - 6.5], 2, 0.6);
-  // Up and down the nine steps, to the doors and back.
-  for (const x of [-2.4, 1.2, 3.8]) {
-    cast.walk(
-      [
-        [x, 0, stairFoot - 2.5],
-        [x, 0, stairFoot - 0.3],
-        [x, y0, -0.5],
-      ],
-      { carry: x > 3 ? "basket" : "scroll", role: x > 3 ? "worker" : "citizen", speed: 0.8 },
-    );
+  // The three doors, the middle one the widest.
+  const bayCentres = [
+    -((w * 0.152) / 2 + w * 0.152 + (w * 0.114) / 2),
+    0,
+    (w * 0.152) / 2 + w * 0.152 + (w * 0.114) / 2,
+  ];
+  // Up and down the nine steps, to the doors and back — in line with a
+  // door, not with the podium of an aedicula between two of them.
+  // Tread by tread, and back down the same way.
+  const stair = (x: number): Vec3[] => {
+    const up: Vec3[] = [[x, 0, stairFoot - 2.5]];
+    for (let i = 0; i < spec.steps; i += 1) {
+      const z = -(spec.steps - i) * tread;
+      up.push([x, i * rise, z - 0.08], [x, (i + 1) * rise, z + 0.08]);
+    }
+    up.push([x, y0, -0.5]);
+    return [...up, ...up.slice(1, -1).reverse()];
+  };
+  for (const x of [bayCentres[0]! + 0.4, 1.2, bayCentres[2]! - 0.4]) {
+    cast.walk(stair(x), {
+      carry: x > 3 ? "basket" : "scroll",
+      role: x > 3 ? "worker" : "citizen",
+      speed: 0.8,
+    });
   }
   // Readers sitting on the steps in the sun, scrolls open on their knees.
   for (const [x, step] of [
@@ -1122,15 +1142,10 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   cast.add({ at: [-11.4, 0, stairFoot - 8.4], rotY: 0.35, action: "talk", role: "worker" });
 
   // Torches either side of each door, and a brazier at each horseman.
-  const bayCentres = [
-    -((w * 0.152) / 2 + w * 0.152 + (w * 0.114) / 2),
-    0,
-    (w * 0.152) / 2 + w * 0.152 + (w * 0.114) / 2,
-  ];
   const doorHalf = [w * 0.114 * 0.36, w * 0.152 * 0.36, w * 0.114 * 0.36];
   bayCentres.forEach((cx, i) => {
     for (const side of [-1, 1]) {
-      fire(b, torchStand([cx + side * (doorHalf[i]! + 0.35), y0, -0.55], 1.7), 0.32, i === 1);
+      fire(b, torchStand([cx + side * (doorHalf[i]! + 0.35), y0, -0.22], 1.7), 0.32, i === 1);
     }
   });
   for (const side of [-1, 1]) {
@@ -1375,25 +1390,51 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
   });
   // Late arrivals climbing a stair, and a seller of nuts and water along the
   // walkway between the tiers.
-  const stairTheta = (Math.PI * (Math.floor(spec.stairways / 2) + 0.5)) / spec.stairways;
+  // The stair just left of the middle one: with an odd count the middle one
+  // runs up the axis, where Miletus set its magistrates' box across it.
+  const stairTheta =
+    (Math.PI * (Math.max(0, Math.floor(spec.stairways / 2) - 1) + 0.5)) / spec.stairways;
   const lower = rowAt(0);
   const upper = rowAt(spec.lowerRows - 1);
+  /*
+   * Step by step: across each tread, then up its riser before reaching it.
+   * A straight line from the bottom row to the top one ran under every
+   * nosing, the feet sunk in the stone the whole way up. The stair's top is
+   * the row's, plus the 10 cm its slabs stand proud.
+   */
+  const climb = (radius: (r: number) => number): Vec3[] => {
+    // From the first row: the wall round the orchestra is too high to step
+    // up from where Ephesus raised it for the arena.
+    const up: [number, number][] = [];
+    for (let row = 0; row < spec.lowerRows; row += 1) {
+      const { inner, outer, y } = rowAt(row);
+      const tread = y + spec.seatRise + 0.1;
+      up.push([row === 0 ? inner + 0.15 : inner - 0.02, tread], [outer - 0.12, tread]);
+    }
+    up.push([upper.outer + 0.3, upper.y + spec.seatRise + 0.1]);
+    void upper;
+    // Up, and back down the same way: a route of more than two points is a
+    // loop, and closing it straight would cut back through the seats.
+    const path = [...up, ...up.slice(1, -1).reverse()];
+    return path.map(([r, y]) => [
+      Math.cos(stairTheta) * radius(r),
+      y,
+      Math.sin(stairTheta) * radius(r),
+    ]);
+  };
   for (let i = 0; i < 2; i += 1) {
-    const dt = (i - 0.5) * 0.004;
+    const off = (i - 0.5) * 0.45;
+    const route = climb((r) => r).map(([x, y, z]): Vec3 => [
+      x - Math.sin(stairTheta) * off,
+      y,
+      z + Math.cos(stairTheta) * off,
+    ]);
+    // The two start at opposite ends, one going up as the other comes down.
     cast.walk(
-      [
-        [
-          Math.cos(stairTheta + dt) * (lower.inner - 0.3),
-          lower.y,
-          Math.sin(stairTheta + dt) * (lower.inner - 0.3),
-        ],
-        [
-          Math.cos(stairTheta + dt) * (upper.inner + 0.3),
-          upper.y + spec.seatRise,
-          Math.sin(stairTheta + dt) * (upper.inner + 0.3),
-        ],
-      ],
-      { speed: 0.6 },
+      i === 0 ? route : [...route.slice(route.length / 2), ...route.slice(0, route.length / 2)],
+      {
+        speed: 0.6,
+      },
     );
   }
   const walkway = rowAt(spec.lowerRows - 1);
@@ -1404,13 +1445,30 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
     const a = 0.25 + (i / 10) * (Math.PI - 0.5);
     arc.push([Math.cos(a) * wr, wy, Math.sin(a) * wr]);
   }
-  cast.walk(arc, { role: "worker", carry: "basket", speed: 0.7 });
-  cast.walk([...arc].reverse(), { role: "worker", carry: "amphora", speed: 0.6 });
+  /*
+   * Along the walkway and back. A route of more than two points is a loop,
+   * and this one used to close with a straight line from one end of the
+   * walkway to the other — so the seller flew across the cavea, nine metres
+   * up, every lap.
+   */
+  const lap = [...arc, ...arc.slice(1, -1).reverse()];
+  cast.walk(lap, { role: "worker", carry: "basket", speed: 0.7 });
+  cast.walk([...lap.slice(arc.length - 1), ...lap.slice(0, arc.length - 1)], {
+    role: "worker",
+    carry: "amphora",
+    speed: 0.6,
+  });
 
   // Torches along the front of the stage, and braziers at its ends.
   const stageHalf = Math.min(layout.stageWidth, spec.caveaDiameter * 0.62) / 2;
+  // At Aspendos the magistrates' boxes over the side entrances come down onto
+  // the ends of the stage: the row of torches stops short of them.
+  const torchReach =
+    layout.character.box === "tribunalia"
+      ? Math.min(stageHalf * 0.8, layout.podiumOuter + 0.1 * spec.lowerRows * spec.seatTread - 0.8)
+      : stageHalf * 0.8;
   for (let i = 0; i < 6; i += 1) {
-    const x = -stageHalf * 0.8 + (stageHalf * 1.6 * i) / 5;
+    const x = -torchReach + (torchReach * 2 * i) / 5;
     fire(b, torchStand([x, stageY, -0.4], 1.6), 0.3, i === 1 || i === 4);
   }
   for (const side of [-1, 1]) {
@@ -1740,8 +1798,10 @@ function enclosureLife(spec: NeolithicEnclosureSpec, era: Era): SceneLife {
     });
   }
   // On the benches round the wall.
-  for (let i = 0; i < 6; i += 1) {
-    const a = 1.9 + i * 0.32 + (i > 2 ? 1.2 : 0);
+  // Midway between two pillars, where the bench runs: one sitter had been
+  // put where a pillar stands, on a bench that is not there.
+  for (const gap of [3, 4, 5, 7, 8, 9]) {
+    const a = ((gap + 0.5) * TAU) / spec.ringPillars;
     const r = inner - 0.4;
     const at: Vec3 = [Math.cos(a) * r, floor + spec.benchHeight, Math.sin(a) * r];
     cast.add({ at, rotY: facing(-at[0], -at[2]), action: rand() < 0.6 ? "sit" : "talk" });
@@ -1806,7 +1866,8 @@ function enclosureLife(spec: NeolithicEnclosureSpec, era: Era): SceneLife {
     [-5, floor, 4],
     [2, floor, 9],
     [7, floor, 3],
-    [1, floor, -2],
+    // Round the north of the central pair, not between their feet.
+    [4.5, floor, 0.5],
   ]);
   flock(b, "gazelle", [24, 0, -12], 6, 5);
   flock(b, "gazelle", [-20, 0, 18], 4, 4);
@@ -1839,27 +1900,42 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
       ...(i === 2 ? { carry: "offering" as const } : {}),
     });
   }
-  // Up the stair: the procession.
+  /*
+   * Up the stair: the procession, from the square over the five steps round
+   * the building and then the flight between the wings, tread by tread (see
+   * greatAltarParts: risers of 0.3 m, the flight 8.5 m deep) — and back down
+   * the same way. Drawn as a straight ramp from a starting point already at
+   * the top of the five steps, it floated over the square and sank through
+   * every nosing; closed as a loop, it came back down through the building.
+   */
+  const flight = Math.max(2, Math.round((terrace - ground) / 0.3));
+  const flightRise = (terrace - ground) / flight;
+  const flightRun = 8.5 / flight;
+  const climb = (x: number): Vec3[] => {
+    const up: Vec3[] = [[x, 0, foot - 6]];
+    for (let s = 0; s < spec.steps; s += 1) {
+      const z = foot + s * 0.55;
+      up.push([x, s * 0.3, z - 0.12], [x, (s + 1) * 0.3, z + 0.08]);
+    }
+    for (let s = 0; s < flight; s += 1) {
+      const z = -halfD + s * flightRun;
+      up.push([x, ground + s * flightRise, z - 0.12], [x, ground + (s + 1) * flightRise, z + 0.08]);
+    }
+    up.push([x * 0.5, terrace, courtZ - 5]);
+    return [...up, ...up.slice(1, -1).reverse()];
+  };
   for (let i = 0; i < 8; i += 1) {
     const x = (i % 2 ? 1 : -1) * between(rand, 1.5, 5);
-    cast.walk(
-      [
-        [x, ground, foot - 6],
-        [x, ground, -halfD],
-        [x, terrace, -halfD + 8.5],
-        [x * 0.5, terrace, courtZ - 5],
-      ],
-      {
-        role: i < 2 ? "musician" : i < 4 ? "priestess" : "citizen",
-        carry:
-          i < 2
-            ? i
-              ? "lyre"
-              : "aulos"
-            : pick(rand, ["offering", "basket", "jar", "torch"] as const),
-        speed: 0.55,
-      },
-    );
+    cast.walk(climb(x), {
+      role: i < 2 ? "musician" : i < 4 ? "priestess" : "citizen",
+      carry:
+        i < 2
+          ? i
+            ? "lyre"
+            : "aulos"
+          : pick(rand, ["offering", "basket", "jar", "torch"] as const),
+      speed: 0.55,
+    });
   }
   // The city at the foot of the steps.
   for (let i = 0; i < 18; i += 1) {
@@ -1875,8 +1951,10 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
       action: rand() < 0.3 ? "talk" : rand() < 0.5 ? "pray" : "stand",
     });
   }
+  // Guards either side of the foot of the stair, on the square — not where
+  // they stood before, a metre up in the air over the second step.
   cast.add({
-    at: [-spec.stairWidth / 2 - 2, ground, foot + 1],
+    at: [-spec.stairWidth / 2 + 1, 0, foot - 0.8],
     rotY: 0.3,
     action: "stand",
     role: "soldier",
@@ -1884,7 +1962,7 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
     carryLeft: "shield",
   });
   cast.add({
-    at: [spec.stairWidth / 2 + 2, ground, foot + 1],
+    at: [spec.stairWidth / 2 - 1, 0, foot - 0.8],
     rotY: -0.3,
     action: "stand",
     role: "soldier",
@@ -1897,26 +1975,21 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
     fire(b, brazier([side * (spec.stairWidth / 2 + 1.5), 0, foot - 2], 1.2), 0.5, false, true);
   }
   // The bull for the sacrifice, led up the great stair to the court.
-  animal(b, "ox", [-2, ground, foot - 8], 0, "walk", {
+  const led = (x: number, back: number, last: number): Vec3[] => {
+    const route = climb(x);
+    route[0] = [x, 0, foot - back];
+    const top = route.length / 2;
+    route[top] = [x, terrace, courtZ - last];
+    return route;
+  };
+  const oxRoute = led(-2, 8, 5.5);
+  animal(b, "ox", oxRoute[0]!, 0, "walk", {
     colour: 0x2a1d14,
     dressed: 0xd4ae52,
-    route: [
-      [-2, ground, foot - 8],
-      [-2, ground, -halfD],
-      [-2, terrace, -halfD + 8.5],
-      [-2, terrace, courtZ - 5.5],
-    ],
+    route: oxRoute,
     speed: 0.5,
   });
-  cast.walk(
-    [
-      [-3, ground, foot - 7.4],
-      [-3, ground, -halfD + 0.6],
-      [-3, terrace, -halfD + 9],
-      [-3, terrace, courtZ - 5],
-    ],
-    { role: "priest", carry: "staff", speed: 0.5 },
-  );
+  cast.walk(led(-3, 7.4, 5), { role: "priest", carry: "staff", speed: 0.5 });
   dog(b, [spec.baseWidth * 0.3, 0, foot - 5]);
   /*
    * The roof of the colonnade carried statues — gods, and horses — standing
@@ -2221,6 +2294,8 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
       [halfW - 0.8, 0, -halfD - 1.4],
       [dx - 1.2, 0, -halfD - 1.0],
       [dx - 1.0, 0, -0.9],
+      // And back the same way: closed straight, the loop cut through the wall.
+      [dx - 1.2, 0, -halfD - 1.0],
     ],
     { role: "worker", carry: "amphora", speed: 0.55 },
   );
@@ -2423,6 +2498,9 @@ function mausoleumLife(spec: MausoleumSpec, era: Era): SceneLife {
     const n = route[1]!;
     const t = (i / 14) * 0.9;
     route[0] = [a[0] + (n[0] - a[0]) * t, 0, a[2] + (n[2] - a[2]) * t];
+    // The corner it started past is walked round too, last: without it the
+    // loop closed on a diagonal, straight through the podium.
+    route.push(a);
     cast.walk(route, {
       role: i % 3 === 0 ? "priest" : "mourner",
       ...(i % 2 === 0
@@ -2545,19 +2623,21 @@ function tumulusLife(spec: TumulusSanctuarySpec, era: Era): SceneLife {
   // Pilgrims coming up into the court from the east with their offerings.
   for (let i = 0; i < 10; i += 1) {
     const z = between(rand, -halfCourt + 2, halfCourt - 2);
-    cast.walk(
-      [
-        [spec.courtDepth + 3, 0, z],
-        [altarX + 4.5, 0, z * 0.7],
-        [8, 0, z * 0.8],
-        [6, 0, z],
-      ],
-      {
-        role: i === 0 ? "official" : i % 4 === 0 ? "worker" : "citizen",
-        carry: pick(rand, ["offering", "jar", "basket", "amphora", "torch"] as const),
-        speed: 0.6,
-      },
-    );
+    // Past the stepped altar on one side of it or the other, not through it,
+    // and back the way they came.
+    const pass = (z < 0 ? -1 : 1) * Math.max(Math.abs(z) * 0.7, 4.8);
+    const there: Vec3[] = [
+      [spec.courtDepth + 3, 0, z],
+      [altarX + 4.5, 0, pass],
+      [altarX - 4.5, 0, pass],
+      [8, 0, z * 0.8],
+      [6, 0, z],
+    ];
+    cast.walk([...there, ...there.slice(1, -1).reverse()], {
+      role: i === 0 ? "official" : i % 4 === 0 ? "worker" : "citizen",
+      carry: pick(rand, ["offering", "jar", "basket", "amphora", "torch"] as const),
+      speed: 0.6,
+    });
   }
   // Feasting along the stelae, as the law laid down: wine and meat for all.
   for (const side of [-1, 1]) {

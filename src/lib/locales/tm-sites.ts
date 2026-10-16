@@ -432,10 +432,10 @@ export const tm: Record<string, [string, string]> = {
   "Alexandria Troas": ["Alexandria Troas", "Александрия Троада"],
   Alinda: ["Alinda", "Алинда"],
   "Alişar Höyük": ["Alişar Höyük", "Алишар-Хююк"],
-  "Alongside Amasya's finds from the Hittites to the Ottomans, the museum displays six mummies surviving from the Ilkhanid period.":
+  "Alongside Amasya's finds from the Chalcolithic to the Ottomans, the museum displays six mummies surviving from the Ilkhanid period.":
     [
-      "Neben den Funden Amasyas von den Hethitern bis zu den Osmanen zeigt das Museum sechs Mumien aus der Zeit der Ilchane.",
-      "Помимо находок Амасьи от хеттов до османов, музей показывает шесть мумий эпохи Хулагуидов.",
+      "Neben den Funden Amasyas von der Kupfersteinzeit bis zu den Osmanen zeigt das Museum sechs Mumien aus der Zeit der Ilchane.",
+      "Помимо находок Амасьи от энеолита до османов, музей показывает шесть мумий эпохи Хулагуидов.",
     ],
   Altıntepe: ["Altıntepe", "Алтынтепе"],
   "Alâeddin Mosque, Konya": ["Alâeddin-Moschee (Konya)", "Мечеть Алаэддина (Конья)"],
@@ -446,10 +446,10 @@ export const tm: Record<string, [string, string]> = {
   "Amasya Riverside Houses": ["Uferhäuser von Amasya", "Прибрежные дома Амасьи"],
   Amisus: ["Amisos", "Амис"],
   Amorium: ["Amorion", "Аморий"],
-  "An Artuqid bridge spanning the Batman river in a single 38-metre arch — among the widest stone spans of the Middle Ages — with chambers in its flanks where travellers slept.":
+  "An Artuqid bridge spanning the Batman river in a single arch of more than 38 metres — among the widest stone spans of the Middle Ages — with chambers in its flanks where travellers slept.":
     [
-      "Eine artukidische Brücke, die den Batman-Fluss mit einem einzigen 38-Meter-Bogen überspannt – eine der weitesten Steinspannweiten des Mittelalters –, mit Kammern in den Flanken, in denen Reisende übernachteten.",
-      "Артукидский мост, перекрывающий реку Батман одной 38-метровой аркой — одним из самых широких каменных пролётов Средневековья, — с комнатами в боковых частях, где ночевали путники.",
+      "Eine artukidische Brücke, die den Batman-Fluss mit einem einzigen Bogen von über 38 Metern überspannt – eine der weitesten Steinspannweiten des Mittelalters –, mit Kammern in den Flanken, in denen Reisende übernachteten.",
+      "Артукидский мост, перекрывающий реку Батман одной аркой пролётом более 38 метров — одним из самых широких каменных пролётов Средневековья, — с комнатами в боковых частях, где ночевали путники.",
     ],
   "An Ionian city at Seferihisar, home to the largest Temple of Dionysos in the ancient world.": [
     "Ionische Stadt bei Seferihisar mit dem größten Dionysostempel der antiken Welt.",
@@ -562,10 +562,10 @@ export const tm: Record<string, [string, string]> = {
   Aspendos: ["Aspendos", "Аспендос"],
   "Aspendos Aqueduct": ["Aquädukt von Aspendos", "Акведук Аспендоса"],
   Assos: ["Assos", "Ассос"],
-  "At 1,238 metres over the Ergene, the longest stone arch bridge in the world; the keystones of its 174 arches carry lions, elephants and tulips.":
+  "At 1,238 metres over the Ergene, the longest stone arch bridge in the world; the keystones of its 174 arches carry lions, elephants, tulips and other figures.":
     [
-      "Mit 1.238 Metern über die Ergene die längste Steinbogenbrücke der Welt; die Schlusssteine ihrer 174 Bögen tragen Löwen, Elefanten und Tulpen.",
-      "Мост длиной 1238 метров через реку Эргене — самый длинный каменный арочный мост в мире; замковые камни его 174 арок украшены львами, слонами и тюльпанами.",
+      "Mit 1.238 Metern über die Ergene die längste Steinbogenbrücke der Welt; die Schlusssteine ihrer 174 Bögen tragen Löwen, Elefanten, Tulpen und andere Figuren.",
+      "Мост длиной 1238 метров через реку Эргене — самый длинный каменный арочный мост в мире; замковые камни его 174 арок украшены львами, слонами, тюльпанами и другими фигурами.",
     ],
   "At Demre, the church where Nicholas of Myra — the source of the Father Christmas story — was buried, its floor mosaics and part of its frescoes still in place.":
     [
@@ -697,10 +697,10 @@ export const tm: Record<string, [string, string]> = {
   Dascylium: ["Daskyleion", "Даскилион"],
   Denizli: ["Denizli", "Денизли"],
   "Derinkuyu Underground City": ["Unterirdische Stadt Derinkuyu", "Подземный город Деринкую"],
-  "Designed as a cube half-sunk beside the mound, it lays out Troy's nine layers and traces what was carried away from the city.":
+  "Designed as a cube half-sunk into the ground near the mound, it lays out Troy's nine layers and traces what was carried away from the city.":
     [
-      "Als halb im Boden versenkter Würfel neben dem Siedlungshügel gestaltet, stellt es die neun Schichten Trojas vor und verfolgt, was aus der Stadt fortgebracht wurde.",
-      "Задуманный как наполовину утопленный в землю куб рядом с холмом, музей представляет девять слоёв Трои и прослеживает судьбу вывезенных из города находок.",
+      "Als halb im Boden versenkter Würfel unweit des Siedlungshügels gestaltet, stellt es die neun Schichten Trojas vor und verfolgt, was aus der Stadt fortgebracht wurde.",
+      "Задуманный как наполовину утопленный в землю куб неподалёку от холма, музей представляет девять слоёв Трои и прослеживает судьбу вывезенных из города находок.",
     ],
   Didyma: ["Didyma", "Дидима"],
   "Direkli Cave": ["Direkli-Höhle", "Пещера Диреклы"],
@@ -1015,10 +1015,10 @@ export const tm: Record<string, [string, string]> = {
   "Mosque and complex": ["Moschee und Külliye", "Мечеть и комплекс"],
   Mound: ["Siedlungshügel", "Холм-поселение"],
   "Mount Nemrut": ["Nemrut Dağı", "Гора Немрут"],
-  "Moved into the halls of an early Republican textile mill — one of the largest museum buildings in Türkiye — gathering the Hittite and Roman finds of the Çukurova plain.":
+  "Moved into the halls of a textile mill founded at the start of the twentieth century — one of the largest museum buildings in Türkiye — gathering the Hittite and Roman finds of the Çukurova plain.":
     [
-      "In die Hallen einer Textilfabrik aus der frühen Republikzeit verlegt – eines der größten Museumsgebäude der Türkei –, vereint es die hethitischen und römischen Funde der Çukurova-Ebene.",
-      "Переехавший в цеха ткацкой фабрики ранней республиканской эпохи — одно из крупнейших музейных зданий Турции, — музей собирает хеттские и римские находки равнины Чукурова.",
+      "In die Hallen einer Anfang des 20. Jahrhunderts gegründeten Textilfabrik verlegt – eines der größten Museumsgebäude der Türkei –, vereint es die hethitischen und römischen Funde der Çukurova-Ebene.",
+      "Переехавший в цеха ткацкой фабрики, основанной в начале XX века, — одно из крупнейших музейных зданий Турции, — музей собирает хеттские и римские находки равнины Чукурова.",
     ],
   Museum: ["Museum", "Музей"],
   "Museum of Anatolian Civilizations": [
@@ -1186,10 +1186,10 @@ export const tm: Record<string, [string, string]> = {
     "Sitz der persischen Satrapen in Anatolien, eine mysische Stadt, berühmt für ihre Steinreliefs.",
     "Резиденция персидских сатрапов в Анатолии, мисийский город, знаменитый каменными рельефами.",
   ],
-  "Seat of the Syriac Orthodox patriarchate for six centuries; the vaulted room beneath it survives from a sun temple that stood here before the monastery.":
+  "Seat of the Syriac Orthodox patriarchate for centuries; the vaulted room beneath it survives from a sun temple that stood here before the monastery.":
     [
-      "Sechs Jahrhunderte lang Sitz des syrisch-orthodoxen Patriarchats; der Gewölberaum darunter stammt von einem Sonnentempel, der hier vor dem Kloster stand.",
-      "Шесть веков резиденция сирийского православного патриархата; сводчатое помещение под ним сохранилось от храма Солнца, стоявшего здесь до монастыря.",
+      "Jahrhundertelang Sitz des syrisch-orthodoxen Patriarchats; der Gewölberaum darunter stammt von einem Sonnentempel, der hier vor dem Kloster stand.",
+      "На протяжении веков резиденция сирийского православного патриархата; сводчатое помещение под ним сохранилось от храма Солнца, стоявшего здесь до монастыря.",
     ],
   Seleucia: ["Seleukeia (Silifke)", "Селевкия (Силифке)"],
   Selge: ["Selge", "Сельге"],
@@ -1247,10 +1247,10 @@ export const tm: Record<string, [string, string]> = {
   "Sinop Museum": ["Museum Sinop", "Музей Синопа"],
   Sinope: ["Sinope (Sinop)", "Синопа (Синоп)"],
   "Sivrihisar Great Mosque": ["Große Moschee von Sivrihisar", "Великая мечеть Сиврихисара"],
-  "Sixty-seven wooden columns carry the roof, more than in any other Anatolian hypostyle mosque, and their capitals were reused from ancient buildings.":
+  "Sixty-seven wooden columns carry the roof, more than in any other Anatolian hypostyle mosque, and some of their capitals were reused from ancient buildings.":
     [
-      "Siebenundsechzig Holzsäulen tragen das Dach, mehr als in jeder anderen anatolischen Säulenmoschee; ihre Kapitelle stammen aus antiken Bauten.",
-      "Кровлю несут шестьдесят семь деревянных колонн — больше, чем в любой другой многоколонной мечети Анатолии; их капители взяты из античных построек.",
+      "Siebenundsechzig Holzsäulen tragen das Dach, mehr als in jeder anderen anatolischen Säulenmoschee; ein Teil ihrer Kapitelle stammt aus antiken Bauten.",
+      "Кровлю несут шестьдесят семь деревянных колонн — больше, чем в любой другой многоколонной мечети Анатолии; часть их капителей взята из античных построек.",
     ],
   "Slender Minaret Madrasa": ["İnce-Minareli-Medrese", "Медресе Индже-Минарели"],
   Smintheion: ["Smintheion", "Сминфейон"],

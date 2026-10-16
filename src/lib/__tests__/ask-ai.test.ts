@@ -4,12 +4,19 @@ import {
   buildContext,
   clientIp,
   createRateLimiter,
+  DEFAULT_LIMITS,
   geminiBody,
+  GEMINI_TIMEOUT_MS,
   isSameOrigin,
   MAX_CONTEXT,
+  MAX_ENTRY_POINT,
+  MAX_OUTPUT_TOKENS,
   MAX_TURNS,
   parseGeminiResponse,
+  parseGroundingSources,
+  parseSearchEntryPoint,
   sanitizeHistory,
+  searchEnabled,
   systemInstruction,
   validateAskBody,
   type AskRequest,
@@ -23,14 +30,24 @@ afterEach(() => {
 });
 
 /** Replace fetch for one test; records what was sent. */
-function mockFetch(respond: () => Response | Promise<Response>) {
+function mockFetch(respond: (call: number) => Response | Promise<Response>) {
   const calls: { url: string; init: RequestInit | undefined }[] = [];
   globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
     calls.push({ url: String(url), init });
-    return respond();
+    return respond(calls.length - 1);
   }) as typeof fetch;
   return calls;
 }
+
+/** The JSON body of a recorded call. */
+const sent = (call: { init: RequestInit | undefined }) =>
+  JSON.parse(String(call.init?.body)) as Record<string, unknown> & {
+    tools?: unknown;
+    systemInstruction: { parts: { text: string }[] };
+  };
+
+const geminiAnswer = (text: string, extra: Record<string, unknown> = {}) =>
+  Response.json({ candidates: [{ content: { parts: [{ text }] }, ...extra }] });
 
 const request: AskRequest = { question: "Ne zaman kuruldu?", lang: "tr", site: efes, history: [] };
 const env = { GEMINI_API_KEY: "test-key" };
@@ -112,7 +129,27 @@ describe("ask-ai context", () => {
     );
     expect(body.contents.map((c) => c.role)).toEqual(["user", "model", "user"]);
     expect(body.contents.at(-1)!.parts[0]!.text).toBe("c");
-    expect(body.generationConfig.maxOutputTokens).toBe(600);
+    expect(body.generationConfig.maxOutputTokens).toBe(MAX_OUTPUT_TOKENS);
+    expect(MAX_OUTPUT_TOKENS).toBeGreaterThanOrEqual(1024);
+    expect("tools" in body).toBe(false);
+    expect(geminiBody("sys", [], "c", true).tools).toEqual([{ google_search: {} }]);
+  });
+
+  test("the instruction invites general questions and search, without the old refusal", () => {
+    const withSearch = systemInstruction(efes, "tr", "ctx", true);
+    expect(withSearch).toContain("Google Search");
+    expect(withSearch).toContain("3–8 sentences");
+    expect(withSearch).not.toContain("steer back");
+    expect(systemInstruction(efes, "tr", "ctx", false)).not.toContain("Google Search");
+  });
+
+  test("GEMINI_SEARCH is on unless turned off", () => {
+    expect(searchEnabled({})).toBe(true);
+    expect(searchEnabled({ GEMINI_SEARCH: "1" })).toBe(true);
+    expect(searchEnabled({ GEMINI_SEARCH: "true" })).toBe(true);
+    for (const off of ["0", "false", "OFF", " no "]) {
+      expect(searchEnabled({ GEMINI_SEARCH: off })).toBe(false);
+    }
   });
 });
 
@@ -151,7 +188,10 @@ describe("ask-ai response", () => {
       Response.json({ candidates: [{ content: { parts: [{ text: "MÖ 10. yüzyılda." }] } }] }),
     );
     const r = await answerWithGemini(request, { ...env, GEMINI_MODEL: "gemini-x" });
-    expect(r).toEqual({ status: 200, body: { answer: "MÖ 10. yüzyılda.", source: "ai" } });
+    expect(r).toEqual({
+      status: 200,
+      body: { answer: "MÖ 10. yüzyılda.", source: "ai", sources: [], search: "used" },
+    });
     expect(calls[0]!.url).toContain("/models/gemini-x:generateContent");
     expect(calls[0]!.url).not.toContain("test-key");
     expect(new Headers(calls[0]!.init?.headers).get("x-goog-api-key")).toBe("test-key");
@@ -163,11 +203,110 @@ describe("ask-ai response", () => {
     expect(calls[0]!.url).toContain("/models/gemini-3.5-flash-lite:generateContent");
   });
 
+  test("search on by default: tools sent, grounding sources returned", async () => {
+    const calls = mockFetch(() =>
+      geminiAnswer("Müze bugün 08.00–19.00 arası açık.", {
+        groundingMetadata: {
+          groundingChunks: [
+            { web: { uri: "https://vertexaisearch.cloud.google.com/r/1", title: "muze.gov.tr" } },
+            { web: { uri: "https://example.org/a", title: "Wikipedia" } },
+          ],
+        },
+      }),
+    );
+    const r = await answerWithGemini(request, env);
+    expect(calls).toHaveLength(1);
+    expect(sent(calls[0]!).tools).toEqual([{ google_search: {} }]);
+    expect(r.body).toEqual({
+      answer: "Müze bugün 08.00–19.00 arası açık.",
+      source: "ai",
+      sources: [
+        { title: "muze.gov.tr", url: "https://vertexaisearch.cloud.google.com/r/1" },
+        { title: "Wikipedia", url: "https://example.org/a" },
+      ],
+      search: "used",
+    });
+  });
+
+  test("Google's Search Suggestions pass through untouched, only when search was used", async () => {
+    const html =
+      '<style>.c{color:red}</style><div class="c"><a href="https://www.google.com/search?q=efes">efes</a></div>';
+    const grounded = (extra: Record<string, unknown> = {}) =>
+      geminiAnswer("Cevap.", {
+        groundingMetadata: { searchEntryPoint: { renderedContent: html }, ...extra },
+      });
+
+    mockFetch(() => grounded());
+    expect((await answerWithGemini(request, env)).body).toMatchObject({
+      search: "used",
+      searchEntryPoint: html,
+    });
+
+    mockFetch((i) => (i === 0 ? new Response("no tools", { status: 400 }) : grounded()));
+    const fallback = (await answerWithGemini(request, env)).body;
+    expect(fallback).toMatchObject({ search: "fallback" });
+    expect("searchEntryPoint" in fallback).toBe(false);
+
+    mockFetch(() => grounded());
+    const off = (await answerWithGemini(request, { ...env, GEMINI_SEARCH: "off" })).body;
+    expect("searchEntryPoint" in off).toBe(false);
+
+    mockFetch(() => geminiAnswer("Cevap."));
+    expect("searchEntryPoint" in (await answerWithGemini(request, env)).body).toBe(false);
+  });
+
+  test("an oversized or malformed entry point is dropped, not truncated", () => {
+    const withHtml = (renderedContent: unknown) => ({
+      candidates: [{ groundingMetadata: { searchEntryPoint: { renderedContent } } }],
+    });
+    const atCap = "x".repeat(MAX_ENTRY_POINT);
+    expect(MAX_ENTRY_POINT).toBe(20_000);
+    expect(parseSearchEntryPoint(withHtml(atCap))).toBe(atCap);
+    expect(parseSearchEntryPoint(withHtml(`${atCap}x`))).toBeNull();
+    expect(parseSearchEntryPoint(withHtml("   "))).toBeNull();
+    expect(parseSearchEntryPoint(withHtml(42))).toBeNull();
+    expect(parseSearchEntryPoint({})).toBeNull();
+  });
+
+  test("GEMINI_SEARCH=off sends no tools", async () => {
+    const calls = mockFetch(() => geminiAnswer("Tamam."));
+    const r = await answerWithGemini(request, { ...env, GEMINI_SEARCH: "off" });
+    expect("tools" in sent(calls[0]!)).toBe(false);
+    expect(sent(calls[0]!).systemInstruction.parts[0]!.text).not.toContain("Google Search");
+    expect(r.body).toMatchObject({ answer: "Tamam.", search: "off", sources: [] });
+  });
+
+  test("a 400 with tools is retried once without them", async () => {
+    const calls = mockFetch((i) =>
+      i === 0
+        ? new Response("Search grounding is not supported", { status: 400 })
+        : geminiAnswer("Kayıttan cevap."),
+    );
+    const r = await answerWithGemini(request, env);
+    expect(calls).toHaveLength(2);
+    expect(sent(calls[0]!).tools).toBeDefined();
+    expect("tools" in sent(calls[1]!)).toBe(false);
+    expect(r).toEqual({
+      status: 200,
+      body: { answer: "Kayıttan cevap.", source: "ai", sources: [], search: "fallback" },
+    });
+  });
+
+  test("only one retry, and none when search is off", async () => {
+    let calls = mockFetch(() => new Response("bad", { status: 400 }));
+    expect((await answerWithGemini(request, env)).body).toEqual({ error: "failed" });
+    expect(calls).toHaveLength(2);
+
+    calls = mockFetch(() => new Response("bad", { status: 400 }));
+    await answerWithGemini(request, { ...env, GEMINI_SEARCH: "0" });
+    expect(calls).toHaveLength(1);
+  });
+
   test("429 → busy; other failures → failed, never upstream text", async () => {
     mockFetch(() => new Response("quota for key test-key", { status: 429 }));
     expect(await answerWithGemini(request, env)).toEqual({ status: 503, body: { error: "busy" } });
 
-    mockFetch(() => new Response("bad", { status: 400 }));
+    mockFetch(() => new Response("bad", { status: 500 }));
     expect(await answerWithGemini(request, env)).toEqual({
       status: 502,
       body: { error: "failed" },
@@ -191,6 +330,44 @@ describe("ask-ai response", () => {
   });
 });
 
+describe("ask-ai grounding sources", () => {
+  const withChunks = (chunks: unknown[]) => ({
+    candidates: [
+      { content: { parts: [{ text: "x" }] }, groundingMetadata: { groundingChunks: chunks } },
+    ],
+  });
+
+  test("https only, deduped by url and title, at most four", () => {
+    const sources = parseGroundingSources(
+      withChunks([
+        { web: { uri: "http://insecure.example/a", title: "insecure" } },
+        { web: { uri: "javascript:alert(1)", title: "evil" } },
+        { web: { uri: "not a url", title: "broken" } },
+        { web: { uri: "https://a.example/1", title: "A" } },
+        { web: { uri: "https://a.example/1", title: "A again" } },
+        { web: { uri: "https://a.example/2", title: "a" } },
+        { web: { uri: "https://b.example/", title: "" } },
+        { retrievedContext: { uri: "https://c.example/" } },
+        { web: { uri: "https://c.example/", title: "C" } },
+        { web: { uri: "https://d.example/", title: "D" } },
+        { web: { uri: "https://e.example/", title: "E" } },
+      ]),
+    );
+    expect(sources).toEqual([
+      { title: "A", url: "https://a.example/1" },
+      { title: "b.example", url: "https://b.example/" },
+      { title: "C", url: "https://c.example/" },
+      { title: "D", url: "https://d.example/" },
+    ]);
+  });
+
+  test("no metadata → no sources", () => {
+    expect(parseGroundingSources({ candidates: [{ content: { parts: [] } }] })).toEqual([]);
+    expect(parseGroundingSources(null)).toEqual([]);
+    expect(parseGroundingSources(withChunks("nope" as unknown as unknown[]))).toEqual([]);
+  });
+});
+
 describe("ask-ai abuse protection", () => {
   const req = (headers: Record<string, string>) =>
     new Request("https://antik.example/api/sor", { method: "POST", headers });
@@ -207,6 +384,15 @@ describe("ask-ai abuse protection", () => {
   test("client IP is the first forwarded hop", () => {
     expect(clientIp(req({ "x-forwarded-for": "1.2.3.4, 10.0.0.1" }))).toBe("1.2.3.4");
     expect(clientIp(req({ "x-real-ip": "5.6.7.8" }))).toBe("5.6.7.8");
+  });
+
+  test("default limits are sized for shared addresses", () => {
+    expect(DEFAULT_LIMITS).toEqual({ perMinute: 15, perDay: 150, globalPerMinute: 60 });
+    expect(GEMINI_TIMEOUT_MS).toBe(25_000);
+    const limiter = createRateLimiter();
+    const t = 5_000_000;
+    for (let i = 0; i < 15; i++) expect(limiter.check("ip", t + i)).toBe("ok");
+    expect(limiter.check("ip", t + 20)).toBe("rate_limited");
   });
 
   test("per-IP minute and day limits, and a global cap", () => {

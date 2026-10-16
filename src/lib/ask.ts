@@ -21,6 +21,8 @@ export type Answer = {
   text: string;
   /** Where the answer comes from, shown under it. */
   source?: string | undefined;
+  /** The matcher found nothing and says so; there is no answer to show. */
+  unknown?: boolean | undefined;
 };
 
 type Intent =
@@ -451,7 +453,7 @@ export function answer(site: Site, question: string, lang: Lang): Answer {
     if (!best || score > best.score) best = { ...c, score };
   }
   if (best && best.score >= 0.5) return { text: best.text, source: best.source };
-  return { text: says.unknown };
+  return { text: says.unknown, unknown: true };
 }
 
 /** Example questions shown as chips, so people know what can be asked. */

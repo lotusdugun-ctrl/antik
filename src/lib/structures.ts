@@ -474,7 +474,7 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Kümbet evler": {
     blurb: {
-      tr: "Harran'ın simgesi olan, konik damlı balçık evler; içeride serin tutar.",
+      tr: "Harran'ın simgesi olan, konik damlı kerpiç evler; içeride serin tutar.",
       en: "Harran's iconic beehive houses with conical mud-brick roofs that keep interiors cool.",
     },
     image:
@@ -1366,14 +1366,14 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Perikles Heroonu": {
     blurb: {
-      tr: "Limyra'nın ünlü kaya mezarı; Likyalı yönetici Perikles'e adanmış.",
-      en: "Limyra's famous rock tomb dedicated to the Lycian ruler Pericles.",
+      tr: "Limyra akropolündeki ünlü anıt mezar; Likya kralı Perikles için yapılmış, karyatidli, tapınak biçimli bir heroon.",
+      en: "Limyra's famous tomb monument on the acropolis, built for the Lycian king Pericles: a temple-shaped heroon with caryatids.",
     },
   },
   "Pericles Heroon": {
     blurb: {
-      tr: "Limyra'nın ünlü kaya mezarı; Likyalı yönetici Perikles'e adanmış.",
-      en: "Limyra's famous rock tomb dedicated to the Lycian ruler Pericles.",
+      tr: "Limyra akropolündeki ünlü anıt mezar; Likya kralı Perikles için yapılmış, karyatidli, tapınak biçimli bir heroon.",
+      en: "Limyra's famous tomb monument on the acropolis, built for the Lycian king Pericles: a temple-shaped heroon with caryatids.",
     },
   },
   "Kaineus Kabartması": {
@@ -1546,14 +1546,14 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Uzuncaburç Kulesi": {
     blurb: {
-      tr: "Uzuncaburç'a adını veren, sur hattındaki yüksek kule.",
-      en: "The tall tower that gives Uzuncaburç its name.",
+      tr: "Uzuncaburç'a adını veren, kentin kuzey kenarındaki yüksek Helenistik kule.",
+      en: "The tall Hellenistic tower on the city's northern edge that gives Uzuncaburç its name.",
     },
   },
   "The Tall Tower": {
     blurb: {
-      tr: "Uzuncaburç'a adını veren, sur hattındaki yüksek kule.",
-      en: "The tall tower that gives Uzuncaburç its name.",
+      tr: "Uzuncaburç'a adını veren, kentin kuzey kenarındaki yüksek Helenistik kule.",
+      en: "The tall Hellenistic tower on the city's northern edge that gives Uzuncaburç its name.",
     },
   },
   "Tyche Tapınağı": {
@@ -2242,8 +2242,8 @@ export const structureInfo: Partial<Record<string, { blurb: Localized; image?: s
   },
   "Tünelli Cadde": {
     blurb: {
-      tr: "Kayaya oyularak yapılmış kapalı geçit.",
-      en: "A covered passageway cut through the rock.",
+      tr: "Kenti ikiye bölen derenin üzerine taştan örülmüş tonozlu tünel; üzerinden kentin caddesi ve meydanı geçerdi.",
+      en: "A vaulted tunnel built of stone over the stream that divides the city, carrying its street and square on top.",
     },
   },
   "Ulu Cami": {

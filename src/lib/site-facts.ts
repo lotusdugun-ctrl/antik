@@ -44,8 +44,8 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   aphrodisias: [
     f(
-      "Stadyum 30.000 kişilikti ve antik dünyanın en iyi korunmuş stadyumudur — iki ucu da ayakta.",
-      "The stadium seated 30,000 and is the best-preserved in the ancient world, with both ends still standing.",
+      "Stadyumun iki kavisli ucu da hâlâ ayaktadır.",
+      "Both curved ends of the stadium are still standing.",
     ),
     f(
       "Sebasteion'un kabartmaları Roma imparatorlarını tanrılarla yan yana gösterir; imparatorluk propagandasının taşa işlenmiş en kapsamlı örneğidir.",
@@ -132,10 +132,6 @@ export const siteFacts: Record<string, Localized[]> = {
       "One of the seven churches of Revelation. Its rebuke — 'neither cold nor hot' — is thought to play on the water that arrived lukewarm through kilometres of aqueduct.",
     ),
     f(
-      "MS 60'taki depremden sonra kent Roma'nın yardımını reddetti ve kendi parasıyla yeniden kuruldu; Tacitus bunu özellikle kaydeder.",
-      "After the earthquake of AD 60 the city refused imperial aid and rebuilt at its own expense — a detail Tacitus thought worth recording.",
-    ),
-    f(
       "İki tiyatrosu, bir stadyumu ve Anadolu'nun en büyük antik su dağıtım terminallerinden biri vardı.",
       "It had two theatres, a stadium, and one of the largest ancient water-distribution terminals in Anatolia.",
     ),
@@ -164,7 +160,7 @@ export const siteFacts: Record<string, Localized[]> = {
       "The city had two harbours, one naval. Built on the cape where two seas meet, it was where ships waited out the wind.",
     ),
     f(
-      "Astronom Eudoksos buralıydı; kentteki rasathane olduğu düşünülen yapı onun adıyla anılır.",
+      "Astronom Eudoksos buralıydı; kentte gözlemevi olduğu düşünülen yapı onun adıyla anılır.",
       "The astronomer Eudoxus came from Knidos; the structure thought to be its observatory carries his name.",
     ),
   ],
@@ -227,10 +223,6 @@ export const siteFacts: Record<string, Localized[]> = {
     f(
       "Likya Birliği'nin meclis binası buradadır. Temsilcilerin kentlerinin büyüklüğüne göre oy kullandığı bu sistem, Montesquieu üzerinden ABD anayasa tartışmalarında federalizm örneği olarak anıldı.",
       "The Lycian League met in the council house here. Its system — delegates voting in proportion to their city's size — reached the American constitutional debates as a model of federalism, by way of Montesquieu.",
-    ),
-    f(
-      "Aziz Nikolaos, yani Noel Baba, MS 3. yüzyılda bu kentte doğdu.",
-      "Saint Nicholas — Father Christmas — was born in this city in the third century AD.",
     ),
     f(
       "Neron döneminde dikilen deniz feneri, dünyanın ayakta kalabilmiş en eski fenerlerinden biridir; parçaları bulunup yeniden birleştirildi.",
@@ -393,7 +385,7 @@ export const siteFacts: Record<string, Localized[]> = {
       "The city began on an islet; when the channel silted up the island joined the shore and the city spread onto it.",
     ),
     f(
-      "Kappadokia Kralı Arkhelaos burayı ikinci başkenti yaptı ve Augustus onuruna Sebaste adını verdi.",
+      "Kapadokya Kralı Arkhelaos burayı ikinci başkenti yaptı ve Augustus onuruna Sebaste adını verdi.",
       "King Archelaus of Cappadocia made it his second capital and renamed it Sebaste in honour of Augustus.",
     ),
     f(
@@ -411,8 +403,8 @@ export const siteFacts: Record<string, Localized[]> = {
       "Frederick Barbarossa drowned in the Göksu — the ancient Calycadnus — here in 1190 on the Third Crusade, and the crusade fell apart.",
     ),
     f(
-      "Jüpiter Tapınağı'nın sütunu ve Roma köprüsü bugünkü Silifke'nin trafiği arasında ayakta duruyor.",
-      "A column of the Temple of Jupiter and the Roman bridge still stand amid the traffic of modern Silifke.",
+      "Zeus Tapınağı'nın sütunu ve Roma köprüsü bugünkü Silifke'nin trafiği arasında ayakta duruyor.",
+      "A column of the Temple of Zeus and the Roman bridge still stand amid the traffic of modern Silifke.",
     ),
   ],
 
@@ -423,7 +415,7 @@ export const siteFacts: Record<string, Localized[]> = {
       "Nine cities stand stacked in the mound. Digging in 1871, Schliemann drove straight past the layer he was looking for and found his 'Treasure of Priam' in one a thousand years too old.",
     ),
     f(
-      "Truva Atı'ndan hiçbir iz bulunmadı. Buna karşılık Hitit tabletlerinde, Troya'nın yeriyle uyuşan 'Wilusa' adlı bir kentle yapılan antlaşmalar geçer.",
+      "Tahta attan hiçbir iz bulunmadı. Buna karşılık Hitit tabletlerinde, Troya'nın yeriyle uyuşan 'Wilusa' adlı bir kentle yapılan antlaşmalar geçer.",
       "No trace of the wooden horse has been found. Hittite tablets, however, record treaties with a city called Wilusa, in the right place to be Troy.",
     ),
     f(
@@ -707,8 +699,8 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   sinope: [
     f(
-      "Kinik filozof Sinoplu Diogenes buradandır: bir küpün içinde yaşayan, Büyük İskender ona ne dilediğini sorduğunda 'gölge etme' diyen adam.",
-      "Diogenes the Cynic came from here — the man who lived in a jar and, asked by Alexander what he wanted, said 'stand out of my light'.",
+      "Diogenes bir küpün içinde yaşardı; Büyük İskender ona ne dilediğini sorduğunda 'gölge etme' demişti.",
+      "Diogenes lived in a jar, and when Alexander asked him what he wanted, he said 'stand out of my light'.",
     ),
     f(
       "Karadeniz'in tek doğal korunaklı limanıdır; kent bu yüzden hem Miletos kolonisi hem Pontus donanmasının üssü oldu.",
@@ -929,7 +921,7 @@ export const siteFacts: Record<string, Localized[]> = {
       "Capital of Urartu. The rock-cut royal tombs and the annals of Argishti I look out from the sheer face of the citadel.",
     ),
     f(
-      "Pers Kralı Xerxes'in üç dilli çivi yazılı yazıtı, kayalığın erişilmesi güç bir yerine oyulmuştur ve hâlâ okunabiliyor.",
+      "Pers Kralı Kserkses'in üç dilli çivi yazılı yazıtı, kayalığın erişilmesi güç bir yerine oyulmuştur ve hâlâ okunabiliyor.",
       "Xerxes' trilingual cuneiform inscription is cut into an all but unreachable spot on the cliff, and can still be read.",
     ),
     f(
@@ -997,8 +989,8 @@ export const siteFacts: Record<string, Localized[]> = {
       "The exterior of the Church of the Holy Cross, built for King Gagik I between 915 and 921, is covered wall to wall in relief: Jonah, David and Goliath, vine scrolls and animals.",
     ),
     f(
-      "Kilise 2007'de müze olarak restore edildi ve o tarihten beri yılda bir kez ayin yapılıyor.",
-      "The church was restored as a museum in 2007, and a service has been held there once a year since.",
+      "Kilise 2007'de restore edilerek müze olarak açıldı.",
+      "The church was restored and opened as a museum in 2007.",
     ),
   ],
   altintepe: [
@@ -1045,8 +1037,8 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   sapinuwa: [
     f(
-      "Hitit'in ikinci başkenti sayılır; buradan dört binden fazla çivi yazılı tablet çıktı.",
-      "Reckoned a second Hittite capital, it has produced more than four thousand cuneiform tablets.",
+      "Hitit krallarının ikametgâhı olarak kullanıldığı için kimi araştırmacılar onu ikinci bir başkent sayar; kazılarda, A Yapısı dışındakiler de dahil, toplam dört binden fazla çivi yazılı tablet ve parça çıktı.",
+      "Because Hittite kings resided here, some scholars count it a second capital; in all, including those found outside Building A, the excavations have produced more than four thousand cuneiform tablets and fragments.",
     ),
     f(
       "Sarayı yakan yangın, kil tabletleri pişirerek sertleştirdi ve arşivi yok etmek yerine günümüze taşıdı.",
@@ -1067,8 +1059,8 @@ export const siteFacts: Record<string, Localized[]> = {
   // ————— Kalan Ege —————
   kaunos: [
     f(
-      "Kaya mezarları tapınak cephesi biçiminde, dik kayalığa oyulmuştur ve Dalyan Kanalı'ndan tekneyle geçerken tam karşıdan görülür.",
-      "The rock tombs are cut into the cliff as temple façades, and face you head-on as the boat passes down the Dalyan channel.",
+      "Kaya mezarları tapınak cephesi biçiminde, dik kayalığa oyulmuştur ve Dalyan Çayı'ndan tekneyle geçerken tam karşıdan görülür.",
+      "The rock tombs are cut into the cliff as temple façades, and face you head-on as the boat passes down the Dalyan river.",
     ),
     f(
       "Kentin limanı alüvyonla dolup göle dönüştü; deniz kenti, bugün sazlıkların arkasında kaldı.",
@@ -1095,11 +1087,11 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   labraunda: [
     f(
-      "Zeus Labraundos kutsal alanını Karya satrapı Maussollos ve kardeşi Idrieus yaptırdı; Mozole'yi yaptıran hanedanın dağdaki tapınağıdır.",
+      "Zeus Labraundos kutsal alanını Karya satrapı Mausolos ve kardeşi Idrieus yaptırdı; Mozole'yi yaptıran hanedanın dağdaki tapınağıdır.",
       "The sanctuary of Zeus Labraundos was built by the Carian satrap Mausolus and his brother Idrieus: the mountain temple of the dynasty that raised the Mausoleum.",
     ),
     f(
-      "Milas'a 14 kilometrelik bir Kutsal Yol'la bağlıydı; alayın bu yolu tırmanarak geldiği biliniyor.",
+      "Mylasa'ya (bugünkü Milas) 14 kilometrelik bir Kutsal Yol'la bağlıydı; alayın bu yolu tırmanarak geldiği biliniyor.",
       "A fourteen-kilometre Sacred Way linked it to Mylasa, and the procession is known to have climbed it on foot.",
     ),
     f(
@@ -1159,14 +1151,14 @@ export const siteFacts: Record<string, Localized[]> = {
       "The vaulted oracular chambers and the water channel beneath the temple survive, and the stair the prophet went down can still be seen.",
     ),
     f(
-      "Apollon, Artemis ve Leto'nun yaklaşık üç metrelik heykellerinin parçaları bulundu; sadece ayak ve el parçaları bile insan boyunu aşıyor.",
-      "Fragments of roughly three-metre statues of Apollo, Artemis and Leto were found here: even the surviving feet and hands are taller than a person.",
+      "Apollon, Artemis ve Leto heykellerinin parçaları bulundu; kalan ayak ve el parçaları bile heykellerin ne kadar dev olduğunu gösteriyor.",
+      "Fragments of the statues of Apollo, Artemis and Leto were found here: even the surviving feet and hands show how colossal they were.",
     ),
   ],
   aizanoi: [
     f(
-      "Zeus Tapınağı, Anadolu'nun en iyi korunmuş antik tapınağıdır ve altında Kibele'ye ait tonozlu bir alt yapı vardır — iki din, iki kat.",
-      "The Temple of Zeus is the best-preserved ancient temple in Anatolia, and beneath it lies a vaulted undercroft belonging to Cybele: two religions, two storeys.",
+      "Zeus Tapınağı, Anadolu'nun en iyi korunmuş Zeus tapınağıdır ve altında Kibele'ye ait tonozlu bir alt yapı vardır — iki din, iki kat.",
+      "The Temple of Zeus is the best-preserved temple of Zeus in Anatolia, and beneath it lies a vaulted undercroft belonging to Cybele: two religions, two storeys.",
     ),
     f(
       "Macellum'un duvarına kazınmış Diocletianus'un Fiyat Fermanı, dünyanın bilinen ilk borsa binası sayılan yapıyı bir belge haline getirir.",
@@ -1229,10 +1221,6 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   kibyra: [
     f(
-      "Odeon'un tabanındaki Medusa, renkli mermer kakma (opus sectile) tekniğiyle yapılmıştır ve türünün en iyi korunmuş örneklerindendir.",
-      "The Medusa in the floor of the odeon is worked in cut coloured marble, opus sectile, and is among the best-preserved of its kind.",
-    ),
-    f(
       "Kayaya oyulmuş stadyumu on bin kişiliktir ve oturma sıraları doğrudan yamaçtan çıkarılmıştır.",
       "Its rock-cut stadium seats ten thousand, its rows carved straight out of the hillside.",
     ),
@@ -1279,8 +1267,8 @@ export const siteFacts: Record<string, Localized[]> = {
       "The city was ruled by the Teucrids, a dynasty of priest-kings — a rare arrangement in which priesthood and rule sat in the same person.",
     ),
     f(
-      "Kente adını veren yirmi iki metrelik Helenistik kule hâlâ ayaktadır: 'Uzuncaburç', uzun burç demektir.",
-      "The twenty-two-metre Hellenistic tower that gives the village its name still stands: 'Uzuncaburç' means 'tall tower'.",
+      "Kente adını veren yirmi iki metrelik Helenistik kule hâlâ ayaktadır.",
+      "The twenty-two-metre Hellenistic tower that gives the village its name still stands.",
     ),
   ],
   karatepe: [
@@ -1389,12 +1377,8 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   derinkuyu: [
     f(
-      "Yeraltı kenti 1963'te bir ev tadilatında tesadüfen bulundu: duvarı yıkan adam, arkasından bilinmeyen bir oda çıkınca durdu.",
-      "The city was found by accident during home repairs in 1963: the man knocking through a wall stopped when an unknown room appeared behind it.",
-    ),
-    f(
-      "Katları ayıran yuvarlak taş kapılar bir tondan ağırdır ve yalnızca içeriden açılabilecek biçimde tasarlanmıştır.",
-      "The round stone doors between levels weigh over a tonne each and were designed to be opened only from the inside.",
+      "Katları ayıran yuvarlak taş kapıların ağırlığı bir tonu bulabilir; kapılar yalnızca içeriden açılabilecek biçimde tasarlanmıştır.",
+      "The round stone doors between levels can weigh up to about a tonne and were designed to be opened only from the inside.",
     ),
     f(
       "55 metre derinliğindeki havalandırma bacası aynı zamanda kuyu olarak da kullanılıyordu.",
@@ -1417,8 +1401,8 @@ export const siteFacts: Record<string, Localized[]> = {
       "Zelve is one of the few places where a rock-cut church and a rock-cut mosque stand side by side in the same cliff.",
     ),
     f(
-      "Köy 1952'de kayaların çökme tehlikesi nedeniyle boşaltıldı; Kapadokya'da terk edilme tarihi kesin olarak bilinen ender yerleşimlerdendir.",
-      "The village was evacuated in 1952 because the rock was starting to collapse — one of the few Cappadocian settlements with an exact date of abandonment.",
+      "Köy, kayaların çökme tehlikesi nedeniyle boşaltılmıştı.",
+      "The village was evacuated because the rock was starting to collapse.",
     ),
   ],
   ihlara: [
@@ -1573,8 +1557,8 @@ export const siteFacts: Record<string, Localized[]> = {
   // ————— Tarihi kent dokuları —————
   safranbolu: [
     f(
-      "Kasabada bini aşkın tescilli Osmanlı evi ayaktadır; demiryolu ve karayolu güzergâhlarının Safranbolu'yu atlaması dokuyu koruyan asıl etken oldu.",
-      "More than a thousand registered Ottoman houses still stand. The railway and the highway both passed the town by, and that is what preserved it.",
+      "Kasabada bin kadar tescilli Osmanlı evi ayaktadır; demiryolu ve karayolu güzergâhlarının Safranbolu'yu atlaması dokuyu koruyan asıl etken oldu.",
+      "Around a thousand registered Ottoman houses still stand. The railway and the highway both passed the town by, and that is what preserved it.",
     ),
     f(
       "Evlerin çoğunda harem ile selamlık arasında dönen bir dolap vardır: yemek, iki taraf birbirini görmeden bu raf döndürülerek aktarılırdı.",
@@ -1665,8 +1649,8 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   "hatay-muzesi": [
     f(
-      "Antakya, Roma İmparatorluğu'nun en büyük üçüncü kentiydi; çevresindeki villaların taban mozaikleri dünyanın en zengin Roma mozaik koleksiyonunu oluşturur.",
-      "Antioch was the third city of the Roman Empire, and the floors of the villas around it make up the richest collection of Roman mosaic in the world.",
+      "Antakya, Roma İmparatorluğu'nun en büyük üçüncü kentiydi; çevresindeki villaların taban mozaikleri dünyanın en zengin Roma mozaik koleksiyonlarından birini oluşturur.",
+      "Antioch was the third city of the Roman Empire, and the floors of the villas around it make up one of the richest collections of Roman mosaic in the world.",
     ),
     f(
       "Koleksiyondaki 'Uğursuzluğa Karşı' mozaiği nazarı bir göz olarak resmeder ve üstüne kargalar, bir akrep ve bir yılan salar: MS 2. yüzyıldan kalma bir muska.",
@@ -1878,10 +1862,6 @@ export const siteFacts: Record<string, Localized[]> = {
       "Anıtın yeri, Ankara'ya hâkim Rasattepe'ydi; inşaat sırasında tepenin altından Frig dönemine ait tümülüsler çıktı.",
       "The monument stands on Rasattepe above Ankara, and the building work uncovered Phrygian tumuli beneath the hill.",
     ),
-    f(
-      "Aslanlı Yol'un yirmi dört aslanı, Hitit heykel geleneğine uyularak ayakta değil oturur biçimde yontuldu.",
-      "The twenty-four lions of the Lion Road are carved seated rather than standing, following Hittite sculptural practice.",
-    ),
   ],
   "alanya-kalesi": [
     f(
@@ -2061,8 +2041,8 @@ export const siteFacts: Record<string, Localized[]> = {
       "The Ilkhanid-period mummies here are the only known group of bodies preserved this way in Anatolia.",
     ),
     f(
-      "Koleksiyon, kentin Hitit'ten Pontus'a ve Osmanlı'ya uzanan katmanlarını tek bir sırada izler.",
-      "The collection follows the city's layers from the Hittites through Pontus to the Ottomans in a single sequence.",
+      "Koleksiyon, kentin Kalkolitik dönemden Hitit, Pontus ve Osmanlı'ya uzanan katmanlarını tek bir sırada izler.",
+      "The collection follows the city's layers from the Chalcolithic through the Hittites and Pontus to the Ottomans in a single sequence.",
     ),
   ],
   "trabzon-muzesi": [
@@ -2071,8 +2051,8 @@ export const siteFacts: Record<string, Localized[]> = {
       "The building was a banking family's mansion and became Atatürk's residence in Trabzon in 1924.",
     ),
     f(
-      "Tavanlardaki kalem işi bezeme yerinde korundu; konak, Karadeniz'in 19. yüzyıl sivil mimarisinin en iyi örneklerindendir.",
-      "The painted ceiling decoration was left in place, and the house is among the best examples of nineteenth-century Black Sea domestic architecture.",
+      "Konak, Karadeniz'in 19. yüzyıl sonu ve 20. yüzyıl başı sivil mimarisinin en iyi örneklerindendir.",
+      "The house is among the best examples of Black Sea domestic architecture from the turn of the twentieth century.",
     ),
   ],
   "corum-muzesi": [
@@ -2271,10 +2251,6 @@ export const siteFacts: Record<string, Localized[]> = {
     f(
       "Adı 'bin bir direk' demektir; gerçekte 224 sütun vardır.",
       "The name means 'a thousand and one columns'; there are in fact 224.",
-    ),
-    f(
-      "Sütunlar tek parça yetmediği için ikişer parça hâlinde üst üste konmuştur ve ek yerlerindeki taş bilezikler açıkça görülür.",
-      "Single shafts were not tall enough, so each column is two pieces set one on the other, the stone collars at the joins left plainly visible.",
     ),
   ],
   "serefiye-sarnici": [
@@ -2904,10 +2880,6 @@ export const siteFacts: Record<string, Localized[]> = {
       "Yedi metrelik heykel, çıkarıldığı taş ocağında yattığı yerde duruyor ve hiç tamamlanmadı.",
       "The seven-metre statue lies where it was cut, in its own quarry, and was never finished.",
     ),
-    f(
-      "Anadolu'da bilinen en büyük Hitit heykelidir; yaklaşık yetmiş ton ağırlığında olduğu için hiç kaldırılamamıştır.",
-      "It is the largest Hittite statue known in Anatolia, and at some seventy tonnes it was never lifted at all.",
-    ),
   ],
   beldibi: [
     f(
@@ -3101,8 +3073,8 @@ export const siteFacts: Record<string, Localized[]> = {
   ],
   "edirne-sarayi": [
     f(
-      "Saray, Topkapı'dan önce Osmanlı'nın asıl sarayıydı ve Avrupa seferlerinin karargâhıydı.",
-      "The palace was the Ottomans' principal seat before Topkapı and the headquarters for their campaigns in Europe.",
+      "Yapımına Topkapı'dan önce başlanan saray, Osmanlı padişahlarının başlıca saraylarından biriydi.",
+      "Begun before Topkapı, it was one of the principal palaces of the Ottoman sultans.",
     ),
     f(
       "1878'de Rus işgali sırasında cephanelik patlatılınca yapının büyük bölümü yıkıldı.",

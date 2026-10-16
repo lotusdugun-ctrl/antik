@@ -513,6 +513,22 @@ const dict = {
   ask_thinking: { tr: "Rehber düşünüyor…", en: "The guide is thinking…" },
   ask_offline: { tr: "Çevrimdışı yanıt", en: "Offline answer" },
   ask_ai_source: { tr: "Yapay zekâ rehber", en: "AI guide" },
+  /** The AI guide also searches the web now (Google Search grounding). */
+  ask_sub_web: {
+    tr: "Yaz ya da söyle. Yapay zekâ rehber uygulamadaki bilgileri ve Google aramasını kullanır; önemli ayrıntıları kaynaklarından doğrula.",
+    en: "Type or say it. The AI guide uses what the app holds and Google Search; check important details with the sources.",
+  },
+  ask_sources: { tr: "Kaynaklar", en: "Sources" },
+  ask_notice_limited: {
+    tr: "Kısa sürede çok soru sordun; yapay zekâ rehber birkaç dakika sonra yine cevaplayacak. Şimdilik elimdeki bilgi:",
+    en: "That was a lot of questions in a short time; the AI guide will answer again in a few minutes. For now, here is what the app holds:",
+  },
+  ask_notice_busy: {
+    tr: "Yapay zekâ rehber şu an çok yoğun. Biraz sonra tekrar dene; şimdilik elimdeki bilgi:",
+    en: "The AI guide is very busy right now. Try again shortly; for now, here is what the app holds:",
+  },
+  ask_retry: { tr: "Tekrar sor", en: "Ask again" },
+  ask_search_suggestions: { tr: "Google arama önerileri", en: "Google Search suggestions" },
 
   news_title: {
     tr: "Kazı haberleri",

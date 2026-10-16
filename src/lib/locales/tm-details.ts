@@ -164,10 +164,10 @@ export const tm: Record<string, [string, string]> = {
       "Um den Kult der Aphrodite gewachsen, erhielt die Stadt für ihre Treue zu Rom Steuerfreiheit. Ihre Bildhauer, die den einheimischen Marmor bearbeiteten, lieferten Statuen in das ganze Reich.",
       "Выросший вокруг культа Афродиты, город получил освобождение от налогов за верность Риму. Его скульпторы, работавшие с местным мрамором, поставляли статуи по всей империи.",
     ],
-  "Grown on the Silk Road to some 100,000 people, it was abandoned after earthquakes and shifting trade routes.":
+  "Grown on the Silk Road to an estimated population approaching 100,000, it was abandoned after earthquakes and shifting trade routes.":
     [
-      "An der Seidenstraße auf rund 100.000 Einwohner angewachsen, wurde sie nach Erdbeben und der Verlagerung der Handelswege verlassen.",
-      "Разросшийся на Шёлковом пути примерно до 100 000 жителей, город был покинут после землетрясений и смещения торговых путей.",
+      "An der Seidenstraße gewachsen – ihre Einwohnerzahl soll sich 100.000 genähert haben –, wurde sie nach Erdbeben und der Verlagerung der Handelswege verlassen.",
+      "Разросшийся на Шёлковом пути город, население которого, по оценкам, приближалось к 100 000, был покинут после землетрясений и смещения торговых путей.",
     ],
   Harem: ["Harem", "Гарем"],
   "Harem apartments": ["Haremsgemächer", "Покои гарема"],
@@ -587,11 +587,10 @@ export const tm: Record<string, [string, string]> = {
       "Die Felskirche ist auch außen mit Fresken bemalt, damit diejenigen, die keinen Platz fanden, den Gottesdienst von der Terrasse aus verfolgen konnten.",
       "Скальная церковь расписана фресками и снаружи, чтобы те, кто не поместился внутри, могли следить за службой с террасы.",
     ],
-  "The stadium seated 30,000 and is the best-preserved in the ancient world, with both ends still standing.":
-    [
-      "Das Stadion bot 30.000 Menschen Platz und ist das am besten erhaltene der antiken Welt; beide Enden stehen noch.",
-      "Стадион вмещал 30 000 зрителей и является наиболее сохранившимся в античном мире; оба его торца всё ещё стоят.",
-    ],
+  "Both curved ends of the stadium are still standing.": [
+    "Beide gerundeten Enden des Stadions stehen noch.",
+    "Оба закруглённых торца стадиона всё ещё стоят.",
+  ],
   "The star pattern on the lion relief is counted among the oldest known star charts, and is thought to fix a specific date.":
     [
       "Das Sternmuster auf dem Löwenrelief zählt zu den ältesten bekannten Sternkarten und soll ein bestimmtes Datum festhalten.",
@@ -644,10 +643,10 @@ export const tm: Record<string, [string, string]> = {
     ],
   "Viewing gallery": ["Aussichtsgalerie", "Смотровая галерея"],
   "Viking inscription": ["Wikingerinschrift", "Надпись викинга"],
-  "Volcanic tuff is soft enough to dig with a pick and hardens once cut, which is why the Göreme valley became a landscape of monasteries from the tenth century on: churches, refectories and cells were hollowed out one by one. Some were painted on plaster, others straight onto the rock; the Dark Church kept its colours because it has so few windows.":
+  "Volcanic tuff is soft enough to dig with a pick and hardens once cut, which is why the Göreme valley became a landscape of monasteries from the tenth century on: churches, refectories and cells were hollowed out one by one. Some were painted on plaster, others straight onto the rock; the Dark Church kept its colours because only a single small window lets the light in.":
     [
-      "Vulkanischer Tuff ist weich genug, um ihn mit der Spitzhacke abzutragen, und härtet aus, sobald er geschnitten ist; deshalb wurde das Tal von Göreme ab dem zehnten Jahrhundert zu einer Landschaft der Klöster: Kirchen, Refektorien und Zellen wurden eine nach der anderen ausgehöhlt. Manche wurden auf Putz bemalt, andere direkt auf den Fels; die Dunkle Kirche hat ihre Farben bewahrt, weil sie so wenige Fenster hat.",
-      "Вулканический туф достаточно мягок, чтобы копать его киркой, и твердеет после того, как его вырубят; вот почему долина Гёреме с десятого века превратилась в край монастырей: церкви, трапезные и кельи выдалбливали одну за другой. Одни расписывали по штукатурке, другие прямо по скале; Тёмная церковь сохранила свои краски, потому что в ней так мало окон.",
+      "Vulkanischer Tuff ist weich genug, um ihn mit der Spitzhacke abzutragen, und härtet aus, sobald er geschnitten ist; deshalb wurde das Tal von Göreme ab dem zehnten Jahrhundert zu einer Landschaft der Klöster: Kirchen, Refektorien und Zellen wurden eine nach der anderen ausgehöhlt. Manche wurden auf Putz bemalt, andere direkt auf den Fels; die Dunkle Kirche hat ihre Farben bewahrt, weil nur ein einziges kleines Fenster Licht hereinlässt.",
+      "Вулканический туф достаточно мягок, чтобы копать его киркой, и твердеет после того, как его вырубят; вот почему долина Гёреме с десятого века превратилась в край монастырей: церкви, трапезные и кельи выдалбливали одну за другой. Одни расписывали по штукатурке, другие прямо по скале; Тёмная церковь сохранила свои краски, потому что свет в неё проникает лишь через одно маленькое окно.",
     ],
   "West terrace": ["Westterrasse", "Западная терраса"],
   "When Sultan Abdülmecid found Topkapı inadequate for the diplomacy of the age, he moved the court to a filled-in bay on the Bosphorus. Built by the Balyan family between 1843 and 1856, it holds 285 rooms, 46 halls and six hundred metres of quay frontage. In the Republic it became Atatürk's residence and workplace in İstanbul, and he died here on 10 November 1938.":

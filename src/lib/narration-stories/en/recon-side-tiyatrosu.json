@@ -1,0 +1,9 @@
+{
+  "intro": "This is the Theatre of Side, built in AD 150 - 175. It is the largest theatre in Pamphylia, and one of the rare ones raised on level ground rather than set into a hillside: its cavea stands on a two-storey vaulted substructure. Its three-storey stage building faced the colonnaded street of the city.",
+  "spot-1": "Now you are looking at the orchestra, 29 metres across. An 80 cm podium wall ran around it, keeping the audience off the floor.",
+  "spot-2": "Now the camera turns to the stage platform: a stone platform six metres deep, standing three metres above the orchestra. Imagine the performers stepping out onto it.",
+  "spot-3": "Now you are looking at the stage building, three storeys high and 63 metres wide. Its street front was once crowded with statues; picture that façade alive with figures.",
+  "spot-4": "Look up to the diazoma, the walkway that divides the thirty rows below from the twenty-five above.",
+  "spot-5": "And now the vaulted substructure. With no hillside to lean on, the cavea rests on two storeys of vaults, which show on the outside as an arcaded face.",
+  "uncertainty": "Finally, what this model does not know. The cavea and orchestra diameters, the row counts of the two tiers, the podium wall and the stage depth come from the archive record; the capacity comes from the German Wikipedia. The seat tread (0.7 m) and the riser are derived to fit them into 120 metres. The three-storey stage building is known to be 63 m wide, but its height is not measured: the model proportions it to 17 metres and draws its niches and doorways as a generic Roman stage wall. The two-storey vaulted substructure that carries the cavea is shown as an arcaded outer face, and the 2 m wall built round the orchestra when it became an arena is not modelled."
+}

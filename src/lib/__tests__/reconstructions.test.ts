@@ -221,6 +221,71 @@ describe("the geometry", () => {
     }
   });
 
+  /*
+   * A label points at a part of the building, and choosing it flies the
+   * camera there. One placed off the end of the building — the Pergamon
+   * stair's, a metre and a half out over the square — flew to empty air.
+   * The landscape round a model (the Nemrut mound among it) is decor, so a
+   * label may also stand on a decor part, just not beyond everything.
+   */
+  test("every label points at the building, not at the air beside it", () => {
+    const wrong: string[] = [];
+    for (const item of reconstructions) {
+      const parts = partsOf(item);
+      const { min, max } = boundsOf(parts.filter((part) => !part.decor));
+      for (const spot of item.hotspots) {
+        const inside = (lo: number[], hi: number[], pad: number) =>
+          spot.at.every((v, k) => v >= lo[k]! - pad && v <= hi[k]! + pad);
+        if (inside(min, max, 1)) continue;
+        const onDecor = parts.some((part) => {
+          if (!part.decor) return false;
+          // boundsOf leaves decor out; this one is measured on purpose.
+          const box = boundsOf([{ ...part, decor: false }]);
+          return inside(box.min, box.max, 0.5);
+        });
+        if (!onDecor) wrong.push(`${item.id}: ${spot.label.en}`);
+      }
+    }
+    expect(wrong).toEqual([]);
+  });
+
+  /*
+   * Nor buried in it. The Artemision's roof label sat eight metres down
+   * inside the stack of roof courses, and the camera, sent to look at it,
+   * came to rest between two of them.
+   */
+  test("no label is buried more than a metre deep in solid stone", () => {
+    const solidAt = (parts: Part[], [x, y, z]: number[]) =>
+      parts.some((part) => {
+        if (part.kind !== "box" || part.decor) return false;
+        const dx = x! - part.at[0];
+        const dz = z! - part.at[2];
+        const u = dx * Math.cos(part.rotY) - dz * Math.sin(part.rotY);
+        const v = dx * Math.sin(part.rotY) + dz * Math.cos(part.rotY);
+        return (
+          Math.abs(u) < part.size[0] / 2 &&
+          Math.abs(v) < part.size[2] / 2 &&
+          y! > part.at[1] &&
+          y! < part.at[1] + part.size[1]
+        );
+      });
+    const buried: string[] = [];
+    for (const item of reconstructions) {
+      const parts = partsOf(item);
+      for (const spot of item.hotspots) {
+        // Buried: still in stone a metre away from it in all six directions.
+        const ways = [0, 1, 2].flatMap((axis) =>
+          [-1, 1].map((sign) => spot.at.map((v, k) => (k === axis ? v + sign : v))),
+        );
+        if (solidAt(parts, spot.at) && ways.every((p) => solidAt(parts, p)))
+          buried.push(`${item.id}: ${spot.label.en}`);
+      }
+    }
+    // The one label that is meant to be inside the stone: it marks a room the
+    // model does not build, under the temple (its note says as much).
+    expect(buried).toEqual(["aizanoi-zeus-tapinagi: The vaulted chamber"]);
+  });
+
   test("nothing is built below the ground it stands on", () => {
     for (const item of reconstructions) {
       const { min } = boundsOf(partsOf(item));

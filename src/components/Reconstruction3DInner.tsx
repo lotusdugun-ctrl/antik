@@ -3306,7 +3306,9 @@ export default function Reconstruction3DInner({
       const maxRatio = Math.min(window.devicePixelRatio, touch ? 1.5 : 2);
       renderer.setPixelRatio(maxRatio);
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      // PCF is the soft filter since r180; asking for PCFSoft only logs a
+      // deprecation warning and falls back to it.
+      renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
       renderer.domElement.style.width = "100%";
@@ -3401,12 +3403,59 @@ export default function Reconstruction3DInner({
         ctx.fillRect(0, 0, 4, 256);
         sky.needsUpdate = true;
       };
-      scene.background = sky;
       /*
-       * The same sky, used as the light that metal reflects. Without it a
-       * bronze horse renders black: a metal in a physically based renderer
-       * has almost no colour of its own, it only shows what is around it,
-       * and what was around it was nothing.
+       * What is seen of the sky is a dome round the camera painted by a
+       * shader from two colours, not the strip itself: three.js turns an
+       * equirectangular background into a cube map once and keeps it, so a
+       * repainted strip never reached the screen and the night kept a day
+       * sky over a dark land. Uniforms change every frame for nothing.
+       * Drawn first and without depth, it is behind everything however near.
+       */
+      const skyUniforms = {
+        top: { value: new THREE.Color() },
+        horizon: { value: new THREE.Color() },
+      };
+      const skyDome = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 24, 12),
+        new THREE.ShaderMaterial({
+          uniforms: skyUniforms,
+          vertexShader: `
+            varying vec3 vDirection;
+            void main() {
+              vDirection = position;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }`,
+          // The strip's own gradient: top colour at the zenith, horizon colour
+          // from a little below the horizon down — mixed in sRGB as the
+          // canvas mixes it, and written out as it is.
+          fragmentShader: `
+            uniform vec3 top;
+            uniform vec3 horizon;
+            varying vec3 vDirection;
+            void main() {
+              float f = 0.5 - asin(clamp(normalize(vDirection).y, -1.0, 1.0)) / 3.14159265;
+              gl_FragColor = vec4(mix(top, horizon, clamp(f / 0.62, 0.0, 1.0)), 1.0);
+            }`,
+          side: THREE.BackSide,
+          depthTest: false,
+          depthWrite: false,
+          fog: false,
+          toneMapped: false,
+        }),
+      );
+      skyDome.renderOrder = -1e6;
+      skyDome.frustumCulled = false;
+      skyDome.scale.setScalar(span * 4);
+      // In a group of its own, so the walk's search for floors passes it by.
+      const skyGroup = new THREE.Group();
+      skyGroup.add(skyDome);
+      scene.add(skyGroup);
+      /*
+       * The strip is the light that metal reflects. Without it a bronze horse
+       * renders black: a metal in a physically based renderer has almost no
+       * colour of its own, it only shows what is around it, and what was
+       * around it was nothing. Its prefiltered copy is also made once and
+       * kept, so a repaint has to let the old one go (see repaintSky).
        */
       scene.environment = sky;
       const fog = new THREE.Fog(0xdfe6ec, span * 1.8, span * 5.5);
@@ -3572,6 +3621,7 @@ export default function Reconstruction3DInner({
         exposure: p.exposure,
       });
 
+      const DAY_GROUND = new THREE.Color(paletteFor("light", "day").ground);
       const liveAtmos = makeLive(paletteFor(latestRef.current.theme, startAtmos));
       let atmosTarget = liveAtmos;
 
@@ -3585,6 +3635,17 @@ export default function Reconstruction3DInner({
         fill.intensity = liveAtmos.fillIntensity;
         fog.color.set(liveAtmos.fog);
         apronMaterial.color.set(liveAtmos.ground);
+        /*
+         * The country round the apron takes the same tint, relative to the
+         * day's ground its colours were picked under. Left as it was, a dusk
+         * or a night turned the apron orange or blue and left a bright ring
+         * of daylight fields round it.
+         */
+        landscape.terrain.color.setRGB(
+          liveAtmos.ground.r / DAY_GROUND.r,
+          liveAtmos.ground.g / DAY_GROUND.g,
+          liveAtmos.ground.b / DAY_GROUND.b,
+        );
         renderer.toneMappingExposure = liveAtmos.exposure;
         starMaterial.opacity = liveAtmos.starOpacity;
         cloudMaterial.color.set(liveAtmos.cloudColor);
@@ -3592,20 +3653,38 @@ export default function Reconstruction3DInner({
         birdMaterial.opacity = liveAtmos.birdOpacity;
       };
 
-      // The canvas repaints only when its colours actually moved, so a settled
-      // scene stops rerendering the sky entirely.
-      let lastSky: [number, number] = [-1, -1];
-      const repaintSkyIfChanged = () => {
+      /*
+       * The dome follows every step of a change of light. The reflected sky
+       * is prefiltered afresh each time it is repainted, which costs too much
+       * to do every frame on a phone: it catches up four times a second and
+       * once more when the light has settled.
+       */
+      const lastSky: [number, number] = [-1, -1];
+      let envPaintedAt = -Infinity;
+      let envStale = false;
+      const repaintSkyIfChanged = (now = 0) => {
         const top = liveAtmos.skyTop.getHex();
         const horizon = liveAtmos.skyHorizon.getHex();
-        if (top === lastSky[0] && horizon === lastSky[1]) return;
-        lastSky = [top, horizon];
+        if (top !== lastSky[0] || horizon !== lastSky[1]) {
+          lastSky[0] = top;
+          lastSky[1] = horizon;
+          skyUniforms.top.value.copy(liveAtmos.skyTop).convertLinearToSRGB();
+          skyUniforms.horizon.value.copy(liveAtmos.skyHorizon).convertLinearToSRGB();
+          envStale = true;
+        }
+        if (!envStale || now - envPaintedAt < 0.25) return;
+        envStale = false;
+        envPaintedAt = now;
+        // Letting the texture go drops the renderer's prefiltered copy of it;
+        // the next frame makes a new one from the repainted canvas.
+        sky.dispose();
         repaintSky(liveAtmos.skyTop, liveAtmos.skyHorizon);
       };
 
       // The decorations are the model's surroundings, not the model. They drop
       // out of a model export the way they would drop out of a section drawing.
       const decorations = [
+        skyGroup,
         lifeGroup,
         stars,
         landscape.group,
@@ -3662,6 +3741,8 @@ export default function Reconstruction3DInner({
 
       const buildPins = (list: SceneLabel[], active: number | null) => {
         pins.forEach((pin) => pin.element.remove());
+        // New buttons, new words: measured again when next on screen.
+        pinWidth.length = 0;
         pins = list.map((item, index) => {
           const element = document.createElement("button");
           element.type = "button";
@@ -3703,15 +3784,51 @@ export default function Reconstruction3DInner({
       }
 
       let labelsVisible = latestRef.current.showLabels;
+      /*
+       * Two points close together on screen — a central pillar and the floor
+       * it stands on, seen from the default view — put one label over the
+       * other, and the one underneath could be neither read nor clicked.
+       * Each frame the labels are laid out nearest first (the chosen one
+       * before all), and a label that would land on one already placed is
+       * moved up or down to the nearest clear row; its dot goes with it,
+       * which is a few pixels of truth traded for a label that can be read.
+       * Scratch arrays are kept between frames, so nothing is allocated.
+       */
+      const pinX: number[] = [];
+      const pinY: number[] = [];
+      const pinDepth: number[] = [];
+      const pinOn: boolean[] = [];
+      const pinOrder: number[] = [];
+      const pinWidth: number[] = [];
+      const placedLeft: number[] = [];
+      const placedTop: number[] = [];
+      const placedRight: number[] = [];
+      const placedBottom: number[] = [];
+      const nearerFirst = (a: number, b: number) => pinDepth[a]! - pinDepth[b]!;
+      const PIN_HEIGHT = 24;
+      const PIN_GAP = 3;
+      const clearOf = (left: number, top: number, right: number, count: number) => {
+        for (let j = 0; j < count; j += 1) {
+          if (
+            left < placedRight[j]! &&
+            right > placedLeft[j]! &&
+            top < placedBottom[j]! &&
+            top + PIN_HEIGHT > placedTop[j]!
+          )
+            return false;
+        }
+        return true;
+      };
       const placePins = () => {
         if (!pins.length) return;
         const width = host.clientWidth;
         const height2 = host.clientHeight;
-        for (const pin of pins) {
-          if (!labelsVisible) {
-            pin.element.style.display = "none";
-            continue;
-          }
+        const active = latestRef.current.activeLabel;
+        let shown = 0;
+        for (let i = 0; i < pins.length; i += 1) {
+          const pin = pins[i]!;
+          pinOn[i] = false;
+          if (!labelsVisible) continue;
           projected.copy(pin.point).project(camera);
           // `z > 1` means the point is behind the camera, where projection
           // mirrors it to the wrong side of the screen.
@@ -3721,11 +3838,55 @@ export default function Reconstruction3DInner({
             projected.x > 1.15 ||
             projected.y < -1.15 ||
             projected.y > 1.15;
-          pin.element.style.display = offScreen ? "none" : "block";
           if (offScreen) continue;
-          const x = (projected.x * 0.5 + 0.5) * width;
-          const y = (-projected.y * 0.5 + 0.5) * height2;
-          pin.element.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-14px, -50%)`;
+          pinOn[i] = true;
+          pinX[i] = (projected.x * 0.5 + 0.5) * width;
+          pinY[i] = (-projected.y * 0.5 + 0.5) * height2;
+          pinDepth[i] = i === active ? -Infinity : projected.z;
+          pinOrder[shown] = i;
+          shown += 1;
+        }
+        pinOrder.length = shown;
+        pinOrder.sort(nearerFirst);
+        let placed = 0;
+        for (let k = 0; k < shown; k += 1) {
+          const i = pinOrder[k]!;
+          const element = pins[i]!.element;
+          if (element.style.display !== "block") element.style.display = "block";
+          // Measured once, the first time the label is on screen to measure.
+          if (!pinWidth[i]) pinWidth[i] = element.offsetWidth;
+          // Kept inside the frame: a point near the edge of a phone's narrow
+          // view left its label cut off half-way through a word.
+          const labelWidth = pinWidth[i] || 120;
+          const left = Math.max(2, Math.min(pinX[i]! - 14, width - labelWidth - 2));
+          const right = left + labelWidth;
+          const top = pinY[i]! - PIN_HEIGHT / 2;
+          let y = top;
+          if (!clearOf(left, y, right, placed)) {
+            for (let step = 1; step <= 4; step += 1) {
+              const shift = step * (PIN_HEIGHT + PIN_GAP) * 0.5;
+              if (clearOf(left, top - shift, right, placed)) {
+                y = top - shift;
+                break;
+              }
+              if (clearOf(left, top + shift, right, placed)) {
+                y = top + shift;
+                break;
+              }
+            }
+          }
+          placedLeft[placed] = left - PIN_GAP;
+          placedRight[placed] = right + PIN_GAP;
+          placedTop[placed] = y - PIN_GAP;
+          placedBottom[placed] = y + PIN_HEIGHT + PIN_GAP;
+          placed += 1;
+          element.style.transform = `translate3d(${left}px, ${y}px, 0)`;
+          // Nearer labels are drawn over farther ones if they still meet.
+          element.style.zIndex = String(shown - k);
+        }
+        for (let i = 0; i < pins.length; i += 1) {
+          if (!pinOn[i] && pins[i]!.element.style.display !== "none")
+            pins[i]!.element.style.display = "none";
         }
       };
 
@@ -3813,9 +3974,19 @@ export default function Reconstruction3DInner({
        * of them above whatever is underfoot.
        */
       const EYE = 1.6;
-      // The highest thing that can be stepped up onto without climbing: a
-      // theatre's seat row, a stair, a low plinth — not a wall or a podium.
-      const STEP = 1.1;
+      /*
+       * The highest thing that can be stepped or hoisted up onto: a theatre's
+       * seat row (0.4 m), a krepidoma's step (0.5), the altar at Nemrut's
+       * (0.8), the podium walls round an orchestra or a stadium's track (1.0
+       * to 1.2) — not a wall, a column or a temple's podium, which are blocks
+       * to walk round, or to rise over with E.
+       */
+      const STEP = 1.25;
+      // Clear height needed overhead, from the feet: the eye and a hand more.
+      const HEAD = EYE + 0.15;
+      // The longest stride tested at once, so a fast frame cannot skip a step
+      // or pass through a column.
+      const STRIDE = 0.2;
       const groundY = bounds.min[1] - 0.06;
       const apronRadius = span * 2.2;
       // A stroll on a 20 m tomb, a brisk walk round a 140 m theatre.
@@ -3871,24 +4042,62 @@ export default function Reconstruction3DInner({
        * sorted once into a grid over the plan the first time someone walks,
        * so finding the floor underfoot means testing the few dozen triangles
        * in one cell rather than the two hundred thousand in the model.
+       *
+       * Which way a flat face looks matters. One facing up is a floor; one
+       * facing down is the underside of something — a lintel, a vault, the
+       * bottom of a wall's footing. Taken for floors too, the undersides let
+       * a walker who had pushed into a seating bank stand on its base inside
+       * it, under rows that were then all out of reach. Read in order up a
+       * column of the plan, they also say whether a spot is open or inside
+       * something solid, which is what stops a walker at a wall.
        */
-      const FLOOR_GRID = 64;
+      const floorExtent =
+        Math.max(bounds.max[0] - bounds.min[0], bounds.max[2] - bounds.min[2]) + 2;
+      // About a metre a cell, so a cell holds a step's tread or two, not a flight.
+      const FLOOR_GRID = Math.max(32, Math.min(192, Math.ceil(floorExtent)));
       const floorMinX = bounds.min[0] - 1;
       const floorMinZ = bounds.min[2] - 1;
-      const floorCell =
-        (Math.max(bounds.max[0] - bounds.min[0], bounds.max[2] - bounds.min[2]) + 2) / FLOOR_GRID;
+      const floorCell = floorExtent / FLOOR_GRID;
       let floorTris: Float32Array | null = null;
-      let floorCells: number[][] = [];
+      // 1 where a face looks up, 0 where it looks down.
+      let floorUp = new Uint8Array(0);
+      // The triangles of cell i are floorIds[floorStart[i] .. floorStart[i + 1]).
+      let floorStart = new Int32Array(0);
+      let floorIds = new Int32Array(0);
       const buildFloors = () => {
         const a = new THREE.Vector3();
         const b = new THREE.Vector3();
         const c = new THREE.Vector3();
         const ab = new THREE.Vector3();
         const ac = new THREE.Vector3();
+        const n = new THREE.Vector3();
+        const normalMatrix = new THREE.Matrix3();
         const flat: number[] = [];
+        const up: number[] = [];
         const cells: number[][] = Array.from({ length: FLOOR_GRID * FLOOR_GRID }, () => []);
         const cellOf = (value: number, min: number) =>
           Math.min(FLOOR_GRID - 1, Math.max(0, Math.floor((value - min) / floorCell)));
+        const addTriangle = () => {
+          ab.subVectors(b, a);
+          ac.subVectors(c, a);
+          ab.cross(ac);
+          const length = ab.length();
+          if (length < 1e-9 || Math.abs(ab.y) / length < 0.7) return;
+          const id = flat.length / 9;
+          flat.push(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z);
+          // The stored normals say which way a face looks even where a
+          // mirrored part has turned its winding over; the winding otherwise.
+          up.push((n.lengthSq() > 1e-12 ? n.y : ab.y) > 0 ? 1 : 0);
+          const x1 = cellOf(Math.min(a.x, b.x, c.x), floorMinX);
+          const x2 = cellOf(Math.max(a.x, b.x, c.x), floorMinX);
+          const z1 = cellOf(Math.min(a.z, b.z, c.z), floorMinZ);
+          const z2 = cellOf(Math.max(a.z, b.z, c.z), floorMinZ);
+          for (let gz = z1; gz <= z2; gz += 1) {
+            for (let gx = x1; gx <= x2; gx += 1) cells[gz * FLOOR_GRID + gx]!.push(id);
+          }
+        };
+        const instanceMatrix = new THREE.Matrix4();
+        const world = new THREE.Matrix4();
         // Only the building itself: not the scale figure, the scans, the
         // furniture of its life or the landscape, none of which is a floor.
         for (const object of scene.children) {
@@ -3897,68 +4106,121 @@ export default function Reconstruction3DInner({
           const position = mesh.geometry.attributes["position"] as
             THREE_NS.BufferAttribute | undefined;
           if (!position) continue;
+          const normal = mesh.geometry.attributes["normal"] as THREE_NS.BufferAttribute | undefined;
           mesh.updateMatrixWorld();
           const index = mesh.geometry.index;
           const count = index ? index.count : position.count;
-          for (let i = 0; i + 2 < count; i += 3) {
-            a.fromBufferAttribute(position, index ? index.getX(i) : i).applyMatrix4(
-              mesh.matrixWorld,
-            );
-            b.fromBufferAttribute(position, index ? index.getX(i + 1) : i + 1).applyMatrix4(
-              mesh.matrixWorld,
-            );
-            c.fromBufferAttribute(position, index ? index.getX(i + 2) : i + 2).applyMatrix4(
-              mesh.matrixWorld,
-            );
-            ab.subVectors(b, a);
-            ac.subVectors(c, a);
-            ab.cross(ac);
-            const length = ab.length();
-            // Either winding: a slab's underside is harmless, since a ceiling
-            // is never within a step of the feet.
-            if (length < 1e-9 || Math.abs(ab.y) / length < 0.7) continue;
-            const id = flat.length / 9;
-            flat.push(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z);
-            const x1 = cellOf(Math.min(a.x, b.x, c.x), floorMinX);
-            const x2 = cellOf(Math.max(a.x, b.x, c.x), floorMinX);
-            const z1 = cellOf(Math.min(a.z, b.z, c.z), floorMinZ);
-            const z2 = cellOf(Math.max(a.z, b.z, c.z), floorMinZ);
-            for (let gz = z1; gz <= z2; gz += 1) {
-              for (let gx = x1; gx <= x2; gx += 1) cells[gz * FLOOR_GRID + gx]!.push(id);
+          // An instanced part is its geometry once per instance, each placed
+          // by its own matrix on top of the mesh's.
+          const instanced = mesh as unknown as THREE_NS.InstancedMesh;
+          const copies = instanced.isInstancedMesh ? instanced.count : 1;
+          for (let k = 0; k < copies; k += 1) {
+            if (instanced.isInstancedMesh) {
+              instanced.getMatrixAt(k, instanceMatrix);
+              world.multiplyMatrices(mesh.matrixWorld, instanceMatrix);
+            } else world.copy(mesh.matrixWorld);
+            normalMatrix.getNormalMatrix(world);
+            for (let i = 0; i + 2 < count; i += 3) {
+              const ia = index ? index.getX(i) : i;
+              const ib = index ? index.getX(i + 1) : i + 1;
+              const ic = index ? index.getX(i + 2) : i + 2;
+              a.fromBufferAttribute(position, ia).applyMatrix4(world);
+              b.fromBufferAttribute(position, ib).applyMatrix4(world);
+              c.fromBufferAttribute(position, ic).applyMatrix4(world);
+              if (normal) {
+                n.fromBufferAttribute(normal, ia);
+                ac.fromBufferAttribute(normal, ib);
+                n.add(ac);
+                ac.fromBufferAttribute(normal, ic);
+                n.add(ac).applyMatrix3(normalMatrix);
+              } else n.set(0, 0, 0);
+              addTriangle();
             }
           }
         }
         floorTris = new Float32Array(flat);
-        floorCells = cells;
+        floorUp = Uint8Array.from(up);
+        floorStart = new Int32Array(cells.length + 1);
+        let total = 0;
+        cells.forEach((cell, i) => {
+          floorStart[i] = total;
+          total += cell.length;
+        });
+        floorStart[cells.length] = total;
+        floorIds = new Int32Array(total);
+        cells.forEach((cell, i) => floorIds.set(cell, floorStart[i]!));
       };
-      /** The highest floor at (x, z) that is no higher than `reach`. */
-      const floorAt = (x: number, z: number, reach: number) => {
+      /*
+       * What a probe found, kept here rather than returned so that the
+       * dozens of probes a second allocate nothing: the floor, and the
+       * nearest face above it and which way that one looks.
+       */
+      const probe = { floor: 0, above: Infinity, aboveUp: false };
+      /** Height at (x, z) of triangle `id` of the floor set, or NaN off it. */
+      const heightOn = (id: number, x: number, z: number) => {
+        const tris = floorTris!;
+        const o = id * 9;
+        const ax = tris[o]!;
+        const az = tris[o + 2]!;
+        const bx = tris[o + 3]!;
+        const bz = tris[o + 5]!;
+        const cx = tris[o + 6]!;
+        const cz = tris[o + 8]!;
+        // Barycentric weights in plan; outside the triangle, one goes negative.
+        const d = (bz - cz) * (ax - cx) + (cx - bx) * (az - cz);
+        if (Math.abs(d) < 1e-12) return NaN;
+        const wa = ((bz - cz) * (x - cx) + (cx - bx) * (z - cz)) / d;
+        const wb = ((cz - az) * (x - cx) + (ax - cx) * (z - cz)) / d;
+        const wc = 1 - wa - wb;
+        if (wa < -1e-6 || wb < -1e-6 || wc < -1e-6) return NaN;
+        return wa * tris[o + 1]! + wb * tris[o + 4]! + wc * tris[o + 7]!;
+      };
+      /**
+       * The highest floor at (x, z) no higher than `reach` — never below the
+       * open ground — and the first face above it.
+       */
+      const probeAt = (x: number, z: number, reach: number) => {
         let best = groundAt(x, z);
-        const tris = floorTris;
-        if (!tris) return best;
+        probe.floor = best;
+        probe.above = Infinity;
+        probe.aboveUp = false;
+        if (!floorTris) return probe;
         const gx = Math.floor((x - floorMinX) / floorCell);
         const gz = Math.floor((z - floorMinZ) / floorCell);
-        if (gx < 0 || gz < 0 || gx >= FLOOR_GRID || gz >= FLOOR_GRID) return best;
-        for (const id of floorCells[gz * FLOOR_GRID + gx]!) {
-          const o = id * 9;
-          const ax = tris[o]!;
-          const az = tris[o + 2]!;
-          const bx = tris[o + 3]!;
-          const bz = tris[o + 5]!;
-          const cx = tris[o + 6]!;
-          const cz = tris[o + 8]!;
-          // Barycentric weights in plan; outside the triangle, one goes negative.
-          const d = (bz - cz) * (ax - cx) + (cx - bx) * (az - cz);
-          if (Math.abs(d) < 1e-12) continue;
-          const wa = ((bz - cz) * (x - cx) + (cx - bx) * (z - cz)) / d;
-          const wb = ((cz - az) * (x - cx) + (ax - cx) * (z - cz)) / d;
-          const wc = 1 - wa - wb;
-          if (wa < -1e-6 || wb < -1e-6 || wc < -1e-6) continue;
-          const y = wa * tris[o + 1]! + wb * tris[o + 4]! + wc * tris[o + 7]!;
+        if (gx < 0 || gz < 0 || gx >= FLOOR_GRID || gz >= FLOOR_GRID) return probe;
+        const cell = gz * FLOOR_GRID + gx;
+        const from = floorStart[cell]!;
+        const to = floorStart[cell + 1]!;
+        for (let k = from; k < to; k += 1) {
+          const id = floorIds[k]!;
+          if (floorUp[id] !== 1) continue;
+          const y = heightOn(id, x, z);
           if (y <= reach && y > best) best = y;
         }
-        return best;
+        probe.floor = best;
+        // A face flush with the floor — the foot of a wall standing on it —
+        // is not above it; the wall's top, further up, says it is there.
+        const over = best + 0.05;
+        for (let k = from; k < to; k += 1) {
+          const id = floorIds[k]!;
+          const y = heightOn(id, x, z);
+          if (y > over && y < probe.above) {
+            probe.above = y;
+            probe.aboveUp = floorUp[id] === 1;
+          }
+        }
+        return probe;
       };
+      /** The highest floor at (x, z) that is no higher than `reach`. */
+      const floorAt = (x: number, z: number, reach: number) => probeAt(x, z, reach).floor;
+      /**
+       * Whether a body standing `lift` above the floor the probe found fits
+       * there. The first face above being a top means the spot is inside
+       * something too tall to step onto — a wall, a column, a podium; an
+       * underside lower than a head means an overhang to duck under.
+       */
+      const fits = (lift: number) =>
+        probe.above === Infinity || (!probe.aboveUp && probe.above >= probe.floor + lift + HEAD);
 
       /*
        * The walker. `feet` is the floor being stood on; `lift` is how far
@@ -3966,7 +4228,18 @@ export default function Reconstruction3DInner({
        * Rising past a floor lands on it, which is also how an upper storey or
        * a podium too tall to step onto is reached.
        */
-      const walker = { on: false, yaw: 0, pitch: 0, feet: groundY, lift: 0, nudge: 0 };
+      const walker = {
+        on: false,
+        yaw: 0,
+        pitch: 0,
+        feet: groundY,
+        lift: 0,
+        nudge: 0,
+        // Where the eye is carried from: the feet, eased up a step and let
+        // fall off a ledge rather than jumping to each new floor.
+        view: groundY,
+        fall: 0,
+      };
       const held = { forward: false, back: false, left: false, right: false };
       const heldVertical = { up: false, down: false, run: false };
       // Where the orbit camera was, to go back to when the walk ends.
@@ -3997,6 +4270,8 @@ export default function Reconstruction3DInner({
         const x = centre.x + fx * away;
         const z = centre.z + fz * away;
         walker.feet = floorAt(x, z, groundY + STEP);
+        walker.view = walker.feet;
+        walker.fall = 0;
         walker.lift = 0;
         walker.nudge = 0;
         walker.yaw = Math.atan2(fx, fz);
@@ -4141,6 +4416,20 @@ export default function Reconstruction3DInner({
       renderer.domElement.addEventListener("pointercancel", onLookUp);
       renderer.domElement.addEventListener("wheel", onWalkWheel, { passive: false });
 
+      /** Where a walk's strides have got to, and whether it began stuck inside something. */
+      const stride = { x: 0, z: 0, free: false };
+      /** One stride to (x, z), taken if there is room there; false if blocked. */
+      const tryStride = (x: number, z: number) => {
+        probeAt(x, z, walker.feet + walker.lift + STEP);
+        const lift = Math.max(0, walker.lift - Math.max(0, probe.floor - walker.feet));
+        if (!stride.free && !fits(lift)) return false;
+        stride.x = x;
+        stride.z = z;
+        // Landing on something higher spends the lift it took to get there.
+        walker.lift = lift;
+        walker.feet = probe.floor;
+        return true;
+      };
       /** One frame of walking: move, find the floor, settle the eye onto it. */
       const stepWalk = (dt: number) => {
         const pad = padRef.current;
@@ -4160,30 +4449,113 @@ export default function Reconstruction3DInner({
         const sin = Math.sin(walker.yaw);
         const cos = Math.cos(walker.yaw);
         // Yaw 0 looks down -z; the right hand then points down +x.
-        camera.position.x += -sin * ahead + cos * aside;
-        camera.position.z += -cos * ahead - sin * aside;
+        const moveX = -sin * ahead + cos * aside;
+        const moveZ = -cos * ahead - sin * aside;
         const rise = (heldVertical.up ? 1 : 0) - (heldVertical.down ? 1 : 0);
         walker.lift = Math.max(0, Math.min(span * 2, walker.lift + rise * speed * 0.7 * dt));
-        const floor = floorAt(
-          camera.position.x,
-          camera.position.z,
-          walker.feet + walker.lift + STEP,
-        );
-        // Landing on something higher spends the lift it took to get there.
-        if (floor > walker.feet) walker.lift = Math.max(0, walker.lift - (floor - walker.feet));
-        walker.feet = floor;
-        const eye = floor + EYE + walker.lift;
-        camera.position.y += (eye - camera.position.y) * Math.min(1, dt * 10);
+        /*
+         * The move is taken in strides of a few hand-spans, each checked
+         * against the floors: up a step if it is within reach, along a wall
+         * or round a column if the way ahead is blocked. Someone who is
+         * already inside something — started there, or sank into it with Q —
+         * walks freely until they are out.
+         */
+        const strides = Math.max(1, Math.ceil(Math.hypot(moveX, moveZ) / STRIDE));
+        const sx = moveX / strides;
+        const sz = moveZ / strides;
+        stride.x = camera.position.x;
+        stride.z = camera.position.z;
+        probeAt(stride.x, stride.z, walker.feet + walker.lift + STEP);
+        stride.free = !fits(Math.max(0, walker.lift - Math.max(0, probe.floor - walker.feet)));
+        if (moveX === 0 && moveZ === 0) tryStride(stride.x, stride.z);
+        for (let i = 0; i < strides; i += 1) {
+          const { x, z } = stride;
+          // Blocked head-on, slide along whichever way is still open.
+          if (!tryStride(x + sx, z + sz) && !tryStride(x + sx, z) && !tryStride(x, z + sz)) {
+            walker.feet = floorAt(x, z, walker.feet + walker.lift + STEP);
+            break;
+          }
+        }
+        camera.position.x = stride.x;
+        camera.position.z = stride.z;
+        /*
+         * The eye follows the feet: quickly up a step, so a flight of seats
+         * is climbed rather than teleported up, and off a ledge with
+         * something like gravity, so a drop is a drop and not a cut.
+         */
+        const wanted = walker.feet + walker.lift;
+        if (walker.view < wanted) {
+          walker.fall = 0;
+          walker.view = Math.min(
+            wanted,
+            walker.view + Math.max((wanted - walker.view) * Math.min(1, dt * 14), dt * 1.5),
+          );
+        } else if (walker.view > wanted) {
+          walker.fall = Math.min(25, walker.fall + 9.8 * dt);
+          walker.view = Math.max(wanted, walker.view - Math.max(walker.fall, 1.5) * dt);
+        } else walker.fall = 0;
+        camera.position.y = walker.view + EYE;
         camera.rotation.set(walker.pitch, walker.yaw, 0, "YXZ");
       };
+
+      // A handle for driving the walk deterministically from the console or a
+      // test: the software renderers that tests run on draw a frame a second.
+      if (import.meta.env.DEV) {
+        (window as unknown as { __walk?: unknown }).__walk = {
+          enter: enterWalk,
+          exit: () => exitWalk(false),
+          bounds,
+          centre: centre.toArray(),
+          place: (x: number, z: number, yaw: number, reach = groundY + 0.05) => {
+            camera.position.x = x;
+            camera.position.z = z;
+            walker.yaw = yaw;
+            walker.pitch = 0;
+            walker.feet = floorAt(x, z, reach);
+            walker.view = walker.feet;
+            walker.fall = 0;
+            walker.lift = 0;
+            camera.position.y = walker.feet + EYE;
+          },
+          look: (pitch: number, yaw?: number) => {
+            walker.pitch = pitch;
+            if (yaw !== undefined) walker.yaw = yaw;
+          },
+          step: (dt: number, forward: number) => {
+            held.forward = forward > 0;
+            held.back = forward < 0;
+            stepWalk(dt);
+            held.forward = held.back = false;
+            return [camera.position.x, camera.position.y, camera.position.z, walker.feet];
+          },
+          rise: (up: number) => {
+            heldVertical.up = up > 0;
+            heldVertical.down = up < 0;
+          },
+          floorAt: (x: number, z: number, reach: number) => floorAt(x, z, reach),
+          // Where the camera is and what it is aimed at, so a test can wait
+          // for a flight to land however slowly the frames come.
+          pose: () => [...camera.position.toArray(), ...controls.target.toArray()],
+          shot: () => {
+            renderer.render(scene, camera);
+            return renderer.domElement.toDataURL("image/png");
+          },
+        };
+      }
 
       let lastFrame = performance.now() / 1000;
       const frame = () => {
         const now = performance.now() / 1000;
-        const dt = Math.min(0.1, now - lastFrame);
+        const elapsed = now - lastFrame;
+        const dt = Math.min(0.1, elapsed);
         lastFrame = now;
-        if (dt > 0) {
-          const rate = Math.min(1, dt / 1.8);
+        /*
+         * The light eases over about two seconds of the clock, not of
+         * frames: `dt` is capped for motion's sake, and on a phone drawing
+         * five frames a second a capped step made dusk take ten.
+         */
+        const rate = 1 - Math.exp(-Math.min(Math.max(elapsed, 0), 2) / 0.6);
+        if (rate > 0) {
           liveAtmos.hemiIntensity += (atmosTarget.hemiIntensity - liveAtmos.hemiIntensity) * rate;
           liveAtmos.sunIntensity += (atmosTarget.sunIntensity - liveAtmos.sunIntensity) * rate;
           liveAtmos.fillIntensity += (atmosTarget.fillIntensity - liveAtmos.fillIntensity) * rate;
@@ -4222,8 +4594,9 @@ export default function Reconstruction3DInner({
           bird.group.rotation.y = Math.PI - a;
           bird.wings.rotation.z = Math.sin(now * bird.flap + bird.phase * 7) * 0.65;
         }
-        repaintSkyIfChanged();
-        glow += (glowTarget - glow) * Math.min(1, dt / 1.8);
+        skyGroup.position.copy(camera.position);
+        repaintSkyIfChanged(now);
+        glow += (glowTarget - glow) * rate;
         lifeHandle?.update(now, dt, glow, camera);
         if (walker.on) stepWalk(dt);
         else {
@@ -4294,11 +4667,24 @@ export default function Reconstruction3DInner({
         walkEndRef.current?.();
       };
 
-      /** The three views the model is worth seeing from, besides its own. */
+      /*
+       * The three views the model is worth seeing from, besides its own —
+       * taken from the side the model is met from, which is the side its own
+       * opening view looks from. Fixed to the -z side for every model, "front"
+       * showed a theatre as the bare back wall of its stage building and the
+       * Nemrut terrace from behind the gods.
+       */
+      const opening = VIEWPOINT[kind];
+      const alongX = Math.abs(opening[0]) > Math.abs(opening[2]);
+      const fx = alongX ? Math.sign(opening[0]) : 0;
+      const fz = alongX ? 0 : Math.sign(opening[2]);
+      // The corner view swings the way the opening view already leans.
+      const sx = alongX ? 0 : Math.sign(opening[0]) || 1;
+      const sz = alongX ? Math.sign(opening[2]) || 1 : 0;
       const viewpoints: Record<"front" | "above" | "corner", THREE_NS.Vector3> = {
-        front: new THREE.Vector3(0, 0.18, -1),
-        above: new THREE.Vector3(0.05, 1, 0.12),
-        corner: new THREE.Vector3(0.85, 0.4, -0.7),
+        front: new THREE.Vector3(fx, Math.max(0.18, opening[1] * 0.8), fz),
+        above: new THREE.Vector3(0.05 - fx * 0.12, 1, -fz * 0.12),
+        corner: new THREE.Vector3(fx * 0.7 + sx * 0.85, 0.4, fz * 0.7 + sz * 0.85),
       };
 
       apiRef.current = {
@@ -4374,13 +4760,70 @@ export default function Reconstruction3DInner({
         focus: (at) => {
           leaveWalkForFlight();
           const point = new THREE.Vector3(...at);
-          const direction = camera.position.clone().sub(controls.target).normalize();
+          const close = Math.max(5, span * 0.17);
+          /*
+           * Come in from where the camera already is, if the point can be
+           * seen from there. Often it cannot: from the default view behind a
+           * theatre's cavea, the diazoma and the seats are on the far side of
+           * the outer wall, and the flight ended nose to nose with brickwork.
+           * So the approach is tried round the point — the current bearing
+           * first, then further and further round, then from higher up — and
+           * the first one with nothing solid between camera and point wins.
+           * A few dozen rays, once per click.
+           */
+          const ahead = camera.position.clone().sub(controls.target);
           // Flatten the approach a little: coming in along a steep downward
           // look leaves the camera staring at the top of whatever it flew to.
-          direction.y = Math.min(direction.y, 0.42);
-          direction.normalize();
-          const close = Math.max(5, span * 0.17);
-          flyTo(point.clone().addScaledVector(direction, close), point);
+          const lift = Math.min(0.42, Math.max(0.15, ahead.normalize().y));
+          ahead.y = 0;
+          if (ahead.lengthSq() < 1e-6) ahead.set(0, 0, -1);
+          ahead.normalize();
+          const solids = scene.children.filter(
+            (object) =>
+              (object as THREE_NS.Mesh).isMesh && object !== apronMesh && object !== scaleFigure,
+          );
+          const ray = new THREE.Raycaster();
+          const hits: THREE_NS.Intersection[] = [];
+          const direction = new THREE.Vector3();
+          const best = new THREE.Vector3().copy(ahead).multiplyScalar(Math.sqrt(1 - lift * lift));
+          best.y = lift;
+          let bestFree = -1;
+          // The point itself sits on (or just inside) the part it names.
+          const start = 0.6;
+          /*
+           * Each ray is tested against every triangle of the building, which
+           * on a phone and a temple of 127 fluted columns is tens of
+           * milliseconds a ray. The search stops at a time budget and takes
+           * the clearest approach found by then.
+           */
+          const deadline = performance.now() + 120;
+          search: for (const rise of [lift, 0.7, 0.92]) {
+            for (let k = 0; k <= 12; k += 1) {
+              // 0, +30°, -30°, +60°, -60° … round to the far side.
+              const turn = (k % 2 === 1 ? 1 : -1) * Math.ceil(k / 2) * (Math.PI / 6);
+              const flat = Math.sqrt(1 - rise * rise);
+              const c = Math.cos(turn);
+              const sn = Math.sin(turn);
+              direction.set(
+                (ahead.x * c + ahead.z * sn) * flat,
+                rise,
+                (ahead.z * c - ahead.x * sn) * flat,
+              );
+              ray.set(point.clone().addScaledVector(direction, start), direction);
+              ray.far = close;
+              hits.length = 0;
+              ray.intersectObjects(solids, false, hits);
+              const free = hits.length ? hits[0]!.distance : close;
+              if (free > bestFree + 0.01) {
+                bestFree = free;
+                best.copy(direction);
+              }
+              if (free >= close - 0.01 || performance.now() > deadline) break search;
+            }
+          }
+          // Nowhere entirely clear: as far back as the clearest way allows.
+          const distance = Math.max(1.5, Math.min(close, start + bestFree - 0.5));
+          flyTo(point.clone().addScaledVector(best, distance), point);
         },
         setQuality: (on) => {
           qualityOn = on;
@@ -4407,6 +4850,7 @@ export default function Reconstruction3DInner({
 
       cleanup = () => {
         apiRef.current = null;
+        if (import.meta.env.DEV) delete (window as unknown as { __walk?: unknown }).__walk;
         observer.disconnect();
         onScreen.disconnect();
         renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
@@ -4419,6 +4863,8 @@ export default function Reconstruction3DInner({
         materialsOwned.forEach((material) => material.dispose());
         textures.forEach((texture) => texture.dispose());
         sky.dispose();
+        skyDome.geometry.dispose();
+        skyDome.material.dispose();
         starGeometry.dispose();
         starMaterial.dispose();
         cloudPuff.dispose();

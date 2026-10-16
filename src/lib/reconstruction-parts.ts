@@ -1431,10 +1431,21 @@ function cornice(
 ): Part[] {
   const [x, y, z] = at;
   const course = height / 3;
+  /*
+   * Each course steps out by a share of the cornice's own height, the same
+   * on every side, as a moulding is cut. Stepped out by a share of the
+   * block's length instead, the crown of a 26 m podium overhung it by two
+   * metres front and back — a slab a visitor walked into at the top of the
+   * Pergamon stair, and a shelf round the Mausoleum.
+   */
+  const out1 = height * 0.1;
+  const out2 = height * 0.32;
+  const midWidth = width + 2 * out1;
+  const midDepth = depth + 2 * out1;
   const parts: Part[] = [
     box(material, [x, y, z], [width, course, depth]),
-    box(material, [x, y + course, z], [width * 1.02, course, depth * 1.08]),
-    box(material, [x, y + course * 2, z], [width * 1.05, course, depth * 1.16]),
+    box(material, [x, y + course, z], [midWidth, course, midDepth]),
+    box(material, [x, y + course * 2, z], [width + 2 * out2, course, depth + 2 * out2]),
   ];
   /*
    * The dentils: the row of small square blocks under the crown of an Ionic
@@ -1462,8 +1473,8 @@ function cornice(
   };
   if (course > 0.08) {
     for (const side of [-1, 1]) {
-      dentils(width * 1.02, "x", side * ((depth * 1.08) / 2 + lip));
-      dentils(depth * 1.08, "z", side * ((width * 1.02) / 2 + lip));
+      dentils(midWidth, "x", side * (midDepth / 2 + lip));
+      dentils(midDepth, "z", side * (midWidth / 2 + lip));
     }
   }
   return parts;
@@ -2662,7 +2673,10 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     const run = (spec.steps - i) * stepTread;
     parts.push(box("marbleWorn", [0, i * stepRise, -run / 2], [w, stepRise, run]));
   }
-  parts.push(box("marbleWorn", [0, 0, depth / 2 - 0.7], [w + 1.4, podium, depth + 1.4]));
+  // The podium the hall stands on, starting where the top step ends. Run
+  // 1.4 m further forward, it swallowed the top two treads and left the
+  // ninth step a 54 cm riser.
+  parts.push(box("marbleWorn", [0, 0, depth / 2], [w + 1.4, podium, depth]));
 
   const y0 = podium;
 
@@ -2696,7 +2710,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
   const wallCourse = (
     base: number,
     height: number,
-    openings: { centre: number; width: number }[],
+    openings: { centre: number; width: number; open?: boolean }[],
   ) => {
     let cursor = -w / 2;
     for (const opening of openings) {
@@ -2712,10 +2726,13 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
         );
       }
       // The reveal at the back of the opening, which is what gives a doorway
-      // depth when you cannot cut a hole in a box.
-      parts.push(
-        box("shadow", [opening.centre, base, wallDepth - 0.06], [opening.width, height, 0.12]),
-      );
+      // depth when you cannot cut a hole in a box — except where the door
+      // stands open and the hall behind is there to be seen.
+      if (!opening.open) {
+        parts.push(
+          box("shadow", [opening.centre, base, wallDepth - 0.06], [opening.width, height, 0.12]),
+        );
+      }
       cursor = to;
     }
     parts.push(
@@ -2727,7 +2744,14 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     );
   };
 
-  const doors = bays.map((bay) => ({ centre: bay.centre, width: bay.width * 0.72 }));
+  // The middle door stands open: the hall with its book cupboards and its
+  // Athena is built, and shut doors left a walker on the top step with no way
+  // in to it.
+  const doors = bays.map((bay) => ({
+    centre: bay.centre,
+    width: bay.width * 0.72,
+    open: bay.centre === 0,
+  }));
   wallCourse(y0, doorHeight, doors);
 
   /*
@@ -2737,6 +2761,20 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
    */
   for (const door of doors) {
     const leaf = door.width / 2 - 0.04;
+    if (door.open) {
+      // Swung back into the vestibule, flat against the reveals.
+      for (const side of [-1, 1]) {
+        parts.push(
+          box(
+            "timber",
+            [door.centre + side * (door.width / 2 - 0.06), y0, wallDepth + leaf / 2],
+            [leaf, doorHeight, 0.1],
+            Math.PI / 2,
+          ),
+        );
+      }
+      continue;
+    }
     for (const side of [-1, 1]) {
       const cx = door.centre + side * (leaf / 2 + 0.02);
       parts.push(box("timber", [cx, y0, wallDepth - 0.14], [leaf, doorHeight, 0.1]));
@@ -2855,6 +2893,13 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     const entablature = height - pedestal - shaft;
     const z = -(project + diameter / 2);
 
+    // The lower storey's pedestals project over the stair: each stands on a
+    // block of the podium carried forward through the steps, not on air.
+    if (base <= y0 + 1e-6) {
+      parts.push(
+        box("marbleWorn", [centre, 0, z], [spread * 2 + diameter * 2.2, base, diameter * 2.6]),
+      );
+    }
     // One pedestal under both columns, moulded top and bottom.
     parts.push(
       box("marble", [centre, base, z], [spread * 2 + diameter * 2.2, 0.16, diameter * 2.6]),
@@ -3050,9 +3095,16 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     const width = bay.width + aediculaWidth * 0.9;
     if (index === 1) {
       parts.push(prism("marble", [0, top, pedimentZ], [width, width * 0.3, pedimentDepth]));
-      // The tympanum behind the raking cornice was painted, not left bare.
+      // The tympanum behind the raking cornice was painted, not left bare. It
+      // is laid on the pediment's front face: centred on the prism, as it
+      // once was, it sat buried inside the stone and the middle pediment
+      // showed none of its red.
       parts.push(
-        prism("paintRed", [0, top + 0.1, pedimentZ - 0.05], [width * 0.86, width * 0.24, 0.12]),
+        prism(
+          "paintRed",
+          [0, top + 0.1, pedimentZ - pedimentDepth / 2 - 0.02],
+          [width * 0.86, width * 0.24, 0.08],
+        ),
       );
     } else {
       parts.push(
@@ -3063,12 +3115,14 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
           pedimentDepth,
         ),
       );
+      // Its painted field stands a few centimetres proud of the gilded band
+      // below: level with it, the two fought over the same pixels.
       parts.push(
         segmentalPediment(
           "paintRed",
-          [bay.centre, top + 0.08, pedimentZ - pedimentDepth * 0.52],
+          [bay.centre, top + 0.08, pedimentZ - pedimentDepth * 0.52 - 0.04],
           width * 0.43,
-          0.1,
+          0.14,
         ),
       );
     }
@@ -3140,6 +3194,10 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
   parts.push(
     ring("stone", y0, apseHalf, apseHalf + wallThickness, hallHeight, 0, Math.PI, [0, hallBack]),
   );
+  // The podium carried on round the apse, which reaches past the end of the
+  // rectangle: without it the apse wall stood on air and its floor was a
+  // hole a walker fell through to the ground.
+  parts.push(ring("marbleWorn", 0, 0, apseHalf + wallThickness, y0, 0, Math.PI, [0, hallBack]));
 
   // Ten shelf niches per storey: four at the back, three down each side.
   const nicheWidth = 1.1;
@@ -3343,15 +3401,23 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
    * from the end of a wing, the bank is solid, not a flight of floating rings.
    */
   const fill: Material = ch.ground === "hillside" ? "ground" : "stoneDark";
-  for (const [first, last] of [
-    [0, spec.lowerRows - 1],
-    ...(middle > 0 ? [[spec.lowerRows, spec.lowerRows + middle - 1]] : []),
-    [spec.lowerRows + middle, rows - 1],
-  ] as [number, number][]) {
-    const lo = rowAt(first);
-    const hi = rowAt(last);
-    const [start, length] = rowSpan(last);
-    parts.push(ring(fill, 0, lo.inner, hi.outer + diazoma, lo.y, start, length));
+  /*
+   * Under every row, from the ground up to it, and under each walkway: one
+   * block per tier, only as high as the tier's first row, left the rows above
+   * it as stepped shelves over a hollow — seen from the ends of the wings and
+   * from anywhere a walker got under them.
+   */
+  const lastOfTier = new Set(
+    middle > 0 ? [spec.lowerRows - 1, spec.lowerRows + middle - 1] : [spec.lowerRows - 1],
+  );
+  for (let i = 0; i < rows; i += 1) {
+    const { inner, outer, y } = rowAt(i);
+    const [start, length] = rowSpan(i);
+    parts.push(ring(fill, 0, inner, outer, y, start, length));
+    if (lastOfTier.has(i)) {
+      const [nextStart, nextLength] = rowSpan(i + 1);
+      parts.push(ring(fill, 0, outer, outer + diazoma, y + spec.seatRise, nextStart, nextLength));
+    }
   }
 
   // The walkways that split the bank: one, or two where there are three tiers.
@@ -3748,6 +3814,18 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
       const x = -(screenSpan / 2) + i * bayWidth;
       const pick = shafts[s]!;
       const shaft = pick[i % pick.length]!;
+      /*
+       * The aediculae of the ground storey frame the doors; none stands in
+       * one. On the regular grid a column fell on the axis of the royal door
+       * and others across the guest doors, so an actor coming on met a
+       * pedestal, and the doors read as blocked.
+       */
+      const half = ch.screen === "miletus" ? bayWidth * 0.14 : 0;
+      if (
+        s === 0 &&
+        doors.some(([d, w]) => Math.abs(d - x) < w / 2 + half + storey.height * 0.11 * 1.2)
+      )
+        continue;
       if (ch.screen === "miletus") {
         // Paired columns, close together.
         aedicula(x - bayWidth * 0.14, storey.base, storey.height, project, shaft);
@@ -3967,7 +4045,9 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
   const insetW = (spec.crepidomaWidth - spec.stylobateWidth) / 2 / spec.crepidomaSteps;
   const insetL = (spec.crepidomaLength - spec.stylobateLength) / 2 / spec.crepidomaSteps;
 
+  const crepidoma: number[] = [];
   for (let i = 0; i < spec.crepidomaSteps; i += 1) {
+    crepidoma.push(parts.length);
     parts.push(
       box(
         "marbleWorn",
@@ -4232,11 +4312,49 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
       [portalWidth, spec.sekosWallHeight - portalHeight, wallThickness],
     ),
   );
-  parts.push(
-    box("shadow", [0, y0, courtCentre - halfCL - wallThickness], [portalWidth, portalHeight, 0.3]),
-  );
+  /*
+   * Didyma's portal is drawn as the dark mouth it was — its sill stood well
+   * above the porch floor, and the court was reached by the tunnels. A cella
+   * door is a door: the room behind it is built, with its god in it, so it
+   * is left open to see into and to walk through. Filled with the dark
+   * panel, it was a wall to a walker and a black slab seen from inside.
+   */
+  if (spec.interior !== "cella") {
+    parts.push(
+      box(
+        "shadow",
+        [0, y0, courtCentre - halfCL - wallThickness],
+        [portalWidth, portalHeight, 0.3],
+      ),
+    );
+  }
   // The court floor sits below the porch, reached by the two sloping tunnels.
   parts.push(box("stone", [0, y0 - 1.4, courtCentre], [courtWidth, 0.3, courtLength]));
+  if (spec.interior !== "cella") {
+    /*
+     * So the upper steps of the platform stop at the court's edge. Laid as
+     * solid slabs right across, they buried the sunken floor under a metre
+     * of marble — and with it the naiskos's base, the laurels' roots and the
+     * shins of everyone standing in the court.
+     */
+    const floorTop = y0 - 1.1;
+    for (const index of [...crepidoma].reverse()) {
+      const step = parts[index] as Extract<Part, { kind: "box" }>;
+      if (step.at[1] + step.size[1] <= floorTop + 1e-6) continue;
+      const [W, H, L] = step.size;
+      const y = step.at[1];
+      const front = courtCentre - halfCL;
+      const back = courtCentre + halfCL;
+      parts.splice(
+        index,
+        1,
+        box("marbleWorn", [-(W / 2 + halfCW) / 2, y, 0], [W / 2 - halfCW, H, L]),
+        box("marbleWorn", [(W / 2 + halfCW) / 2, y, 0], [W / 2 - halfCW, H, L]),
+        box("marbleWorn", [0, y, (-L / 2 + front) / 2], [courtWidth, H, front + L / 2]),
+        box("marbleWorn", [0, y, (back + L / 2) / 2], [courtWidth, H, L / 2 - back]),
+      );
+    }
+  }
 
   // Pronaos: rows of columns in front of the portal, and then as many more
   // rows as it takes to stand up the number the sources count.
@@ -4270,9 +4388,11 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
         ),
       );
     }
+    // The pediments stand 3 cm proud of the stepped roof's ends: flush with
+    // them, the two stones fought over every pixel of the gable.
     for (const side of [-1, 1]) {
       parts.push(
-        prism("marble", [0, eaves, side * (roofLength / 2 - 0.6)], [roofHalf * 2, pitch, 1.2]),
+        prism("marble", [0, eaves, side * (roofLength / 2 - 0.57)], [roofHalf * 2, pitch, 1.2]),
       );
     }
     // The cult statue, standing in the dark at the back of the cella.
@@ -4603,29 +4723,29 @@ export function greatAltarParts(spec: GreatAltarSpec): Part[] {
   const stepRun = 0.55;
   const ground = spec.steps * stepRise;
 
-  // The five steps that run round the building, open where the stair cuts in.
+  /*
+   * The five steps that run round the building — across the front of the
+   * stair too, which climbs on from the top of them. Left open where the
+   * stair cuts in, they left the stair's first tread a metre and a half up
+   * in the air with nothing under it.
+   */
   for (let i = 0; i < spec.steps; i += 1) {
     const grow = (spec.steps - i) * stepRun;
     const w = spec.baseWidth + 2 * grow;
     const d = spec.baseDepth + 2 * grow;
-    parts.push(
-      box("marbleWorn", [0, i * stepRise, halfD + grow - stepRun / 2], [w, stepRise, stepRun]),
-    );
     for (const side of [-1, 1]) {
+      parts.push(
+        box(
+          "marbleWorn",
+          [0, i * stepRise, side * (halfD + grow - stepRun / 2)],
+          [w, stepRise, stepRun],
+        ),
+      );
       parts.push(
         box(
           "marbleWorn",
           [side * (halfW + grow - stepRun / 2), i * stepRise, 0],
           [stepRun, stepRise, d],
-        ),
-      );
-      const from = side * halfStair;
-      const to = side * (halfW + grow);
-      parts.push(
-        box(
-          "marbleWorn",
-          [(from + to) / 2, i * stepRise, -(halfD + grow - stepRun / 2)],
-          [Math.abs(to - from), stepRise, stepRun],
         ),
       );
     }

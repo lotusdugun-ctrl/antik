@@ -1,13 +1,22 @@
-import { MessageCircleQuestion, Mic, Send, Volume2, WifiOff } from "lucide-react";
+import {
+  Clock,
+  ExternalLink,
+  MessageCircleQuestion,
+  Mic,
+  Send,
+  Volume2,
+  WifiOff,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { claimSpeech } from "@/hooks/use-audio-guide";
 import { track } from "@/lib/analytics";
 import { answer, suggestions, type Answer } from "@/lib/ask";
 // Types only: the module itself is server-side and stays out of the bundle.
-import type { AskResponse, Turn } from "@/lib/ask-ai";
+import type { AskResponse, AskSource, Turn } from "@/lib/ask-ai";
 import { useI18n, type Lang } from "@/lib/i18n";
 import { spokenText } from "@/lib/narration";
 import type { Site } from "@/lib/sites";
+import { useTheme } from "@/lib/theme";
 
 const BCP47: Record<Lang, string> = { tr: "tr-TR", en: "en-GB", de: "de-DE", ru: "ru-RU" };
 
@@ -40,10 +49,21 @@ type Item = {
   offline?: boolean;
   /** Answered by the AI, so it may be sent back as conversation history. */
   ai?: boolean;
+  /** Web pages Google Search grounded the AI answer in. */
+  sources?: AskSource[];
+  /** Google's Search Suggestions HTML, shown as Google rendered it. */
+  searchEntryPoint?: string | undefined;
+  /**
+   * Why the AI did not answer, when it is worth telling: this visitor asked
+   * too fast, or the guide (the server or Gemini's quota) is busy. Either
+   * way it will work again shortly, which an "Offline answer" badge alone
+   * does not say.
+   */
+  notice?: "limited" | "busy" | undefined;
 };
 
-/** Longer than the server's own 15 s Gemini timeout, so that one decides first. */
-const CLIENT_TIMEOUT_MS = 20_000;
+/** Longer than the server's own 25 s Gemini deadline, so that one decides first. */
+const CLIENT_TIMEOUT_MS = 30_000;
 /** Previous questions kept as conversation for the model (each is two turns). */
 const HISTORY_PAIRS = 3;
 
@@ -60,9 +80,14 @@ const HISTORY_PAIRS = 3;
  */
 export function AskGuide({ site }: { site: Site }) {
   const { t, lang } = useI18n();
+  const { theme } = useTheme();
   const [question, setQuestion] = useState("");
   // Newest first, as the panel shows them.
   const [items, setItems] = useState<Item[]>([]);
+  // The latest list for `ask`: a voice question is asked from the closure the
+  // microphone was started in, whose `items` would miss newer answers.
+  const itemsRef = useRef<Item[]>(items);
+  itemsRef.current = items;
   const [listening, setListening] = useState(false);
   const [canListen, setCanListen] = useState(false);
   const recognition = useRef<Recognition | null>(null);
@@ -95,7 +120,7 @@ export function AskGuide({ site }: { site: Site }) {
     const id = nextId.current++;
     // History from AI answers only: an offline "I don't know" is not
     // something the model should take as its own earlier words.
-    const history = items
+    const history = itemsRef.current
       .filter((item) => item.ai && item.a)
       .slice(0, HISTORY_PAIRS)
       .reverse()
@@ -106,10 +131,14 @@ export function AskGuide({ site }: { site: Site }) {
     setItems((list) => [{ id, q: text }, ...list].slice(0, 5));
     setQuestion("");
 
-    const offline = () => {
+    const offline = (notice?: Item["notice"]) => {
       const a = answer(site, text, lang);
-      settle(id, { a, offline: true });
-      track("Guide question", { site: site.slug, answered: a.source ? "yes" : "maybe" });
+      // With a notice, a local "I don't know" adds nothing: the notice is the answer.
+      settle(id, notice && a.unknown ? { a: { text: "" }, notice } : { a, offline: true, notice });
+      track("Guide question", {
+        site: site.slug,
+        answered: notice ?? (a.unknown ? "no" : a.source ? "yes" : "maybe"),
+      });
     };
 
     try {
@@ -121,10 +150,21 @@ export function AskGuide({ site }: { site: Site }) {
       });
       const data = (await res.json().catch(() => null)) as AskResponse | null;
       if (res.ok && data && "answer" in data && data.answer) {
-        settle(id, { a: { text: data.answer, source: t("ask_ai_source") }, ai: true });
+        settle(id, {
+          a: { text: data.answer, source: t("ask_ai_source") },
+          ai: true,
+          sources: Array.isArray(data.sources)
+            ? data.sources.filter((s) => /^https:\/\//.test(s.url)).slice(0, 4)
+            : [],
+          searchEntryPoint:
+            typeof data.searchEntryPoint === "string" && data.searchEntryPoint.length <= 20_000
+              ? data.searchEntryPoint
+              : undefined,
+        });
         track("Guide question", { site: site.slug, answered: "ai" });
       } else {
-        offline();
+        const code = data && "error" in data ? data.error : undefined;
+        offline(code === "rate_limited" ? "limited" : code === "busy" ? "busy" : undefined);
       }
     } catch {
       offline();
@@ -173,7 +213,7 @@ export function AskGuide({ site }: { site: Site }) {
       <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
         <MessageCircleQuestion className="h-5 w-5 text-primary" /> {t("ask_title")}
       </h2>
-      <p className="mt-1 text-xs text-muted-foreground">{t("ask_sub_ai")}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{t("ask_sub_web")}</p>
 
       <form
         onSubmit={(e) => {
@@ -238,24 +278,62 @@ export function AskGuide({ site }: { site: Site }) {
             <p className="font-semibold">{item.q}</p>
             {item.a ? (
               <>
-                <p className="mt-1 whitespace-pre-line leading-relaxed">{item.a.text}</p>
-                <div className="mt-1.5 flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
-                  <span className="flex flex-wrap items-center gap-1.5">
-                    {item.offline && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5">
-                        <WifiOff className="h-3 w-3" aria-hidden /> {t("ask_offline")}
-                      </span>
-                    )}
-                    {item.a.source && <span>{item.a.source}</span>}
-                  </span>
-                  <button
-                    onClick={() => speak(item.a!.text)}
-                    aria-label={t("ask_speak")}
-                    className="grid h-7 w-7 shrink-0 place-items-center rounded-full hover:bg-secondary"
-                  >
-                    <Volume2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
+                {item.notice && (
+                  <p className="mt-1.5 flex items-start gap-1.5 rounded-lg bg-secondary px-2.5 py-1.5 text-xs">
+                    <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                    <span>
+                      {t(item.notice === "limited" ? "ask_notice_limited" : "ask_notice_busy")}{" "}
+                      <button
+                        onClick={() => void ask(item.q)}
+                        className="font-semibold text-primary underline-offset-2 hover:underline"
+                      >
+                        {t("ask_retry")}
+                      </button>
+                    </span>
+                  </p>
+                )}
+                {item.a.text && (
+                  <p className="mt-1 whitespace-pre-line leading-relaxed">{item.a.text}</p>
+                )}
+                {item.sources && item.sources.length > 0 && (
+                  <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
+                    <span>{t("ask_sources")}:</span>
+                    {item.sources.map((s) => (
+                      <a
+                        key={s.url}
+                        href={s.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex max-w-[14rem] items-center gap-0.5 rounded-full border border-border px-2 py-0.5 hover:border-primary hover:text-foreground"
+                      >
+                        <span className="truncate">{s.title}</span>
+                        <ExternalLink className="h-2.5 w-2.5 shrink-0" aria-hidden />
+                      </a>
+                    ))}
+                  </p>
+                )}
+                {item.searchEntryPoint && (
+                  <SearchSuggestions html={item.searchEntryPoint} dark={theme === "dark"} />
+                )}
+                {item.a.text && (
+                  <div className="mt-1.5 flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
+                    <span className="flex flex-wrap items-center gap-1.5">
+                      {item.offline && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5">
+                          <WifiOff className="h-3 w-3" aria-hidden /> {t("ask_offline")}
+                        </span>
+                      )}
+                      {item.a.source && <span>{item.a.source}</span>}
+                    </span>
+                    <button
+                      onClick={() => speak(item.a!.text)}
+                      aria-label={t("ask_speak")}
+                      className="grid h-7 w-7 shrink-0 place-items-center rounded-full hover:bg-secondary"
+                    >
+                      <Volume2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               <p className="mt-1 flex items-center gap-2 text-muted-foreground">
@@ -271,5 +349,34 @@ export function AskGuide({ site }: { site: Site }) {
         ))}
       </ul>
     </section>
+  );
+}
+
+/**
+ * Google's "Search Suggestions" for a grounded answer — required by the
+ * Gemini grounding terms — shown exactly as Google rendered it, but walled
+ * off: a sandboxed srcdoc iframe with no scripts and no same-origin access,
+ * so the HTML cannot touch the page, its cookies or its storage. Popups are
+ * allowed (and escape the sandbox) so its links can open Google in a new
+ * tab, which the injected <base target="_blank"> makes them do.
+ *
+ * Without scripts the frame cannot report its height, so it has a fixed one
+ * that fits Google's single row of chips; a long row scrolls sideways inside
+ * Google's own carousel. `color-scheme` on the frame sets what
+ * prefers-color-scheme reports inside it, so Google's dark styles follow
+ * the app's theme rather than only the system's.
+ */
+function SearchSuggestions({ html, dark }: { html: string; dark: boolean }) {
+  const { t } = useI18n();
+  const doc = `<!doctype html><html><head><meta charset="utf-8"><meta name="color-scheme" content="light dark"><base target="_blank"><style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}</style></head><body>${html}</body></html>`;
+  return (
+    <iframe
+      title={t("ask_search_suggestions")}
+      srcDoc={doc}
+      sandbox="allow-popups allow-popups-to-escape-sandbox"
+      loading="lazy"
+      className="mt-2 block h-[72px] w-full overflow-hidden border-0 bg-transparent"
+      style={{ colorScheme: dark ? "dark" : "light" }}
+    />
   );
 }

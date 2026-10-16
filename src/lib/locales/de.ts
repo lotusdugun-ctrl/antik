@@ -386,4 +386,13 @@ export const de: Partial<Record<TKey, string>> = {
   ask_thinking: "Der Guide denkt nach…",
   ask_offline: "Offline-Antwort",
   ask_ai_source: "KI-Guide",
+  ask_sub_web:
+    "Schreib oder sprich. Der KI-Guide nutzt die Daten der App und die Google-Suche; prüfe wichtige Details bei den Quellen.",
+  ask_sources: "Quellen",
+  ask_notice_limited:
+    "Das waren viele Fragen in kurzer Zeit; der KI-Guide antwortet in ein paar Minuten wieder. Bis dahin, was die App weiß:",
+  ask_notice_busy:
+    "Der KI-Guide ist gerade sehr ausgelastet. Versuch es gleich noch einmal; bis dahin, was die App weiß:",
+  ask_retry: "Noch einmal fragen",
+  ask_search_suggestions: "Vorschläge der Google-Suche",
 };
