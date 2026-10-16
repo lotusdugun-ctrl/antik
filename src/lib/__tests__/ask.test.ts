@@ -38,4 +38,18 @@ describe("ask the guide", () => {
   test("suggestions are offered in the reader's language", () => {
     expect(suggestions(aspendos, "de").length).toBeGreaterThan(2);
   });
+
+  test("how many lived in a city is not how many its theatre seated", () => {
+    expect(intentsOf("Efes'te kaç kişi yaşıyordu?")).not.toContain("capacity");
+    for (const [q, lang] of [
+      ["Efes'te kaç kişi yaşıyordu?", "tr"],
+      ["Efes'in nüfusu ne kadardı?", "tr"],
+      ["How many people lived in Ephesus?", "en"],
+    ] as const) {
+      const a = answer(efes, q, lang);
+      expect(a.text).toMatch(/200/);
+      expect(a.text).not.toMatch(/21[.,]500|24[.,]000/);
+    }
+    expect(answer(efes, "Tiyatro kaç kişilikti?", "tr").text).toMatch(/21\.500/);
+  });
 });

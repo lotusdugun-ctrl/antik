@@ -26,6 +26,7 @@ export type Answer = {
 };
 
 type Intent =
+  | "population"
   | "capacity"
   | "height"
   | "diameter"
@@ -58,6 +59,29 @@ export function fold(text: string): string {
  * than words ("yuksek" catches yüksek, yüksekliği, yüksekliğinde).
  */
 const CUES: Record<Intent, string[]> = {
+  /*
+   * How many lived in the city — not how many a theatre seated. "Kaç kişi
+   * yaşıyordu" also contains the capacity cue "kaç kişi", so this one wins.
+   */
+  population: [
+    "nufus",
+    "yasiyor",
+    "yasardi",
+    "yasadi",
+    "yasayan",
+    "sakin",
+    "population",
+    "inhabitant",
+    "lived",
+    "live there",
+    "einwohner",
+    "bevolkerung",
+    "lebten",
+    "населен",
+    "жител",
+    "жило",
+    "жили",
+  ],
   capacity: [
     "kac kisi",
     "kisilik",
@@ -184,6 +208,7 @@ const PRIORITY: Intent[] = [
   "fee",
   "hours",
   "unesco",
+  "population",
   "capacity",
   "height",
   "diameter",
@@ -212,8 +237,20 @@ const CUE_PATTERNS = Object.fromEntries(
 
 export function intentsOf(question: string): Intent[] {
   const q = ` ${fold(question)} `;
-  return PRIORITY.filter((intent) => CUE_PATTERNS[intent].some((cue) => cue.test(q)));
+  const found = PRIORITY.filter((intent) => CUE_PATTERNS[intent].some((cue) => cue.test(q)));
+  // A question about who lived there is never answered with a seat count.
+  return found.includes("population")
+    ? found.filter((i) => i !== "capacity" && i !== "who" && i !== "count")
+    : found;
 }
+
+/** Words that make a head count a seat count, folded. */
+const SEATING_WORDS =
+  /(seat|capacity|spectator|theat|kisilik|seyirci|tiyatro|kapasite|zuschauer|sitzpl|theater|зрител|мест|театр)/u;
+
+/** Words a sentence about a city's population uses, folded. */
+const POPULATION_WORDS =
+  /(^|\s)(nufus|sakin|population|inhabitant|resident|home to|einwohner|bevolkerung|heimat|населен|жител)/u;
 
 function fmt(value: number, lang: Lang) {
   return value.toLocaleString(lang === "en" ? "en-US" : lang);
@@ -368,6 +405,21 @@ function overlap(question: string, sentence: string): number {
   return hits / words.size;
 }
 
+/** Every "Did you know?" fact and audio-guide sentence for a site, with where it is from. */
+function sentencesOf(site: Site, lang: Lang): { text: string; source: string }[] {
+  const says = SAYS[lang];
+  const L = (value: Localized) => pick(value, lang);
+  const guide = guideForSite(site.slug);
+  return [
+    ...factsFor(site.slug).map((fact) => ({ text: L(fact), source: says.facts })),
+    ...(guide?.chapters ?? []).flatMap((chapter) =>
+      L(chapter.text)
+        .split(/(?<=[.!?])\s+/)
+        .map((sentence) => ({ text: sentence, source: `${says.guide}: ${L(chapter.title)}` })),
+    ),
+  ];
+}
+
 export function answer(site: Site, question: string, lang: Lang): Answer {
   const says = SAYS[lang];
   const L = (value: Localized) => pick(value, lang);
@@ -375,6 +427,19 @@ export function answer(site: Site, question: string, lang: Lang): Answer {
 
   for (const intent of intents) {
     switch (intent) {
+      case "population": {
+        // Only a sentence that is about people living there, with a number in it.
+        const about = sentencesOf(site, lang).filter((c) => {
+          const f = fold(c.text);
+          if (!/\d/.test(c.text)) return false;
+          if (POPULATION_WORDS.test(f)) return true;
+          // "with over 200,000 people" — a head count, unless it is a seat count.
+          return /\d[\d.,\s]*\s(people|menschen|человек|kisi)/u.test(f) && !SEATING_WORDS.test(f);
+        });
+        about.sort((a, b) => overlap(question, b.text) - overlap(question, a.text));
+        if (about[0]) return { text: about[0].text, source: about[0].source };
+        break;
+      }
       case "capacity":
       case "height":
       case "diameter":
@@ -438,15 +503,7 @@ export function answer(site: Site, question: string, lang: Lang): Answer {
   }
 
   // No intent answered: look for the sentence that best matches the words.
-  const guide = guideForSite(site.slug);
-  const candidates: { text: string; source: string }[] = [
-    ...factsFor(site.slug).map((fact) => ({ text: L(fact), source: says.facts })),
-    ...(guide?.chapters ?? []).flatMap((chapter) =>
-      L(chapter.text)
-        .split(/(?<=[.!?])\s+/)
-        .map((sentence) => ({ text: sentence, source: `${says.guide}: ${L(chapter.title)}` })),
-    ),
-  ];
+  const candidates = sentencesOf(site, lang);
   let best: { text: string; source: string; score: number } | null = null;
   for (const c of candidates) {
     const score = overlap(question, c.text);
