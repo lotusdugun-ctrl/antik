@@ -200,6 +200,20 @@ export type Part =
       thetaLength: number;
     })
   /**
+   * Earth banked up in an arc and falling away smoothly: highest (`height`)
+   * at radius `inner` and down to the ground `reach` further out, steep at
+   * the wall and flattening into the plain (see `bankHeight`).
+   */
+  | (Base & {
+      kind: "bank";
+      at: Vec3;
+      inner: number;
+      reach: number;
+      height: number;
+      thetaStart: number;
+      thetaLength: number;
+    })
+  /**
    * A carved panel: a finely divided surface that the carving's own photograph
    * pushes into relief. Faces +z before `rotY` turns it, and `at` is the
    * bottom centre like everything else.
@@ -290,6 +304,26 @@ export type Part =
       rotY: number;
       sections: LoftSection[];
     });
+
+/**
+ * How high a bank stands `r` metres from its centre (0 beyond its reach). Given
+ * an angle too, the bank also tapers off over the last stretch at each end of
+ * its arc, so it fades into the ground there instead of ending in a cut face.
+ */
+export const bankHeight = (
+  part: { inner: number; reach: number; height: number; thetaStart: number; thetaLength: number },
+  r: number,
+  theta?: number,
+): number => {
+  const t = Math.min(1, Math.max(0, (r - part.inner) / part.reach));
+  let h = part.height * (1 - t) ** 1.6;
+  if (theta !== undefined && part.thetaLength < Math.PI * 2 - 1e-6) {
+    const edge = Math.min(theta - part.thetaStart, part.thetaStart + part.thetaLength - theta);
+    const fade = Math.min(1, Math.max(0, edge / (part.thetaLength * 0.12)));
+    h *= fade * fade * (3 - 2 * fade);
+  }
+  return h;
+};
 
 /** One cross-section of a loft, in metres relative to the part's `at`. */
 export type LoftSection = { c: Vec3; rx: number; ry: number };
@@ -3538,30 +3572,23 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
       ),
     );
   };
-  /** Earth banked against the outer wall, falling away in shallow steps. */
-  const slope = (from: number, height: number, reach: number, start: number, length: number) => {
-    const steps = 40;
-    const out: Part[] = [];
-    for (let k = 0; k < steps; k += 1) {
-      const t = k / steps;
-      // An easing curve: steep at the wall, flattening out into the plain.
-      const h = height * (1 - t) ** 1.6;
-      out.push(
-        scenery(
-          ring(
-            "ground",
-            0,
-            from + reach * t - 0.2,
-            from + reach * (t + 1 / steps),
-            h,
-            start,
-            length,
-          ),
-        ),
-      );
-    }
-    return out;
-  };
+  /**
+   * Earth banked against the outer wall, falling away smoothly. It used to be
+   * forty stacked rings, and from any distance the bank read as a flight of
+   * giant steps.
+   */
+  const slope = (from: number, height: number, reach: number, start: number, length: number) => [
+    scenery<Part>({
+      kind: "bank",
+      material: "ground",
+      at: [0, 0, 0],
+      inner: from - 0.2,
+      reach,
+      height,
+      thetaStart: start,
+      thetaLength: length,
+    }),
+  ];
   if (ch.facade === "arcade") {
     if (ch.ground === "mound") {
       // The mound, and only the top third carried on vaults.
@@ -6117,7 +6144,7 @@ export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
         grow(x - r, y, z - r);
         grow(x + r, y + part.height, z + r);
       }
-    } else if (part.kind === "ring") {
+    } else if (part.kind === "ring" || part.kind === "bank") {
       // A half ring covers half a circle, and saying otherwise put the centre
       // of a theatre 25 m behind its stage.
       const from = part.thetaStart;
@@ -6128,7 +6155,8 @@ export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
         if (angle > from && angle < to) angles.push(angle);
       }
       for (const angle of angles) {
-        for (const r of [part.inner, part.outer]) {
+        const outer = part.kind === "ring" ? part.outer : part.inner + part.reach;
+        for (const r of [part.inner, outer]) {
           const px = x + Math.cos(angle) * r;
           const pz = z + Math.sin(angle) * r;
           grow(px, y, pz);

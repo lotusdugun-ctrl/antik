@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   ANIMAL_SHAPES,
+  bankHeight,
   boundsOf,
   CARVINGS,
   IDENTITIES,
@@ -647,6 +648,25 @@ describe("the six models added in September 2026", () => {
       return sum + 12;
     }, 0);
     expect(triangles).toBeLessThan(170_000);
+  });
+
+  test("theatre banks are smooth slopes, not stacks of earth rings", () => {
+    for (const item of reconstructions) {
+      if (item.model.kind !== "roman-theatre") continue;
+      const parts = partsOf(item);
+      const earthRings = parts.filter(
+        (p) => p.kind === "ring" && p.material === "ground" && p.decor,
+      );
+      expect(earthRings.length).toBeLessThan(10);
+      for (const bank of parts.filter((p) => p.kind === "bank")) {
+        if (bank.kind !== "bank") continue;
+        expect(bankHeight(bank, bank.inner)).toBeCloseTo(bank.height, 5);
+        expect(bankHeight(bank, bank.inner + bank.reach)).toBeCloseTo(0, 6);
+        // It fades into the ground at both ends of its arc.
+        expect(bankHeight(bank, bank.inner, bank.thetaStart)).toBeCloseTo(0, 6);
+        expect(bankHeight(bank, bank.inner, bank.thetaStart + bank.thetaLength)).toBeCloseTo(0, 6);
+      }
+    }
   });
 
   test("the open-ended stadium closes only its north end", () => {

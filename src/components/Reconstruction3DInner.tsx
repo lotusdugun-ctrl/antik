@@ -22,6 +22,7 @@ import {
   type LoftSection,
   type Material,
   type Part,
+  bankHeight,
 } from "@/lib/reconstruction-parts";
 import type { ModelSpec } from "@/lib/reconstructions";
 
@@ -543,6 +544,70 @@ export default function Reconstruction3DInner({
           curveSegments: segments,
         });
         geometry.rotateX(-Math.PI / 2);
+        return geometry;
+      };
+
+      /**
+       * A bank of earth as one smooth skin: a grid over radius and angle whose
+       * height follows `bankHeight`, with the profile closed off at both ends
+       * of the arc. Points are laid out the way a ring's are, (r cos θ, r sin θ).
+       */
+      const bankGeometry = (part: Extract<Part, { kind: "bank" }>) => {
+        const radial = 14;
+        const around = Math.min(
+          96,
+          Math.max(6, Math.ceil((part.thetaLength / (Math.PI * 2)) * 128)),
+        );
+        const positions: number[] = [];
+        const uvs: number[] = [];
+        const indices: number[] = [];
+        const vertex = (r: number, theta: number, y: number) => {
+          const x = Math.cos(theta) * r;
+          const z = Math.sin(theta) * r;
+          positions.push(x, y, z);
+          uvs.push(x, z);
+          return positions.length / 3 - 1;
+        };
+        // Denser near the wall, where the slope bends most.
+        const radiusAt = (i: number) => part.inner + part.reach * (i / radial) ** 1.4;
+        for (let j = 0; j <= around; j += 1) {
+          const theta = part.thetaStart + (part.thetaLength * j) / around;
+          for (let i = 0; i <= radial; i += 1) {
+            const r = radiusAt(i);
+            vertex(r, theta, bankHeight(part, r, theta));
+          }
+        }
+        const row = radial + 1;
+        for (let j = 0; j < around; j += 1) {
+          for (let i = 0; i < radial; i += 1) {
+            const a = j * row + i;
+            const b = a + row;
+            // Wound so the top faces up.
+            indices.push(a, b, a + 1, b, b + 1, a + 1);
+          }
+        }
+        // Each end of the arc: the profile, fanned down to the ground.
+        for (const [theta, flip] of [
+          [part.thetaStart, true],
+          [part.thetaStart + part.thetaLength, false],
+        ] as const) {
+          const top: number[] = [];
+          const foot: number[] = [];
+          for (let i = 0; i <= radial; i += 1) {
+            const r = radiusAt(i);
+            top.push(vertex(r, theta, bankHeight(part, r, theta)));
+            foot.push(vertex(r, theta, 0));
+          }
+          for (let i = 0; i < radial; i += 1) {
+            const quad = [top[i]!, foot[i]!, top[i + 1]!, top[i + 1]!, foot[i]!, foot[i + 1]!];
+            indices.push(...(flip ? quad.reverse() : quad));
+          }
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+        geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+        geometry.setIndex(indices);
+        geometry.computeVertexNormals();
         return geometry;
       };
 
@@ -2367,6 +2432,10 @@ export default function Reconstruction3DInner({
           }
           case "ring": {
             geometry = shapeFor(part);
+            break;
+          }
+          case "bank": {
+            geometry = bankGeometry(part);
             break;
           }
           case "relief": {
