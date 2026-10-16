@@ -1,4 +1,9 @@
+import { inscription } from "@/lib/reconstruction-detail";
 import {
+  bankHeight,
+  boundsOf,
+  partsFor,
+  stadiumLayout as layoutOfStadium,
   theatreLayout,
   horseStatue,
   ornateAltar,
@@ -119,7 +124,25 @@ export type Look = {
   female: boolean;
   beard: boolean;
   headwear?: Headwear;
+  /**
+   * How a woman's hair is dressed when no veil covers it: a knot at the nape,
+   * a braid wound round the head, the Roman "nodus" roll over the brow with a
+   * knot behind, or long hair tied and falling down the back.
+   */
+  hairStyle?: HairStyle;
+  /** Gold earrings and a necklace, for a woman dressed to go out. */
+  jewels?: boolean;
 };
+
+export type HairStyle = "bun" | "crown" | "nodus" | "fall";
+const HAIR_STYLES: HairStyle[] = ["bun", "crown", "nodus", "fall"];
+
+/**
+ * A choice made from colours already rolled, so it costs no extra roll of
+ * the die: every later roll — where people stand, which way they walk —
+ * stays exactly as it was.
+ */
+const choose = (seed: number, n: number) => (((seed * 2654435761) >>> 0) >>> 8) % n;
 
 export type Person = {
   /** Where their feet are, or the seat under them when seated. */
@@ -326,7 +349,7 @@ function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
 
   if (era === "commagene" && role !== "child" && role !== "worker") {
     const priest = role === "priest";
-    return {
+    const look: Look = {
       ...base,
       female: priest ? false : isFemale,
       garment: "persian",
@@ -335,6 +358,13 @@ function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
       beard: !isFemale && rand() < 0.75,
       headwear: priest ? (rand() < 0.5 ? "tiara" : "phrygian") : isFemale ? "veil" : "phrygian",
     };
+    // A Commagenian woman: veiled only now and then, her hair dressed otherwise.
+    if (look.female && !priest && choose(look.main ^ skin, 3) !== 0) {
+      delete look.headwear;
+      look.hairStyle = HAIR_STYLES[choose(look.trim ^ hair, HAIR_STYLES.length)]!;
+      look.jewels = true;
+    }
+    return look;
   }
 
   switch (role) {
@@ -366,6 +396,8 @@ function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
         main: DYE.white,
         trim: pick(rand, [DYE.weld, DYE.purple, DYE.sky]),
         headwear: rand() < 0.5 ? "wreath" : "fillet",
+        hairStyle: HAIR_STYLES[choose(skin ^ hair, HAIR_STYLES.length)]!,
+        jewels: true,
       };
     case "soldier":
       return {
@@ -419,7 +451,13 @@ function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
         main: pick(rand, [DYE.black, DYE.grey, DYE.brown]),
         trim: pick(rand, [DYE.black, DYE.grey]),
         beard: !isFemale && rand() < 0.7,
-        ...(isFemale ? { headwear: "veil" as const } : {}),
+        // Half the women mourners draw the mantle over the head; the rest
+        // wear the hair loose down the back, the other sign of grief.
+        ...(isFemale
+          ? choose(skin ^ hair, 2) === 0
+            ? { headwear: "veil" as const }
+            : { hairStyle: "fall" as const }
+          : {}),
       };
     case "official":
       return {
@@ -433,12 +471,30 @@ function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
       };
     default: {
       if (isFemale) {
+        const garment: Garment = rand() < 0.55 ? "peplos" : "chiton";
+        const main = pick(rand, GREEK_CLOTH);
+        const trim = pick(rand, GREEK_CLOTH);
+        /*
+         * Most women in the street went bareheaded, their hair dressed; a
+         * mantle drawn up over the head was for some — a matron at a rite,
+         * or out in the sun — not the rule.
+         */
+        const veiled = rand() < 0.12;
+        const style = HAIR_STYLES[choose(main ^ (trim << 1) ^ skin, HAIR_STYLES.length)]!;
+        const band = choose(trim ^ hair, 5);
         return {
           ...base,
-          garment: rand() < 0.55 ? "peplos" : "chiton",
-          main: pick(rand, GREEK_CLOTH),
-          trim: pick(rand, GREEK_CLOTH),
-          ...(rand() < 0.55 ? { headwear: "veil" as const } : {}),
+          garment,
+          main,
+          trim,
+          ...(veiled
+            ? { headwear: "veil" as const }
+            : {
+                hairStyle: style,
+                // A ribbon or a fillet in the hair, now and then.
+                ...(band === 0 ? { headwear: "fillet" as const } : {}),
+              }),
+          jewels: choose(main ^ hair, 3) !== 0,
         };
       }
       // A citizen of a Roman city in Asia wore the Greek mantle over a tunic;
@@ -622,6 +678,19 @@ function amphora(at: Vec3, scale = 1): Part[] {
       [0.86 * s, 0.045 * s],
       [0.9 * s, 0.055 * s],
     ]),
+  ];
+}
+
+/**
+ * A small amphora as a seller sets it out: body, shoulder and neck as three
+ * drums. A lofted jar is a thousand triangles, and a stall of them is ten.
+ */
+function smallAmphora(at: Vec3, scale = 1): Part[] {
+  const s = scale;
+  return [
+    cyl("terracotta", at, 0.05 * s, 0.15 * s, 0.32 * s, 8),
+    cyl("terracotta", [at[0], at[1] + 0.32 * s, at[2]], 0.15 * s, 0.05 * s, 0.14 * s, 8),
+    cyl("terracotta", [at[0], at[1] + 0.46 * s, at[2]], 0.04 * s, 0.05 * s, 0.14 * s, 6),
   ];
 }
 
@@ -832,7 +901,8 @@ function tree(at: Vec3, kind: "laurel" | "olive" | "cypress", rand: Rand, scale 
 }
 
 /** A market stall: a table under a striped awning on four posts. */
-function stall(at: Vec3, rotY: number, rand: Rand, goods: "pottery" | "fruit" | "shrines"): Part[] {
+type Goods = "pottery" | "fruit" | "shrines" | "amphorae" | "cloth" | "baskets";
+function stall(at: Vec3, rotY: number, rand: Rand, goods: Goods): Part[] {
   const parts: Part[] = [...table(at, 2.2, 0.9, 0.85, rotY)];
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
@@ -854,7 +924,29 @@ function stall(at: Vec3, rotY: number, rand: Rand, goods: "pottery" | "fruit" | 
   for (let i = 0; i < 6; i += 1) {
     const p = turn([at[0], top, at[2]], rotY, -0.9 + i * 0.36, 0, between(rand, -0.2, 0.2));
     if (goods === "pottery") parts.push(...jar(p, between(rand, 0.28, 0.4)));
-    else if (goods === "shrines") {
+    else if (goods === "amphorae") parts.push(...smallAmphora(p, between(rand, 0.8, 1)));
+    else if (goods === "cloth") {
+      // Bolts of dyed wool and linen, laid across the counter.
+      parts.push(
+        cyl(pick(rand, BOLTS), [p[0], p[1] + 0.09, p[2]], 0.09, 0.09, 0.62, 8, {
+          rotX: Math.PI / 2,
+          rotY: rotY + between(rand, -0.15, 0.15),
+        }),
+      );
+    } else if (goods === "baskets") {
+      // Wicker baskets heaped with what the country brought in.
+      parts.push(cyl("papyrus", p, 0.13, 0.17, 0.16, 9));
+      parts.push(
+        cyl(
+          pick(rand, ["foliage", "paintRed", "paintGold", "terracotta"] as const),
+          [p[0], p[1] + 0.12, p[2]],
+          0.15,
+          0.05,
+          0.09,
+          8,
+        ),
+      );
+    } else if (goods === "shrines") {
       // The little silver shrines of the goddess that Ephesian smiths sold.
       parts.push(box("paintGold", p, [0.16, 0.2, 0.1], rotY));
       parts.push(
@@ -886,6 +978,165 @@ function stall(at: Vec3, rotY: number, rand: Rand, goods: "pottery" | "fruit" | 
     }
   }
   return parts;
+}
+
+/** The dyes a cloth-seller's bolts came in. */
+const BOLTS: Material[] = ["linen", "paintRed", "paintBlue", "fadedRed", "fadedBlue", "paintGold"];
+
+/* ------------------------------------------------------------------ *
+ * Street furniture: what stood where people gathered
+ * ------------------------------------------------------------------ */
+
+/**
+ * A street fountain: a stone basin brimming with water, and behind it the
+ * slab the pipe came through, its bronze spout over the basin. `rotY` turns
+ * the open side (`+z`) to face the street.
+ */
+function fountain(at: Vec3, rotY: number): Part[] {
+  const w = 2.0;
+  const d = 0.9;
+  const h = 0.7;
+  const t = 0.14;
+  const parts: Part[] = [
+    box("marbleWorn", turn(at, rotY, 0, 0, 0), [w, 0.12, d], rotY),
+    box("marbleWorn", turn(at, rotY, 0, 0, d / 2 - t / 2), [w, h, t], rotY),
+    box("marbleWorn", turn(at, rotY, 0, 0, -d / 2 + t / 2), [w, h, t], rotY),
+    box("marbleWorn", turn(at, rotY, -w / 2 + t / 2, 0, 0), [t, h, d - 2 * t], rotY),
+    box("marbleWorn", turn(at, rotY, w / 2 - t / 2, 0, 0), [t, h, d - 2 * t], rotY),
+    box("water", turn(at, rotY, 0, h - 0.12, 0), [w - 2 * t, 0.04, d - 2 * t], rotY),
+    // The slab behind, with a moulded top, and the spout.
+    box("marble", turn(at, rotY, 0, 0, -d / 2 - 0.18), [w + 0.2, 1.9, 0.36], rotY),
+    box("marbleWorn", turn(at, rotY, 0, 1.9, -d / 2 - 0.18), [w + 0.4, 0.14, 0.5], rotY),
+    cyl("bronze", turn(at, rotY, 0, 1.15, -d / 2), 0.045, 0.045, 0.32, 8, {
+      rotX: Math.PI / 2 + 0.25,
+      rotY,
+    }),
+  ];
+  return parts;
+}
+
+/** A stone trough for the animals, full of water. */
+function trough(at: Vec3, rotY: number): Part[] {
+  const w = 1.8;
+  const d = 0.6;
+  const h = 0.55;
+  const t = 0.1;
+  return [
+    box("stone", turn(at, rotY, 0, 0, 0), [w, 0.1, d], rotY),
+    box("stone", turn(at, rotY, 0, 0, d / 2 - t / 2), [w, h, t], rotY),
+    box("stone", turn(at, rotY, 0, 0, -d / 2 + t / 2), [w, h, t], rotY),
+    box("stone", turn(at, rotY, -w / 2 + t / 2, 0, 0), [t, h, d - 2 * t], rotY),
+    box("stone", turn(at, rotY, w / 2 - t / 2, 0, 0), [t, h, d - 2 * t], rotY),
+    box("water", turn(at, rotY, 0, h - 0.1, 0), [w - 2 * t, 0.04, d - 2 * t], rotY),
+  ];
+}
+
+/**
+ * A perirrhanterion: the marble basin on a stand at a sanctuary's entrance,
+ * where everyone going in washed their hands.
+ */
+function lustralBasin(at: Vec3): Part[] {
+  return [
+    cyl("marbleWorn", at, 0.32, 0.28, 0.12, 14),
+    cyl("marble", [at[0], at[1] + 0.12, at[2]], 0.11, 0.09, 0.72, 12),
+    cyl("marble", [at[0], at[1] + 0.84, at[2]], 0.12, 0.6, 0.16, 18),
+    cyl("water", [at[0], at[1] + 0.97, at[2]], 0.52, 0.52, 0.02, 18),
+  ];
+}
+
+/** A two-wheeled cart, its shafts down on the ground, a load of jars on its bed. */
+function cart(at: Vec3, rotY: number, rand: Rand): Part[] {
+  const parts: Part[] = [
+    box("timber", turn(at, rotY, 0, 0.62, 0), [1.3, 0.08, 2.0], rotY),
+    box("timber", turn(at, rotY, -0.62, 0.7, 0), [0.06, 0.28, 2.0], rotY),
+    box("timber", turn(at, rotY, 0.62, 0.7, 0), [0.06, 0.28, 2.0], rotY),
+    box("timber", turn(at, rotY, 0, 0.7, -0.97), [1.3, 0.28, 0.06], rotY),
+  ];
+  for (const side of [-1, 1]) {
+    // The wheels, solid boards with an iron tyre, their axle under the bed.
+    parts.push(
+      cyl("timber", turn(at, rotY, side * 0.72 - 0.05, 0.55, 0.15), 0.55, 0.55, 0.1, 14, {
+        rotX: Math.PI / 2,
+        rotY: rotY + Math.PI / 2,
+      }),
+    );
+    // A shaft, running forward and down to rest on the ground.
+    parts.push(
+      decor({
+        kind: "box",
+        material: "timber",
+        at: turn(at, rotY, side * 0.45, 0.32, 1.3),
+        size: [0.07, 0.07, 1.9],
+        rotY,
+        rotX: 0.33,
+      }),
+    );
+  }
+  for (let i = 0; i < 4; i += 1) {
+    parts.push(
+      ...smallAmphora(
+        turn(at, rotY, (i % 2) * 0.6 - 0.3, 0.7, Math.floor(i / 2) * 0.8 - 0.5),
+        between(rand, 1.2, 1.5),
+      ),
+    );
+  }
+  return parts;
+}
+
+/**
+ * An honorific statue: a moulded base, its inscription — lettering, not
+ * words — and a bronze of a benefactor of the city on top.
+ */
+function honorific(at: Vec3, rotY: number, seed: number, female: boolean): Part[] {
+  const parts: Part[] = [
+    box("marbleWorn", at, [1.1, 0.2, 1.1], rotY),
+    box("marble", [at[0], at[1] + 0.2, at[2]], [0.86, 1.25, 0.86], rotY),
+    box("marbleWorn", [at[0], at[1] + 1.45, at[2]], [1.05, 0.16, 1.05], rotY),
+    ...inscription({
+      at: turn(at, rotY, 0, 0.55, 0.43),
+      rotY,
+      width: 0.66,
+      letter: 0.07,
+      rows: 6,
+      lastLine: 0.5,
+      seed,
+    }).map(decor),
+  ];
+  parts.push(
+    decor({
+      kind: "figure",
+      material: "bronze",
+      at: [at[0], at[1] + 1.61, at[2]],
+      height: 1.95,
+      rotY,
+      identity: female
+        ? {
+            name: "Benefactress",
+            sex: "female",
+            hair: "bun",
+            dress: "himation",
+            gesture: "veil",
+          }
+        : {
+            name: "Benefactor",
+            sex: "male",
+            bearded: true,
+            hair: "short",
+            dress: "himation",
+            left: "scroll",
+          },
+    }),
+  );
+  return parts;
+}
+
+/** A stone bench, a slab on two blocks: what a street or a forecourt offered to sit on. */
+function stoneBench(at: Vec3, length: number, rotY: number): Part[] {
+  return [
+    box("marbleWorn", turn(at, rotY, 0, 0.36, 0), [length, 0.1, 0.48], rotY),
+    box("stone", turn(at, rotY, -length / 2 + 0.25, 0, 0), [0.3, 0.36, 0.42], rotY),
+    box("stone", turn(at, rotY, length / 2 - 0.25, 0, 0), [0.3, 0.36, 0.42], rotY),
+  ];
 }
 
 /** A dressed stone altar — garlands, bolsters, fire-tray — and its fire. */
@@ -1261,12 +1512,13 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
     carry: "scroll",
     role: "official",
   });
+  // Down the hall inside the line of the herms, not through them.
   cast.walk(
     [
-      [-6.6, floor, hallFront + 1.6],
-      [-6.6, floor, hallBack - 1.6],
-      [6.6, floor, hallBack - 1.6],
-      [6.6, floor, hallFront + 1.6],
+      [-5.7, floor, hallFront + 1.6],
+      [-5.7, floor, hallBack - 1.6],
+      [5.7, floor, hallBack - 1.6],
+      [5.7, floor, hallFront + 1.6],
     ],
     { role: "worker", carry: "basket", speed: 0.7 },
   );
@@ -1535,7 +1787,8 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
   const wayLength = 24;
   for (let i = 0; i < 10; i += 1) {
     const x = (i % 2 === 0 ? -1 : 1) * 1.1;
-    const z0 = altarZ - wayLength + (i * wayLength) / 10;
+    // Strung out along the way up to the altar, none of them starting inside it.
+    const z0 = altarZ - wayLength + (i * (wayLength - altarW * 0.7)) / 10;
     cast.walk(
       [
         [x, 0, z0],
@@ -2882,6 +3135,10 @@ const ERA: Record<string, Era> = {
 
 /** The scene for one reconstruction. */
 export function lifeFor(item: Reconstruction): SceneLife {
+  return furnish(item, sceneFor(item));
+}
+
+function sceneFor(item: Reconstruction): SceneLife {
   const era = ERA[item.id] ?? "roman";
   const seed = [...item.id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
   const spec = item.model;
@@ -2905,4 +3162,427 @@ export function lifeFor(item: Reconstruction): SceneLife {
     case "tumulus-sanctuary":
       return tumulusLife(spec, era);
   }
+}
+
+/* ------------------------------------------------------------------ *
+ * The market and the street: furniture where people gathered
+ * ------------------------------------------------------------------ */
+
+type PieceKind =
+  "stall" | "fountain" | "trough" | "bench" | "cart" | "honorific" | "basin" | "torch";
+
+/** One piece of street furniture, wanted at `at`, its front (`+z`) turned by `rotY`. */
+type Piece = { kind: PieceKind; at: Vec3; rotY: number; goods?: Goods };
+
+/**
+ * Each piece's footprint in its own frame — half-widths across and along,
+ * and how far its middle sits from `at` along `z` — including the place a
+ * stallholder stands behind the counter.
+ */
+const FOOTPRINT: Record<PieceKind, { hx: number; hz: number; cz: number }> = {
+  stall: { hx: 1.3, hz: 1.05, cz: -0.25 },
+  fountain: { hx: 1.2, hz: 0.7, cz: -0.22 },
+  trough: { hx: 0.9, hz: 0.3, cz: 0 },
+  bench: { hx: 1.1, hz: 0.25, cz: 0 },
+  cart: { hx: 0.82, hz: 1.65, cz: 0.6 },
+  honorific: { hx: 0.55, hz: 0.55, cz: 0 },
+  basin: { hx: 0.6, hz: 0.6, cz: 0 },
+  torch: { hx: 0.25, hz: 0.25, cz: 0 },
+};
+
+/** Where each scene's crowd gathers: the pieces it would like, in order of want. */
+function marketFor(item: Reconstruction): Piece[] {
+  const spec = item.model;
+  const p = (kind: PieceKind, x: number, z: number, rotY = 0, goods?: Goods): Piece => ({
+    kind,
+    at: [x, 0, z],
+    rotY,
+    ...(goods ? { goods } : {}),
+  });
+  const E = Math.PI / 2;
+  switch (spec.kind) {
+    case "roman-facade": {
+      // The square before the library: the city's market came up to its steps.
+      const sf = -spec.steps * 0.44;
+      return [
+        p("stall", -15.2, sf - 3.9, E, "amphorae"),
+        p("stall", 15.2, sf - 3.9, -E, "cloth"),
+        p("stall", -15.2, sf - 6.7, E, "baskets"),
+        p("stall", 15.2, sf - 6.7, -E, "amphorae"),
+        p("fountain", 0, sf - 11.6, 0),
+        p("honorific", -15, sf + 0.6, E),
+        p("honorific", 15, sf + 0.6, -E),
+        p("bench", -6, sf - 12.2, 0),
+        p("bench", 6, sf - 12.2, 0),
+        p("torch", -14, sf - 2.2),
+        p("torch", 14, sf - 2.2),
+      ];
+    }
+    case "ionic-dipteros": {
+      // The forecourt: basins at the way in, statues along the sacred way,
+      // and the sellers of offerings by the road.
+      const front = -spec.crepidomaLength / 2;
+      const altarZ = front - Math.min(17, spec.crepidomaWidth * 0.3);
+      const side = spec.crepidomaWidth / 2;
+      return [
+        p("basin", -6.5, front - 3),
+        p("basin", 6.5, front - 3),
+        p("honorific", -9.5, altarZ + 4, E),
+        p("honorific", 9.5, altarZ + 4, -E),
+        p("honorific", -9.5, altarZ - 6, E),
+        p("honorific", 9.5, altarZ - 6, -E),
+        p("stall", -14, altarZ - 3, E, "baskets"),
+        p("stall", 14, altarZ - 3, -E, "amphorae"),
+        p("bench", -(side + 3), front + 12, E),
+        p("bench", side + 3, front + 12, -E),
+        p("cart", 19, altarZ - 4, -0.3),
+        p("trough", 21.5, altarZ + 1.5, -0.3),
+      ];
+    }
+    case "great-altar": {
+      const foot = -spec.baseDepth / 2 - spec.steps * 0.55;
+      const edge = spec.baseWidth / 2;
+      return [
+        p("honorific", -(edge + 3.5), foot - 3, 0.3),
+        p("honorific", edge + 3.5, foot - 3, -0.3),
+        p("basin", -(edge + 1.2), foot - 1.6),
+        p("basin", edge + 1.2, foot - 1.6),
+        p("bench", -(edge + 4.2), foot + 6, E),
+        p("bench", edge + 4.2, foot + 6, -E),
+        p("stall", -(edge + 3), foot - 6, 0.4, "amphorae"),
+        p("fountain", edge + 3, foot - 6, -0.4),
+      ];
+    }
+    case "roman-theatre": {
+      // At the side entrances, where the audience came in from the town.
+      const L = theatreLayout(spec);
+      const R = L.outerRadius + 1.4;
+      const pieces: Piece[] = [];
+      for (const s of [-1, 1]) {
+        const toward = s > 0 ? -E : E;
+        pieces.push(
+          p("stall", s * (R + 6), -4.5, toward, s > 0 ? "baskets" : "amphorae"),
+          p("fountain", s * (R + 6.5), L.wallZ - 7, toward),
+          p("honorific", s * (R + 2.8), 2.5, toward),
+          p("torch", s * (L.stageWidth / 2 + 1.2), -1),
+          p("bench", s * (R + 3), 8, toward),
+        );
+      }
+      pieces.push(p("cart", R + 10, L.wallZ - 12, 0.3), p("trough", R + 11.5, L.wallZ - 7.5, 0.3));
+      const behind = L.wallZ - 9;
+      // And behind the stage building, where its own doors let out.
+      pieces.push(
+        p("stall", -12, behind - 4, Math.PI, "amphorae"),
+        p("fountain", 9, behind - 4.5, Math.PI),
+        p("honorific", -4, behind - 3, Math.PI),
+        p("bench", 3.5, behind - 3.2, Math.PI),
+      );
+      if (L.character.annex === "harbour-street") {
+        pieces.push(
+          p("stall", -3.4, behind - 14, E, "cloth"),
+          p("stall", 3.4, behind - 26, -E, "amphorae"),
+          p("fountain", -3.6, behind - 34, E),
+          p("honorific", 3.8, behind - 8, -E),
+        );
+      } else if (L.character.annex === "agora") {
+        const cz = behind - 38;
+        pieces.push(
+          p("stall", -12, cz + 9, E, "cloth"),
+          p("stall", 12, cz + 9, -E, "baskets"),
+          p("stall", -12, cz - 6, E, "amphorae"),
+          p("fountain", 0, cz + 16, 0),
+          p("honorific", -7, cz + 22, 0),
+          p("honorific", 7, cz + 22, 0),
+        );
+      }
+      return pieces;
+    }
+    case "stadium": {
+      const L = layoutOfStadium(spec);
+      const outer = L.halfWidth + 1.2;
+      if (spec.vaults) {
+        const gz = -L.endCentre;
+        return [
+          p("honorific", -(L.arenaHalf + 1.6), gz - 2.6, Math.PI),
+          p("honorific", L.arenaHalf + 1.6, gz - 2.6, Math.PI),
+          p("fountain", -(L.arenaHalf + 5), gz - 6, Math.PI),
+          p("stall", L.arenaHalf + 6, gz - 8, -2.6, "baskets"),
+          p("torch", -L.arenaHalf / 3 - 0.9, gz - 1.6),
+          p("torch", L.arenaHalf / 3 + 0.9, gz - 1.6),
+          p("trough", outer + 7.6, -L.endCentre * 0.45, -E),
+          p("cart", outer + 8.4, L.endCentre * 0.25, 0.2),
+          p("bench", outer + 7.4, L.endCentre * 0.6, -E),
+        ];
+      }
+      // Outside the long side away from the city wall, where the crowd came in.
+      const x = outer + (spec.bow ?? 0) + 4.5;
+      return [
+        p("stall", x, -18, -E, "baskets"),
+        p("stall", x, 16, -E, "amphorae"),
+        p("fountain", x + 0.6, -2, -E),
+        p("honorific", x - 1.5, -36, -E),
+        p("honorific", x - 1.5, 34, -E),
+        p("cart", x + 4, 26, Math.PI + 0.2),
+        p("trough", x + 4.2, 6, -E),
+        p("bench", x - 0.5, -26, -E),
+      ];
+    }
+    case "peristyle-house": {
+      // The street below the house: a fountain, a benefactor, a seat.
+      const halfD = spec.courtDepth / 2;
+      const shell = spec.courtWidth / 2 + 0.45 + spec.roomDepth;
+      return [
+        p("fountain", shell - 1.6, -halfD - 4.6, Math.PI),
+        p("honorific", -(shell - 1.2), -halfD - 4.4, Math.PI),
+        p("bench", -(shell - 3.6), -halfD - 5.2, Math.PI),
+        p("stall", 1.5, -halfD - 7.6, Math.PI, "cloth"),
+      ];
+    }
+    case "mausoleum": {
+      const hw = spec.baseWidth / 2 + 4;
+      const hd = spec.baseDepth / 2 + 4;
+      return [
+        p("honorific", -(hw - 4), -hd - 2.2, Math.PI),
+        p("honorific", hw - 4, -hd - 2.2, Math.PI),
+        p("basin", -(hw + 2.2), -hd + 4),
+        p("bench", hw + 3, 2, -E),
+        p("bench", -(hw + 3), 2, E),
+      ];
+    }
+    default:
+      return [];
+  }
+}
+
+/** A plan rectangle, turned: the ground a piece covers. */
+type Rect = { x: number; z: number; hx: number; hz: number; rotY: number };
+
+const rectOf = (piece: Piece, pad = 0): Rect => {
+  const f = FOOTPRINT[piece.kind];
+  const c = turn(piece.at, piece.rotY, 0, 0, f.cz);
+  return { x: c[0], z: c[2], hx: f.hx + pad, hz: f.hz + pad, rotY: piece.rotY };
+};
+
+const inRect = (r: Rect, x: number, z: number) => {
+  const dx = x - r.x;
+  const dz = z - r.z;
+  const u = dx * Math.cos(r.rotY) - dz * Math.sin(r.rotY);
+  const v = dx * Math.sin(r.rotY) + dz * Math.cos(r.rotY);
+  return Math.abs(u) <= r.hx && Math.abs(v) <= r.hz;
+};
+
+/** Points a quarter metre apart over a rectangle, edges included. */
+function samplesOf(r: Rect): [number, number][] {
+  const out: [number, number][] = [];
+  const nx = Math.max(1, Math.ceil((r.hx * 2) / 0.25));
+  const nz = Math.max(1, Math.ceil((r.hz * 2) / 0.25));
+  for (let i = 0; i <= nx; i += 1) {
+    for (let k = 0; k <= nz; k += 1) {
+      const u = -r.hx + (2 * r.hx * i) / nx;
+      const v = -r.hz + (2 * r.hz * k) / nz;
+      out.push([
+        r.x + u * Math.cos(r.rotY) + v * Math.sin(r.rotY),
+        r.z - u * Math.sin(r.rotY) + v * Math.cos(r.rotY),
+      ]);
+    }
+  }
+  return out;
+}
+
+/** Whether a part occupies the point (x, y, z) — a solid, or water underfoot. */
+function occupies(part: Part, x: number, y: number, z: number): boolean {
+  if (part.material === "grass" || part.material === "human") return false;
+  if (part.kind === "box" || part.kind === "prism") {
+    const dx = x - part.at[0];
+    const dz = z - part.at[2];
+    const u = dx * Math.cos(part.rotY) - dz * Math.sin(part.rotY);
+    const v = dx * Math.sin(part.rotY) + dz * Math.cos(part.rotY);
+    const tilt =
+      part.kind === "box" && part.rotX ? part.size[2] * Math.abs(Math.sin(part.rotX)) : 0;
+    const top = part.at[1] + part.size[1] + tilt;
+    const bottom = part.material === "water" ? part.at[1] - 2 : part.at[1] - tilt;
+    return (
+      Math.abs(u) < part.size[0] / 2 &&
+      Math.abs(v) < part.size[2] / 2 + tilt &&
+      y > bottom &&
+      y < top
+    );
+  }
+  if (part.kind === "cylinder") {
+    const r = Math.max(part.radiusBottom, part.radiusTop);
+    if (part.rotX) {
+      const b = boundsOf([{ ...part, decor: false }]);
+      return (
+        x > b.min[0] && x < b.max[0] && z > b.min[2] && z < b.max[2] && y > b.min[1] && y < b.max[1]
+      );
+    }
+    return (
+      Math.hypot(x - part.at[0], z - part.at[2]) < r &&
+      y > part.at[1] &&
+      y < part.at[1] + part.height
+    );
+  }
+  if (part.kind === "ring" || part.kind === "bank") {
+    const dx = x - part.at[0];
+    const dz = z - part.at[2];
+    const r = Math.hypot(dx, dz);
+    const theta = Math.atan2(dz, dx);
+    const turnTo = (((theta - part.thetaStart) % TAU) + TAU) % TAU;
+    if (turnTo > part.thetaLength) return false;
+    if (part.kind === "bank") {
+      return y < part.at[1] + bankHeight(part, r, part.thetaStart + turnTo) - 0.05;
+    }
+    return r > part.inner && r < part.outer && y > part.at[1] && y < part.at[1] + part.height;
+  }
+  if (
+    part.kind === "relief" ||
+    part.kind === "carving" ||
+    part.kind === "loft" ||
+    part.kind === "figure"
+  ) {
+    const b = boundsOf([{ ...part, decor: false }]);
+    return (
+      x > b.min[0] && x < b.max[0] && z > b.min[2] && z < b.max[2] && y > b.min[1] && y < b.max[1]
+    );
+  }
+  return false;
+}
+
+/**
+ * Sets the scene's street furniture down where it fits: on open ground the
+ * landscape leaves flat, clear of the building and of everything else in
+ * the scene, and out of the way of everyone who walks — a piece in the path
+ * of a walker is left out rather than walked through. Built from its own
+ * random source, so the rest of the scene is exactly what it was.
+ */
+function furnish(item: Reconstruction, life: SceneLife): SceneLife {
+  const wanted = marketFor(item);
+  if (wanted.length === 0) return life;
+  const era = life.era;
+  const rand = seeded([...item.id].reduce((h, c) => (h * 33 + c.charCodeAt(0)) >>> 0, 911));
+  const cast = new Cast(rand, era);
+  const parts = partsFor(item.model);
+  const bounds = boundsOf(parts);
+  const centre = [(bounds.min[0] + bounds.max[0]) / 2, (bounds.min[2] + bounds.max[2]) / 2];
+  // The ground stays flat out to here (see `landscape.ts`).
+  const flat =
+    Math.hypot((bounds.max[0] - bounds.min[0]) / 2, (bounds.max[2] - bounds.min[2]) / 2) * 1.25;
+  // Where people and animals go, a quarter metre at a time, and where they stand.
+  const trodden: [number, number][] = [];
+  const tread = (route: Vec3[]) => {
+    const loop = route.length > 2 ? [...route, route[0]!] : route;
+    for (let i = 0; i < loop.length; i += 1) {
+      const a = loop[i]!;
+      trodden.push([a[0], a[2]]);
+      const b = loop[i + 1];
+      if (!b) continue;
+      const n = Math.ceil(Math.hypot(b[0] - a[0], b[2] - a[2]) / 0.25);
+      for (let k = 1; k < n; k += 1) {
+        trodden.push([a[0] + ((b[0] - a[0]) * k) / n, a[2] + ((b[2] - a[2]) * k) / n]);
+      }
+    }
+  };
+  for (const person of life.people) tread([person.at, ...(person.route ?? [])]);
+  for (const a of life.animals) tread([a.at, ...(a.route ?? [])]);
+  for (const c of life.chariots) tread(c.route);
+  const solid = [...parts, ...life.props];
+  const near = (r: Rect) => {
+    const reach = Math.hypot(r.hx, r.hz) + 1;
+    return solid.filter((part) => {
+      const b = boundsOf([{ ...part, decor: false }]);
+      return (
+        b.min[0] < r.x + reach &&
+        b.max[0] > r.x - reach &&
+        b.min[2] < r.z + reach &&
+        b.max[2] > r.z - reach
+      );
+    });
+  };
+  const props: Part[] = [];
+  const flames: Flame[] = [];
+  const fits = (piece: Piece) => {
+    const body = rectOf(piece);
+    const corners = samplesOf(body);
+    if (corners.some(([x, z]) => Math.hypot(x - centre[0]!, z - centre[1]!) > flat)) return false;
+    const walked = rectOf(piece, 0.45);
+    if (trodden.some(([x, z]) => inRect(walked, x, z))) return false;
+    const around = near(body);
+    return !corners.some(([x, z]) =>
+      [0.12, 0.9, 1.9].some((y) => around.some((part) => occupies(part, x, y, z))),
+    );
+  };
+  /*
+   * Each piece where it was asked for, or failing that a step or two to one
+   * side: the scatter of rock round a site is random, and a piece is moved
+   * off a boulder rather than dropped.
+   */
+  const NUDGES: [number, number][] = [
+    [0, 0],
+    [1.5, 0],
+    [-1.5, 0],
+    [0, 1.5],
+    [0, -1.5],
+    [2.5, 2.5],
+    [-2.5, 2.5],
+    [2.5, -2.5],
+    [-2.5, -2.5],
+  ];
+  // Statues are the dearest thing in a scene to draw: two to a square.
+  let statues = 0;
+  for (const asked of wanted) {
+    if (asked.kind === "honorific" && statues >= 2) continue;
+    const piece = NUDGES.map(([dx, dz]): Piece => ({
+      ...asked,
+      at: [asked.at[0] + dx, asked.at[1], asked.at[2] + dz],
+    })).find((option) => fits(option));
+    if (!piece) continue;
+    const { at, rotY } = piece;
+    let made: Part[];
+    switch (piece.kind) {
+      case "stall":
+        made = stall(at, rotY, rand, piece.goods ?? "amphorae");
+        cast.add({
+          at: turn(at, rotY, between(rand, -0.4, 0.4), 0, -0.85),
+          rotY,
+          action: "talk",
+          role: "worker",
+        });
+        break;
+      case "fountain":
+        made = fountain(at, rotY);
+        break;
+      case "trough":
+        made = trough(at, rotY);
+        break;
+      case "bench":
+        made = stoneBench(at, 2.2, rotY);
+        break;
+      case "cart":
+        made = cart(at, rotY, rand);
+        break;
+      case "honorific":
+        statues += 1;
+        made = honorific(at, rotY, Math.round(at[0] * 13 + at[2] * 7), rand() < 0.35);
+        break;
+      case "basin":
+        made = lustralBasin(at);
+        break;
+      case "torch": {
+        const torch = torchStand(at, 1.9);
+        made = torch.parts;
+        flames.push({ at: torch.flame, size: 0.3 });
+        break;
+      }
+    }
+    props.push(...made);
+    solid.push(...made);
+    // What is set down is in the way of what comes after it, and so is its keeper.
+    for (const person of cast.people.slice(-1)) trodden.push([person.at[0], person.at[2]]);
+  }
+  return {
+    ...life,
+    people: [...life.people, ...cast.people],
+    props: [...life.props, ...props],
+    flames: [...life.flames, ...flames],
+  };
 }

@@ -232,6 +232,11 @@ export type StadiumSpec = {
   arenaEnd?: boolean;
   /** Built into the city's fortification wall along one long side. */
   cityWall?: boolean;
+  /**
+   * Seats with names cut in their fronts — the places reserved for guilds,
+   * families and city tribes, as hundreds of the Aphrodisias seats are.
+   */
+  inscribedSeats?: boolean;
   /** Set at the foot of a hill that rises behind one long side. */
   hillside?: boolean;
 };
@@ -427,8 +432,8 @@ export const reconstructions: Reconstruction[] = [
       },
     ],
     uncertainty: l(
-      "Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni — dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen/yay alınlıklar — 1970-78'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır; iki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise orantıdır, ölçü değil. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir ama Viyana'daki özgün heykellerin kopyası değildir; duruşları ve giysileri yorumdur. Avludaki bronz atlılar da Roma'daki Marcus Aurelius heykelinin oranlarıyla kurulmuştur. Başlıkların akant yaprakları ve volütleri modellenmiştir ama taştaki işçiliğin kopyası değildir; frizlerdeki yazıtlar ve bezeme modelde yoktur. **Renkler de ölçü değil, yorumdur:** Roma mermer cepheleri boyalıydı ve bugün Efes'te boya izi kalmamıştır — modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar, altın kafes pencereler ve merdivenin iki yanındaki bronz atlı heykeller yayımlanmış bir rekonstrüksiyon resminden alınmıştır, kazıdan değil. Salonun tavanı da yoktur: yapının iki katlı mı üç katlı mı olduğu tartışmalıdır.",
-      "The façade's width and height are measured. The rhythm of the front — four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those — is read off photographs of the front re-erected in 1970-78; how the two orders divide the 16 metres, the column diameters and the poses of the statues are proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, but they are not copies of the originals in Vienna; their poses and clothing are interpretation. The bronze horsemen in the court are likewise built on the proportions of the Marcus Aurelius in Rome. The acanthus and volutes of the capitals are modelled but are not a copy of the carving on the stone, and the inscriptions and the ornament of the friezes are absent. **The colour is interpretation, not measurement:** Roman marble fronts were painted, and no pigment survives at Ephesus — the red panels, the blue and gilded mouldings, the timber doors, the gilded window lattices and the bronze horsemen flanking the stairs are taken from a published reconstruction painting, not from the excavation. So is the hall's ceiling absent: whether the building had two storeys or three is disputed.",
+      "Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni — dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen/yay alınlıklar — 1970-78'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır; iki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise orantıdır, ölçü değil. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir ama Viyana'daki özgün heykellerin kopyası değildir; duruşları ve giysileri yorumdur. Avludaki bronz atlılar da Roma'daki Marcus Aurelius heykelinin oranlarıyla kurulmuştur. Başlıkların akant yaprakları ve volütleri modellenmiştir ama taştaki işçiliğin kopyası değildir; arşitravlardaki ve kaidelerdeki yazıtlar yalnızca harf biçimli kesik dizileri olarak gösterilmiştir, metinleri değil; frizlerin bezemesi modelde yoktur. **Renkler de ölçü değil, yorumdur:** Roma mermer cepheleri boyalıydı ve bugün Efes'te boya izi kalmamıştır — modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar, altın kafes pencereler ve merdivenin iki yanındaki bronz atlı heykeller yayımlanmış bir rekonstrüksiyon resminden alınmıştır, kazıdan değil. Salonun tavanı da yoktur: yapının iki katlı mı üç katlı mı olduğu tartışmalıdır.",
+      "The façade's width and height are measured. The rhythm of the front — four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those — is read off photographs of the front re-erected in 1970-78; how the two orders divide the 16 metres, the column diameters and the poses of the statues are proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, but they are not copies of the originals in Vienna; their poses and clothing are interpretation. The bronze horsemen in the court are likewise built on the proportions of the Marcus Aurelius in Rome. The acanthus and volutes of the capitals are modelled but are not a copy of the carving on the stone, the inscriptions on the architraves and bases are shown only as rows of letter-shaped cuts, not as their text, and the ornament of the friezes is absent. **The colour is interpretation, not measurement:** Roman marble fronts were painted, and no pigment survives at Ephesus — the red panels, the blue and gilded mouldings, the timber doors, the gilded window lattices and the bronze horsemen flanking the stairs are taken from a published reconstruction painting, not from the excavation. So is the hall's ceiling absent: whether the building had two storeys or three is disputed.",
     ),
     hotspots: [
       spot(
@@ -1164,6 +1169,7 @@ export const reconstructions: Reconstruction[] = [
       bow: 4.5,
       arenaEnd: true,
       cityWall: true,
+      inscribedSeats: true,
     },
   },
   {

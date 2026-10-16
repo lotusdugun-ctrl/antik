@@ -1334,6 +1334,10 @@ const dict = {
     tr: "İnsanlar, ateşler ve eşyalar dönemin giyim ve kullanımına göre canlandırılmış bir sahnedir; ölçülmüş yapının parçası değildir.",
     en: "The people, fires and furnishings are an illustration based on the dress and customs of the period, not part of the measured building.",
   },
+  recon_detail_note: {
+    tr: "Yazıtlar harf biçimli kesik dizileri olarak gösterilir; metinleri yeniden üretilmemiştir. Çatı kiremitleri, mermerdeki soluk boya izleri ve pazar tezgâhları da ölçü değil, dönemin yapı ve renk alışkanlıklarından çıkarılmış yorumdur.",
+    en: "Inscriptions are shown as rows of letter-shaped cuts; their texts are not reproduced. The roof tiles, the faded traces of paint on the marble and the market stalls are likewise interpretation drawn from the building and painting habits of the period, not measurement.",
+  },
   recon_face_credit: {
     tr: "Heykel yüzlerinin temeli gerçek bir insan başı taramasıdır: “Infinite, 3D Head Scan”, Lee Perry-Smith (ir-ltd.net), CC BY 3.0. Her heykel bu yüzü kendine göre yeniden biçimlendirir.",
     en: "The statues' faces are built on a real head scan: “Infinite, 3D Head Scan” by Lee Perry-Smith (ir-ltd.net), CC BY 3.0. Each statue reshapes it into its own face.",

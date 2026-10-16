@@ -190,6 +190,11 @@ function ReconstructionPage() {
             <p className="mt-2 text-sm leading-relaxed text-secondary-foreground">
               {L(item.uncertainty)}
             </p>
+            {item.model.kind !== "neolithic-enclosure" && (
+              <p className="mt-2 text-sm leading-relaxed text-secondary-foreground">
+                {t("recon_detail_note")}
+              </p>
+            )}
           </section>
 
           <section className="rounded-2xl surface-panel p-5">

@@ -267,6 +267,12 @@ const MATERIALS: Record<Material, Palette> = {
   foliage: { color: 0x56683a, roughness: 0.9, metalness: 0 },
   papyrus: { color: 0xd9c591, roughness: 0.8, metalness: 0 },
   hide: { color: 0x8a6a48, roughness: 0.95, metalness: 0 },
+  // Letters cut in the stone: darker where the cut holds dirt, a ghost of red.
+  lettering: { color: 0x8a7766, roughness: 0.92, metalness: 0 },
+  letteringDark: { color: 0x4f453b, roughness: 0.95, metalness: 0 },
+  // Paint as it survives: a stain of red ochre, a grey ghost of Egyptian blue.
+  fadedRed: { color: 0xb88672, roughness: 0.85, metalness: 0 },
+  fadedBlue: { color: 0x8c9fae, roughness: 0.85, metalness: 0 },
 };
 
 /*
@@ -2365,7 +2371,16 @@ export default function Reconstruction3DInner({
         switch (part.kind) {
           case "box": {
             const [w, h, d] = part.size;
-            if (part.weather) {
+            if (part.material === "lettering" || part.material === "letteringDark") {
+              /*
+               * A stroke of a letter shows only its face: a millimetre proud
+               * of the stone, its sides are never seen, and a box's twelve
+               * triangles for every stroke made lettering the costliest
+               * thing on a façade. Two triangles, on the front.
+               */
+              geometry = new THREE.PlaneGeometry(w, h);
+              geometry.translate(0, h / 2, d / 2);
+            } else if (part.weather) {
               /*
                * A weathered block: divided about every 12 cm and then pushed
                * about by noise, so its faces bow, its edges chip and it stops
@@ -2383,6 +2398,7 @@ export default function Reconstruction3DInner({
               geometry = new THREE.BoxGeometry(w, h, d);
             }
             geometry.translate(0, h / 2, 0);
+            if (part.rotX) geometry.rotateX(part.rotX);
             if (part.rotY) geometry.rotateY(part.rotY);
             break;
           }
@@ -2939,6 +2955,8 @@ export default function Reconstruction3DInner({
             "bronze",
             "foliage",
             "linen",
+            "lettering",
+            "letteringDark",
           ].includes(name);
           const painted = masonry || list.some((geometry) => geometry.getAttribute("color"));
           if (painted) {
@@ -2991,7 +3009,18 @@ export default function Reconstruction3DInner({
            * a wall. Two faces in one plane fight over every pixel and shimmer
            * as the camera moves, so these are drawn a hair in front.
            */
-          const DECALS = ["paintRed", "paintBlue", "paintGold", "shadow", "stoneDark", "timber"];
+          const DECALS = [
+            "paintRed",
+            "paintBlue",
+            "paintGold",
+            "shadow",
+            "stoneDark",
+            "timber",
+            "lettering",
+            "letteringDark",
+            "fadedRed",
+            "fadedBlue",
+          ];
           if (DECALS.includes(name)) {
             material.polygonOffset = true;
             material.polygonOffsetFactor = -1;
@@ -4605,6 +4634,31 @@ export default function Reconstruction3DInner({
           // Where the camera is and what it is aimed at, so a test can wait
           // for a flight to land however slowly the frames come.
           pose: () => [...camera.position.toArray(), ...controls.target.toArray()],
+          // Points the orbit camera from one spot at another, for close shots.
+          aim: (from: [number, number, number], to: [number, number, number]) => {
+            flight = null;
+            camera.position.set(...from);
+            controls.target.set(...to);
+            controls.update();
+          },
+          // Triangles drawn per top-level group: the building, its life, the land.
+          triangles: () => {
+            const tally: Record<string, number> = {};
+            for (const child of scene.children) {
+              const key = child.name || ((child as THREE_NS.Mesh).isMesh ? "building" : "other");
+              child.traverse((object) => {
+                const mesh = object as THREE_NS.Mesh;
+                if (!mesh.isMesh || !mesh.geometry) return;
+                const index = mesh.geometry.index;
+                const position = mesh.geometry.attributes["position"];
+                const count = (index ? index.count : (position?.count ?? 0)) / 3;
+                const instanced = mesh as unknown as THREE_NS.InstancedMesh;
+                tally[key] =
+                  (tally[key] ?? 0) + count * (instanced.isInstancedMesh ? instanced.count : 1);
+              });
+            }
+            return tally;
+          },
           shot: () => {
             renderer.render(scene, camera);
             return renderer.domElement.toDataURL("image/png");

@@ -14,6 +14,9 @@ import type {
 
 type Vec3Tuple = [number, number, number];
 
+/** Gold for earrings and necklaces. */
+const GOLD = 0xc9a43c;
+
 type ThreeModule = typeof import("three");
 
 /**
@@ -545,8 +548,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         ),
       );
       if (female) {
-        if (look.headwear !== "veil")
-          out.push(paint(sphere(0.032, [0, 0.95, -0.065], [1, 1, 1], 8, 7), look.hair));
+        if (look.headwear !== "veil") out.push(...hairdo(look));
         else
           out.push(
             paint(
@@ -567,6 +569,19 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     }
     const hw = headwear(look.headwear, look);
     out.push(...hw);
+    if (female && look.jewels && !masked) {
+      // Gold drops at the ears and a thin collar of beads at the neck.
+      for (const side of [-1, 1])
+        out.push(paint(sphere(0.009, [side * 0.058, 0.9, 0.004], [1, 1.4, 1], 6, 5), GOLD));
+      out.push(
+        paint(
+          new THREE.TorusGeometry(0.04, 0.0055, 5, 16)
+            .rotateX(Math.PI / 2 - 0.25)
+            .translate(0, 0.835, 0.012),
+          GOLD,
+        ),
+      );
+    }
 
     /* Things carried on the body rather than in a hand. */
     const items = (c: Carry | undefined) => {
@@ -730,6 +745,48 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     g.scale(s, s, s);
     g.translate(...at);
     return [paint(g, 0xb06a44)];
+  };
+
+  /** A woman's dressed hair, as `look.hairStyle` says; a knot at the nape by default. */
+  const hairdo = (look: Look) => {
+    const out: THREE_NS.BufferGeometry[] = [];
+    switch (look.hairStyle) {
+      case "crown":
+        // A braid wound round the head above the brow.
+        out.push(
+          paint(
+            new THREE.TorusGeometry(0.058, 0.014, 6, 20)
+              .rotateX(Math.PI / 2 - 0.18)
+              .translate(0, 0.962, -0.008),
+            look.hair,
+          ),
+        );
+        break;
+      case "nodus":
+        // The roll of hair over the forehead, and the knot behind.
+        out.push(paint(sphere(0.022, [0, 0.99, 0.045], [1.2, 0.9, 0.9], 8, 6), look.hair));
+        out.push(paint(sphere(0.028, [0, 0.965, -0.066], [1, 0.9, 1], 8, 7), look.hair));
+        break;
+      case "fall":
+        // Tied at the nape and falling down the back.
+        out.push(
+          paint(
+            stack(
+              [
+                { y: 0.79, z: -0.05, rx: 0.03, rz: 0.015 },
+                { y: 0.86, z: -0.055, rx: 0.04, rz: 0.02 },
+                { y: 0.92, z: -0.058, rx: 0.045, rz: 0.025 },
+              ],
+              8,
+            ),
+            look.hair,
+          ),
+        );
+        break;
+      default:
+        out.push(paint(sphere(0.032, [0, 0.95, -0.065], [1, 1, 1], 8, 7), look.hair));
+    }
+    return out;
   };
 
   const headwear = (kind: Headwear | undefined, look: Look) => {

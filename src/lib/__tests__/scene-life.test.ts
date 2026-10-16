@@ -133,6 +133,10 @@ const NOT_SOLID = new Set([
   "paintRed",
   "paintBlue",
   "paintGold",
+  "fadedRed",
+  "fadedBlue",
+  "lettering",
+  "letteringDark",
   "human",
   "water",
   "ground",
@@ -281,5 +285,24 @@ describe("where people go", () => {
       }
     }
     expect(wrong).toEqual([]);
+  });
+});
+
+describe("how women are dressed", () => {
+  test("most women go bareheaded, their hair dressed in more than one way", () => {
+    let women = 0;
+    let veiled = 0;
+    const styles = new Set<string>();
+    for (const item of reconstructions) {
+      for (const person of lifeFor(item).people) {
+        if (!person.look.female) continue;
+        women += 1;
+        if (person.look.headwear === "veil") veiled += 1;
+        if (person.look.hairStyle) styles.add(person.look.hairStyle);
+      }
+    }
+    expect(women).toBeGreaterThan(50);
+    expect(veiled / women).toBeLessThan(0.2);
+    expect(styles.size).toBeGreaterThanOrEqual(3);
   });
 });
