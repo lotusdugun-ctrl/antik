@@ -1,4 +1,113 @@
 {
  "version": 1,
- "clips": {}
+ "clips": {
+  "actor-oedipus-1": {
+   "file": "actor-oedipus-1.mp3",
+   "text": "Ὦ τέκνα, Κάδμου τοῦ πάλαι νέα τροφή, τίνας ποθ᾽ ἕδρας τάσδε μοι θοάζετε ἱκτηρίοις κλάδοισιν ἐξεστεμμένοι;"
+  },
+  "actor-oedipus-2": {
+   "file": "actor-oedipus-2.mp3",
+   "text": "Πόλις δ᾽ ὁμοῦ μὲν θυμιαμάτων γέμει, ὁμοῦ δὲ παιάνων τε καὶ στεναγμάτων."
+  },
+  "actor-oedipus-3": {
+   "file": "actor-oedipus-3.mp3",
+   "text": "Ἁγὼ δικαιῶν μὴ παρ᾽ ἀγγέλων, τέκνα, ἄλλων ἀκούειν αὐτὸς ὧδ᾽ ἐλήλυθα, ὁ πᾶσι κλεινὸς Οἰδίπους καλούμενος."
+  },
+  "actor-frogs-1": {
+   "file": "actor-frogs-1.mp3",
+   "text": "Εἴπω τι τῶν εἰωθότων, ὦ δέσποτα, ἐφ᾽ οἷς ἀεὶ γελῶσιν οἱ θεώμενοι;"
+  },
+  "actor-frogs-2": {
+   "file": "actor-frogs-2.mp3",
+   "text": "Νὴ τὸν Δί᾽, ὅ τι βούλει γε, πλὴν «πιέζομαι». Τοῦτο δὲ φύλαξαι· πάνυ γάρ ἐστ᾽ ἤδη χολή."
+  },
+  "actor-antigone": {
+   "file": "actor-antigone.mp3",
+   "text": "Πολλὰ τὰ δεινὰ κοὐδὲν ἀνθρώπου δεινότερον πέλει."
+  },
+  "crowd-euge": {
+   "file": "crowd-euge.mp3",
+   "text": "Εὖγε! Εὖγε!"
+  },
+  "crowd-nika": {
+   "file": "crowd-nika.mp3",
+   "text": "Νίκα! Νίκα!"
+  },
+  "crowd-axios": {
+   "file": "crowd-axios.mp3",
+   "text": "Ἄξιος! Ἄξιος!"
+  },
+  "crowd-kalos": {
+   "file": "crowd-kalos.mp3",
+   "text": "Καλῶς! Καλῶς γε!"
+  },
+  "crowd-iou": {
+   "file": "crowd-iou.mp3",
+   "text": "Ἰοὺ ἰού!"
+  },
+  "herald-akouete": {
+   "file": "herald-akouete.mp3",
+   "text": "Ἀκούετε, λεῴ! Ἀκούετε!"
+  },
+  "herald-pindar": {
+   "file": "herald-pindar.mp3",
+   "text": "Ἄριστον μὲν ὕδωρ, ὁ δὲ χρυσὸς αἰθόμενον πῦρ ἅτε διαπρέπει νυκτὶ μεγάνορος ἔξοχα πλούτου."
+  },
+  "hymn-artemis": {
+   "file": "hymn-artemis.mp3",
+   "text": "Ἄρτεμιν ἀείδω χρυσηλάκατον, κελαδεινήν, παρθένον αἰδοίην, ἐλαφηβόλον, ἰοχέαιραν."
+  },
+  "hymn-apollo": {
+   "file": "hymn-apollo.mp3",
+   "text": "Μνήσομαι οὐδὲ λάθωμαι Ἀπόλλωνος ἑκάτοιο, ὅν τε θεοὶ κατὰ δῶμα Διὸς τρομέουσιν ἰόντα."
+  },
+  "hymn-zeus": {
+   "file": "hymn-zeus.mp3",
+   "text": "Ζῆνα θεῶν τὸν ἄριστον ἀείσομαι ἠδὲ μέγιστον, εὐρύοπα κρείοντα, τελεσφόρον."
+  },
+  "hymn-cleanthes": {
+   "file": "hymn-cleanthes.mp3",
+   "text": "Κύδιστ᾽ ἀθανάτων, πολυώνυμε, παγκρατὲς αἰεί, Ζεῦ, φύσεως ἀρχηγέ, νόμου μέτα πάντα κυβερνῶν."
+  },
+  "vendor-oil": {
+   "file": "vendor-oil.mp3",
+   "text": "Ἔλαιον! Ἔλαιον καλόν!"
+  },
+  "vendor-bread": {
+   "file": "vendor-bread.mp3",
+   "text": "Ἄρτοι θερμοί! Ἄρτοι!"
+  },
+  "vendor-fish": {
+   "file": "vendor-fish.mp3",
+   "text": "Ἰχθύες! Ἰχθύες νεαροί!"
+  },
+  "vendor-figs": {
+   "file": "vendor-figs.mp3",
+   "text": "Σῦκα! Σῦκα γλυκέα!"
+  },
+  "vendor-wine": {
+   "file": "vendor-wine.mp3",
+   "text": "Οἶνος Χῖος! Οἶνος!"
+  },
+  "house-come": {
+   "file": "house-come.mp3",
+   "text": "Ἐλθὲ δεῦρο, ὦ παιδίον."
+  },
+  "house-water": {
+   "file": "house-water.mp3",
+   "text": "Φέρε τὸ ὕδωρ, ταχέως."
+  },
+  "nemrut-antiochos-1": {
+   "file": "nemrut-antiochos-1.mp3",
+   "text": "Βασιλεὺς μέγας Ἀντίοχος, θεὸς δίκαιος ἐπιφανής, φιλορώμαιος καὶ φιλέλλην."
+  },
+  "nemrut-antiochos-2": {
+   "file": "nemrut-antiochos-2.mp3",
+   "text": "Ὁ ἐκ βασιλέως Μιθραδάτου Καλλινίκου καὶ βασιλίσσης Λαοδίκης θεᾶς φιλαδέλφου."
+  },
+  "lament-andromache": {
+   "file": "lament-andromache.mp3",
+   "text": "Ἆνερ, ἀπ᾽ αἰῶνος νέος ὤλεο, κὰδ δέ με χήρην λείπεις ἐν μεγάροισι."
+  }
+ }
 }
