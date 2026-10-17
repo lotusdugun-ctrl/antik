@@ -10,7 +10,16 @@ import {
   tiledSlope,
   uncovered,
 } from "@/lib/reconstruction-detail";
-import { flowing, runs, single, TEXTS, type EpigraphicText, type Lettering } from "@/lib/epigraphy";
+import {
+  asCut,
+  flowing,
+  measure,
+  runs,
+  single,
+  TEXTS,
+  type EpigraphicText,
+  type Lettering,
+} from "@/lib/epigraphy";
 import type { ScanId } from "@/lib/scans";
 import type {
   GreatAltarSpec,
@@ -4053,6 +4062,10 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     );
   }
 
+  parts.push(
+    ...theatreWingEnds(spec, layout, { wallStone, screenStone, wallThickness, galleryTop }),
+  );
+
   // Post holes for the awning masts, one mast each, around the rim.
   const masts = spec.velariumMasts ?? 0;
   for (let i = 0; i < masts; i += 1) {
@@ -4404,7 +4417,8 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     const z = wallZ + 0.5 + 0.75;
     const span = Math.max(3, 2 * edge - 0.6);
     const dedications: Record<TheatreCharacter["screen"], EpigraphicText[]> = {
-      aspendos: [TEXTS.aspendosLatin, TEXTS.aspendosGreek],
+      // Aspendos' is cut larger on a frieze of its own, below.
+      aspendos: [],
       hierapolis: [TEXTS.hierapolisDedication],
       ephesus: [TEXTS.ephesusStage],
       side: [TEXTS.sideStage],
@@ -4424,6 +4438,104 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
         }),
       );
     });
+  }
+
+  /*
+   * At Aspendos the dedication is meant to be read from the seats: a plain
+   * marble frieze under the cornice of the lower storey, between the
+   * aediculae and clear of the door cornices, its letters cut nearly a
+   * quarter of a metre high in one line and painted red — the Latin across the left
+   * half of the stage front, the Greek across the right.
+   */
+  if (ch.screen === "aspendos") {
+    const storey = storeys[0]!;
+    const diameter = storey.height * 0.11;
+    const top = storey.base + storey.height - 0.7;
+    const bottom =
+      Math.max(...doors.filter(([x]) => x !== 0).map(([, , h]) => stageTop + h + 0.7)) + 0.06;
+    // Clear of each aedicula's capital and broken-forward entablature.
+    const clearOf = diameter * 1.3 + storey.height * 0.13 * 0.32 + 0.15;
+    const royal = doors.find(([x]) => x === 0)!;
+    const standing: number[] = [];
+    for (let i = 0; i <= bays; i += 1) {
+      const x = -(screenSpan / 2) + i * bayWidth;
+      if (!doors.some(([d, w]) => Math.abs(d - x) < w / 2 + diameter * 1.2)) standing.push(x);
+    }
+    const edges = [-stageWidth * 0.47, ...standing, stageWidth * 0.47];
+    const stretches: [number, number][] = [];
+    for (let i = 0; i < edges.length - 1; i += 1) {
+      const a = edges[i]! + (i === 0 ? 0 : clearOf);
+      const b = edges[i + 1]! - (i === edges.length - 2 ? 0 : clearOf);
+      // The royal door's cornice rises into the frieze; the halves stop at it.
+      for (const [u, v] of a < 0 && b > 0
+        ? [
+            [a, -(royal[1] / 2 + 0.75)],
+            [royal[1] / 2 + 0.75, b],
+          ]
+        : [[a, b]]) {
+        if (v! - u! > 1.8) stretches.push([u!, v!]);
+      }
+    }
+    const z = wallZ + 0.02;
+    for (const [u, v] of stretches) {
+      parts.push(box(screenStone, [(u + v) / 2, bottom, z + 0.04], [v - u, top - bottom, 0.12]));
+    }
+    const h = top - bottom;
+    const margin = 0.2;
+    const friezes: {
+      text: EpigraphicText;
+      half: [number, number][];
+      pieces: string[];
+      fit: number;
+    }[] = [];
+    for (const [text, half] of [
+      [TEXTS.aspendosLatin, stretches.filter(([u]) => u < 0)],
+      [TEXTS.aspendosGreek, stretches.filter(([u]) => u > 0)],
+    ] as const) {
+      const widths = half.map(([u, v]) => v - u - margin * 2);
+      const lines = text.text as string[];
+      // Latin words are parted by stops, not spaces: each stop is a place to
+      // break, and the stone's own line ends get one when run together.
+      const flat = text.script === "latin" ? lines.join("·").replace(/·/g, "· ") : lines.join(" ");
+      const words = asCut(flat, text.script).split(" ");
+      // Filled stretch by stretch, at the largest letter that takes it all.
+      const pack = (letter: number) => {
+        const out: string[] = [];
+        let k = 0;
+        for (const width of widths) {
+          const line: string[] = [];
+          while (k < words.length && measure([...line, words[k]].join(" ")) * letter <= width)
+            line.push(words[k++]!);
+          out.push(line.join(" "));
+        }
+        return k === words.length ? out : null;
+      };
+      let lo = 0.03;
+      let hi = h - 0.3;
+      for (let i = 0; i < 24; i += 1) {
+        const mid = (lo + hi) / 2;
+        if (pack(mid)) lo = mid;
+        else hi = mid;
+      }
+      friezes.push({ text, half, pieces: pack(lo) ?? [], fit: lo });
+    }
+    // Both languages at one height, the smaller of the two that fit.
+    const fit = Math.min(...friezes.map((f) => f.fit));
+    for (const { text, half, pieces } of friezes) {
+      pieces.forEach((piece, i) => {
+        if (!piece) return;
+        const [u, v] = half[i]!;
+        parts.push(
+          ...inscription({
+            at: [(u + v) / 2, bottom + (h - fit) / 2, z + 0.1],
+            rotY: FACING.north,
+            width: v - u - margin * 2,
+            letter: fit,
+            text: { ...text, text: [piece], finish: "rubricated" },
+          }),
+        );
+      });
+    }
   }
 
   // Five doorways at stage level: the royal door in the middle, the guest
@@ -4556,6 +4668,423 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
       hills: ch.ground === "hillside" ? 0.9 : 0.55,
     }),
   );
+  return parts;
+}
+
+/**
+ * The ends of the seating: the analemmata, the retaining walls that close
+ * each wing of the cavea where it meets the side entrance. They were never
+ * the bare cut of the fill the model used to show. They were the most
+ * carefully built walls of the theatre, because everyone came in past them:
+ * coursed ashlar with drafted margins round each block (the lower courses,
+ * within reach, left with a raised face), a moulded foot, and a moulded
+ * coping that runs up the rake of the seats as a parapet. Where the stage
+ * building is bonded to the wings (Aspendos, Hierapolis, Side) the side
+ * entrance between them is a barrel-vaulted passage with an arched mouth;
+ * where a Greek horseshoe leaves the end wall standing free (Ephesus,
+ * Miletus), a flight of steps runs up the outside of it to the first
+ * walkway. Each end has a statue niche with an inscribed panel under it —
+ * the parodoi were where cities put up their benefactors — carrying only
+ * the formula such bases open with, not an invented name.
+ */
+function theatreWingEnds(
+  spec: RomanTheatreSpec,
+  L: ReturnType<typeof theatreLayout>,
+  o: { wallStone: Material; screenStone: Material; wallThickness: number; galleryTop: number },
+): Part[] {
+  const parts: Part[] = [];
+  const { character: ch, rows, rowAt, rowSpan, diazoma, orchestraRadius, outerRadius } = L;
+  const { wallStone, screenStone, galleryTop } = o;
+  /** How far the wall stands out from the cut end of the fill. */
+  const face = 0.4;
+  const parapet = 0.9;
+  const coping = 0.42;
+  const course = 0.66;
+  const seatTop = (i: number) => rowAt(i).y + spec.seatRise + 0.06;
+  const tiers = new Set(
+    L.middle > 0 ? [spec.lowerRows - 1, spec.lowerRows + L.middle - 1] : [spec.lowerRows - 1],
+  );
+  const firstDiazoma = rowAt(spec.lowerRows - 1).outer;
+  const rimTop = galleryTop + (ch.topGallery ? 4.5 : 1.4);
+  const endR = outerRadius + (ch.facade === "none" ? 0.2 : o.wallThickness);
+  // Rows that end at the same angle are closed by one wall: all of them on a
+  // Roman plan, the lower and the upper rows apart on a horseshoe.
+  const groups: { theta: number; from: number; to: number }[] = [];
+  for (let i = 0; i < rows; i += 1) {
+    const theta = rowSpan(i)[0];
+    const last = groups[groups.length - 1];
+    if (last && Math.abs(last.theta - theta) < 1e-9) last.to = i;
+    else groups.push({ theta, from: i, to: i });
+  }
+  const roman = groups.length === 1;
+  const hillside = ch.ground === "hillside";
+
+  for (const side of [1, -1] as const) {
+    groups.forEach((group, g) => {
+      const outermost = g === groups.length - 1;
+      const theta = side > 0 ? group.theta : Math.PI - group.theta;
+      const radial: [number, number] = [Math.cos(theta), Math.sin(theta)];
+      // Out of the end of the seating, away from the rows it closes.
+      const n: [number, number] =
+        side > 0 ? [Math.sin(theta), -Math.cos(theta)] : [-Math.sin(theta), Math.cos(theta)];
+      const rotY = Math.atan2(n[0], n[1]);
+      // The face's own x runs along the radius one way or the other.
+      const sense = Math.cos(rotY) * radial[0] - Math.sin(rotY) * radial[1] > 0 ? 1 : -1;
+      const r0 = group.from === 0 ? orchestraRadius : rowAt(group.from - 1).outer;
+      const r1 = outermost ? endR : rowAt(group.to).outer;
+      /** A point on the wall's front, `r` out along it, `y` up, `out` further forward. */
+      const on = (r: number, y: number, out = 0): Vec3 => [
+        radial[0] * r + n[0] * (face + out),
+        y,
+        radial[1] * r + n[1] * (face + out),
+      ];
+      const strip = (
+        material: Material,
+        ra: number,
+        rb: number,
+        y: number,
+        h: number,
+        out: number,
+      ) => box(material, on((ra + rb) / 2, y, out / 2 - 0.004), [rb - ra, h, out + 0.008], rotY);
+
+      /*
+       * The top of the wall: the seat line of the rows it closes, a parapet's
+       * height above it, dropping to the walkway where a diazoma comes out
+       * through it, and up to the rim behind the top row.
+       */
+      const line: [number, number][] = [];
+      if (group.from === 0) line.push([orchestraRadius, spec.podiumHeight + parapet]);
+      for (let i = group.from; i <= group.to; i += 1) {
+        const { inner, outer } = rowAt(i);
+        const first = i === group.from || tiers.has(i - 1);
+        if (first && i > 0 && tiers.has(i - 1)) {
+          // The walkway: open at the wall, so it can be reached from outside.
+          const walk = seatTop(i - 1) + 0.06;
+          line.push([inner - diazoma, walk], [inner, walk]);
+        }
+        if (first) line.push([inner, seatTop(i) + parapet]);
+        if (tiers.has(i) || i === group.to) line.push([outer, seatTop(i) + parapet]);
+      }
+      if (outermost) line.push([rowAt(rows - 1).outer + 0.4, rimTop], [r1, rimTop]);
+      // The walls: a slab standing proud of the fill, its outline the line above.
+      const outline: [number, number][] = [
+        [sense * r0, 0],
+        [sense * r1, 0],
+        ...[...line].reverse().map(([r, y]): [number, number] => [sense * r, y]),
+      ];
+      if (line[0]![0] > r0 + 1e-6) outline.push([sense * r0, line[0]![1]]);
+      parts.push({
+        kind: "carving",
+        material: wallStone,
+        at: [0, 0, 0],
+        outline,
+        depth: face + 0.05,
+        sink: 0.05 / (face + 0.05),
+        rotY,
+      });
+      /** How high the coursed face runs at radius `r`, under the coping. */
+      const topAt = (r: number) => {
+        for (let k = 0; k < line.length - 1; k += 1) {
+          const [ra, ya] = line[k]!;
+          const [rb, yb] = line[k + 1]!;
+          if (r >= ra && r <= rb)
+            return (
+              (rb - ra < 1e-6 ? Math.min(ya, yb) : ya + ((r - ra) / (rb - ra)) * (yb - ya)) - coping
+            );
+        }
+        return r < line[0]![0] ? line[0]![1] - coping : line[line.length - 1]![1] - coping;
+      };
+      /** Where the coursed face first reaches `y`, going out from the orchestra. */
+      const startAt = (y: number) => {
+        for (let r = r0; r < r1; r += 0.25) if (topAt(r) >= y && topAt(r + 0.25) >= y) return r;
+        return r1;
+      };
+      /*
+       * Where the steps and the niche go, worked out before the courses so
+       * the raised block faces stop short of them.
+       */
+      const holes: [number, number][] = [];
+      const x0 = Math.min(L.stageWidth * 0.94, spec.caveaDiameter * 0.62) / 2;
+      const x1 = hillside ? outerRadius - 0.2 : r1;
+      const stairTop = firstDiazoma + diazoma / 2;
+      const level = seatTop(spec.lowerRows - 1) + 0.06;
+      const rise = 0.25;
+      const tread = 0.32;
+      const steps = Math.ceil(level / rise);
+      const landing = diazoma / 2 + 0.3;
+      const stairFoot = stairTop + landing + (steps - 1) * tread;
+      const niche = roman
+        ? Math.max(x0 + 2.5, x1 - 4.5)
+        : Math.min(r1 - 4, stairFoot + (r1 - stairFoot) * 0.45);
+      if (outermost) {
+        if (!roman) holes.push([stairTop - landing, stairFoot + 0.4]);
+        holes.push([niche - 1.3, niche + 1.3]);
+      }
+      // The moulded foot.
+      parts.push(strip(wallStone, r0, r1, 0, 0.5, 0.14), strip(wallStone, r0, r1, 0.5, 0.12, 0.07));
+      /*
+       * The courses. Within reach (the lowest ones), each block's face is
+       * left raised inside a drafted margin; above, only the joints.
+       */
+      const joint: Material = wallStone === "limestone" ? "stone" : "stoneDark";
+      const blockLength = 1.6;
+      let row = 0;
+      for (let y = 0.62; y < rimTop - coping - 0.2; y += course, row += 1) {
+        const from = startAt(y + course);
+        if (from >= r1 - 0.3) continue;
+        if (y + course > 5.6) {
+          parts.push(strip(joint, startAt(y), r1, y, 0.05, 0.016));
+          continue;
+        }
+        // The joints and margins read dark between the raised faces.
+        parts.push(strip(joint, from, r1, y, course, 0.012));
+        for (let r = from + (row % 2 ? blockLength / 2 : 0); r < r1 - 0.3; r += blockLength) {
+          const ra = Math.max(r, from);
+          const rb = Math.min(r + blockLength, r1);
+          if (rb - ra < 0.6) continue;
+          if (holes.some(([h0, h1]) => rb > h0 && ra < h1)) continue;
+          parts.push(strip(wallStone, ra + 0.05, rb - 0.05, y + 0.05, course - 0.1, 0.045));
+        }
+      }
+      // The coping up the rake: a fascia, and a crown over it.
+      for (let k = 0; k < line.length - 1; k += 1) {
+        const [ra, ya] = line[k]!;
+        const [rb, yb] = line[k + 1]!;
+        if (rb - ra < 1e-3) continue;
+        for (const [below, above, out] of [
+          [coping, 0.1, 0.1],
+          [0.1, 0, 0.18],
+        ] as const) {
+          parts.push({
+            kind: "carving",
+            material: wallStone,
+            at: [0, 0, 0],
+            outline: [
+              [sense * ra, ya - below],
+              [sense * rb, yb - below],
+              [sense * rb, yb - above],
+              [sense * ra, ya - above],
+            ],
+            depth: face + out + 0.05,
+            sink: 0.05 / (face + out + 0.05),
+            rotY,
+          });
+        }
+      }
+      if (!outermost) return;
+
+      /* ---- The side entrance, the steps, the statue ---------------------- */
+      if (roman) {
+        /*
+         * The vaulted passage between the end wall and the stage building,
+         * from the end of the stage out to the town, and its arched mouth.
+         */
+        const near = -face;
+        const far = L.wallZ;
+        const radius = (near - far) / 2;
+        const zc = (near + far) / 2;
+        // The passage's own across-coordinate runs along -z on the right, +z on the left.
+        const uc = side > 0 ? -zc : zc;
+        const spring = 4.2;
+        const crown = spring + radius + 0.8;
+        const arc: [number, number][] = [];
+        for (let k = 1; k < 16; k += 1) {
+          const a = (k / 16) * Math.PI;
+          arc.push([uc + radius * Math.cos(a), spring + radius * Math.sin(a)]);
+        }
+        parts.push({
+          kind: "carving",
+          material: wallStone,
+          at: [side * x0, 0, 0],
+          outline: [
+            [uc - radius, spring],
+            [uc - radius, crown],
+            [uc + radius, crown],
+            [uc + radius, spring],
+            ...arc,
+          ],
+          depth: x1 - x0,
+          sink: 0,
+          rotY: side * (Math.PI / 2),
+        });
+        if (!hillside) {
+          // The mouth: a moulded archivolt on pilasters, a keystone, and a
+          // pier carrying it on the stage building's side.
+          const mouth = side * (x1 + 0.02);
+          const archivolt: [number, number][] = [];
+          for (let k = 0; k <= 16; k += 1) {
+            const a = (k / 16) * Math.PI;
+            archivolt.push([(radius + 0.6) * Math.cos(a), spring + (radius + 0.6) * Math.sin(a)]);
+          }
+          for (let k = 16; k >= 0; k -= 1) {
+            const a = (k / 16) * Math.PI;
+            archivolt.push([radius * Math.cos(a), spring + radius * Math.sin(a)]);
+          }
+          parts.push({
+            kind: "carving",
+            material: screenStone,
+            at: [mouth, 0, zc],
+            outline: archivolt,
+            depth: 0.3,
+            sink: 0.3,
+            rotY: side > 0 ? FACING.east : FACING.west,
+          });
+          const stageEnd = L.stageWidth / 2;
+          if (stageEnd < x1 - 0.05) {
+            parts.push(
+              box(
+                wallStone,
+                [side * ((stageEnd + x1) / 2), 0, far - 0.45],
+                [x1 - stageEnd, crown, 0.9],
+              ),
+            );
+          }
+          for (const zp of [near + 0.3, far - 0.3]) {
+            parts.push(
+              box(screenStone, [mouth + side * 0.08, 0, zp], [0.16, spring - 0.32, 0.6]),
+              box(screenStone, [mouth + side * 0.12, spring - 0.32, zp], [0.24, 0.34, 0.8]),
+            );
+          }
+          parts.push(
+            box(screenStone, [mouth + side * 0.12, spring + radius - 0.1, zc], [0.24, 0.85, 0.6]),
+          );
+        }
+      } else {
+        /*
+         * The steps up the outside of the end wall to the first walkway,
+         * which comes out through the wall at the top of them.
+         */
+        const width = 1.6;
+        // The landing, against the wall where the walkway comes out.
+        parts.push(box(wallStone, on(stairTop, 0, width / 2), [landing * 2, level, width], rotY));
+        for (let k = 0; k < steps - 1; k += 1) {
+          const r = stairTop + landing + (k + 0.5) * tread;
+          parts.push(
+            box(
+              wallStone,
+              on(r, 0, width / 2),
+              [tread + 0.01, level - (k + 1) * rise, width],
+              rotY,
+            ),
+          );
+        }
+        // Its parapet, raking down with the flight.
+        parts.push({
+          kind: "carving",
+          material: wallStone,
+          at: [n[0] * (face + width), 0, n[1] * (face + width)],
+          outline: [
+            [sense * (stairTop - landing), level],
+            [sense * (stairTop + landing), level],
+            [sense * stairFoot, 0.3],
+            [sense * stairFoot, 1.2],
+            [sense * (stairTop + landing), level + 0.95],
+            [sense * (stairTop - landing), level + 0.95],
+          ],
+          depth: 0.3,
+          sink: 0.5,
+          rotY,
+        });
+      }
+
+      /*
+       * The statue niche: a round-headed recess framed by an archivolt on two
+       * pilasters, a benefactor in it, and an inscribed panel under it.
+       */
+      const nw = 1.5;
+      const nh = 3.2;
+      const sill = 1.6;
+      parts.push(
+        box("shadow", on(niche, sill, 0.01), [nw, nh - nw / 2, 0.06], rotY),
+        cyl("shadow", on(niche, sill + nh - nw / 2, 0.01), nw / 2, nw / 2, 0.06, 14, {
+          rotX: Math.PI / 2,
+          rotY,
+          thetaStart: Math.PI / 2,
+          thetaLength: Math.PI,
+        }),
+      );
+      const frame: [number, number][] = [];
+      for (let k = 0; k <= 12; k += 1) {
+        const a = (k / 12) * Math.PI;
+        frame.push([(nw / 2 + 0.22) * Math.cos(a), nh - nw / 2 + (nw / 2 + 0.22) * Math.sin(a)]);
+      }
+      frame.push([-(nw / 2 + 0.22), 0], [-nw / 2, 0]);
+      for (let k = 12; k >= 0; k -= 1) {
+        const a = (k / 12) * Math.PI;
+        frame.push([(nw / 2) * Math.cos(a), nh - nw / 2 + (nw / 2) * Math.sin(a)]);
+      }
+      frame.push([nw / 2, 0], [nw / 2 + 0.22, 0]);
+      parts.push({
+        kind: "carving",
+        material: screenStone,
+        at: on(niche, sill),
+        outline: frame,
+        depth: 0.14,
+        sink: 0.3,
+        rotY,
+      });
+      parts.push(box(screenStone, on(niche, sill - 0.2, 0.12), [nw + 0.8, 0.2, 0.3], rotY));
+      /*
+       * The benefactor in the niche: a draped figure with a scroll, cut as a
+       * figure in deep relief rather than modelled in the round (a statue in
+       * the round is a scanned head and a body, more than all of this wall).
+       */
+      const figure: [number, number][] = [
+        [-0.2, 0],
+        [0.2, 0],
+        [0.25, 0.3],
+        [0.26, 0.9],
+        [0.32, 1.0],
+        [0.33, 1.12],
+        [0.28, 1.16],
+        [0.27, 1.35],
+        [0.24, 1.5],
+        [0.16, 1.56],
+        [0.08, 1.6],
+        [0.07, 1.66],
+        [0.1, 1.72],
+        [0.1, 1.84],
+        [0.06, 1.92],
+        [0, 1.94],
+        [-0.06, 1.92],
+        [-0.1, 1.84],
+        [-0.1, 1.72],
+        [-0.07, 1.66],
+        [-0.08, 1.6],
+        [-0.16, 1.56],
+        [-0.24, 1.5],
+        [-0.27, 1.3],
+        [-0.36, 1.15],
+        [-0.42, 1.05],
+        [-0.38, 1.0],
+        [-0.27, 1.08],
+        [-0.26, 0.9],
+        [-0.25, 0.3],
+      ];
+      const scale = (nh - 0.25) / 1.94;
+      parts.push({
+        kind: "carving",
+        material: screenStone,
+        at: on(niche, sill, 0.02),
+        outline: figure.map(([u, v]): [number, number] => [u * scale, v * scale]),
+        depth: 0.34,
+        sink: 0.1,
+        rotY,
+      });
+      // Under it, the panel with its text: the formula such bases open with.
+      parts.push(
+        ...inscribedPanel({
+          at: on(niche, 0.55, 0.02),
+          rotY,
+          width: 1.3,
+          height: 0.85,
+          material: screenStone,
+          letter: 0.075,
+          text: TEXTS.honorificFormula,
+        }),
+      );
+    });
+  }
   return parts;
 }
 

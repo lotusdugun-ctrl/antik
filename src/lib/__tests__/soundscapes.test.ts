@@ -1,16 +1,25 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { boundsOf, partsFor } from "@/lib/reconstruction-parts";
 import { reconstructions } from "@/lib/reconstructions";
+import { lifeFor } from "@/lib/scene-life";
+import { spotsFor } from "@/lib/sound-spots";
 import {
   CALLS,
   callsOf,
   CLIPS,
   clipsOf,
+  FAR_GAIN,
+  hearing,
   levelAt,
+  NEAR_GAIN,
+  nearestOn,
   soundscapeFor,
+  spotsOf,
   VOICES,
   voicesOf,
+  type Point,
   type Soundscape,
   type TimeOfDay,
 } from "@/lib/soundscapes";
@@ -165,5 +174,110 @@ describe("soundscapes", () => {
       const named = new RegExp(`\\b${clip.replace(/\d$/, "")}`).test(credits);
       expect(named).toBe(true);
     }
+  });
+});
+
+describe("sounds heard from where they are", () => {
+  // Looking down -z, as the camera does by default: +x is to the right.
+  const AHEAD: [number, number] = [0, -1];
+
+  test("a placed sound plays at its own level at its own distance", () => {
+    expect(hearing([0, 0, 0], AHEAD, [0, 0, -20], 20).gain).toBeCloseTo(1, 6);
+  });
+
+  test("it is louder nearer and quieter further, never lost and never deafening", () => {
+    const at = (d: number) => hearing([0, 0, 0], AHEAD, [0, 0, -d], 10).gain;
+    expect(at(5)).toBeGreaterThan(at(10));
+    expect(at(10)).toBeGreaterThan(at(20));
+    // Twice as far, half the pressure: the inverse-distance law.
+    expect(at(20) / at(40)).toBeCloseTo(2, 6);
+    expect(at(0.01)).toBe(NEAR_GAIN);
+    expect(at(100000)).toBe(FAR_GAIN);
+  });
+
+  test("it is panned to the side it is on, whichever way the listener turns", () => {
+    expect(hearing([0, 0, 0], AHEAD, [10, 0, 0], 10).pan).toBeGreaterThan(0.8);
+    expect(hearing([0, 0, 0], AHEAD, [-10, 0, 0], 10).pan).toBeLessThan(-0.8);
+    expect(Math.abs(hearing([0, 0, 0], AHEAD, [0, 0, -10], 10).pan)).toBeLessThan(1e-9);
+    // Turned to face +x, the same source is now straight ahead...
+    expect(Math.abs(hearing([0, 0, 0], [1, 0], [10, 0, 0], 10).pan)).toBeLessThan(1e-9);
+    // ...and one at -z is on the left.
+    expect(hearing([0, 0, 0], [1, 0], [0, 0, -10], 10).pan).toBeLessThan(-0.8);
+    // Behind and to the right is still right; the length of `forward` does not matter.
+    expect(hearing([0, 0, 0], [0, -7], [5, 0, 5], 10).pan).toBeCloseTo(
+      hearing([0, 0, 0], AHEAD, [5, 0, 5], 10).pan,
+      9,
+    );
+  });
+
+  test("overhead, or looking straight down, it sits in the middle", () => {
+    expect(hearing([0, 0, 0], AHEAD, [0, 30, 0], 10).pan).toBe(0);
+    expect(hearing([0, 0, 0], [0, 0], [10, 0, 0], 10).pan).toBe(0);
+    // Close by, the pan eases towards the middle rather than snapping.
+    const close = hearing([0, 0, 0], AHEAD, [1, 0, 0], 10).pan;
+    const far = hearing([0, 0, 0], AHEAD, [10, 0, 0], 10).pan;
+    expect(close).toBeGreaterThan(0);
+    expect(close).toBeLessThan(far);
+  });
+
+  test("a line is heard from its nearest stretch, a set of points from the nearest", () => {
+    const track = {
+      points: [
+        [0, 0, -50],
+        [0, 0, 50],
+      ] as Point[],
+      line: true,
+      ref: 10,
+    };
+    expect(nearestOn(track, [20, 0, 10])).toEqual([0, 0, 10]);
+    expect(nearestOn(track, [20, 0, 90])).toEqual([0, 0, 50]);
+    const stalls = {
+      points: [
+        [5, 0, 0],
+        [-30, 0, 0],
+      ] as Point[],
+      ref: 10,
+    };
+    expect(nearestOn(stalls, [-20, 0, 0])).toEqual([-30, 0, 0]);
+  });
+
+  test("every placed sound of every model is somewhere in that model", () => {
+    for (const item of reconstructions) {
+      const scape = soundscapeFor(item);
+      const places = spotsFor(item, lifeFor(item));
+      const { min, max } = boundsOf(partsFor(item.model));
+      // The ground the scene is laid out on, as the scene furnishes it: the
+      // building and the forecourt its stalls and altar stand in.
+      const cx = (min[0] + max[0]) / 2;
+      const cz = (min[2] + max[2]) / 2;
+      const reach = Math.hypot((max[0] - min[0]) / 2, (max[2] - min[2]) / 2) * 1.25;
+      for (const spot of spotsOf(scape)) {
+        const place = places[spot];
+        expect(`${item.id} ${spot}: ${place !== undefined}`).toBe(`${item.id} ${spot}: true`);
+        for (const [x, y, z] of place!.points) {
+          const inside =
+            Math.hypot(x - cx, z - cz) <= reach && y >= min[1] && y <= max[1] && place!.ref > 0;
+          expect(`${item.id} ${spot} ${x},${y},${z}: ${inside}`).toBe(
+            `${item.id} ${spot} ${x},${y},${z}: true`,
+          );
+        }
+      }
+      // The stage of a theatre is over its stage, inside the building itself.
+      if (places.stage) {
+        const [x, y, z] = places.stage.points[0]!;
+        expect(x >= min[0] && x <= max[0] && y <= max[1] && z >= min[2] && z <= max[2]).toBe(true);
+      }
+    }
+  }, 60000);
+
+  test("each kind of place puts its sounds where they are made", () => {
+    const at = (kind: string) =>
+      spotsOf(soundscapeFor(reconstructions.find((r) => r.model.kind === kind)!)).sort();
+    expect(at("roman-theatre")).toEqual(["stage"]);
+    expect(at("stadium")).toEqual(["track"]);
+    expect(at("ionic-dipteros")).toEqual(["altar"]);
+    expect(at("roman-facade")).toEqual(["fountain", "stalls"]);
+    // The Mausoleum's harbour is all round it: nothing placed, as before.
+    expect(at("mausoleum")).toEqual([]);
   });
 });

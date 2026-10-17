@@ -17,10 +17,12 @@
 import {
   clipUrl,
   DIRECTOR_CLIPS,
+  hearing,
   isCall,
   isClip,
   isVoice,
   levelAt,
+  nearestOn,
   STAGE_LINES,
   VOICE_MANIFEST,
   voiceUrl,
@@ -29,8 +31,11 @@ import {
   type Call,
   type Clip,
   type Happening,
+  type Places,
+  type Point,
   type Soundscape,
   type Space,
+  type Spot,
   type TimeOfDay,
   type Voice,
 } from "./soundscapes";
@@ -132,6 +137,51 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
   reverbOut.connect(master);
 
   const white = noiseBuffer(ctx, 4);
+
+  /*
+   * ---- Places: the sounds that come from somewhere in the model ----------
+   *
+   * Everything from one spot (the stage, the altar, the stalls) goes through
+   * one gain and one stereo pan, turned as the camera moves: a few nodes a
+   * scene, and arithmetic ten times a second. Until the model says where a
+   * spot is, or the camera where it is, a spot's bus is left at unity and the
+   * scene sounds as it always did. The reverb is fed before the bus, so a
+   * far stage is quieter but its echo off the bowl is not — which is how a
+   * distant sound is heard.
+   */
+  type Bus = { gain: GainNode; pan: StereoPannerNode };
+  const buses = new Map<Spot, Bus>();
+  let places: Places = {};
+  let listener: { at: Point; forward: readonly [number, number] } | null = null;
+  const aim = (spot: Spot, bus: Bus, seconds: number) => {
+    const where = places[spot];
+    let gain = 1;
+    let pan = 0;
+    if (where && listener) {
+      ({ gain, pan } = hearing(
+        listener.at,
+        listener.forward,
+        nearestOn(where, listener.at),
+        where.ref,
+      ));
+    }
+    bus.gain.gain.setTargetAtTime(gain, ctx.currentTime, seconds);
+    bus.pan.pan.setTargetAtTime(pan, ctx.currentTime, seconds);
+  };
+  /** Where a sound from `spot` goes in: its bus, or straight out if it is from nowhere. */
+  const from = (spot: Spot | undefined): AudioNode => {
+    if (!spot) return dry;
+    let bus = buses.get(spot);
+    if (!bus) {
+      const gain = ctx.createGain();
+      const pan = ctx.createStereoPanner();
+      gain.connect(pan).connect(dry);
+      bus = { gain, pan };
+      buses.set(spot, bus);
+      aim(spot, bus, 0.01);
+    }
+    return bus.gain;
+  };
 
   /* ---- Files: fetched and decoded on first use, once ------------------- */
 
@@ -279,7 +329,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     const out = ctx.createGain();
     out.gain.value = 0;
     const mod = ctx.createGain();
-    out.connect(mod).connect(dry);
+    out.connect(mod).connect(from(bed.at));
     if (bed.wet) {
       const send = ctx.createGain();
       send.gain.value = bed.wet;
@@ -306,7 +356,8 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         at,
         level: 1,
         offset,
-        pan: (player.bed.pan ?? 0) + rand(-0.25, 0.25),
+        // A placed bed is panned by where it is; only a little wander is its own.
+        pan: player.bed.at ? rand(-0.1, 0.1) : (player.bed.pan ?? 0) + rand(-0.25, 0.25),
         muffle: player.bed.muffle,
         into: player.out,
         fadeIn: 0.001,
@@ -345,7 +396,8 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     const max = h.max;
     play(buffer, {
       level,
-      pan: rand(-spread, spread),
+      pan: h.at ? rand(-0.15, 0.15) : rand(-spread, spread),
+      into: from(h.at),
       rate: h.rate ? rand(h.rate[0], h.rate[1]) : 1,
       muffle: h.muffle,
       wet: h.wet,
@@ -433,7 +485,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
   }
 
   /** A spark or a split log over the recorded fire: a click of filtered noise. */
-  const spark = (level: number) => {
+  const spark = (level: number, into: AudioNode) => {
     const at = ctx.currentTime + 0.05;
     const len = rand(0.004, 0.03);
     const source = ctx.createBufferSource();
@@ -447,7 +499,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     env.gain.exponentialRampToValueAtTime(0.0001, at + len);
     const pan = ctx.createStereoPanner();
     pan.pan.value = rand(-0.3, 0.3);
-    source.connect(band).connect(env).connect(pan).connect(dry);
+    source.connect(band).connect(env).connect(pan).connect(into);
     source.start(at, Math.random() * 3, len + 0.02);
     source.onended = () => source.disconnect();
   };
@@ -473,7 +525,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     const route = (into: AudioNode, pan: StereoPannerNode) => {
       pan.pan.setValueAtTime(-0.95 * direction, at);
       pan.pan.linearRampToValueAtTime(0.95 * direction, at + span);
-      into.connect(pan).connect(dry);
+      into.connect(pan).connect(from("track"));
       const send = ctx.createGain();
       send.gain.value = 0.35;
       pan.connect(send).connect(reverbIn);
@@ -909,7 +961,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
       case "hush": {
         let end = now + 1;
         const lines = STAGE_LINES.filter((v) => bufferOf(v));
-        const stage = { pan: rand(-0.1, 0.1), wet: 0.55, muffle: 6500 };
+        const stage = { pan: rand(-0.1, 0.1), wet: 0.55, muffle: 6500, into: from("stage") };
         let comic = false;
         if (lines.length > 0 && Math.random() < 0.65) {
           // An actor's voice from the stage, carried by the bowl.
@@ -988,6 +1040,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         const herald = say(["herald-akouete"], now + 0.1, 0.55, {
           pan: rand(-0.3, 0.3),
           wet: 0.5,
+          into: from("track"),
         });
         const blown = salpinx((herald?.end ?? now) + 0.4, 1, rand(-0.5, 0.5));
         crowd(1.25, blown, 3);
@@ -1017,6 +1070,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
               pan: 0.2 * race.direction,
               rate: rand(0.95, 1.05),
               wet: 0.3,
+              into: from("track"),
             });
         }
         race.laps -= 1;
@@ -1038,7 +1092,11 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         });
         crowd(1.6, now, 1);
         // The victor's ode, as the poets wrote them for the winning team.
-        say(["herald-pindar"], now + 9, 0.45, { pan: rand(-0.2, 0.2), wet: 0.5 });
+        say(["herald-pindar"], now + 9, 0.45, {
+          pan: rand(-0.2, 0.2),
+          wet: 0.5,
+          into: from("track"),
+        });
         phase = { name: "finish", until: now + 14 };
         return;
       default:
@@ -1059,7 +1117,9 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     for (let i = 0; i < 48; i += 1) closeness[i] = Math.sin((i / 47) * Math.PI) ** 1.5;
     const aulos = ready.get(clipUrl("aulos"));
     const at = now + 0.2;
-    const pan = rand(-0.5, 0.5);
+    // Coming up to the altar: heard from there once its place is known.
+    const into = from("altar");
+    const pan = places.altar ? rand(-0.15, 0.15) : rand(-0.5, 0.5);
     if (aulos) {
       const source = play(aulos, {
         at,
@@ -1071,6 +1131,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         muffleCurve: closeness.map((v) => 700 + 6500 * v),
         fadeIn: 0.01,
         fadeOut: 0.01,
+        into,
       });
       source.gain.gain.cancelScheduledValues(at);
       source.gain.gain.setValueCurveAtTime(
@@ -1090,10 +1151,11 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
           rate: rand(0.9, 1.0),
           muffle: 900 + 5000 * near,
           wet: 0.4,
+          into,
         });
       }
     }
-    say(scene?.scape.voices ?? [], at + span * 0.45, 0.32, { pan, wet: 0.5, muffle: 4500 });
+    say(scene?.scape.voices ?? [], at + span * 0.45, 0.32, { pan, wet: 0.5, muffle: 4500, into });
     if (Math.random() < 0.6) {
       const moo = ready.get(clipUrl(pick(["moo1", "moo2", "moo3"] as const)));
       if (moo)
@@ -1104,6 +1166,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
           wet: 0.35,
           duration: 3,
           fadeOut: 0.6,
+          into,
         });
     }
     phase = { name: "passing", until: now + span };
@@ -1137,14 +1200,20 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
           at: at + t,
           level: 0.45 * accent * Math.max(0.1, swell) * (night ? 0.8 : 1),
           rate: rand(0.78, 0.84),
-          pan: -0.25,
+          pan: places.altar ? 0 : -0.25,
           wet: 0.55,
           muffle: 2600,
+          into: from("altar"),
         });
       }
     }
     rattle(at, shakes, 0.12);
-    say(scene?.scape.voices ?? [], at + span + 1, 0.35, { pan: 0.15, wet: 0.35, muffle: 5500 });
+    say(scene?.scape.voices ?? [], at + span + 1, 0.35, {
+      pan: places.altar ? 0 : 0.15,
+      wet: 0.35,
+      muffle: 5500,
+      into: from("altar"),
+    });
     phase = { name: "rite", until: at + span + 8 };
   };
 
@@ -1187,7 +1256,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     const fireBed = scene.scape.beds.find((b) => b.clip === "fire");
     if (scene.scape.synth.crackle && fireBed && now >= nextSpark) {
       const level = levelAt(fireBed.level, scene.time);
-      if (level > 0) spark(0.25 * level);
+      if (level > 0) spark(0.25 * level, from(fireBed.at));
       nextSpark = now + rand(0.08, 0.9) / Math.max(0.2, level * 2);
     }
     switch (scene.scape.director) {
@@ -1265,6 +1334,19 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
       window.clearInterval(timer);
       if (!manual) timer = window.setInterval(tick, 200);
       tick();
+    },
+    /** Where the model's spots are (see src/lib/sound-spots.ts). */
+    setPlaces(next: Places) {
+      places = next;
+      for (const [spot, bus] of buses) aim(spot, bus, 0.3);
+    },
+    /**
+     * Where the camera is and which way it looks (x, z), to place the spots
+     * by. Cheap enough to call ten times a second.
+     */
+    setListener(at: Point, forward: readonly [number, number]) {
+      listener = { at, forward };
+      for (const [spot, bus] of buses) aim(spot, bus, 0.12);
     },
     /** Offline only: run the clock once. */
     advance() {

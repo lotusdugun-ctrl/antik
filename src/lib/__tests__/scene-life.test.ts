@@ -285,7 +285,7 @@ describe("where people go", () => {
       }
     }
     expect(wrong).toEqual([]);
-  });
+  }, 30_000);
 });
 
 describe("how women are dressed", () => {

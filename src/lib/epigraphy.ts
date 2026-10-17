@@ -23,8 +23,13 @@ export type Script =
   | "greek-lunate"
   | "latin";
 
-/** How the letters were made: chiselled, painted on plaster, or scratched into it. */
-export type Finish = "cut" | "painted" | "scratched";
+/**
+ * How the letters were made: chiselled, painted on plaster, or scratched into
+ * it — or chiselled and then filled with red paint, as Roman inscriptions
+ * meant to be read from a distance were (rubrication: minium or red ochre in
+ * the grooves; traces survive on many stones).
+ */
+export type Finish = "cut" | "rubricated" | "painted" | "scratched";
 
 export type EpigraphicText = {
   /**

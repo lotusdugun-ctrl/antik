@@ -100,6 +100,26 @@ export type Call = (typeof CALLS)[number];
 export const VOICE_MANIFEST = "/ambience/voices/manifest.json";
 export const voiceUrl = (file: string) => `/ambience/voices/${file}`;
 
+/**
+ * Where in the model a sound comes from. Each is found in the model itself
+ * (src/lib/sound-spots.ts): the middle of the stage, the altar's fire, the
+ * market stalls and the fountain the scene sets down, the race track.
+ */
+export const SPOTS = ["stage", "altar", "stalls", "fountain", "track"] as const;
+
+export type Spot = (typeof SPOTS)[number];
+
+export type Point = [number, number, number];
+
+/**
+ * A spot as found in a model: a point or a few (the nearest is the one
+ * heard), or a line (a track, heard from its nearest stretch), and the
+ * distance at which a sound there plays at the level the soundscape gives it.
+ */
+export type Place = { points: Point[]; line?: boolean; ref: number };
+
+export type Places = Partial<Record<Spot, Place>>;
+
 /** A level for each time of day; a bare number is the same all day. */
 export type Levels = number | Partial<Record<TimeOfDay, number>>;
 
@@ -116,6 +136,8 @@ export type Bed = {
   pan?: number;
   /** How much of it reaches the reverb, 0..1. */
   wet?: number;
+  /** Where it comes from, if from one place: louder there, panned towards it. */
+  at?: Spot;
 };
 
 /** Something that happens now and then: a dog, a hammer, a cow. */
@@ -133,6 +155,8 @@ export type Happening = {
   wet?: number;
   /** Play only part of a long clip, in seconds. */
   max?: number;
+  /** Where it comes from, if from one place. */
+  at?: Spot;
 };
 
 /**
@@ -249,6 +273,7 @@ function stadium(): Soundscape {
     happenings: [
       // The teams waiting in the stalls.
       {
+        at: "track",
         sounds: ["neigh1", "neigh2", "neigh3"],
         every: [14, 40],
         level: { day: 0.32, golden: 0.32, night: 0.18 },
@@ -280,6 +305,7 @@ function sanctuary(hymns: readonly Voice[], opts: { exposed: boolean; masons: bo
   const happenings: Happening[] = [
     // The victims waiting by the altar.
     {
+      at: "altar",
       sounds: ["moo1", "moo2", "moo3"],
       every: [30, 75],
       level: { day: 0.3, golden: 0.3, night: 0.12 },
@@ -290,6 +316,7 @@ function sanctuary(hymns: readonly Voice[], opts: { exposed: boolean; masons: bo
       max: 3,
     },
     {
+      at: "altar",
       sounds: ["sheep"],
       every: [45, 110],
       level: { day: 0.22, golden: 0.22 },
@@ -320,7 +347,7 @@ function sanctuary(hymns: readonly Voice[], opts: { exposed: boolean; masons: bo
     character: "sanctuary",
     beds: [
       BIRDS(opts.exposed ? 0.35 : 0.6),
-      { clip: "fire", level: { day: 0.12, golden: 0.2, night: 0.35 }, wet: 0.2 },
+      { clip: "fire", level: { day: 0.12, golden: 0.2, night: 0.35 }, wet: 0.2, at: "altar" },
       NIGHT_INSECTS,
     ],
     happenings,
@@ -335,13 +362,20 @@ function agora(): Soundscape {
   return {
     character: "agora",
     beds: [
-      { clip: "market", level: { day: 0.75, golden: 0.55, night: 0 }, wet: 0.3 },
-      { clip: "fountain", level: { day: 0.3, golden: 0.32, night: 0.4 }, pan: 0.45, wet: 0.25 },
+      { clip: "market", level: { day: 0.75, golden: 0.55, night: 0 }, wet: 0.3, at: "stalls" },
+      {
+        clip: "fountain",
+        level: { day: 0.3, golden: 0.32, night: 0.4 },
+        pan: 0.45,
+        wet: 0.25,
+        at: "fountain",
+      },
       BIRDS(0.3),
       NIGHT_INSECTS,
     ],
     happenings: [
       {
+        at: "stalls",
         sounds: ["vendor-oil", "vendor-bread", "vendor-fish", "vendor-figs", "vendor-wine"],
         every: [12, 30],
         level: { day: 0.35, golden: 0.28 },
@@ -392,7 +426,13 @@ function house(): Soundscape {
     character: "house",
     beds: [
       // The peristyle's fountain, a few steps away.
-      { clip: "fountain", level: { day: 0.5, golden: 0.5, night: 0.55 }, pan: -0.2, wet: 0.3 },
+      {
+        clip: "fountain",
+        level: { day: 0.5, golden: 0.5, night: 0.55 },
+        pan: -0.2,
+        wet: 0.3,
+        at: "fountain",
+      },
       // The street outside the walls.
       { clip: "market", level: { day: 0.22, golden: 0.16, night: 0 }, muffle: 900, wet: 0.1 },
       BIRDS(0.45),
@@ -522,7 +562,7 @@ function mountain(): Soundscape {
   return {
     character: "mountain",
     beds: [
-      { clip: "fire", level: { day: 0.2, golden: 0.3, night: 0.45 }, wet: 0.1 },
+      { clip: "fire", level: { day: 0.2, golden: 0.3, night: 0.45 }, wet: 0.1, at: "altar" },
       BIRDS(0.15),
       { ...NIGHT_INSECTS, level: { golden: 0.1, night: 0.35 } },
     ],
@@ -562,7 +602,7 @@ function neolithic(): Soundscape {
   return {
     character: "neolithic",
     beds: [
-      { clip: "fire", level: { day: 0.25, golden: 0.35, night: 0.5 }, wet: 0.15 },
+      { clip: "fire", level: { day: 0.25, golden: 0.35, night: 0.5 }, wet: 0.15, at: "altar" },
       // People at the enclosure: talk, but too far off to be in any language.
       { clip: "murmur", level: { day: 0.12, golden: 0.12 }, muffle: 700, wet: 0.2 },
       BIRDS(0.25),
@@ -698,6 +738,92 @@ export const DIRECTOR_VOICES: Record<Director | "none", readonly Voice[]> = {
   rite: [],
   none: [],
 };
+
+/** Where each director's story is played: the stage, the track, the altar. */
+export const DIRECTOR_SPOT: Record<Director, Spot> = {
+  theatre: "stage",
+  races: "track",
+  procession: "altar",
+  rite: "altar",
+};
+
+/** Every place a soundscape's sounds come from. */
+export function spotsOf(scape: Soundscape): Spot[] {
+  const out = new Set<Spot>();
+  for (const bed of scape.beds) if (bed.at) out.add(bed.at);
+  for (const h of scape.happenings) if (h.at) out.add(h.at);
+  if (scape.director) out.add(DIRECTOR_SPOT[scape.director]);
+  return [...out];
+}
+
+/* ---- Hearing a place from where the camera is ----------------------- */
+
+/** The quietest a placed sound gets, however far off: the place still carries. */
+export const FAR_GAIN = 0.15;
+/** The loudest, right beside it. */
+export const NEAR_GAIN = 1.8;
+
+/** The point of a place nearest to `p`. */
+export function nearestOn(place: Place, p: Point): Point {
+  const { points } = place;
+  if (points.length === 0) return p;
+  let best: Point = points[0]!;
+  let bestD = Infinity;
+  const consider = (q: Point) => {
+    const d = (q[0] - p[0]) ** 2 + (q[1] - p[1]) ** 2 + (q[2] - p[2]) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = q;
+    }
+  };
+  if (place.line && points.length > 1) {
+    for (let i = 0; i < points.length - 1; i += 1) {
+      const a = points[i]!;
+      const b = points[i + 1]!;
+      const ab: Point = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+      const len = ab[0] ** 2 + ab[1] ** 2 + ab[2] ** 2;
+      const t =
+        len > 0
+          ? Math.max(
+              0,
+              Math.min(
+                1,
+                ((p[0] - a[0]) * ab[0] + (p[1] - a[1]) * ab[1] + (p[2] - a[2]) * ab[2]) / len,
+              ),
+            )
+          : 0;
+      consider([a[0] + ab[0] * t, a[1] + ab[1] * t, a[2] + ab[2] * t]);
+    }
+  } else for (const q of points) consider(q);
+  return best;
+}
+
+/**
+ * How a sound at `source` is heard by a listener at `at` looking along
+ * `forward` (x, z): its gain, as the inverse of distance (the level the
+ * soundscape gives it at `ref` metres, louder nearer, quieter further, never
+ * lost entirely), and its pan, -1 left to 1 right, by the bearing of the
+ * source from the way the listener faces — eased to the middle when it is
+ * nearly overhead or underfoot, so it does not flip from ear to ear.
+ */
+export function hearing(
+  at: Point,
+  forward: readonly [number, number],
+  source: Point,
+  ref: number,
+): { gain: number; pan: number } {
+  const dx = source[0] - at[0];
+  const dz = source[2] - at[2];
+  const flat = Math.hypot(dx, dz);
+  const distance = Math.hypot(flat, source[1] - at[1]);
+  const gain = Math.max(FAR_GAIN, Math.min(NEAR_GAIN, ref / Math.max(distance, 1e-3)));
+  const facing = Math.hypot(forward[0], forward[1]);
+  if (flat < 1e-6 || facing < 1e-6) return { gain, pan: 0 };
+  // The listener's right, for a camera looking along (fx, fz): (-fz, fx).
+  const side = (dx * -forward[1] + dz * forward[0]) / (flat * facing);
+  const pan = Math.max(-1, Math.min(1, side)) * 0.85 * Math.min(1, flat / 3);
+  return { gain, pan };
+}
 
 /** Every recording a soundscape may ask for, for preloading and for tests. */
 export function clipsOf(scape: Soundscape): Clip[] {

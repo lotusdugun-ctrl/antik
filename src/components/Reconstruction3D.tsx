@@ -24,7 +24,8 @@ import { track } from "@/lib/analytics";
 import { createAmbience, type Ambience, type AmbienceScene } from "@/lib/ambience";
 import { partsFor } from "@/lib/reconstruction-parts";
 import { lifeFor } from "@/lib/scene-life";
-import { soundscapeFor } from "@/lib/soundscapes";
+import { spotsFor } from "@/lib/sound-spots";
+import { soundscapeFor, type Places } from "@/lib/soundscapes";
 import type { Reconstruction } from "@/lib/reconstructions";
 import { useI18n } from "@/lib/i18n";
 import { reconstructionGuide } from "@/lib/narration";
@@ -235,10 +236,13 @@ export function Reconstruction3D({
   const ambientScene = useMemo<AmbienceScene>(() => ({ scape, time: atmos }), [scape, atmos]);
   const sceneRef = useRef(ambientScene);
   sceneRef.current = ambientScene;
+  // Where the stage, the altar, the stalls are: set below, once the scene's life is.
+  const placesRef = useRef<Places>({});
   const startAmbience = useCallback(() => {
     ambienceRef.current ??= createAmbience();
     const engine = ambienceRef.current;
     if (!engine) return;
+    engine.setPlaces(placesRef.current);
     engine.setScene(sceneRef.current);
     void engine.start();
   }, []);
@@ -334,6 +338,16 @@ export function Reconstruction3D({
   const parts = useMemo(() => partsFor(item.model), [item.model]);
   // The people, fires and furniture of the place, and whether they are shown.
   const life = useMemo(() => lifeFor(item), [item]);
+  // The sound's spots are found in the same model and life, and the camera
+  // is the listener: near the stage the actor is louder, and to the side he is on.
+  const places = useMemo(() => spotsFor(item, life), [item, life]);
+  placesRef.current = places;
+  useEffect(() => {
+    ambienceRef.current?.setPlaces(places);
+  }, [places]);
+  const onListen = useCallback((at: [number, number, number], forward: [number, number]) => {
+    ambienceRef.current?.setListener(at, forward);
+  }, []);
   const [showLife, setShowLife] = useState(true);
   // Same for the labels: a new array every render would rebuild every pin.
   const labels = useMemo(
@@ -433,6 +447,7 @@ export function Reconstruction3D({
               walk={walking}
               onWalkEnd={onWalkEnd}
               padLabels={padLabels}
+              onListen={ambient ? onListen : undefined}
             />
           </Suspense>
         ) : (

@@ -142,6 +142,12 @@ type Props = {
   onWalkEnd?: (() => void) | undefined;
   /** Names for the on-screen walking pad's buttons, in the reader's language. */
   padLabels?: { forward: string; back: string; left: string; right: string } | undefined;
+  /**
+   * Told, ten times a second at most and only when it has moved, where the
+   * camera is and which way it looks along the ground (x, z): the ears the
+   * scene's sounds are placed for.
+   */
+  onListen?: ((at: [number, number, number], forward: [number, number]) => void) | undefined;
 };
 
 type Palette = {
@@ -400,6 +406,7 @@ export default function Reconstruction3DInner({
   walk = false,
   onWalkEnd,
   padLabels,
+  onListen,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   /*
@@ -409,6 +416,8 @@ export default function Reconstruction3DInner({
   const padRef = useRef({ forward: 0, right: 0 });
   const walkEndRef = useRef(onWalkEnd);
   walkEndRef.current = onWalkEnd;
+  const listenRef = useRef(onListen);
+  listenRef.current = onListen;
   const walkRef = useRef(walk);
   walkRef.current = walk;
   const apiRef = useRef<{
@@ -4716,6 +4725,27 @@ export default function Reconstruction3DInner({
         };
       }
 
+      /*
+       * The ears: where the camera is, passed on for the sound at most ten
+       * times a second and only when it has moved or turned, so a still view
+       * costs nothing.
+       */
+      let lastListen = 0;
+      const heard = new THREE.Vector3(Infinity, 0, 0);
+      const earFacing = new THREE.Vector3();
+      const heardLook = new THREE.Vector3();
+      const listen = (now: number) => {
+        const tell = listenRef.current;
+        if (!tell || now - lastListen < 0.1) return;
+        lastListen = now;
+        camera.getWorldDirection(earFacing);
+        if (heard.distanceToSquared(camera.position) < 0.01 && heardLook.dot(earFacing) > 0.9995)
+          return;
+        heard.copy(camera.position);
+        heardLook.copy(earFacing);
+        tell([camera.position.x, camera.position.y, camera.position.z], [earFacing.x, earFacing.z]);
+      };
+
       let lastFrame = performance.now() / 1000;
       const frame = () => {
         const now = performance.now() / 1000;
@@ -4806,6 +4836,7 @@ export default function Reconstruction3DInner({
         if (composer && qualityOn) composer.render();
         else renderer.render(scene, camera);
         placePins();
+        listen(now);
       };
 
       /*

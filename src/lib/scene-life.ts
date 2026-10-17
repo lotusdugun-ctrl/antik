@@ -3359,6 +3359,18 @@ function marketFor(item: Reconstruction): Piece[] {
   }
 }
 
+/**
+ * Where the scene's stalls and fountains are asked for: for the sound, which
+ * needs only to know where the market is, not which stall fitted.
+ */
+export function marketSpots(item: Reconstruction): { stalls: Vec3[]; fountains: Vec3[] } {
+  const wanted = marketFor(item);
+  return {
+    stalls: wanted.filter((p) => p.kind === "stall").map((p) => p.at),
+    fountains: wanted.filter((p) => p.kind === "fountain").map((p) => p.at),
+  };
+}
+
 /** A plan rectangle, turned: the ground a piece covers. */
 type Rect = { x: number; z: number; hx: number; hz: number; rotY: number };
 

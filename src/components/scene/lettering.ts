@@ -24,7 +24,8 @@ import type { Part } from "@/lib/reconstruction-parts";
  * Cut letters are drawn as a V-groove seen in daylight: the groove dark and
  * a little red, where dirt and the trace of the paint that filled them sit;
  * its upper wall in shadow and its lower lip catching the light. Painted
- * letters are flat ochre; scratched ones a fine line.
+ * letters are flat ochre; scratched ones a fine line; rubricated ones are cut
+ * and filled with a strong red, as the stones meant to be read from afar were.
  */
 
 type Plate = Extract<Part, { kind: "box" }> & { lettering: Lettering };
@@ -90,7 +91,7 @@ function serifs(strokes: Stroke[]): [number, number, number, number][] {
 function pathOf(lettering: Lettering, px: number, left: number, top: number): Path2D {
   const path = new Path2D();
   const widest = Math.max(...lettering.lines.map(measure));
-  const cut = lettering.finish === "cut";
+  const cut = lettering.finish === "cut" || lettering.finish === "rubricated";
   lettering.lines.forEach((line, row) => {
     const baseline = top + (PAD + 1 + row * LEADING) * px;
     const start = left + (PAD + (widest - measure(line)) / 2) * px;
@@ -145,6 +146,17 @@ function draw(context: CanvasRenderingContext2D, slot: Slot) {
   if (lettering.finish === "scratched") {
     pass("rgba(255, 250, 240, 0.45)", width * 0.42, 0.025);
     pass("rgba(52, 42, 34, 0.85)", width * 0.32, 0);
+    return;
+  }
+  if (lettering.finish === "rubricated") {
+    /*
+     * Cut, and the groove filled with red: the lip still catches the light,
+     * the paint fills the cut edge to edge, and a hair of shadow under the
+     * upper wall keeps the letter crisp against white marble at a distance.
+     */
+    pass("rgba(255, 252, 244, 0.5)", width * 1.25, 0.05);
+    pass("rgba(70, 14, 8, 0.75)", width * 1.18, -0.02);
+    pass("rgba(176, 30, 20, 1)", width, 0);
     return;
   }
   const dark = material === "letteringDark";
