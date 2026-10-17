@@ -1,18 +1,18 @@
+import { extent, layout, LEADING, type EpigraphicText } from "@/lib/epigraphy";
 import type { Material, Part, Vec3 } from "@/lib/reconstruction-parts";
 
 /**
  * The small things that make a big building read as built: the lettering cut
  * into its stone, the tiles on its roof, the paint left on its mouldings.
  *
- * None of it is measured, and none of it pretends to be. The lettering is not
- * text — no Greek or Latin is invented here — but rows of letter-shaped cuts
- * in the proportions of an inscription, so that from a few metres away a
- * statue base or an architrave reads as inscribed, which it was. The tiles are
- * laid at the spacing Greek and Roman roofs used; the paint is kept faded.
+ * The lettering is real: each block of it is a text that stood on the
+ * building, or a formula of the kind it carried, read from the corpora and
+ * cited in `epigraphy.ts`. The tiles are laid at the spacing Greek and Roman
+ * roofs used; the paint is kept faded.
  *
  * Every helper works in a face's own frame and returns ordinary parts, so the
- * renderer merges them with the rest of the stone: a row of a hundred letters
- * costs no extra draw call.
+ * renderer merges them with the rest of the stone; the lettering of a whole
+ * building is drawn from one texture.
  */
 
 const TAU = Math.PI * 2;
@@ -48,127 +48,57 @@ export const FACING = {
   west: -Math.PI / 2,
 } as const;
 
-/*
- * The strokes of a letter, in a unit cell (x across, y up), as rectangles
- * [x0, y0, x1, y1] before the stroke's own thickness is added. Only upright
- * and level strokes: the capitals of a Greek or Latin inscription are mostly
- * those, and a row of them reads as lettering long before any one of them can
- * be read as a letter.
- */
-const V = (x: number, y0 = 0, y1 = 1): [number, number, number, number] => [x, y0, x, y1];
-const H = (y: number, x0 = 0, x1 = 1): [number, number, number, number] => [x0, y, x1, y];
-const GLYPHS: [number, number, number, number][][] = [
-  [V(0.5)], // I
-  [V(0), H(1), H(0.5, 0, 0.8), H(0)], // E
-  [V(0), V(1), H(0.5)], // H
-  [V(0), V(1), H(1)], // Π
-  [H(1), V(0.5)], // T
-  [V(0), H(1, 0, 0.85)], // Γ
-  [V(0), V(1), H(1), H(0)], // O, squared as the stone-cutter's chisel leaves it
-  [H(1), H(0.5, 0.15, 0.85), H(0)], // Ξ
-  [V(0), H(1, 0, 0.9), H(0.5, 0, 0.9), V(1, 0.5, 1)], // P
-  [V(0, 0, 0.85), V(1, 0, 0.85), H(0.85, 0.1, 0.9), H(0.42)], // A
-  [H(1), H(0), H(0.5, 0.2, 0.6)], // Σ
-  [V(0), V(1), V(0.5, 0.3, 1)], // M, N
-  [V(0), H(0)], // L
-  [V(0), V(1, 0.5, 1), V(1, 0, 0.5), H(0.5)], // K, cut square
-];
-/** How often each letter turns up: the vowels and the commoner consonants more. */
-const WEIGHTS = [5, 6, 3, 3, 5, 2, 6, 1, 3, 6, 5, 4, 2, 2];
-const WEIGHT_SUM = WEIGHTS.reduce((a, c) => a + c, 0);
-
-const pickGlyph = (random: () => number) => {
-  let roll = random() * WEIGHT_SUM;
-  for (let i = 0; i < GLYPHS.length; i += 1) {
-    roll -= WEIGHTS[i]!;
-    if (roll <= 0) return GLYPHS[i]!;
-  }
-  return GLYPHS[0]!;
-};
-
 export type InscriptionOptions = {
   /** The bottom centre of the block of lettering, on the face itself. */
   at: Vec3;
   /** Turns `+z` onto the face's outward normal (see `FACING`). */
   rotY: number;
-  /** The length of a line. */
+  /** The longest a line may run. */
   width: number;
-  /** How tall the letters are cut. */
+  /** How tall the letters are cut, at most: a long text is cut smaller to fit. */
   letter: number;
+  /** What is written (see `epigraphy.ts`). */
+  text: EpigraphicText;
+  /** The most lines a wrapped text may take. */
   rows?: number;
-  seed: number;
+  /** The most height the block may take, metres. */
+  height?: number;
+  /** Whether `at` is the block's bottom centre (the default) or its middle. */
+  middle?: boolean;
   material?: Material;
-  /** How full the last line runs, 0-1: inscriptions rarely end flush. */
-  lastLine?: number;
-  /** Interpuncts between the words, as Roman lettering has. */
-  stops?: boolean;
 };
 
 /**
- * Rows of lettering cut into a face. Each letter is a few strokes standing a
- * millimetre or two proud of the stone and stopping short in it — enough to
- * catch the light — in the darker material that weathered, paint-filled
- * letters read as from the ground.
+ * A text cut into a face: one thin plate lying on the stone, as wide and as
+ * tall as the lettering, which carries the laid-out lines. The renderer draws
+ * the letters themselves on it (see `components/scene/lettering.ts`); here it
+ * is a part like any other, so tests can find it on its face and the bounds
+ * of a block can leave it out where a neighbour covers it.
  *
- * Returns parts in line order, top line first.
+ * The plate sits mostly proud of the face, its back sunk a few millimetres
+ * into it, so the letters can never be lost inside the stone.
  */
 export function inscription(options: InscriptionOptions): Part[] {
-  const { at, rotY, width, letter, seed } = options;
-  const rows = options.rows ?? 1;
-  const material = options.material ?? "lettering";
-  const random = seeded(seed);
-  const parts: Part[] = [];
-  const cell = letter * 0.7;
-  const gap = letter * 0.24;
-  const stroke = Math.max(0.012, letter * 0.13);
-  const depth = Math.max(0.01, letter * 0.08);
-  // The strokes sit mostly proud of the face, their backs sunk in it.
-  const z = depth * 0.2;
-  const leading = letter * 1.5;
-  const perLine = Math.max(1, Math.floor((width + gap) / (cell + gap)));
-  for (let row = 0; row < rows; row += 1) {
-    const y = (rows - 1 - row) * leading;
-    const last = row === rows - 1;
-    const count = last ? Math.max(1, Math.round(perLine * (options.lastLine ?? 1))) : perLine;
-    const lineWidth = count * cell + (count - 1) * gap;
-    let word = 2 + Math.floor(random() * 6);
-    for (let i = 0; i < count; i += 1) {
-      const left = -lineWidth / 2 + i * (cell + gap);
-      word -= 1;
-      if (word < 0 && i < count - 1) {
-        // A word break: a stop at mid height, or a plain space.
-        word = 2 + Math.floor(random() * 6);
-        if (options.stops !== false) {
-          const s = stroke * 1.3;
-          parts.push(
-            box(
-              material,
-              onFace(at, rotY, left + cell / 2, y + letter * 0.42, z),
-              [s, s, depth],
-              rotY,
-            ),
-          );
-        }
-        continue;
-      }
-      for (const [x0, y0, x1, y1] of pickGlyph(random)) {
-        // The stroke's rectangle, thickened and kept inside the letter's cell.
-        const xl = x0 * (cell - stroke);
-        const xr = x1 * (cell - stroke) + stroke;
-        const yb = y0 * (letter - stroke);
-        const yt = y1 * (letter - stroke) + stroke;
-        parts.push(
-          box(
-            material,
-            onFace(at, rotY, left + (xl + xr) / 2, y + yb, z),
-            [xr - xl, yt - yb, depth],
-            rotY,
-          ),
-        );
-      }
-    }
-  }
-  return parts;
+  const { at, rotY } = options;
+  const lettering = layout(options.text, {
+    width: options.width,
+    letter: options.letter,
+    ...(options.rows !== undefined ? { rows: options.rows } : {}),
+    ...(options.height !== undefined ? { height: options.height } : {}),
+  });
+  if (lettering.lines.length === 0 || lettering.lines.every((line) => !line)) return [];
+  const [width, height] = extent(lettering);
+  const depth = 0.01;
+  return [
+    {
+      kind: "box",
+      material: options.material ?? "lettering",
+      at: onFace(at, rotY, 0, options.middle ? -height / 2 : 0, depth * 0.2),
+      size: [width, height, depth],
+      rotY,
+      lettering,
+    },
+  ];
 }
 
 /**
@@ -204,7 +134,7 @@ export function uncovered(parts: Part[]): Part[] {
 
 /** How tall a block of lettering stands, for setting it in a field. */
 export const inscriptionHeight = (letter: number, rows: number) =>
-  letter + (rows - 1) * letter * 1.5;
+  letter + (rows - 1) * letter * LEADING;
 
 /**
  * An inscribed panel: a smooth field set a little proud of the face, framed
@@ -218,11 +148,10 @@ export function inscribedPanel(options: {
   height: number;
   material: Material;
   letter: number;
-  rows: number;
-  seed: number;
-  lastLine?: number;
+  text: EpigraphicText;
+  rows?: number;
 }): Part[] {
-  const { at, rotY, width, height, material, letter, rows, seed } = options;
+  const { at, rotY, width, height, material, letter } = options;
   const proud = 0.03;
   const parts: Part[] = [
     box(material, onFace(at, rotY, 0, 0, proud / 2 - 0.01), [width, height, proud + 0.02], rotY),
@@ -242,20 +171,115 @@ export function inscribedPanel(options: {
       ),
     );
   }
-  const block = inscriptionHeight(letter, rows);
-  parts.push(
-    ...inscription({
-      at: onFace(at, rotY, 0, (height - block) / 2, proud),
-      rotY,
-      width: width - bead * 2 - letter * 0.8,
-      letter,
-      rows,
-      seed,
-      ...(options.lastLine !== undefined ? { lastLine: options.lastLine } : {}),
-    }),
-  );
+  // The text, centred in the field inside the frame.
+  const field = height - bead * 2 - letter * 0.8;
+  const cut = inscription({
+    at: onFace(at, rotY, 0, 0, proud),
+    rotY,
+    width: width - bead * 2 - letter * 0.8,
+    letter,
+    text: options.text,
+    height: field,
+    ...(options.rows !== undefined ? { rows: options.rows } : {}),
+  });
+  for (const part of cut) {
+    if (part.kind !== "box") continue;
+    part.at = onFace(at, rotY, 0, (height - part.size[1]) / 2, proud + 0.002);
+  }
+  parts.push(...cut);
   return parts;
 }
+
+/* ------------------------------------------------------------------ *
+ * Walls
+ * ------------------------------------------------------------------ */
+
+/**
+ * The dressing of a plain stretch of ashlar wall: a moulded foot, the joint
+ * of every course drawn along it a hair proud of the face so it catches the
+ * light, and a coping under the top. `at` is the middle of the wall's foot
+ * on its face, `rotY` turns `+z` onto the face's outward normal, and `gaps`
+ * are stretches along it (from, to, in the face's own x) left bare for doors.
+ */
+export function ashlar(options: {
+  at: Vec3;
+  rotY: number;
+  length: number;
+  height: number;
+  course?: number;
+  material?: Material;
+  /** The colour the joints read in: a darker stone than the face. */
+  joint?: Material;
+  /** Draw the upright joints too, staggered course by course, blocks this long. */
+  blocks?: number;
+  foot?: boolean;
+  coping?: boolean;
+  gaps?: [number, number][];
+}): Part[] {
+  const { at, rotY, length, height } = options;
+  const course = options.course ?? 0.62;
+  const material = options.material ?? "marbleWorn";
+  const joint = options.joint ?? JOINTS[material] ?? material;
+  const parts: Part[] = [];
+  const gaps = [...(options.gaps ?? [])].sort((a, b) => a[0] - b[0]);
+  // The runs of wall between the gaps.
+  const runs: [number, number][] = [];
+  let from = -length / 2;
+  for (const [g0, g1] of gaps) {
+    if (g0 > from) runs.push([from, Math.min(g0, length / 2)]);
+    from = Math.max(from, g1);
+  }
+  if (from < length / 2) runs.push([from, length / 2]);
+  const band = (y: number, h: number, proud: number, stone: Material) => {
+    for (const [u0, u1] of runs) {
+      if (u1 - u0 < 0.05) continue;
+      parts.push(
+        box(
+          stone,
+          onFace(at, rotY, (u0 + u1) / 2, y, proud / 2 - 0.004),
+          [u1 - u0, h, proud + 0.008],
+          rotY,
+        ),
+      );
+    }
+  };
+  let bottom = 0;
+  if (options.foot !== false) {
+    band(0, 0.5, 0.14, material);
+    band(0.5, 0.12, 0.07, material);
+    bottom = 0.62;
+  }
+  const top = options.coping !== false ? height - 0.45 : height;
+  let row = 0;
+  for (let y = bottom; y < top - 0.2; y += course) {
+    if (y > bottom) band(y, 0.025, 0.012, joint);
+    if (options.blocks) {
+      // The upright joints of this course, half a block along from the last.
+      const next = Math.min(y + course, top);
+      for (const [u0, u1] of runs) {
+        for (
+          let u = u0 + (row % 2 ? options.blocks / 2 : options.blocks);
+          u < u1 - 0.2;
+          u += options.blocks
+        ) {
+          parts.push(box(joint, onFace(at, rotY, u, y, 0.002), [0.022, next - y, 0.012], rotY));
+        }
+      }
+    }
+    row += 1;
+  }
+  if (options.coping !== false) band(top, 0.45, 0.12, material);
+  return parts;
+}
+
+/** The stone a wall's joints read in, by the stone of its face. */
+const JOINTS: Partial<Record<Material, Material>> = {
+  marble: "marbleWorn",
+  marbleWorn: "stone",
+  stone: "stoneDark",
+  limestone: "stone",
+  conglomerate: "stoneDark",
+};
 
 /* ------------------------------------------------------------------ *
  * Roof tiles

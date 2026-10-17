@@ -335,7 +335,11 @@ export const de: Partial<Record<TKey, string>> = {
   ambience_on: "Umgebungsklang",
   ambience_off: "Umgebungsklang aus",
   ambience_hint:
-    "Wind, Zikaden, nächtliche Grillen und Publikum in den Theatern – im Browser erzeugt.",
+    "Die Klänge des Ortes: im Theater Publikum, Applaus und Musik von der Bühne; im Hippodrom galoppierende Gespanne und eine tobende Menge; am Tempel Aulos, Trommel und Opfertiere; auf der Agora der Markt. Echte Aufnahmen und im Browser erzeugter Klang; leiser, sobald die Führung spricht.",
+  ambience_credit: "Umgebungsklang: Aufnahmen und Musik aus 0 A.D.",
+  ambience_credit_rest:
+    "sowie gemeinfreie (CC0) Aufnahmen von freesound.org (ESC-50, Sonic Pi, Minetest).",
+  ambience_credit_all: "Alle Quellen",
   recon_life_show: "Alltag zeigen",
   recon_life_hide: "Alltag ausblenden",
   recon_life_hint:

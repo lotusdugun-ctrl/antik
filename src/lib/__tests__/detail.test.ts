@@ -136,16 +136,21 @@ describe("inscriptions", () => {
       "milet-buyuk-tiyatro",
       "efes-buyuk-tiyatro",
       "side-tiyatrosu",
-      "halikarnas-mozolesi",
       "perge-stadyumu",
       "aphrodisias-stadyumu",
       "nemrut-dogu-terasi",
+      "efes-yamac-evler",
     ]) {
-      const letters = partsOf(byId(id)).filter((part) => part.material.startsWith("lettering"));
-      expect(`${id}: ${letters.length > 60}`).toBe(`${id}: true`);
+      const texts = partsOf(byId(id)).filter(
+        (part) => part.kind === "box" && part.lettering !== undefined,
+      );
+      expect(`${id}: ${texts.length > 0}`).toBe(`${id}: true`);
     }
     // Göbeklitepe was cut eleven thousand years before anyone wrote.
-    const gobekli = partsOf(byId("gobeklitepe-d-yapisi"));
+    const gobekli = [
+      ...partsOf(byId("gobeklitepe-d-yapisi")),
+      ...lifeFor(byId("gobeklitepe-d-yapisi")).props,
+    ];
     expect(gobekli.filter((part) => part.material.startsWith("lettering"))).toEqual([]);
   });
 
@@ -171,6 +176,18 @@ describe("inscriptions", () => {
           q[1] <= part.at[1] + top
         );
       }
+      if (part.kind === "ring") {
+        const r = Math.hypot(q[0] - part.at[0], q[2] - part.at[2]);
+        let angle = Math.atan2(q[2] - part.at[2], q[0] - part.at[0]);
+        while (angle < part.thetaStart) angle += Math.PI * 2;
+        return (
+          r >= part.inner &&
+          r <= part.outer &&
+          angle <= part.thetaStart + part.thetaLength &&
+          q[1] >= part.at[1] &&
+          q[1] <= part.at[1] + part.height
+        );
+      }
       if (part.kind !== "box" || part.rotX) return false;
       const [u, v] = local(part.at, part.rotY, q[0], q[2]);
       return (
@@ -185,7 +202,7 @@ describe("inscriptions", () => {
       const parts = [...partsOf(item), ...lifeFor(item).props];
       const solids = parts.filter(
         (part) =>
-          (part.kind === "box" || part.kind === "carving") &&
+          (part.kind === "box" || part.kind === "carving" || part.kind === "ring") &&
           !part.material.startsWith("lettering"),
       );
       for (const letter of parts) {

@@ -21,9 +21,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
-import { createAmbience, type Ambience } from "@/lib/ambience";
+import { createAmbience, type Ambience, type AmbienceScene } from "@/lib/ambience";
 import { partsFor } from "@/lib/reconstruction-parts";
 import { lifeFor } from "@/lib/scene-life";
+import { soundscapeFor } from "@/lib/soundscapes";
 import type { Reconstruction } from "@/lib/reconstructions";
 import { useI18n } from "@/lib/i18n";
 import { reconstructionGuide } from "@/lib/narration";
@@ -82,6 +83,9 @@ type WebkitDocument = Document & {
   webkitFullscreenEnabled?: boolean;
   webkitExitFullscreen?: () => Promise<void> | void;
 };
+/** Where the visitor's choice to silence the models is remembered. */
+const AMBIENCE_KEY = "antik-ambience";
+
 const fullscreenElement = () =>
   document.fullscreenElement ?? (document as WebkitDocument).webkitFullscreenElement ?? null;
 
@@ -212,34 +216,70 @@ export function Reconstruction3D({
     setQuality(capable);
   }, []);
 
-  /* Ambient sound. Created on the first press: an AudioContext may only
-     start inside a user gesture. */
+  /*
+   * The sound of the place. On by default — the owner wants every model to be
+   * heard — but a browser lets nothing play before the visitor has touched the
+   * page, so it starts on the first tap, click or key (at once, if they
+   * already have). Turning it off is remembered.
+   */
   const ambienceRef = useRef<Ambience | null>(null);
-  const [ambient, setAmbient] = useState(false);
-  const ambientScene = useMemo(
-    () => ({
-      time: atmos,
-      crowd: item.model.kind === "roman-theatre" || item.model.kind === "stadium",
-      exposed: BIOME[item.id] === "mountain" || BIOME[item.id] === "steppe",
-    }),
-    [atmos, item.model.kind, item.id],
-  );
-  const toggleAmbient = () => {
-    if (ambient) {
-      ambienceRef.current?.stop();
-      setAmbient(false);
+  const [ambient, setAmbient] = useState(true);
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem(AMBIENCE_KEY) === "off") setAmbient(false);
+    } catch {
+      /* storage blocked: keep the default */
+    }
+  }, []);
+  const scape = useMemo(() => soundscapeFor(item), [item]);
+  const ambientScene = useMemo<AmbienceScene>(() => ({ scape, time: atmos }), [scape, atmos]);
+  const sceneRef = useRef(ambientScene);
+  sceneRef.current = ambientScene;
+  const startAmbience = useCallback(() => {
+    ambienceRef.current ??= createAmbience();
+    const engine = ambienceRef.current;
+    if (!engine) return;
+    engine.setScene(sceneRef.current);
+    void engine.start();
+  }, []);
+  useEffect(() => {
+    if (!ambient || !mounted) return;
+    const activation = (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } })
+      .userActivation;
+    if (activation?.hasBeenActive) {
+      startAmbience();
       return;
     }
-    ambienceRef.current ??= createAmbience();
-    if (!ambienceRef.current) return;
-    ambienceRef.current.setScene(ambientScene);
-    void ambienceRef.current.start();
-    setAmbient(true);
+    const gestures = ["pointerdown", "keydown", "touchend"] as const;
+    const onGesture = () => {
+      gestures.forEach((name) => window.removeEventListener(name, onGesture, true));
+      startAmbience();
+    };
+    gestures.forEach((name) => window.addEventListener(name, onGesture, true));
+    return () => gestures.forEach((name) => window.removeEventListener(name, onGesture, true));
+  }, [ambient, mounted, startAmbience]);
+  const toggleAmbient = () => {
+    const next = !ambient;
+    try {
+      window.localStorage.setItem(AMBIENCE_KEY, next ? "on" : "off");
+    } catch {
+      /* not remembered, but still obeyed */
+    }
+    track("3D ambience", { model: item.id, on: next ? "on" : "off" });
+    setAmbient(next);
+    if (next) startAmbience();
+    else ambienceRef.current?.stop();
   };
   useEffect(() => {
     ambienceRef.current?.setScene(ambientScene);
   }, [ambientScene]);
-  useEffect(() => () => ambienceRef.current?.dispose(), []);
+  useEffect(
+    () => () => {
+      ambienceRef.current?.dispose();
+      ambienceRef.current = null;
+    },
+    [],
+  );
 
   /* The narrated tour turns the camera to each hotspot as the voice gets to it. */
   const guide = useMemo(() => applyStories(reconstructionGuide(item), stories), [item, stories]);
@@ -680,6 +720,30 @@ export function Reconstruction3D({
       <p className="mt-2 text-xs text-muted-foreground">
         {t("recon_scale")} {t("recon_landscape_note")} {t("recon_life_note")}{" "}
         {t("recon_face_credit")}
+      </p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        {t("ambience_credit")} (
+        <a
+          href="https://www.wildfiregames.com/"
+          target="_blank"
+          rel="noreferrer"
+          className="hover:underline"
+        >
+          Wildfire Games
+        </a>
+        ,{" "}
+        <a
+          href="https://creativecommons.org/licenses/by-sa/3.0/"
+          target="_blank"
+          rel="noreferrer license"
+          className="hover:underline"
+        >
+          CC BY-SA 3.0
+        </a>
+        ) {t("ambience_credit_rest")}{" "}
+        <a href="/ambience/CREDITS.txt" target="_blank" rel="noreferrer" className="underline">
+          {t("ambience_credit_all")}
+        </a>
       </p>
 
       {still && todayPhoto && (

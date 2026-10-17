@@ -1,3 +1,4 @@
+import { TEXTS, type EpigraphicText } from "@/lib/epigraphy";
 import { inscription } from "@/lib/reconstruction-detail";
 import {
   bankHeight,
@@ -8,11 +9,13 @@ import {
   horseStatue,
   ornateAltar,
   stadiumLayout,
+  walkStartFor,
   type FigureIdentity,
   type FigurePaint,
   type Material,
   type Part,
   type Vec3,
+  type WalkStart,
 } from "@/lib/reconstruction-parts";
 import type { ScanId } from "@/lib/scans";
 import type {
@@ -233,6 +236,8 @@ export type SceneLife = {
    * the racers are passing. Empty for a crowd that cheers at random.
    */
   cheerFor?: "racers";
+  /** Where a walk through the scene begins (see `walkStartFor`). */
+  walkStart?: WalkStart;
 };
 
 /* ------------------------------------------------------------------ *
@@ -1084,22 +1089,22 @@ function cart(at: Vec3, rotY: number, rand: Rand): Part[] {
 }
 
 /**
- * An honorific statue: a moulded base, its inscription — lettering, not
- * words — and a bronze of a benefactor of the city on top.
+ * An honorific statue: a moulded base, the inscription naming who was
+ * honoured and by whom, and a bronze of a benefactor of the city on top.
  */
-function honorific(at: Vec3, rotY: number, seed: number, female: boolean): Part[] {
+function honorific(at: Vec3, rotY: number, female: boolean, text: EpigraphicText): Part[] {
   const parts: Part[] = [
     box("marbleWorn", at, [1.1, 0.2, 1.1], rotY),
     box("marble", [at[0], at[1] + 0.2, at[2]], [0.86, 1.25, 0.86], rotY),
     box("marbleWorn", [at[0], at[1] + 1.45, at[2]], [1.05, 0.16, 1.05], rotY),
     ...inscription({
-      at: turn(at, rotY, 0, 0.55, 0.43),
+      at: turn(at, rotY, 0, 0.84, 0.43),
       rotY,
-      width: 0.66,
+      width: 0.7,
       letter: 0.07,
-      rows: 6,
-      lastLine: 0.5,
-      seed,
+      height: 1.05,
+      middle: true,
+      text,
     }).map(decor),
   ];
   parts.push(
@@ -3135,7 +3140,7 @@ const ERA: Record<string, Era> = {
 
 /** The scene for one reconstruction. */
 export function lifeFor(item: Reconstruction): SceneLife {
-  return furnish(item, sceneFor(item));
+  return { ...furnish(item, sceneFor(item)), walkStart: walkStartFor(item.model) };
 }
 
 function sceneFor(item: Reconstruction): SceneLife {
@@ -3449,6 +3454,26 @@ function occupies(part: Part, x: number, y: number, z: number): boolean {
 }
 
 /**
+ * What an honorific base in the square says. Where a real statue base of the
+ * place has been read — the Asiarch Apollodoros at Miletus, the high priest
+ * Kleon at Ephesus — the first statue carries it; any other carries only the
+ * formula such bases open with ("the council and the people honoured"), the
+ * name below worn away rather than invented.
+ */
+function honorificText(id: string, index: number, female: boolean): EpigraphicText {
+  if (index === 1 && !female) {
+    if (id === "milet-buyuk-tiyatro") return TEXTS.miletusApollodoros;
+    if (
+      ["celsus-kutuphanesi", "efes-buyuk-tiyatro", "efes-yamac-evler", "artemis-tapinagi"].includes(
+        id,
+      )
+    )
+      return TEXTS.ephesusHonorific;
+  }
+  return TEXTS.honorificFormula;
+}
+
+/**
  * Sets the scene's street furniture down where it fits: on open ground the
  * landscape leaves flat, clear of the building and of everything else in
  * the scene, and out of the way of everyone who walks — a piece in the path
@@ -3562,7 +3587,10 @@ function furnish(item: Reconstruction, life: SceneLife): SceneLife {
         break;
       case "honorific":
         statues += 1;
-        made = honorific(at, rotY, Math.round(at[0] * 13 + at[2] * 7), rand() < 0.35);
+        {
+          const female = rand() < 0.35;
+          made = honorific(at, rotY, female, honorificText(item.id, statues, female));
+        }
         break;
       case "basin":
         made = lustralBasin(at);

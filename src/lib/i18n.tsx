@@ -1317,11 +1317,20 @@ const dict = {
 
   // ————— Ambient sound —————
   ambience_on: { tr: "Ortam sesi", en: "Ambient sound" },
-  ambience_off: { tr: "Sesi kapat", en: "Mute ambience" },
+  ambience_off: { tr: "Ortam sesini kapat", en: "Mute ambience" },
   ambience_hint: {
-    tr: "Rüzgâr, ağustos böcekleri, gece cırcır böcekleri ve tiyatroda kalabalık — tarayıcıda üretilen sesler.",
-    en: "Wind, cicadas, night crickets and a crowd in the theatres — synthesised in the browser.",
+    tr: "Mekânın sesleri: tiyatroda seyirci, alkış ve sahneden müzik; hipodromda dörtnala atlar ve kalabalığın coşkusu; tapınakta aulos, davul ve kurbanlık hayvanlar; agorada pazar. Gerçek kayıtlar ve tarayıcıda üretilen sesler; anlatım başlayınca kısılır.",
+    en: "The sounds of the place: the audience, applause and music from the stage in a theatre; galloping teams and a roaring crowd at the races; pipes, drum and the victims at a temple; the market in the agora. Real recordings and sound made in the browser; it dips when the narrator speaks.",
   },
+  ambience_credit: {
+    tr: "Ortam sesleri: 0 A.D. kayıtları ve müziği",
+    en: "Ambient sound: recordings and music from 0 A.D.",
+  },
+  ambience_credit_rest: {
+    tr: "ile freesound.org'dan kamu malı (CC0) kayıtlar (ESC-50, Sonic Pi, Minetest).",
+    en: "and public-domain (CC0) recordings from freesound.org (ESC-50, Sonic Pi, Minetest).",
+  },
+  ambience_credit_all: { tr: "Tüm kaynaklar", en: "All sources" },
 
   // ————— Realism / AR / compare —————
   recon_life_show: { tr: "Yaşamı göster", en: "Show daily life" },

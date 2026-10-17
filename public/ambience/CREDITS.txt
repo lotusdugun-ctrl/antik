@@ -1,0 +1,72 @@
+Antik Türkiye — ambient sound in the 3D models
+==============================================
+
+The recordings in this folder are edited (trimmed, joined, levelled, converted
+to MP3) from the sources below. scripts/build_ambience.py in the project
+records exactly which file each clip came from and what was done to it.
+Everything else heard in the models (wind, cicadas, sparks, chariot wheels,
+the scops owl, doves, gulls and larks, the salpinx, the gourd rattle, the
+reverb) is synthesised in the browser.
+
+
+1. 0 A.D. — Wildfire Games — CC BY-SA 3.0
+   https://www.wildfiregames.com/   https://play0ad.com/
+   Licence: https://creativecommons.org/licenses/by-sa/3.0/
+   Source:  https://github.com/0ad/0ad  (binaries/data/mods/public/audio)
+
+   birds.mp3      ambient/dayscape/day_temperate_12.ogg
+   market.mp3     ambient/building/amb_trade_10, _12, _13.ogg
+   murmur.mp3     ambient/building/amb_trade_10, _11, _13, _20.ogg (layered)
+   hooves.mp3     actor/mounted/movement/mstep110-115.ogg
+   aulos.mp3      music/Whistler.ogg (0:07-0:47), music by Omri Lahav
+   lyre.mp3       music/Whistler.ogg (1:03-1:33), music by Omri Lahav
+   neigh1-3.mp3   actor/fauna/animal/horse_attack1-3.ogg
+   moo1.mp3       actor/fauna/animal/cattle_02.ogg
+   moo2.mp3       actor/fauna/animal/cattle_06.ogg
+   footsteps.mp3  actor/human/movement/Footsteps/Footstep_Rock_Walking.ogg
+   anvil.mp3      resource/mining/mine_metal_01, _02.ogg
+   stone.mp3      resource/mining/mine_stone_01-03.ogg, resource/construction/con_stone_01-02.ogg
+
+   These edited clips are themselves released under CC BY-SA 3.0.
+
+
+2. ESC-50 (Karol J. Piczak) — only clips whose freesound.org originals are
+   CC0 1.0 (public domain), as listed clip by clip in
+   https://github.com/karolpiczak/ESC-50/blob/master/LICENSE
+
+   applause1.mp3  3-138114-A  freesound 138114
+   applause2.mp3  5-221568-A  freesound 221568
+   applause3.mp3  5-221567-A  freesound 221567
+   cheer.mp3      2-25292-A   freesound 25292
+   laugh1.mp3     1-36164-B   freesound 36164
+   laugh2.mp3     5-244526-A  freesound 244526
+   laugh3.mp3     1-73123-A   freesound 73123
+   moo3.mp3       4-181955-A  freesound 181955
+   sheep.mp3      3-140199-C  freesound 140199
+   dog1.mp3       3-155312-A  freesound 155312
+   dog2.mp3       2-122104-A  freesound 122104 (rickyjezz)
+   rooster.mp3    5-200334-A  freesound 200334
+   crow.mp3       4-173865-A  freesound 173865
+   saw.mp3        2-59321-A   freesound 59321
+   sea.mp3        4-182613-A/B, 5-208810-A/B
+   fire.mp3       4-181563-A, 1-17808-A, 4-182369-A
+   crickets.mp3   4-195707-A, 1-59102-A, 3-162786-A, 3-146033-A
+
+
+3. Running water — Yuval, freesound.org 197023 — CC0 1.0
+   via Minetest Game, mods/env_sounds (https://github.com/minetest/minetest_game)
+   fountain.mp3   env_sounds_water.1-4.ogg
+
+
+4. Sonic Pi sample library — CC0 1.0 (https://github.com/sonic-pi-net/sonic-pi)
+   drum.mp3       drum_tom_lo_soft (menegass, freesound 100065),
+                  drum_bass_soft (menegass, freesound 100052)
+
+
+5. voices/ — spoken Greek, recorded with Microsoft Edge's neural voices
+   (el-GR-NestorasNeural, el-GR-AthinaNeural) by
+   scripts/generate_ambience_voices.py. The texts are public domain:
+   Sophocles (Oedipus the King 1-8, Antigone 332-333), Aristophanes (Frogs 1-4;
+   the herald's call, Peace 551), Pindar (Olympian 1.1-2), Homer (Iliad 24.725-726), the Homeric Hymns
+   (3, 23, 27), Cleanthes' Hymn to Zeus, and the inscription of Antiochos I on
+   Nemrut Dağı (OGIS 383).

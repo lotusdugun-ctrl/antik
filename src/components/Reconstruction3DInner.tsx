@@ -8,6 +8,7 @@ import {
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { SCANS } from "@/lib/scans";
 import { buildLandscape, type Biome } from "./scene/landscape";
+import { buildLettering, isPlate } from "./scene/lettering";
 import type { LifeHandle } from "./scene/life";
 import type { SceneLife } from "@/lib/scene-life";
 import type * as THREE_NS from "three";
@@ -2925,6 +2926,8 @@ export default function Reconstruction3DInner({
         const statueOf = new Map<THREE_NS.BufferGeometry, string>();
         for (const part of source) {
           if (part.carving || part.scan) continue;
+          // A lettered plate is drawn by the lettering, on its own texture.
+          if (isPlate(part)) continue;
           const list = byMaterial.get(part.material) ?? [];
           const geometry = flatten(geometryFor(part));
           list.push(geometry);
@@ -3054,6 +3057,26 @@ export default function Reconstruction3DInner({
         lifeGroup.add(lifeHandle.group);
       }
       lifeGroup.visible = showLifeRef.current;
+
+      /*
+       * The inscriptions: real texts, drawn letter by letter onto a canvas
+       * once the building is on screen, so the model never waits on them.
+       * The building's go with the building; the statue bases of the scene
+       * with its life, so they hide with it.
+       */
+      const letterings: { dispose: () => void }[] = [];
+      const letteringTimer = setTimeout(() => {
+        if (disposed) return;
+        const anisotropy = renderer.capabilities.getMaxAnisotropy();
+        const own = buildLettering(THREE, parts.filter(isPlate), anisotropy);
+        scene.add(own.group);
+        letterings.push(own);
+        if (life) {
+          const theirs = buildLettering(THREE, life.props.filter(isPlate), anisotropy);
+          lifeGroup.add(theirs.group);
+          letterings.push(theirs);
+        }
+      }, 60);
       // How much the fires light the scene: a little by day, fully at night.
       const startAtmos = latestRef.current.atmos;
       let glowTarget = startAtmos === "night" ? 1 : startAtmos === "golden" ? 0.45 : 0.08;
@@ -4350,9 +4373,39 @@ export default function Reconstruction3DInner({
         orbitPosition.copy(camera.position);
         orbitTarget.copy(controls.target);
         controls.enabled = false;
+        walker.view = 0;
+        walker.fall = 0;
+        walker.lift = 0;
+        walker.nudge = 0;
         /*
-         * Start in front of the building, a few paces outside it, facing its
-         * middle — where a visitor arriving would stand. "In front" is the
+         * Start where the place's life is (see `walkStartFor`): a few rows up
+         * in a theatre looking at the stage, at the edge of a stadium's
+         * track, in a temple's forecourt facing its steps. The spot is taken
+         * only if there is a floor there at the height expected and room to
+         * stand on it.
+         */
+        const start = life?.walkStart;
+        if (start) {
+          const [x, z] = start.at;
+          probeAt(x, z, start.floor + 0.6);
+          if (Math.abs(probe.floor - start.floor) < 0.7 && fits(0)) {
+            const [lx, ly, lz] = start.look;
+            walker.feet = probe.floor;
+            walker.view = walker.feet;
+            walker.yaw = Math.atan2(x - lx, z - lz);
+            walker.pitch = Math.max(
+              -0.45,
+              Math.min(0.5, Math.atan2(ly - walker.feet - EYE, Math.hypot(lx - x, lz - z))),
+            );
+            camera.position.set(x, walker.feet + EYE, z);
+            camera.rotation.set(walker.pitch, walker.yaw, 0, "YXZ");
+            walker.on = true;
+            return;
+          }
+        }
+        /*
+         * Otherwise in front of the building, a few paces outside it, facing
+         * its middle — where a visitor arriving would stand. "In front" is the
          * side the model is first shown from.
          */
         let fx = direction.x;
@@ -4369,9 +4422,6 @@ export default function Reconstruction3DInner({
         const z = centre.z + fz * away;
         walker.feet = floorAt(x, z, groundY + STEP);
         walker.view = walker.feet;
-        walker.fall = 0;
-        walker.lift = 0;
-        walker.nudge = 0;
         walker.yaw = Math.atan2(fx, fz);
         walker.pitch = Math.max(
           -0.3,
@@ -4998,6 +5048,8 @@ export default function Reconstruction3DInner({
         apronMaterial.dispose();
         landscape.dispose();
         lifeHandle?.dispose();
+        clearTimeout(letteringTimer);
+        letterings.forEach((lettering) => lettering.dispose());
         scanResources.forEach((resource) => resource.dispose());
         composer?.dispose();
         controls.removeEventListener("start", cancelFlight);
