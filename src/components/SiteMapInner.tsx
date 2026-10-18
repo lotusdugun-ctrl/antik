@@ -1,9 +1,9 @@
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet";
 import { Link } from "@tanstack/react-router";
 import { Check, ExternalLink } from "lucide-react";
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Photo } from "@/components/Photo";
 import { coverImage, type Site } from "@/lib/sites";
 import { useI18n } from "@/lib/i18n";
@@ -13,10 +13,11 @@ import { useProgress } from "@/lib/progress";
 const CLUSTER_CELL_PX = 56;
 
 /*
- * Icons are made once per look and kept. react-leaflet calls `setIcon` — which
- * throws the marker's DOM away and builds it again — whenever the `icon` prop
- * is a different object, so a fresh `divIcon` per render rebuilt every pin on
- * the map at each zoom, each visit ticked and each language switch.
+ * Icons are made once per look and kept. Leaflet's `setIcon` throws the
+ * marker's DOM away and builds it again, and the markers below only call it
+ * when the icon is a different object — so with a fresh `divIcon` per render
+ * every pin on the map would be rebuilt at each zoom, each visit ticked and
+ * each language switch.
  */
 const clusterIcons = new Map<string, L.DivIcon>();
 const pinIcons = new Map<boolean, L.DivIcon>();
@@ -73,12 +74,11 @@ function makePinIcon(visited: boolean) {
   });
 }
 
-function Recenter({ center, zoom }: { center: [number, number]; zoom: number }) {
-  const map = useMap();
-  useEffect(() => {
-    map.flyTo(center, zoom, { duration: 0.8 });
-  }, [center[0], center[1], zoom]); // eslint-disable-line react-hooks/exhaustive-deps
-  return null;
+/** Two coordinate lists with the same points, whatever their identity. */
+function samePath(a: [number, number][] | undefined, b: [number, number][] | undefined) {
+  if (a === b) return true;
+  if (!a || !b || a.length !== b.length) return false;
+  return a.every((p, i) => p[0] === b[i]![0] && p[1] === b[i]![1]);
 }
 
 /**
@@ -91,21 +91,21 @@ function Recenter({ center, zoom }: { center: [number, number]; zoom: number }) 
  * country zoom. Bucketing by pixel cell means the grouping loosens as the user
  * zooms in and dissolves on its own once the pins have room.
  */
-function useClusters(sites: Site[], enabled: boolean) {
-  const map = useMap();
-  const [version, bump] = useReducer((n: number) => n + 1, 0);
+function useClusters(map: L.Map, sites: Site[], enabled: boolean) {
+  const [zoom, setZoom] = useState(() => map.getZoom());
 
   useEffect(() => {
     if (!enabled) return;
-    map.on("zoomend", bump);
+    const onZoom = () => setZoom(map.getZoom());
+    onZoom();
+    map.on("zoomend", onZoom);
     return () => {
-      map.off("zoomend", bump);
+      map.off("zoomend", onZoom);
     };
   }, [map, enabled]);
 
   return useMemo(() => {
     if (!enabled) return sites.map((site) => [site] as Site[]);
-    const zoom = map.getZoom();
     const cells = new Map<string, Site[]>();
     for (const site of sites) {
       const point = map.project([site.lat, site.lng], zoom);
@@ -115,62 +115,155 @@ function useClusters(sites: Site[], enabled: boolean) {
       else cells.set(key, [site]);
     }
     return [...cells.values()];
-    // `version` is the zoom-change signal; map identity alone never changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sites, enabled, map, version]);
+  }, [sites, enabled, map, zoom]);
 }
 
 /**
- * One cluster pin. Its own component so the bounds and the click handler are
- * made once per group: react-leaflet rebinds `eventHandlers` whenever it gets
- * a new object, which an inline literal is on every render.
+ * A Leaflet marker owned by a React component: added on mount, removed on
+ * unmount, and kept in step with its position, icon and title in between.
+ * Returns the marker once it exists, for the popup and the click handler.
+ */
+function useMarker(
+  map: L.Map,
+  position: L.LatLngExpression,
+  icon: L.DivIcon,
+  title: string,
+): L.Marker | null {
+  const [marker, setMarker] = useState<L.Marker | null>(null);
+  const latLng = L.latLng(position);
+
+  useEffect(() => {
+    // Leaflet's markers are focusable buttons; without a title a screen
+    // reader announces each of them as just "button".
+    const made = L.marker(latLng, { icon, title, alt: title }).addTo(map);
+    setMarker(made);
+    return () => {
+      made.remove();
+    };
+    // Created once; the effects below follow later changes in place.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
+
+  useEffect(() => {
+    if (marker && !marker.getLatLng().equals(latLng)) marker.setLatLng(latLng);
+  }, [marker, latLng.lat, latLng.lng]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    // The icons are cached per look, so identity is the change test.
+    if (marker && marker.options.icon !== icon) marker.setIcon(icon);
+  }, [marker, icon]);
+
+  useEffect(() => {
+    if (!marker) return;
+    // Leaflet reads these when it builds the icon; set them for the next
+    // `setIcon` and on the element that is there now (a language switch).
+    marker.options.title = title;
+    marker.options.alt = title;
+    const el = marker.getElement();
+    if (el) {
+      el.title = title;
+      el.setAttribute("alt", title);
+      el.setAttribute("aria-label", title);
+    }
+  }, [marker, title]);
+
+  return marker;
+}
+
+/**
+ * One site pin with its popup. The popup's content is React — router links,
+ * the visited toggle — rendered through a portal into the element Leaflet
+ * shows, so it keeps the app's context and its links stay in-app navigation.
+ * It is only rendered while the popup is open: three hundred closed popups
+ * would otherwise each be loading a photo.
+ */
+function PinMarker({
+  map,
+  site,
+  icon,
+  title,
+  children,
+}: {
+  map: L.Map;
+  site: Site;
+  icon: L.DivIcon;
+  title: string;
+  children: ReactNode;
+}) {
+  const marker = useMarker(map, [site.lat, site.lng], icon, title);
+  const [content] = useState(() => document.createElement("div"));
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!marker) return;
+    marker.bindPopup(content);
+    const onOpen = () => setOpen(true);
+    const onClose = () => setOpen(false);
+    marker.on("popupopen", onOpen);
+    marker.on("popupclose", onClose);
+    return () => {
+      marker.off("popupopen", onOpen);
+      marker.off("popupclose", onClose);
+      marker.unbindPopup();
+    };
+  }, [marker, content]);
+
+  // Leaflet measured the popup before React filled it: size and pan again.
+  useLayoutEffect(() => {
+    if (open) marker?.getPopup()?.update();
+  });
+
+  return open ? createPortal(children, content) : null;
+}
+
+/**
+ * One cluster pin. Clicking it zooms to the group; `maxZoom` stops a pile of
+ * sites that share one hilltop from throwing the map to street level.
  */
 function ClusterMarker({
+  map,
   group,
   allVisited,
   title,
 }: {
+  map: L.Map;
   group: Site[];
   allVisited: boolean;
   title: string;
 }) {
-  const map = useMap();
   const bounds = useMemo(
     () => L.latLngBounds(group.map((s) => [s.lat, s.lng] as [number, number])),
     [group],
   );
   const centre = useMemo(() => bounds.getCenter(), [bounds]);
-  const eventHandlers = useMemo(
-    () => ({
-      click: () =>
-        // Zoom to the group. `maxZoom` stops a pile of sites that share
-        // one hilltop from throwing the map to street level.
-        map.flyToBounds(bounds.pad(0.25), { maxZoom: 13, duration: 0.6 }),
-    }),
-    [map, bounds],
-  );
-  return (
-    <Marker
-      position={centre}
-      icon={clusterIcon(group.length, allVisited)}
-      title={title}
-      eventHandlers={eventHandlers}
-    />
-  );
+  const marker = useMarker(map, centre, clusterIcon(group.length, allVisited), title);
+
+  useEffect(() => {
+    if (!marker) return;
+    const onClick = () => map.flyToBounds(bounds.pad(0.25), { maxZoom: 13, duration: 0.6 });
+    marker.on("click", onClick);
+    return () => {
+      marker.off("click", onClick);
+    };
+  }, [marker, map, bounds]);
+
+  return null;
 }
 
 function SiteMarkers({
+  map,
   sites,
   cluster,
   renderPopup,
 }: {
+  map: L.Map;
   sites: Site[];
   cluster: boolean;
-  renderPopup: (site: Site) => React.ReactNode;
+  renderPopup: (site: Site) => ReactNode;
 }) {
   const { t, L: label } = useI18n();
   const { isVisited } = useProgress();
-  const groups = useClusters(sites, cluster);
+  const groups = useClusters(map, sites, cluster);
 
   return (
     <>
@@ -178,23 +271,22 @@ function SiteMarkers({
         const first = group[0]!;
         if (group.length === 1) {
           return (
-            <Marker
+            <PinMarker
               key={first.slug}
-              position={[first.lat, first.lng]}
+              map={map}
+              site={first}
               icon={pinIcon(isVisited(first.slug))}
-              // Leaflet's markers are focusable buttons; without a title a
-              // screen reader announces each of them as just "button".
               title={label(first.name)}
-              alt={label(first.name)}
             >
-              <Popup>{renderPopup(first)}</Popup>
-            </Marker>
+              {renderPopup(first)}
+            </PinMarker>
           );
         }
 
         return (
           <ClusterMarker
             key={`cluster-${first.slug}-${group.length}`}
+            map={map}
             group={group}
             allVisited={group.every((s) => isVisited(s.slug))}
             title={`${group.length} ${t("civs_places")}: ${group
@@ -206,6 +298,26 @@ function SiteMarkers({
       })}
     </>
   );
+}
+
+/** The route line, replaced when the points change and removed with the map. */
+function RouteLine({ map, path }: { map: L.Map; path: [number, number][] }) {
+  const stable = useRef(path);
+  if (!samePath(stable.current, path)) stable.current = path;
+  const points = stable.current;
+
+  useEffect(() => {
+    const line = L.polyline(points, {
+      color: "oklch(0.52 0.13 45)",
+      weight: 4,
+      opacity: 0.85,
+    }).addTo(map);
+    return () => {
+      line.remove();
+    };
+  }, [map, points]);
+
+  return null;
 }
 
 export default function SiteMapInner({
@@ -225,6 +337,37 @@ export default function SiteMapInner({
 }) {
   const { t, L: tr } = useI18n();
   const { isVisited, toggleVisited } = useProgress();
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<L.Map | null>(null);
+
+  // The map itself: made once on mount, torn down (with every layer on it)
+  // on unmount. The view it starts at is the first `center` and `zoom`.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    const made = L.map(host, { center, zoom, scrollWheelZoom: true });
+    // The single tile host OSM asks apps to use (the a/b/c subdomains are retired).
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(made);
+    setMap(made);
+    return () => {
+      setMap(null);
+      made.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // A new centre or zoom (a region page, a route) glides there.
+  const lastView = useRef<string | null>(null);
+  useEffect(() => {
+    if (!map) return;
+    const key = `${center[0]},${center[1]},${zoom}`;
+    if (lastView.current !== null && lastView.current !== key) {
+      map.flyTo(center, zoom, { duration: 0.8 });
+    }
+    lastView.current = key;
+  }, [map, center[0], center[1], zoom]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // An itinerary is a numbered sequence — collapsing its stops would hide the
   // very thing the map is drawing — so a path always shows every pin.
@@ -279,25 +422,13 @@ export default function SiteMapInner({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border" style={{ height }}>
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        scrollWheelZoom
-        style={{ height: "100%", width: "100%" }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Recenter center={center} zoom={zoom} />
-        {path && path.length > 1 && (
-          <Polyline
-            positions={path}
-            pathOptions={{ color: "oklch(0.52 0.13 45)", weight: 4, opacity: 0.85 }}
-          />
-        )}
-        <SiteMarkers sites={sites} cluster={clustered} renderPopup={renderPopup} />
-      </MapContainer>
+      <div ref={hostRef} style={{ height: "100%", width: "100%" }} />
+      {map && (
+        <>
+          {path && path.length > 1 && <RouteLine map={map} path={path} />}
+          <SiteMarkers map={map} sites={sites} cluster={clustered} renderPopup={renderPopup} />
+        </>
+      )}
     </div>
   );
 }

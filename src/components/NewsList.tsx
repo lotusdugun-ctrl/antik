@@ -1,91 +1,53 @@
-import { ExternalLink, Newspaper } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useI18n } from "@/lib/i18n";
-import type { NewsItem } from "@/lib/news";
+import { ExternalLink, Landmark, Newspaper, Search } from "lucide-react";
+import { useI18n, type TKey } from "@/lib/i18n";
+import { newsLinks, type NewsLink } from "@/lib/news";
+import { getSite } from "@/lib/sites";
+
+const LABEL: Record<NewsLink["kind"], TKey> = {
+  search: "news_search",
+  excavations: "news_excavations",
+  museums: "news_museums",
+};
+
+const ICON = { search: Search, excavations: Landmark, museums: Landmark } as const;
 
 /**
- * Recent excavation headlines, fetched when the section scrolls into view.
- * Nothing is shown while loading or when there is no news: an empty "News"
- * heading on a quiet site would look broken.
+ * "Excavation news": links that open news searches and the Ministry's own
+ * pages in the browser. No headline, snippet or feed is fetched, copied or
+ * shown here (see src/lib/news.ts for why).
  */
-export function NewsList({
-  site,
-  limit = 5,
-  always = false,
-}: {
-  site?: string;
-  limit?: number;
-  /** On the news page itself, say so when the list is empty. */
-  always?: boolean;
-}) {
-  const { t, lang } = useI18n();
-  const [items, setItems] = useState<NewsItem[] | null>(null);
-  const box = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setItems(null);
-    const el = box.current;
-    if (!el) return;
-    let done = false;
-    const load = () => {
-      if (done) return;
-      done = true;
-      const params = new URLSearchParams({ lang, ...(site ? { site } : {}) });
-      fetch(`/api/haberler?${params}`)
-        .then((r) => (r.ok ? r.json() : { items: [] }))
-        .then((data: { items: NewsItem[] }) => setItems(data.items.slice(0, limit)))
-        .catch(() => setItems([]));
-    };
-    const io = new IntersectionObserver(
-      (entries) => entries.some((e) => e.isIntersecting) && load(),
-      {
-        rootMargin: "200px",
-      },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [site, lang, limit]);
-
-  const empty = items !== null && items.length === 0;
-
+export function NewsList({ site }: { site?: string }) {
+  const { t, lang, L } = useI18n();
+  const found = site ? getSite(site) : undefined;
+  const subject = found ? (lang === "tr" ? found.name.tr : found.name.en) : t("news_country");
   return (
-    <div ref={box}>
-      {items && items.length > 0 && (
-        <section className="rounded-2xl surface-panel p-5">
-          <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold">
-            <Newspaper className="h-5 w-5 text-primary" /> {t("news_title")}
-          </h2>
-          <ul className="divide-y divide-border">
-            {items.map((item) => (
-              <li key={item.url}>
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex items-start gap-3 py-2.5"
-                >
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-medium leading-snug group-hover:underline">
-                      {item.title}
-                    </span>
-                    <span className="mt-0.5 block text-xs text-muted-foreground">
-                      {item.source}
-                      {item.date && ` · ${new Date(item.date).toLocaleDateString(lang)}`}
-                    </span>
-                  </span>
-                  <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-2 text-[11px] text-muted-foreground">{t("news_note")}</p>
-        </section>
-      )}
-      {always && empty && (
-        <p className="rounded-2xl surface-panel p-8 text-center text-sm text-muted-foreground">
-          {t("news_empty")}
-        </p>
-      )}
-    </div>
+    <section className="rounded-2xl surface-panel p-5">
+      <h2 className="mb-1 flex items-center gap-2 font-display text-lg font-semibold">
+        <Newspaper className="h-5 w-5 text-primary" /> {t("news_title")}
+      </h2>
+      <p className="mb-3 text-xs text-muted-foreground">
+        {found ? `${L(found.name)} — ` : ""}
+        {t("news_links_sub")}
+      </p>
+      <ul className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        {newsLinks(subject, lang).map((link) => {
+          const Icon = ICON[link.kind];
+          return (
+            <li key={link.kind}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-2 text-sm font-medium hover:border-primary"
+              >
+                <Icon className="h-4 w-4 text-primary" aria-hidden />
+                {t(LABEL[link.kind])}
+                <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }

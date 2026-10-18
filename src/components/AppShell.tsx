@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useState, type ReactNode } from "react";
+import { PageCredits } from "@/components/PageCredits";
 import { LANGS, useI18n, type Lang, type TKey } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -73,6 +74,13 @@ const EXPERIENCE: NavGroup = {
     { to: "/ogretmen", key: "teacher_title", desc: "nav_teacher_d", icon: GraduationCap },
   ],
 };
+
+/** The privacy policy, the terms and the credits: in the footer and the menu, on every page. */
+const LEGAL: { to: string; key: TKey }[] = [
+  { to: "/gizlilik", key: "privacy_title" },
+  { to: "/kosullar", key: "terms_title" },
+  { to: "/gorseller", key: "nav_credits" },
+];
 
 const TOOLS: NavItem[] = [
   { to: "/harita", key: "nav_map", desc: "nav_map_d", icon: MapIcon },
@@ -291,12 +299,17 @@ function MenuDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o: b
                 ]}
               />
             </div>
-            <Link
-              to="/gorseller"
-              className="block px-1 text-xs font-medium text-muted-foreground underline-offset-2 hover:underline"
-            >
-              {t("nav_credits")}
-            </Link>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 px-1 text-xs font-medium text-muted-foreground">
+              {LEGAL.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="underline-offset-2 hover:text-foreground hover:underline"
+                >
+                  {t(item.key)}
+                </Link>
+              ))}
+            </div>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
@@ -459,13 +472,19 @@ export function AppShell({ children }: { children: ReactNode }) {
               </ul>
             </div>
           ))}
-          <Link
-            to="/gorseller"
-            className="font-medium text-muted-foreground hover:text-foreground hover:underline sm:hidden"
-          >
-            {t("nav_credits")}
-          </Link>
         </div>
+        <nav
+          aria-label={t("nav_legal")}
+          className="mx-auto mt-8 flex max-w-7xl flex-wrap gap-x-5 gap-y-2 border-t border-border pt-5 text-xs text-muted-foreground"
+        >
+          {LEGAL.map((item) => (
+            <Link key={item.to} to={item.to} className="hover:text-foreground hover:underline">
+              {t(item.key)}
+            </Link>
+          ))}
+          <span>© Iova LTD</span>
+        </nav>
+        <PageCredits />
       </footer>
 
       <MenuDrawer open={menuOpen} onOpenChange={setMenuOpen} />

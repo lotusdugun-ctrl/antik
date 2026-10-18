@@ -1,7 +1,7 @@
-# Records the Greek voices heard in the 3D models' ambient sound (the actor on
-# the stage, the herald at the races, hymns, vendors, a lament) with Microsoft's
-# free Edge voices, and publishes them. Run it from ORTAM-SESLERI.bat.
-# The site works without these files; once they are pushed, the models use them.
+# Records only the Greek voices heard in the 3D models' ambient sound with an
+# open-source Piper voice (if its licence allows commercial use; see
+# docs/SESLER.md), and publishes them. Run it from ORTAM-SESLERI.bat.
+# SESLENDIR.bat does this too. The site works without these files.
 # Keep this file ASCII: Windows PowerShell 5.1 reads BOM-less scripts as ANSI.
 $ErrorActionPreference = "Continue"
 $root = Split-Path -Parent $PSScriptRoot
@@ -26,16 +26,19 @@ if (-not $py) {
   exit 1
 }
 $pyExe = $py[0]; $pyArgs = @(); if ($py.Count -gt 1) { $pyArgs = @($py[1]) }
-& $pyExe @pyArgs -m pip install --quiet --upgrade edge-tts | Out-Host
+& $pyExe @pyArgs -m pip install --quiet --upgrade "piper-tts>=1.3,<2" lameenc | Out-Host
 
-Step "Ortam sesleri kaydediliyor (27 kisa Yunanca kayit)"
+git checkout main
+git pull --no-edit origin main
+
+Step "Ortam sesleri kaydediliyor (27 kisa Yunanca kayit, Piper)"
 & $pyExe @pyArgs (Join-Path $PSScriptRoot "generate_ambience_voices.py") | Out-Host
 if ($LASTEXITCODE -ne 0) { Write-Host "Bazi kayitlar alinamadi; alinanlar yine de gonderiliyor. Sonra yeniden calistirin, eksikleri tamamlar." -ForegroundColor Yellow }
 
 Step "GitHub'a gonderiliyor"
-git checkout main
-git add public/ambience/voices
-git commit -m "Ortam sesleri: Yunanca konusmalar kaydedildi (Edge sesleri)" 2>$null
+# One path at a time: a folder that no longer exists must not stop the others.
+foreach ($p in @("public/ambience/voices", "src/lib/voice-credits.json")) { git add -A -- $p 2>$null }
+git commit -m "Ortam sesleri: Yunanca konusmalar Piper ile kaydedildi (lisans kontrollu)" 2>$null
 git pull --no-edit origin main
 git push origin main
 Write-Host ""

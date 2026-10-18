@@ -4,9 +4,10 @@
  *
  * Pure data, so it can be tested without a browser; src/lib/ambience.ts is
  * the player. Recordings are in public/ambience (see CREDITS.txt there and
- * scripts/build_ambience.py for where each came from); the spoken Greek is in
- * public/ambience/voices, recorded on the owner's computer by
- * scripts/generate_ambience_voices.py, and every scene works without it.
+ * scripts/build_ambience.py for where each came from: public-domain (CC0)
+ * recordings, and sounds synthesised for this app); the spoken Greek is in
+ * public/ambience/voices, recorded on the owner's computer with a Piper voice
+ * by scripts/generate_ambience_voices.py, and every scene works without it.
  */
 import type { Reconstruction } from "./reconstructions";
 
@@ -15,7 +16,7 @@ export type TimeOfDay = "day" | "golden" | "night";
 /** A recording in public/ambience. */
 export const CLIPS = {
   // Beds: long, looped with crossfades at random offsets.
-  birds: 26,
+  birds: 25,
   market: 60,
   murmur: 25,
   fountain: 21,
@@ -36,8 +37,8 @@ export const CLIPS = {
   neigh1: 1.5,
   neigh2: 1.4,
   neigh3: 1.2,
-  moo1: 2.1,
-  moo2: 2.7,
+  moo1: 4.1,
+  moo2: 2.1,
   moo3: 5,
   sheep: 5,
   dog1: 5,
@@ -45,7 +46,7 @@ export const CLIPS = {
   rooster: 5,
   crow: 5,
   saw: 5,
-  footsteps: 3,
+  footsteps: 5,
   anvil: 1.9,
   stone: 3.4,
   drum: 1.4,

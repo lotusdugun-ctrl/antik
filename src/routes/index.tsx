@@ -140,7 +140,7 @@ function Index() {
         <div className="relative h-[68vh] min-h-[440px] w-full overflow-hidden">
           <Photo
             src={heroImage}
-            alt="Efes Antik Kenti Celsus Kütüphanesi"
+            alt="Celsus Kütüphanesi, Efes — Antik Türkiye 3D rekonstrüksiyonu"
             sizes="100vw"
             fallbackWidth={1280}
             width={1920}

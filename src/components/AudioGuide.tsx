@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
+import { voiceCreditsByLang } from "@/lib/audio-manifest";
 import { useI18n, pick, type Lang } from "@/lib/i18n";
 import { estimateSeconds, type Guide } from "@/lib/narration";
 import { distanceKm } from "@/lib/sites";
@@ -258,6 +259,22 @@ export function AudioGuide({
               t("guide_no_voice")
             )}
           </p>
+          {player.recorded && voiceCreditsByLang[voiceLang] && (
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              {t("guide_voice_by")} {voiceCreditsByLang[voiceLang]!.dataset} (
+              <a
+                href={
+                  voiceCreditsByLang[voiceLang]!.licenseUrl ?? voiceCreditsByLang[voiceLang]!.card
+                }
+                target="_blank"
+                rel="noreferrer license"
+                className="hover:underline"
+              >
+                {voiceCreditsByLang[voiceLang]!.license}
+              </a>
+              ).
+            </p>
+          )}
         </>
       )}
 

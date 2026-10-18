@@ -1,6 +1,7 @@
 import {
   Clock,
   ExternalLink,
+  Flag,
   MessageCircleQuestion,
   Mic,
   Send,
@@ -14,6 +15,7 @@ import { answer, suggestions, type Answer } from "@/lib/ask";
 // Types only: the module itself is server-side and stays out of the bundle.
 import type { AskResponse, AskSource, Turn } from "@/lib/ask-ai";
 import { useI18n, type Lang } from "@/lib/i18n";
+import { REPORT_REASONS, MAX_REPORT_NOTE, type ReportReason } from "@/lib/report";
 import { spokenText } from "@/lib/narration";
 import type { Site } from "@/lib/sites";
 import { useTheme } from "@/lib/theme";
@@ -94,6 +96,8 @@ export function AskGuide({ site }: { site: Site }) {
   const inflight = useRef<AbortController | null>(null);
   const nextId = useRef(0);
   const chips = useMemo(() => suggestions(site, lang), [site, lang]);
+  // The answer whose "report" form is open, if any.
+  const [reporting, setReporting] = useState<number | null>(null);
 
   useEffect(() => setCanListen(Boolean(recognitionClass())), []);
   useEffect(() => {
@@ -325,14 +329,35 @@ export function AskGuide({ site }: { site: Site }) {
                       )}
                       {item.a.source && <span>{item.a.source}</span>}
                     </span>
-                    <button
-                      onClick={() => speak(item.a!.text)}
-                      aria-label={t("ask_speak")}
-                      className="grid h-7 w-7 shrink-0 place-items-center rounded-full hover:bg-secondary"
-                    >
-                      <Volume2 className="h-3.5 w-3.5" />
-                    </button>
+                    <span className="flex shrink-0 items-center gap-0.5">
+                      {item.ai && (
+                        <button
+                          onClick={() => setReporting(reporting === item.id ? null : item.id)}
+                          aria-label={t("report_open")}
+                          aria-expanded={reporting === item.id}
+                          title={t("report_open")}
+                          className="grid h-7 w-7 place-items-center rounded-full hover:bg-secondary"
+                        >
+                          <Flag className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => speak(item.a!.text)}
+                        aria-label={t("ask_speak")}
+                        className="grid h-7 w-7 place-items-center rounded-full hover:bg-secondary"
+                      >
+                        <Volume2 className="h-3.5 w-3.5" />
+                      </button>
+                    </span>
                   </div>
+                )}
+                {item.ai && item.a.text && reporting === item.id && (
+                  <ReportForm
+                    question={item.q}
+                    answer={item.a.text}
+                    slug={site.slug}
+                    onClose={() => setReporting(null)}
+                  />
                 )}
               </>
             ) : (
@@ -378,5 +403,109 @@ function SearchSuggestions({ html, dark }: { html: string; dark: boolean }) {
       className="mt-2 block h-[72px] w-full overflow-hidden border-0 bg-transparent"
       style={{ colorScheme: dark ? "dark" : "light" }}
     />
+  );
+}
+
+/**
+ * "Report this answer": Google Play requires that AI-generated content can be
+ * flagged from inside the app. The report (reason, optional note and excerpts
+ * of the question and answer) goes to /api/rapor, which only writes it to the
+ * server log for review.
+ */
+function ReportForm({
+  question,
+  answer,
+  slug,
+  onClose,
+}: {
+  question: string;
+  answer: string;
+  slug: string;
+  onClose: () => void;
+}) {
+  const { t, lang } = useI18n();
+  const [reason, setReason] = useState<ReportReason>("offensive");
+  const [note, setNote] = useState("");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  async function send() {
+    setState("sending");
+    try {
+      const res = await fetch("/api/rapor", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ reason, note, question, answer, lang, slug }),
+      });
+      setState(res.ok ? "sent" : "error");
+      if (res.ok) track("AI answer reported", { site: slug, reason });
+    } catch {
+      setState("error");
+    }
+  }
+
+  if (state === "sent") {
+    return (
+      <p role="status" className="mt-2 rounded-lg bg-secondary px-3 py-2 text-xs">
+        {t("report_thanks")}{" "}
+        <button onClick={onClose} className="font-semibold text-primary hover:underline">
+          {t("report_close")}
+        </button>
+      </p>
+    );
+  }
+
+  return (
+    <form
+      className="mt-2 space-y-2 rounded-lg border border-border bg-background p-3 text-xs"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void send();
+      }}
+    >
+      <fieldset>
+        <legend className="mb-1 font-semibold">{t("report_title")}</legend>
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
+          {REPORT_REASONS.map((r) => (
+            <label key={r} className="inline-flex items-center gap-1.5">
+              <input
+                type="radio"
+                name="report-reason"
+                value={r}
+                checked={reason === r}
+                onChange={() => setReason(r)}
+              />
+              {t(`report_reason_${r}`)}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <textarea
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        maxLength={MAX_REPORT_NOTE}
+        rows={2}
+        placeholder={t("report_note")}
+        aria-label={t("report_note")}
+        className="w-full rounded-md border border-border bg-card px-2 py-1.5 outline-none focus:ring-2 focus:ring-ring"
+      />
+      {state === "error" && <p className="text-destructive">{t("report_error")}</p>}
+      <div className="flex items-center justify-end gap-2">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-full px-3 py-1 hover:bg-secondary"
+        >
+          {t("report_cancel")}
+        </button>
+        <button
+          type="submit"
+          disabled={state === "sending"}
+          className="rounded-full bg-primary px-3 py-1 font-semibold text-primary-foreground disabled:opacity-50"
+        >
+          {t("report_send")}
+        </button>
+      </div>
+      <p className="text-[10px] text-muted-foreground">{t("report_privacy")}</p>
+    </form>
   );
 }

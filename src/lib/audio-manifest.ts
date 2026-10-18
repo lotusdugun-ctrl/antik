@@ -1,19 +1,49 @@
 import type { Lang } from "@/lib/i18n";
 import manifest from "./audio-manifest.json";
+import voiceCredits from "./voice-credits.json";
 
 /**
  * Pre-recorded narration, where someone has made it.
  *
  * The guide speaks with the device's own voice by default. A recorded file —
- * a natural neural voice rendered once by `scripts/generate_audio_edge.py` —
- * wins over it chapter by chapter, but only while it still says what the page
- * says: each entry carries a hash of the text it was recorded from, and a
- * chapter whose text has since been corrected falls back to the device voice
- * rather than reading out the old version.
+ * made once, on the owner's computer, by `scripts/generate_audio_piper.py`
+ * with an open-source Piper voice whose licence allows commercial
+ * redistribution (see docs/SESLER.md) — wins over it chapter by chapter, but
+ * only while it still says what the page says: each entry carries a hash of
+ * the text it was recorded from, and a chapter whose text has since been
+ * corrected falls back to the device voice rather than reading out the old
+ * version.
  *
- * Shape: guide key (`site:efes`) → language → chapter id → { url, hash }.
+ * Only entries that name the Piper engine are ever played. Recordings made
+ * earlier with other engines (Microsoft Edge's online voices, whose output may
+ * not be redistributed) cannot slip back in through an old manifest: without
+ * `engine: "piper"` and a voice listed in voice-credits.json they are ignored
+ * and the device speaks instead.
+ *
+ * Shape: guide key (`site:efes`) → language → chapter id → { url, hash, engine, voice }.
  */
-export type Recording = { url: string; hash: string; v?: number };
+export type Recording = { url: string; hash: string; v?: number; engine?: string; voice?: string };
+
+/** A recorded voice and the licence that allows us to publish its output. */
+export type VoiceCredit = {
+  /** Piper voice id, e.g. "de_DE-thorsten-medium". */
+  voice: string;
+  /** The dataset the voice was trained on, as its model card names it. */
+  dataset: string;
+  license: string;
+  licenseUrl?: string;
+  /** The voice's model card, where the licence is stated. */
+  card: string;
+};
+
+/** Per language ("tr", "en", "de", "ru", and "el" for the 3D models' Greek). */
+export const voiceCreditsByLang = voiceCredits as Partial<Record<Lang | "el", VoiceCredit>>;
+
+function playable(entry: Recording | undefined, lang: Lang): entry is Recording {
+  if (!entry || entry.engine !== "piper") return false;
+  const credit = voiceCreditsByLang[lang];
+  return Boolean(credit && entry.voice === credit.voice);
+}
 export type RecordedAudio = Record<string, Partial<Record<Lang, Record<string, Recording>>>>;
 
 export const recordedAudio = manifest as RecordedAudio;
@@ -38,14 +68,17 @@ export function recordingFor(
   text: string,
 ): string | undefined {
   const entry = recordedAudio[key]?.[lang]?.[chapterId];
-  return entry && entry.hash === textHash(text) ? entry.url : undefined;
+  return playable(entry, lang) && entry.hash === textHash(text) ? entry.url : undefined;
 }
 
 /** Every recorded file a guide has, for the offline download. */
 export function recordingsFor(key: string): string[] {
   const byLang = recordedAudio[key];
   if (!byLang) return [];
-  return Object.values(byLang).flatMap((chapters) =>
-    Object.values(chapters ?? {}).map((entry) => entry.url),
+  return (Object.entries(byLang) as [Lang, Record<string, Recording> | undefined][]).flatMap(
+    ([lang, chapters]) =>
+      Object.values(chapters ?? {})
+        .filter((entry) => playable(entry, lang))
+        .map((entry) => entry.url),
   );
 }

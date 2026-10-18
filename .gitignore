@@ -42,11 +42,8 @@ dist-ssr
 .env.*
 !.env.example
 
-# Text-to-Speech key and local usage (scripts/generate_audio_chirp.py)
-scripts/.tts-key
-scripts/.tts-usage.json
-scripts/.tts-voice
-scripts/voice-samples/
+# Piper voice models downloaded by scripts/piper_voices.py, and listening samples
+scripts/.piper-voices/
 *.part
 scripts/ses-ornekleri/
 scripts/__pycache__/

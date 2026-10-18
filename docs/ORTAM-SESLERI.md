@@ -23,16 +23,19 @@ baykuş (Otus scops) duyulur.
 
 ## Seslerin kaynağı
 
-- Kayıtlar `public/ambience/` içinde (≈2,1 MB, MP3). Kaynaklar ve lisanslar:
-  `public/ambience/CREDITS.txt` (0 A.D. – CC BY-SA 3.0; ESC-50/freesound, Minetest,
-  Sonic Pi – CC0). Nasıl üretildikleri: `scripts/build_ambience.py`.
+- Kayıtlar `public/ambience/` içinde (MP3). Hepsi ya kamu malı (CC0: ESC-50/freesound,
+  Minetest, Sonic Pi) ya da bu uygulama için sentezlendi (kalabalık uğultusu, pazar
+  konuşmaları, nal sesleri, kişnemeler, örs, keski, aulos ve lir). Ayrıntı:
+  `public/ambience/CREDITS.txt`; nasıl üretildikleri: `scripts/build_ambience.py`.
+  (Eskiden kullanılan 0 A.D. kayıtları CC BY-SA olduğu için kaldırıldı.)
 - Rüzgâr, ağustos böcekleri, kıvılcımlar, araba tekerleri, kuş çağrıları, salpinx,
   çıngırak ve yankı tarayıcıda üretilir (`src/lib/ambience.ts`).
 - Hangi modelin neyi çaldığı: `src/lib/soundscapes.ts`.
 
 ## Yunanca konuşmaları kaydetmek
 
-Oyuncu, haberci, ilahiler, satıcılar ve ağıt Microsoft Edge'in ücretsiz Yunanca
-sesleriyle kaydedilir. Proje klasöründe **ORTAM-SESLERI.bat** dosyasını çift tıklayın:
-Python ve edge-tts'i kurar, 27 kısa kaydı `public/ambience/voices/` klasörüne yazar ve
-GitHub'a gönderir. Kayıtlar yokken de sesler çalışır; yalnızca konuşmalar duyulmaz.
+Oyuncu, haberci, ilahiler, satıcılar ve ağıt açık kaynak **Piper** sesiyle, sizin
+bilgisayarınızda kaydedilir — ama yalnızca Yunanca sesin lisansı ticari kullanıma izin
+veriyorsa (bkz. `docs/SESLER.md`). **SESLENDIR.bat** bunu da yapar; yalnızca bunlar için
+**ORTAM-SESLERI.bat** çalıştırılabilir. Kayıtlar yokken de sesler çalışır; yalnızca
+konuşmalar duyulmaz.

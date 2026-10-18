@@ -218,9 +218,12 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     voicesAsked = true;
     fetch(VOICE_MANIFEST)
       .then((res) => (res.ok ? res.json() : null))
-      .then((manifest: { clips?: Record<string, { file?: string }> } | null) => {
+      .then((manifest: { engine?: string; clips?: Record<string, { file?: string }> } | null) => {
         const found = new Map<Voice, string>();
-        for (const [key, entry] of Object.entries(manifest?.clips ?? {})) {
+        // Only voices recorded with Piper under a licence that allows
+        // redistribution (scripts/generate_ambience_voices.py) are played.
+        const clips = manifest?.engine === "piper" ? manifest.clips : undefined;
+        for (const [key, entry] of Object.entries(clips ?? {})) {
           if (isVoice(key) && typeof entry?.file === "string") found.set(key, voiceUrl(entry.file));
         }
         voices = found;

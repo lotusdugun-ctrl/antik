@@ -40,6 +40,8 @@ const staticPaths = [
   "/haberler",
   "/ogretmen",
   "/gorseller",
+  "/gizlilik",
+  "/kosullar",
 ];
 
 function escapeXml(value: string): string {

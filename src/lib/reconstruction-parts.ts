@@ -6190,24 +6190,11 @@ export function greatAltarParts(spec: GreatAltarSpec): Part[] {
 
   podiumBlock(0, halfD - backDepth / 2, spec.baseWidth, backDepth);
   /*
-   * The Athena group, from a cast of it, on the east face where it belongs —
-   * a little right of the middle as seen from the east, beside Zeus. It is
-   * set just proud of the photographed frieze, which carries on either side.
+   * The east face carries the photographed Gigantomachy round its whole
+   * length, like the other three. (A scan of the Athena group used to be set
+   * in here; the only one available was licensed for non-commercial use, so
+   * the frieze runs on unbroken instead.)
    */
-  {
-    const eastFace = halfD - backDepth / 2 + (backDepth + 0.5) / 2 + 0.02;
-    const athenaWidth = spec.friezeHeight * 1.64;
-    parts.push({
-      ...relief(
-        "marble",
-        [-spec.baseWidth * 0.08, friezeBase, eastFace],
-        [athenaWidth, spec.friezeHeight],
-        undefined,
-        0,
-      ),
-      scan: { id: "pergamon-athena" },
-    });
-  }
   for (const side of [-1, 1]) {
     const wingWidth = halfW - halfStair;
     podiumBlock(side * (halfStair + wingWidth / 2), -halfD + stairRun / 2, wingWidth, stairRun);

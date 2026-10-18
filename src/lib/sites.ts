@@ -3,7 +3,8 @@ import imgEge from "@/assets/region-ege.jpg";
 import imgAkdeniz from "@/assets/region-akdeniz.jpg";
 import imgIcAnadolu from "@/assets/region-ic-anadolu.jpg";
 import imgGuneydogu from "@/assets/region-guneydogu.jpg";
-import imgKaradeniz from "@/assets/region-karadeniz.jpg";
+import landscapeHills from "@/assets/landscape-hills.jpg";
+import landscapeSteppe from "@/assets/landscape-steppe.jpg";
 import type { Localized } from "@/lib/i18n";
 
 /**
@@ -124,6 +125,11 @@ export const MINISTRY_HOURS = {
 export const regions: {
   id: RegionId;
   name: Localized;
+  /**
+   * A render of one of the app's own 3D reconstructions in the region, or —
+   * where the app has no model there (Marmara, Black Sea, Eastern Anatolia) —
+   * the generic landscape, so no card shows a monument from somewhere else.
+   */
   image: string;
   blurb: Localized;
 }[] = [
@@ -148,7 +154,7 @@ export const regions: {
   {
     id: "marmara",
     name: { tr: "Marmara", en: "Marmara" },
-    image: imgIcAnadolu,
+    image: landscapeHills,
     blurb: {
       tr: "Truva'dan İznik'e, iki kıtanın kavşağındaki kentler.",
       en: "From Troy to Nicaea, cities where two continents meet.",
@@ -166,7 +172,7 @@ export const regions: {
   {
     id: "karadeniz",
     name: { tr: "Karadeniz", en: "Black Sea" },
-    image: imgKaradeniz,
+    image: landscapeHills,
     blurb: {
       tr: "Hitit başkentleri ve yeşil tepelerdeki liman kaleleri.",
       en: "Hittite capitals and harbour fortresses on green hills.",
@@ -184,7 +190,7 @@ export const regions: {
   {
     id: "dogu",
     name: { tr: "Doğu Anadolu", en: "Eastern Anatolia" },
-    image: imgIcAnadolu,
+    image: landscapeSteppe,
     blurb: {
       tr: "Urartu kaleleri ve yüksek yaylalardaki taş kentler.",
       en: "Urartian fortresses and stone cities on high plateaus.",
@@ -193,22 +199,25 @@ export const regions: {
 ];
 
 /**
- * Generic regional artwork, used only when a site has no photograph of its own.
+ * Generic landscape, used only when a site has no photograph of its own.
  *
- * These are illustrations of a landscape, not photographs of a place, which is
- * the point: Marmara used to fall back to `heroEphesus` — an unmistakable photo
- * of the Library of Celsus — so any Marmara site without a photo was illustrated
- * by a specific ruin four hundred kilometres away. Never put an identifiable
- * monument in this map.
+ * Both are renders of the country our own 3D scenes stand in (the landscape
+ * generator in `components/scene/landscape.ts`), with no building in frame:
+ * green hills with olive and cypress for the coasts, the bare plateau for the
+ * interior. They are deliberately nowhere in particular. Marmara used to fall
+ * back to a photo of the Library of Celsus, so any Marmara site without a
+ * photo was illustrated by a specific ruin four hundred kilometres away. Never
+ * put an identifiable monument in this map — the region cards' renders of
+ * Aspendos, Nemrut and the rest included.
  */
 const regionImage: Record<RegionId, string> = {
-  ege: imgEge,
-  akdeniz: imgAkdeniz,
-  marmara: imgIcAnadolu,
-  "ic-anadolu": imgIcAnadolu,
-  karadeniz: imgKaradeniz,
-  guneydogu: imgGuneydogu,
-  dogu: imgIcAnadolu,
+  ege: landscapeHills,
+  akdeniz: landscapeHills,
+  marmara: landscapeHills,
+  "ic-anadolu": landscapeSteppe,
+  karadeniz: landscapeHills,
+  guneydogu: landscapeSteppe,
+  dogu: landscapeSteppe,
 };
 
 export function coverImage(site: Site) {
@@ -219,9 +228,8 @@ export function coverImage(site: Site) {
  * Whether the cover is a photograph of this place, or the regional artwork
  * standing in for one.
  *
- * The stand-in is itself a real photograph of somewhere, which is exactly the
- * problem: it looks like a picture of the site and a visitor has no way to
- * tell that it is not. A page showing one says so, the way the structure
+ * The stand-in is a landscape render, but at thumbnail size it can still pass
+ * for a picture of the site. A page showing one says so, the way the structure
  * dialog already admits when it is showing the city instead of the structure.
  */
 export function hasOwnPhoto(site: Site) {
@@ -240,6 +248,40 @@ export function regionCoverImage(regionId: RegionId) {
 }
 
 export const heroImage = heroEphesus;
+
+/**
+ * The images in `src/assets`: renders of the app's own procedural 3D
+ * reconstructions and landscape, made for it and owned outright — no
+ * photograph and no third-party artwork in them. Listed so the credits page
+ * can say so (Commons credits cannot: these are not Commons files).
+ */
+export const ownRenders: { src: string; title: Localized }[] = [
+  {
+    src: heroEphesus,
+    title: {
+      tr: "Celsus Kütüphanesi, Efes (ana sayfa)",
+      en: "Library of Celsus, Ephesus (home page)",
+    },
+  },
+  { src: imgEge, title: { tr: "Artemis Tapınağı, Efes", en: "Temple of Artemis, Ephesus" } },
+  { src: imgAkdeniz, title: { tr: "Aspendos Tiyatrosu", en: "Theatre of Aspendos" } },
+  {
+    src: imgIcAnadolu,
+    title: { tr: "Aizanoi Zeus Tapınağı", en: "Temple of Zeus, Aizanoi" },
+  },
+  {
+    src: imgGuneydogu,
+    title: { tr: "Nemrut Dağı, doğu terası", en: "Mount Nemrut, east terrace" },
+  },
+  {
+    src: landscapeHills,
+    title: { tr: "Genel manzara: zeytinli tepeler", en: "Generic landscape: olive hills" },
+  },
+  {
+    src: landscapeSteppe,
+    title: { tr: "Genel manzara: bozkır", en: "Generic landscape: steppe" },
+  },
+];
 
 /**
  * Freely licensed photos (Wikimedia Commons) per site. URL used verbatim;

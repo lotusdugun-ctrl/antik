@@ -1,9 +1,3 @@
-import heroEphesus from "@/assets/hero-ephesus.jpg";
-import imgEge from "@/assets/region-ege.jpg";
-import imgAkdeniz from "@/assets/region-akdeniz.jpg";
-import imgIcAnadolu from "@/assets/region-ic-anadolu.jpg";
-import imgGuneydogu from "@/assets/region-guneydogu.jpg";
-import imgKaradeniz from "@/assets/region-karadeniz.jpg";
 import { coverImage, type Site } from "@/lib/sites";
 import type { Localized } from "@/lib/i18n";
 

@@ -1,6 +1,6 @@
 /**
  * Write the narration that is to be recorded to `scripts/audio-script.json`,
- * for `generate_audio_edge.py` to read.
+ * for `generate_audio_piper.py` to read.
  *
  *   bun scripts/export-audio-script.ts            # every site and every 3D tour
  *   bun scripts/export-audio-script.ts efes troya # just these sites

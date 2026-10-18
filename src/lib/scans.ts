@@ -6,9 +6,8 @@ import type { Localized } from "@/lib/i18n";
  * A procedural figure, however carefully posed, is an illustration of a
  * statue; a scan is the statue. Where a freely licensed scan of the surviving
  * piece exists, the model uses it in place of its own geometry — the Medusa
- * of Didyma, the sculptured drum of the Artemision, the Athena group of the
- * Pergamon altar, the Amazon frieze of the Mausoleum, two of the four virtues
- * of the Celsus front.
+ * of Didyma, the sculptured drum of the Artemision, the Amazon frieze of the
+ * Mausoleum, two of the four virtues of the Celsus front.
  *
  * The files in `public/scans/` are the authors' scans reduced for the web
  * (decimated, textures resized, meshopt-compressed) and re-centred: the
@@ -21,7 +20,6 @@ export type ScanId =
   | "celsus-arete"
   | "didyma-medusa"
   | "artemision-drum"
-  | "pergamon-athena"
   | "mausoleum-amazon-1"
   | "mausoleum-amazon-2"
   | "nemrut-head"
@@ -32,7 +30,6 @@ export type ScanId =
   | "magdalensberg-youth"
   | "penelope"
   | "hermes-sandal"
-  | "herakles-lansdowne"
   | "pan"
   | "hermanubis"
   | "centaur"
@@ -72,8 +69,12 @@ export type Scan = {
    * Three D Scans (Oliver Laric) publishes its scans of public-domain
    * sculpture as a free archive, with no licence terms attached; it is
    * credited all the same.
+   *
+   * Only licences that allow commercial use are accepted here: the app is
+   * published commercially on Google Play. A NonCommercial (NC) scan cannot be
+   * added: the type refuses it, and a test checks the licence URLs as well.
    */
-  license: "CC BY 4.0" | "CC BY-NC-SA 4.0" | "Free archive";
+  license: "CC BY 4.0" | "Free archive";
   licenseUrl: string;
   /** Turn about y that makes the carved face look along +z. */
   facing?: number;
@@ -82,7 +83,6 @@ export type Scan = {
 };
 
 const BY = "https://creativecommons.org/licenses/by/4.0/";
-const BY_NC_SA = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
 const TDS = "https://threedscans.com/info/";
 const l = (tr: string, en: string): Localized => ({ tr, en });
 
@@ -138,18 +138,6 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     note: l(
       "British Museum'daki özgün tambur (MÖ 340-320): Hermes, Thanatos ve bir kadın figürü. Yalnızca bir tambur ayakta kaldığı için modeldeki bütün kabartmalı sütunlarda bu tambur tekrarlanıyor; gerçekte her birinin sahnesi farklıydı.",
       "The original drum in the British Museum (340-320 BC): Hermes, Thanatos and a woman. Only this one survives whole, so every sculptured column in the model repeats it; in reality each carried a different scene.",
-    ),
-  },
-  "pergamon-athena": {
-    url: "/scans/pergamon-athena.glb",
-    title: l("Athena ile dev Alkyoneus", "Athena and the giant Alkyoneus"),
-    author: "Ancient World 3D",
-    source: "https://sketchfab.com/3d-models/bfe43faf0179456090a880c28c33deec",
-    license: "CC BY-NC-SA 4.0",
-    licenseUrl: BY_NC_SA,
-    note: l(
-      "Doğu frizinin Athena grubunun Kopenhag'daki modern alçı kalıbı; özgün friz Berlin'deki Pergamon Müzesi'nde. Modelde doğu yüzüne bir kez yerleştirildi; frizin geri kalanı fotoğraftan oyulmuş kabartma olarak duruyor.",
-      "A modern plaster cast in Copenhagen of the Athena group of the east frieze; the original is in the Pergamon Museum, Berlin. It is set once on the model's east face; the rest of the frieze is still cut from a photograph.",
     ),
   },
   "mausoleum-amazon-1": {
@@ -271,18 +259,6 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     note: l(
       "Lysippos'a atfedilen tipin Roma kopyasından alınmış, Viyana'daki alçı kalıp. Modelde sahne cephelerindeki Hermes heykellerinin yerine duruyor.",
       "A plaster cast in Vienna from a Roman copy of the type attributed to Lysippos. In the model it stands in for the Hermes of the stage fronts.",
-    ),
-  },
-  "herakles-lansdowne": {
-    url: "/scans/herakles-lansdowne.glb",
-    title: l("Lansdowne Herakles'i", "The Lansdowne Herakles"),
-    author: "Ancient World 3D",
-    source: "https://sketchfab.com/3d-models/37474f59a3f04487900d8144548e4d69",
-    license: "CC BY-NC-SA 4.0",
-    licenseUrl: BY_NC_SA,
-    note: l(
-      "Getty Müzesi'ndeki, MS 125 dolayına tarihlenen Roma heykelinin Kopenhag'daki alçı kalıbı: postunu kolunda, sopasını omzunda taşıyan Herakles.",
-      "A cast in Copenhagen of the Roman marble of about AD 125 in the Getty Museum: Herakles with his lion skin over one arm and his club on his shoulder.",
     ),
   },
   pan: {
@@ -646,7 +622,6 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "antinous",
     "nike",
     "pan",
-    "herakles-lansdowne",
     "hermes-sandal",
     "muse-polyhymnia",
     "arringatore",
@@ -658,7 +633,6 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "artemision-drum",
     "antinous",
     "cybele",
-    "herakles-lansdowne",
     "muse-thalia",
     "magdalensberg-youth",
     "muse-clio",
@@ -670,14 +644,13 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "hadrian-troy",
     "caryatid",
     "arringatore",
+    "efebo",
   ],
   "pergamon-zeus-sunagi": [
-    "pergamon-athena",
     "magdalensberg-youth",
     "penelope",
     "cybele",
     "augustus",
-    "herakles-lansdowne",
     "nike",
     "muse-thalia",
     "amazon-wounded",
@@ -702,7 +675,6 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "magdalensberg-youth",
     "nike",
     "pan",
-    "herakles-lansdowne",
     "hermes-sandal",
     "antinous",
     "arringatore",
@@ -740,7 +712,6 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "magdalensberg-youth",
     "nike",
     "pan",
-    "herakles-lansdowne",
     "hermes-sandal",
     "muse-polyhymnia",
     "hadrian-troy",
@@ -751,13 +722,13 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "caryatid",
     "ephesus-portrait",
+    "antinous",
   ],
   "side-tiyatrosu": [
     "neptune",
     "magdalensberg-youth",
     "nike",
     "pan",
-    "herakles-lansdowne",
     "hermes-sandal",
     "muse-polyhymnia",
     "hadrian-troy",
@@ -772,11 +743,11 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "ephesus-portrait",
     "caryatid",
+    "efebo",
   ],
   "aizanoi-zeus-tapinagi": [
     "neptune",
     "cybele",
-    "herakles-lansdowne",
     "muse-thalia",
     "antinous",
     "hadrian-troy",
@@ -787,6 +758,7 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "arringatore",
     "caryatid",
     "tiberius-velatus",
+    "efebo",
   ],
   "halikarnas-mozolesi": [
     "mausoleum-amazon-1",

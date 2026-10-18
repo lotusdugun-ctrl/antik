@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { partsFor, type Part } from "@/lib/reconstruction-parts";
 import { reconstructions } from "@/lib/reconstructions";
@@ -23,6 +23,22 @@ describe("scans", () => {
       expect(scan.title.tr && scan.title.en && scan.note.tr && scan.note.en).toBeTruthy();
       expect(scan.url).toBe(`/scans/${id}.glb`);
     }
+  });
+
+  test("no scan carries a NonCommercial, NoDerivatives or unknown licence", () => {
+    // The app is published commercially (Google Play); NC scans are not allowed.
+    for (const [id, scan] of Object.entries(SCANS)) {
+      expect(`${id}:${scan.license}`).toMatch(/:(CC BY 4\.0|Free archive)$/);
+      expect(`${id}:${scan.licenseUrl}`).not.toMatch(/-nc|-nd|noncommercial/i);
+      if (scan.license === "CC BY 4.0")
+        expect(`${id}:${scan.licenseUrl}`).toBe(
+          `${id}:https://creativecommons.org/licenses/by/4.0/`,
+        );
+    }
+    // And no file is shipped that the list does not credit.
+    const files = readdirSync(join(root, "public", "scans")).filter((f) => f.endsWith(".glb"));
+    const listed = new Set(Object.values(SCANS).map((s) => s.url.replace("/scans/", "")));
+    expect(files.filter((f) => !listed.has(f))).toEqual([]);
   });
 
   test("a scan set into a model is credited on that model's page", () => {
@@ -54,7 +70,6 @@ describe("scans", () => {
     expect(count("celsus-kutuphanesi", "caryatid")).toBe(1);
     expect(count("aizanoi-zeus-tapinagi", "neptune")).toBe(1);
     expect(count("didyma-apollon-tapinagi", "didyma-medusa")).toBe(1);
-    expect(count("pergamon-zeus-sunagi", "pergamon-athena")).toBe(1);
     expect(count("artemis-tapinagi", "artemision-drum")).toBeGreaterThan(0);
     expect(
       count("halikarnas-mozolesi", "mausoleum-amazon-1") +
@@ -140,7 +155,6 @@ function trianglesOf(gltf: Gltf): number {
 const HERO_BUDGET: Partial<Record<ScanId, number>> = {
   "didyma-medusa": 60_000,
   "nemrut-head": 55_000,
-  "pergamon-athena": 65_000,
   caryatid: 45_000,
   "ephesus-portrait": 45_000,
   "herm-thucydides-herodotus": 35_000,

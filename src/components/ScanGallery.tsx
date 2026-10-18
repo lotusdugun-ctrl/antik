@@ -8,7 +8,8 @@ const Viewer = lazy(() => import("./ScanViewer"));
 /**
  * The real pieces behind a reconstruction: each scan shown on its own, with
  * what it is and whose work it is. The credit is a licence term — every scan
- * here is CC BY or CC BY-NC-SA — so it is printed in full, not tucked away.
+ * here is CC BY (or from the Three D Scans free archive, credited all the same)
+ * — so it is printed in full, not tucked away.
  */
 export function ScanGallery({ ids }: { ids: ScanId[] }) {
   const { t, L } = useI18n();

@@ -817,25 +817,7 @@ export function Reconstruction3D({
         {t("recon_face_credit")}
       </p>
       <p className="mt-1 text-xs text-muted-foreground">
-        {t("ambience_credit")} (
-        <a
-          href="https://www.wildfiregames.com/"
-          target="_blank"
-          rel="noreferrer"
-          className="hover:underline"
-        >
-          Wildfire Games
-        </a>
-        ,{" "}
-        <a
-          href="https://creativecommons.org/licenses/by-sa/3.0/"
-          target="_blank"
-          rel="noreferrer license"
-          className="hover:underline"
-        >
-          CC BY-SA 3.0
-        </a>
-        ) {t("ambience_credit_rest")}{" "}
+        {t("ambience_credit")}{" "}
         <a href="/ambience/CREDITS.txt" target="_blank" rel="noreferrer" className="underline">
           {t("ambience_credit_all")}
         </a>

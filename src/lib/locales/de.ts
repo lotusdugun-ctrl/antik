@@ -151,7 +151,7 @@ export const de: Partial<Record<TKey, string>> = {
   photo_prev: "Vorheriges Foto",
   photo_next: "Nächstes Foto",
   photo_placeholder:
-    "Platzhalterbild – von diesem Ort gibt es noch kein Foto, daher wird eine Ansicht der Region gezeigt.",
+    "Platzhalterbild – von diesem Ort gibt es noch kein Foto, daher wird eine allgemeine Landschaft aus den 3D-Szenen der App gezeigt.",
   structure_general_view:
     "Dies ist eine Gesamtansicht der Stadt – ein Foto des Bauwerks selbst gibt es noch nicht.",
   structure_generic:
@@ -314,7 +314,6 @@ export const de: Partial<Record<TKey, string>> = {
   guide_offline_ok: "Vorgelesen von der Stimme deines Geräts – funktioniert auch ohne Empfang.",
   guide_online_voice:
     "Diese Stimme benötigt eventuell eine Verbindung. Lade in den Geräteeinstellungen ein Sprachpaket herunter, um offline zu hören.",
-  guide_recorded: "Studioaufnahme",
   guide_no_voice:
     "Auf diesem Gerät gibt es keine Stimme für diese Sprache. Der Text steht unten zum Lesen.",
   guide_unsupported: "Dieser Browser kann nicht vorlesen.",
@@ -335,9 +334,8 @@ export const de: Partial<Record<TKey, string>> = {
   ambience_off: "Umgebungsklang aus",
   ambience_hint:
     "Die Klänge des Ortes: im Theater Publikum, Applaus und Musik von der Bühne; im Hippodrom galoppierende Gespanne und eine tobende Menge; am Tempel Aulos, Trommel und Opfertiere; auf der Agora der Markt. Echte Aufnahmen und im Browser erzeugter Klang; leiser, sobald die Führung spricht.",
-  ambience_credit: "Umgebungsklang: Aufnahmen und Musik aus 0 A.D.",
-  ambience_credit_rest:
-    "sowie gemeinfreie (CC0) Aufnahmen von freesound.org (ESC-50, Sonic Pi, Minetest).",
+  ambience_credit:
+    "Umgebungsklang: gemeinfreie (CC0) Aufnahmen von freesound.org (ESC-50, Sonic Pi, Minetest) und für diese App synthetisierte Klänge und Musik.",
   ambience_credit_all: "Alle Quellen",
   recon_life_show: "Alltag zeigen",
   recon_life_hide: "Alltag ausblenden",

@@ -1,13 +1,14 @@
-# Records the audio guide with Microsoft's free Edge voices (no card, no key)
-# and publishes the files. Run it from SESLENDIR.bat. Default Turkish voice:
-# tr-TR-EmelNeural, chosen by listening to the samples (SES-ORNEKLERI.bat).
+# Records the audio guide (tr/en/de/ru) and the Greek voices of the 3D models
+# with open-source Piper voices ON THIS COMPUTER, and publishes them. Run it
+# from SESLENDIR.bat. No card, no account, no key.
+# Only voices whose model card states a licence that allows commercial use
+# are used (see docs/SESLER.md); the old Microsoft Edge recordings are deleted.
 # Keep this file ASCII: Windows PowerShell 5.1 reads BOM-less scripts as ANSI.
 $ErrorActionPreference = "Continue"
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 $audioRepo = Join-Path (Split-Path -Parent $root) "antik-audio"
 $owner = "lotusdugun-ctrl"
-$voice = "tr-TR-EmelNeural"
 
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch {}
 $env:PYTHONIOENCODING = "utf-8"
@@ -15,7 +16,7 @@ $env:PYTHONUTF8 = "1"
 
 function Step($text) { Write-Host ""; Write-Host "=== $text ===" -ForegroundColor Cyan }
 
-# 1. Python and edge-tts
+# 1. Python, Piper and the MP3 encoder
 Step "Python kontrol ediliyor"
 $py = $null
 foreach ($candidate in @("py", "python", "python3")) {
@@ -29,10 +30,15 @@ if (-not $py) {
   exit 1
 }
 $pyExe = $py[0]; $pyArgs = @(); if ($py.Count -gt 1) { $pyArgs = @($py[1]) }
-& $pyExe @pyArgs -m pip install --quiet --upgrade edge-tts | Out-Host
-$generator = Join-Path $PSScriptRoot "generate_audio_edge.py"
+& $pyExe @pyArgs -m pip uninstall -y edge-tts 2>$null | Out-Null
+& $pyExe @pyArgs -m pip install --quiet --upgrade "piper-tts>=1.3,<2" lameenc | Out-Host
 
-# 3. The audio repository on GitHub Pages (as before)
+# 2. Latest code first, so the newest texts and manifest are used
+Step "Proje guncelleniyor"
+git checkout main
+git pull --no-edit origin main
+
+# 3. The audio repository on GitHub Pages
 function Prepare-AudioRepo {
   Step "antik-audio deposu hazirlaniyor"
   git ls-remote "https://github.com/$owner/antik-audio.git" 2>$null | Out-Null
@@ -54,29 +60,30 @@ function Prepare-AudioRepo {
   Set-Location $audioRepo; git pull --no-edit 2>$null; Set-Location $root
   if (-not (Test-Path (Join-Path $audioRepo ".nojekyll"))) { New-Item -ItemType File (Join-Path $audioRepo ".nojekyll") | Out-Null }
 }
-
-function Publish {
-  Step "Ses dosyalari GitHub'a gonderiliyor"
-  Set-Location $audioRepo
-  git add -A
-  git commit -m "Sesli rehber kayitlari (yeni anlatim, $voice)" 2>$null
-  git push origin HEAD
-  Set-Location $root
-  git checkout main
-  # Only the recordings and their list.
-  git add src/lib/audio-manifest.json public/audio
-  git commit -m "Sesli rehber: yeni anlatim metinleriyle yeniden kaydedildi ($voice)" 2>$null
-  git pull --no-edit origin main
-  git push origin main
-  Write-Host ""
-  Write-Host "Tamam! Seslendirmeler yayinlandi. Birkac dakika icinde sitede." -ForegroundColor Green
-}
-
-# 2. Record what changed (the rewritten Turkish chapters), then publish
 Prepare-AudioRepo
-Step "Seslendirmeler kaydediliyor ($voice). Uzun surebilir; yarida kalirsa SESLENDIR.bat'i yeniden calistirin, kaldigi yerden devam eder"
-& $pyExe @pyArgs $generator --voice-tr $voice --jobs 4 --remote-dir $audioRepo | Out-Host
-if ($LASTEXITCODE -ne 0) {
+
+# 4. Licence check, delete old recordings, record (resumes where it stopped)
+Step "Sesli rehber kaydediliyor (Piper). Uzun surebilir; yarida kalirsa SESLENDIR.bat'i yeniden calistirin, kaldigi yerden devam eder"
+& $pyExe @pyArgs (Join-Path $PSScriptRoot "generate_audio_piper.py") --remote-dir $audioRepo | Out-Host
+$guideOk = ($LASTEXITCODE -eq 0)
+Step "3D modellerin Yunanca sesleri kaydediliyor (Piper)"
+& $pyExe @pyArgs (Join-Path $PSScriptRoot "generate_ambience_voices.py") | Out-Host
+if (-not $guideOk) {
   Write-Host "Bazi bolumler kaydedilemedi (yukaridaki mesajlara bakin). Kaydedilenler yine de gonderiliyor." -ForegroundColor Yellow
 }
-Publish
+
+# 5. Publish both repositories (deletions included)
+Step "Ses dosyalari GitHub'a gonderiliyor"
+Set-Location $audioRepo
+git add -A
+git commit -m "Sesli rehber: Piper kayitlari (lisans kontrollu); eski Edge kayitlari silindi" 2>$null
+git push origin HEAD
+Set-Location $root
+# One path at a time: a folder that no longer exists must not stop the others.
+foreach ($p in @("src/lib/audio-manifest.json", "src/lib/voice-credits.json", "public/audio", "public/ambience/voices")) { git add -A -- $p 2>$null }
+git commit -m "Sesli rehber: Piper kayitlari (lisans kontrollu); eski Edge kayitlari silindi" 2>$null
+git pull --no-edit origin main
+git push origin main
+Write-Host ""
+Write-Host "Tamam! Seslendirmeler yayinlandi. Birkac dakika icinde sitede." -ForegroundColor Green
+Write-Host "Lisansi uygun ses bulunamayan dillerde uygulama cihazin kendi sesini kullanir." -ForegroundColor Green

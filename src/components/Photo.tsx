@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { imageAt, srcSetFor } from "@/lib/images";
+import { registerShownPhoto } from "@/lib/shown-photos";
 
 /**
  * Every photo in the app goes through here so the browser can pick a width
@@ -8,6 +10,9 @@ import { imageAt, srcSetFor } from "@/lib/images";
  * this component exists to avoid.
  *
  * `fallbackWidth` is what non-srcSet browsers (and the `src` attribute) get.
+ *
+ * Each photo also registers itself while it is shown, so the page footer can
+ * list its author and licence ("Photo credits on this page").
  */
 export function Photo({
   src,
@@ -32,6 +37,7 @@ export function Photo({
   fetchPriority?: "high" | "low" | "auto";
   decoding?: "async" | "sync" | "auto";
 }) {
+  useEffect(() => registerShownPhoto(src), [src]);
   return (
     <img
       src={imageAt(src, fallbackWidth)}

@@ -1929,6 +1929,7 @@ export const photoCredits: Record<string, PhotoCredit> = {
   "Istanbul_-_Kariye_Camii_(s._Salvatore_in_Chora)_-_Foto_G._Dall'Orto_26-5-2006.jpg": {
     author: "G.dallorto",
     license: "Attribution",
+    licenseUrl: "https://commons.wikimedia.org/wiki/Template:Attribution",
   },
   "Ihlara.jpg": {
     author: "The original uploader was Morphosis at Turkish Wikipedia.",
@@ -3702,6 +3703,7 @@ export const photoCredits: Record<string, PhotoCredit> = {
   "Trabzon_museum.jpg": {
     author: "Radosław Botev",
     license: "Attribution",
+    licenseUrl: "https://commons.wikimedia.org/wiki/Template:Attribution",
   },
   "CorumMuseum1.jpg": {
     author: "Klaus-Peter Simon",

@@ -600,7 +600,13 @@ const SCAN_OF: Partial<Record<string, ScanId[]>> = {
   Apollon: ["efebo", "apollo-kitharoidos"],
   Dionysos: ["magdalensberg-youth", "antinous"],
   Hermes: ["hermes-sandal"],
-  Herakles: ["herakles-lansdowne"],
+  /**
+   * Herakles as the young athlete-hero, the type of the Lansdowne Herakles: a
+   * nude youth of the same Polykleitan-Lysippan build stands in for him. (The
+   * cast of the Lansdowne Herakles once used here was licensed for
+   * non-commercial use only.)
+   */
+  Herakles: ["efebo", "hermes-sandal", "antinous"],
   Pan: ["pan"],
   Hermanubis: ["hermanubis"],
   Asklepios: ["asklepios"],
