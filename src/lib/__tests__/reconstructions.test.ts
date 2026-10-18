@@ -493,22 +493,11 @@ describe("the carved silhouettes", () => {
     expect(pillars.size).toBe(spec.ringPillars);
   });
 
-  test("the horsemen ride a lofted horse, not a stack of drums", () => {
+  test("the Celsus bases carry statues, not crude riders", () => {
     const celsus = reconstructions.find((r) => r.id === "celsus-kutuphanesi")!;
-    const riders = partsOf(celsus).filter(
-      (part) => part.kind === "figure" && part.pose === "riding",
-    );
-    expect(riders.length).toBe(2);
-    const skins = partsOf(celsus).filter(
-      (part) => part.kind === "loft" && part.material === "bronze",
-    );
-    // Body, muscles, neck, head and its features, legs and tail: two dozen
-    // skins a horse, nothing like a stack of drums.
-    expect(skins.length).toBeGreaterThanOrEqual(40);
-    // The rider sits on the horse's back, above every hoof.
-    for (const rider of riders) {
-      expect(rider.at[1]).toBeGreaterThan(2.94 + 1.2);
-    }
+    const figures = partsOf(celsus).filter((part) => part.kind === "figure");
+    expect(figures.filter((part) => part.kind === "figure" && part.pose === "riding")).toEqual([]);
+    expect(figures.filter((part) => part.material === "bronze" && part.scan).length).toBe(2);
   });
 });
 

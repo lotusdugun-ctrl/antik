@@ -4,9 +4,7 @@ import {
   BookOpen,
   Building2,
   Castle,
-  Check,
   Clock,
-  ChevronDown,
   Columns3,
   Compass,
   Gamepad2,
@@ -15,7 +13,7 @@ import {
   Home,
   Landmark,
   Layers,
-  LayoutGrid,
+  Menu,
   Map as MapIcon,
   Moon,
   Newspaper,
@@ -27,13 +25,8 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import * as Dialog from "@radix-ui/react-dialog";
+import { useEffect, useState, type ReactNode } from "react";
 import { LANGS, useI18n, type Lang, type TKey } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -117,315 +110,255 @@ function usePath() {
   return useRouterState({ select: (state) => state.location.pathname });
 }
 
-function LangSwitch() {
-  const { lang, setLang, t } = useI18n();
-  return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger
-        aria-label={t("nav_language")}
-        className="flex h-9 items-center gap-1 rounded-full border border-border bg-card px-3 text-xs font-semibold uppercase text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <Globe className="h-4 w-4" /> {lang}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className={cn(LAYER, "min-w-[10rem] rounded-xl p-1")}>
-        {LANGS.map((code) => (
-          <DropdownMenuItem
-            key={code}
-            onSelect={() => setLang(code)}
-            className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm"
-          >
-            {LANG_NAME[code]}
-            {lang === code && <Check className="h-4 w-4 text-primary" />}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function ThemeButton() {
-  const { theme, toggle } = useTheme();
-  const { t } = useI18n();
-  return (
-    <button
-      onClick={toggle}
-      aria-label={theme === "dark" ? t("theme_light") : t("theme_dark")}
-      className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
-    >
-      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </button>
-  );
-}
-
-function ProfileButton() {
-  const { t } = useI18n();
-  const active = isActive(usePath(), "/profil");
-  return (
-    <Link
-      to="/profil"
-      aria-label={t("nav_profile")}
-      title={t("nav_profile")}
-      className={cn(
-        "hidden h-9 w-9 shrink-0 place-items-center rounded-full border transition-colors lg:grid",
-        active
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border bg-card text-muted-foreground hover:text-foreground",
-      )}
-    >
-      <User className="h-4 w-4" />
-    </Link>
-  );
-}
-
-/** A group in the desktop bar: a button that opens its pages with a line on each. */
-function GroupMenu({ group }: { group: NavGroup }) {
-  const { t } = useI18n();
-  const path = usePath();
-  const active = group.items.some((item) => isActive(path, item.to));
-  return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger
-        className={cn(
-          "flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium transition-colors outline-none data-[state=open]:bg-secondary data-[state=open]:text-foreground",
-          active ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground",
-        )}
-      >
-        {t(group.key)} <ChevronDown className="h-3.5 w-3.5 opacity-70" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className={cn(LAYER, "w-80 rounded-2xl p-1.5")}>
-        {group.items.map((item) => (
-          <DropdownMenuItem key={item.to} asChild className="cursor-pointer rounded-xl p-0">
-            <Link
-              to={item.to}
-              className={cn(
-                "flex items-start gap-3 px-3 py-2.5",
-                isActive(path, item.to) && "bg-secondary",
-              )}
-            >
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-secondary text-primary">
-                <item.icon className="h-4 w-4" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-semibold text-foreground">{t(item.key)}</span>
-                {item.desc && (
-                  <span className="block text-xs text-muted-foreground">{t(item.desc)}</span>
-                )}
-              </span>
-            </Link>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function DesktopNav() {
-  const { t } = useI18n();
-  const path = usePath();
-  return (
-    <nav className="mr-1 hidden items-center gap-1 lg:flex">
-      <GroupMenu group={EXPLORE} />
-      {TOOLS.map((item) => (
-        <Link
-          key={item.to}
-          to={item.to}
-          className={cn(
-            "rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
-            isActive(path, item.to)
-              ? "bg-secondary text-foreground"
-              : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {t(item.key)}
-        </Link>
-      ))}
-      <GroupMenu group={EXPERIENCE} />
-    </nav>
-  );
-}
-
-/** The phone's "Menu" tab: every section, grouped, in a sheet from the bottom. */
-function MenuSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { t } = useI18n();
-  const path = usePath();
-  const sheet = useRef<HTMLDivElement>(null);
-
-  // Close on navigation and on Escape; keep the page behind from scrolling.
-  useEffect(() => {
-    if (open) onClose();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path]);
-  useEffect(() => {
-    if (!open) return;
-    /*
-     * `aria-modal` promises a modal, so behave like one for keyboard and
-     * screen-reader users: focus moves into the sheet, Tab cycles inside it,
-     * and closing hands focus back to whatever opened it (the Menu tab).
-     */
-    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    // Following a link closes the sheet too; then focus belongs to the new
-    // page, not back on the Menu tab.
-    const openedOn = window.location.pathname;
-    const focusables = () =>
-      Array.from(
-        sheet.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ) ?? [],
-      );
-    // The panel's own close button, not the full-screen backdrop button.
-    (sheet.current?.querySelector<HTMLElement>("[data-sheet-close]") ?? focusables()[0])?.focus();
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab") return;
-      const items = focusables();
-      if (items.length === 0) return;
-      const first = items[0]!;
-      const last = items[items.length - 1]!;
-      const active = document.activeElement;
-      const inside = active instanceof Node && sheet.current?.contains(active);
-      if (e.shiftKey && (active === first || !inside)) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && (active === last || !inside)) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = overflow;
-      window.removeEventListener("keydown", onKey);
-      if (opener?.isConnected && window.location.pathname === openedOn) opener.focus();
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
-
-  const section = (group: NavGroup) => (
-    <section key={group.key}>
-      <h2 className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {t(group.key)}
-      </h2>
-      <div className="grid grid-cols-2 gap-2">
-        {group.items.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={cn(
-              "flex items-center gap-2.5 rounded-xl border p-3 text-sm font-semibold",
-              isActive(path, item.to)
-                ? "border-primary bg-secondary text-foreground"
-                : "border-border bg-card",
-            )}
-          >
-            <item.icon className="h-4 w-4 shrink-0 text-primary" />
-            <span className="min-w-0 truncate">{t(item.key)}</span>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-
+/** A two-to-four way choice as one pill with a sliding highlight. */
+function Segmented<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: { value: T; label: string; icon?: typeof Home; lang?: string }[];
+  onChange: (value: T) => void;
+}) {
   return (
     <div
-      ref={sheet}
-      className={cn("fixed inset-0 lg:hidden", LAYER)}
-      role="dialog"
-      aria-modal="true"
-      aria-label={t("nav_menu")}
+      role="radiogroup"
+      aria-label={label}
+      className="grid gap-1 rounded-xl bg-secondary p-1"
+      style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
     >
-      <button
-        aria-label={t("nav_close")}
-        onClick={onClose}
-        className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
-      />
-      <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl border-t border-border bg-background px-4 pb-24 pt-3 shadow-2xl">
-        <div className="mb-3 flex items-center justify-between">
-          <span className="mx-auto h-1 w-10 rounded-full bg-border" />
-        </div>
-        <div className="mb-4 flex items-center justify-between">
-          <p className="font-display text-lg font-semibold">{t("nav_menu")}</p>
+      {options.map((option) => {
+        const on = option.value === value;
+        return (
           <button
-            onClick={onClose}
-            aria-label={t("nav_close")}
-            data-sheet-close
-            className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card"
+            key={option.value}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            lang={option.lang}
+            onClick={() => onChange(option.value)}
+            className={cn(
+              "flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              on
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
-            <X className="h-4 w-4" />
+            {option.icon && <option.icon className="h-3.5 w-3.5 shrink-0" />}
+            <span className="truncate">{option.label}</span>
           </button>
-        </div>
-        <div className="space-y-5">
-          {section(EXPLORE)}
-          {section(EXPERIENCE)}
-          <Link
-            to="/gorseller"
-            className="block px-1 text-xs font-medium text-muted-foreground underline-offset-2 hover:underline"
-          >
-            {t("nav_credits")}
-          </Link>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 }
 
-/** Five tabs a thumb can hit: home, map, route, profile — and everything else. */
+/**
+ * The one menu: every page, the language and the theme, in a drawer from the
+ * left. The header used to carry two drop-downs, two loose links, a language
+ * picker, a theme button and a profile icon; now it carries the button that
+ * opens this, the name, and the two things most visits are for.
+ */
+function MenuDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+  const { t, lang, setLang } = useI18n();
+  const { theme, toggle } = useTheme();
+  const path = usePath();
+
+  // Following a link closes the drawer.
+  useEffect(() => {
+    onOpenChange(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path]);
+
+  const row = (item: NavItem) => {
+    const active = isActive(path, item.to);
+    return (
+      <Link
+        key={item.to}
+        to={item.to}
+        aria-current={active ? "page" : undefined}
+        className={cn(
+          "flex items-center gap-3 rounded-xl px-2.5 py-2 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+          active ? "bg-primary/10 text-primary" : "text-foreground hover:bg-secondary",
+        )}
+      >
+        <span
+          className={cn(
+            "grid h-8 w-8 shrink-0 place-items-center rounded-lg",
+            active ? "bg-primary text-primary-foreground" : "bg-secondary text-primary",
+          )}
+        >
+          <item.icon className="h-4 w-4" />
+        </span>
+        <span className="min-w-0 truncate">{t(item.key)}</span>
+      </Link>
+    );
+  };
+  const heading = (key: TKey) => (
+    <h2 className="mb-1.5 px-2.5 font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      {t(key)}
+    </h2>
+  );
+
+  return (
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          className={cn(
+            "fixed inset-0 bg-black/45 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:animate-none",
+            LAYER,
+          )}
+        />
+        <Dialog.Content
+          aria-describedby={undefined}
+          className={cn(
+            "fixed inset-y-0 left-0 flex w-[min(22rem,88vw)] flex-col border-r border-border bg-background shadow-2xl outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left data-[state=closed]:duration-200 data-[state=open]:duration-300 motion-reduce:animate-none",
+            LAYER,
+          )}
+        >
+          <div className="flex items-center justify-between gap-3 border-b border-border px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+            <Dialog.Title className="flex min-w-0 items-center gap-2.5">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
+                <Landmark className="h-4 w-4" />
+              </span>
+              <span className="truncate font-display text-base font-semibold">{t("appName")}</span>
+            </Dialog.Title>
+            <Dialog.Close
+              aria-label={t("nav_close")}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground outline-none transition-colors hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <X className="h-5 w-5" />
+            </Dialog.Close>
+          </div>
+
+          <nav
+            aria-label={t("nav_menu")}
+            className="flex-1 space-y-5 overflow-y-auto overscroll-contain px-2.5 py-4"
+          >
+            <div className="space-y-0.5">
+              {row({ to: "/", key: "nav_home", icon: Home })}
+              {row({ to: "/rekonstruksiyonlar", key: "nav_reconstructions", icon: Box })}
+              {row({ to: "/profil", key: "nav_profile", icon: User })}
+            </div>
+            <section>
+              {heading(EXPLORE.key)}
+              <div className="space-y-0.5">{EXPLORE.items.map(row)}</div>
+            </section>
+            <section>
+              {heading("nav_group_tools")}
+              <div className="space-y-0.5">{TOOLS.map(row)}</div>
+            </section>
+            <section>
+              {heading(EXPERIENCE.key)}
+              <div className="space-y-0.5">
+                {EXPERIENCE.items.filter((item) => item.to !== "/rekonstruksiyonlar").map(row)}
+              </div>
+            </section>
+          </nav>
+
+          <div className="space-y-3 border-t border-border px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4">
+            <div>
+              <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <Globe className="h-3.5 w-3.5" /> {t("nav_language")}
+              </p>
+              <Segmented
+                label={t("nav_language")}
+                value={lang}
+                onChange={(code) => setLang(code)}
+                options={LANGS.map((code) => ({
+                  value: code,
+                  label: code.toUpperCase(),
+                  lang: code,
+                }))}
+              />
+              <p className="mt-1 px-1 text-[11px] text-muted-foreground">{LANG_NAME[lang]}</p>
+            </div>
+            <div>
+              <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("nav_theme")}
+              </p>
+              <Segmented
+                label={t("nav_theme")}
+                value={theme}
+                onChange={(next) => {
+                  if (next !== theme) toggle();
+                }}
+                options={[
+                  { value: "light", label: t("theme_light_short"), icon: Sun },
+                  { value: "dark", label: t("theme_dark_short"), icon: Moon },
+                ]}
+              />
+            </div>
+            <Link
+              to="/gorseller"
+              className="block px-1 text-xs font-medium text-muted-foreground underline-offset-2 hover:underline"
+            >
+              {t("nav_credits")}
+            </Link>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+/**
+ * Five tabs a thumb can hit: home, the map, the 3D models in the middle, the
+ * profile, and the same menu the header opens — within reach of a thumb.
+ */
 function MobileTabs({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolean }) {
   const { t } = useI18n();
   const path = usePath();
-  const tabs: NavItem[] = [
-    { to: "/", key: "nav_home", icon: Home },
-    { to: "/harita", key: "nav_map", icon: MapIcon },
-    { to: "/rota", key: "nav_route", icon: RouteIcon },
-    { to: "/profil", key: "nav_profile", icon: User },
-  ];
-  const inMenu = [...EXPLORE.items, ...EXPERIENCE.items].some((item) => isActive(path, item.to));
   const tab =
-    "flex flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[11px] font-medium transition-colors";
+    "flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-[11px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring";
+  const link = (item: NavItem) => (
+    <Link
+      key={item.to}
+      to={item.to}
+      className={cn(
+        tab,
+        isActive(path, item.to) && !menuOpen ? "text-primary" : "text-muted-foreground",
+      )}
+    >
+      <span className="grid h-6 place-items-center">
+        <item.icon className="h-5 w-5" />
+      </span>
+      <span className="max-w-full truncate">{t(item.key)}</span>
+    </Link>
+  );
+  const in3d = isActive(path, "/rekonstruksiyonlar");
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-[1000] print:hidden border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
       <div className="mx-auto flex max-w-xl items-stretch justify-between px-2 py-1.5">
-        {tabs.slice(0, 2).map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
+        {link({ to: "/", key: "nav_home", icon: Home })}
+        {link({ to: "/harita", key: "nav_map", icon: MapIcon })}
+        <Link to="/rekonstruksiyonlar" className={cn(tab, "text-primary")}>
+          <span
             className={cn(
-              tab,
-              isActive(path, item.to) && !menuOpen ? "text-primary" : "text-muted-foreground",
+              "grid h-6 w-11 place-items-center rounded-full transition-colors",
+              in3d && !menuOpen ? "bg-primary text-primary-foreground" : "bg-primary/12",
             )}
           >
-            <item.icon className="h-5 w-5" />
-            <span className="truncate">{t(item.key)}</span>
-          </Link>
-        ))}
+            <Box className="h-4.5 w-4.5" />
+          </span>
+          <span className="max-w-full truncate font-semibold">{t("recon_badge")}</span>
+        </Link>
+        {link({ to: "/profil", key: "nav_profile", icon: User })}
         <button
+          type="button"
           onClick={onMenu}
           aria-expanded={menuOpen}
-          className={cn(tab, menuOpen || inMenu ? "text-primary" : "text-muted-foreground")}
+          aria-haspopup="dialog"
+          className={cn(tab, menuOpen ? "text-primary" : "text-muted-foreground")}
         >
-          <LayoutGrid className="h-5 w-5" />
-          <span className="truncate">{t("nav_group_explore")}</span>
+          <span className="grid h-6 place-items-center">
+            <Menu className="h-5 w-5" />
+          </span>
+          <span className="max-w-full truncate">{t("nav_menu")}</span>
         </button>
-        {tabs.slice(2).map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={cn(
-              tab,
-              isActive(path, item.to) && !menuOpen ? "text-primary" : "text-muted-foreground",
-            )}
-          >
-            <item.icon className="h-5 w-5" />
-            <span className="truncate">{t(item.key)}</span>
-          </Link>
-        ))}
       </div>
     </nav>
   );
@@ -433,27 +366,60 @@ function MobileTabs({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolea
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
+  const path = usePath();
   const [menuOpen, setMenuOpen] = useState(false);
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const iconButton =
+    "grid h-10 w-10 shrink-0 place-items-center rounded-full text-muted-foreground outline-none transition-colors hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring";
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-[1000] print:hidden border-b border-border/70 bg-background/85 backdrop-blur-xl">
-        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 sm:px-6">
-          <Link to="/" className="flex min-w-0 items-center gap-2.5">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
-              <Landmark className="h-4.5 w-4.5" />
+      <header className="sticky top-0 z-[1000] print:hidden border-b border-border/60 bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-14 max-w-7xl items-center gap-1.5 px-2 sm:h-16 sm:gap-2 sm:px-4">
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label={t("nav_menu_open")}
+            aria-expanded={menuOpen}
+            aria-haspopup="dialog"
+            data-menu-trigger
+            className={iconButton}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <Link
+            to="/"
+            className="flex min-w-0 items-center gap-2 rounded-lg pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
+              <Landmark className="h-4 w-4" />
             </span>
-            <span className="block truncate font-display text-base font-semibold leading-tight">
+            <span className="truncate font-display text-[17px] font-semibold leading-tight">
               {t("appName")}
             </span>
           </Link>
 
-          <div className="flex items-center gap-2">
-            <DesktopNav />
-            <LangSwitch />
-            <ThemeButton />
-            <ProfileButton />
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+            <Link
+              to="/kentler"
+              aria-label={t("search_action")}
+              title={t("search_action")}
+              className={iconButton}
+            >
+              <Search className="h-5 w-5" />
+            </Link>
+            <Link
+              to="/rekonstruksiyonlar"
+              className={cn(
+                "inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
+                isActive(path, "/rekonstruksiyonlar")
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground",
+              )}
+            >
+              <Box className="h-4 w-4" />
+              <span className="hidden sm:inline">{t("nav_reconstructions")}</span>
+              <span className="sm:hidden">{t("recon_badge")}</span>
+            </Link>
           </div>
         </div>
       </header>
@@ -502,8 +468,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </footer>
 
-      <MenuSheet open={menuOpen} onClose={closeMenu} />
-      <MobileTabs onMenu={() => setMenuOpen((v) => !v)} menuOpen={menuOpen} />
+      <MenuDrawer open={menuOpen} onOpenChange={setMenuOpen} />
+      <MobileTabs onMenu={() => setMenuOpen(true)} menuOpen={menuOpen} />
     </div>
   );
 }

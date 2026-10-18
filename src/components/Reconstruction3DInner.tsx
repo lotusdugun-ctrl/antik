@@ -143,6 +143,13 @@ type Props = {
   /** Names for the on-screen walking pad's buttons, in the reader's language. */
   padLabels?: { forward: string; back: string; left: string; right: string } | undefined;
   /**
+   * An analogue push from outside — the caller's thumb stick — read every
+   * frame while walking: `forward` and `right` each from -1 to 1, and their
+   * length is the share of walking speed. Stands in for the pad's own state,
+   * so pass one or the other.
+   */
+  walkStick?: { current: { forward: number; right: number } } | undefined;
+  /**
    * Told, ten times a second at most and only when it has moved, where the
    * camera is and which way it looks along the ground (x, z): the ears the
    * scene's sounds are placed for.
@@ -406,6 +413,7 @@ export default function Reconstruction3DInner({
   walk = false,
   onWalkEnd,
   padLabels,
+  walkStick,
   onListen,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -413,7 +421,9 @@ export default function Reconstruction3DInner({
    * The on-screen walking pad, read by the render loop every frame: how hard
    * it is being pushed forward (+1) or back (-1), and to the right or left.
    */
-  const padRef = useRef({ forward: 0, right: 0 });
+  const ownPad = useRef({ forward: 0, right: 0 });
+  // Kept stable for the scene's lifetime: the walk loop closes over it once.
+  const padRef = useRef(walkStick ?? ownPad).current;
   const walkEndRef = useRef(onWalkEnd);
   walkEndRef.current = onWalkEnd;
   const listenRef = useRef(onListen);
@@ -3020,6 +3030,12 @@ export default function Reconstruction3DInner({
            * flush with it: a band of colour on a frieze, a door's dark void in
            * a wall. Two faces in one plane fight over every pixel and shimmer
            * as the camera moves, so these are drawn a hair in front.
+           *
+           * Only a hair: a constant step, no slope term. With the slope term
+           * the pull grew with the angle a face was seen at, and from the
+           * cavea it dragged the timber stage floor through the stone front
+           * laid two centimetres in front of it, in stripes. Paint now sits
+           * genuinely in front of its stone (see `face-fights.test.ts`).
            */
           const DECALS = [
             "paintRed",
@@ -3035,7 +3051,7 @@ export default function Reconstruction3DInner({
           ];
           if (DECALS.includes(name)) {
             material.polygonOffset = true;
-            material.polygonOffsetFactor = -1;
+            material.polygonOffsetFactor = 0;
             material.polygonOffsetUnits = -2 - DECALS.indexOf(name) * 0.5;
           }
           const mesh = new THREE.Mesh(merged, material);
@@ -3304,12 +3320,24 @@ export default function Reconstruction3DInner({
                 mesh.material = scanStoneFor(part.material);
                 return;
               }
-              if (base.map || part.material === "marble") return;
+              // Metal is cast, not carved: a bronze or a gilded statue loses
+              // the photograph of its marble original and takes the metal's
+              // own colour and sheen.
+              const metal = part.material === "bronze" || part.material === "paintGold";
+              if (!metal && (base.map || part.material === "marble")) return;
               const key = `${fit.id}|${part.material}`;
               let tinted = tintedScans.get(key);
               if (!tinted) {
                 tinted = base.clone();
-                tinted.color.set(MATERIALS[part.material].color);
+                const look = MATERIALS[part.material];
+                tinted.color.set(look.color);
+                if (metal) {
+                  tinted.map = null;
+                  tinted.emissiveMap = null;
+                  tinted.emissive.set(0x000000);
+                  tinted.roughness = look.roughness;
+                  tinted.metalness = look.metalness;
+                }
                 tintedScans.set(key, tinted);
                 scanResources.push(tinted);
               }
@@ -4117,6 +4145,14 @@ export default function Reconstruction3DInner({
       // The longest stride tested at once, so a fast frame cannot skip a step
       // or pass through a column.
       const STRIDE = 0.2;
+      /*
+       * The near plane while walking. Depth precision falls with the square of
+       * the distance over this, so 5 cm left a phone unable to tell apart two
+       * faces 2 cm apart across a theatre; at 15 cm it does three times
+       * better. The walker's body (`BODY`) keeps the plane's corners — up to
+       * 0.21 m from the eye on a phone held sideways — out of the walls.
+       */
+      const WALK_NEAR = 0.15;
       const groundY = bounds.min[1] - 0.06;
       const apronRadius = span * 2.2;
       // A stroll on a 20 m tomb, a brisk walk round a 140 m theatre.
@@ -4574,17 +4610,47 @@ export default function Reconstruction3DInner({
       renderer.domElement.addEventListener("wheel", onWalkWheel, { passive: false });
 
       /** Where a walk's strides have got to, and whether it began stuck inside something. */
-      const stride = { x: 0, z: 0, free: false };
+      const stride = { x: 0, z: 0, free: false, crowded: 0 };
+      /*
+       * The walker has a body, not just a point: the eye is kept this far
+       * from any wall. The near plane (`WALK_NEAR`) is drawn a little in
+       * front of the eye, and a body round it is what lets that plane stand
+       * far enough out to keep the depth buffer's precision for the far end
+       * of a theatre — a point could walk its eye up to the stone, and the
+       * plane had to be pulled in to 5 cm so as not to slice through it.
+       */
+      const BODY = 0.25;
+      const AROUND = Array.from({ length: 8 }, (_, i) => [
+        Math.cos((i * Math.PI) / 4) * BODY,
+        Math.sin((i * Math.PI) / 4) * BODY,
+      ]);
+      /** How many points round a body standing at (x, z) are inside something. */
+      const crowding = (x: number, z: number) => {
+        let inside = 0;
+        for (const [dx, dz] of AROUND) {
+          probeAt(x + dx!, z + dz!, walker.feet + walker.lift + STEP);
+          if (!fits(Math.max(0, walker.lift - Math.max(0, probe.floor - walker.feet)))) inside += 1;
+        }
+        return inside;
+      };
       /** One stride to (x, z), taken if there is room there; false if blocked. */
       const tryStride = (x: number, z: number) => {
         probeAt(x, z, walker.feet + walker.lift + STEP);
         const lift = Math.max(0, walker.lift - Math.max(0, probe.floor - walker.feet));
         if (!stride.free && !fits(lift)) return false;
+        const floor = probe.floor;
+        if (!stride.free) {
+          // Never closer to a wall than a body allows; if already pressed to
+          // one (put there, or started there), only a step away from it.
+          const crowded = crowding(x, z);
+          if (crowded > 0 && crowded >= stride.crowded) return false;
+          stride.crowded = crowded;
+        }
         stride.x = x;
         stride.z = z;
         // Landing on something higher spends the lift it took to get there.
         walker.lift = lift;
-        walker.feet = probe.floor;
+        walker.feet = floor;
         return true;
       };
       /** One frame of walking: move, find the floor, settle the eye onto it. */
@@ -4624,7 +4690,14 @@ export default function Reconstruction3DInner({
         stride.z = camera.position.z;
         probeAt(stride.x, stride.z, walker.feet + walker.lift + STEP);
         stride.free = !fits(Math.max(0, walker.lift - Math.max(0, probe.floor - walker.feet)));
-        if (moveX === 0 && moveZ === 0) tryStride(stride.x, stride.z);
+        stride.crowded = stride.free ? 0 : crowding(stride.x, stride.z);
+        if (moveX === 0 && moveZ === 0) {
+          // Standing still is always allowed, wherever the body is.
+          const crowded = stride.crowded;
+          stride.crowded = Infinity;
+          tryStride(stride.x, stride.z);
+          stride.crowded = crowded;
+        }
         for (let i = 0; i < strides; i += 1) {
           const { x, z } = stride;
           // Blocked head-on, slide along whichever way is still open.
@@ -4700,12 +4773,13 @@ export default function Reconstruction3DInner({
             controls.target.set(...to);
             controls.update();
           },
-          // Triangles drawn per top-level group: the building, its life, the land.
+          // Triangles drawn per top-level group (hidden objects, such as the far
+          // figure of somebody close, left out): the building, its life, the land.
           triangles: () => {
             const tally: Record<string, number> = {};
             for (const child of scene.children) {
               const key = child.name || ((child as THREE_NS.Mesh).isMesh ? "building" : "other");
-              child.traverse((object) => {
+              child.traverseVisible((object) => {
                 const mesh = object as THREE_NS.Mesh;
                 if (!mesh.isMesh || !mesh.geometry) return;
                 const index = mesh.geometry.index;
@@ -4827,7 +4901,7 @@ export default function Reconstruction3DInner({
          * depth buffer keeps its precision at the far end of the scene too.
          */
         const nearWanted = walker.on
-          ? 0.05
+          ? WALK_NEAR
           : Math.min(0.5, Math.max(0.02, camera.position.distanceTo(controls.target) * 0.02));
         if (Math.abs(camera.near - nearWanted) > camera.near * 0.1) {
           camera.near = nearWanted;

@@ -1,7 +1,8 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   Columns2,
   Download,
+  Ellipsis,
   Footprints,
   Glasses,
   Maximize2,
@@ -12,12 +13,12 @@ import {
   Moon,
   RotateCcw,
   RotateCw,
-  Square,
   Sun,
   Sunset,
   Tag,
   TagsIcon,
   Users,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
@@ -34,6 +35,7 @@ import { structurePhotoFor } from "@/lib/structure-photos";
 import { useTheme } from "@/lib/theme";
 import { AudioGuide } from "./AudioGuide";
 import { CompareSlider } from "./CompareSlider";
+import { WalkJoystick } from "./WalkJoystick";
 import { arSupport, openQuickLook, startWebXR, type ARMode } from "./ar/launch-ar";
 import type { AtmosMode } from "./Reconstruction3DInner";
 import type { Biome } from "./scene/landscape";
@@ -70,12 +72,23 @@ function Skeleton({ height, label }: { height: string; label: string }) {
   );
 }
 
-const control =
-  "inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold transition-colors hover:border-primary";
+/** The dark glass every panel over the model is made of, in either theme. */
+const glass =
+  "border border-white/15 bg-neutral-950/55 text-white shadow-lg backdrop-blur-md supports-[backdrop-filter]:bg-neutral-950/45";
 
-/** A round button floating over the model itself. */
-const floating =
-  "inline-flex h-10 min-w-10 items-center justify-center gap-1.5 rounded-full border border-border bg-card/85 px-2.5 text-sm font-semibold shadow-md backdrop-blur transition-colors hover:border-primary aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground";
+/** A button inside a glass panel: icon, and a short label where there is room. */
+const tool =
+  "inline-flex h-9 min-w-9 shrink-0 items-center justify-center gap-1.5 rounded-xl px-2 text-xs font-semibold text-white/85 outline-none transition-colors hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-white/70 disabled:opacity-50 aria-pressed:bg-white aria-pressed:text-neutral-900 aria-checked:bg-white aria-checked:text-neutral-900 aria-checked:hover:bg-white";
+
+/** A secondary action under the model. */
+const chip =
+  "inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-card px-3.5 text-xs font-semibold transition-colors hover:border-primary disabled:opacity-60";
+
+const LIGHTS = [
+  ["day", Sun, "recon_light_day"],
+  ["golden", Sunset, "recon_light_sunset"],
+  ["night", Moon, "recon_light_night"],
+] as const;
 
 /** The prefixed names Safari still uses for element full screen. */
 type WebkitElement = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
@@ -193,15 +206,36 @@ export function Reconstruction3D({
   const [touchFirst, setTouchFirst] = useState(false);
   useEffect(() => setTouchFirst(window.matchMedia("(pointer: coarse)").matches), []);
   const onWalkEnd = useCallback(() => setWalking(false), []);
-  const padLabels = useMemo(
-    () => ({
-      forward: t("recon_move_forward"),
-      back: t("recon_move_back"),
-      left: t("recon_move_left"),
-      right: t("recon_move_right"),
-    }),
-    [t],
-  );
+  // The thumb stick's push, read by the view every frame (see WalkJoystick).
+  const walkStick = useRef({ forward: 0, right: 0 });
+  // How to walk: said once as the walk starts, then out of the way.
+  const [hintShown, setHintShown] = useState(false);
+  useEffect(() => {
+    setHintShown(walking);
+    if (!walking) return;
+    const timer = window.setTimeout(() => setHintShown(false), 6000);
+    return () => window.clearTimeout(timer);
+  }, [walking]);
+
+  /* The control bar's "more" panel: closed by Escape or a tap elsewhere. */
+  const [more, setMore] = useState(false);
+  const moreId = useId();
+  const barRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!more) return;
+    const onDown = (event: PointerEvent) => {
+      if (!barRef.current?.contains(event.target as Node)) setMore(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMore(false);
+    };
+    window.addEventListener("pointerdown", onDown, true);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("pointerdown", onDown, true);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [more]);
 
   /* High quality: ambient occlusion. On by default where there is a mouse —
      a desktop GPU — and off on touch devices, where it costs battery. */
@@ -399,6 +433,90 @@ export function Reconstruction3D({
 
   const chosen = active === null ? undefined : item.hotspots[active];
 
+  /*
+   * Labels, people and sound: in the bar where the stage has room for them
+   * beside the light (and, while walking, beside the stick too), and as rows
+   * in the "more" panel where it does not. Container queries, so a stage in
+   * a narrow column and a phone in full screen get the same treatment.
+   */
+  const roomy = walking ? "hidden @2xl:flex" : "hidden @md:flex";
+  const cramped = walking ? "@2xl:hidden" : "@md:hidden";
+  const switchRow = (
+    key: string,
+    on: boolean,
+    flip: () => void,
+    Icon: typeof Sun,
+    label: string,
+    hint?: string,
+  ) => (
+    <button
+      key={key}
+      type="button"
+      role="switch"
+      aria-checked={on}
+      onClick={flip}
+      title={hint}
+      className="flex h-9 w-full items-center gap-2 rounded-xl px-2 text-xs font-semibold text-white/90 outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/70"
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      <span className="min-w-0 flex-1 truncate text-left">{label}</span>
+      <span
+        aria-hidden="true"
+        className={`relative h-5 w-9 shrink-0 rounded-full transition-colors motion-reduce:transition-none ${on ? "bg-primary" : "bg-white/25"}`}
+      >
+        <span
+          className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-[left] motion-reduce:transition-none ${on ? "left-[1.125rem]" : "left-0.5"}`}
+        />
+      </span>
+    </button>
+  );
+  const toggles = (inPanel: boolean) =>
+    (
+      [
+        [
+          "labels",
+          showLabels,
+          () => setShowLabels((on) => !on),
+          TagsIcon,
+          "recon_ctl_labels",
+          undefined,
+        ],
+        [
+          "life",
+          showLife,
+          () => setShowLife((on) => !on),
+          Users,
+          "recon_ctl_people",
+          t("recon_life_hint"),
+        ],
+        [
+          "sound",
+          ambient,
+          toggleAmbient,
+          ambient ? Volume2 : VolumeX,
+          "recon_ctl_sound",
+          t("ambience_hint"),
+        ],
+      ] as const
+    ).map(([key, on, flip, Icon, label, hint]) =>
+      inPanel ? (
+        switchRow(key, on, flip, Icon, t(label), hint)
+      ) : (
+        <button
+          key={key}
+          type="button"
+          aria-pressed={on}
+          aria-label={t(label)}
+          title={hint ?? t(label)}
+          onClick={flip}
+          className={tool}
+        >
+          <Icon className="h-4 w-4" />
+          <span className="hidden @3xl:inline">{t(label)}</span>
+        </button>
+      ),
+    );
+
   return (
     <div>
       {/* The stage: the model with the buttons and labels over it — the box
@@ -410,11 +528,11 @@ export function Reconstruction3D({
           // and not while walking, where a drag is a look round.
           if (event.target instanceof HTMLCanvasElement && !walking) toggleFull();
         }}
-        className={
+        className={`${
           full
             ? "fixed inset-0 z-[1100] h-full w-full bg-background"
             : "relative overflow-hidden rounded-2xl border border-border bg-card"
-        }
+        } @container`}
       >
         {mounted ? (
           <Suspense
@@ -446,7 +564,7 @@ export function Reconstruction3D({
               showLife={showLife}
               walk={walking}
               onWalkEnd={onWalkEnd}
-              padLabels={padLabels}
+              walkStick={walkStick}
               onListen={ambient ? onListen : undefined}
             />
           </Suspense>
@@ -454,17 +572,22 @@ export function Reconstruction3D({
           <Skeleton height={height} label={t("recon_loading")} />
         )}
 
-        {/* Walk and full screen, on the model where the eye already is. */}
-        <div className="absolute right-[max(0.5rem,env(safe-area-inset-right))] top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex gap-2">
+        {/* Top right: walking, and full screen. */}
+        <div
+          className={`absolute right-[max(0.5rem,env(safe-area-inset-right))] top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex items-center gap-1 rounded-2xl p-1 ${glass}`}
+        >
           <button
             type="button"
             onClick={() => setWalking((on) => !on)}
             disabled={!sceneReady}
-            aria-pressed={walking}
-            title={walking ? t("recon_walk_exit") : t("recon_walk")}
-            className={`${floating} disabled:opacity-60`}
+            data-walk-toggle
+            className={`inline-flex h-9 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-white/70 disabled:opacity-50 ${
+              walking
+                ? "bg-white text-neutral-900 hover:bg-white/90"
+                : "bg-primary text-primary-foreground hover:bg-primary/90"
+            }`}
           >
-            <Footprints className="h-4 w-4" />
+            {walking ? <X className="h-4 w-4" /> : <Footprints className="h-4 w-4" />}
             <span>{walking ? t("recon_walk_exit") : t("recon_walk")}</span>
           </button>
           <button
@@ -472,102 +595,165 @@ export function Reconstruction3D({
             onClick={toggleFull}
             aria-label={full ? t("recon_fullscreen_exit") : t("recon_fullscreen")}
             title={full ? t("recon_fullscreen_exit") : t("recon_fullscreen")}
-            className={floating}
+            className={tool}
           >
             {full ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
           </button>
         </div>
 
-        {/* How to walk, while walking; and in full screen, what a chosen label
-            is, since the note under the model is off screen there. */}
-        {(walking || (full && chosen)) && (
-          <div className="pointer-events-none absolute left-[max(0.5rem,env(safe-area-inset-left))] top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex max-w-[min(26rem,calc(100%-12rem))] flex-col gap-2 max-sm:top-[calc(max(0.5rem,env(safe-area-inset-top))+3rem)] max-sm:max-w-[calc(100%-1rem)]">
-            {walking && (
-              <p className="rounded-xl bg-black/55 px-3 py-2 text-xs leading-snug text-white backdrop-blur">
-                {touchFirst ? t("recon_walk_hint_touch") : t("recon_walk_hint_keys")}
-              </p>
-            )}
-            {full && chosen && (
-              <p className="flex items-start gap-2 rounded-xl border-l-4 border-primary bg-secondary/90 p-3 text-sm leading-relaxed text-secondary-foreground backdrop-blur">
-                <Tag className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>
-                  <strong className="font-semibold">{L(chosen.label)}</strong> — {L(chosen.note)}
-                </span>
-              </p>
-            )}
-          </div>
+        {/* Under the top row: how to walk, as a chip that goes by itself; and
+            in full screen, what a chosen label is, since the note under the
+            model is off screen there. */}
+        <div className="pointer-events-none absolute left-[max(0.5rem,env(safe-area-inset-left))] right-[max(0.5rem,env(safe-area-inset-right))] top-[calc(max(0.5rem,env(safe-area-inset-top))+3.25rem)] z-10 flex flex-col items-start gap-2">
+          {walking && (
+            <div
+              role="status"
+              className={`pointer-events-auto flex max-w-[26rem] items-center gap-2 rounded-full py-1.5 pl-3.5 pr-1.5 text-xs leading-snug transition-opacity duration-700 motion-reduce:transition-none ${glass} ${
+                hintShown ? "opacity-100" : "pointer-events-none opacity-0"
+              }`}
+              aria-hidden={!hintShown}
+            >
+              <Footprints className="h-3.5 w-3.5 shrink-0 text-white/70" />
+              <span>{touchFirst ? t("recon_walk_hint_touch") : t("recon_walk_hint_keys")}</span>
+              <button
+                type="button"
+                onClick={() => setHintShown(false)}
+                aria-label={t("nav_close")}
+                tabIndex={hintShown ? 0 : -1}
+                className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-white/70 hover:bg-white/15 hover:text-white"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+          {full && chosen && (
+            <p
+              className={`flex max-w-[26rem] items-start gap-2 rounded-2xl p-3 text-sm leading-relaxed ${glass}`}
+            >
+              <Tag className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <span>
+                <strong className="font-semibold">{L(chosen.label)}</strong> — {L(chosen.note)}
+              </span>
+            </p>
+          )}
+        </div>
+
+        {/* Bottom left, while walking: the thumb stick. */}
+        {walking && (
+          <WalkJoystick
+            label={t("recon_joystick")}
+            stick={walkStick}
+            className="absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] z-10"
+          />
         )}
 
-        {/* In full screen the toolbars under the model are out of sight, so
-            the ones that change what is on screen come along as icons. */}
-        {full && (
-          <div className="absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.5rem,env(safe-area-inset-left))] z-10 flex max-w-[calc(100%-11rem)] flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setShowLabels((on) => !on)}
-              aria-pressed={showLabels}
-              aria-label={showLabels ? t("recon_labels_hide") : t("recon_labels_show")}
-              title={showLabels ? t("recon_labels_hide") : t("recon_labels_show")}
-              className={floating}
-            >
-              <TagsIcon className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowLife((on) => !on)}
-              aria-pressed={showLife}
-              aria-label={showLife ? t("recon_life_hide") : t("recon_life_show")}
-              title={showLife ? t("recon_life_hide") : t("recon_life_show")}
-              className={floating}
-            >
-              <Users className="h-4 w-4" />
-            </button>
-            {!walking && (
-              <button
-                type="button"
-                onClick={() => setSpinning((on) => !on)}
-                aria-pressed={spinning}
-                aria-label={spinning ? t("recon_spin_stop") : t("recon_spin")}
-                title={spinning ? t("recon_spin_stop") : t("recon_spin")}
-                className={floating}
-              >
-                {spinning ? <Square className="h-4 w-4" /> : <RotateCw className="h-4 w-4" />}
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => {
-                setWalking(false);
-                setActive(null);
-                setResetToken((n) => n + 1);
-              }}
-              aria-label={t("recon_reset")}
-              title={t("recon_reset")}
-              className={floating}
-            >
-              <RotateCcw className="h-4 w-4" />
-            </button>
-            {(
-              [
-                ["day", Sun],
-                ["golden", Sunset],
-                ["night", Moon],
-              ] as const
-            ).map(([mode, Icon]) => (
-              <button
-                key={mode}
-                type="button"
-                onClick={() => setAtmos(mode)}
-                aria-pressed={atmos === mode}
-                aria-label={t(`recon_light_${mode}` as const)}
-                title={t(`recon_light_${mode}` as const)}
-                className={floating}
-              >
-                <Icon className="h-4 w-4" />
-              </button>
-            ))}
+        {/* Bottom right: the control bar. The light is always there; the
+            three toggles join it where the stage is wide enough, and fold
+            into "more" where it is not, so nothing ever covers the stick. */}
+        <div
+          ref={barRef}
+          className="absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.5rem,env(safe-area-inset-right))] z-10 flex items-end gap-1.5"
+        >
+          <div
+            role="radiogroup"
+            aria-label={t("recon_light")}
+            className={`flex gap-0.5 rounded-2xl p-1 ${glass}`}
+          >
+            {LIGHTS.map(([mode, Icon, key]) => {
+              const on = atmos === mode;
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  aria-label={t(key)}
+                  title={t(key)}
+                  onClick={() => setAtmos(mode)}
+                  className={tool}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className={on ? "pr-0.5" : "hidden pr-0.5 @3xl:inline"}>{t(key)}</span>
+                </button>
+              );
+            })}
           </div>
-        )}
+          <div className={`${roomy} gap-0.5 rounded-2xl p-1 ${glass}`}>{toggles(false)}</div>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setMore((on) => !on)}
+              aria-expanded={more}
+              aria-controls={moreId}
+              aria-label={t("recon_more")}
+              title={t("recon_more")}
+              className={`grid h-11 w-11 place-items-center rounded-2xl outline-none transition-colors focus-visible:ring-2 focus-visible:ring-white/70 ${glass} ${more ? "bg-white! text-neutral-900!" : "hover:bg-neutral-950/70"}`}
+            >
+              {more ? <X className="h-4 w-4" /> : <Ellipsis className="h-5 w-5" />}
+            </button>
+            {more && (
+              <div
+                id={moreId}
+                role="group"
+                aria-label={t("recon_more")}
+                className={`absolute bottom-full right-0 mb-2 w-[min(17rem,calc(100cqw-1rem))] space-y-3 rounded-2xl p-3 ${glass}`}
+              >
+                <div className="space-y-1">
+                  <div className={`${cramped} space-y-1`}>{toggles(true)}</div>
+                  {switchRow(
+                    "quality",
+                    quality,
+                    () => setQuality((on) => !on),
+                    Sparkles,
+                    t("recon_ctl_quality"),
+                    t("recon_quality_hint"),
+                  )}
+                  {!walking &&
+                    switchRow(
+                      "spin",
+                      spinning,
+                      () => setSpinning((on) => !on),
+                      RotateCw,
+                      t("recon_spin"),
+                    )}
+                </div>
+                <div>
+                  <p className="mb-1.5 px-1 text-[10px] font-semibold uppercase tracking-wider text-white/60">
+                    {t("recon_ctl_view")}
+                  </p>
+                  <div className="grid grid-cols-[repeat(3,minmax(0,1fr))_auto] gap-1 rounded-xl bg-white/10 p-1">
+                    {(["front", "corner", "above"] as const).map((name) => (
+                      <button
+                        key={name}
+                        type="button"
+                        onClick={() => {
+                          setWalking(false);
+                          setView({ name, token: Date.now() });
+                        }}
+                        className="h-8 truncate rounded-lg px-1 text-xs font-semibold text-white/85 outline-none hover:bg-white/15 hover:text-white focus-visible:ring-2 focus-visible:ring-white/70"
+                      >
+                        {t(`recon_view_${name}` as const)}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setWalking(false);
+                        setActive(null);
+                        setResetToken((n) => n + 1);
+                      }}
+                      aria-label={t("recon_reset")}
+                      title={t("recon_reset")}
+                      className="grid h-8 w-8 place-items-center rounded-lg text-white/85 outline-none hover:bg-white/15 hover:text-white focus-visible:ring-2 focus-visible:ring-white/70"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* What a chosen label is for. It sits directly under the model rather
@@ -582,125 +768,9 @@ export function Reconstruction3D({
         </p>
       )}
 
+      {/* Under the model, only what takes the model elsewhere: AR, the file,
+          the photograph of today. Everything that changes the view is on it. */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button
-          onClick={() => setShowLabels((on) => !on)}
-          aria-pressed={showLabels}
-          className={control}
-        >
-          <TagsIcon className="h-4 w-4" />
-          {showLabels ? t("recon_labels_hide") : t("recon_labels_show")}
-        </button>
-        <button
-          onClick={() => setShowLife((on) => !on)}
-          aria-pressed={showLife}
-          title={t("recon_life_hint")}
-          className={control}
-        >
-          <Users className="h-4 w-4" />
-          {showLife ? t("recon_life_hide") : t("recon_life_show")}
-        </button>
-        <button
-          onClick={() => setSpinning((on) => !on)}
-          aria-pressed={spinning}
-          className={control}
-        >
-          {spinning ? <Square className="h-4 w-4" /> : <RotateCw className="h-4 w-4" />}
-          {spinning ? t("recon_spin_stop") : t("recon_spin")}
-        </button>
-        <button
-          onClick={() => {
-            setWalking(false);
-            setActive(null);
-            setResetToken((n) => n + 1);
-          }}
-          className={control}
-        >
-          <RotateCcw className="h-4 w-4" /> {t("recon_reset")}
-        </button>
-      </div>
-
-      {/* Named viewpoints, so the model can be met from the angles it was
-          built to be met from without anyone having to drag their way there. */}
-      <div className="mt-2 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {t("recon_views")}
-        </span>
-        {(["front", "corner", "above"] as const).map((name) => (
-          <button
-            key={name}
-            onClick={() => {
-              setWalking(false);
-              setView({ name, token: Date.now() });
-            }}
-            className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
-          >
-            {t(`recon_view_${name}` as const)}
-          </button>
-        ))}
-        <button
-          onClick={() => {
-            setExportFor("download");
-            setExporting(true);
-            setExportToken((n) => n + 1);
-          }}
-          disabled={exporting || !sceneReady}
-          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary disabled:opacity-60"
-        >
-          <Download className="h-3.5 w-3.5" />
-          {exporting ? t("recon_exporting") : t("recon_export")}
-        </button>
-        <p className="text-xs text-muted-foreground">{t("recon_hint")}</p>
-      </div>
-
-      {/* Light: the same building under a high sun, a low one, or the moon. */}
-      <div className="mt-2 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {t("recon_light")}
-        </span>
-        {(
-          [
-            ["day", Sun],
-            ["golden", Sunset],
-            ["night", Moon],
-          ] as const
-        ).map(([mode, Icon]) => (
-          <button
-            key={mode}
-            onClick={() => setAtmos(mode)}
-            aria-pressed={atmos === mode}
-            className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
-          >
-            <Icon className="h-3.5 w-3.5" />
-            {t(`recon_light_${mode}` as const)}
-          </button>
-        ))}{" "}
-        <p className="text-xs text-muted-foreground">{t("recon_light_hint")}</p>
-      </div>
-
-      {/* Realism, sound, AR, and the photograph of today. */}
-      <div className="mt-2 flex flex-wrap items-center gap-2">
-        <button
-          onClick={() => setQuality((on) => !on)}
-          aria-pressed={quality}
-          title={t("recon_quality_hint")}
-          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary ${
-            quality ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"
-          }`}
-        >
-          <Sparkles className="h-3.5 w-3.5" /> {t("recon_quality")}
-        </button>
-        <button
-          onClick={toggleAmbient}
-          aria-pressed={ambient}
-          title={t("ambience_hint")}
-          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary ${
-            ambient ? "border-primary bg-primary/10 text-primary" : "border-border bg-card"
-          }`}
-        >
-          {ambient ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-          {ambient ? t("ambience_off") : t("ambience_on")}
-        </button>
         {arMode && (
           <button
             onClick={() => {
@@ -713,7 +783,7 @@ export function Reconstruction3D({
               setExportToken((n) => n + 1);
             }}
             disabled={exporting || (!arReady && !sceneReady)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-3.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
           >
             <Glasses className="h-3.5 w-3.5" />
             {exporting && exportFor === "ar"
@@ -724,14 +794,24 @@ export function Reconstruction3D({
           </button>
         )}
         {todayPhoto && (
-          <button
-            onClick={() => setCaptureToken((n) => n + 1)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
-          >
+          <button onClick={() => setCaptureToken((n) => n + 1)} className={chip}>
             <Columns2 className="h-3.5 w-3.5" /> {t("recon_compare")}
           </button>
         )}
+        <button
+          onClick={() => {
+            setExportFor("download");
+            setExporting(true);
+            setExportToken((n) => n + 1);
+          }}
+          disabled={exporting || !sceneReady}
+          className={chip}
+        >
+          <Download className="h-3.5 w-3.5" />
+          {exporting && exportFor === "download" ? t("recon_exporting") : t("recon_export")}
+        </button>
       </div>
+      <p className="mt-2 text-xs text-muted-foreground">{t("recon_hint")}</p>
       <p className="mt-2 text-xs text-muted-foreground">
         {t("recon_scale")} {t("recon_landscape_note")} {t("recon_life_note")}{" "}
         {t("recon_face_credit")}

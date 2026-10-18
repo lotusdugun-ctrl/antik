@@ -41,7 +41,7 @@ export function spotsFor(item: Reconstruction, life: Pick<SceneLife, "flames">):
   const raised = (at: readonly number[]): Point => [at[0]!, (at[1] ?? 0) + MOUTH, at[2]!];
   if (market.stalls.length) out.stalls = { points: market.stalls.map(raised), ref: 9 };
   if (spec.kind === "peristyle-house") {
-    // The house's own fountain: the Eros over the pool in the middle of the court.
+    // The house's own fountain: the marble youth over the pool in the middle of the court.
     out.fountain = { points: [[0, 0.9, 0]], ref: 6 };
   } else if (market.fountains.length) {
     out.fountain = { points: market.fountains.map((at) => [at[0], 0.8, at[2]]), ref: 6 };

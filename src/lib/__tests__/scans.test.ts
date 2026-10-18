@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { partsFor } from "@/lib/reconstruction-parts";
+import { partsFor, type Part } from "@/lib/reconstruction-parts";
 import { reconstructions } from "@/lib/reconstructions";
-import { lifeFor } from "@/lib/scene-life";
+import { lifeFor, STATUE_MATERIALS } from "@/lib/scene-life";
 import { SCANS, scansFor, type ScanId } from "@/lib/scans";
 
 const root = join(import.meta.dir, "..", "..", "..");
@@ -42,9 +42,14 @@ describe("scans", () => {
         .length;
     expect(count("celsus-kutuphanesi", "celsus-sophia")).toBe(1);
     expect(count("celsus-kutuphanesi", "celsus-arete")).toBe(1);
-    // The four lost statues of the upper storey are four different stand-ins.
+    // The four lost statues of the upper storey are four different stand-ins
+    // (the two bronzes on the bases by the stair are not among them).
+    const marble = (id: ScanId) =>
+      partsFor(reconstructions.find((r) => r.id === "celsus-kutuphanesi")!.model).filter(
+        (p) => p.scan?.id === id && p.material !== "bronze",
+      ).length;
     for (const id of ["tiberius-velatus", "arringatore", "ephesus-portrait", "augustus"] as const)
-      expect(count("celsus-kutuphanesi", id)).toBe(1);
+      expect(marble(id)).toBe(1);
     expect(count("celsus-kutuphanesi", "muse-polyhymnia")).toBe(1);
     expect(count("celsus-kutuphanesi", "caryatid")).toBe(1);
     expect(count("aizanoi-zeus-tapinagi", "neptune")).toBe(1);
@@ -56,6 +61,41 @@ describe("scans", () => {
         count("halikarnas-mozolesi", "mausoleum-amazon-2"),
     ).toBeGreaterThan(20);
   });
+
+  test("no statue is left as a procedural figure", () => {
+    // People are figures too, but of `human` and not of stone or metal.
+    const statue = (part: Part) =>
+      part.kind === "figure" &&
+      (part.identity !== undefined || STATUE_MATERIALS.includes(part.material)) &&
+      part.material !== "human";
+    for (const item of reconstructions) {
+      const bare = [...partsFor(item.model), ...lifeFor(item).props]
+        .filter((part) => statue(part) && !part.scan)
+        .map((part) => (part.kind === "figure" ? (part.identity?.name ?? part.material) : ""));
+      expect(`${item.id}: ${bare.join(", ")}`).toBe(`${item.id}: `);
+    }
+  }, 30_000);
+
+  test("the scanned statues stand on what carries them", () => {
+    // The Mausoleum's dynasts on its podium and in its chariot, the bronzes
+    // on the Celsus bases, the benefactors in the theatres' wing niches.
+    const tomb = partsFor(reconstructions.find((r) => r.id === "halikarnas-mozolesi")!.model);
+    const dynasts = tomb.filter((p) => p.kind === "figure" && p.identity);
+    expect(dynasts.length).toBe(22);
+    expect(dynasts.every((p) => p.scan)).toBe(true);
+    const celsus = partsFor(reconstructions.find((r) => r.id === "celsus-kutuphanesi")!.model);
+    const bronzes = celsus.filter((p) => p.kind === "figure" && p.material === "bronze");
+    expect(bronzes.map((p) => p.scan?.id).sort()).toEqual(["arringatore", "tiberius-velatus"]);
+    // Feet on the top of the base: 2.68 m of plinth and a 0.26 m cap.
+    for (const p of bronzes) expect(p.at[1]).toBeCloseTo(2.94, 2);
+    for (const item of reconstructions.filter((r) => r.model.kind === "roman-theatre")) {
+      const niche = partsFor(item.model).filter(
+        (p) => p.kind === "figure" && p.identity?.name === "Benefactor",
+      );
+      expect(`${item.id}: ${niche.length}`).toBe(`${item.id}: 2`);
+      expect(niche.every((p) => p.scan)).toBe(true);
+    }
+  }, 30_000);
 
   test("no stage front repeats one statue more than twice", () => {
     for (const item of reconstructions.filter((r) => r.model.kind === "roman-theatre")) {

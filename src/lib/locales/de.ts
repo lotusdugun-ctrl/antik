@@ -285,8 +285,7 @@ export const de: Partial<Record<TKey, string>> = {
   recon_walk_exit: "Rundgang beenden",
   recon_walk_hint_keys:
     "Mit W A S D oder den Pfeiltasten gehen, ziehen zum Umsehen, scrollen für einen Schritt vor oder zurück. E steigt, Q sinkt, Umschalt läuft.",
-  recon_walk_hint_touch:
-    "Mit einem Finger ziehen zum Umsehen, Pfeile gedrückt halten zum Gehen, mit zwei Fingern spreizen für vor und zurück.",
+  recon_walk_hint_touch: "Mit dem Steuerknüppel gehen, über den Bildschirm ziehen zum Umsehen.",
   recon_move_forward: "Vorwärts",
   recon_move_back: "Zurück",
   recon_move_left: "Links",

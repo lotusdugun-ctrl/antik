@@ -585,13 +585,15 @@ class Cast {
  * ------------------------------------------------------------------ */
 
 /**
- * Statues for which a real scan of an ancient statue of the same type exists
- * stand in that scan rather than in the procedural figure: Athena in the
- * Minerva of Arezzo, Zeus in the bearded Neptune of Nîmes, and a togate
- * emperor or magistrate in the Arringatore. Bronze and gilt figures keep their
- * own geometry, since the scans are of marble and plaster.
+ * Every statue stands in a real scan of an ancient statue of the same type,
+ * never in the procedural figure, which reads as a doll: Athena in the
+ * Minerva of Arezzo, Zeus in the bearded Neptune of Nîmes, a togate emperor
+ * or magistrate in the Arringatore. A bronze or gilded statue takes the same
+ * scans; the renderer gives the surface the colour of the metal.
  */
 const SCAN_OF: Partial<Record<string, ScanId[]>> = {
+  /** A goddess draped and standing: no scan of an Aphrodite of the kind survives here. */
+  Aphrodite: ["ephesus-portrait", "caryatid"],
   Athena: ["athena-arezzo"],
   Zeus: ["neptune"],
   Emperor: ["arringatore", "augustus", "tiberius-velatus", "hadrian-troy"],
@@ -618,11 +620,14 @@ const pickScan = (choices: ScanId[], at: Vec3): ScanId => {
   return choices[h % choices.length]!;
 };
 
+/** What a statue can be made of: stone, or metal laid over a scan. */
+export const STATUE_MATERIALS: Material[] = ["marble", "marbleWorn", "bronze", "paintGold"];
+
 const decor = (part: Part): Part => {
   const scan =
     part.kind === "figure" &&
     !part.scan &&
-    (part.material === "marble" || part.material === "marbleWorn") &&
+    STATUE_MATERIALS.includes(part.material) &&
     part.identity
       ? SCAN_OF[part.identity.name]
       : undefined;
@@ -822,7 +827,7 @@ function armarium(at: Vec3, width: number, height: number, rotY: number, rand: R
   parts.push(box("timber", turn(at, rotY, 0, 0, -0.02), [width, height, 0.04], rotY));
   for (const side of [-1, 1]) {
     parts.push(
-      box("timber", turn(at, rotY, side * (width / 2 - 0.03), 0, 0.12), [0.06, height, 0.3], rotY),
+      box("timber", turn(at, rotY, side * (width / 2 - 0.03), 0, 0.11), [0.06, height, 0.3], rotY),
     );
   }
   for (let s = 0; s <= shelves; s += 1) {
@@ -1089,10 +1094,26 @@ function cart(at: Vec3, rotY: number, rand: Rand): Part[] {
 }
 
 /**
+ * The honorific statues of benefactors, in turn: a man in his toga, as the
+ * bronze Arringatore is, or the veiled Tiberius; a woman wrapped in her
+ * mantle, the Ephesian portrait statue, or standing in her Ionic chiton.
+ */
+const HONORIFIC_SCANS: Record<"male" | "female", ScanId[]> = {
+  male: ["arringatore", "tiberius-velatus"],
+  female: ["ephesus-portrait", "caryatid"],
+};
+
+/**
  * An honorific statue: a moulded base, the inscription naming who was
  * honoured and by whom, and a bronze of a benefactor of the city on top.
  */
-function honorific(at: Vec3, rotY: number, female: boolean, text: EpigraphicText): Part[] {
+function honorific(
+  at: Vec3,
+  rotY: number,
+  female: boolean,
+  text: EpigraphicText,
+  index: number,
+): Part[] {
   const parts: Part[] = [
     box("marbleWorn", at, [1.1, 0.2, 1.1], rotY),
     box("marble", [at[0], at[1] + 0.2, at[2]], [0.86, 1.25, 0.86], rotY),
@@ -1130,6 +1151,7 @@ function honorific(at: Vec3, rotY: number, female: boolean, text: EpigraphicText
             dress: "himation",
             left: "scroll",
           },
+      scan: { id: HONORIFIC_SCANS[female ? "female" : "male"][index % 2]! },
     }),
   );
   return parts;
@@ -1302,7 +1324,7 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   const hallFront = spec.porchDepth + 0.7;
   const hallBack = hallFront + spec.hallDepth;
   const halfHall = spec.hallWidth / 2;
-  const floor = y0 + 0.02;
+  const floor = y0 + 0.04;
   const stepTop = (i: number): Vec3 => [
     0,
     (i + 1) * rise,
@@ -2706,6 +2728,11 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
       rotY: Math.PI / 2,
     }),
   );
+  /*
+   * The two Lares, little bronzes of youths: the household's statuettes
+   * are lost, so they stand in scans of two Roman youths of the same
+   * Polykleitan kind, the Efebo and the Antinous of Delphi, cast in bronze.
+   */
   for (const dz of [-0.18, 0.18]) {
     b.props.push(
       decor({
@@ -2723,6 +2750,7 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
           right: "phiale",
           left: "cornucopia",
         },
+        scan: { id: dz < 0 ? "efebo" : "antinous" },
       }),
     );
   }
@@ -3601,7 +3629,7 @@ function furnish(item: Reconstruction, life: SceneLife): SceneLife {
         statues += 1;
         {
           const female = rand() < 0.35;
-          made = honorific(at, rotY, female, honorificText(item.id, statues, female));
+          made = honorific(at, rotY, female, honorificText(item.id, statues, female), statues);
         }
         break;
       case "basin":

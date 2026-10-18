@@ -57,7 +57,11 @@ export type ScanId =
   | "muse-thalia"
   | "muse-polyhymnia"
   | "muse-clio"
-  | "eagle";
+  | "eagle"
+  | "asklepios-lod"
+  | "tiberius-velatus-lod"
+  | "ephesus-portrait-lod"
+  | "caryatid-lod";
 
 export type Scan = {
   url: string;
@@ -82,7 +86,12 @@ const BY_NC_SA = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
 const TDS = "https://threedscans.com/info/";
 const l = (tr: string, en: string): Localized => ({ tr, en });
 
-export const SCANS: Record<ScanId, Scan> = {
+type FullScanId = Exclude<
+  ScanId,
+  "asklepios-lod" | "tiberius-velatus-lod" | "ephesus-portrait-lod" | "caryatid-lod"
+>;
+
+const SCANS_FULL: Record<FullScanId, Scan> = {
   "celsus-sophia": {
     url: "/scans/celsus-sophia.glb",
     title: l("Sophia (Bilgelik) heykeli", "Sophia (Wisdom)"),
@@ -578,6 +587,33 @@ export const SCANS: Record<ScanId, Scan> = {
   },
 };
 
+/*
+ * Reduced copies, for statues set far up and many times over — the twenty
+ * dynasts between the Mausoleum's columns — where the full scan would be
+ * spent on pixels no one sees. Same scans, same authors and licences, cut to
+ * about 4,400 triangles each with gltfpack (meshoptimizer).
+ */
+const reduced = (of: FullScanId, url: string): Scan => ({
+  ...SCANS_FULL[of],
+  url,
+  title: l(
+    `${SCANS_FULL[of].title.tr} (azaltılmış kopya)`,
+    `${SCANS_FULL[of].title.en} (reduced copy)`,
+  ),
+  note: l(
+    `${SCANS_FULL[of].note.tr} Uzaktan görülen heykeller için taramanın azaltılmış bir kopyası.`,
+    `${SCANS_FULL[of].note.en} A reduced copy of the scan, for statues seen from afar.`,
+  ),
+});
+
+export const SCANS: Record<ScanId, Scan> = {
+  ...SCANS_FULL,
+  "asklepios-lod": reduced("asklepios", "/scans/asklepios-lod.glb"),
+  "tiberius-velatus-lod": reduced("tiberius-velatus", "/scans/tiberius-velatus-lod.glb"),
+  "ephesus-portrait-lod": reduced("ephesus-portrait", "/scans/ephesus-portrait-lod.glb"),
+  "caryatid-lod": reduced("caryatid", "/scans/caryatid-lod.glb"),
+};
+
 /**
  * Which scans each reconstruction shows: those set into the model, and those
  * that are only shown alongside it.
@@ -613,8 +649,11 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "herakles-lansdowne",
     "hermes-sandal",
     "muse-polyhymnia",
+    "arringatore",
+    "tiberius-velatus",
+    "caryatid",
   ],
-  "didyma-apollon-tapinagi": ["didyma-medusa"],
+  "didyma-apollon-tapinagi": ["didyma-medusa", "tiberius-velatus", "arringatore"],
   "artemis-tapinagi": [
     "artemision-drum",
     "antinous",
@@ -629,6 +668,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "hermes-sandal",
     "penelope",
     "hadrian-troy",
+    "caryatid",
+    "arringatore",
   ],
   "pergamon-zeus-sunagi": [
     "pergamon-athena",
@@ -645,6 +686,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "arringatore",
     "neptune",
     "athena-arezzo",
+    "caryatid",
+    "ephesus-portrait",
   ],
   "hierapolis-tiyatrosu": [
     "muse-polyhymnia",
@@ -662,6 +705,9 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "herakles-lansdowne",
     "hermes-sandal",
     "antinous",
+    "arringatore",
+    "tiberius-velatus",
+    "caryatid",
   ],
   "milet-buyuk-tiyatro": [
     "hadrian-troy",
@@ -673,8 +719,18 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "penelope",
     "neptune",
     "magdalensberg-youth",
+    "arringatore",
+    "tiberius-velatus",
+    "caryatid",
   ],
-  "efes-yamac-evler": ["centaur", "glykon"],
+  "efes-yamac-evler": [
+    "centaur",
+    "glykon",
+    "magdalensberg-youth",
+    "efebo",
+    "antinous",
+    "tiberius-velatus",
+  ],
   "efes-buyuk-tiyatro": [
     "amazon-wounded",
     "efebo",
@@ -691,6 +747,10 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "asklepios",
     "hermanubis",
     "apollo-kitharoidos",
+    "arringatore",
+    "tiberius-velatus",
+    "caryatid",
+    "ephesus-portrait",
   ],
   "side-tiyatrosu": [
     "neptune",
@@ -708,6 +768,10 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "muse-thalia",
     "penelope",
     "antinous",
+    "arringatore",
+    "tiberius-velatus",
+    "ephesus-portrait",
+    "caryatid",
   ],
   "aizanoi-zeus-tapinagi": [
     "neptune",
@@ -721,8 +785,22 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "hermes-sandal",
     "penelope",
     "arringatore",
+    "caryatid",
+    "tiberius-velatus",
   ],
-  "halikarnas-mozolesi": ["mausoleum-amazon-1", "mausoleum-amazon-2", "lion-met"],
+  "halikarnas-mozolesi": [
+    "mausoleum-amazon-1",
+    "mausoleum-amazon-2",
+    "lion-met",
+    "asklepios-lod",
+    "ephesus-portrait-lod",
+    "tiberius-velatus-lod",
+    "caryatid-lod",
+    "tiberius-velatus",
+    "arringatore",
+  ],
+  "aphrodisias-stadyumu": ["caryatid", "ephesus-portrait"],
+  "perge-stadyumu": ["tiberius-velatus", "arringatore"],
   "nemrut-dogu-terasi": ["eagle", "lion-delos", "nemrut-head"],
 };
 

@@ -156,17 +156,18 @@ export function inscribedPanel(options: {
   const parts: Part[] = [
     box(material, onFace(at, rotY, 0, 0, proud / 2 - 0.01), [width, height, proud + 0.02], rotY),
   ];
-  // The frame: a bead round the field, a hair proud of it.
+  // The frame: a bead round the field, standing three centimetres proud of
+  // it — the least that keeps the two faces apart in a phone's depth buffer.
   const bead = Math.max(0.02, letter * 0.18);
   for (const y of [0, height - bead]) {
-    parts.push(box(material, onFace(at, rotY, 0, y, proud), [width, bead, 0.03], rotY));
+    parts.push(box(material, onFace(at, rotY, 0, y, proud + 0.015), [width, bead, 0.06], rotY));
   }
   for (const side of [-1, 1]) {
     parts.push(
       box(
         material,
-        onFace(at, rotY, side * (width / 2 - bead / 2), 0, proud),
-        [bead, height, 0.03],
+        onFace(at, rotY, side * (width / 2 - bead / 2), 0, proud + 0.015),
+        [bead, height, 0.06],
         rotY,
       ),
     );
@@ -252,7 +253,9 @@ export function ashlar(options: {
   const top = options.coping !== false ? height - 0.45 : height;
   let row = 0;
   for (let y = bottom; y < top - 0.2; y += course) {
-    if (y > bottom) band(y, 0.025, 0.012, joint);
+    // Three and a half centimetres proud: a joint any closer to the face
+    // shares its depth on a phone, and flickers in and out of it.
+    if (y > bottom) band(y, 0.025, 0.035, joint);
     if (options.blocks) {
       // The upright joints of this course, half a block along from the last.
       const next = Math.min(y + course, top);
@@ -262,7 +265,7 @@ export function ashlar(options: {
           u < u1 - 0.2;
           u += options.blocks
         ) {
-          parts.push(box(joint, onFace(at, rotY, u, y, 0.002), [0.022, next - y, 0.012], rotY));
+          parts.push(box(joint, onFace(at, rotY, u, y, 0.0135), [0.022, next - y, 0.043], rotY));
         }
       }
     }

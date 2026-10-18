@@ -1229,8 +1229,8 @@ const dict = {
     en: "Walk with W A S D or the arrow keys, drag to look around, scroll to step forward or back. E rises, Q sinks, Shift runs.",
   },
   recon_walk_hint_touch: {
-    tr: "Tek parmakla sürükleyerek etrafa bak, okları basılı tutarak yürü, iki parmakla açıp kapatarak ileri-geri git.",
-    en: "Drag one finger to look around, hold the arrows to walk, pinch to step forward or back.",
+    tr: "Soldaki kolla yürü, ekranı sürükleyerek etrafa bak.",
+    en: "Walk with the stick, drag the screen to look around.",
   },
   recon_move_forward: { tr: "İleri", en: "Forward" },
   recon_move_back: { tr: "Geri", en: "Back" },
@@ -1414,6 +1414,54 @@ const dict = {
   seo_stories_desc: {
     tr: "Efes, Aspendos, Göbeklitepe, Pergamon, Troya, Hattuşa, Aphrodisias ve Göreme'de geçen, seçimlerinizle ilerleyen ve her sahnesinin tarihsel arka planı verilen kısa hikâyeler.",
     en: "Short branching stories set in Ephesus, Aspendos, Göbeklitepe, Pergamon, Troy, Hattusa, Aphrodisias and Göreme, each scene with its historical background.",
+  },
+  /* The simplified header, its side menu, the home page's 3D shelf, the
+     browse list's filter sheet and the 3D view's control bar. */
+  nav_menu_open: { tr: "Menüyü aç", en: "Open menu", de: "Menü öffnen", ru: "Открыть меню" },
+  nav_settings: { tr: "Ayarlar", en: "Settings", de: "Einstellungen", ru: "Настройки" },
+  nav_theme: { tr: "Tema", en: "Theme", de: "Design", ru: "Тема" },
+  theme_light_short: { tr: "Açık", en: "Light", de: "Hell", ru: "Светлая" },
+  theme_dark_short: { tr: "Koyu", en: "Dark", de: "Dunkel", ru: "Тёмная" },
+  home_3d_kicker: {
+    tr: "3B'de keşfet",
+    en: "Explore in 3D",
+    de: "In 3D entdecken",
+    ru: "Исследуйте в 3D",
+  },
+  home_3d_title: {
+    tr: "Antik yapıların içinde dolaş",
+    en: "Walk inside ancient buildings",
+    de: "Durch antike Bauwerke gehen",
+    ru: "Прогуляйтесь внутри античных зданий",
+  },
+  home_3d_walk: { tr: "İçinde gez", en: "Walk inside", de: "Begehen", ru: "Войти" },
+  filter_button: { tr: "Filtrele", en: "Filter", de: "Filtern", ru: "Фильтры" },
+  filter_show: {
+    tr: "Sonuçları göster",
+    en: "Show results",
+    de: "Ergebnisse anzeigen",
+    ru: "Показать результаты",
+  },
+  filter_reset: { tr: "Sıfırla", en: "Reset", de: "Zurücksetzen", ru: "Сбросить" },
+  filter_remove: {
+    tr: "Filtreyi kaldır",
+    en: "Remove filter",
+    de: "Filter entfernen",
+    ru: "Убрать фильтр",
+  },
+  filter_other: { tr: "Diğer", en: "Other", de: "Weitere", ru: "Другое" },
+  recon_more: { tr: "Diğer seçenekler", en: "More options", de: "Weitere Optionen", ru: "Ещё" },
+  recon_ctl_labels: { tr: "Etiketler", en: "Labels", de: "Beschriftung", ru: "Подписи" },
+  recon_ctl_people: { tr: "İnsanlar", en: "People", de: "Menschen", ru: "Люди" },
+  recon_ctl_sound: { tr: "Ses", en: "Sound", de: "Ton", ru: "Звук" },
+  recon_ctl_quality: { tr: "Kalite", en: "Quality", de: "Qualität", ru: "Качество" },
+  recon_ctl_view: { tr: "Görünüm", en: "View", de: "Ansicht", ru: "Вид" },
+  recon_light_sunset: { tr: "Gün batımı", en: "Sunset", de: "Abend", ru: "Закат" },
+  recon_joystick: {
+    tr: "Yürüme kolu: yürümek için kaydır",
+    en: "Walking stick: slide to walk",
+    de: "Steuerknüppel: zum Gehen schieben",
+    ru: "Джойстик: сдвиньте, чтобы идти",
   },
 } satisfies Record<string, Localized>;
 

@@ -5,6 +5,7 @@ import {
   BookOpen,
   Box,
   Building2,
+  Footprints,
   Castle,
   Landmark,
   Map as MapIcon,
@@ -175,8 +176,79 @@ function Index() {
                 {t("search_action")}
               </button>
             </form>
+            <Link
+              to="/rekonstruksiyonlar"
+              className="fade-up mt-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/30 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-black/50"
+            >
+              <Box className="h-4 w-4" /> {t("home_3d_kicker")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
+      </section>
+
+      {/* 3D first. The reconstructions are what this guide has that a
+          photograph cannot give, so they come straight after the hero, large,
+          on a shelf a thumb can swipe. A model has no picture of its own yet,
+          so each card shows the place as it stands today — the "after" the
+          model is the "before" of. */}
+      <section aria-labelledby="home-3d" className="mx-auto max-w-7xl px-4 pt-10 sm:px-6">
+        <div className="mb-4 flex items-end justify-between gap-4">
+          <div className="min-w-0">
+            <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              <Box className="h-3.5 w-3.5" /> {t("home_3d_kicker")}
+            </p>
+            <h2 id="home-3d" className="mt-1 font-display text-2xl font-semibold sm:text-3xl">
+              {t("home_3d_title")}
+            </h2>
+          </div>
+          <Link
+            to="/rekonstruksiyonlar"
+            className="flex shrink-0 items-center gap-1 text-sm font-medium text-primary hover:underline"
+          >
+            {t("view_all")}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-3 sm:-mx-6 sm:scroll-px-6 sm:px-6 [scrollbar-width:thin]">
+          {reconstructions.map((item) => {
+            const site = getSite(item.siteSlug);
+            return (
+              <li key={item.id} className="w-[78%] max-w-[22rem] shrink-0 snap-start sm:w-[22rem]">
+                <Link
+                  to="/rekonstruksiyon/$id"
+                  params={{ id: item.id }}
+                  className="group relative block aspect-[4/5] overflow-hidden rounded-3xl border border-border bg-muted shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {site && (
+                    <Photo
+                      src={coverImage(site)}
+                      alt=""
+                      sizes="(min-width: 640px) 352px, 78vw"
+                      fallbackWidth={500}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
+                  <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-md">
+                    <Box className="h-3.5 w-3.5" /> {t("recon_badge")}
+                  </span>
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <p className="text-xs font-medium text-white/80">
+                      {site ? L(site.name) : item.siteSlug} · {L(item.period)}
+                    </p>
+                    <h3 className="mt-1 font-display text-xl font-semibold leading-tight text-white">
+                      {L(item.title)}
+                    </h3>
+                    <span className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-900 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                      <Footprints className="h-3.5 w-3.5" /> {t("home_3d_walk")}
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </section>
 
       <div className="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6">
@@ -247,41 +319,6 @@ function Index() {
               ))}
             </div>
           )}
-        </section>
-
-        {/* 3D reconstructions. They have no photograph to lead with — the point
-            of them is the buildings no photograph could show — so the card
-            leads with the measurements instead. */}
-        <section>
-          <SectionTitle title={t("recon_title")} action={t("view_all")} to="/rekonstruksiyonlar" />
-          <p className="-mt-2 mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            {t("recon_sub")}
-          </p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {reconstructions.slice(0, 4).map((item) => {
-              const site = getSite(item.siteSlug);
-              return (
-                <Link
-                  key={item.id}
-                  to="/rekonstruksiyon/$id"
-                  params={{ id: item.id }}
-                  className="flex flex-col rounded-2xl surface-panel p-4 lift"
-                >
-                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
-                    <Box className="h-3 w-3" /> {t("recon_badge")}
-                  </span>
-                  <h3 className="mt-2 font-display text-base font-semibold">{L(item.title)}</h3>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {site ? L(site.name) : item.siteSlug} · {L(item.period)}
-                  </p>
-                  <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-primary">
-                    <Ruler className="h-3.5 w-3.5" />
-                    {item.measures.length} {t("recon_measure_count")}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
         </section>
 
         {/* Route builder */}

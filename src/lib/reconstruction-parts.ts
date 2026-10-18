@@ -810,6 +810,22 @@ export const IDENTITIES = {
 } satisfies Record<string, FigureIdentity | FigureIdentity[]>;
 
 /**
+ * The scans the Mausoleum's dynasts stand in. No statue of the family
+ * survives whole enough to scan, so each stands in a scanned statue of its
+ * kind from the same tradition: a man in the himation, bearded, as the
+ * so-called Maussollos in the British Museum is (the Asklepios type), or with
+ * it drawn over his head; a woman wrapped in her mantle, or standing in the
+ * Ionic chiton of the Erechtheion's maidens. They are seen thirty metres up,
+ * twenty of them, so they come from reduced copies of the scans.
+ */
+function dynastScan(who: FigureIdentity, index: number): ScanId {
+  const men: ScanId[] = ["asklepios-lod", "tiberius-velatus-lod"];
+  const women: ScanId[] = ["ephesus-portrait-lod", "caryatid-lod"];
+  const choices = who.sex === "female" ? women : men;
+  return choices[Math.floor(index / 2) % choices.length]!;
+}
+
+/**
  * The paint on the statues. Pigment survives as traces — Egyptian blue, red
  * and yellow ochre, madder, gold leaf — and these follow the published
  * colour reconstructions of Hellenistic and Roman marbles: coloured mantles
@@ -2073,33 +2089,6 @@ export function horseStatue(
   return parts;
 }
 
-/**
- * A bronze horse with its rider astride at the withers, turned to face the
- * way the horse does: the pair on the Celsus court.
- */
-function bronzeHorseman(at: Vec3, rotY: number, scale = 1.1, raised: -1 | 1 = -1): Part[] {
-  return [
-    ...horseStatue("bronze", at, rotY, scale, raised),
-    {
-      kind: "figure",
-      material: "bronze",
-      at: placed(at, rotY, [0, 1.38 * scale, -0.3 * scale]),
-      height: 1.85 * scale,
-      rotY: rotY + Math.PI,
-      pose: "riding",
-      // A benefactor of the city, laurelled, in the cuirass of command.
-      identity: {
-        name: "Horseman",
-        sex: "male",
-        bearded: true,
-        hair: "curls",
-        headgear: "diadem",
-        face: { brow: 1.2, jaw: 1.15, nose: 1.1, age: 0.5 },
-      },
-    },
-  ];
-}
-
 /* ------------------------------------------------------------------ *
  * The sculpture of Nemrut Dağı: enthroned gods, eagles and lions
  * ------------------------------------------------------------------ */
@@ -2982,7 +2971,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
           [
             window.centre - window.width / 2 + (window.width * i) / bars,
             windowBase,
-            wallDepth - 0.12,
+            wallDepth - 0.17,
           ],
           [0.045, windowHeight, 0.045],
         ),
@@ -2992,7 +2981,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       parts.push(
         box(
           "paintGold",
-          [window.centre, windowBase + (windowHeight * i) / rows, wallDepth - 0.12],
+          [window.centre, windowBase + (windowHeight * i) / rows, wallDepth - 0.17],
           [window.width, 0.045, 0.045],
         ),
       );
@@ -3218,7 +3207,9 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
    * makes an entablature read as bands rather than as a shelf.
    */
   for (const level of [lowerTop - lowerBand, facadeTop - upperBand]) {
-    const face = wallDepth + bandDepth - 0.04;
+    // Laid over the cornice's face, three centimetres and more proud of it:
+    // set into it, the paint showed only where the depth buffer let it.
+    const face = wallDepth + bandDepth + 0.005;
     parts.push(box("paintBlue", [0, level + 0.06, face], [w * 0.995, 0.2, 0.06]));
     parts.push(box("paintGold", [0, level + 0.26, face], [w * 0.995, 0.07, 0.07]));
     parts.push(box("paintRed", [0, level + 0.33, face], [w * 0.995, 0.14, 0.06]));
@@ -3368,7 +3359,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
   });
 
   /*
-   * The two bronze horsemen on the courtyard, one either side of the stairs.
+   * The two bronze statues on the courtyard, one either side of the stairs.
    * They stand on their own inscribed plinths, and they are the reason the
    * front reads as the end of a public square rather than as a building in a
    * field: the eye gets something at ground level to measure the steps by.
@@ -3409,11 +3400,30 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
         text: inner,
       }),
     );
-    // The horse and its rider, a little over life size, each turned a touch
-    // towards the stair so the pair address whoever climbs it.
-    parts.push(
-      ...bronzeHorseman([px, 2.94, pz + 0.05], side > 0 ? -0.3 : 0.3, 1.1, side > 0 ? -1 : 1),
-    );
+    /*
+     * The statue on it, in bronze, a little over life size, turned a touch
+     * towards the stair so the pair address whoever climbs it. What stood
+     * here is lost; the two stand in scans of Roman togate statues — the
+     * Arringatore, the one bronze honorific statue of a magistrate to
+     * survive whole, and the veiled Tiberius — which is what such bases
+     * carried.
+     */
+    parts.push({
+      kind: "figure",
+      material: "bronze",
+      at: [px, 2.94, pz + 0.05],
+      height: 2.3,
+      rotY: Math.PI + (side > 0 ? -0.3 : 0.3),
+      identity: {
+        name: "Benefactor",
+        sex: "male",
+        bearded: false,
+        hair: "short",
+        dress: "toga",
+        gesture: "raised",
+      },
+      scan: { id: side < 0 ? "arringatore" : "tiberius-velatus" },
+    });
   }
 
   /* The hall: side walls, rear wall and apse, stopped at the height the
@@ -3425,7 +3435,13 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
   const hallHeight = spec.wallHeight;
 
   parts.push(
-    box("stone", [0, y0 - 0.1, (hallFront + hallBack) / 2], [spec.hallWidth, 0.12, spec.hallDepth]),
+    // The floor stands four centimetres over the podium it is laid on: two
+    // were not enough to keep the two stones apart on a phone.
+    box(
+      "stone",
+      [0, y0 - 0.08, (hallFront + hallBack) / 2],
+      [spec.hallWidth, 0.12, spec.hallDepth],
+    ),
   );
   for (const side of [-1, 1]) {
     parts.push(
@@ -3553,8 +3569,8 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
         parts.push(
           box(
             k++ % 2 === 0 ? "pavonazzetto" : "gialloAntico",
-            [x, y0 + 0.36, inner + 0.07],
-            [pitch - 0.34, dado - 0.62, 0.03],
+            [x, y0 + 0.36, inner + 0.076],
+            [pitch - 0.34, dado - 0.62, 0.032],
           ),
         );
       }
@@ -4012,9 +4028,11 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   if (ch.topGallery) {
     // The colonnaded gallery round the top of the seating.
     const arcadeColumns = Math.round(fullLength * 11);
+    const r = galleryInner + 0.5;
+    // The end columns stand clear of the end walls, not with a plinth in their face.
+    const margin = 0.6 / r;
     for (let i = 0; i <= arcadeColumns; i += 1) {
-      const theta = fullStart + (fullLength * i) / arcadeColumns;
-      const r = galleryInner + 0.5;
+      const theta = fullStart + margin + ((fullLength - margin * 2) * i) / arcadeColumns;
       parts.push(
         ...column(
           screenStone,
@@ -4196,23 +4214,62 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
   }
   // The stage floor, and the front of it the actors played above.
   const floorWidth = Math.min(stageWidth * 0.94, spec.caveaDiameter * 0.62);
-  parts.push(box("timber", [0, 0, wallZ / 2], [floorWidth, stageTop, spec.stageDepth]));
-  parts.push(box(screenStone, [0, 0, -0.18], [floorWidth - 0.04, stageTop - 0.05, 0.4]));
-  // Niches in the low stage front: square and round in turn.
+  /*
+   * The front is stone, the deck timber, and the two never share a face:
+   * the deck is a plank floor laid over the top of the stone front, the
+   * timber framing under it stops behind the stone. Laid one inside the
+   * other, two centimetres apart, the timber's face came through the stone's
+   * in dark stripes on a phone, whose depth buffer cannot tell them apart.
+   */
+  const frontFace = 0.02;
+  const frontDepth = 0.8;
+  const deck = 0.12;
+  const deckBase = stageTop - deck;
+  parts.push(
+    box("timber", [0, deckBase, (wallZ + frontFace) / 2], [floorWidth, deck, frontFace - wallZ]),
+    box(
+      "timber",
+      [0, 0, (wallZ + frontFace - frontDepth) / 2],
+      [floorWidth, deckBase, frontFace - frontDepth - wallZ],
+    ),
+  );
+  /*
+   * The stone front, with niches cut into it — wide and narrow in turn —
+   * as real recesses: a plinth under them, a band over them, piers between,
+   * and the back of each recess set well in. A dark panel laid on the face
+   * instead was three centimetres off it, close enough to fight it too.
+   */
+  /** A block of the front from `x0` to `x1` and `y0` to `y1`, its face `back` behind the line. */
+  const front = (
+    x0: number,
+    x1: number,
+    y0: number,
+    y1: number,
+    back = 0,
+    m: Material = screenStone,
+  ) =>
+    parts.push(
+      box(
+        m,
+        [(x0 + x1) / 2, y0, frontFace - (back + frontDepth) / 2],
+        [x1 - x0, y1 - y0, frontDepth - back],
+      ),
+    );
   const niches = Math.round(floorWidth / 4);
+  const nicheFoot = 0.25;
+  const nicheTop = Math.min(deckBase - 0.2, nicheFoot + stageTop * 0.58);
+  const half = floorWidth / 2;
+  front(-half, half, 0, nicheFoot);
+  front(-half, half, nicheTop, deckBase);
+  let pier = -half;
   for (let i = 0; i < niches; i += 1) {
-    const x = -floorWidth / 2 + (i + 0.5) * (floorWidth / niches);
-    if (i % 2 === 0) {
-      parts.push(
-        cyl("shadow", [x, 0.25, 0.02], 0.7, 0.7, stageTop * 0.6, 12, {
-          thetaStart: Math.PI / 2,
-          thetaLength: Math.PI,
-        }),
-      );
-    } else {
-      parts.push(box("shadow", [x, 0.25, 0.02], [1.2, stageTop * 0.55, 0.06]));
-    }
+    const x = -half + (i + 0.5) * (floorWidth / niches);
+    const w = i % 2 === 0 ? 1.4 : 1.1;
+    front(pier, x - w / 2, nicheFoot, nicheTop);
+    front(x - w / 2, x + w / 2, nicheFoot, nicheTop, 0.32, "shadow");
+    pier = x + w / 2;
   }
+  front(pier, half, nicheFoot, nicheTop);
 
   /*
    * The scaenae frons. Two storeys of aediculae at Aspendos and Side, three
@@ -4284,26 +4341,29 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
         aedicula(x, storey.base, storey.height, project, shaft);
       }
     }
-    // The continuous cornice the aediculae break forward from.
-    parts.push(
-      ...cornice(
-        screenStone,
-        [0, storey.base + storey.height - 0.7, wallZ + 0.5],
-        stageWidth * 0.94,
-        1.5,
-        0.7,
-      ),
-    );
+    // The continuous cornice the aediculae break forward from. The top
+    // storey's is the crowning cornice below, laid over the same stone.
+    if (s < storeys.length - 1)
+      parts.push(
+        ...cornice(
+          screenStone,
+          [0, storey.base + storey.height - 0.7, wallZ + 0.5],
+          stageWidth * 0.94,
+          1.5,
+          0.7,
+        ),
+      );
     // Its middle course picked out in a red that has faded to a stain.
-    parts.push(
-      paintBand(
-        "fadedRed",
-        [0, storey.base + storey.height - 0.7 + 0.233 + 0.03, wallZ + 0.5 + 0.75 + 0.07],
-        FACING.north,
-        stageWidth * 0.94 + 0.14,
-        0.08,
-      ),
-    );
+    if (s < storeys.length - 1)
+      parts.push(
+        paintBand(
+          "fadedRed",
+          [0, storey.base + storey.height - 0.7 + 0.233 + 0.03, wallZ + 0.5 + 0.75 + 0.07],
+          FACING.north,
+          stageWidth * 0.94 + 0.14,
+          0.08,
+        ),
+      );
     // Windows in the upper storeys at Ephesus, where the wall was long and low.
     if (ch.screen === "ephesus" && s > 0) {
       for (let i = 0; i < bays; i += 1) {
@@ -4745,7 +4805,24 @@ function theatreWingEnds(
         y: number,
         h: number,
         out: number,
-      ) => box(material, on((ra + rb) / 2, y, out / 2 - 0.004), [rb - ra, h, out + 0.008], rotY);
+      ) =>
+        // From a centimetre inside the wall to `out` in front of its face,
+        // which the bevel of the wall's own edge sets two centimetres out.
+        box(material, on((ra + rb) / 2, y, (out + 0.01) / 2), [rb - ra, h, out + 0.03], rotY);
+      /** The stretches of `[ra, rb]` clear of the steps and the niche. */
+      const clear = (ra: number, rb: number): [number, number][] => {
+        let runs: [number, number][] = [[ra, rb]];
+        for (const [h0, h1] of holes)
+          runs = runs.flatMap(([a, b]): [number, number][] =>
+            b <= h0 || a >= h1
+              ? [[a, b]]
+              : [
+                  ...(a < h0 ? [[a, h0] as [number, number]] : []),
+                  ...(b > h1 ? [[h1, b] as [number, number]] : []),
+                ],
+          );
+        return runs.filter(([a, b]) => b - a > 0.05);
+      };
 
       /*
        * The top of the wall: the seat line of the rows it closes, a parapet's
@@ -4821,7 +4898,7 @@ function theatreWingEnds(
         holes.push([niche - 1.3, niche + 1.3]);
       }
       // The moulded foot.
-      parts.push(strip(wallStone, r0, r1, 0, 0.5, 0.14), strip(wallStone, r0, r1, 0.5, 0.12, 0.07));
+      parts.push(strip(wallStone, r0, r1, 0, 0.5, 0.12), strip(wallStone, r0, r1, 0.5, 0.12, 0.05));
       /*
        * The courses. Within reach (the lowest ones), each block's face is
        * left raised inside a drafted margin; above, only the joints.
@@ -4833,17 +4910,20 @@ function theatreWingEnds(
         const from = startAt(y + course);
         if (from >= r1 - 0.3) continue;
         if (y + course > 5.6) {
-          parts.push(strip(joint, startAt(y), r1, y, 0.05, 0.016));
+          for (const [a, b] of clear(startAt(y), r1))
+            parts.push(strip(joint, a, b, y, 0.05, 0.035));
           continue;
         }
         // The joints and margins read dark between the raised faces.
-        parts.push(strip(joint, from, r1, y, course, 0.012));
+        // Three and a half centimetres proud of the wall, and the faces as far
+        // again: any closer and a phone's depth buffer mixes the two.
+        for (const [a, b] of clear(from, r1)) parts.push(strip(joint, a, b, y, course, 0.035));
         for (let r = from + (row % 2 ? blockLength / 2 : 0); r < r1 - 0.3; r += blockLength) {
           const ra = Math.max(r, from);
           const rb = Math.min(r + blockLength, r1);
           if (rb - ra < 0.6) continue;
           if (holes.some(([h0, h1]) => rb > h0 && ra < h1)) continue;
-          parts.push(strip(wallStone, ra + 0.05, rb - 0.05, y + 0.05, course - 0.1, 0.045));
+          parts.push(strip(wallStone, ra + 0.05, rb - 0.05, y + 0.05, course - 0.1, 0.07));
         }
       }
       // The coping up the rake: a fascia, and a crown over it.
@@ -4941,12 +5021,13 @@ function theatreWingEnds(
           }
           for (const zp of [near + 0.3, far - 0.3]) {
             parts.push(
-              box(screenStone, [mouth + side * 0.08, 0, zp], [0.16, spring - 0.32, 0.6]),
-              box(screenStone, [mouth + side * 0.12, spring - 0.32, zp], [0.24, 0.34, 0.8]),
+              box(screenStone, [mouth + side * 0.13, 0, zp], [0.16, spring - 0.32, 0.6]),
+              box(screenStone, [mouth + side * 0.2, spring - 0.32, zp], [0.3, 0.34, 0.8]),
             );
           }
           parts.push(
-            box(screenStone, [mouth + side * 0.12, spring + radius - 0.1, zc], [0.24, 0.85, 0.6]),
+            // The keystone, standing well out of the arch's own face.
+            box(screenStone, [mouth + side * 0.15, spring + radius - 0.1, zc], [0.3, 0.85, 0.6]),
           );
         }
       } else {
@@ -5023,61 +5104,38 @@ function theatreWingEnds(
         sink: 0.3,
         rotY,
       });
-      parts.push(box(screenStone, on(niche, sill - 0.2, 0.12), [nw + 0.8, 0.2, 0.3], rotY));
+      // The ledge the statue stands on, deep enough to carry it.
+      parts.push(box(screenStone, on(niche, sill - 0.2, 0.42), [nw + 0.8, 0.2, 0.9], rotY));
       /*
-       * The benefactor in the niche: a draped figure with a scroll, cut as a
-       * figure in deep relief rather than modelled in the round (a statue in
-       * the round is a scanned head and a body, more than all of this wall).
+       * The benefactor in the niche, in the round: a togate statue standing
+       * on the ledge, from the scans of the Arringatore and the veiled
+       * Tiberius, one each side. It was once cut as a silhouette in relief,
+       * which read as a cardboard cut-out from anywhere but square on.
        */
-      const figure: [number, number][] = [
-        [-0.2, 0],
-        [0.2, 0],
-        [0.25, 0.3],
-        [0.26, 0.9],
-        [0.32, 1.0],
-        [0.33, 1.12],
-        [0.28, 1.16],
-        [0.27, 1.35],
-        [0.24, 1.5],
-        [0.16, 1.56],
-        [0.08, 1.6],
-        [0.07, 1.66],
-        [0.1, 1.72],
-        [0.1, 1.84],
-        [0.06, 1.92],
-        [0, 1.94],
-        [-0.06, 1.92],
-        [-0.1, 1.84],
-        [-0.1, 1.72],
-        [-0.07, 1.66],
-        [-0.08, 1.6],
-        [-0.16, 1.56],
-        [-0.24, 1.5],
-        [-0.27, 1.3],
-        [-0.36, 1.15],
-        [-0.42, 1.05],
-        [-0.38, 1.0],
-        [-0.27, 1.08],
-        [-0.26, 0.9],
-        [-0.25, 0.3],
-      ];
-      const scale = (nh - 0.25) / 1.94;
       parts.push({
-        kind: "carving",
+        kind: "figure",
         material: screenStone,
-        at: on(niche, sill, 0.02),
-        outline: figure.map(([u, v]): [number, number] => [u * scale, v * scale]),
-        depth: 0.34,
-        sink: 0.1,
+        at: on(niche, sill, 0.4),
+        height: 2.5,
         rotY,
+        identity: {
+          name: "Benefactor",
+          sex: "male",
+          bearded: false,
+          hair: "short",
+          dress: "toga",
+          left: "scroll",
+        },
+        scan: { id: side > 0 ? "arringatore" : "tiberius-velatus" },
       });
       // Under it, the panel with its text: the formula such bases open with.
       parts.push(
         ...inscribedPanel({
-          at: on(niche, 0.55, 0.02),
+          // Over the moulded foot, not sunk into it.
+          at: on(niche, 0.66, 0.02),
           rotY,
           width: 1.3,
-          height: 0.85,
+          height: 0.72,
           material: screenStone,
           letter: 0.075,
           text: TEXTS.honorificFormula,
@@ -5182,13 +5240,23 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
       runs.push({ c: [0, 0, side * halfL], len: halfW * 2 + t, along: "x", out: [0, 0, side] });
     }
     for (const r of runs) {
+      /*
+       * A course from the inner face of the beam out to `depth`, running on
+       * at each end to the outer face of the run it meets, so the two meet
+       * flush rather than two centimetres short. Paint is a skin on the
+       * outside, not a block reaching back to the inner face, where it lay
+       * in the same plane as the marble and fought it.
+       */
       const course = (y: number, h: number, depth: number, material: Material = "marble") => {
         const grow = depth - t;
+        const paint = material === "paintBlue" || material === "paintGold";
+        const skin = paint ? Math.min(depth, grow + 0.1) : depth;
+        const mid = depth - t / 2 - skin / 2;
         parts.push(
           box(
             material,
-            [r.c[0] + (r.out[0] * grow) / 2, y, r.c[2] + (r.out[2] * grow) / 2],
-            r.along === "z" ? [depth, h, r.len + grow] : [r.len + grow, h, depth],
+            [r.c[0] + r.out[0] * mid, y, r.c[2] + r.out[2] * mid],
+            r.along === "z" ? [skin, h, r.len + grow * 2] : [r.len + grow * 2, h, skin],
           ),
         );
       };
@@ -5439,14 +5507,23 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
         if (face.front) {
           // Interrupted by the portal.
           const piece = (face.length - portalWidth) / 2;
-          for (const side of [-1, 1]) make(side * (portalWidth / 2 + piece / 2), piece);
+          for (const side of [-1, 1]) {
+            const u = side * (portalWidth / 2 + piece / 2);
+            // At Aizanoi the joints stop at the lettered field beside the door
+            // (below), rather than running across its face.
+            const field = spec.cultStatue === "zeus" && y > y0 + 1.45 && y < y0 + 4.25;
+            if (field && c * u < 0) {
+              for (const end of [-1, 1]) make(u + end * (piece / 2 - 0.3), 0.6);
+            } else make(u, piece);
+          }
         } else make(0, face.length);
       };
       band(y0, 0.62, 0.16, "marble");
       band(y0 + 0.62, 0.14, 0.08, "marble");
       for (let y = y0 + 0.76 + course; y < y0 + H - 1; y += course) {
-        // A joint every course, a hair proud so it can catch the light.
-        band(y, 0.04, 0.014, "stone");
+        // A joint every course, proud so it can catch the light — and far
+        // enough out that a phone's depth buffer still parts it from the wall.
+        band(y, 0.04, 0.035, "stone");
       }
       band(y0 + H - 0.62, 0.62, 0.18, "marble");
     }
@@ -5639,8 +5716,17 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
             ? PAINT.zeus
             : PAINT.apollo,
       ),
-      // Zeus stands in a real Roman scan of the bearded god of the type.
-      ...(spec.cultStatue === "zeus" ? { scan: { id: "neptune" as const } } : {}),
+      /*
+       * Zeus stands in a real Roman scan of the bearded god of the type, and
+       * the Ephesian Artemis in the Cybele of Pergamon: the same old mother
+       * goddess of Anatolia, standing frontal in her mural crown between her
+       * lions, as the Ephesian goddess stood between her beasts.
+       */
+      ...(spec.cultStatue === "zeus"
+        ? { scan: { id: "neptune" as const } }
+        : spec.cultStatue === "artemis"
+          ? { scan: { id: "cybele" as const } }
+          : {}),
     });
   } else {
     // The naiskos: a small temple standing alone in the open court, over the
@@ -6433,7 +6519,10 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
     }
   };
 
-  parts.push(box("stone", [0, 0, 0], [spec.arenaWidth + 2 * (spec.bow ?? 0), 0.12, endCentre * 2]));
+  // The track's paving stops inside the podium wall, not in the plane of its back.
+  parts.push(
+    box("stone", [0, 0, 0], [spec.arenaWidth + 2 * (spec.bow ?? 0) - 0.1, 0.12, endCentre * 2]),
+  );
   for (const side of [-1, 1]) {
     if (spec.openEnd && side < 0) continue;
     parts.push(
@@ -6587,7 +6676,7 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
         });
         // The dark of the chamber behind the opening.
         parts.push(
-          box("shadow", [side * (outerRadius + 0.05), 0, zc], [0.1, spring + r * 0.9, opening]),
+          box("shadow", [side * (outerRadius + 0.09), 0, zc], [0.1, spring + r * 0.9, opening]),
         );
         /*
          * A keystone standing a hand proud of the arch. The shops' own
@@ -6678,7 +6767,8 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
           parts.push(box(material, onFace(at, rotY, x, y, size[2] / 2 - 0.02), size, rotY));
         for (const u of [-length / 2 + 0.5, 0]) out(u, 0, [0.9, H - 0.3, 0.3], "stone");
         out(0, H * 0.62, [length, 0.3, 0.22], "stone");
-        out(0, H - 0.35, [length, 0.35, 0.3], "stone");
+        // The coping rises three centimetres over the wall's top, not level with it.
+        out(0, H - 0.35, [length, 0.38, 0.3], "stone");
         if (k % 2 === 1) {
           for (const u of [-length / 4, length / 4]) {
             out(u, 0, [2.0, 3.0, 0.08], "shadow");
@@ -6859,8 +6949,14 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
     ),
   );
   const pool = spec.poolWidth;
-  parts.push(box("stoneDark", [0, 0, 0], [pool + 0.4, 0.22, pool + 0.4]));
-  parts.push(box("shadow", [0, 0.02, 0], [pool, 0.18, pool]));
+  // The kerb, a frame round the pool: laid as one solid block, its top was a
+  // centimetre over the water and hid it.
+  for (const side of [-1, 1]) {
+    parts.push(box("stoneDark", [side * (pool / 2 + 0.1), 0, 0], [0.2, 0.22, pool + 0.4]));
+    parts.push(box("stoneDark", [0, 0, side * (pool / 2 + 0.1)], [pool, 0.22, 0.2]));
+  }
+  // Its dark bed, well under the water's surface rather than a centimetre.
+  parts.push(box("shadow", [0, 0.02, 0], [pool, 0.13, pool]));
 
   /* The rooms round three sides: a floor, walls, and the fresco on the wall
      that faces into the court. */
@@ -7018,7 +7114,7 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
       const w = (spec.courtDepth / panels) * 0.7;
       parts.push(box("paintGold", [face, 0.55, z], [0.03, spec.wallHeight * 0.62, w + 0.12]));
       parts.push(
-        box("paintRed", [face - side * 0.01, 0.61, z], [0.03, spec.wallHeight * 0.62 - 0.12, w]),
+        box("paintRed", [face - side * 0.03, 0.61, z], [0.03, spec.wallHeight * 0.62 - 0.12, w]),
       );
     }
     // A dark dado along the foot of the wall, as Roman walls had.
@@ -7054,7 +7150,7 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
       parts.push(
         box(
           "paintRed",
-          [x, 0.61, face - 0.01],
+          [x, 0.61, face - 0.03],
           [to - from - 0.12, spec.wallHeight * 0.62 - 0.12, 0.03],
         ),
       );
@@ -7072,7 +7168,7 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
     const side = 1;
     parts.push(
       ...inscription({
-        at: [side * (halfW + 0.005) - side * 0.025, 1.45, -halfD + spec.courtDepth / 6 + 0.3],
+        at: [side * (halfW + 0.005) - side * 0.045, 1.45, -halfD + spec.courtDepth / 6 + 0.3],
         rotY: FACING.west,
         width: 0.5,
         letter: 0.05,
@@ -7122,19 +7218,24 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
     parts.push(box("shadow", [x, floorY + 0.9, shellBack - 0.02], [0.9, 1.3, 0.06]));
     parts.push(box("timber", [x, floorY + 0.85, shellBack - 0.06], [1.05, 0.08, 0.12]));
   }
-  // Water in the pool, and a marble Eros over it as the fountain.
+  /*
+   * Water in the pool, and a marble youth over it as the fountain, from the
+   * scan of a Roman youth of the kind set up in houses and gardens (the
+   * Magdalensberg youth): the boy statues of peristyle fountains were of
+   * this type, Eros or a young satyr or simply a boy.
+   */
   parts.push(box("paintBlue", [0, 0.17, 0], [pool - 0.05, 0.04, pool - 0.05]));
   parts.push(cyl("marble", [0, 0.2, 0], 0.25, 0.3, 0.7, 14));
-  parts.push(
-    person([0, 0.9, 0], 0.95, Math.PI, "marble", {
-      name: "Eros",
+  parts.push({
+    ...person([0, 0.9, 0], 1.0, Math.PI, "marble", {
+      name: "Youth",
       sex: "male",
       bearded: false,
       hair: "curls",
       dress: "chiton",
-      right: "phiale",
     }),
-  );
+    scan: { id: "magdalensberg-youth" },
+  });
 
   // Someone standing in the court, because a room is the one place where the
   // scale figure is the whole point.
@@ -7334,18 +7435,24 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
     const b = columnsAt[i + 1]!;
     if (Math.hypot(a[0] - b[0], a[2] - b[2]) > gridW / (spec.columnsShort - 1) + 0.5) continue;
     const mid: Vec3 = [(a[0] + b[0]) / 2, podiumTop, (a[2] + b[2]) / 2];
-    // Facing outwards from the cella.
-    const facing = Math.atan2(mid[0], -mid[2]);
-    parts.push(
-      person(
+    // Facing straight out from the side of the colonnade it stands in: a
+    // figure's front is its +z, turned by rotY onto (sin, cos). (Turned by
+    // the angle from the middle, mirrored in z as it was, the figures down
+    // the long sides stood with their backs to the street.)
+    const sideways = Math.abs(mid[0]) / gridW > Math.abs(mid[2]) / gridD;
+    const facing = sideways ? (Math.sign(mid[0]) * Math.PI) / 2 : mid[2] < 0 ? Math.PI : 0;
+    const who = IDENTITIES.hekatomnids[placed % IDENTITIES.hekatomnids.length]!;
+    parts.push({
+      ...person(
         mid,
         2.6,
-        facing + Math.PI,
+        facing,
         "marble",
-        IDENTITIES.hekatomnids[placed % IDENTITIES.hekatomnids.length]!,
+        who,
         PAINT.hekatomnids[(placed * 3) % PAINT.hekatomnids.length]!,
       ),
-    );
+      scan: { id: dynastScan(who, placed) },
+    });
     placed += 1;
   }
   // The cella inside the ring, its walls laid in courses on a moulded foot.
@@ -7458,8 +7565,8 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
     );
   }
   // Mausolus, bearded, and Artemisia beside him, standing in the car.
-  parts.push(
-    person(
+  parts.push({
+    ...person(
       [-0.3 * horseScale, groupY + 0.55 * horseScale, chariotZ],
       1.55 * horseScale,
       Math.PI,
@@ -7467,9 +7574,10 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       IDENTITIES.maussollos,
       PAINT.maussollos,
     ),
-  );
-  parts.push(
-    person(
+    scan: { id: "asklepios-lod" },
+  });
+  parts.push({
+    ...person(
       [0.3 * horseScale, groupY + 0.55 * horseScale, chariotZ],
       1.45 * horseScale,
       Math.PI,
@@ -7477,7 +7585,8 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       IDENTITIES.artemisia,
       PAINT.artemisia,
     ),
-  );
+    scan: { id: "ephesus-portrait-lod" },
+  });
 
   // On the low ground of the city, with the harbour hills behind.
   parts.push(...setting(spec.baseDepth * 0.7, 3531, { stone: 0.5, grass: 0.9, hills: 0.45 }));
