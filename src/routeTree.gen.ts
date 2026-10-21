@@ -34,6 +34,7 @@ import { Route as ZamanCizelgesiRouteImport } from './routes/zaman-cizelgesi'
 import { Route as DotwellKnownAssetlinksDotjsonRouteImport } from './routes/[.]well-known/assetlinks[.]json'
 import { Route as ApiRaporRouteImport } from './routes/api/rapor'
 import { Route as ApiSorRouteImport } from './routes/api/sor'
+import { Route as ApiUlkeRouteImport } from './routes/api/ulke'
 import { Route as BolgeIdRouteImport } from './routes/bolge.$id'
 import { Route as HikayeIdRouteImport } from './routes/hikaye.$id'
 import { Route as KentSlugRouteImport } from './routes/kent.$slug'
@@ -168,6 +169,11 @@ const ApiSorRoute = ApiSorRouteImport.update({
   path: '/api/sor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiUlkeRoute = ApiUlkeRouteImport.update({
+  id: '/api/ulke',
+  path: '/api/ulke',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BolgeIdRoute = BolgeIdRouteImport.update({
   id: '/bolge/$id',
   path: '/bolge/$id',
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/api/rapor': typeof ApiRaporRoute
   '/api/sor': typeof ApiSorRoute
+  '/api/ulke': typeof ApiUlkeRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/api/rapor': typeof ApiRaporRoute
   '/api/sor': typeof ApiSorRoute
+  '/api/ulke': typeof ApiUlkeRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/.well-known/assetlinks.json': typeof DotwellKnownAssetlinksDotjsonRoute
   '/api/rapor': typeof ApiRaporRoute
   '/api/sor': typeof ApiSorRoute
+  '/api/ulke': typeof ApiUlkeRoute
   '/bolge/$id': typeof BolgeIdRoute
   '/hikaye/$id': typeof HikayeIdRoute
   '/kent/$slug': typeof KentSlugRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/.well-known/assetlinks.json'
     | '/api/rapor'
     | '/api/sor'
+    | '/api/ulke'
     | '/bolge/$id'
     | '/hikaye/$id'
     | '/kent/$slug'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/.well-known/assetlinks.json'
     | '/api/rapor'
     | '/api/sor'
+    | '/api/ulke'
     | '/bolge/$id'
     | '/hikaye/$id'
     | '/kent/$slug'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/.well-known/assetlinks.json'
     | '/api/rapor'
     | '/api/sor'
+    | '/api/ulke'
     | '/bolge/$id'
     | '/hikaye/$id'
     | '/kent/$slug'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   DotwellKnownAssetlinksDotjsonRoute: typeof DotwellKnownAssetlinksDotjsonRoute
   ApiRaporRoute: typeof ApiRaporRoute
   ApiSorRoute: typeof ApiSorRoute
+  ApiUlkeRoute: typeof ApiUlkeRoute
   BolgeIdRoute: typeof BolgeIdRoute
   HikayeIdRoute: typeof HikayeIdRoute
   KentSlugRoute: typeof KentSlugRoute
@@ -624,6 +637,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ulke': {
+      id: '/api/ulke'
+      path: '/api/ulke'
+      fullPath: '/api/ulke'
+      preLoaderRoute: typeof ApiUlkeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bolge/$id': {
       id: '/bolge/$id'
       path: '/bolge/$id'
@@ -702,6 +722,7 @@ const rootRouteChildren: RootRouteChildren = {
   DotwellKnownAssetlinksDotjsonRoute: DotwellKnownAssetlinksDotjsonRoute,
   ApiRaporRoute: ApiRaporRoute,
   ApiSorRoute: ApiSorRoute,
+  ApiUlkeRoute: ApiUlkeRoute,
   BolgeIdRoute: BolgeIdRoute,
   HikayeIdRoute: HikayeIdRoute,
   KentSlugRoute: KentSlugRoute,

@@ -26,6 +26,13 @@ import {
   bankHeight,
 } from "@/lib/reconstruction-parts";
 import type { ModelSpec } from "@/lib/reconstructions";
+import { LOW_SETTINGS } from "@/lib/device-tier";
+import { angleDelta, orientationToLook, smoothAngle } from "@/lib/gyro";
+import { chooseScaleRefs, layoutScaleRefs, type ScaleRef } from "@/lib/scale-refs";
+import { DAY_LOOP_SECONDS, timeOfDay, type Weather } from "@/lib/weather";
+import { buildWeather } from "./scene/weather";
+import type { ScaleRefsHandle } from "./scene/scale-refs";
+import { canvasToPng, paintVignette, paintWatermark, photoScale } from "./scene/photo";
 
 /**
  * The translator from `reconstruction-parts.ts` into a lit, orbitable scene.
@@ -46,6 +53,57 @@ export type SceneLabel = { text: string; at: [number, number, number] };
 
 /** A time of day the scene can be lit as. */
 export type AtmosMode = "day" | "golden" | "night";
+
+export type ViewName = "front" | "above" | "corner";
+
+/**
+ * The scene's newer abilities, handed to the caller once the scene is built
+ * (`onExtras`) and taken back (`null`) when it is torn down: the guided
+ * tour's camera, looking round with the phone, the passing day and the
+ * weather, scale references, the light setting, and photographs.
+ */
+export type SceneExtras = {
+  /**
+   * One shot of the guided tour: fly (in an arc over anything in the way) to
+   * a clear view of a point or to a named view, then, if `drift`, keep
+   * swinging gently round it and in a little until the next shot.
+   */
+  tourShot: (
+    shot: { at?: [number, number, number]; view?: ViewName },
+    drift: boolean,
+    turn: 1 | -1,
+  ) => void;
+  /** Ends the tour's drift and hands the camera back. */
+  endTour: () => void;
+  /** Looking round by turning the phone, while walking. */
+  setGyro: (on: boolean) => void;
+  /** Levels the view and takes the phone's current position as the start. */
+  recentreGyro: () => void;
+  /** Day, golden hour and night eased into each other round a slow loop. */
+  setTimeFlow: (on: boolean) => void;
+  setWeather: (kind: Weather | "off") => void;
+  /** Modern things beside the model for scale, labelled; `null` takes them away. */
+  setScaleRefs: (names: Record<ScaleRef, string> | null) => void;
+  /** The low-quality setting for weak devices (see `device-tier.ts`). */
+  setLite: (on: boolean) => void;
+  /** The current view at twice the screen's resolution, as a PNG. */
+  takePhoto: (options: { vignette: boolean; dof: boolean; mark: string }) => Promise<Blob | null>;
+};
+
+/** Who was tapped: one of the scene's people, or a seat in its crowd. */
+export type PersonHit = { kind: "person"; index: number } | { kind: "crowd"; seat: number };
+
+/** What the scene learned about the device and the model as it drew. */
+export type SceneInfo = {
+  /** The GPU's name, where the browser gives it. */
+  gpu?: string | undefined;
+  /** Triangles drawn in one frame of the opening view. */
+  triangles: number;
+  /** Median frame time over the first seconds, once measured. */
+  frameMs?: number | undefined;
+  /** Every frame time measured, for the caller's verdict. */
+  samples?: number[] | undefined;
+};
 
 type SkyPalette = { top: string; horizon: string };
 
@@ -155,6 +213,16 @@ type Props = {
    * scene's sounds are placed for.
    */
   onListen?: ((at: [number, number, number], forward: [number, number]) => void) | undefined;
+  /** Handed the scene's newer abilities once built, and `null` when torn down. */
+  onExtras?: ((extras: SceneExtras | null) => void) | undefined;
+  /** A tap or click on one of the scene's people (or `null` on empty ground). */
+  onPerson?: ((hit: PersonHit | null) => void) | undefined;
+  /** While walking, a few times a second: the eye, and the unit vector it looks along. */
+  onPose?: ((eye: [number, number, number], dir: [number, number, number]) => void) | undefined;
+  /** What was measured: the GPU once built, the frame times once the first seconds are drawn. */
+  onInfo?: ((info: SceneInfo) => void) | undefined;
+  /** Told when looking with the phone was turned on but no reading has come. */
+  onGyroSilent?: (() => void) | undefined;
 };
 
 type Palette = {
@@ -364,7 +432,7 @@ const paletteFor = (theme: "light" | "dark", atmos: AtmosMode): AtmosPalette => 
  * one is kept low enough to be a view someone standing there could have had;
  * a plan view from overhead reads as a diagram, not a building.
  */
-const VIEWPOINT: Record<ModelSpec["kind"], [number, number, number]> = {
+const VIEWPOINT: Partial<Record<ModelSpec["kind"], [number, number, number]>> = {
   // Head-on and a little above: a façade is meant to be met from the front.
   "roman-facade": [0.32, 0.3, -1],
   // Over the rim of the seating, the way an audience arriving late sees it.
@@ -384,7 +452,19 @@ const VIEWPOINT: Record<ModelSpec["kind"], [number, number, number]> = {
   mausoleum: [0.75, 0.4, -0.8],
   // From the court, looking west at the row of gods with the mound behind.
   "tumulus-sanctuary": [1, 0.32, 0.55],
-};
+  "hittite-gate": [0.45, 0.3, -1],
+  "troy-citadel": [0.85, 0.32, -0.8],
+  "neolithic-town": [0.7, 0.6, 0.75],
+  "medieval-cathedral": [0.75, 0.3, -0.9],
+  nymphaeum: [0.3, 0.3, -1],
+  "peristyle-villa": [0.55, 0.6, -0.9],
+  "terrace-villa": [0.55, 0.6, -0.9],
+  "cliff-monastery": [0.45, 0.12, -1],
+  lighthouse: [0.75, 0.3, -0.8],
+} as Partial<Record<string, [number, number, number]>>;
+/** A kind without a chosen view: three-quarters, a little above. */
+const viewpointOf = (kind: string): [number, number, number] =>
+  (VIEWPOINT as Partial<Record<string, [number, number, number]>>)[kind] ?? [0.65, 0.35, -0.9];
 
 export default function Reconstruction3DInner({
   parts,
@@ -415,8 +495,24 @@ export default function Reconstruction3DInner({
   padLabels,
   walkStick,
   onListen,
+  onExtras,
+  onPerson,
+  onPose,
+  onInfo,
+  onGyroSilent,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
+  // Read through refs, like the other callbacks, so none of them rebuilds the scene.
+  const extrasRef = useRef(onExtras);
+  extrasRef.current = onExtras;
+  const personRef = useRef(onPerson);
+  personRef.current = onPerson;
+  const poseRef = useRef(onPose);
+  poseRef.current = onPose;
+  const infoRef = useRef(onInfo);
+  infoRef.current = onInfo;
+  const gyroSilentRef = useRef(onGyroSilent);
+  gyroSilentRef.current = onGyroSilent;
   /*
    * The on-screen walking pad, read by the render loop every frame: how hard
    * it is being pushed forward (+1) or back (-1), and to the right or left.
@@ -526,6 +622,15 @@ export default function Reconstruction3DInner({
       } catch {
         setFailed(true);
         return;
+      }
+
+      let gpu: string | undefined;
+      try {
+        const gl = renderer.getContext();
+        const ext = gl.getExtension("WEBGL_debug_renderer_info");
+        gpu = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : undefined;
+      } catch {
+        gpu = undefined;
       }
 
       const scene = new THREE.Scene();
@@ -3076,10 +3181,38 @@ export default function Reconstruction3DInner({
       lifeGroup.name = "life";
       scene.add(lifeGroup);
       let lifeHandle: LifeHandle | null = null;
+      /*
+       * Each person's figure, found again by where it was built: `buildLife`
+       * stands somebody at their `at`, scaled to their height, in the order
+       * of `life.people`, and keeps no list of its own that this file could
+       * read. Matching on both is what lets a tap say who was tapped.
+       */
+      const actorRoots: { root: THREE_NS.Object3D; index: number }[] = [];
+      const crowdMeshes: THREE_NS.InstancedMesh[] = [];
       if (life) {
         addMerged(life.props, lifeGroup);
         lifeHandle = buildLife(THREE, life);
         lifeGroup.add(lifeHandle.group);
+        const free = lifeHandle.group.children.filter(
+          (child) => (child as THREE_NS.Group).isGroup === true,
+        );
+        life.people.forEach((person, index) => {
+          const k = free.findIndex(
+            (child) =>
+              Math.abs(child.position.x - person.at[0]) < 1e-4 &&
+              Math.abs(child.position.y - person.at[1]) < 1e-4 &&
+              Math.abs(child.position.z - person.at[2]) < 1e-4 &&
+              Math.abs(child.scale.x - person.height) < 1e-4,
+          );
+          if (k < 0) return;
+          actorRoots.push({ root: free[k]!, index });
+          free.splice(k, 1);
+        });
+        lifeHandle.group.traverse((object) => {
+          const mesh = object as THREE_NS.InstancedMesh;
+          if (mesh.isInstancedMesh && mesh.count >= Math.min(40, life.crowd.length))
+            crowdMeshes.push(mesh);
+        });
       }
       lifeGroup.visible = showLifeRef.current;
 
@@ -3106,6 +3239,9 @@ export default function Reconstruction3DInner({
       const startAtmos = latestRef.current.atmos;
       let glowTarget = startAtmos === "night" ? 1 : startAtmos === "golden" ? 0.45 : 0.08;
       let glow = glowTarget;
+      // The sun's height over the model, a share of its span: lower at dusk.
+      let sunLift = 1.15;
+      let sunLiftTarget = 1.15;
 
       // A wide apron under everything, so the model does not float in a void.
       const apron = new THREE.CircleGeometry(span * 2.2, 64);
@@ -3419,7 +3555,7 @@ export default function Reconstruction3DInner({
         bounds.min[1] + (centre.y - bounds.min[1]) * 0.75,
         centre.z,
       );
-      const direction = new THREE.Vector3(...VIEWPOINT[kind]).normalize();
+      const direction = new THREE.Vector3(...viewpointOf(kind)).normalize();
 
       /*
        * Fitting the frame arithmetically kept getting it wrong in one direction
@@ -3462,6 +3598,8 @@ export default function Reconstruction3DInner({
       // small screen and the fill cost is not.
       const touch = window.matchMedia("(pointer: coarse)").matches;
       const maxRatio = Math.min(window.devicePixelRatio, touch ? 1.5 : 2);
+      // Lowered by the light setting for weak devices (see `setLite`).
+      let ratioCap = maxRatio;
       renderer.setPixelRatio(maxRatio);
       renderer.shadowMap.enabled = true;
       // PCF is the soft filter since r180; asking for PCFSoft only logs a
@@ -3754,6 +3892,30 @@ export default function Reconstruction3DInner({
         });
       }
 
+      /* Weather: off until asked for (see `scene/weather.ts`). */
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const weather = buildWeather(THREE, {
+        centre,
+        span,
+        groundY: bounds.min[1] - 0.06,
+        reducedMotion,
+      });
+      scene.add(weather.group);
+      const baseFog = { near: span * 1.8, far: span * 5.5 };
+      let fogScale = 1;
+      let scaleRefs: ScaleRefsHandle | null = null;
+      /* The day going round by itself (`setTimeFlow`). */
+      const flow = { on: false, phase: 0, tickAt: 0 };
+      /* The light setting for weak devices (`setLite`). */
+      let liteOn = false;
+      const liteEye = { position: new THREE.Vector3() } as unknown as THREE_NS.Camera;
+      const liteLook = new THREE.Vector3();
+      let scanCheckAt = 0;
+      /* The first seconds' frame times, for the caller's verdict on the device. */
+      const perf = { firstAt: -1, samples: [] as number[], done: false };
+      let poseAt = 0;
+      const poseDir = new THREE.Vector3();
+
       /**
        * The atmosphere in numbers: what the lights, sky and life are *aiming*
        * at (its palette) and what they currently are (live). The loop eases
@@ -3778,6 +3940,29 @@ export default function Reconstruction3DInner({
         birdOpacity: p.birdOpacity,
         exposure: p.exposure,
       });
+
+      /** Part of the way from one atmosphere to another, for the passing day. */
+      const mixLive = (a: LiveAtmos, b: LiveAtmos, f: number): LiveAtmos => {
+        const n = (x: number, y: number) => x + (y - x) * f;
+        return {
+          skyTop: a.skyTop.clone().lerp(b.skyTop, f),
+          skyHorizon: a.skyHorizon.clone().lerp(b.skyHorizon, f),
+          fog: a.fog.clone().lerp(b.fog, f),
+          ground: a.ground.clone().lerp(b.ground, f),
+          hemiSky: a.hemiSky.clone().lerp(b.hemiSky, f),
+          hemiGround: a.hemiGround.clone().lerp(b.hemiGround, f),
+          hemiIntensity: n(a.hemiIntensity, b.hemiIntensity),
+          sunColor: a.sunColor.clone().lerp(b.sunColor, f),
+          sunIntensity: n(a.sunIntensity, b.sunIntensity),
+          fillColor: a.fillColor.clone().lerp(b.fillColor, f),
+          fillIntensity: n(a.fillIntensity, b.fillIntensity),
+          starOpacity: n(a.starOpacity, b.starOpacity),
+          cloudOpacity: n(a.cloudOpacity, b.cloudOpacity),
+          cloudColor: a.cloudColor.clone().lerp(b.cloudColor, f),
+          birdOpacity: n(a.birdOpacity, b.birdOpacity),
+          exposure: n(a.exposure, b.exposure),
+        };
+      };
 
       const DAY_GROUND = new THREE.Color(paletteFor("light", "day").ground);
       const liveAtmos = makeLive(paletteFor(latestRef.current.theme, startAtmos));
@@ -3848,6 +4033,7 @@ export default function Reconstruction3DInner({
         landscape.group,
         ...clouds.map((c) => c.group),
         ...flock.map((f) => f.group),
+        weather.group,
       ];
       applyLive();
       repaintSkyIfChanged();
@@ -3872,7 +4058,7 @@ export default function Reconstruction3DInner({
          * bigger rather than the frame rate smaller.
          */
         const budget = Math.sqrt(4_100_000 / (clientWidth * clientHeight));
-        renderer.setPixelRatio(Math.max(1, Math.min(maxRatio, budget)));
+        renderer.setPixelRatio(Math.max(1, Math.min(ratioCap, budget)));
         renderer.setSize(clientWidth, clientHeight, false);
         composer?.setSize(clientWidth, clientHeight);
       };
@@ -4106,20 +4292,44 @@ export default function Reconstruction3DInner({
         toTarget: THREE_NS.Vector3;
         start: number;
         duration: number;
+        /** How high the path bows up in the middle, so a long hop clears the walls. */
+        arc: number;
       } | null = null;
-      const flyTo = (position: THREE_NS.Vector3, look: THREE_NS.Vector3) => {
+      const flyTo = (
+        position: THREE_NS.Vector3,
+        look: THREE_NS.Vector3,
+        duration = 1.4,
+        arc = 0,
+      ) => {
         flight = {
           fromPos: camera.position.clone(),
           toPos: position.clone(),
           fromTarget: controls.target.clone(),
           toTarget: look.clone(),
           start: performance.now() / 1000,
-          duration: 1.4,
+          duration,
+          arc,
         };
       };
+      /*
+       * The guided tour's slow movement at a stop: once the flight has
+       * landed, the camera swings a little to and fro round the point and
+       * eases in, the way a film camera holds on something — never more than
+       * about fifteen degrees, so it cannot swing round into the stone the
+       * clear approach was chosen to avoid.
+       */
+      let drift: {
+        look: THREE_NS.Vector3;
+        offset: THREE_NS.Vector3;
+        start: number;
+        turn: 1 | -1;
+      } | null = null;
+      let driftNext: { turn: 1 | -1 } | null = null;
       // Grabbing the model mid-flight hands the camera back at once.
       const cancelFlight = () => {
         flight = null;
+        drift = null;
+        driftNext = null;
       };
       controls.addEventListener("start", cancelFlight);
 
@@ -4415,6 +4625,8 @@ export default function Reconstruction3DInner({
         if (walker.on) return;
         if (!floorTris) buildFloors();
         flight = null;
+        drift = null;
+        driftNext = null;
         orbitPosition.copy(camera.position);
         orbitTarget.copy(controls.target);
         controls.enabled = false;
@@ -4609,6 +4821,109 @@ export default function Reconstruction3DInner({
       renderer.domElement.addEventListener("pointercancel", onLookUp);
       renderer.domElement.addEventListener("wheel", onWalkWheel, { passive: false });
 
+      /*
+       * A tap on one of the people: a press and release in the same place,
+       * quickly, with one finger — anything longer or further is a look or
+       * an orbit. The figure under the finger wins; failing that, whoever
+       * stands nearest the finger on screen, within a thumb's width; failing
+       * that, a seat in the crowd.
+       */
+      const tap = { id: -1, x: 0, y: 0, at: 0, pointers: 0 };
+      const pickRay = new THREE.Raycaster();
+      const pickNdc = new THREE.Vector2();
+      const pickHead = new THREE.Vector3();
+      const onTapDown = (event: PointerEvent) => {
+        tap.pointers += 1;
+        if (tap.pointers > 1 || (event.pointerType === "mouse" && event.button !== 0)) {
+          tap.id = -1;
+          return;
+        }
+        tap.id = event.pointerId;
+        tap.x = event.clientX;
+        tap.y = event.clientY;
+        tap.at = performance.now();
+      };
+      const pickPerson = (clientX: number, clientY: number): PersonHit | null => {
+        if (!lifeGroup.visible || (!actorRoots.length && !crowdMeshes.length)) return null;
+        const rect = renderer.domElement.getBoundingClientRect();
+        if (!rect.width || !rect.height) return null;
+        pickNdc.set(
+          ((clientX - rect.left) / rect.width) * 2 - 1,
+          -((clientY - rect.top) / rect.height) * 2 + 1,
+        );
+        pickRay.setFromCamera(pickNdc, camera);
+        const roots = actorRoots.map((a) => a.root);
+        const hits = pickRay.intersectObjects(roots, true);
+        // Nothing in the building in front of the person hit.
+        const blocker = (distance: number) => {
+          const solid = pickRay.intersectObjects(
+            scene.children.filter(
+              (object) => (object as THREE_NS.Mesh).isMesh && object !== apronMesh,
+            ),
+            false,
+          )[0];
+          return solid !== undefined && solid.distance < distance - 0.3;
+        };
+        for (const hit of hits) {
+          let object: THREE_NS.Object3D | null = hit.object;
+          while (object && !roots.includes(object)) object = object.parent;
+          const actor = actorRoots.find((a) => a.root === object);
+          if (actor && !blocker(hit.distance)) return { kind: "person", index: actor.index };
+        }
+        // Near misses: the nearest person to the finger on screen.
+        let best: { index: number; px: number; depth: number } | null = null;
+        const thumb = 34;
+        for (const { root, index } of actorRoots) {
+          root.getWorldPosition(pickHead);
+          pickHead.y += root.scale.y * 0.6;
+          const depth = pickHead.distanceTo(camera.position);
+          pickHead.project(camera);
+          if (pickHead.z > 1) continue;
+          const px = Math.hypot(
+            ((pickHead.x + 1) / 2) * rect.width - (clientX - rect.left),
+            ((1 - pickHead.y) / 2) * rect.height - (clientY - rect.top),
+          );
+          if (px < thumb && (!best || px < best.px)) best = { index, px, depth };
+        }
+        if (best) return { kind: "person", index: best.index };
+        if (crowdMeshes.length) {
+          const seat = pickRay.intersectObjects(crowdMeshes, false)[0];
+          if (seat && seat.instanceId !== undefined && !blocker(seat.distance))
+            return { kind: "crowd", seat: seat.instanceId };
+        }
+        return null;
+      };
+      const onTapUp = (event: PointerEvent) => {
+        tap.pointers = Math.max(0, tap.pointers - 1);
+        if (event.pointerId !== tap.id) return;
+        tap.id = -1;
+        const moved = Math.hypot(event.clientX - tap.x, event.clientY - tap.y);
+        if (moved > 8 || performance.now() - tap.at > 450) return;
+        const tell = personRef.current;
+        if (!tell) return;
+        tell(pickPerson(event.clientX, event.clientY));
+      };
+      const onTapCancel = () => {
+        tap.pointers = Math.max(0, tap.pointers - 1);
+        tap.id = -1;
+      };
+      if (import.meta.env.DEV) {
+        // For the headless checks: who stands where, and what a tap at a point finds.
+        (window as unknown as { __people?: unknown }).__people = {
+          count: actorRoots.length,
+          head: (i: number) => {
+            const actor = actorRoots[i];
+            if (!actor) return null;
+            actor.root.getWorldPosition(pickHead);
+            return [pickHead.x, pickHead.y + actor.root.scale.y * 0.6, pickHead.z];
+          },
+          pick: pickPerson,
+        };
+      }
+      renderer.domElement.addEventListener("pointerdown", onTapDown);
+      renderer.domElement.addEventListener("pointerup", onTapUp);
+      renderer.domElement.addEventListener("pointercancel", onTapCancel);
+
       /** Where a walk's strides have got to, and whether it began stuck inside something. */
       const stride = { x: 0, z: 0, free: false, crowded: 0 };
       /*
@@ -4653,6 +4968,68 @@ export default function Reconstruction3DInner({
         walker.feet = floor;
         return true;
       };
+      /*
+       * Looking round by turning the phone. The sensor's reading is turned
+       * into a yaw and pitch (`orientationToLook`), smoothed, and only its
+       * change from one frame to the next is added to the walker's own — so
+       * a drag still turns the view, and the two never fight.
+       */
+      const gyro = {
+        on: false,
+        has: false,
+        target: { yaw: 0, pitch: 0 },
+        smooth: { yaw: 0, pitch: 0 },
+        last: { yaw: 0, pitch: 0 },
+        fresh: true,
+        silentTimer: undefined as ReturnType<typeof setTimeout> | undefined,
+      };
+      const screenAngle = () => {
+        const angle = window.screen?.orientation?.angle;
+        if (typeof angle === "number") return angle;
+        const legacy = (window as unknown as { orientation?: number }).orientation;
+        return typeof legacy === "number" ? legacy : 0;
+      };
+      const onOrientation = (event: DeviceOrientationEvent) => {
+        if (event.alpha === null || event.beta === null || event.gamma === null) return;
+        const look = orientationToLook(event.alpha, event.beta, event.gamma, screenAngle());
+        gyro.target.yaw = look.yaw;
+        gyro.target.pitch = look.pitch;
+        if (!gyro.has || gyro.fresh) {
+          gyro.smooth.yaw = gyro.last.yaw = look.yaw;
+          gyro.smooth.pitch = gyro.last.pitch = look.pitch;
+          gyro.fresh = false;
+        }
+        gyro.has = true;
+        clearTimeout(gyro.silentTimer);
+      };
+      const setGyro = (on: boolean) => {
+        if (on === gyro.on) return;
+        gyro.on = on;
+        gyro.has = false;
+        gyro.fresh = true;
+        clearTimeout(gyro.silentTimer);
+        if (on) {
+          window.addEventListener("deviceorientation", onOrientation);
+          gyro.silentTimer = setTimeout(() => {
+            if (gyro.on && !gyro.has) gyroSilentRef.current?.();
+          }, 2500);
+        } else window.removeEventListener("deviceorientation", onOrientation);
+      };
+      /** One frame of the phone's turn, added to the walker's look. */
+      const stepGyro = (dt: number) => {
+        if (!gyro.on || !gyro.has) return;
+        const k = 1 - Math.exp(-dt / 0.08);
+        gyro.smooth.yaw = smoothAngle(gyro.smooth.yaw, gyro.target.yaw, k);
+        gyro.smooth.pitch += (gyro.target.pitch - gyro.smooth.pitch) * k;
+        walker.yaw += angleDelta(gyro.last.yaw, gyro.smooth.yaw);
+        walker.pitch = Math.max(
+          -1.45,
+          Math.min(1.45, walker.pitch + gyro.smooth.pitch - gyro.last.pitch),
+        );
+        gyro.last.yaw = gyro.smooth.yaw;
+        gyro.last.pitch = gyro.smooth.pitch;
+      };
+
       /** One frame of walking: move, find the floor, settle the eye onto it. */
       const stepWalk = (dt: number) => {
         const pad = padRef.current;
@@ -4725,6 +5102,7 @@ export default function Reconstruction3DInner({
           walker.view = Math.max(wanted, walker.view - Math.max(walker.fall, 1.5) * dt);
         } else walker.fall = 0;
         camera.position.y = walker.view + EYE;
+        stepGyro(dt);
         camera.rotation.set(walker.pitch, walker.yaw, 0, "YXZ");
       };
 
@@ -4874,15 +5252,91 @@ export default function Reconstruction3DInner({
         skyGroup.position.copy(camera.position);
         repaintSkyIfChanged(now);
         glow += (glowTarget - glow) * rate;
-        lifeHandle?.update(now, dt, glow, camera);
+        if (flow.on) {
+          flow.phase = (flow.phase + Math.max(0, Math.min(elapsed, 1)) / DAY_LOOP_SECONDS) % 1;
+          if (now - flow.tickAt > 0.25) {
+            flow.tickAt = now;
+            const { from, to, f } = timeOfDay(flow.phase);
+            const theme = latestRef.current.theme;
+            const a = makeLive(paletteFor(theme, from));
+            const b = makeLive(paletteFor(theme, to));
+            atmosTarget = mixLive(a, b, f);
+            const glowOf = (m: AtmosMode) => (m === "night" ? 1 : m === "golden" ? 0.45 : 0.08);
+            glowTarget = glowOf(from) + (glowOf(to) - glowOf(from)) * f;
+            const liftOf = (m: AtmosMode) => (m === "night" ? 0.9 : m === "golden" ? 0.32 : 1.15);
+            sunLiftTarget = liftOf(from) + (liftOf(to) - liftOf(from)) * f;
+          }
+        }
+        sunLift += (sunLiftTarget - sunLift) * rate;
+        sun.position.y = bounds.min[1] + span * sunLift;
+        // Mist and dust bring the fog in.
+        fogScale += (weather.fogScale() - fogScale) * rate;
+        fog.near = baseFog.near * fogScale * fogScale;
+        fog.far = baseFog.far * fogScale;
+        weather.update(
+          now,
+          dt,
+          walker.on ? camera.position : controls.target,
+          liveAtmos.starOpacity,
+        );
+        if (liteOn) {
+          // People in full detail only close by: the eye they are measured
+          // from is set back behind the camera.
+          camera.getWorldDirection(liteLook);
+          liteEye.position
+            .copy(camera.position)
+            .addScaledVector(liteLook, -(24 - LOW_SETTINGS.peopleDetail));
+          if (now - scanCheckAt > 0.5) {
+            scanCheckAt = now;
+            const reach = Math.max(25, span * LOW_SETTINGS.scanReach);
+            for (const holder of [...scanGroup.children, ...lifeGroup.children]) {
+              if (!holder.name.startsWith("scan:")) continue;
+              holder.visible = holder.position.distanceTo(camera.position) < reach;
+            }
+          }
+        }
+        lifeHandle?.update(now, dt, glow, liteOn ? liteEye : camera);
+        if (walker.on && now - poseAt > 0.25 && poseRef.current) {
+          poseAt = now;
+          camera.getWorldDirection(poseDir);
+          poseRef.current(
+            [camera.position.x, camera.position.y, camera.position.z],
+            [poseDir.x, poseDir.y, poseDir.z],
+          );
+        }
         if (walker.on) stepWalk(dt);
         else {
           if (flight) {
             const t = Math.min(1, (now - flight.start) / flight.duration);
             const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
             camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
+            camera.position.y += flight.arc * Math.sin(Math.PI * e);
             controls.target.lerpVectors(flight.fromTarget, flight.toTarget, e);
-            if (t >= 1) flight = null;
+            if (t >= 1) {
+              flight = null;
+              if (driftNext) {
+                drift = {
+                  look: controls.target.clone(),
+                  offset: camera.position.clone().sub(controls.target),
+                  start: now,
+                  turn: driftNext.turn,
+                };
+                driftNext = null;
+              }
+            }
+          } else if (drift) {
+            const k = now - drift.start;
+            const angle = drift.turn * 0.26 * Math.sin((k * Math.PI * 2) / 48);
+            const closer = 1 - 0.07 * (1 - Math.cos((k * Math.PI * 2) / 64)) * 0.5;
+            const c = Math.cos(angle);
+            const sn = Math.sin(angle);
+            const o = drift.offset;
+            camera.position.set(
+              drift.look.x + (o.x * c + o.z * sn) * closer,
+              drift.look.y + o.y * closer,
+              drift.look.z + (o.z * c - o.x * sn) * closer,
+            );
+            controls.target.copy(drift.look);
           }
           controls.update();
           /*
@@ -4911,6 +5365,20 @@ export default function Reconstruction3DInner({
         else renderer.render(scene, camera);
         placePins();
         listen(now);
+        if (!perf.done) {
+          if (perf.firstAt < 0) perf.firstAt = now;
+          else if (now - perf.firstAt > 1.5) perf.samples.push(elapsed * 1000);
+          if (now - perf.firstAt > 6.5) {
+            perf.done = true;
+            const sorted = [...perf.samples].sort((a, b) => a - b);
+            infoRef.current?.({
+              gpu,
+              triangles: renderer.info.render.triangles,
+              frameMs: sorted[Math.floor(sorted.length / 2)],
+              samples: perf.samples,
+            });
+          }
+        }
       };
 
       /*
@@ -4952,7 +5420,7 @@ export default function Reconstruction3DInner({
        * showed a theatre as the bare back wall of its stage building and the
        * Nemrut terrace from behind the gods.
        */
-      const opening = VIEWPOINT[kind];
+      const opening = viewpointOf(kind);
       const alongX = Math.abs(opening[0]) > Math.abs(opening[2]);
       const fx = alongX ? Math.sign(opening[0]) : 0;
       const fz = alongX ? 0 : Math.sign(opening[2]);
@@ -4963,6 +5431,75 @@ export default function Reconstruction3DInner({
         front: new THREE.Vector3(fx, Math.max(0.18, opening[1] * 0.8), fz),
         above: new THREE.Vector3(0.05 - fx * 0.12, 1, -fz * 0.12),
         corner: new THREE.Vector3(fx * 0.7 + sx * 0.85, 0.4, fz * 0.7 + sz * 0.85),
+      };
+
+      /** A clear view of a point: see `focus`. */
+      const approach = (at: [number, number, number]) => {
+        const point = new THREE.Vector3(...at);
+        const close = Math.max(5, span * 0.17);
+        /*
+         * Come in from where the camera already is, if the point can be
+         * seen from there. Often it cannot: from the default view behind a
+         * theatre's cavea, the diazoma and the seats are on the far side of
+         * the outer wall, and the flight ended nose to nose with brickwork.
+         * So the approach is tried round the point — the current bearing
+         * first, then further and further round, then from higher up — and
+         * the first one with nothing solid between camera and point wins.
+         * A few dozen rays, once per click.
+         */
+        const ahead = camera.position.clone().sub(controls.target);
+        // Flatten the approach a little: coming in along a steep downward
+        // look leaves the camera staring at the top of whatever it flew to.
+        const lift = Math.min(0.42, Math.max(0.15, ahead.normalize().y));
+        ahead.y = 0;
+        if (ahead.lengthSq() < 1e-6) ahead.set(0, 0, -1);
+        ahead.normalize();
+        const solids = scene.children.filter(
+          (object) =>
+            (object as THREE_NS.Mesh).isMesh && object !== apronMesh && object !== scaleFigure,
+        );
+        const ray = new THREE.Raycaster();
+        const hits: THREE_NS.Intersection[] = [];
+        const direction = new THREE.Vector3();
+        const best = new THREE.Vector3().copy(ahead).multiplyScalar(Math.sqrt(1 - lift * lift));
+        best.y = lift;
+        let bestFree = -1;
+        // The point itself sits on (or just inside) the part it names.
+        const start = 0.6;
+        /*
+         * Each ray is tested against every triangle of the building, which
+         * on a phone and a temple of 127 fluted columns is tens of
+         * milliseconds a ray. The search stops at a time budget and takes
+         * the clearest approach found by then.
+         */
+        const deadline = performance.now() + 120;
+        search: for (const rise of [lift, 0.7, 0.92]) {
+          for (let k = 0; k <= 12; k += 1) {
+            // 0, +30°, -30°, +60°, -60° … round to the far side.
+            const turn = (k % 2 === 1 ? 1 : -1) * Math.ceil(k / 2) * (Math.PI / 6);
+            const flat = Math.sqrt(1 - rise * rise);
+            const c = Math.cos(turn);
+            const sn = Math.sin(turn);
+            direction.set(
+              (ahead.x * c + ahead.z * sn) * flat,
+              rise,
+              (ahead.z * c - ahead.x * sn) * flat,
+            );
+            ray.set(point.clone().addScaledVector(direction, start), direction);
+            ray.far = close;
+            hits.length = 0;
+            ray.intersectObjects(solids, false, hits);
+            const free = hits.length ? hits[0]!.distance : close;
+            if (free > bestFree + 0.01) {
+              bestFree = free;
+              best.copy(direction);
+            }
+            if (free >= close - 0.01 || performance.now() > deadline) break search;
+          }
+        }
+        // Nowhere entirely clear: as far back as the clearest way allows.
+        const distance = Math.max(1.5, Math.min(close, start + bestFree - 0.5));
+        return { position: point.clone().addScaledVector(best, distance), look: point };
       };
 
       apiRef.current = {
@@ -5037,71 +5574,8 @@ export default function Reconstruction3DInner({
         },
         focus: (at) => {
           leaveWalkForFlight();
-          const point = new THREE.Vector3(...at);
-          const close = Math.max(5, span * 0.17);
-          /*
-           * Come in from where the camera already is, if the point can be
-           * seen from there. Often it cannot: from the default view behind a
-           * theatre's cavea, the diazoma and the seats are on the far side of
-           * the outer wall, and the flight ended nose to nose with brickwork.
-           * So the approach is tried round the point — the current bearing
-           * first, then further and further round, then from higher up — and
-           * the first one with nothing solid between camera and point wins.
-           * A few dozen rays, once per click.
-           */
-          const ahead = camera.position.clone().sub(controls.target);
-          // Flatten the approach a little: coming in along a steep downward
-          // look leaves the camera staring at the top of whatever it flew to.
-          const lift = Math.min(0.42, Math.max(0.15, ahead.normalize().y));
-          ahead.y = 0;
-          if (ahead.lengthSq() < 1e-6) ahead.set(0, 0, -1);
-          ahead.normalize();
-          const solids = scene.children.filter(
-            (object) =>
-              (object as THREE_NS.Mesh).isMesh && object !== apronMesh && object !== scaleFigure,
-          );
-          const ray = new THREE.Raycaster();
-          const hits: THREE_NS.Intersection[] = [];
-          const direction = new THREE.Vector3();
-          const best = new THREE.Vector3().copy(ahead).multiplyScalar(Math.sqrt(1 - lift * lift));
-          best.y = lift;
-          let bestFree = -1;
-          // The point itself sits on (or just inside) the part it names.
-          const start = 0.6;
-          /*
-           * Each ray is tested against every triangle of the building, which
-           * on a phone and a temple of 127 fluted columns is tens of
-           * milliseconds a ray. The search stops at a time budget and takes
-           * the clearest approach found by then.
-           */
-          const deadline = performance.now() + 120;
-          search: for (const rise of [lift, 0.7, 0.92]) {
-            for (let k = 0; k <= 12; k += 1) {
-              // 0, +30°, -30°, +60°, -60° … round to the far side.
-              const turn = (k % 2 === 1 ? 1 : -1) * Math.ceil(k / 2) * (Math.PI / 6);
-              const flat = Math.sqrt(1 - rise * rise);
-              const c = Math.cos(turn);
-              const sn = Math.sin(turn);
-              direction.set(
-                (ahead.x * c + ahead.z * sn) * flat,
-                rise,
-                (ahead.z * c - ahead.x * sn) * flat,
-              );
-              ray.set(point.clone().addScaledVector(direction, start), direction);
-              ray.far = close;
-              hits.length = 0;
-              ray.intersectObjects(solids, false, hits);
-              const free = hits.length ? hits[0]!.distance : close;
-              if (free > bestFree + 0.01) {
-                bestFree = free;
-                best.copy(direction);
-              }
-              if (free >= close - 0.01 || performance.now() > deadline) break search;
-            }
-          }
-          // Nowhere entirely clear: as far back as the clearest way allows.
-          const distance = Math.max(1.5, Math.min(close, start + bestFree - 0.5));
-          flyTo(point.clone().addScaledVector(best, distance), point);
+          const shot = approach(at);
+          flyTo(shot.position, shot.look);
         },
         setQuality: (on) => {
           qualityOn = on;
@@ -5124,10 +5598,146 @@ export default function Reconstruction3DInner({
       apiRef.current.setLife(showLifeRef.current);
       apiRef.current.setWalk(walkRef.current);
       renderer.domElement.setAttribute("aria-label", latest.label);
+
+      const extras: SceneExtras = {
+        tourShot: (shot, keepMoving, turn) => {
+          leaveWalkForFlight();
+          controls.autoRotate = false;
+          let position: THREE_NS.Vector3;
+          let look: THREE_NS.Vector3;
+          if (shot.at) {
+            ({ position, look } = approach(shot.at));
+          } else {
+            const towards = viewpoints[shot.view ?? "front"].clone().normalize();
+            position = target.clone().addScaledVector(towards, distance);
+            look = target.clone();
+          }
+          drift = null;
+          driftNext = keepMoving && !reducedMotion ? { turn } : null;
+          // A long hop bows up over the building; a short one goes straight.
+          const hop = camera.position.distanceTo(position);
+          const arc = hop > span * 0.25 ? Math.min(span * 0.3, hop * 0.3) : 0;
+          flyTo(position, look, reducedMotion ? 0.35 : 2.6, reducedMotion ? 0 : arc);
+        },
+        endTour: () => {
+          drift = null;
+          driftNext = null;
+        },
+        setGyro,
+        recentreGyro: () => {
+          walker.pitch = 0;
+          gyro.fresh = true;
+        },
+        setTimeFlow: (on) => {
+          if (on === flow.on) return;
+          flow.on = on;
+          flow.tickAt = 0;
+          if (on) {
+            const mode = latestRef.current.atmos;
+            flow.phase = mode === "day" ? 0 : mode === "golden" ? 0.42 : 0.62;
+          } else {
+            apiRef.current?.setAtmos(latestRef.current.theme, latestRef.current.atmos);
+            sunLiftTarget = 1.15;
+          }
+        },
+        setWeather: (kind) => weather.set(kind),
+        setScaleRefs: (names) => {
+          if (scaleRefs) {
+            scene.remove(scaleRefs.group);
+            scaleRefs.dispose();
+            scaleRefs = null;
+          }
+          if (!names) return;
+          const refs = chooseScaleRefs({
+            width: bounds.max[0] - bounds.min[0],
+            depth: bounds.max[2] - bounds.min[2],
+            height: bounds.max[1] - bounds.min[1],
+          });
+          // To the right of the opening view, so the row is in sight from it.
+          const side: [number, number] = [-direction.z, direction.x];
+          const placed = layoutScaleRefs(
+            refs,
+            [centre.x, centre.z],
+            [(bounds.max[0] - bounds.min[0]) / 2, (bounds.max[2] - bounds.min[2]) / 2],
+            side,
+          );
+          void import("./scene/scale-refs").then(({ buildScaleRefs }) => {
+            if (disposed || scaleRefs) return;
+            scaleRefs = buildScaleRefs(THREE, placed, groundAt, names, span);
+            scene.add(scaleRefs.group);
+          });
+        },
+        setLite: (on) => {
+          liteOn = on;
+          ratioCap = on ? Math.min(maxRatio, LOW_SETTINGS.pixelRatio) : maxRatio;
+          resize();
+          sun.castShadow = !on;
+          weather.setLite(on);
+          if (!on) {
+            for (const holder of [...scanGroup.children, ...lifeGroup.children])
+              if (holder.name.startsWith("scan:")) holder.visible = true;
+          }
+        },
+        takePhoto: async ({ vignette, dof, mark }) => {
+          const { clientWidth: w, clientHeight: h } = host;
+          if (!w || !h) return null;
+          const scale = photoScale(w, h, renderer.getPixelRatio());
+          const out = document.createElement("canvas");
+          out.width = Math.round(w * scale);
+          out.height = Math.round(h * scale);
+          const ctx = out.getContext("2d");
+          if (!ctx) return null;
+          let bokeh: { render: () => void; dispose: () => void } | null = null;
+          if (dof) {
+            try {
+              const [{ EffectComposer }, { RenderPass }, { BokehPass }, { OutputPass }] =
+                await Promise.all([
+                  import("three/addons/postprocessing/EffectComposer.js"),
+                  import("three/addons/postprocessing/RenderPass.js"),
+                  import("three/addons/postprocessing/BokehPass.js"),
+                  import("three/addons/postprocessing/OutputPass.js"),
+                ]);
+              if (disposed) return null;
+              const focusAt = walker.on ? 8 : camera.position.distanceTo(controls.target);
+              const made = new EffectComposer(renderer);
+              made.setPixelRatio(scale);
+              made.setSize(w, h);
+              made.addPass(new RenderPass(scene, camera));
+              made.addPass(
+                new BokehPass(scene, camera, {
+                  focus: focusAt,
+                  aperture: 0.003 / Math.max(5, focusAt),
+                  maxblur: 0.008,
+                }),
+              );
+              made.addPass(new OutputPass());
+              bokeh = { render: () => made.render(), dispose: () => made.dispose() };
+            } catch {
+              bokeh = null;
+            }
+          }
+          try {
+            renderer.setPixelRatio(scale);
+            renderer.setSize(w, h, false);
+            if (bokeh) bokeh.render();
+            else renderer.render(scene, camera);
+            // Copied now, in the same task, before the browser clears the buffer.
+            ctx.drawImage(renderer.domElement, 0, 0, out.width, out.height);
+          } finally {
+            bokeh?.dispose();
+            resize();
+          }
+          if (vignette) paintVignette(ctx, out.width, out.height);
+          paintWatermark(ctx, out.width, out.height, mark);
+          return canvasToPng(out);
+        },
+      };
+      extrasRef.current?.(extras);
       setReady(true);
 
       cleanup = () => {
         apiRef.current = null;
+        extrasRef.current?.(null);
         if (import.meta.env.DEV) delete (window as unknown as { __walk?: unknown }).__walk;
         observer.disconnect();
         onScreen.disconnect();
@@ -5166,6 +5776,12 @@ export default function Reconstruction3DInner({
         renderer.domElement.removeEventListener("pointerup", onLookUp);
         renderer.domElement.removeEventListener("pointercancel", onLookUp);
         renderer.domElement.removeEventListener("wheel", onWalkWheel);
+        renderer.domElement.removeEventListener("pointerdown", onTapDown);
+        renderer.domElement.removeEventListener("pointerup", onTapUp);
+        renderer.domElement.removeEventListener("pointercancel", onTapCancel);
+        setGyro(false);
+        weather.dispose();
+        scaleRefs?.dispose();
         renderer.dispose();
         // `dispose` frees the buffers but leaves the context itself alive
         // until garbage collection; give it back now, or a page that opens a

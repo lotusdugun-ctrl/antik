@@ -1,11 +1,28 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 type Theme = "light" | "dark";
+/** What the visitor chose: a theme, or "whatever the device is set to". */
+export type ThemePref = Theme | "system";
 const KEY = "antik-tr-theme";
 
-const ThemeCtx = createContext<{ theme: Theme; toggle: () => void } | null>(null);
+const ThemeCtx = createContext<{
+  /** The theme on screen. */
+  theme: Theme;
+  /** The choice behind it. */
+  pref: ThemePref;
+  setPref: (pref: ThemePref) => void;
+  toggle: () => void;
+} | null>(null);
+
+const systemTheme = (): Theme =>
+  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+function apply(theme: Theme) {
+  document.documentElement.classList.toggle("dark", theme === "dark");
+}
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [pref, setPrefState] = useState<ThemePref>("system");
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
@@ -19,26 +36,41 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     } catch {
       /* storage unavailable */
     }
-    const initial =
-      stored ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    setTheme(initial);
-    document.documentElement.classList.toggle("dark", initial === "dark");
+    setPrefState(stored ?? "system");
   }, []);
 
-  const toggle = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === "dark" ? "light" : "dark";
-      try {
-        window.localStorage.setItem(KEY, next);
-      } catch {
-        /* storage unavailable — the choice lasts for this visit only */
-      }
-      document.documentElement.classList.toggle("dark", next === "dark");
-      return next;
-    });
+  // Follow the device while the choice is "system", including a change of
+  // setting (or the evening switch) while the page is open.
+  useEffect(() => {
+    if (pref !== "system") {
+      setTheme(pref);
+      apply(pref);
+      return;
+    }
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    const sync = () => {
+      const next = systemTheme();
+      setTheme(next);
+      apply(next);
+    };
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, [pref]);
+
+  const setPref = useCallback((next: ThemePref) => {
+    try {
+      if (next === "system") window.localStorage.removeItem(KEY);
+      else window.localStorage.setItem(KEY, next);
+    } catch {
+      /* storage unavailable — the choice lasts for this visit only */
+    }
+    setPrefState(next);
   }, []);
 
-  return <ThemeCtx.Provider value={{ theme, toggle }}>{children}</ThemeCtx.Provider>;
+  const toggle = useCallback(() => setPref(theme === "dark" ? "light" : "dark"), [setPref, theme]);
+
+  return <ThemeCtx.Provider value={{ theme, pref, setPref, toggle }}>{children}</ThemeCtx.Provider>;
 }
 
 export function useTheme() {

@@ -21,6 +21,14 @@ import {
   type Lettering,
 } from "@/lib/epigraphy";
 import type { ScanId } from "@/lib/scans";
+import { hittiteGateParts, hittiteGateWalkStart } from "@/lib/models/hattusa-aslanli-kapi";
+import { troyCitadelParts, troyWalkStart } from "@/lib/models/troya-vi-surlari";
+import { neolithicTownParts, neolithicTownWalkStart } from "@/lib/models/catalhoyuk-dogu-hoyugu";
+import { cathedralParts, cathedralWalkStart } from "@/lib/models/ani-katedrali";
+import { nymphaeumParts, nymphaeumWalkStart } from "@/lib/models/sagalassos-antoninler-cesmesi";
+import { villaParts, villaWalkStart } from "@/lib/models/zeugma-villa";
+import { cliffMonasteryParts, monasteryWalkStart } from "@/lib/models/sumela-manastiri";
+import { lighthouseParts, lighthouseWalkStart } from "@/lib/models/patara-deniz-feneri";
 import type {
   GreatAltarSpec,
   IonicDipterosSpec,
@@ -7804,6 +7812,22 @@ export function partsFor(spec: ModelSpec): Part[] {
       return mausoleumParts(spec);
     case "tumulus-sanctuary":
       return tumulusSanctuaryParts(spec);
+    case "hittite-gate":
+      return hittiteGateParts(spec);
+    case "troy-citadel":
+      return troyCitadelParts(spec);
+    case "neolithic-town":
+      return neolithicTownParts(spec);
+    case "medieval-cathedral":
+      return cathedralParts(spec);
+    case "nymphaeum":
+      return nymphaeumParts(spec);
+    case "terrace-villa":
+      return villaParts(spec);
+    case "cliff-monastery":
+      return cliffMonasteryParts(spec);
+    case "lighthouse":
+      return lighthouseParts(spec);
   }
 }
 
@@ -7883,6 +7907,22 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
         floor: 0,
         look: [-1.5, spec.statueHeight * 0.55, 0],
       };
+    case "hittite-gate":
+      return hittiteGateWalkStart(spec);
+    case "troy-citadel":
+      return troyWalkStart(spec);
+    case "neolithic-town":
+      return neolithicTownWalkStart(spec);
+    case "medieval-cathedral":
+      return cathedralWalkStart(spec);
+    case "nymphaeum":
+      return nymphaeumWalkStart(spec);
+    case "terrace-villa":
+      return villaWalkStart(spec);
+    case "cliff-monastery":
+      return monasteryWalkStart(spec);
+    case "lighthouse":
+      return lighthouseWalkStart(spec);
   }
 }
 
@@ -8011,3 +8051,27 @@ export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
 
   return { min, max };
 }
+
+/*
+ * The primitives and the larger pieces built from them, for the models that
+ * live in their own files under `src/lib/models/` — each of those exports a
+ * builder that `partsFor` hands its spec to. Used only inside functions
+ * there, never at load time, so the import cycle this makes is harmless.
+ */
+export {
+  box as kitBox,
+  cyl as kitCyl,
+  ring as kitRing,
+  prism as kitPrism,
+  relief as kitRelief,
+  person as kitPerson,
+  loft as kitLoft,
+  worn as kitWorn,
+  scenery as kitScenery,
+  segmentalPediment as kitSegmentalPediment,
+  column as kitColumn,
+  cornice as kitCornice,
+  setting as kitSetting,
+  rubble as kitRubble,
+  seeded as kitSeeded,
+};

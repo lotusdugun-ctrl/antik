@@ -40,7 +40,23 @@ export function spotsFor(item: Reconstruction, life: Pick<SceneLife, "flames">):
   const market = marketSpots(item);
   const raised = (at: readonly number[]): Point => [at[0]!, (at[1] ?? 0) + MOUTH, at[2]!];
   if (market.stalls.length) out.stalls = { points: market.stalls.map(raised), ref: 9 };
-  if (spec.kind === "peristyle-house") {
+  if (spec.kind === "nymphaeum") {
+    // The water falling into the basin, all along the fountain's front.
+    out.fountain = {
+      points: [
+        [-8, 1, -1.5],
+        [0, 1, -1.5],
+        [8, 1, -1.5],
+      ],
+      ref: 10,
+    };
+  } else if (spec.kind === "terrace-villa") {
+    // The pool in the middle of the court.
+    out.fountain = { points: [[0, spec.terraceHeight + 0.6, 0]], ref: 6 };
+  } else if (spec.kind === "cliff-monastery") {
+    // The holy spring at the back of the cave.
+    out.fountain = { points: [[0.5, spec.courtLevel + 1, 11.2]], ref: 6 };
+  } else if (spec.kind === "peristyle-house") {
     // The house's own fountain: the marble youth over the pool in the middle of the court.
     out.fountain = { points: [[0, 0.9, 0]], ref: 6 };
   } else if (market.fountains.length) {

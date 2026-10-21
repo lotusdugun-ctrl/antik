@@ -3,6 +3,7 @@ import { Award, BookOpen, Lock, MapPin, RotateCcw, Trash2, Trophy } from "lucide
 import { BackupPanel } from "@/components/BackupPanel";
 import { OfflinePanel } from "@/components/OfflinePanel";
 import { PassportPanel } from "@/components/Passport";
+import { QuestSummary } from "@/components/QuestSummary";
 import { TransferPanel } from "@/components/TransferPanel";
 import { Photo } from "@/components/Photo";
 import { SiteCard } from "@/components/SiteCard";
@@ -78,6 +79,7 @@ function ProfilePage() {
       </section>
 
       <PassportPanel />
+      <QuestSummary />
 
       {/* Region progress */}
       <section className="mt-8">

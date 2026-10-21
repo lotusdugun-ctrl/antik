@@ -182,7 +182,16 @@ export type Space = { seconds: number; wet: number; early: number };
 export type Soundscape = {
   /** The kind of place, for tests and for anyone reading this. */
   character:
-    "theatre" | "stadium" | "sanctuary" | "agora" | "house" | "harbour" | "mountain" | "neolithic";
+    | "theatre"
+    | "stadium"
+    | "sanctuary"
+    | "agora"
+    | "house"
+    | "harbour"
+    | "mountain"
+    | "neolithic"
+    | "citadel"
+    | "church";
   beds: Bed[];
   happenings: Happening[];
   director?: Director;
@@ -650,6 +659,152 @@ function neolithic(): Soundscape {
   };
 }
 
+/*
+ * The Bronze Age gates, the Neolithic town and the medieval cathedral. Only
+ * the recordings and calls this file already has: no words in any language,
+ * since none of these places spoke one that is recorded here.
+ */
+
+/** A Bronze Age citadel gate: wind on the walls, the road, the herds below. */
+function citadel(horses: boolean): Soundscape {
+  return {
+    character: "citadel",
+    beds: [
+      { clip: "fire", level: { day: 0.12, golden: 0.2, night: 0.35 }, wet: 0.1, at: "altar" },
+      // People at the gate and in the forecourt, too far off to make out.
+      { clip: "murmur", level: { day: 0.16, golden: 0.14, night: 0.03 }, muffle: 900, wet: 0.2 },
+      BIRDS(0.35),
+      { ...NIGHT_INSECTS, level: { golden: 0.2, night: 0.6 } },
+    ],
+    happenings: [
+      {
+        sounds: ["footsteps"],
+        every: [12, 30],
+        level: { day: 0.25, golden: 0.2 },
+        spread: 0.7,
+        rate: [0.9, 1.1],
+        wet: 0.3,
+        max: 3,
+      },
+      {
+        sounds: horses ? ["neigh1", "neigh2", "neigh3"] : ["moo1", "moo2", "moo3"],
+        every: [35, 90],
+        level: { day: 0.22, golden: 0.2 },
+        spread: 1,
+        rate: [0.92, 1.05],
+        muffle: 3000,
+        wet: 0.4,
+      },
+      {
+        sounds: ["sheep"],
+        every: [30, 80],
+        level: { day: 0.2, golden: 0.22 },
+        spread: 0.9,
+        rate: [0.95, 1.1],
+        muffle: 3000,
+        wet: 0.4,
+        max: 3,
+      },
+      {
+        sounds: ["crow"],
+        every: [40, 100],
+        level: { day: 0.18, golden: 0.2 },
+        spread: 1,
+        rate: [0.85, 1],
+        muffle: 4500,
+        wet: 0.45,
+        max: 3,
+      },
+      { ...DOGS, level: { day: 0.2, golden: 0.25, night: 0.3 } },
+      {
+        sounds: ["lark"],
+        every: [30, 70],
+        level: { day: 0.16, golden: 0.1 },
+        spread: 0.8,
+        muffle: 7000,
+        wet: 0.2,
+      },
+      OWL,
+    ],
+    synth: { wind: horses ? 0.6 : 0.7, cicadas: horses, crackle: true },
+    space: { seconds: 1.1, wet: 0.14, early: 0.25 },
+  };
+}
+
+/** Çatalhöyük: voices without words over the roofs, stone tools, the flocks. */
+function village(): Soundscape {
+  const base = neolithic();
+  return {
+    ...base,
+    beds: [
+      { clip: "fire", level: { day: 0.2, golden: 0.3, night: 0.45 }, wet: 0.12, at: "altar" },
+      { clip: "murmur", level: { day: 0.2, golden: 0.18, night: 0.04 }, muffle: 800, wet: 0.18 },
+      BIRDS(0.3),
+      { ...NIGHT_INSECTS, level: { golden: 0.2, night: 0.6 } },
+    ],
+    happenings: [
+      ...base.happenings,
+      {
+        sounds: ["sheep"],
+        every: [25, 70],
+        level: { day: 0.22, golden: 0.24 },
+        spread: 0.8,
+        rate: [1.0, 1.2],
+        muffle: 3500,
+        wet: 0.3,
+        max: 3,
+      },
+    ],
+  };
+}
+
+/** Ani: the square before the cathedral, the wind over the plateau. */
+function church(): Soundscape {
+  return {
+    character: "church",
+    beds: [
+      { clip: "murmur", level: { day: 0.3, golden: 0.28, night: 0.05 }, muffle: 2400, wet: 0.3 },
+      { clip: "hooves", level: { day: 0.08, golden: 0.06 }, muffle: 2000, wet: 0.2 },
+      BIRDS(0.35),
+      { ...NIGHT_INSECTS, level: { golden: 0.2, night: 0.55 } },
+    ],
+    happenings: [
+      {
+        sounds: ["footsteps"],
+        every: [8, 22],
+        level: { day: 0.28, golden: 0.24 },
+        spread: 0.7,
+        rate: [0.9, 1.1],
+        wet: 0.45,
+        max: 3,
+      },
+      {
+        sounds: ["moo1", "moo2"],
+        every: [60, 140],
+        level: { day: 0.16, golden: 0.14 },
+        spread: 1,
+        muffle: 2500,
+        wet: 0.4,
+      },
+      DOVES,
+      { ...DOGS, level: { day: 0.2, golden: 0.25, night: 0.3 } },
+      {
+        sounds: ["crow"],
+        every: [45, 110],
+        level: { day: 0.16, golden: 0.18 },
+        spread: 1,
+        rate: [0.85, 1],
+        muffle: 4500,
+        wet: 0.5,
+        max: 3,
+      },
+      OWL,
+    ],
+    synth: { wind: 0.75, cicadas: false, crackle: false },
+    space: { seconds: 1.4, wet: 0.2, early: 0.4 },
+  };
+}
+
 /** Which hymn belongs to which god's house. */
 const HYMNS: Record<string, readonly Voice[]> = {
   "artemis-tapinagi": ["hymn-artemis"],
@@ -657,6 +812,139 @@ const HYMNS: Record<string, readonly Voice[]> = {
   "aizanoi-zeus-tapinagi": ["hymn-zeus", "hymn-cleanthes"],
   "pergamon-zeus-sunagi": ["hymn-cleanthes", "hymn-zeus"],
 };
+
+/**
+ * A monumental fountain on a mountain agora: the water louder than the market,
+ * and the wind of 1,500 metres over it (the Antonine Nymphaeum, Sagalassos).
+ */
+function fountainHouse(): Soundscape {
+  const base = agora();
+  return {
+    ...base,
+    // The stalls are off at the square's edge, heard but not placed.
+    beds: base.beds.map((bed) => {
+      if (bed.clip === "fountain") return { ...bed, level: { day: 0.6, golden: 0.62, night: 0.7 } };
+      const { at: _at, ...rest } = bed;
+      return bed.at === "stalls" ? { ...rest, muffle: 3000 } : bed;
+    }),
+    happenings: base.happenings.map((h) => {
+      const { at: _at, ...rest } = h;
+      return h.at === "stalls" ? rest : h;
+    }),
+    synth: { wind: 0.45, cicadas: true, crackle: false },
+  };
+}
+
+/** A harbour with its light: sea, gulls, the quay at work, the keeper's fire at night. */
+function lighthouse(): Soundscape {
+  return {
+    character: "harbour",
+    beds: [
+      { clip: "sea", level: { day: 0.55, golden: 0.6, night: 0.6 }, pan: -0.4, wet: 0.2 },
+      { clip: "market", level: { day: 0.3, golden: 0.22, night: 0 }, muffle: 2400, wet: 0.2 },
+      { clip: "fire", level: { day: 0.05, golden: 0.12, night: 0.2 }, muffle: 3000, wet: 0.3 },
+      BIRDS(0.3),
+      NIGHT_INSECTS,
+    ],
+    happenings: [
+      {
+        sounds: ["gull"],
+        every: [8, 25],
+        level: { day: 0.3, golden: 0.3, night: 0.05 },
+        spread: 1,
+        muffle: 6000,
+        wet: 0.4,
+      },
+      {
+        sounds: ["vendor-fish", "vendor-wine", "vendor-oil"],
+        every: [30, 70],
+        level: { day: 0.2, golden: 0.16 },
+        spread: 0.9,
+        muffle: 3500,
+        wet: 0.4,
+      },
+      {
+        sounds: ["saw", "anvil"],
+        every: [25, 60],
+        level: { day: 0.15, golden: 0.08 },
+        spread: 0.9,
+        muffle: 2500,
+        wet: 0.5,
+        max: 3.5,
+      },
+      {
+        sounds: ["footsteps"],
+        every: [15, 40],
+        level: { day: 0.22, golden: 0.22, night: 0.12 },
+        spread: 0.8,
+        rate: [0.9, 1.1],
+        wet: 0.3,
+      },
+      DOGS,
+      OWL,
+    ],
+    synth: { wind: 0.5, cicadas: true, crackle: false },
+    space: { seconds: 0.9, wet: 0.15, early: 0.25 },
+  };
+}
+
+/**
+ * A monastery in a forest gorge (Sümela): birds in the trees, the spring in
+ * the cave, ravens off the cliff, goats on the slope, the wind in the valley,
+ * and at night the owl and the brazier. No chant: no recording of one with a
+ * licence that allows it is in the app.
+ */
+function monastery(): Soundscape {
+  return {
+    character: "mountain",
+    beds: [
+      BIRDS(0.6),
+      {
+        clip: "fountain",
+        level: { day: 0.18, golden: 0.2, night: 0.26 },
+        muffle: 3500,
+        wet: 0.5,
+        at: "fountain",
+      },
+      { clip: "fire", level: { day: 0.06, golden: 0.15, night: 0.3 }, wet: 0.2 },
+      { ...NIGHT_INSECTS, level: { golden: 0.12, night: 0.4 } },
+    ],
+    happenings: [
+      {
+        sounds: ["crow"],
+        every: [30, 80],
+        level: { day: 0.26, golden: 0.26 },
+        spread: 1,
+        rate: [0.8, 0.95],
+        muffle: 5000,
+        wet: 0.6,
+        max: 3,
+      },
+      {
+        sounds: ["sheep"],
+        every: [45, 110],
+        level: { day: 0.18, golden: 0.18 },
+        spread: 0.9,
+        rate: [1.1, 1.25],
+        muffle: 3000,
+        wet: 0.5,
+        max: 2.5,
+      },
+      {
+        sounds: ["footsteps"],
+        every: [18, 45],
+        level: { day: 0.2, golden: 0.2, night: 0.08 },
+        spread: 0.6,
+        rate: [0.85, 1.0],
+        wet: 0.5,
+      },
+      DOVES,
+      { ...OWL, level: { night: 0.3 }, wet: 0.6 },
+    ],
+    synth: { wind: 0.6, cicadas: false, crackle: true },
+    space: { seconds: 2.2, wet: 0.28, early: 0.6 },
+  };
+}
 
 export function soundscapeFor(item: Pick<Reconstruction, "id"> & { model: { kind: string } }) {
   const { id } = item;
@@ -681,6 +969,22 @@ export function soundscapeFor(item: Pick<Reconstruction, "id"> & { model: { kind
       return mountain();
     case "neolithic-enclosure":
       return neolithic();
+    case "hittite-gate":
+      return citadel(false);
+    case "troy-citadel":
+      return citadel(true);
+    case "neolithic-town":
+      return village();
+    case "medieval-cathedral":
+      return church();
+    case "nymphaeum":
+      return fountainHouse();
+    case "terrace-villa":
+      return house();
+    case "cliff-monastery":
+      return monastery();
+    case "lighthouse":
+      return lighthouse();
     default:
       // A kind added later still gets birds, wind and the night.
       return {

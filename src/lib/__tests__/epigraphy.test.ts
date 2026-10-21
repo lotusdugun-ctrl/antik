@@ -335,6 +335,14 @@ describe("the cost of the new detail", () => {
     "aizanoi-zeus-tapinagi": 139266,
     "halikarnas-mozolesi": 133818,
     "nemrut-dogu-terasi": 12518,
+    "hattusa-aslanli-kapi": 18756,
+    "troya-vi-surlari": 32808,
+    "catalhoyuk-dogu-hoyugu": 23720,
+    "ani-katedrali": 65964,
+    "sagalassos-antoninler-cesmesi": 45944,
+    "zeugma-villa": 64980,
+    "sumela-manastiri": 30340,
+    "patara-deniz-feneri": 12360,
   };
   test("no building grows by more than 15%", () => {
     for (const item of reconstructions) {

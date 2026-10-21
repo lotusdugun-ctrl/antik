@@ -11,6 +11,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useCallback, useEffect, type ReactNode } from "react";
+import { isBot, langFromCountry, langFromLocales, storedLang, storeLang } from "@/lib/lang-detect";
 import { toast } from "sonner";
 
 import appCss from "../styles.css?url";
@@ -176,6 +177,45 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * The first visit opens in the visitor's language: their own earlier choice,
+ * else the device's language, else the one for the country they are in. Only
+ * on a plain address — a shared `?lang=` link is honoured as it is — and never
+ * for crawlers, which must see each language at its own canonical URL.
+ */
+function useAutoLang(current: Lang, goToLang: (lang: Lang) => unknown) {
+  useEffect(() => {
+    if (typeof window === "undefined" || isBot(navigator.userAgent)) return;
+    const explicit = new URLSearchParams(window.location.search).has("lang");
+    const saved = storedLang();
+    if (explicit) return;
+    if (saved) {
+      if (saved !== current) void goToLang(saved);
+      return;
+    }
+    const locales = navigator.languages?.length ? navigator.languages : [navigator.language];
+    const fromDevice = langFromLocales(locales.filter(Boolean));
+    if (fromDevice) {
+      if (fromDevice !== current) void goToLang(fromDevice);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/ulke")
+      .then((res) => (res.ok ? (res.json() as Promise<{ country?: string }>) : { country: "" }))
+      .catch(() => ({ country: "" }))
+      .then(({ country }) => {
+        if (cancelled) return;
+        const lang = langFromCountry(country, locales.filter(Boolean).length > 0);
+        if (lang !== current) void goToLang(lang);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // Once per visit: later language changes are the visitor's own.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
+
 function PwaRegistration() {
   const { t } = useI18n();
   useEffect(() => {
@@ -203,7 +243,7 @@ function RootComponent() {
 
   // Switching language is a navigation, not a state change, so the address bar
   // agrees with what is on screen and the page can be shared or bookmarked.
-  const setLang = useCallback(
+  const goToLang = useCallback(
     (next: Lang) =>
       navigate({
         to: ".",
@@ -218,6 +258,15 @@ function RootComponent() {
       }),
     [navigate],
   );
+  // A language the visitor picks is remembered and wins from then on.
+  const setLang = useCallback(
+    (next: Lang) => {
+      storeLang(next);
+      void goToLang(next);
+    },
+    [goToLang],
+  );
+  useAutoLang(lang, goToLang);
 
   return (
     <QueryClientProvider client={queryClient}>

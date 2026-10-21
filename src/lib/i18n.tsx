@@ -827,9 +827,29 @@ const dict = {
 
   // ——— Menu groups ———
   nav_group_explore: { tr: "Keşfet", en: "Explore", de: "Entdecken", ru: "Обзор" },
-  nav_group_experience: { tr: "Deneyim", en: "Experience", de: "Erleben", ru: "Впечатления" },
-  nav_group_tools: { tr: "Araçlar", en: "Tools", de: "Werkzeuge", ru: "Инструменты" },
+  nav_group_learn: { tr: "Öğren", en: "Learn", de: "Lernen", ru: "Узнать" },
+  nav_group_plan: { tr: "Planla", en: "Plan", de: "Planen", ru: "Планировать" },
+  nav_group_more: { tr: "Daha fazla", en: "More", de: "Mehr", ru: "Ещё" },
   nav_menu: { tr: "Menü", en: "Menu", de: "Menü", ru: "Меню" },
+  nav_home_d: {
+    tr: "Öne çıkanlar ve yakınındakiler",
+    en: "Highlights and places near you",
+    de: "Highlights und Orte in deiner Nähe",
+    ru: "Главное и места рядом",
+  },
+  nav_profile_d: {
+    tr: "İlerleme, ziyaretler ve favoriler",
+    en: "Progress, visits and favourites",
+    de: "Fortschritt, Besuche und Favoriten",
+    ru: "Прогресс, посещения и избранное",
+  },
+  nav_credits_d: {
+    tr: "Fotoğrafların kaynakları ve lisansları",
+    en: "Where the photographs come from, and their licences",
+    de: "Herkunft und Lizenzen der Fotos",
+    ru: "Источники и лицензии фотографий",
+  },
+  theme_system_short: { tr: "Sistem", en: "System", de: "System", ru: "Авто" },
   nav_all_places: {
     tr: "Tüm yerlerde ara",
     en: "Search all places",

@@ -1,7 +1,24 @@
 import { Suspense, lazy, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
+  Aperture,
+  Camera,
+  Check,
+  Circle,
+  Clock,
+  Cloud,
   Columns2,
+  Crosshair,
   Download,
+  Gauge,
+  MessageCircle,
+  Pause,
+  Play,
+  Route,
+  Ruler,
+  SkipBack,
+  SkipForward,
+  Smartphone,
+  Trophy,
   Ellipsis,
   Footprints,
   Glasses,
@@ -31,13 +48,33 @@ import type { Reconstruction } from "@/lib/reconstructions";
 import { useI18n } from "@/lib/i18n";
 import { reconstructionGuide } from "@/lib/narration";
 import { applyStories, type StoryText } from "@/lib/narration-stories";
-import { structurePhotoFor } from "@/lib/structure-photos";
 import { useTheme } from "@/lib/theme";
+import { assessDevice, framesTooSlow, isHeavy } from "@/lib/device-tier";
+import { personLine, spectatorLine, ROLE_NAMES, SPEECH_LANG } from "@/lib/person-stories";
+import { creditLine } from "@/lib/photo-credits";
+import {
+  badgeId,
+  generateQuests,
+  markQuestDone,
+  questHit,
+  questTitle,
+  readQuests,
+  type Quest,
+} from "@/lib/quests";
+import { boundsOf, type Part } from "@/lib/reconstruction-parts";
+import { STATUE_MATERIALS } from "@/lib/scene-life";
+import { RS, fill } from "@/lib/recon-strings";
+import { todayPhotoFor } from "@/lib/today-photo";
+import { planTour, type TourStop } from "@/lib/tour";
+import { defaultWeather } from "@/lib/weather";
+import { claimSpeech } from "@/hooks/use-audio-guide";
+import { useGuidedTour } from "@/hooks/use-guided-tour";
+import type { Localized } from "@/lib/i18n";
 import { AudioGuide } from "./AudioGuide";
 import { CompareSlider } from "./CompareSlider";
 import { WalkJoystick } from "./WalkJoystick";
 import { arSupport, openQuickLook, startWebXR, type ARMode } from "./ar/launch-ar";
-import type { AtmosMode } from "./Reconstruction3DInner";
+import type { AtmosMode, PersonHit, SceneExtras, SceneInfo } from "./Reconstruction3DInner";
 import type { Biome } from "./scene/landscape";
 
 /**
@@ -49,11 +86,42 @@ const BIOME: Partial<Record<string, Biome>> = {
   "gobeklitepe-d-yapisi": "steppe",
   "aizanoi-zeus-tapinagi": "steppe",
   "nemrut-dogu-terasi": "mountain",
+  "hattusa-aslanli-kapi": "steppe",
+  "catalhoyuk-dogu-hoyugu": "steppe",
+  "ani-katedrali": "steppe",
+  // A forested Pontic valley: mountain country; its weather is morning mist (see weather.ts).
+  "sumela-manastiri": "mountain",
 };
 
-/** The photograph of what stands there today, for the before/after slider. */
-function todayPhotoFor(item: Reconstruction): string | undefined {
-  return structurePhotoFor(item.siteSlug, item.structure.tr);
+/** Where the visitor's own choice of quality is remembered: "high" or "lite". */
+const QUALITY_KEY = "antik-3d-quality";
+
+const readKey = (key: string) => {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+const writeKey = (key: string, value: string) => {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    /* not remembered, but still obeyed */
+  }
+};
+
+/** The named statues and the inscriptions of a model, for its quests. */
+function questSources(parts: Part[], props: Part[]) {
+  const statues: { name: string; at: [number, number, number]; height: number }[] = [];
+  const plates: { at: [number, number, number]; width: number; height: number }[] = [];
+  for (const part of [...parts, ...props]) {
+    if (part.kind === "figure" && part.identity && STATUE_MATERIALS.includes(part.material))
+      statues.push({ name: part.identity.name, at: part.at, height: part.height });
+    if (part.kind === "box" && (part as { lettering?: unknown }).lettering)
+      plates.push({ at: part.at, width: part.size[0], height: part.size[1] });
+  }
+  return { statues, plates };
 }
 
 // three.js reaches for `window` and a canvas as it initialises, and it is the
@@ -113,7 +181,7 @@ export function Reconstruction3D({
   stories?: StoryText | undefined;
   height?: string;
 }) {
-  const { t, L } = useI18n();
+  const { t, L, lang } = useI18n();
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [spinning, setSpinning] = useState(false);
@@ -216,6 +284,17 @@ export function Reconstruction3D({
     const timer = window.setTimeout(() => setHintShown(false), 6000);
     return () => window.clearTimeout(timer);
   }, [walking]);
+
+  // While walking or full screen, the app's tab bar steps aside so it never
+  // sits over the thumb stick or the control bar (see AppShell's MobileTabs).
+  useEffect(() => {
+    if (!walking && !full) return;
+    const root = document.documentElement;
+    root.dataset["immersive"] = "";
+    return () => {
+      delete root.dataset["immersive"];
+    };
+  }, [walking, full]);
 
   /* The control bar's "more" panel: closed by Escape or a tap elsewhere. */
   const [more, setMore] = useState(false);
@@ -433,6 +512,322 @@ export function Reconstruction3D({
 
   const chosen = active === null ? undefined : item.hotspots[active];
 
+  /* ---- The scene's newer abilities (see SceneExtras in the inner view) ---- */
+  const [extras, setExtras] = useState<SceneExtras | null>(null);
+  const extrasRef = useRef<SceneExtras | null>(null);
+  extrasRef.current = extras;
+  const reducedMotion = useRef(false);
+  useEffect(() => {
+    reducedMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
+  /* ---- Guided tour ---- */
+  const plan = useMemo(
+    () => planTour(guide, item.hotspots, !stories),
+    [guide, item.hotspots, stories],
+  );
+  const onTourStop = useCallback((stop: TourStop, index: number) => {
+    setWalking(false);
+    setSpinning(false);
+    setActive(null);
+    extrasRef.current?.tourShot(
+      stop.kind === "spot" ? { at: stop.at } : { view: stop.view },
+      true,
+      index % 2 === 0 ? 1 : -1,
+    );
+  }, []);
+  const onTourEnd = useCallback(() => extrasRef.current?.endTour(), []);
+  const tour = useGuidedTour({
+    guide: plan.guide,
+    stops: plan.stops,
+    lang,
+    onStop: onTourStop,
+    onEnd: onTourEnd,
+  });
+  const tourChapter = tour.active ? plan.guide.chapters[tour.index] : undefined;
+  const tourSpot =
+    tourChapter?.hotspot !== undefined ? item.hotspots[tourChapter.hotspot] : undefined;
+  const toggleTour = () => {
+    if (tour.active) {
+      tour.exit();
+      return;
+    }
+    track("3D tour", { model: item.id });
+    setMore(false);
+    tour.start();
+  };
+
+  /* ---- Talking people ---- */
+  const [speech, setSpeech] = useState<{ role: Localized; text: Localized; key: string } | null>(
+    null,
+  );
+  const taps = useRef(new Map<string, number>());
+  const onPerson = useCallback(
+    (hit: PersonHit | null) => {
+      if (!hit) {
+        setSpeech(null);
+        return;
+      }
+      const key = hit.kind === "person" ? `p${hit.index}` : `c${hit.seat}`;
+      const count = taps.current.get(key) ?? 0;
+      taps.current.set(key, count + 1);
+      const said =
+        hit.kind === "person"
+          ? life.people[hit.index]
+            ? personLine(life.era, life.people[hit.index]!, hit.index, count)
+            : null
+          : spectatorLine(life.era, hit.seat, count);
+      if (!said) return;
+      track("3D person", { model: item.id, role: said.role });
+      setQuestsOpen(false);
+      setSpeech({ role: ROLE_NAMES[said.role], text: said.text, key: `${key}-${count}` });
+    },
+    [life, item.id],
+  );
+  const speak = (text: string) => {
+    if (!("speechSynthesis" in window)) return;
+    claimSpeech("person-card");
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = SPEECH_LANG[lang];
+    window.speechSynthesis.speak(utterance);
+  };
+  const [peopleHint, setPeopleHint] = useState(false);
+  useEffect(() => {
+    if (!sceneReady || life.people.length === 0) return;
+    try {
+      if (window.sessionStorage.getItem("antik-people-hint")) return;
+      window.sessionStorage.setItem("antik-people-hint", "1");
+    } catch {
+      /* show it anyway */
+    }
+    setPeopleHint(true);
+    const timer = window.setTimeout(() => setPeopleHint(false), 7000);
+    return () => window.clearTimeout(timer);
+  }, [sceneReady, life.people.length]);
+
+  /* ---- Looking with the phone ---- */
+  const [gyroOn, setGyroOn] = useState(false);
+  const [gyroAble, setGyroAble] = useState(false);
+  useEffect(() => {
+    setGyroAble(
+      window.matchMedia("(pointer: coarse)").matches &&
+        typeof DeviceOrientationEvent !== "undefined",
+    );
+  }, []);
+  const toggleGyro = () => {
+    if (gyroOn) {
+      setGyroOn(false);
+      return;
+    }
+    // iOS asks for permission, and only inside the tap itself.
+    const ask = (DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> })
+      .requestPermission;
+    if (typeof ask === "function") {
+      ask()
+        .then((answer) => {
+          if (answer === "granted") setGyroOn(true);
+          else toast.error(L(RS.gyroDenied));
+        })
+        .catch(() => toast.error(L(RS.gyroDenied)));
+      return;
+    }
+    setGyroOn(true);
+  };
+  const onGyroSilent = useCallback(() => {
+    setGyroOn(false);
+    toast.error(L(RS.gyroUnavailable));
+  }, [L]);
+  useEffect(() => {
+    extras?.setGyro(gyroOn && walking);
+  }, [extras, gyroOn, walking]);
+
+  /* ---- Time passing, weather, scale ---- */
+  const [timeFlow, setTimeFlow] = useState(false);
+  const [weatherOn, setWeatherOn] = useState(false);
+  const weatherKind = useMemo(
+    () =>
+      defaultWeather({
+        id: item.id,
+        siteSlug: item.siteSlug,
+        biome: BIOME[item.id] ?? "mediterranean",
+        kind: item.model.kind,
+      }),
+    [item],
+  );
+  const [scaleOn, setScaleOn] = useState(false);
+  useEffect(() => {
+    extras?.setTimeFlow(timeFlow);
+  }, [extras, timeFlow]);
+  useEffect(() => {
+    extras?.setWeather(weatherOn ? weatherKind : "off");
+  }, [extras, weatherOn, weatherKind]);
+  useEffect(() => {
+    extras?.setScaleRefs(
+      scaleOn
+        ? {
+            person: L(RS.scalePerson),
+            bus: L(RS.scaleBus),
+            block: L(RS.scaleBlock),
+            pitch: L(RS.scalePitch),
+          }
+        : null,
+    );
+  }, [extras, scaleOn, L]);
+
+  /* ---- Lite mode for weak devices ---- */
+  const [lite, setLite] = useState(false);
+  const [liteNotice, setLiteNotice] = useState(false);
+  useEffect(() => {
+    if (!liteNotice) return;
+    const timer = window.setTimeout(() => setLiteNotice(false), 12000);
+    return () => window.clearTimeout(timer);
+  }, [liteNotice]);
+  const autoLite = useCallback(() => {
+    setLite(true);
+    setLiteNotice(true);
+  }, []);
+  useEffect(() => {
+    const chosenQuality = readKey(QUALITY_KEY);
+    if (chosenQuality === "lite") {
+      setLite(true);
+      return;
+    }
+    if (chosenQuality === "high") return;
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const tier = assessDevice({
+      memory: nav.deviceMemory,
+      cores: navigator.hardwareConcurrency,
+      touch: window.matchMedia("(pointer: coarse)").matches,
+      dpr: window.devicePixelRatio,
+    });
+    if (tier === "low") autoLite();
+  }, [autoLite]);
+  const onInfo = useCallback(
+    (info: SceneInfo) => {
+      if (readKey(QUALITY_KEY)) return;
+      const nav = navigator as Navigator & { deviceMemory?: number };
+      const weakGpu =
+        assessDevice({
+          memory: nav.deviceMemory,
+          cores: navigator.hardwareConcurrency,
+          touch: window.matchMedia("(pointer: coarse)").matches,
+          gpu: info.gpu,
+        }) === "low";
+      const heavy = isHeavy(info.triangles) || item.model.kind === "mausoleum";
+      if (weakGpu || framesTooSlow(info.samples ?? [], heavy)) autoLite();
+    },
+    [autoLite, item.model.kind],
+  );
+  useEffect(() => {
+    extras?.setLite(lite);
+  }, [extras, lite]);
+  const chooseLite = (on: boolean) => {
+    writeKey(QUALITY_KEY, on ? "lite" : "high");
+    setLite(on);
+    setLiteNotice(false);
+    if (!on) setQuality(true);
+  };
+
+  /* ---- Photo mode ---- */
+  const [photo, setPhoto] = useState(false);
+  const [vignette, setVignette] = useState(true);
+  const [dof, setDof] = useState(false);
+  const [shooting, setShooting] = useState(false);
+  useEffect(() => {
+    if (!photo) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPhoto(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [photo]);
+  const enterPhoto = () => {
+    setMore(false);
+    if (tour.active) tour.exit();
+    setSpeech(null);
+    setPhoto(true);
+    track("3D photo mode", { model: item.id });
+  };
+  const shoot = async () => {
+    if (!extras || shooting) return;
+    setShooting(true);
+    try {
+      const blob = await extras.takePhoto({ vignette, dof, mark: L(RS.watermark) });
+      if (!blob) {
+        toast.error(L(RS.photoFailed));
+        return;
+      }
+      const { sharePhoto } = await import("./scene/photo");
+      const outcome = await sharePhoto(blob, `antik-turkiye-${item.id}.png`, L(item.title));
+      if (outcome === "saved") toast.success(L(RS.photoSaved));
+      track("3D photo", { model: item.id, outcome });
+    } catch {
+      toast.error(L(RS.photoFailed));
+    } finally {
+      setShooting(false);
+    }
+  };
+
+  /* ---- Discovery quests ---- */
+  const quests = useMemo(() => {
+    const { statues, plates } = questSources(parts, life.props);
+    const bounds = boundsOf(parts);
+    return generateQuests({
+      modelId: item.id,
+      hotspots: item.hotspots,
+      statues,
+      plates,
+      groundY: bounds.min[1],
+      span: Math.max(
+        bounds.max[0] - bounds.min[0],
+        bounds.max[1] - bounds.min[1],
+        bounds.max[2] - bounds.min[2],
+      ),
+    });
+  }, [parts, life.props, item.id, item.hotspots]);
+  const [done, setDone] = useState<string[]>([]);
+  useEffect(() => setDone(readQuests()[item.id] ?? []), [item.id]);
+  const [questsOpen, setQuestsOpen] = useState(false);
+  const [cheer, setCheer] = useState<{ text: string; all: boolean; key: number } | null>(null);
+  useEffect(() => {
+    if (!cheer) return;
+    const timer = window.setTimeout(() => setCheer(null), 4500);
+    return () => window.clearTimeout(timer);
+  }, [cheer]);
+  const questState = useRef({ quests, done, lang });
+  questState.current = { quests, done, lang };
+  const onPose = useCallback(
+    (eye: [number, number, number], dir: [number, number, number]) => {
+      const { quests: list, done: finished, lang: language } = questState.current;
+      const hit = list.find((quest) => !finished.includes(quest.id) && questHit(quest, eye, dir));
+      if (!hit) return;
+      let next = markQuestDone(item.id, hit.id);
+      if (!next.includes(hit.id)) next = [...finished, hit.id];
+      const all = list.every((quest) => next.includes(quest.id));
+      if (all && !next.includes(badgeId(item.id))) next = markQuestDone(item.id, badgeId(item.id));
+      questState.current.done = next;
+      setDone(next);
+      setCheer({ text: questTitle(hit, language), all, key: Date.now() });
+      track("3D quest", { model: item.id, quest: hit.id });
+    },
+    [item.id],
+  );
+  const doneCount = quests.filter((quest: Quest) => done.includes(quest.id)).length;
+
+  /* ---- Room for the "more" panel above the bar ---- */
+  const [stageHeight, setStageHeight] = useState(600);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const observer = new ResizeObserver(() => setStageHeight(stage.clientHeight));
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
+
+  /** The whole overlay steps aside in photo mode. */
+  const hideUi = photo;
+
   /*
    * Labels, people and sound: in the bar where the stage has room for them
    * beside the light (and, while walking, beside the stick too), and as rows
@@ -548,7 +943,7 @@ export function Reconstruction3D({
               label={`${L(item.title)} — ${t("recon_unavailable")}`}
               height={full ? "100%" : height}
               labels={labels}
-              showLabels={showLabels}
+              showLabels={showLabels && !photo}
               activeLabel={active}
               onPickLabel={onPickLabel}
               view={view}
@@ -557,7 +952,7 @@ export function Reconstruction3D({
               onReady={setSceneReady}
               exportWithoutGround={exportFor === "ar"}
               biome={BIOME[item.id] ?? "mediterranean"}
-              quality={quality}
+              quality={quality && !lite}
               captureToken={captureToken}
               onCaptured={onCaptured}
               life={life}
@@ -566,16 +961,34 @@ export function Reconstruction3D({
               onWalkEnd={onWalkEnd}
               walkStick={walkStick}
               onListen={ambient ? onListen : undefined}
+              onExtras={setExtras}
+              onPerson={onPerson}
+              onPose={onPose}
+              onInfo={onInfo}
+              onGyroSilent={onGyroSilent}
             />
           </Suspense>
         ) : (
           <Skeleton height={height} label={t("recon_loading")} />
         )}
 
-        {/* Top right: walking, and full screen. */}
+        {/* Top right: the tour, walking, and full screen. */}
         <div
-          className={`absolute right-[max(0.5rem,env(safe-area-inset-right))] top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex items-center gap-1 rounded-2xl p-1 ${glass}`}
+          className={`absolute right-[max(0.5rem,env(safe-area-inset-right))] top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex items-center gap-1 rounded-2xl p-1 ${glass} ${hideUi ? "hidden" : ""}`}
         >
+          <button
+            type="button"
+            onClick={toggleTour}
+            disabled={!sceneReady}
+            aria-pressed={tour.active}
+            aria-label={tour.active ? L(RS.tourExit) : L(RS.tour)}
+            title={L(RS.tourHint)}
+            data-tour-toggle
+            className={tool}
+          >
+            <Route className="h-4 w-4" />
+            <span className="hidden @lg:inline">{L(RS.tour)}</span>
+          </button>
           <button
             type="button"
             onClick={() => setWalking((on) => !on)}
@@ -601,10 +1014,249 @@ export function Reconstruction3D({
           </button>
         </div>
 
+        {/* Top left: the quests, and while walking on a phone, looking by turning it. */}
+        {!hideUi && (quests.length > 0 || (walking && gyroAble)) && (
+          <div
+            className={`absolute left-[max(0.5rem,env(safe-area-inset-left))] top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex items-center gap-1 rounded-2xl p-1 ${glass}`}
+          >
+            {quests.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSpeech(null);
+                  setQuestsOpen((open) => !open);
+                }}
+                aria-expanded={questsOpen}
+                aria-label={`${L(RS.questsTitle)}: ${doneCount}/${quests.length}`}
+                title={L(RS.questsTitle)}
+                data-quests-toggle
+                className={tool}
+              >
+                <Trophy className="h-4 w-4" />
+                <span className="tabular-nums">
+                  {doneCount}/{quests.length}
+                </span>
+              </button>
+            )}
+            {walking && gyroAble && (
+              <button
+                type="button"
+                onClick={toggleGyro}
+                aria-pressed={gyroOn}
+                aria-label={L(RS.gyro)}
+                title={L(RS.gyro)}
+                className={tool}
+              >
+                <Smartphone className="h-4 w-4" />
+              </button>
+            )}
+            {walking && gyroOn && (
+              <button
+                type="button"
+                onClick={() => extras?.recentreGyro()}
+                aria-label={L(RS.gyroRecentre)}
+                title={L(RS.gyroRecentre)}
+                className={tool}
+              >
+                <Crosshair className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Under the top row: how to walk, as a chip that goes by itself; and
             in full screen, what a chosen label is, since the note under the
             model is off screen there. */}
-        <div className="pointer-events-none absolute left-[max(0.5rem,env(safe-area-inset-left))] right-[max(0.5rem,env(safe-area-inset-right))] top-[calc(max(0.5rem,env(safe-area-inset-top))+3.25rem)] z-10 flex flex-col items-start gap-2">
+        <div
+          className={`pointer-events-none absolute bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+8.5rem)] left-[max(0.5rem,env(safe-area-inset-left))] right-[max(0.5rem,env(safe-area-inset-right))] top-[calc(max(0.5rem,env(safe-area-inset-top))+3.25rem)] z-10 flex flex-col items-start gap-2 overflow-hidden ${hideUi ? "hidden" : ""}`}
+        >
+          {questsOpen && quests.length > 0 && (
+            <div
+              role="group"
+              aria-label={L(RS.questsTitle)}
+              className={`pointer-events-auto w-[min(20rem,100%)] rounded-2xl p-3 text-xs ${glass}`}
+            >
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <p className="font-semibold">{L(RS.questsTitle)}</p>
+                <button
+                  type="button"
+                  onClick={() => setQuestsOpen(false)}
+                  aria-label={t("nav_close")}
+                  className="grid h-7 w-7 place-items-center rounded-full text-white/70 hover:bg-white/15 hover:text-white"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <ul className="space-y-1.5">
+                {quests.map((quest) => {
+                  const finished = done.includes(quest.id);
+                  return (
+                    <li key={quest.id} className="flex items-start gap-2">
+                      <span
+                        className={`mt-px grid h-4 w-4 shrink-0 place-items-center rounded-full ${finished ? "bg-primary text-primary-foreground" : "border border-white/40"}`}
+                      >
+                        {finished && <Check className="h-3 w-3" />}
+                      </span>
+                      <span className={finished ? "text-white/60 line-through" : ""}>
+                        {questTitle(quest, lang)}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="mt-2 text-white/65">{walking ? L(RS.questsHint) : L(RS.questsWalk)}</p>
+            </div>
+          )}
+          {tour.active && tourChapter && (
+            <div
+              role="region"
+              aria-label={L(RS.tour)}
+              aria-live="polite"
+              data-tour-panel
+              className={`pointer-events-auto flex w-[min(26rem,100%)] flex-col gap-1.5 rounded-2xl p-2 ${glass}`}
+            >
+              <div className="flex items-center gap-2">
+                <Route className="ml-1 h-4 w-4 shrink-0 text-primary" />
+                <p className="min-w-0 flex-1 truncate text-xs">
+                  <span className="tabular-nums text-white/65">
+                    {tour.index + 1}/{tour.total}
+                  </span>{" "}
+                  <strong className="font-semibold">{L(tourChapter.title)}</strong>
+                </p>
+                <button
+                  type="button"
+                  onClick={tour.prev}
+                  disabled={tour.index === 0}
+                  aria-label={L(RS.tourPrev)}
+                  title={L(RS.tourPrev)}
+                  className={tool}
+                >
+                  <SkipBack className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={tour.paused ? tour.resume : tour.pause}
+                  aria-label={tour.paused ? L(RS.tourResume) : L(RS.tourPause)}
+                  title={tour.paused ? L(RS.tourResume) : L(RS.tourPause)}
+                  className={tool}
+                >
+                  {tour.paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={tour.next}
+                  aria-label={L(RS.tourNext)}
+                  title={L(RS.tourNext)}
+                  className={tool}
+                >
+                  <SkipForward className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={tour.exit}
+                  aria-label={L(RS.tourExit)}
+                  title={L(RS.tourExit)}
+                  className={tool}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              {tourSpot && (
+                <p className="line-clamp-3 px-1 pb-0.5 text-xs leading-snug text-white/85">
+                  {L(tourSpot.note)}
+                </p>
+              )}
+            </div>
+          )}
+          {speech && (
+            <div
+              key={speech.key}
+              role="status"
+              data-person-card
+              className={`pointer-events-auto flex w-[min(24rem,100%)] items-start gap-2 rounded-2xl p-3 text-sm leading-snug ${glass}`}
+            >
+              <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60">
+                  {L(speech.role)}
+                </p>
+                <p className="mt-0.5">“{L(speech.text)}”</p>
+                <p className="mt-1 text-[10px] text-white/55">{L(RS.personNote)}</p>
+              </div>
+              <div className="flex shrink-0 flex-col gap-1">
+                <button
+                  type="button"
+                  onClick={() => speak(L(speech.text))}
+                  aria-label={L(RS.personListen)}
+                  title={L(RS.personListen)}
+                  className="grid h-7 w-7 place-items-center rounded-full text-white/80 hover:bg-white/15 hover:text-white"
+                >
+                  <Volume2 className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSpeech(null)}
+                  aria-label={L(RS.personClose)}
+                  title={L(RS.personClose)}
+                  className="grid h-7 w-7 place-items-center rounded-full text-white/70 hover:bg-white/15 hover:text-white"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          )}
+          {cheer && (
+            <div
+              key={cheer.key}
+              role="status"
+              data-quest-cheer
+              className={`pointer-events-auto flex max-w-[24rem] items-center gap-2.5 rounded-2xl p-2.5 pr-3.5 text-sm ${glass}`}
+            >
+              <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gold text-gold-foreground">
+                <span className="absolute inset-0 rounded-full bg-gold/60 motion-safe:animate-ping" />
+                <Trophy className="relative h-4 w-4" />
+              </span>
+              <span className="min-w-0">
+                <strong className="block font-semibold">
+                  {cheer.all ? L(RS.questsAll) : L(RS.questDone)}
+                </strong>
+                <span className="block truncate text-xs text-white/75">{cheer.text}</span>
+              </span>
+            </div>
+          )}
+          {liteNotice && (
+            <div
+              role="status"
+              className={`pointer-events-auto flex max-w-[26rem] items-center gap-2 rounded-full py-1.5 pl-3.5 pr-1.5 text-xs leading-snug ${glass}`}
+            >
+              <Gauge className="h-3.5 w-3.5 shrink-0 text-white/70" />
+              <span>{L(RS.liteAuto)}</span>
+              <button
+                type="button"
+                onClick={() => chooseLite(false)}
+                className="shrink-0 rounded-full bg-white px-2.5 py-1 font-semibold text-neutral-900 hover:bg-white/90"
+              >
+                {L(RS.liteHigh)}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLiteNotice(false)}
+                aria-label={t("nav_close")}
+                className="grid h-6 w-6 shrink-0 place-items-center rounded-full text-white/70 hover:bg-white/15 hover:text-white"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+          {peopleHint && !speech && !tour.active && (
+            <div
+              role="status"
+              className={`pointer-events-auto flex max-w-[24rem] items-center gap-2 rounded-full py-1.5 pl-3.5 pr-3.5 text-xs leading-snug ${glass}`}
+            >
+              <MessageCircle className="h-3.5 w-3.5 shrink-0 text-white/70" />
+              <span>{L(RS.personHint)}</span>
+            </div>
+          )}
           {walking && (
             <div
               role="status"
@@ -626,7 +1278,7 @@ export function Reconstruction3D({
               </button>
             </div>
           )}
-          {full && chosen && (
+          {full && chosen && !tour.active && (
             <p
               className={`flex max-w-[26rem] items-start gap-2 rounded-2xl p-3 text-sm leading-relaxed ${glass}`}
             >
@@ -639,7 +1291,7 @@ export function Reconstruction3D({
         </div>
 
         {/* Bottom left, while walking: the thumb stick. */}
-        {walking && (
+        {walking && !hideUi && (
           <WalkJoystick
             label={t("recon_joystick")}
             stick={walkStick}
@@ -652,7 +1304,7 @@ export function Reconstruction3D({
             into "more" where it is not, so nothing ever covers the stick. */}
         <div
           ref={barRef}
-          className="absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.5rem,env(safe-area-inset-right))] z-10 flex items-end gap-1.5"
+          className={`absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.5rem,env(safe-area-inset-right))] z-10 flex items-end gap-1.5 ${hideUi ? "hidden" : ""}`}
         >
           <div
             role="radiogroup"
@@ -669,7 +1321,10 @@ export function Reconstruction3D({
                   aria-checked={on}
                   aria-label={t(key)}
                   title={t(key)}
-                  onClick={() => setAtmos(mode)}
+                  onClick={() => {
+                    setTimeFlow(false);
+                    setAtmos(mode);
+                  }}
                   className={tool}
                 >
                   <Icon className="h-4 w-4" />
@@ -696,18 +1351,69 @@ export function Reconstruction3D({
                 id={moreId}
                 role="group"
                 aria-label={t("recon_more")}
-                className={`absolute bottom-full right-0 mb-2 w-[min(17rem,calc(100cqw-1rem))] space-y-3 rounded-2xl p-3 ${glass}`}
+                className={`absolute bottom-full right-0 mb-2 w-[min(17rem,calc(100cqw-1rem))] space-y-3 overflow-y-auto overscroll-contain rounded-2xl p-3 ${glass}`}
+                style={{ maxHeight: Math.max(160, stageHeight - 80) }}
               >
                 <div className="space-y-1">
                   <div className={`${cramped} space-y-1`}>{toggles(true)}</div>
                   {switchRow(
                     "quality",
-                    quality,
-                    () => setQuality((on) => !on),
+                    quality && !lite,
+                    () => {
+                      if (lite) chooseLite(false);
+                      else setQuality((on) => !on);
+                    },
                     Sparkles,
                     t("recon_ctl_quality"),
                     t("recon_quality_hint"),
                   )}
+                  {switchRow(
+                    "lite",
+                    lite,
+                    () => chooseLite(!lite),
+                    Gauge,
+                    L(RS.lite),
+                    L(RS.liteHint),
+                  )}
+                  {switchRow(
+                    "time",
+                    timeFlow,
+                    () => setTimeFlow((on) => !on),
+                    Clock,
+                    L(RS.timeFlow),
+                    L(RS.timeFlowHint),
+                  )}
+                  {switchRow(
+                    "weather",
+                    weatherOn,
+                    () => setWeatherOn((on) => !on),
+                    Cloud,
+                    `${L(RS.weather)}: ${L(
+                      weatherKind === "mist"
+                        ? RS.weatherMist
+                        : weatherKind === "dust"
+                          ? RS.weatherDust
+                          : RS.weatherClouds,
+                    )}`,
+                  )}
+                  {switchRow(
+                    "scale",
+                    scaleOn,
+                    () => setScaleOn((on) => !on),
+                    Ruler,
+                    L(RS.scale),
+                    L(RS.scaleHint),
+                  )}
+                  <button
+                    type="button"
+                    onClick={enterPhoto}
+                    disabled={!sceneReady}
+                    data-photo-mode
+                    className="flex h-9 w-full items-center gap-2 rounded-xl px-2 text-xs font-semibold text-white/90 outline-none hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/70 disabled:opacity-50"
+                  >
+                    <Camera className="h-4 w-4 shrink-0" />
+                    <span className="min-w-0 flex-1 truncate text-left">{L(RS.photo)}</span>
+                  </button>
                   {!walking &&
                     switchRow(
                       "spin",
@@ -754,6 +1460,82 @@ export function Reconstruction3D({
             )}
           </div>
         </div>
+        {/* Photo mode: the frame, a vignette preview, and only the camera's own controls. */}
+        {photo && vignette && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-[5] bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.55)_100%)]"
+          />
+        )}
+        {photo && (
+          <div
+            role="toolbar"
+            aria-label={L(RS.photo)}
+            data-photo-toolbar
+            className={`absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-2xl p-1.5 ${glass}`}
+          >
+            <button
+              type="button"
+              aria-pressed={vignette}
+              onClick={() => setVignette((on) => !on)}
+              aria-label={L(RS.photoVignette)}
+              title={L(RS.photoVignette)}
+              className={tool}
+            >
+              <Circle className="h-4 w-4" />
+            </button>
+            {quality && !lite && (
+              <button
+                type="button"
+                aria-pressed={dof}
+                onClick={() => setDof((on) => !on)}
+                aria-label={L(RS.photoDof)}
+                title={L(RS.photoDof)}
+                className={tool}
+              >
+                <Aperture className="h-4 w-4" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setTimeFlow(false);
+                setAtmos((now) => (now === "day" ? "golden" : now === "golden" ? "night" : "day"));
+              }}
+              aria-label={`${L(RS.photoLight)}: ${t(LIGHTS.find(([mode]) => mode === atmos)![2])}`}
+              title={L(RS.photoLight)}
+              className={tool}
+            >
+              {atmos === "day" ? (
+                <Sun className="h-4 w-4" />
+              ) : atmos === "golden" ? (
+                <Sunset className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => void shoot()}
+              disabled={shooting || !extras}
+              aria-label={L(RS.photoTake)}
+              title={L(RS.photoTake)}
+              data-shutter
+              className="mx-1 grid h-12 w-12 place-items-center rounded-full border-4 border-white/80 bg-white text-neutral-900 outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-white/70 disabled:opacity-60 motion-reduce:transition-none"
+            >
+              <Camera className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setPhoto(false)}
+              aria-label={L(RS.photoExit)}
+              title={L(RS.photoExit)}
+              className={tool}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* What a chosen label is for. It sits directly under the model rather
@@ -834,6 +1616,11 @@ export function Reconstruction3D({
             onClose={() => setStill(null)}
           />
           <p className="mt-2 text-xs text-muted-foreground">{t("recon_compare_hint")}</p>
+          {creditLine(todayPhoto) && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {L(RS.compareCredit)} {creditLine(todayPhoto)}
+            </p>
+          )}
         </div>
       )}
 

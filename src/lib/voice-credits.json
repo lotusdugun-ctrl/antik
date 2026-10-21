@@ -1,1 +1,16 @@
-{}
+{
+ "de": {
+  "card": "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/de/de_DE/mls/medium/MODEL_CARD",
+  "dataset": "http://openslr.org/94/",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "voice": "de_DE-mls-medium"
+ },
+ "en": {
+  "card": "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/ljspeech/high/MODEL_CARD",
+  "dataset": "https://keithito.com/LJ-Speech-Dataset/",
+  "license": "Public domain (CC0)",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "voice": "en_US-ljspeech-high"
+ }
+}

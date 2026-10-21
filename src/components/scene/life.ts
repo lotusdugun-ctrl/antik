@@ -947,6 +947,75 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           );
         out.push(paint(sphere(0.075, [0, 1.0, -0.005], [1, 0.9, 1], 12, 8), look.hair));
         break;
+      case "conical":
+        // The tall pointed cap of Hittite gods, kings and priests, and the
+        // pointed helmet of a Bronze Age or medieval soldier: the brim on
+        // the brow, the point leaning a little back.
+        out.push(
+          paint(
+            stack(
+              [
+                { y: 0.932, z: -0.004, rx: 0.07, rz: 0.075 },
+                { y: 0.972, z: -0.008, rx: 0.065, rz: 0.07 },
+                { y: 1.03, z: -0.016, rx: 0.046, rz: 0.05 },
+                { y: 1.09, z: -0.024, rx: 0.024, rz: 0.026 },
+                { y: 1.135, z: -0.03, rx: 0.004, rz: 0.004 },
+              ],
+              14,
+            ),
+            look.trim,
+          ),
+        );
+        break;
+      case "turban":
+        // Cloth wound round a cap, as the men of eleventh-century Ani wore it.
+        out.push(
+          paint(
+            stack(
+              [
+                { y: 0.925, rx: 0.073, rz: 0.077 },
+                { y: 0.95, rx: 0.084, rz: 0.088 },
+                { y: 0.988, rx: 0.086, rz: 0.09 },
+                { y: 1.016, rx: 0.07, rz: 0.074 },
+                { y: 1.032, rx: 0.026, rz: 0.028 },
+              ],
+              14,
+            ),
+            look.trim,
+          ),
+        );
+        for (const [y, tilt] of [
+          [0.955, 0.22],
+          [0.985, -0.18],
+        ] as const)
+          out.push(
+            paint(
+              new THREE.TorusGeometry(0.083, 0.008, 4, 18)
+                .rotateX(Math.PI / 2 + tilt)
+                .translate(0, y, 0),
+              darker(look.trim),
+            ),
+          );
+        break;
+      case "hood":
+        // A monk's or priest's pointed hood, down over the shoulders behind.
+        out.push(
+          paint(
+            stack(
+              [
+                { y: 0.68, z: -0.07, rx: 0.14, rz: 0.04 },
+                { y: 0.8, z: -0.05, rx: 0.14, rz: 0.065 },
+                { y: 0.88, z: -0.025, rx: 0.082, rz: 0.074 },
+                { y: 0.972, z: -0.01, rx: 0.071, rz: 0.075 },
+                { y: 1.035, z: -0.03, rx: 0.038, rz: 0.042 },
+                { y: 1.095, z: -0.055, rx: 0.004, rz: 0.004 },
+              ],
+              14,
+            ),
+            look.main,
+          ),
+        );
+        break;
       default:
         break;
     }

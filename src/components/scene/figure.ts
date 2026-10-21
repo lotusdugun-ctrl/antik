@@ -79,6 +79,14 @@ const PATTERNS: ((row: number, col: number) => boolean)[] = [
   (row) => row === 0 || row === 2,
 ];
 
+/** Eras whose borders are plain woven bands rather than Greek patterns. */
+const BANDED: ReadonlySet<Era> = new Set([
+  "village-neolithic",
+  "hittite",
+  "bronze-age",
+  "medieval",
+]);
+
 export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
   const tmp = new THREE.Color();
   const tmp2 = new THREE.Color();
@@ -565,6 +573,55 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     return kit.paint(new THREE.TubeGeometry(curve, segs, r, 5, closed), hex);
   };
 
+  /**
+   * An open sheet of cloth over a grid of vertices, `vertex(k, j)` for row k
+   * and column j, coloured by row. Drawn from both sides, since a fold of
+   * cloth is seen from behind as often as from in front.
+   */
+  const sheetBy = (
+    rows: number,
+    cols: number,
+    vertex: (k: number, j: number) => V3,
+    colour: (k: number) => number,
+  ) => {
+    const pos: number[] = [];
+    for (let k = 0; k < rows; k += 1) for (let j = 0; j < cols; j += 1) pos.push(...vertex(k, j));
+    const sides: Geo[] = [];
+    for (const flip of [false, true]) {
+      const index: number[] = [];
+      const row: number[] = [];
+      for (let k = 0; k < rows - 1; k += 1) {
+        for (let j = 0; j < cols - 1; j += 1) {
+          const a = k * cols + j;
+          const b = a + 1;
+          const c = a + cols;
+          const d = c + 1;
+          if (flip) index.push(a, b, c, b, d, c);
+          else index.push(a, c, b, b, c, d);
+          row.push(k, k);
+        }
+      }
+      const indexed = new THREE.BufferGeometry();
+      indexed.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+      indexed.setIndex(index);
+      indexed.computeVertexNormals();
+      const geometry = indexed.toNonIndexed();
+      indexed.dispose();
+      const colours = new Float32Array(row.length * 9);
+      row.forEach((k, t) => {
+        tmp.set(colour(k));
+        for (let v = 0; v < 3; v += 1) {
+          colours[t * 9 + v * 3] = tmp.r;
+          colours[t * 9 + v * 3 + 1] = tmp.g;
+          colours[t * 9 + v * 3 + 2] = tmp.b;
+        }
+      });
+      geometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+      sides.push(geometry);
+    }
+    return sides;
+  };
+
   /** A belt, a little clear of whatever it is buckled over. */
   const belt = (look: Look, y: number, off: number, hex: number, h = 0.018) =>
     loftBy(2, 24, (k, _j, a) => outside(look.female, y + (k - 0.5) * h, a, off), hex);
@@ -595,7 +652,8 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     const body: Geo[] = [];
     const hem: Geo[] = [];
     const h = lookHash(look);
-    const style = h % PATTERNS.length;
+    // The Greek key is Greek: earlier and later dress takes plain bands.
+    const style = BANDED.has(era) ? 3 : h % PATTERNS.length;
     const g = look.garment;
     const female = look.female;
     const trimEdge = look.trim === look.main ? shade(look.main, 0.62) : look.trim;
@@ -865,25 +923,42 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         if (toga && !seated) {
           // The sinus, the deep fold sweeping across the front to the knee,
           // and the umbo pulled out over the band across the chest.
-          const sinus: V3[] = [
-            [0.11, 0.74, 0.1],
-            [0.07, 0.5, 0.15],
-            [-0.02, 0.33, 0.16],
-            [-0.1, 0.38, 0.13],
-            [-0.14, 0.5, 0.07],
-          ];
-          body.push(roll(sinus, 0.026, cloth, false, 18));
-          if (praetexta)
-            body.push(
-              roll(
-                sinus.map(([x, y, z]) => [x, y - 0.024, z + 0.008] as V3),
-                0.008,
-                praetexta,
-                false,
-                14,
-              ),
-            );
-          body.push(ball(0.04, [0.03, 0.645, 0.095], [0.9, 0.55, 0.5], cloth, 8, 6));
+          /*
+           * The sinus is a sheet, not a rope: the cloth hangs from the band
+           * that crosses the chest from the left shoulder to the right hip
+           * and sags in a deep curve to the knee, bellying out a little and
+           * breaking into a few soft folds that deepen towards its edge.
+           */
+          const ROWS = 7;
+          const COLS = 13;
+          const sinus = sheetBy(
+            ROWS,
+            COLS,
+            (k, j) => {
+              const u = j / (COLS - 1);
+              const v = k / (ROWS - 1);
+              // Across the body from the left (+x) round to the right side.
+              const a = lerp(0.42, 2.55, u);
+              const topY = lerp(0.745, 0.5, u);
+              const hemY = 0.335 + 0.29 * (u - 0.42) ** 2 * (u < 0.42 ? 2.2 : 1.05);
+              const y = lerp(topY, hemY, v ** 0.9);
+              const off =
+                0.03 +
+                0.022 * Math.sin(Math.PI * v) +
+                0.012 * v * Math.sin(u * Math.PI * 5 + (h % 3)) +
+                0.012 * v;
+              return outside(female, y, a, off);
+            },
+            (k) =>
+              k === ROWS - 2 && praetexta
+                ? praetexta
+                : k === ROWS - 2
+                  ? shade(cloth, 0.9)
+                  : shade(cloth, 1 - 0.035 * k),
+          );
+          body.push(...sinus);
+          // The umbo: the pouch of cloth pulled up out over the band.
+          body.push(ball(0.036, [0.035, 0.66, 0.1], [1.1, 0.6, 0.55], cloth, 8, 6));
         }
         break;
       }
@@ -1100,18 +1175,42 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     ];
     if (g === "chiton" && look.female) {
       // The Ionic sleeve: loose, flaring, pinned along the top of the arm.
+      /*
+       * Fitted over the round of the shoulder where it is pinned, and
+       * widening as it falls, its hem dipping behind: a smooth taper from
+       * the shoulder cap rather than a cylinder stood on it, with the folds
+       * growing from nothing at the pins to their deepest at the hem.
+       */
+      const ys = [-0.122, -0.112, -0.085, -0.05, -0.015, 0.008, 0.022, 0.03];
+      const radii: [number, number][] = [
+        [0.055, 0.052],
+        [0.054, 0.051],
+        [0.05, 0.048],
+        [0.045, 0.044],
+        [0.04, 0.04],
+        [0.033, 0.034],
+        [0.022, 0.024],
+        [0.008, 0.009],
+      ];
+      const hemEdge = look.trim === look.main ? shade(look.main, 0.7) : look.trim;
       upper.push(
-        loft(
-          [
-            { y: -0.11, x: side * 0.003, rx: 0.045, rz: 0.046 },
-            { y: -0.1, x: side * 0.003, rx: 0.045, rz: 0.046 },
-            { y: -0.04, x: side * 0.002, rx: 0.043, rz: 0.044 },
-            { y: 0.018, rx: 0.026, rz: 0.03 },
-          ],
-          10,
-          (k) =>
-            k === 0 ? (look.trim === look.main ? shade(look.main, 0.7) : look.trim) : look.main,
-          { fold: (_k, j) => 0.06 * Math.cos(j * 2.2), top: true },
+        loftBy(
+          ys.length,
+          12,
+          (k, _j, a) => {
+            const [rx, rz] = radii[k]!;
+            const fall = Math.max(0, 1 - (ys[k]! + 0.12) / 0.13);
+            const f = 1 + 0.07 * fall * Math.cos(a * 3 + side);
+            // The hem hangs lower at the back of the arm than at the front.
+            const dip = k < 2 ? -0.022 * Math.max(0, -Math.sin(a)) : 0;
+            return [
+              side * 0.002 * fall - side * 0.008 * (1 - fall) + Math.cos(a) * rx * f,
+              ys[k]! + dip,
+              Math.sin(a) * rz * f,
+            ];
+          },
+          (k) => (k === 0 ? hemEdge : look.main),
+          { top: true },
         ),
       );
       for (const y of [0.0, -0.035, -0.07]) upper.push(pin([side * 0.044, y, 0], GOLD, 0.006));
@@ -1150,9 +1249,23 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     const g = look.garment;
     const trousers = g === "persian";
     const legCloth = trousers ? shade(look.main, 0.7) : robedSeated ? look.main : look.skin;
+    // The Hittites wore shoes with the toe turned up; the Neolithic went barefoot.
+    const upturned = era === "hittite";
     const shoe: "sandal" | "boot" | "shoe" | "bare" =
-      g === "persian" ? "boot" : g === "toga" ? "shoe" : g === "hide" ? "bare" : "sandal";
-    const shoeHex = g === "toga" ? (look.trim !== look.main ? 0x6a2a22 : 0x3a2a20) : 0x4a3426;
+      era === "village-neolithic" || g === "hide"
+        ? "bare"
+        : g === "persian"
+          ? "boot"
+          : g === "toga" || upturned
+            ? "shoe"
+            : "sandal";
+    const shoeHex = upturned
+      ? 0x6a4630
+      : g === "toga"
+        ? look.trim !== look.main
+          ? 0x6a2a22
+          : 0x3a2a20
+        : 0x4a3426;
     const greaves = g === "armour";
     const thigh: Geo[] = feetOnly
       ? []
@@ -1221,6 +1334,23 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     foot.rotateX(Math.PI / 2);
     foot.translate(0, -SHIN, 0);
     shin.push(foot);
+    if (upturned) {
+      // The point of the shoe, carried on past the toes and curled up.
+      const tip = loft(
+        [
+          { y: 0.09, z: 0.022, rx: 0.02, rz: 0.008 },
+          { y: 0.115, z: 0.016, rx: 0.012, rz: 0.007 },
+          { y: 0.132, z: 0.0, rx: 0.007, rz: 0.006 },
+          { y: 0.138, z: -0.02, rx: 0.003, rz: 0.003 },
+        ],
+        6,
+        shoeHex,
+        { top: true },
+      );
+      tip.rotateX(Math.PI / 2);
+      tip.translate(0, -SHIN, 0);
+      shin.push(tip);
+    }
     if (shoe !== "bare")
       shin.push(
         kit.paint(

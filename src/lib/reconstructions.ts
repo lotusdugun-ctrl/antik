@@ -1,4 +1,13 @@
 import type { Localized } from "@/lib/i18n";
+import type { HittiteGateSpec } from "@/lib/models/hattusa-aslanli-kapi";
+import type { TroyCitadelSpec } from "@/lib/models/troya-vi-surlari";
+import type { NeolithicTownSpec } from "@/lib/models/catalhoyuk-dogu-hoyugu";
+import type { CathedralSpec } from "@/lib/models/ani-katedrali";
+import type { NymphaeumSpec } from "@/lib/models/sagalassos-antoninler-cesmesi";
+import type { TerraceVillaSpec } from "@/lib/models/zeugma-villa";
+import type { CliffMonasterySpec } from "@/lib/models/sumela-manastiri";
+import type { LighthouseSpec } from "@/lib/models/patara-deniz-feneri";
+import { SAGALASSOS_ZEUGMA_SUMELA_PATARA } from "@/lib/models/sagalassos-zeugma-sumela-patara";
 
 /**
  * Measured reconstructions — the structures the app can show in three
@@ -312,7 +321,15 @@ export type ModelSpec =
   | StadiumSpec
   | PeristyleHouseSpec
   | MausoleumSpec
-  | TumulusSanctuarySpec;
+  | TumulusSanctuarySpec
+  | HittiteGateSpec
+  | TroyCitadelSpec
+  | NeolithicTownSpec
+  | CathedralSpec
+  | NymphaeumSpec
+  | TerraceVillaSpec
+  | CliffMonasterySpec
+  | LighthouseSpec;
 
 /**
  * A named part of the building, pinned to the point in the model where it is.
@@ -2174,6 +2191,391 @@ export const reconstructions: Reconstruction[] = [
       altarSteps: 5,
     },
   },
+  {
+    id: "hattusa-aslanli-kapi",
+    siteSlug: "hattusa",
+    structure: l("Aslanlı Kapı", "Lion Gate"),
+    title: l("Hattuşa, Aslanlı Kapı", "Hattusa, the Lion Gate"),
+    blurb: l(
+      "Hitit başkentinin Yukarı Şehir surundaki güneybatı kapısı: iki kulenin arasında, birbirine doğru eğilerek parabolik bir kemerde buluşan dev söve taşları, ve dış sövelerin taşından yontulmuş iki aslan. Sur, toprak bir setin sırtında yürür; yol kapıya setin yüzü boyunca bir rampayla çıkar.",
+      "The south-west gate in the Upper City wall of the Hittite capital: between two towers, huge jamb stones leaning towards each other until they meet in a parabolic arch, and two lions cut from the stone of the outer jambs. The wall runs along the crest of an earthen rampart; the road climbs to the gate along its face on a ramp.",
+    ),
+    period: l(
+      "Hitit İmparatorluk dönemi, MÖ 14.–13. yüzyıl",
+      "Hittite Empire, 14th–13th century BC",
+    ),
+    measures: [
+      {
+        value: 2,
+        unit: "count",
+        label: l("Söve taşlarından yontulmuş aslan", "Lions carved from the jamb stones"),
+        source: "en",
+      },
+      {
+        value: 2,
+        unit: "count",
+        label: l("Kapıyı iki yandan kuşatan kule", "Towers flanking the gate"),
+        source: "en",
+      },
+    ],
+    uncertainty: l(
+      "Kaynaktan alınan yalnızca kapının düzenidir: iki kule arasında parabolik kemerli bir geçit ve dış sövelerdeki iki aslan. Bu modelin hazırlandığı sırada kaynaklara erişilemediği için hiçbir metre ölçüsü doğrulanmamıştır: kemerin genişliği (3,3 m) ve yüksekliği (5 m), kulelerin boyu, surun kalınlığı ve yüksekliği, setin yüksekliği ve aslanların boyu fotoğraflara ve yayımlanmış rekonstrüksiyon çizimlerine dayanan orantılardır ve yayınlarla karşılaştırılmalıdır. Taş kaidelerin üstündeki kerpiç duvarlar, ahşap hatıllar, mazgallar ve kule pencereleri Hitit kule biçimli kaplarından ve Boğazköy'de yeniden kurulmuş sur parçasından tanınan türdendir; ölçüleri tahmindir. Kapı odasının üstünün örtülü olup olmadığı bilinmiyor; model açık bırakır. Kemerin taşları ve aslanlar tek tek taşlar olarak değil, söve bloklarıyla birlikte yontulmuş olarak gösterilir. Kapının tarihi tartışmalıdır: Yukarı Şehir'in bir kısmı bugün MÖ 16. yüzyıla tarihleniyor.",
+      "What the source gives is only the arrangement of the gate: a passage with parabolic arches between two towers, and the two lions on the outer jambs. The sources could not be reached while this model was made, so no metre figure here has been checked: the width (3.3 m) and height (5 m) of the arch, the towers, the thickness and height of the wall, the height of the rampart and the size of the lions are proportions taken from photographs and published reconstruction drawings, and should be checked against the publications. The mud-brick walls on the stone socles, their timber lacing, the crenellations and the tower windows are of the kind known from Hittite tower-shaped vessels and from the stretch of wall rebuilt at Boğazköy; their sizes are estimates. Whether the gate chamber was roofed is unknown, and the model leaves it open. The date is debated: parts of the Upper City are now dated as early as the 16th century BC.",
+    ),
+    hotspots: [
+      spot(
+        [-2.5, 6.6, -9.6],
+        "Aslanlar",
+        "The lions",
+        "Ağzı açık iki aslanın ön gövdesi, dış sövelerin taşından yontulmuştur; gözleri bir zamanlar kakmaydı.",
+        "The foreparts of two roaring lions, cut from the stone of the outer jambs; their eyes were once inlaid.",
+      ),
+      spot(
+        [0, 9.6, -8.4],
+        "Parabolik kemer",
+        "The parabolic arch",
+        "Birbirine doğru eğilen iki dev taş ve tepedeki taş: kemer bir sivri parabol çizer.",
+        "Two huge stones leaning together and a crown stone on top: the opening is a pointed parabola.",
+      ),
+      spot(
+        [0, 6.4, -1],
+        "Kapı odası",
+        "The gate chamber",
+        "Dış ve iç kemer arasındaki oda; kapı kanatları ahşap ve tunç kaplamaydı.",
+        "The chamber between the outer and inner arches; the door leaves were timber, sheathed in bronze.",
+      ),
+      spot(
+        [-7.8, 15, -9.3],
+        "Kapı kulesi",
+        "Gate tower",
+        "Çokgen taşlı kaide üstünde kerpiç, ahşap hatıllar ve mazgallar.",
+        "Mud brick with timber lacing and crenellations, on a socle of polygonal stones.",
+      ),
+      spot(
+        [-50.3, 6.5, 0],
+        "Kazamat duvar",
+        "The casemate wall",
+        "İki taş kabuk ve aralarında moloz dolgu; üstünde kerpiç.",
+        "Two stone shells with rubble fill between them, mud brick above.",
+      ),
+      spot(
+        [-30, 3.4, -14.4],
+        "Toprak set",
+        "The rampart",
+        "Sur yapay bir setin sırtında yürür; dış yamacı taşla kaplıdır.",
+        "The wall runs on an artificial rampart; its outer slope is faced with stone.",
+      ),
+      spot(
+        [34, 3.2, -20.7],
+        "Rampa",
+        "The ramp",
+        "Yol kapıya setin önünden, sura paralel bir rampayla çıkar.",
+        "The road climbs to the gate along the front of the rampart, parallel to the wall.",
+      ),
+    ],
+    sources: [wiki("en", "en", "Hattusa", "Wikipedia (İngilizce): Hattusa", "Wikipedia: Hattusa")],
+    model: {
+      kind: "hittite-gate",
+      gateWidth: 3.3,
+      lions: 2,
+      towers: 2,
+      archHeight: 5,
+      rampartHeight: 5,
+      wallThickness: 8,
+      wallHeight: 9,
+      socleHeight: 3,
+      towerWidth: 9,
+      towerDepth: 16,
+      towerHeight: 14,
+      lionHeight: 2.1,
+      wallLength: 100,
+    },
+  },
+  {
+    id: "troya-vi-surlari",
+    siteSlug: "troya",
+    structure: l("Kent surları", "City walls"),
+    title: l("Troya VI, Doğu Kapısı ve surlar", "Troy VI, the East Gate and its walls"),
+    blurb: l(
+      "Geç Tunç Çağı'nda Troya'nın kale surları: dışa doğru eğimli, düzgün kesme kireçtaşından alt duvar, birkaç metrede bir hafifçe geri çekilen yüzü, üstünde kerpiç. Doğu Kapısı duvardaki bir açıklık değil, iki sur ucunun arasından kıvrılarak yükselen bir geçittir; ötesinde öne çıkan bir kule ve terasların üstünde serbest duran büyük evler.",
+      "The citadel walls of Troy in the Late Bronze Age: a lower wall of dressed limestone with a sloping, battered face that steps back a little every few metres, and mud brick on top of it. The East Gate is not an opening through the wall but a passage climbing between two of its ends; beyond it a tower stands forward of the wall, and on the terraces inside stand large free-standing houses.",
+    ),
+    period: l("Troya VI, yaklaşık MÖ 1700–1250", "Troy VI, about 1700–1250 BC"),
+    measures: [
+      {
+        value: 5,
+        unit: "m",
+        label: l(
+          "Sur duvarının kalınlığı (doğrulanmadı)",
+          "Thickness of the citadel wall (unverified)",
+        ),
+        source: "en",
+      },
+    ],
+    uncertainty: l(
+      "Höyükte üst üste dokuz kent katmanı (Troya I–IX) vardır; model yalnızca Troya VI'nın surlarını gösterir. Bugün en çok görülen taş rampa Troya II'ye, bin yıl daha eskiye aittir ve Troya VI zamanında toprak altındaydı; bu yüzden modelde yoktur — buradaki rampa Doğu Kapısı geçidinin kendi yükselen zeminidir. Bu model hazırlanırken kaynaklara erişilemedi: duvar kalınlığı (5 m) bellekteki yayınlanmış değerdir ve doğrulanmalıdır; taş duvarın yüksekliği (6 m), kerpicin yüksekliği, eğimin miktarı, geri çekilmelerin aralığı (yaklaşık 9,5 m) ve derinliği, geçidin genişliği, kulenin ölçüleri ve evlerin yerleri orantıdır. Kerpiç üst duvarın biçimi, korkulukları ve pencereleri bilinmiyor; düz bir korkuluk gösterilir. Evler tek tek kazılmış Troya VI evlerinin kopyası değil, o türden evlerdir.",
+      "The mound holds nine cities one above another (Troy I–IX); the model shows only the walls of Troy VI. The stone ramp most visitors see today belongs to Troy II, a thousand years older, and lay buried in Troy VI's time, so it is not in the model — the ramp here is the climbing floor of the East Gate passage itself. The sources could not be reached while this model was made: the wall thickness (5 m) is the published figure as remembered and should be checked; the height of the stone wall (6 m), the mud brick, the amount of batter, the spacing (about 9.5 m) and depth of the offsets, the width of the passage, the tower and the placing of the houses are proportion. The form of the mud-brick upper wall, its parapet and windows is unknown; a plain parapet is shown. The houses are of the Troy VI type, not copies of particular excavated ones.",
+    ),
+    hotspots: [
+      spot(
+        [-20, 3, -3.7],
+        "Eğimli duvar yüzü",
+        "The battered face",
+        "Kireçtaşı alt duvar yükseldikçe geriye yaslanır; taşlar düzgün sıralar halinde kesilmiştir.",
+        "The limestone lower wall leans back as it rises, cut and laid in regular courses.",
+      ),
+      spot(
+        [-5.5, 4.5, -3.5],
+        "Geri çekilmeler",
+        "The offsets",
+        "Yüz birkaç metrede bir hafifçe geri basamak yapar: Troya VI surunun imzası.",
+        "Every few metres the face steps back slightly: the signature of a Troy VI wall.",
+      ),
+      spot(
+        [14, 4.2, -5.3],
+        "Doğu Kapısı",
+        "The East Gate",
+        "İki sur ucunun arasındaki geçit: içeri giren, sağ yanını surun yüzüne vermek zorundadır.",
+        "A passage between two ends of the wall: whoever came in had to walk along the face of the wall.",
+      ),
+      spot(
+        [10, 1.8, -5.3],
+        "Yükselen geçit",
+        "The climbing passage",
+        "Geçidin zemini ovadan kale terasına doğru yükselir.",
+        "The floor of the passage climbs from the plain to the citadel terrace.",
+      ),
+      spot(
+        [32, 9, -18.2],
+        "Kule",
+        "The tower",
+        "Kapının ötesinde surun önüne çıkan kule.",
+        "The tower that stands forward of the wall beyond the gate.",
+      ),
+      spot(
+        [-30, 7.5, -2.4],
+        "Kerpiç üst duvar",
+        "The mud-brick upper wall",
+        "Taş duvarın üstünde, ahşap hatıllı kerpiç.",
+        "Mud brick, laced with timber, on top of the stone wall.",
+      ),
+      spot(
+        [-4, 5, 19],
+        "Teras evleri",
+        "The terrace houses",
+        "Taş temelli, kerpiç duvarlı, serbest duran büyük evler.",
+        "Large free-standing houses on stone socles with mud-brick walls.",
+      ),
+      spot(
+        [10, 3.6, 34],
+        "Katmanlar",
+        "The layers",
+        "Ayağınızın altında beş eski kent, üstünüzde sonraki üç kent: Troya dokuz katmandır.",
+        "Five older cities lie underfoot and three later ones would rise above: Troy is nine layers deep.",
+      ),
+    ],
+    sources: [wiki("en", "en", "Troy", "Wikipedia (İngilizce): Troy", "Wikipedia: Troy")],
+    model: {
+      kind: "troy-citadel",
+      wallThickness: 5,
+      stoneHeight: 6,
+      brickHeight: 3.5,
+      batter: 1.5,
+      offsetSpacing: 9.5,
+      offsetDepth: 0.3,
+      passageWidth: 3.2,
+      terrace: 3,
+      towerWidth: 10,
+      towerDepth: 6,
+      houses: 4,
+    },
+  },
+  {
+    id: "catalhoyuk-dogu-hoyugu",
+    siteSlug: "catalhoyuk",
+    structure: l("Kuzey kazı alanı", "North excavation shelter"),
+    title: l("Çatalhöyük, Doğu Höyüğü'nde evler", "Çatalhöyük, houses on the East Mound"),
+    blurb: l(
+      "Sokağı olmayan bir kasaba: kerpiç evler duvar duvara yapılmış, insanlar düz damların üstünde yürür ve evlerine damdaki bir delikten, ocağın yanından inen merdivenle girerdi. İçeride beyaz sıvalı duvarlar ve sekiler, duvarlara gömülü yaban boğası boynuzları, duvar resimleri. İki evin damı içini göstermek için açık bırakılmıştır.",
+      "A town without streets: the mud-brick houses were built wall against wall, people walked across the flat roofs and came down into their houses by a ladder through a hole in the roof, beside the oven. Inside, white-plastered walls and platforms, the horns of wild bulls set into the walls, and paintings. Two houses are shown with their roofs off so that the inside can be seen.",
+    ),
+    period: l("Neolitik, yaklaşık MÖ 7400–6200", "Neolithic, about 7400–6200 BC"),
+    measures: [
+      {
+        value: 8000,
+        unit: "people",
+        label: l(
+          "Nüfus tahmini, en yüksek (3.500–8.000)",
+          "Estimated population, upper figure (3,500–8,000)",
+        ),
+        source: "en",
+      },
+    ],
+    uncertainty: l(
+      "Evlerin damdan girilmesi, duvar duvara yapılması, sıvalı sekiler, fırın ve ocak, boğa boynuzları ve duvar resimleri kazıdan bilinir; burada gösterilen ise belirli bir kazılmış ev grubunun planı değil, o türden bir kümedir. Bu model hazırlanırken kaynaklara erişilemedi; nüfus aralığı bellekteki yayınlanmış değerdir ve doğrulanmalıdır. Odaların boyu (yaklaşık 5 × 4,4 m), duvar kalınlığı ve yüksekliği, sekilerin yüksekliği, dam deliklerinin yeri ve damların düzeyleri orantıdır. Duvar resimleri gerçek resimlerin kopyası değildir: kırmızı geometrik pano ile boğa ve avcılar sahnesi, Çatalhöyük'te bulunan türden resimlerin bu uygulamada yeniden çizilmiş benzerleridir. Yazı yoktu; modelde yazı yoktur.",
+      "That the houses were entered from the roof, built wall against wall, and had plastered platforms, an oven and hearth, bulls' horns and wall paintings is known from excavation; what is shown is a cluster of that kind, not the plan of a particular excavated group. The sources could not be reached while this model was made; the population range is the published figure as remembered and should be checked. The room size (about 5 × 4.4 m), the thickness and height of the walls, the height of the platforms, the place of the roof holes and the levels of the roofs are proportion. The paintings are not copies: the red geometric panel and the bull among hunters are this app's redrawings of the kinds of painting found at Çatalhöyük. There was no writing, and the model has none.",
+    ),
+    hotspots: [
+      spot(
+        [0.9, 3.7, -2.33],
+        "Damdaki giriş",
+        "The way in through the roof",
+        "Eve damdaki bir delikten, merdivenle inilirdi; dumanın çıktığı yer de burasıydı.",
+        "You came down into the house by a ladder through a hole in the roof, which was also where the smoke went out.",
+      ),
+      spot(
+        [5.88, 3.8, 1.5],
+        "Sokak yerine damlar",
+        "Roofs for streets",
+        "Sokak yoktu: komşular damların üstünden birbirine giderdi.",
+        "There were no streets: neighbours crossed from roof to roof.",
+      ),
+      spot(
+        [-0.8, 0.9, -9.6],
+        "Fırın ve ocak",
+        "Oven and hearth",
+        "Güney duvarında, merdivenin dibinde kubbeli fırın ve önünde ocak.",
+        "The domed oven against the south wall at the foot of the ladder, and the hearth before it.",
+      ),
+      spot(
+        [1.5, 0.7, -6.4],
+        "Sekiler",
+        "The platforms",
+        "Beyaz sıvalı sekiler; ölüler bunların altına gömülürdü.",
+        "White-plastered platforms; the dead were buried beneath them.",
+      ),
+      spot(
+        [2.3, 1.9, -8.2],
+        "Boğa boynuzları",
+        "Bulls' horns",
+        "Yaban boğalarının sıvayla kaplanmış başları ve boynuzları duvara ve sekilere yerleştirilirdi.",
+        "The plastered heads and horns of wild bulls were set into the walls and platforms.",
+      ),
+      spot(
+        [-2.3, 1.7, -8.1],
+        "Duvar resimleri",
+        "Wall paintings",
+        "Beyaz sıva üstüne kırmızı ve siyah: geometrik desenler, büyük bir boğa ve çevresinde küçük avcılar.",
+        "Red and black on white plaster: geometric patterns, and a great bull ringed by small hunters.",
+      ),
+      spot(
+        [5.88, 0.6, -7.03],
+        "Avlu",
+        "The yard",
+        "Terk edilmiş bir evin yeri; kül ve çöp buraya atılırdı.",
+        "Where a house had stood empty; ash and rubbish were thrown here.",
+      ),
+    ],
+    sources: [
+      wiki(
+        "en",
+        "en",
+        "%C3%87atalh%C3%B6y%C3%BCk",
+        "Wikipedia (İngilizce): Çatalhöyük",
+        "Wikipedia: Çatalhöyük",
+      ),
+    ],
+    model: {
+      kind: "neolithic-town",
+      houses: 11,
+      roomWidth: 5,
+      roomDepth: 4.4,
+      storeDepth: 1.4,
+      wallHeight: 2.8,
+      wallThickness: 0.35,
+      platformHeight: 0.3,
+    },
+  },
+  {
+    id: "ani-katedrali",
+    siteSlug: "ani",
+    structure: l("Ani Katedrali", "Ani Cathedral"),
+    title: l("Ani Katedrali ve kent surları", "The Cathedral of Ani and the city walls"),
+    blurb: l(
+      "Mimar Trdat'ın 989–1001 yılları arasında yaptığı kubbeli bazilika, 1319 depreminde çöken kasnağı ve kubbesiyle: dışta düz bir dikdörtgen, haçın kolları yalnızca çatıların alınlıklarında görünür. Dört cepheyi ince çift sütunçeler üstünde yükselen kör kemerler dolaşır, derin üçgen nişler duvarlara oyulmuştur. Arkada, yuvarlak kuleli çift surun bir parçası.",
+      "The domed basilica the architect Trdat built between 989 and 1001, with the drum and dome that fell in the earthquake of 1319: a plain rectangle outside, the arms of its cross showing only in the gables of the roofs. A blind arcade of tall arches on slender paired shafts runs round all four sides, and deep triangular niches are cut into the walls. Behind it, a stretch of the city's double wall with its round towers.",
+    ),
+    period: l("Bagratlı Ermeni krallığı, 989–1001", "Bagratid Armenian kingdom, 989–1001"),
+    measures: [
+      {
+        value: 3,
+        unit: "count",
+        label: l("Kapı: batı, kuzey ve güney", "Doors: west, north and south"),
+        source: "en",
+      },
+    ],
+    uncertainty: l(
+      "Kubbe ve kasnağı 1319 depreminde çöktü; model onları yerinde gösterir, ama biçimleri ve yükseklikleri (kasnak çapı 10,4 m, yüksekliği 6,5 m, külah 5 m) Ermeni kiliselerinin benzerlerinden alınmış orantılardır. Bu model hazırlanırken kaynaklara erişilemedi; yapının boyu (34 m), eni (21,5 m), saçak (14 m) ve alınlık (18,5 m) yükseklikleri bellekteki değerlerdir ve doğrulanmalıdır. Nişlerin ve pencerelerin yeri ve sayısı, kör kemerlerin aralığı ve kapı çerçeveleri yaklaşıktır. Kraliçe Katranide'nin güney cephedeki inşa kitabesi modelde yazılı değildir: Ermeni harfleri bu uygulamanın yazı çiziminde yoktur ve metin doğrulanamadı. İç mekân modellenmemiştir. Surlar katedralden çok uzaktadır; burada arkaya, yakına konmuşlardır ve ölçüleri tahmindir; kulelerdeki haçlar Ani surlarında bulunan türdendir.",
+      "The dome and its drum fell in the earthquake of 1319; the model shows them in place, but their form and heights (a drum 10.4 m across and 6.5 m high, a 5 m cone) are proportion taken from Armenian churches of the kind. The sources could not be reached while this model was made; the length (34 m), width (21.5 m), eave (14 m) and gable (18.5 m) heights are figures as remembered and should be checked. The placing and number of the niches and windows, the spacing of the blind arcade and the door frames are approximate. Queen Katranide's building inscription on the south front is not lettered: the app's lettering has no Armenian script, and the text could not be checked. The interior is not modelled. The walls stand far from the cathedral; here they are set close behind it, and their sizes are estimates; the crosses on the towers are of the kind set into Ani's walls.",
+    ),
+    hotspots: [
+      spot(
+        [0, 22, -5.7],
+        "Kasnak ve kubbe",
+        "Drum and dome",
+        "1319 depreminde çöktü; model onu yerinde gösterir.",
+        "It fell in the earthquake of 1319; the model shows it in place.",
+      ),
+      spot(
+        [0, 6.5, -17.6],
+        "Batı kapısı",
+        "The west door",
+        "Üç kapının en büyüğü; kapı batı, kuzey ve güneyde.",
+        "The largest of three doors, on the west, north and south.",
+      ),
+      spot(
+        [-11.2, 8, -8],
+        "Kör kemerler",
+        "The blind arcade",
+        "Dört cepheyi dolaşan, ince çift sütunçeler üstünde yüksek kemerler.",
+        "Tall arches on slender paired shafts running round all four fronts.",
+      ),
+      spot(
+        [3.6, 5, 17.5],
+        "Üçgen nişler",
+        "The triangular niches",
+        "Duvara oyulmuş derin nişler, içerideki duvarların dış duvara kavuştuğu yeri belli eder.",
+        "Deep niches cut into the wall mark where the inner walls meet the outer ones.",
+      ),
+      spot(
+        [0, 19.2, -14],
+        "Haç planlı çatılar",
+        "The roofs of the cross",
+        "Dışarıdan dikdörtgen olan yapının haç planı çatılarda görünür.",
+        "The cross of the plan, hidden in the rectangle of the walls, shows in the roofs.",
+      ),
+      spot(
+        [0, 9, 41],
+        "Çift sur",
+        "The double wall",
+        "Yüksek iç sur, önünden çıkan yuvarlak kuleler ve dışta alçak ön sur.",
+        "The high inner wall with its round towers, and the lower outer wall beyond.",
+      ),
+    ],
+    sources: [
+      wiki(
+        "en",
+        "en",
+        "Cathedral_of_Ani",
+        "Wikipedia (İngilizce): Cathedral of Ani",
+        "Wikipedia: Cathedral of Ani",
+      ),
+    ],
+    model: {
+      kind: "medieval-cathedral",
+      portals: 3,
+      length: 34,
+      width: 21.5,
+      eaveHeight: 14,
+      gableHeight: 18.5,
+      drumDiameter: 10.4,
+      drumHeight: 6.5,
+      coneHeight: 5,
+      wallLength: 80,
+      wallTowers: 4,
+    },
+  },
+  ...SAGALASSOS_ZEUGMA_SUMELA_PATARA,
 ];
 
 export function getReconstruction(id: string): Reconstruction | undefined {

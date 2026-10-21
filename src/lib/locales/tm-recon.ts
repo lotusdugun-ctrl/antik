@@ -784,4 +784,440 @@ export const tm: Record<string, [string, string]> = {
   ],
   "Zeus-Oromasdes": ["Zeus-Oromasdes", "Зевс-Оромазд"],
   "c. 170 - 159 BC": ["um 170 – 159 v. Chr.", "ок. 170 – 159 гг. до н. э."],
+  "Hattusa, the Lion Gate": ["Hattusa, das Löwentor", "Хаттуса, Львиные ворота"],
+  "Lion Gate": ["Löwentor", "Львиные ворота"],
+  "The south-west gate in the Upper City wall of the Hittite capital: between two towers, huge jamb stones leaning towards each other until they meet in a parabolic arch, and two lions cut from the stone of the outer jambs. The wall runs along the crest of an earthen rampart; the road climbs to the gate along its face on a ramp.":
+    [
+      "Das Südwesttor in der Mauer der Oberstadt der hethitischen Hauptstadt: zwischen zwei Türmen riesige Laibungssteine, die sich einander zuneigen, bis sie sich in einem parabelförmigen Bogen treffen, und zwei Löwen, aus dem Stein der äußeren Laibungen gehauen. Die Mauer verläuft auf dem Kamm eines Erdwalls; die Straße steigt an seiner Front auf einer Rampe zum Tor hinauf.",
+      "Юго-западные ворота в стене Верхнего города хеттской столицы: между двумя башнями огромные косяковые камни наклоняются друг к другу, пока не сходятся в параболическую арку, а из камня внешних косяков высечены два льва. Стена идёт по гребню земляного вала; дорога поднимается к воротам вдоль его склона по пандусу.",
+    ],
+  "Hittite Empire, 14th–13th century BC": [
+    "Hethitisches Großreich, 14.–13. Jahrhundert v. Chr.",
+    "Хеттское царство, XIV–XIII века до н. э.",
+  ],
+  "What the source gives is only the arrangement of the gate: a passage with parabolic arches between two towers, and the two lions on the outer jambs. The sources could not be reached while this model was made, so no metre figure here has been checked: the width (3.3 m) and height (5 m) of the arch, the towers, the thickness and height of the wall, the height of the rampart and the size of the lions are proportions taken from photographs and published reconstruction drawings, and should be checked against the publications. The mud-brick walls on the stone socles, their timber lacing, the crenellations and the tower windows are of the kind known from Hittite tower-shaped vessels and from the stretch of wall rebuilt at Boğazköy; their sizes are estimates. Whether the gate chamber was roofed is unknown, and the model leaves it open. The date is debated: parts of the Upper City are now dated as early as the 16th century BC.":
+    [
+      "Die Quelle liefert nur die Anlage des Tores: einen Durchgang mit parabelförmigen Bögen zwischen zwei Türmen und die beiden Löwen an den äußeren Laibungen. Während der Arbeit an diesem Modell waren die Quellen nicht erreichbar, daher ist hier keine Meterangabe überprüft: Breite (3,3 m) und Höhe (5 m) des Bogens, die Türme, Dicke und Höhe der Mauer, die Höhe des Walls und die Größe der Löwen sind Proportionen nach Fotografien und veröffentlichten Rekonstruktionszeichnungen und sollten mit den Publikationen abgeglichen werden. Die Lehmziegelmauern auf den Steinsockeln, ihre Holzarmierung, die Zinnen und die Turmfenster entsprechen dem, was von hethitischen turmförmigen Gefäßen und dem in Boğazköy wiederaufgebauten Mauerabschnitt bekannt ist; ihre Maße sind geschätzt. Ob die Torkammer überdacht war, ist unbekannt; das Modell lässt sie offen. Die Datierung ist umstritten: Teile der Oberstadt werden heute schon ins 16. Jahrhundert v. Chr. datiert.",
+      "Источник даёт лишь устройство ворот: проход с параболическими арками между двумя башнями и двух львов на внешних косяках. Во время работы над моделью источники были недоступны, поэтому ни один размер в метрах здесь не проверен: ширина (3,3 м) и высота (5 м) арки, башни, толщина и высота стены, высота вала и размер львов — пропорции по фотографиям и опубликованным реконструкциям, их следует сверить с публикациями. Стены из сырцового кирпича на каменных цоколях, деревянные связи, зубцы и окна башен — того рода, что известен по хеттским сосудам в виде башен и по участку стены, восстановленному в Богазкёе; их размеры приблизительны. Была ли воротная камера перекрыта, неизвестно; модель оставляет её открытой. Датировка спорна: части Верхнего города сегодня относят уже к XVI веку до н. э.",
+    ],
+  "Lions carved from the jamb stones": [
+    "Aus den Laibungssteinen gehauene Löwen",
+    "Львы, высеченные из косяковых камней",
+  ],
+  "Towers flanking the gate": ["Türme zu beiden Seiten des Tores", "Башни по сторонам ворот"],
+  "The foreparts of two roaring lions, cut from the stone of the outer jambs; their eyes were once inlaid.":
+    [
+      "Die Vorderkörper zweier brüllender Löwen, aus dem Stein der äußeren Laibungen gehauen; ihre Augen waren einst eingelegt.",
+      "Передние части двух рычащих львов, высеченные из камня внешних косяков; их глаза когда-то были инкрустированы.",
+    ],
+  "The parabolic arch": ["Der parabelförmige Bogen", "Параболическая арка"],
+  "Two huge stones leaning together and a crown stone on top: the opening is a pointed parabola.": [
+    "Zwei riesige, gegeneinander geneigte Steine und ein Scheitelstein darüber: die Öffnung ist eine spitze Parabel.",
+    "Два огромных камня, наклонённых друг к другу, и замковый камень сверху: проём — заострённая парабола.",
+  ],
+  "The gate chamber": ["Die Torkammer", "Воротная камера"],
+  "The chamber between the outer and inner arches; the door leaves were timber, sheathed in bronze.":
+    [
+      "Die Kammer zwischen äußerem und innerem Bogen; die Torflügel waren aus Holz und mit Bronze beschlagen.",
+      "Камера между внешней и внутренней аркой; створки ворот были деревянными, обитыми бронзой.",
+    ],
+  "Gate tower": ["Torturm", "Воротная башня"],
+  "Mud brick with timber lacing and crenellations, on a socle of polygonal stones.": [
+    "Lehmziegel mit Holzarmierung und Zinnen auf einem Sockel aus polygonalen Steinen.",
+    "Сырцовый кирпич с деревянными связями и зубцами на цоколе из полигональных камней.",
+  ],
+  "The casemate wall": ["Die Kastenmauer", "Казематная стена"],
+  "Two stone shells with rubble fill between them, mud brick above.": [
+    "Zwei steinerne Schalen mit Schuttfüllung dazwischen, darüber Lehmziegel.",
+    "Две каменные оболочки с бутовой забутовкой между ними, сверху сырцовый кирпич.",
+  ],
+  "The rampart": ["Der Wall", "Вал"],
+  "The wall runs on an artificial rampart; its outer slope is faced with stone.": [
+    "Die Mauer verläuft auf einem künstlichen Wall; seine Außenböschung ist mit Stein verkleidet.",
+    "Стена идёт по искусственному валу; его внешний склон облицован камнем.",
+  ],
+  "The ramp": ["Die Rampe", "Пандус"],
+  "The road climbs to the gate along the front of the rampart, parallel to the wall.": [
+    "Die Straße steigt vor dem Wall, parallel zur Mauer, zum Tor hinauf.",
+    "Дорога поднимается к воротам перед валом, параллельно стене.",
+  ],
+  "Troy VI, the East Gate and its walls": [
+    "Troja VI, das Osttor und seine Mauern",
+    "Троя VI, Восточные ворота и стены",
+  ],
+  "City walls": ["Stadtmauern", "Городские стены"],
+  "The citadel walls of Troy in the Late Bronze Age: a lower wall of dressed limestone with a sloping, battered face that steps back a little every few metres, and mud brick on top of it. The East Gate is not an opening through the wall but a passage climbing between two of its ends; beyond it a tower stands forward of the wall, and on the terraces inside stand large free-standing houses.":
+    [
+      "Die Burgmauern Trojas in der Spätbronzezeit: eine Unterwand aus behauenem Kalkstein mit geböschter, schräger Front, die alle paar Meter ein wenig zurückspringt, und Lehmziegel darauf. Das Osttor ist keine Öffnung in der Mauer, sondern ein ansteigender Durchgang zwischen zwei ihrer Enden; dahinter steht ein Turm vor der Mauer, und auf den Terrassen im Inneren stehen große, freistehende Häuser.",
+      "Стены цитадели Трои эпохи поздней бронзы: нижняя стена из тёсаного известняка с наклонной лицевой стороной, которая каждые несколько метров чуть отступает назад, и сырцовый кирпич над ней. Восточные ворота — не проём в стене, а поднимающийся проход между двумя её концами; за ним перед стеной выступает башня, а на террасах внутри стоят большие отдельно стоящие дома.",
+    ],
+  "Troy VI, about 1700–1250 BC": [
+    "Troja VI, etwa 1700–1250 v. Chr.",
+    "Троя VI, около 1700–1250 гг. до н. э.",
+  ],
+  "The mound holds nine cities one above another (Troy I–IX); the model shows only the walls of Troy VI. The stone ramp most visitors see today belongs to Troy II, a thousand years older, and lay buried in Troy VI's time, so it is not in the model — the ramp here is the climbing floor of the East Gate passage itself. The sources could not be reached while this model was made: the wall thickness (5 m) is the published figure as remembered and should be checked; the height of the stone wall (6 m), the mud brick, the amount of batter, the spacing (about 9.5 m) and depth of the offsets, the width of the passage, the tower and the placing of the houses are proportion. The form of the mud-brick upper wall, its parapet and windows is unknown; a plain parapet is shown. The houses are of the Troy VI type, not copies of particular excavated ones.":
+    [
+      "Der Hügel birgt neun übereinanderliegende Städte (Troja I–IX); das Modell zeigt nur die Mauern von Troja VI. Die Steinrampe, die die meisten Besucher heute sehen, gehört zu Troja II, ist tausend Jahre älter und lag zur Zeit von Troja VI verschüttet; deshalb fehlt sie im Modell – die Rampe hier ist der ansteigende Boden des Osttor-Durchgangs selbst. Während der Arbeit an diesem Modell waren die Quellen nicht erreichbar: die Mauerdicke (5 m) ist der veröffentlichte Wert aus dem Gedächtnis und sollte überprüft werden; die Höhe der Steinmauer (6 m), der Lehmziegelaufbau, das Maß der Böschung, Abstand (etwa 9,5 m) und Tiefe der Rücksprünge, die Breite des Durchgangs, der Turm und die Lage der Häuser sind Proportion. Die Form des Lehmziegelaufbaus, seiner Brüstung und Fenster ist unbekannt; gezeigt wird eine schlichte Brüstung. Die Häuser entsprechen dem Typ von Troja VI, sind aber keine Kopien bestimmter ausgegrabener Häuser.",
+      "Холм хранит девять городов один над другим (Троя I–IX); модель показывает только стены Трои VI. Каменный пандус, который сегодня видит большинство посетителей, относится к Трое II, он на тысячу лет старше и во времена Трои VI был засыпан, поэтому его в модели нет — пандус здесь — это поднимающийся пол прохода Восточных ворот. Во время работы над моделью источники были недоступны: толщина стены (5 м) — опубликованное значение по памяти, его следует проверить; высота каменной стены (6 м), сырцовая надстройка, величина наклона, шаг (около 9,5 м) и глубина уступов, ширина прохода, башня и расположение домов — пропорции. Форма сырцовой верхней стены, её парапета и окон неизвестна; показан простой парапет. Дома — того же типа, что в Трое VI, но не копии конкретных раскопанных домов.",
+    ],
+  "Thickness of the citadel wall (unverified)": [
+    "Dicke der Burgmauer (nicht überprüft)",
+    "Толщина стены цитадели (не проверено)",
+  ],
+  "The battered face": ["Die geböschte Front", "Наклонная лицевая сторона"],
+  "The limestone lower wall leans back as it rises, cut and laid in regular courses.": [
+    "Die Unterwand aus Kalkstein neigt sich beim Aufsteigen zurück, behauen und in regelmäßigen Lagen verlegt.",
+    "Нижняя стена из известняка по мере подъёма отклоняется назад; камни тёсаны и уложены ровными рядами.",
+  ],
+  "The offsets": ["Die Rücksprünge", "Уступы"],
+  "Every few metres the face steps back slightly: the signature of a Troy VI wall.": [
+    "Alle paar Meter springt die Front leicht zurück: das Kennzeichen einer Mauer von Troja VI.",
+    "Каждые несколько метров лицевая сторона слегка отступает: примета стены Трои VI.",
+  ],
+  "The East Gate": ["Das Osttor", "Восточные ворота"],
+  "A passage between two ends of the wall: whoever came in had to walk along the face of the wall.":
+    [
+      "Ein Durchgang zwischen zwei Mauerenden: Wer hineinkam, musste an der Mauerfront entlanggehen.",
+      "Проход между двумя концами стены: входящий должен был идти вдоль лицевой стороны стены.",
+    ],
+  "The climbing passage": ["Der ansteigende Durchgang", "Поднимающийся проход"],
+  "The floor of the passage climbs from the plain to the citadel terrace.": [
+    "Der Boden des Durchgangs steigt von der Ebene zur Burgterrasse an.",
+    "Пол прохода поднимается от равнины к террасе цитадели.",
+  ],
+  "The tower": ["Der Turm", "Башня"],
+  "The tower that stands forward of the wall beyond the gate.": [
+    "Der Turm, der jenseits des Tores vor der Mauer steht.",
+    "Башня, выступающая перед стеной за воротами.",
+  ],
+  "The mud-brick upper wall": ["Der Lehmziegelaufbau", "Сырцовая верхняя стена"],
+  "Mud brick, laced with timber, on top of the stone wall.": [
+    "Lehmziegel mit Holzarmierung auf der Steinmauer.",
+    "Сырцовый кирпич с деревянными связями поверх каменной стены.",
+  ],
+  "The terrace houses": ["Die Terrassenhäuser", "Дома на террасах"],
+  "Large free-standing houses on stone socles with mud-brick walls.": [
+    "Große, freistehende Häuser auf Steinsockeln mit Lehmziegelwänden.",
+    "Большие отдельно стоящие дома на каменных цоколях со стенами из сырцового кирпича.",
+  ],
+  "The layers": ["Die Schichten", "Слои"],
+  "Five older cities lie underfoot and three later ones would rise above: Troy is nine layers deep.":
+    [
+      "Fünf ältere Städte liegen unter den Füßen, drei spätere würden darüber entstehen: Troja ist neun Schichten tief.",
+      "Пять более древних городов лежат под ногами, три более поздних поднимутся выше: Троя — это девять слоёв.",
+    ],
+  "Çatalhöyük, houses on the East Mound": [
+    "Çatalhöyük, Häuser auf dem Osthügel",
+    "Чатал-Хююк, дома на Восточном холме",
+  ],
+  "North excavation shelter": ["Nördlicher Grabungsschutzbau", "Северный навес над раскопом"],
+  "A town without streets: the mud-brick houses were built wall against wall, people walked across the flat roofs and came down into their houses by a ladder through a hole in the roof, beside the oven. Inside, white-plastered walls and platforms, the horns of wild bulls set into the walls, and paintings. Two houses are shown with their roofs off so that the inside can be seen.":
+    [
+      "Eine Stadt ohne Straßen: Die Lehmziegelhäuser standen Wand an Wand, man ging über die flachen Dächer und stieg durch ein Loch im Dach neben dem Ofen über eine Leiter ins Haus hinab. Innen weiß verputzte Wände und Podeste, in die Wände gesetzte Hörner von Wildrindern und Malereien. Zwei Häuser sind ohne Dach gezeigt, damit man hineinsehen kann.",
+      "Город без улиц: дома из сырцового кирпича стояли стена к стене, люди ходили по плоским крышам и спускались в дома по лестнице через отверстие в крыше рядом с печью. Внутри — побелённые стены и помосты, вделанные в стены рога диких быков и росписи. Два дома показаны без крыш, чтобы было видно, что внутри.",
+    ],
+  "Neolithic, about 7400–6200 BC": [
+    "Neolithikum, etwa 7400–6200 v. Chr.",
+    "Неолит, около 7400–6200 гг. до н. э.",
+  ],
+  "That the houses were entered from the roof, built wall against wall, and had plastered platforms, an oven and hearth, bulls' horns and wall paintings is known from excavation; what is shown is a cluster of that kind, not the plan of a particular excavated group. The sources could not be reached while this model was made; the population range is the published figure as remembered and should be checked. The room size (about 5 × 4.4 m), the thickness and height of the walls, the height of the platforms, the place of the roof holes and the levels of the roofs are proportion. The paintings are not copies: the red geometric panel and the bull among hunters are this app's redrawings of the kinds of painting found at Çatalhöyük. There was no writing, and the model has none.":
+    [
+      "Dass die Häuser vom Dach aus betreten wurden, Wand an Wand standen und verputzte Podeste, Ofen und Herd, Stierhörner und Wandmalereien hatten, ist durch die Ausgrabung bekannt; gezeigt wird eine Gruppe dieser Art, nicht der Plan einer bestimmten ausgegrabenen Häusergruppe. Während der Arbeit an diesem Modell waren die Quellen nicht erreichbar; die Bevölkerungsspanne ist der veröffentlichte Wert aus dem Gedächtnis und sollte überprüft werden. Die Raumgröße (etwa 5 × 4,4 m), Dicke und Höhe der Wände, die Höhe der Podeste, die Lage der Dachöffnungen und die Höhen der Dächer sind Proportion. Die Malereien sind keine Kopien: Das rote geometrische Feld und der Stier zwischen Jägern sind Nachzeichnungen dieser App nach der Art der in Çatalhöyük gefundenen Malereien. Es gab keine Schrift, und das Modell zeigt keine.",
+      "То, что в дома входили через крышу, что они стояли стена к стене, имели оштукатуренные помосты, печь и очаг, бычьи рога и настенные росписи, известно по раскопкам; показана группа такого рода, а не план конкретной раскопанной группы. Во время работы над моделью источники были недоступны; диапазон численности населения — опубликованное значение по памяти, его следует проверить. Размер комнат (около 5 × 4,4 м), толщина и высота стен, высота помостов, место отверстий в крышах и уровни крыш — пропорции. Росписи — не копии: красное геометрическое панно и бык среди охотников перерисованы этим приложением по образцу росписей, найденных в Чатал-Хююке. Письменности не было, и в модели её нет.",
+    ],
+  "Estimated population, upper figure (3,500–8,000)": [
+    "Geschätzte Bevölkerung, obere Angabe (3.500–8.000)",
+    "Оценка численности населения, верхняя (3500–8000)",
+  ],
+  "The way in through the roof": ["Der Eingang durch das Dach", "Вход через крышу"],
+  "You came down into the house by a ladder through a hole in the roof, which was also where the smoke went out.":
+    [
+      "Man stieg über eine Leiter durch ein Loch im Dach ins Haus hinab; dort zog auch der Rauch ab.",
+      "В дом спускались по лестнице через отверстие в крыше; через него же уходил дым.",
+    ],
+  "Roofs for streets": ["Dächer statt Straßen", "Крыши вместо улиц"],
+  "There were no streets: neighbours crossed from roof to roof.": [
+    "Es gab keine Straßen: Nachbarn gingen von Dach zu Dach.",
+    "Улиц не было: соседи ходили с крыши на крышу.",
+  ],
+  "Oven and hearth": ["Ofen und Herd", "Печь и очаг"],
+  "The domed oven against the south wall at the foot of the ladder, and the hearth before it.": [
+    "Der Kuppelofen an der Südwand am Fuß der Leiter und davor der Herd.",
+    "Куполообразная печь у южной стены у подножия лестницы и очаг перед ней.",
+  ],
+  "The platforms": ["Die Podeste", "Помосты"],
+  "White-plastered platforms; the dead were buried beneath them.": [
+    "Weiß verputzte Podeste; unter ihnen wurden die Toten bestattet.",
+    "Побелённые помосты; под ними хоронили умерших.",
+  ],
+  "Bulls' horns": ["Stierhörner", "Бычьи рога"],
+  "The plastered heads and horns of wild bulls were set into the walls and platforms.": [
+    "Die verputzten Köpfe und Hörner von Wildrindern wurden in Wände und Podeste gesetzt.",
+    "Оштукатуренные головы и рога диких быков вделывали в стены и помосты.",
+  ],
+  "Wall paintings": ["Wandmalereien", "Настенные росписи"],
+  "Red and black on white plaster: geometric patterns, and a great bull ringed by small hunters.": [
+    "Rot und Schwarz auf weißem Putz: geometrische Muster und ein großer Stier, umringt von kleinen Jägern.",
+    "Красное и чёрное на белой штукатурке: геометрические узоры и большой бык в кольце маленьких охотников.",
+  ],
+  "The yard": ["Der Hof", "Двор"],
+  "Where a house had stood empty; ash and rubbish were thrown here.": [
+    "Wo ein Haus leer gestanden hatte; hier wurden Asche und Abfall hingeworfen.",
+    "Место, где стоял опустевший дом; сюда выбрасывали золу и мусор.",
+  ],
+  "The Cathedral of Ani and the city walls": [
+    "Die Kathedrale von Ani und die Stadtmauern",
+    "Собор Ани и городские стены",
+  ],
+  "Ani Cathedral": ["Kathedrale von Ani", "Собор Ани"],
+  "The domed basilica the architect Trdat built between 989 and 1001, with the drum and dome that fell in the earthquake of 1319: a plain rectangle outside, the arms of its cross showing only in the gables of the roofs. A blind arcade of tall arches on slender paired shafts runs round all four sides, and deep triangular niches are cut into the walls. Behind it, a stretch of the city's double wall with its round towers.":
+    [
+      "Die Kuppelbasilika, die der Architekt Trdat zwischen 989 und 1001 errichtete, mit Tambour und Kuppel, die beim Erdbeben von 1319 einstürzten: außen ein schlichtes Rechteck, die Arme ihres Kreuzes zeigen sich nur in den Giebeln der Dächer. Eine Blendarkade aus hohen Bögen auf schlanken Doppelsäulchen umläuft alle vier Seiten, und tiefe dreieckige Nischen sind in die Wände geschnitten. Dahinter ein Abschnitt der doppelten Stadtmauer mit ihren runden Türmen.",
+      "Купольная базилика, которую архитектор Трдат построил между 989 и 1001 годами, с барабаном и куполом, обрушившимися при землетрясении 1319 года: снаружи — простой прямоугольник, рукава её креста видны лишь во фронтонах крыш. Слепая аркада из высоких арок на тонких сдвоенных колонках обходит все четыре стороны, а в стены врезаны глубокие треугольные ниши. За собором — участок двойной городской стены с круглыми башнями.",
+    ],
+  "Bagratid Armenian kingdom, 989–1001": [
+    "Bagratidisches Königreich Armenien, 989–1001",
+    "Армянское царство Багратидов, 989–1001",
+  ],
+  "The dome and its drum fell in the earthquake of 1319; the model shows them in place, but their form and heights (a drum 10.4 m across and 6.5 m high, a 5 m cone) are proportion taken from Armenian churches of the kind. The sources could not be reached while this model was made; the length (34 m), width (21.5 m), eave (14 m) and gable (18.5 m) heights are figures as remembered and should be checked. The placing and number of the niches and windows, the spacing of the blind arcade and the door frames are approximate. Queen Katranide's building inscription on the south front is not lettered: the app's lettering has no Armenian script, and the text could not be checked. The interior is not modelled. The walls stand far from the cathedral; here they are set close behind it, and their sizes are estimates; the crosses on the towers are of the kind set into Ani's walls.":
+    [
+      "Kuppel und Tambour stürzten beim Erdbeben von 1319 ein; das Modell zeigt sie an ihrem Platz, doch ihre Form und Höhen (ein Tambour von 10,4 m Durchmesser und 6,5 m Höhe, ein 5 m hoher Kegel) sind Proportionen nach armenischen Kirchen dieser Art. Während der Arbeit an diesem Modell waren die Quellen nicht erreichbar; Länge (34 m), Breite (21,5 m), Trauf- (14 m) und Giebelhöhe (18,5 m) sind Werte aus dem Gedächtnis und sollten überprüft werden. Lage und Zahl der Nischen und Fenster, der Abstand der Blendarkade und die Türrahmen sind ungefähr. Die Bauinschrift der Königin Katranide an der Südfront ist nicht ausgeschrieben: Die Beschriftung der App kennt keine armenische Schrift, und der Text konnte nicht überprüft werden. Das Innere ist nicht modelliert. Die Mauern stehen weit von der Kathedrale entfernt; hier sind sie dicht dahinter gesetzt, ihre Maße sind geschätzt; die Kreuze an den Türmen sind von der Art, wie sie in Anis Mauern eingesetzt sind.",
+      "Купол и барабан обрушились при землетрясении 1319 года; модель показывает их на месте, но форма и высоты (барабан диаметром 10,4 м и высотой 6,5 м, конус 5 м) — пропорции по армянским церквям того же типа. Во время работы над моделью источники были недоступны; длина (34 м), ширина (21,5 м), высота карниза (14 м) и фронтона (18,5 м) — значения по памяти, их следует проверить. Расположение и число ниш и окон, шаг слепой аркады и обрамления дверей приблизительны. Строительная надпись царицы Катраниде на южном фасаде не воспроизведена: в надписях приложения нет армянского письма, а текст не удалось проверить. Интерьер не моделировался. Стены стоят далеко от собора; здесь они поставлены близко за ним, их размеры приблизительны; кресты на башнях — того рода, что вставлены в стены Ани.",
+    ],
+  "Doors: west, north and south": [
+    "Türen: Westen, Norden und Süden",
+    "Двери: западная, северная и южная",
+  ],
+  "Drum and dome": ["Tambour und Kuppel", "Барабан и купол"],
+  "It fell in the earthquake of 1319; the model shows it in place.": [
+    "Sie stürzte beim Erdbeben von 1319 ein; das Modell zeigt sie an ihrem Platz.",
+    "Он обрушился при землетрясении 1319 года; модель показывает его на месте.",
+  ],
+  "The west door": ["Die Westtür", "Западная дверь"],
+  "The largest of three doors, on the west, north and south.": [
+    "Die größte der drei Türen, im Westen, Norden und Süden.",
+    "Самая большая из трёх дверей — на западе, севере и юге.",
+  ],
+  "The blind arcade": ["Die Blendarkade", "Слепая аркада"],
+  "Tall arches on slender paired shafts running round all four fronts.": [
+    "Hohe Bögen auf schlanken Doppelsäulchen, die um alle vier Fronten laufen.",
+    "Высокие арки на тонких сдвоенных колонках по всем четырём фасадам.",
+  ],
+  "The triangular niches": ["Die dreieckigen Nischen", "Треугольные ниши"],
+  "Deep niches cut into the wall mark where the inner walls meet the outer ones.": [
+    "Tiefe, in die Wand geschnittene Nischen markieren, wo die Innenwände auf die Außenwand treffen.",
+    "Глубокие ниши, врезанные в стену, отмечают места, где внутренние стены сходятся с наружной.",
+  ],
+  "The roofs of the cross": ["Die Dächer des Kreuzes", "Крыши креста"],
+  "The cross of the plan, hidden in the rectangle of the walls, shows in the roofs.": [
+    "Der Kreuzgrundriss, im Rechteck der Mauern verborgen, zeigt sich in den Dächern.",
+    "Крестовый план, скрытый в прямоугольнике стен, виден в крышах.",
+  ],
+  "The double wall": ["Die Doppelmauer", "Двойная стена"],
+  "The high inner wall with its round towers, and the lower outer wall beyond.": [
+    "Die hohe Innenmauer mit ihren runden Türmen und dahinter die niedrigere Außenmauer.",
+    "Высокая внутренняя стена с круглыми башнями и за ней более низкая внешняя.",
+  ],
+  // Sagalassos, Zeugma, Sümela and Patara (October 2026).
+  "The Antonine Nymphaeum at Sagalassos": [
+    "Das Antoninische Nymphäum von Sagalassos",
+    "Антонинов нимфей в Сагалассе",
+  ],
+  "The monumental fountain on the north side of the Upper Agora: a long basin in front, a wall divided by columned niches behind it, a half-domed apse in the middle and statues in the niches. Its fallen blocks were set up again where they lay, and after some 1,700 years it runs with water once more. The model shows it with its water and its statues, in the everyday life of the square.":
+    [
+      "Der Monumentalbrunnen an der Nordseite der Oberen Agora: vorn ein langes Becken, dahinter eine Wand, gegliedert von Säulennischen, in der Mitte eine Apsis mit Halbkuppel und in den Nischen Statuen. Seine gestürzten Blöcke wurden dort wieder aufgerichtet, wo sie lagen, und nach rund 1.700 Jahren fließt wieder Wasser. Das Modell zeigt ihn mit Wasser und Statuen im Alltag des Platzes.",
+      "Монументальный фонтан на северной стороне Верхней агоры: впереди длинный бассейн, за ним стена, расчленённая нишами с колоннами, в центре апсида с полукуполом, в нишах статуи. Его упавшие блоки поставили обратно там, где они лежали, и спустя примерно 1700 лет в нём снова течёт вода. Модель показывает фонтан с водой и статуями, в повседневной жизни площади.",
+    ],
+  "AD 160 - 180": ["160–180 n. Chr.", "160–180 гг. н. э."],
+  "Antonine Nymphaeum": ["Antoninisches Nymphäum", "Антонинов нимфей"],
+  "The length and height of the front are from the English Wikipedia. How the front divides — four side aediculae and the apse between them, the girth and height of the columns, the height of their pedestals, the depth of the basin — is modelled from photographs of the re-erected fountain and the known proportions of Roman fountain houses, and the coloured stone of the shafts is a guess. Dionysos, of the fountain's statue group, stands in the middle niche; who stood in the side niches is treated as unknown, and they hold scans of other ancient statues — none of them is a statue from here. The water stands still rather than flowing; the paving of the agora, the honorific columns and the stalls are scenery, not measurement.":
+    [
+      "Länge und Höhe der Front stammen aus der englischen Wikipedia. Wie sich die Front gliedert — vier seitliche Ädikulen und die Apsis dazwischen, Stärke und Höhe der Säulen, die Höhe ihrer Postamente, die Tiefe des Beckens —, ist nach Fotos des wiederaufgerichteten Brunnens und den bekannten Proportionen römischer Brunnenhäuser modelliert; der farbige Stein der Schäfte ist eine Vermutung. Dionysos aus der Statuengruppe des Brunnens steht in der mittleren Nische; wer in den seitlichen Nischen stand, gilt als unbekannt, und dort stehen Scans anderer antiker Statuen — keine davon stammt von hier. Das Wasser steht still, statt zu fließen; das Pflaster der Agora, die Ehrensäulen und die Stände sind Kulisse, keine Messung.",
+      "Длина и высота фасада взяты из английской Википедии. Членение фасада — четыре боковые эдикулы и апсида между ними, толщина и высота колонн, высота пьедесталов, глубина бассейна — смоделировано по фотографиям восстановленного фонтана и известным пропорциям римских фонтанных зданий; цветной камень стволов — предположение. В средней нише стоит Дионис из скульптурной группы фонтана; кто стоял в боковых нишах, считается неизвестным, и там стоят сканы других античных статуй — ни одна из них не отсюда. Вода стоит, а не течёт; мощение агоры, почётные колонны и лавки — декорация, а не измерение.",
+    ],
+  "Length of the fountain front": ["Länge der Brunnenfront", "Длина фасада фонтана"],
+  "Height of the front": ["Höhe der Front", "Высота фасада"],
+  "Wikipedia: Sagalassos": ["Wikipedia (Englisch): Sagalassos", "Википедия (англ.): Сагалассос"],
+  "The basin": ["Das Becken", "Бассейн"],
+  "The long basin before the fountain; people filled their jars over the parapet.": [
+    "Das lange Becken vor dem Brunnen; die Leute füllten ihre Krüge über die Brüstung.",
+    "Длинный бассейн перед фонтаном; люди наполняли кувшины через парапет.",
+  ],
+  "The apse and Dionysos": ["Die Apsis und Dionysos", "Апсида и Дионис"],
+  "The half-domed niche in the middle, where Dionysos stood — the god of wine and feasting, not of water.":
+    [
+      "Die Nische mit Halbkuppel in der Mitte, in der Dionysos stand — der Gott des Weins und des Festes, nicht des Wassers.",
+      "Ниша с полукуполом в центре, где стоял Дионис — бог вина и празднества, а не воды.",
+    ],
+  "An aedicula": ["Eine Ädikula", "Эдикула"],
+  "A pedimented frame carried on two columns, with a statue in the niche inside it.": [
+    "Ein Rahmen mit Giebel auf zwei Säulen, in der Nische darin eine Statue.",
+    "Обрамление с фронтоном на двух колоннах, со статуей в нише внутри.",
+  ],
+  "The spouts": ["Die Wasserspeier", "Водомёты"],
+  "Water poured into the basin from spouts in the podium, and does so again today.": [
+    "Aus Speiern im Podium floss das Wasser ins Becken, und heute tut es das wieder.",
+    "Вода лилась в бассейн из водомётов в подиуме — и сегодня льётся снова.",
+  ],
+  "The parapet": ["Die Brüstung", "Парапет"],
+  "The low marble wall between the basin and the square, its outer face set with framed panels.": [
+    "Die niedrige Marmormauer zwischen Becken und Platz, ihre Außenseite mit gerahmten Feldern besetzt.",
+    "Низкая мраморная стенка между бассейном и площадью, снаружи украшенная обрамлёнными панелями.",
+  ],
+  "An honorific column": ["Eine Ehrensäule", "Почётная колонна"],
+  "Tall columns with statues on top stood at the corners of the agora.": [
+    "An den Ecken der Agora standen hohe Säulen mit Statuen darauf.",
+    "По углам агоры стояли высокие колонны со статуями наверху.",
+  ],
+  "A peristyle villa at Zeugma": ["Eine Peristylvilla in Zeugma", "Вилла с перистилем в Зевгме"],
+  "A rich Roman house on the terraces above the Euphrates: its colonnaded court and pool, the reception room at the head of the court, the rooms round it and a different mosaic in each. It is the type of the villas excavated before the Birecik dam flooded them — the Houses of Poseidon and of Dionysos — not a copy of any one. The model shows it on an evening before the Sasanian sack of 252-253.":
+    [
+      "Ein reiches römisches Haus auf den Terrassen über dem Euphrat: der Säulenhof mit Becken, der Empfangsraum am Kopf des Hofes, die Räume ringsum und in jedem ein anderes Mosaik. Es ist der Typ der Villen, die vor der Flutung durch den Birecik-Staudamm ausgegraben wurden — die Häuser des Poseidon und des Dionysos —, keine Kopie einer einzelnen. Das Modell zeigt es an einem Abend vor der sasanidischen Plünderung von 252–253.",
+      "Богатый римский дом на террасах над Евфратом: двор с колоннадой и бассейном, приёмный зал во главе двора, комнаты вокруг и в каждой своя мозаика. Это тип вилл, раскопанных до того, как их затопило водохранилище Биреджик, — домов Посейдона и Диониса, — а не копия какой-то одной. Модель показывает дом вечером накануне сасанидского разграбления 252–253 гг.",
+    ],
+  "2nd century AD - 253": ["2. Jahrhundert n. Chr. – 253", "II век н. э. – 253 г."],
+  "Roman houses": ["Römische Häuser", "Римские дома"],
+  "Nothing in this model is measured: the source gives the city's population, not the size of any one house. The court, the number of its columns, the depth of the rooms, the height of the terrace and the pool are modelled from the known proportions of Roman peristyle houses, and the roofs of the rooms are left off so that their floors can be seen. The mosaics are this app's own drawings — in the frames, meanders, lozenges and rosettes Roman floors used — and copy no mosaic found at Zeugma, the Gypsy Girl included. The wall paintings are likewise in the general Roman manner. The Poseidon in the court is a scan of another ancient statue of the type.":
+    [
+      "Nichts an diesem Modell ist gemessen: Die Quelle nennt die Einwohnerzahl der Stadt, nicht die Größe eines einzelnen Hauses. Der Hof, die Zahl seiner Säulen, die Tiefe der Räume, die Höhe der Terrasse und das Becken sind nach den bekannten Proportionen römischer Peristylhäuser modelliert, und die Dächer der Räume sind weggelassen, damit man ihre Böden sieht. Die Mosaiken sind eigene Zeichnungen dieser App — mit den Rahmen, Mäandern, Rauten und Rosetten römischer Böden — und kopieren kein in Zeugma gefundenes Mosaik, auch nicht das Zigeunermädchen. Die Wandmalereien folgen ebenso allgemein römischer Art. Der Poseidon im Hof ist der Scan einer anderen antiken Statue dieses Typs.",
+      "В этой модели ничего не измерено: источник даёт население города, а не размеры какого-либо дома. Двор, число его колонн, глубина комнат, высота террасы и бассейн смоделированы по известным пропорциям римских домов с перистилем, а крыши комнат сняты, чтобы были видны полы. Мозаики — собственные рисунки приложения, с рамками, меандрами, ромбами и розетками римских полов, и не копируют ни одну мозаику из Зевгмы, включая «Цыганку». Росписи стен также выполнены в общей римской манере. Посейдон во дворе — скан другой античной статуи того же типа.",
+    ],
+  "The city's population at its height": [
+    "Einwohnerzahl der Stadt auf ihrem Höhepunkt",
+    "Население города в период расцвета",
+  ],
+  "Wikipedia: Zeugma, Commagene": [
+    "Wikipedia (Englisch): Zeugma, Commagene",
+    "Википедия (англ.): Зевгма (Коммагена)",
+  ],
+  "The peristyle court and pool": ["Der Peristylhof und das Becken", "Перистильный двор и бассейн"],
+  "The heart of the house: the colonnaded court that gathered rain and light, with the pool in the middle.":
+    [
+      "Das Herz des Hauses: der Säulenhof, der Regen und Licht sammelte, mit dem Becken in der Mitte.",
+      "Сердце дома: двор с колоннадой, собиравший дождь и свет, с бассейном посередине.",
+    ],
+  "The reception room mosaic": ["Das Mosaik des Empfangsraums", "Мозаика приёмного зала"],
+  "The picture panel in the middle of the dining room, framed by the couches and seen from the door.":
+    [
+      "Das Bildfeld in der Mitte des Speiseraums, von den Liegen gerahmt und von der Tür aus zu sehen.",
+      "Картинное панно в центре обеденного зала, обрамлённое ложами и видное от двери.",
+    ],
+  "The meander in the portico": ["Der Mäander in der Säulenhalle", "Меандр в портике"],
+  "An endless meander runs along the floor of the walks round the court.": [
+    "Ein endloser Mäander läuft über den Boden der Gänge um den Hof.",
+    "Бесконечный меандр тянется по полу галерей вокруг двора.",
+  ],
+  "The painted walls": ["Die bemalten Wände", "Расписные стены"],
+  "The walls were painted on plaster: a dark dado, red panels in frames, a frieze above.": [
+    "Die Wände waren auf Putz bemalt: ein dunkler Sockel, rote Felder in Rahmen, darüber ein Fries.",
+    "Стены расписывали по штукатурке: тёмная панель внизу, красные поля в рамках, фриз наверху.",
+  ],
+  "The terrace over the Euphrates": ["Die Terrasse über dem Euphrat", "Терраса над Евфратом"],
+  "The villas stood on terraces on the slope; the city was named for the bridge of boats here.": [
+    "Die Villen standen auf Terrassen am Hang; die Stadt ist nach der Schiffsbrücke hier benannt.",
+    "Виллы стояли на террасах склона; город назван по здешнему наплавному мосту.",
+  ],
+  Poseidon: ["Poseidon", "Посейдон"],
+  "The god of the sea at the head of the pool; the mosaic that named one of the houses shows him too.":
+    [
+      "Der Gott des Meeres am Kopf des Beckens; auch das Mosaik, nach dem eines der Häuser benannt ist, zeigt ihn.",
+      "Бог моря во главе бассейна; его же изображает мозаика, давшая имя одному из домов.",
+    ],
+  "Sümela Monastery": ["Kloster Sümela", "Монастырь Сумела"],
+  "The monastery pressed against a cliff above the Altındere valley: a cave turned into a church with its outer wall painted all over, chapels and a holy spring, a range of rooms storeys high with balconies along the cliff edge, an arched aqueduct bringing water along the rock and the long stair climbing up from the valley. The model shows it as it stood in the nineteenth century, before it was emptied in 1923.":
+    [
+      "Das Kloster, an eine Felswand über dem Altındere-Tal gedrückt: eine zur Kirche gewordene Höhle, deren Außenwand ganz bemalt ist, Kapellen und eine heilige Quelle, ein mehrstöckiger Trakt mit Balkonen an der Felskante, ein Bogenaquädukt, der Wasser am Felsen entlang heranführt, und die lange Treppe aus dem Tal herauf. Das Modell zeigt es, wie es im 19. Jahrhundert stand, bevor es 1923 geräumt wurde.",
+      "Монастырь, прижатый к скале над долиной Алтындере: пещера, превращённая в церковь с целиком расписанной наружной стеной, часовни и святой источник, многоэтажный корпус с балконами вдоль края скалы, арочный акведук, подводящий воду вдоль скалы, и длинная лестница из долины. Модель показывает монастырь таким, каким он был в XIX веке, до того как его покинули в 1923 году.",
+    ],
+  "4th century - 1923 (model: 19th century)": [
+    "4. Jahrhundert – 1923 (Modell: 19. Jahrhundert)",
+    "IV век – 1923 г. (модель: XIX век)",
+  ],
+  "The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The cliff, the valley below and the mist are left out or simplified. The paintings on the outer walls of the rock church and the chapel are this app's own drawings — standing, haloed saints after the manner of late Byzantine painting — and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.":
+    [
+      "Die Höhe über dem Meer stammt aus der englischen Wikipedia; das Modell nutzt sie nur für die Mischung des Waldes ringsum. Die Bauten sind nicht gemessen: die Breite der Höhle, die Höhe des Hofes, die Länge des Trakts und die Höhe seiner Geschosse sowie die Zahl der Aquäduktbögen sind nach Fotos und dem bekannten Plan des Klosters modelliert, die Geschosse nach Fotos gezählt. Die Felswand, das Tal darunter und der Nebel sind weggelassen oder vereinfacht. Die Malereien an den Außenwänden der Felskirche und der Kapelle sind eigene Zeichnungen dieser App — stehende Heilige mit Nimbus nach Art der spätbyzantinischen Malerei — und kopieren kein Fresko in Sümela; die echten Wände tragen drei Malschichten aus verschiedenen Jahrhunderten.",
+      "Высота над уровнем моря взята из английской Википедии; модель использует её только для состава окружающего леса. Постройки не измерены: ширина пещеры, уровень двора, длина корпуса и высота его этажей, число арок акведука смоделированы по фотографиям и известному плану монастыря, этажи сосчитаны по фотографиям. Скала, долина внизу и туман опущены или упрощены. Росписи на наружных стенах пещерной церкви и часовни — собственные рисунки приложения: стоящие святые с нимбами в манере поздневизантийской живописи; они не копируют ни одну фреску Сумелы, а настоящие стены несут три слоя росписей разных веков.",
+    ],
+  "Height of the monastery above the sea": [
+    "Höhe des Klosters über dem Meer",
+    "Высота монастыря над уровнем моря",
+  ],
+  "Wikipedia: Sümela Monastery": [
+    "Wikipedia (Englisch): Sümela Monastery",
+    "Википедия (англ.): монастырь Сумела",
+  ],
+  "The Rock Church": ["Die Felskirche", "Пещерная церковь"],
+  "The church built into the cave; its outer wall is painted too, so that those who could not fit in could follow the service outside.":
+    [
+      "Die in die Höhle gebaute Kirche; auch ihre Außenwand ist bemalt, damit wer keinen Platz fand, den Gottesdienst draußen verfolgen konnte.",
+      "Церковь, встроенная в пещеру; её наружная стена тоже расписана, чтобы те, кто не поместился, могли следить за службой снаружи.",
+    ],
+  "The range with its balconies": ["Der Trakt mit den Balkonen", "Корпус с балконами"],
+  "The range of storeys along the cliff edge: the monks' cells, the guesthouse and the library.": [
+    "Der mehrstöckige Trakt an der Felskante: die Zellen der Mönche, das Gästehaus und die Bibliothek.",
+    "Многоэтажный корпус вдоль края скалы: кельи монахов, гостиница и библиотека.",
+  ],
+  "The aqueduct": ["Der Aquädukt", "Акведук"],
+  "The arched channel along the cliff that brought water to the monastery from the mountain.": [
+    "Die Bogenleitung am Felsen entlang, die dem Kloster Wasser vom Berg brachte.",
+    "Арочный водовод вдоль скалы, приносивший монастырю воду с горы.",
+  ],
+  "The stair and the gate": ["Die Treppe und das Tor", "Лестница и ворота"],
+  "The long stair climbs from the valley path to the gate, and down from it into the court.": [
+    "Die lange Treppe steigt vom Talweg zum Tor hinauf und von dort in den Hof hinab.",
+    "Длинная лестница поднимается от тропы в долине к воротам, а от них спускается во двор.",
+  ],
+  "A chapel": ["Eine Kapelle", "Часовня"],
+  "The small chapel at the west end of the court, its outer wall painted as well.": [
+    "Die kleine Kapelle am Westende des Hofes, auch ihre Außenwand bemalt.",
+    "Маленькая часовня в западном конце двора, её наружная стена тоже расписана.",
+  ],
+  "The holy spring": ["Die heilige Quelle", "Святой источник"],
+  "Water seeping from the back of the cave, which pilgrims took away for healing.": [
+    "Wasser, das hinten aus der Höhle sickert und das Pilger zur Heilung mitnahmen.",
+    "Вода, сочащаяся из глубины пещеры; паломники уносили её для исцеления.",
+  ],
+  "The Lighthouse of Patara": ["Der Leuchtturm von Patara", "Маяк Патары"],
+  "The lighthouse at the end of the mole at the mouth of Lycia's greatest harbour: a cylindrical tower on a square base, the fire burning in the lantern on its top. It was raised under the emperor Nero and is among the oldest lighthouses to survive; its blocks, found under the sand, were set back in place. The model shows it among the harbour's daily work, as the evening fire is lit.":
+    [
+      "Der Leuchtturm am Ende der Mole an der Einfahrt zum größten Hafen Lykiens: ein zylindrischer Turm auf quadratischem Sockel, oben brennt das Feuer in der Laterne. Er wurde unter Kaiser Nero errichtet und gehört zu den ältesten erhaltenen Leuchttürmen; seine unter dem Sand gefundenen Blöcke wurden wieder an ihren Platz gesetzt. Das Modell zeigt ihn inmitten der täglichen Arbeit des Hafens, während das Abendfeuer entzündet wird.",
+      "Маяк в конце мола у входа в крупнейшую гавань Ликии: цилиндрическая башня на квадратном основании, на вершине в фонаре горит огонь. Он был возведён при императоре Нероне и входит в число старейших сохранившихся маяков; его блоки, найденные под песком, вернули на место. Модель показывает маяк среди повседневной работы гавани, когда зажигают вечерний огонь.",
+    ],
+  "AD 64 - 65": ["64–65 n. Chr.", "64–65 гг. н. э."],
+  Lighthouse: ["Leuchtturm", "Маяк"],
+  "No dimension in this model is presented as measured: the width and height of the base, the girth and height of the tower and the length of the mole are modelled from photographs of the building and the known form of Roman lighthouses. The dedication on the seaward face of the base was set in bronze letters; the letters are lost and only their dowel holes remain. Since the text could not be read here from a checked source, it is not drawn, and the panel is left empty. The form of the lantern, the warehouse, the ship and the life of the harbour are scenery.":
+    [
+      "Keine Abmessung dieses Modells wird als gemessen ausgegeben: Breite und Höhe des Sockels, Stärke und Höhe des Turms und die Länge der Mole sind nach Fotos des Baus und der bekannten Form römischer Leuchttürme modelliert. Die Weihinschrift an der Seeseite des Sockels war in Bronzebuchstaben gesetzt; die Buchstaben sind verloren, nur ihre Dübellöcher sind geblieben. Da der Text hier nicht aus einer geprüften Quelle gelesen werden konnte, ist er nicht gezeichnet und das Feld bleibt leer. Die Form der Laterne, das Lagerhaus, das Schiff und das Leben im Hafen sind Kulisse.",
+      "Ни один размер этой модели не выдаётся за измеренный: ширина и высота основания, толщина и высота башни и длина мола смоделированы по фотографиям постройки и известной форме римских маяков. Посвятительная надпись на обращённой к морю стороне основания была выложена бронзовыми буквами; буквы утрачены, остались лишь отверстия от штифтов. Поскольку текст не удалось прочитать здесь по проверенному источнику, он не нарисован, и поле оставлено пустым. Форма фонаря, склад, корабль и жизнь гавани — декорация.",
+    ],
+  "The stone tower rising in three narrowing stages from the square base, a stair inside it to the lantern.":
+    [
+      "Der Steinturm, der sich in drei schmaler werdenden Stufen über dem quadratischen Sockel erhebt, innen eine Treppe zur Laterne.",
+      "Каменная башня, поднимающаяся тремя сужающимися ярусами над квадратным основанием; внутри лестница к фонарю.",
+    ],
+  "The lantern": ["Die Laterne", "Фонарь"],
+  "The fire on the hearth at the top showed ships the harbour mouth by night.": [
+    "Das Feuer auf dem Herd oben zeigte den Schiffen nachts die Hafeneinfahrt.",
+    "Огонь в очаге на вершине ночью указывал кораблям вход в гавань.",
+  ],
+  "The inscription panel": ["Das Inschriftfeld", "Поле надписи"],
+  "On the seaward face, a text in bronze letters said the lighthouse was raised in Nero's name.": [
+    "An der Seeseite sagte ein Text in Bronzebuchstaben, dass der Leuchtturm in Neros Namen errichtet wurde.",
+    "На стороне, обращённой к морю, надпись бронзовыми буквами сообщала, что маяк воздвигнут от имени Нерона.",
+  ],
+  "The door and the stair": ["Die Tür und die Treppe", "Дверь и лестница"],
+  "A stair against the landward side of the base climbs to the tower door.": [
+    "Eine Treppe an der Landseite des Sockels führt zur Turmtür hinauf.",
+    "Лестница у обращённой к суше стороны основания ведёт к двери башни.",
+  ],
+  "The mole": ["Die Mole", "Мол"],
+  "The stone mole that sheltered the harbour from the sea; ships moored along its inner side.": [
+    "Die steinerne Mole, die den Hafen vor dem Meer schützte; Schiffe machten an ihrer Innenseite fest.",
+    "Каменный мол, защищавший гавань от моря; корабли швартовались у его внутренней стороны.",
+  ],
+  "The warehouse": ["Das Lagerhaus", "Склад"],
+  "Cargo taken off the ships was carried to storehouses at the landward end of the quay.": [
+    "Die von den Schiffen geholte Fracht wurde in Lagerhäuser am landseitigen Ende des Kais getragen.",
+    "Груз, снятый с кораблей, переносили на склады у сухопутного конца причала.",
+  ],
 };

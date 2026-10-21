@@ -18,6 +18,14 @@ import {
   type WalkStart,
 } from "@/lib/reconstruction-parts";
 import type { ScanId } from "@/lib/scans";
+import { hittiteGateLayout, type HittiteGateSpec } from "@/lib/models/hattusa-aslanli-kapi";
+import { troyLayout, type TroyCitadelSpec } from "@/lib/models/troya-vi-surlari";
+import { townLayout, type NeolithicTownSpec } from "@/lib/models/catalhoyuk-dogu-hoyugu";
+import type { CathedralSpec } from "@/lib/models/ani-katedrali";
+import { nymphaeumLife } from "@/lib/models/sagalassos-antoninler-cesmesi-life";
+import { villaLife } from "@/lib/models/zeugma-villa-life";
+import { monasteryLife } from "@/lib/models/sumela-manastiri-life";
+import { lighthouseLife } from "@/lib/models/patara-deniz-feneri-life";
 import type {
   GreatAltarSpec,
   IonicDipterosSpec,
@@ -47,7 +55,22 @@ import type {
  */
 
 /** Who the people are, which decides what they wear. */
-export type Era = "neolithic" | "hellenistic" | "roman" | "commagene" | "carian";
+export type Era =
+  | "neolithic"
+  | "hellenistic"
+  | "roman"
+  | "commagene"
+  | "carian"
+  /** The Neolithic town: hides, and cloth woven from plant fibre. */
+  | "village-neolithic"
+  /** Hittite Anatolia in the Late Bronze Age. */
+  | "hittite"
+  /** The Late Bronze Age Troad. */
+  | "bronze-age"
+  /** Medieval Armenia, under the Bagratid kings. */
+  | "medieval"
+  /** An Orthodox monastery of the Pontic mountains: monks, lay brothers, pilgrims. */
+  | "byzantine";
 
 /**
  * The garment, as the renderer builds it.
@@ -71,7 +94,20 @@ export type Garment =
   | "robe";
 
 export type Headwear =
-  "veil" | "wreath" | "petasos" | "phrygian" | "tiara" | "helmet" | "mask" | "fillet" | "polos";
+  | "veil"
+  | "wreath"
+  | "petasos"
+  | "phrygian"
+  | "tiara"
+  | "helmet"
+  | "mask"
+  | "fillet"
+  | "polos"
+  /** A tall pointed cap, or a pointed helmet. */
+  | "conical"
+  | "turban"
+  /** A pointed hood, as monks and priests wore it. */
+  | "hood";
 
 /** What a person carries, and where the renderer puts it. */
 export type Carry =
@@ -349,6 +385,182 @@ function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
       trim: rand() < 0.5 ? 0xb4652e : pick(rand, HIDE),
       hair: pick(rand, HAIR.slice(0, 4)),
       beard: !isFemale && rand() < 0.7,
+    };
+  }
+
+  if (era === "village-neolithic") {
+    // Skins, and plain cloth woven from plant fibre: both were found here.
+    const woven = rand() < 0.45;
+    return {
+      ...base,
+      garment: woven ? "tunic" : "hide",
+      main: woven ? pick(rand, [DYE.linen, DYE.oat, DYE.wool, 0xb59a70]) : pick(rand, HIDE),
+      trim: woven ? pick(rand, HIDE) : rand() < 0.4 ? 0xb4652e : pick(rand, HIDE),
+      hair: pick(rand, HAIR.slice(0, 4)),
+      beard: !isFemale && rand() < 0.6,
+      ...(isFemale ? { hairStyle: rand() < 0.5 ? ("fall" as const) : ("bun" as const) } : {}),
+    };
+  }
+
+  if (era === "hittite" || era === "bronze-age") {
+    const hittite = era === "hittite";
+    const cloth = [
+      DYE.linen,
+      DYE.wool,
+      DYE.oat,
+      DYE.madder,
+      DYE.weld,
+      DYE.ochre,
+      DYE.woad,
+      DYE.brown,
+    ];
+    if (role === "priest" || role === "priestess") {
+      const female = role === "priestess";
+      return {
+        ...base,
+        female,
+        garment: "robe",
+        main: DYE.white,
+        trim: female ? pick(rand, [DYE.madder, DYE.woad]) : hittite ? DYE.madder : DYE.weld,
+        beard: false,
+        // The tall pointed cap of the Hittite priest and king; at Troy a fillet.
+        headwear: female ? "polos" : hittite ? "conical" : "fillet",
+        ...(female ? { jewels: true } : {}),
+      };
+    }
+    if (role === "soldier") {
+      return {
+        ...base,
+        female: false,
+        garment: "tunic",
+        main: pick(rand, [DYE.wool, DYE.oat, DYE.linen]),
+        // The trim colours the belt and the pointed bronze helmet.
+        trim: 0xa8843e,
+        beard: !hittite && rand() < 0.5,
+        headwear: "conical",
+      };
+    }
+    if (role === "worker" || role === "child") {
+      return {
+        ...base,
+        ...(role === "worker" ? { female: false } : {}),
+        garment: "tunic",
+        main: pick(rand, role === "child" ? [DYE.linen, DYE.wool, DYE.weld] : WORK_CLOTH),
+        trim: pick(rand, WORK_CLOTH),
+        beard: role === "worker" && rand() < (hittite ? 0.2 : 0.5),
+      };
+    }
+    if (isFemale) {
+      // A long gown; the hair long down the back, sometimes under a tall cap.
+      const capped = hittite && rand() < 0.3;
+      return {
+        ...base,
+        garment: "robe",
+        main: pick(rand, cloth),
+        trim: pick(rand, cloth),
+        hairStyle: rand() < 0.6 ? "fall" : "bun",
+        ...(capped
+          ? { headwear: "polos" as const }
+          : rand() < 0.3
+            ? { headwear: "fillet" as const }
+            : {}),
+        jewels: rand() < 0.6,
+      };
+    }
+    const long = rand() < (hittite ? 0.45 : 0.35);
+    return {
+      ...base,
+      garment: long ? "robe" : "tunic",
+      main: pick(rand, cloth),
+      trim: pick(rand, cloth),
+      // Hittite men are shown clean-shaven on the reliefs, as a rule.
+      beard: rand() < (hittite ? 0.15 : 0.55),
+      ...(hittite && long && rand() < 0.3 ? { headwear: "conical" as const } : {}),
+    };
+  }
+
+  if (era === "byzantine") {
+    // Monks in black, with the hood drawn up; pilgrims and lay brothers in
+    // the undyed and dark homespun of mountain villages.
+    if (role === "priest")
+      return {
+        ...base,
+        female: false,
+        garment: "robe",
+        main: 0x23211e,
+        trim: 0x34312c,
+        beard: true,
+        headwear: "hood",
+      };
+    if (isFemale)
+      return {
+        ...base,
+        garment: "robe",
+        main: pick(rand, [DYE.black, DYE.brown, DYE.madder, DYE.woad]),
+        trim: pick(rand, [DYE.white, DYE.weld]),
+        headwear: "veil",
+      };
+    return {
+      ...base,
+      female: false,
+      garment: rand() < 0.5 ? "tunic" : "robe",
+      main: pick(rand, [DYE.brown, DYE.grey, DYE.wool, DYE.black]),
+      trim: pick(rand, WORK_CLOTH),
+      beard: role !== "child" && rand() < 0.8,
+    };
+  }
+
+  if (era === "medieval") {
+    if (role === "priest") {
+      return {
+        ...base,
+        female: false,
+        garment: "robe",
+        main: 0x2b2723,
+        trim: 0x3e3a34,
+        beard: true,
+        headwear: "hood",
+      };
+    }
+    if (role === "soldier") {
+      return {
+        ...base,
+        female: false,
+        garment: "persian",
+        main: pick(rand, [DYE.madder, DYE.brown, DYE.woad, DYE.green]),
+        trim: 0x8f8d86,
+        beard: rand() < 0.8,
+        headwear: "conical",
+      };
+    }
+    if (role === "worker" || role === "child") {
+      return {
+        ...base,
+        ...(role === "worker" ? { female: false } : {}),
+        garment: "tunic",
+        main: pick(rand, WORK_CLOTH),
+        trim: pick(rand, WORK_CLOTH),
+        beard: role === "worker" && rand() < 0.7,
+      };
+    }
+    if (isFemale) {
+      const veiled = rand() < 0.5;
+      return {
+        ...base,
+        garment: "robe",
+        main: pick(rand, [DYE.madder, DYE.woad, DYE.green, DYE.purple, DYE.linen, DYE.ochre]),
+        trim: pick(rand, [DYE.weld, DYE.white, DYE.madder, DYE.black]),
+        ...(veiled ? { headwear: "veil" as const } : { hairStyle: "fall" as const }),
+        jewels: rand() < 0.5,
+      };
+    }
+    return {
+      ...base,
+      garment: "persian",
+      main: pick(rand, [DYE.madder, DYE.woad, DYE.green, DYE.brown, DYE.wool, DYE.ochre]),
+      trim: pick(rand, [DYE.weld, DYE.white, DYE.black, DYE.madder]),
+      beard: rand() < 0.85,
+      ...(rand() < 0.55 ? { headwear: "turban" as const } : {}),
     };
   }
 
@@ -3170,6 +3382,14 @@ const ERA: Record<string, Era> = {
   "aizanoi-zeus-tapinagi": "roman",
   "halikarnas-mozolesi": "carian",
   "nemrut-dogu-terasi": "commagene",
+  "hattusa-aslanli-kapi": "hittite",
+  "troya-vi-surlari": "bronze-age",
+  "catalhoyuk-dogu-hoyugu": "village-neolithic",
+  "ani-katedrali": "medieval",
+  "sagalassos-antoninler-cesmesi": "roman",
+  "zeugma-villa": "roman",
+  "sumela-manastiri": "byzantine",
+  "patara-deniz-feneri": "roman",
 };
 
 /** The scene for one reconstruction. */
@@ -3200,6 +3420,22 @@ function sceneFor(item: Reconstruction): SceneLife {
       return mausoleumLife(spec, era);
     case "tumulus-sanctuary":
       return tumulusLife(spec, era);
+    case "hittite-gate":
+      return hittiteGateLife(spec, era);
+    case "troy-citadel":
+      return troyLife(spec, era);
+    case "neolithic-town":
+      return townLife(spec, era);
+    case "medieval-cathedral":
+      return cathedralLife(spec, era);
+    case "nymphaeum":
+      return nymphaeumLife(spec, era);
+    case "terrace-villa":
+      return villaLife(spec, era);
+    case "cliff-monastery":
+      return monasteryLife(spec, era);
+    case "lighthouse":
+      return lighthouseLife(spec, era);
   }
 }
 
@@ -3660,3 +3896,518 @@ function furnish(item: Reconstruction, life: SceneLife): SceneLife {
     flames: [...life.flames, ...flames],
   };
 }
+
+/* ------------------------------------------------------------------ *
+ * The Bronze Age, Neolithic and medieval models (in src/lib/models/)
+ * ------------------------------------------------------------------ */
+
+/**
+ * The Lion Gate on an ordinary day of the Hittite empire: guards at the
+ * towers, a priest and priestess pouring an offering before the lions, a
+ * farmer and his donkey climbing the ramp, an oxcart waiting at its foot,
+ * sentries on the wall walk, sheep on the slope below.
+ */
+function hittiteGateLife(spec: HittiteGateSpec, era: Era): SceneLife {
+  const b = make(era, 5141);
+  const { cast, rand } = b;
+  const L = hittiteGateLayout(spec);
+  const R = L.R;
+  const floor = R + 0.1;
+  const paving = R + 0.06;
+  const front = L.zo;
+  const S = Math.PI;
+
+  // Guards before the towers, spears grounded, facing the road.
+  for (const side of [-1, 1]) {
+    cast.add({
+      at: [side * 4.6, R, front - 1.3],
+      rotY: S,
+      action: "stand",
+      role: "soldier",
+      carry: "spear",
+    });
+    fire(b, torchStand([side * 5.6, R, front - 0.75], 1.9), 0.35, side < 0);
+  }
+  // An offering before the left lion: the priest's hands raised, the
+  // priestess with the jar, a stone stand with a bowl on it.
+  b.props.push(box("stone", [-2.5, R, front - 1.7], [0.7, 0.75, 0.55]));
+  b.props.push(cyl("terracotta", [-2.5, R + 0.75, front - 1.7], 0.12, 0.2, 0.09, 12));
+  cast.add({ at: [-2.4, R, front - 2.7], rotY: 0, action: "pray", role: "priest" });
+  cast.add({
+    at: [-3.5, R, front - 2.9],
+    rotY: 0.3,
+    action: "tend",
+    role: "priestess",
+    carry: "jar",
+  });
+  fire(b, brazier([-6.5, R, front - 3.6], 1), 0.55, true, true);
+
+  // Up the ramp from the plain, through the gate and into the city, and back.
+  const ramp = L.ramp;
+  const z = ramp.z + 0.3;
+  const up: Vec3[] = [
+    [ramp.top + ramp.run + 1.3, 0, z],
+    [ramp.top + ramp.run - 0.05, 0, z],
+    [ramp.top + 0.8, R, z],
+    [6, R, front - 5.5],
+    [0.7, floor, front + 1.5],
+    [0.7, paving, L.zi + 14],
+  ];
+  const there = (route: Vec3[]) => [...route, ...route.slice(1, -1).reverse()];
+  cast.walk(there(up), { role: "worker", carry: "basket", speed: 0.8 });
+  animal(b, "donkey", up[0]!, -Math.PI / 2, "walk", {
+    route: there(up.map(([x, y, zz]) => [x, y, zz + 1.0] as Vec3)),
+    speed: 0.8,
+    load: true,
+  });
+  cast.walk(there([...up].reverse().map(([x, y, zz]) => [x, y, zz - 0.7] as Vec3)), {
+    role: "citizen",
+    female: true,
+    carry: "jar",
+    speed: 0.9,
+  });
+  cast.walk(there(up.slice(1).map(([x, y, zz]) => [x, y, zz - 1.3] as Vec3)), {
+    role: "citizen",
+    speed: 1.1,
+  });
+  // In the forecourt: people talking, children, a dog asleep.
+  cast.group([9, R, front - 9], 3);
+  cast.group([-8, R, front - 8], 2);
+  cast.add({ at: [3.5, R, front - 11], rotY: 1.1, action: "play", role: "child" });
+  cast.add({ at: [4.3, R, front - 11.6], rotY: -2, action: "play", role: "child" });
+  dog(b, [10.8, R, front - 6.4]);
+  // Storage jars set down by a trader.
+  for (let i = 0; i < 4; i += 1)
+    b.props.push(...jar([14 + (i % 2) * 0.8, R, front - 12 - Math.floor(i / 2) * 0.8], 1.1));
+  cast.add({ at: [14.4, R, front - 10.6], rotY: S, action: "talk", role: "worker" });
+
+  // Sentries on the wall walk east of the gate.
+  const walk = R + spec.wallHeight - 1.25;
+  const gx = L.P / 2 + spec.towerWidth;
+  cast.walk(
+    [
+      [gx + 1.5, walk, 0.8],
+      [gx + 10, walk, 0.8],
+    ],
+    { role: "soldier", carry: "spear", speed: 0.6 },
+  );
+  cast.add({ at: [-gx - 6, walk, -1], rotY: S, action: "stand", role: "soldier", carry: "spear" });
+
+  // Inside: the street into the Upper City.
+  cast.walk(
+    [
+      [-1.6, paving, L.zi + 3],
+      [-1.6, paving, L.zi + 16],
+    ],
+    { role: "citizen", female: true, carry: "basket" },
+  );
+  cast.walk(
+    [
+      [1.8, paving, L.zi + 15],
+      [1.2, floor, front + 2],
+    ],
+    { role: "priest", speed: 0.7 },
+  );
+  dog(b, [
+    [-2.2, paving, L.zi + 6],
+    [-1.4, paving, L.zi + 15],
+  ]);
+
+  // An oxcart at the foot of the ramp, the pair still yoked, the driver by them.
+  const cartAt: Vec3 = [ramp.top + ramp.run + 4.6, 0, ramp.z - 3.6];
+  const yaw = -Math.PI / 2;
+  b.props.push(...cart(cartAt, yaw, rand));
+  for (const side of [-1, 1]) {
+    animal(b, "ox", turn(cartAt, yaw, side * 0.6, 0, 2.9), yaw, "stand", { dressed: 0x8a6a48 });
+  }
+  cast.add({
+    at: turn(cartAt, yaw, 1.5, 0, 3.4),
+    rotY: yaw,
+    action: "stand",
+    role: "worker",
+    carry: "staff",
+  });
+
+  // Sheep on the plain below the rampart, and their shepherd.
+  flock(b, "sheep", [22, 0, ramp.z - 13], 9, 5);
+  flock(b, "goat", [6, 0, ramp.z - 11], 4, 3);
+  cast.add({
+    at: [17, 0, ramp.z - 10],
+    rotY: 0.6,
+    action: "stand",
+    role: "worker",
+    carry: "staff",
+  });
+  return finish(b);
+}
+
+/**
+ * Troy VI: people and a loaded donkey climbing the passage of the East Gate,
+ * a guard at its head and one on the tower, a two-horse chariot driven out
+ * on the plain, horses and sheep grazing, and the household by its hearth.
+ */
+function troyLife(spec: TroyCitadelSpec, era: Era): SceneLife {
+  const b = make(era, 6113);
+  const { cast, rand } = b;
+  const L = troyLayout(spec);
+  const t = spec.terrace;
+  const there = (route: Vec3[]) => [...route, ...route.slice(1, -1).reverse()];
+  const lane = L.east.inner + 1.0;
+  const up: Vec3[] = [
+    [-3, 0, lane],
+    [L.east.x0 - 4 - 0.05, 0, lane],
+    [L.west.x1 - 0.3, t, lane],
+    [22.6, t, -3],
+    [23.4, t + 0.06, 14],
+  ];
+  const shift = (route: Vec3[], dz: number, dx = 0) =>
+    route.map(([x, y, z]) => [x + dx, y, z + dz] as Vec3);
+  cast.walk(there(up), { role: "worker", carry: "amphora", speed: 0.8 });
+  animal(b, "donkey", up[0]!, Math.PI / 2, "walk", {
+    route: there(shift(up, -0.3)),
+    speed: 0.75,
+    load: true,
+  });
+  cast.walk(there(shift([...up].reverse(), 0.3)), {
+    role: "citizen",
+    female: true,
+    carry: "basket",
+    speed: 0.9,
+  });
+  cast.walk(there(shift(up.slice(1), -0.5)), { role: "citizen", speed: 1.1 });
+  // A guard where the passage turns in, another on the tower.
+  cast.add({
+    at: [21.6, t, -5.9],
+    rotY: -Math.PI / 2,
+    action: "stand",
+    role: "soldier",
+    carry: "spear",
+    carryLeft: "shield",
+  });
+  const towerTop = spec.stoneHeight + spec.brickHeight + 2.4;
+  const tcx = L.tower.x0 + spec.towerWidth / 2;
+  cast.add({
+    at: [tcx - 2, towerTop, L.east.outer - spec.towerDepth / 2],
+    rotY: Math.PI,
+    action: "stand",
+    role: "soldier",
+    carry: "spear",
+  });
+  fire(b, torchStand([21.8, t, -3.2], 1.8), 0.33, true);
+
+  // The household before the first house: a hearth, a loom, jars.
+  const hx = -22;
+  const hz = 16 + 13.5;
+  fire(b, brazier([hx + 6, t, hz - 4], 0.9), 0.5, true, true);
+  cast.add({
+    at: [hx + 6.9, t, hz - 4.6],
+    rotY: -0.9,
+    action: "tend",
+    role: "citizen",
+    female: true,
+  });
+  cast.add({ at: [hx + 5, t, hz - 5], rotY: 0.8, action: "sit", role: "child" });
+  b.props.push(
+    box("timber", [hx - 2.6, t, hz - 2], [0.08, 1.9, 0.08]),
+    box("timber", [hx - 1.0, t, hz - 2], [0.08, 1.9, 0.08]),
+  );
+  b.props.push(box("timber", [hx - 1.8, t + 1.8, hz - 2], [1.8, 0.08, 0.09]));
+  b.props.push(box("hide", [hx - 1.8, t + 0.5, hz - 2], [1.5, 1.25, 0.02]));
+  cast.add({
+    at: [hx - 1.8, t, hz - 1.4],
+    rotY: Math.PI,
+    action: "tend",
+    role: "citizen",
+    female: true,
+  });
+  for (let i = 0; i < 3; i += 1) b.props.push(...jar([hx + 3 + i * 0.75, t, hz - 1.4], 1));
+  cast.group([4, t, 8], 3);
+  cast.group([-12, t, 6.5], 2);
+  dog(b, [hx + 7.5, t, hz - 2.6]);
+  dog(b, [
+    [0, t, 5],
+    [14, t, 6],
+  ]);
+
+  // Out on the plain: a chariot, the horses Troy was famous for, the flocks.
+  const coat = COATS.horse;
+  b.chariots.push({
+    route: [
+      [-40, 0, -24],
+      [8, 0, -27],
+      [38, 0, -36],
+      [-30, 0, -40],
+    ],
+    speed: 4.5,
+    phase: 0,
+    team: 2,
+    horses: [coat[0]!, coat[1]!],
+    driver: dress(rand, era, "soldier"),
+    colour: 0x8a5a3a,
+  });
+  flock(b, "horse", [-26, 0, -33], 4, 4);
+  flock(b, "sheep", [18, 0, -46], 8, 5);
+  cast.add({ at: [14, 0, -43], rotY: 0.4, action: "stand", role: "worker", carry: "staff" });
+  return finish(b);
+}
+
+/**
+ * Çatalhöyük on a working day: people on the roofs, which were the streets
+ * and the workplaces — grinding grain, knapping obsidian, minding a fire,
+ * drying a hide — and inside the open house, a woman at the oven, a child
+ * on the platform; sheep and goats in the yard, dogs everywhere.
+ */
+function townLife(spec: NeolithicTownSpec, era: Era): SceneLife {
+  const b = make(era, 7201);
+  const { cast } = b;
+  const L = townLayout(spec);
+  const h = L.houses;
+  const roof = (i: number) => h[i]!.roof;
+  const on = (i: number, dx: number, dz: number): Vec3 => [h[i]!.cx + dx, roof(i), h[i]!.cz + dz];
+
+  // Grinding grain on a quern.
+  b.props.push(box("limestone", on(0, -0.8, 1.5), [0.7, 0.14, 0.42], 0.3));
+  b.props.push(
+    box(
+      "stone",
+      [on(0, -0.8, 1.5)[0], roof(0) + 0.14, on(0, -0.8, 1.5)[2]],
+      [0.3, 0.07, 0.16],
+      0.3,
+    ),
+  );
+  cast.add({ at: on(0, -0.8, 2.15), rotY: Math.PI, action: "kneel", female: true });
+  // Knapping obsidian, the flakes scattered round him.
+  cast.add({ at: on(3, -0.7, 1.2), rotY: 0.5, action: "kneel", carry: "chisel", female: false });
+  for (let i = 0; i < 6; i += 1)
+    b.props.push(
+      box(
+        "stoneDark",
+        on(3, -0.5 + (i % 3) * 0.12, 1.6 + Math.floor(i / 3) * 0.1),
+        [0.06, 0.02, 0.04],
+        i,
+      ),
+    );
+  // Neighbours talking on a roof.
+  cast.group(on(5, -1.0, 1.4), 3);
+  // A hide stretched to dry, and someone pacing past it.
+  b.props.push(
+    box("timber", on(6, -1.4, -0.6), [0.07, 1.7, 0.07]),
+    box("timber", on(6, 0.2, -0.6), [0.07, 1.7, 0.07]),
+  );
+  b.props.push(
+    box("timber", [on(6, -0.6, -0.6)[0], roof(6) + 1.62, on(6, -0.6, -0.6)[2]], [1.7, 0.07, 0.08]),
+  );
+  b.props.push(
+    box("hide", [on(6, -0.6, -0.6)[0], roof(6) + 0.45, on(6, -0.6, -0.6)[2]], [1.4, 1.1, 0.02]),
+  );
+  cast.walk([on(6, -1.8, 1.8), on(6, 1.8, 1.8)], { female: true, carry: "basket", speed: 0.6 });
+  // A fire on a roof, ringed with stones, smoke going up.
+  const fireAt = on(8, -1.2, 1.5);
+  for (let i = 0; i < 7; i += 1) {
+    const a = (TAU * i) / 7;
+    b.props.push(
+      box(
+        "stone",
+        [fireAt[0] + Math.cos(a) * 0.42, fireAt[1], fireAt[2] + Math.sin(a) * 0.42],
+        [0.2, 0.14, 0.16],
+        -a,
+      ),
+    );
+  }
+  b.flames.push({
+    at: [fireAt[0], fireAt[1] + 0.06, fireAt[2]],
+    size: 0.7,
+    light: true,
+    smoke: true,
+  });
+  cast.add({ at: on(8, -0.3, 1.9), rotY: -2.2, action: "tend", female: true });
+  cast.add({ at: on(8, -1.9, 2.4), rotY: 2.6, action: "stand", female: false });
+  cast.add({ at: on(9, -0.6, 1.2), rotY: 1.4, action: "play", role: "child" });
+  cast.add({ at: on(9, 0.4, 1.8), rotY: -1.7, action: "talk", female: true });
+  dog(b, on(9, 1.2, 2.4));
+  cast.add({ at: on(7, 0.5, 1.4), rotY: 0.4, action: "talk", female: false });
+  cast.add({ at: on(7, 1.1, 2.1), rotY: -2.4, action: "talk", female: true });
+  cast.walk([on(10, -1.2, 1.5), on(10, 1.6, 1.5)], { female: true, carry: "jar", speed: 0.5 });
+  cast.add({ at: on(1, -1.2, 2.2), rotY: 2.8, action: "stand", female: false, carry: "staff" });
+
+  // Inside the open house.
+  const open = h[2]!;
+  const z0 = open.cz - open.d / 2 + spec.wallThickness;
+  cast.add({
+    at: [open.cx + 0.2, 0.04, z0 + 0.55],
+    rotY: -Math.PI / 2,
+    action: "kneel",
+    female: true,
+  });
+  cast.add({
+    at: [open.cx - 1.5, spec.platformHeight, z0 + spec.roomDepth - 0.7],
+    rotY: Math.PI,
+    action: "sit",
+    role: "child",
+  });
+  cast.add({
+    at: [open.cx - 2.0, 0.04, z0 + 2.1],
+    rotY: Math.PI / 2,
+    action: "talk",
+    female: false,
+  });
+  b.flames.push({ at: [open.cx - 0.8, 0.22, z0 + 0.9], size: 0.28, light: true });
+  for (let i = 0; i < 3; i += 1)
+    b.props.push(
+      ...jar([open.cx - 2.1 + i * 0.4, spec.platformHeight, z0 + spec.roomDepth - 0.25], 0.55),
+    );
+
+  // The yard: sheep and goats, and their keeper.
+  const y = L.yard;
+  flock(b, "sheep", [y.cx, 0.12, y.cz + 0.5], 4, 1.6);
+  flock(b, "goat", [y.cx - 0.5, 0.12, y.cz - 1.6], 2, 0.9);
+  cast.add({
+    at: [y.cx + 1.6, 0.12, y.cz - 2.3],
+    rotY: -0.6,
+    action: "stand",
+    carry: "staff",
+    female: false,
+  });
+  dog(b, [
+    [y.cx - 1.8, 0.12, y.cz + 2.4],
+    [y.cx + 1.8, 0.12, y.cz + 2.4],
+  ]);
+  // On the slope below the houses, someone coming up with water.
+  const south = Math.min(...h.map((house) => house.cz - house.d / 2)) - 2;
+  cast.walk(
+    [
+      [-14, 0, south],
+      [9, 0, south],
+    ],
+    { female: true, carry: "jar", speed: 0.7 },
+  );
+  return finish(b);
+}
+
+/**
+ * Ani in the eleventh century: priests at the west door of the cathedral,
+ * the faithful coming up the steps, a merchant's donkeys crossing the
+ * square, an oxcart, and guards on the city wall behind.
+ */
+function cathedralLife(spec: CathedralSpec, era: Era): SceneLife {
+  const b = make(era, 1001);
+  const { cast, rand } = b;
+  const front = -spec.length / 2;
+  const step = 1.05;
+  // The clergy at the door, a censer swinging.
+  cast.add({
+    at: [-1.3, step, front - 0.35],
+    rotY: Math.PI,
+    action: "stand",
+    role: "priest",
+    carry: "incense",
+  });
+  cast.add({
+    at: [1.3, step, front - 0.35],
+    rotY: Math.PI,
+    action: "pray",
+    role: "citizen",
+    female: true,
+  });
+  cast.add({
+    at: [0, step, front - 0.4],
+    rotY: Math.PI,
+    action: "talk",
+    role: "priest",
+    carry: "staff",
+  });
+  for (const side of [-1, 1])
+    fire(b, torchStand([side * 3.3, step, front - 0.38], 1.9), 0.34, true);
+  // People coming up the steps to the door, and going back down.
+  const there = (route: Vec3[]) => [...route, ...route.slice(1, -1).reverse()];
+  for (const [x, dx, female] of [
+    [2.2, 6, true],
+    [-2.0, -7, false],
+    [3.0, 11, false],
+  ] as const) {
+    cast.walk(
+      there([
+        [x + dx, 0, front - 15],
+        [x, 0, front - 1.38],
+        [x, 0.35, front - 1.2],
+        [x, 0.7, front - 0.75],
+        [x, step, front - 0.35],
+      ]),
+      { role: "citizen", female, speed: 0.8 },
+    );
+  }
+  cast.group([-7, 0, front - 8], 3);
+  cast.group([8, 0, front - 6], 2);
+  cast.add({ at: [5.5, 0, front - 4], rotY: 2.4, action: "play", role: "child" });
+  cast.add({ at: [6.2, 0, front - 4.6], rotY: -0.8, action: "play", role: "child" });
+  // A merchant's donkeys crossing the square, the Silk Road trade of Ani.
+  const across: Vec3[] = [
+    [-30, 0, front - 12],
+    [30, 0, front - 13],
+  ];
+  cast.walk(across, { role: "worker", carry: "staff", speed: 0.75 });
+  for (let i = 1; i <= 3; i += 1)
+    animal(b, "donkey", [-30 - i * 2.4, 0, front - 12], Math.PI / 2, "walk", {
+      route: across.map(([x, y, z]) => [x - i * 2.4, y, z] as Vec3),
+      speed: 0.75,
+      load: true,
+    });
+  // An oxcart waiting at the side of the square.
+  const cartAt: Vec3 = [-17, 0, front - 4];
+  b.props.push(...cart(cartAt, 0.2, rand));
+  for (const side of [-1, 1]) animal(b, "ox", turn(cartAt, 0.2, side * 0.6, 0, 2.9), 0.2, "stand");
+  cast.add({
+    at: turn(cartAt, 0.2, 1.6, 0, 3.2),
+    rotY: 0.2,
+    action: "stand",
+    role: "worker",
+    carry: "staff",
+  });
+  dog(b, [9, 0, front - 10]);
+  dog(b, [
+    [-12, 0, 2],
+    [-12, 0, -10],
+  ]);
+  // Guards on the city wall behind the apse.
+  const wz = spec.length / 2 + 26;
+  cast.walk(
+    [
+      [-30, 11, wz - 0.6],
+      [-6, 11, wz - 0.6],
+    ],
+    { role: "soldier", carry: "spear", speed: 0.5 },
+  );
+  cast.add({ at: [20, 11, wz - 0.4], rotY: 0, action: "stand", role: "soldier", carry: "spear" });
+  // People along the foot of the wall.
+  cast.walk(
+    [
+      [-25, 0, wz - 6],
+      [25, 0, wz - 6],
+    ],
+    { role: "citizen", female: true, carry: "basket" },
+  );
+  return finish(b);
+}
+
+/*
+ * The scene-building pieces, for the scenes kept beside their models in
+ * `src/lib/models/` (the Sagalassos, Zeugma, Sümela and Patara ones). Used
+ * only inside functions there, so the import cycle is harmless.
+ */
+export {
+  make as lifeMake,
+  finish as lifeFinish,
+  fire as lifeFire,
+  animal as lifeAnimal,
+  flock as lifeFlock,
+  dog as lifeDog,
+  box as lifeBox,
+  cyl as lifeCyl,
+  amphora as lifeAmphora,
+  jar as lifeJar,
+  bench as lifeBench,
+  stall as lifeStall,
+  torchStand as lifeTorchStand,
+  brazier as lifeBrazier,
+  lampstand as lifeLampstand,
+};

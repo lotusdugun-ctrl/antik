@@ -774,6 +774,14 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
   "aphrodisias-stadyumu": ["caryatid", "ephesus-portrait"],
   "perge-stadyumu": ["tiberius-velatus", "arringatore"],
   "nemrut-dogu-terasi": ["eagle", "lion-delos", "nemrut-head"],
+  "sagalassos-antoninler-cesmesi": [
+    "antinous",
+    "muse-thalia",
+    "ephesus-portrait",
+    "muse-polyhymnia",
+    "caryatid",
+  ],
+  "zeugma-villa": ["neptune"],
 };
 
 export function scansFor(reconstructionId: string): ScanId[] {
