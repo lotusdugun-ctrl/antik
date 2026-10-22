@@ -103,6 +103,124 @@
    }
   }
  },
+ "recon:ani-katedrali": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "84add25b",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "b70ed3ca",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "28f2c65e",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "8e08e7f2",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "cb4293c4",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "9f3fcd59",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "b4b493cf",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "8253cf1b",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-ani-katedrali/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "c4da5b89",
+    "url": "/audio/recon-ani-katedrali/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "1b850e61",
+    "url": "/audio/recon-ani-katedrali/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "37c81698",
+    "url": "/audio/recon-ani-katedrali/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "d55172f6",
+    "url": "/audio/recon-ani-katedrali/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "e92d03b0",
+    "url": "/audio/recon-ani-katedrali/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "4bb4d202",
+    "url": "/audio/recon-ani-katedrali/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "9cf5133b",
+    "url": "/audio/recon-ani-katedrali/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "239148d4",
+    "url": "/audio/recon-ani-katedrali/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
  "recon:aphrodisias-stadyumu": {
   "de": {
    "intro": {
@@ -396,6 +514,138 @@
     "engine": "piper",
     "hash": "34b6755f",
     "url": "/audio/recon-aspendos-tiyatrosu/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
+ "recon:catalhoyuk-dogu-hoyugu": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "ea1eec0f",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "2021720f",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "88a180d8",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "4bf3c663",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "86be3812",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "12ca018c",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "9a84aee4",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "b42c7446",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/spot-7.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "76cf5f4c",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-catalhoyuk-dogu-hoyugu/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "925a0073",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "48f898a4",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "c8620e11",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "aea94941",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "1c45a72d",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "baf30be6",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "5f3dbaa6",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "15385841",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/spot-7.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "e4d221d3",
+    "url": "/audio/recon-catalhoyuk-dogu-hoyugu/en/uncertainty.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    }
@@ -1053,6 +1303,138 @@
    }
   }
  },
+ "recon:hattusa-aslanli-kapi": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "57ff281c",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "7980dbed",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "ed8e2281",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "ff8161de",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "1eaed4dc",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "84c067c0",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "a4039986",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "6267b997",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/spot-7.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "f1efe264",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-hattusa-aslanli-kapi/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "a9fd3373",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "e1a1ce96",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "2e332047",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "9af5fc58",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "f404a5e1",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "9e42b3ac",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "44caa4b2",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "1e91e52d",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/spot-7.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "fdb429b3",
+    "url": "/audio/recon-hattusa-aslanli-kapi/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
  "recon:hierapolis-tiyatrosu": {
   "de": {
    "intro": {
@@ -1248,6 +1630,71 @@
   }
  },
  "recon:nemrut-dogu-terasi": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "d16e4a08",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "54482b6d",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "33a9ad84",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "0c59e06a",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "29db96ab",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "eb362c0e",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "23ca2d58",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "7df70954",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/spot-7.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "a5be5109",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-nemrut-dogu-terasi/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
   "en": {
    "intro": {
     "engine": "piper",
@@ -1307,8 +1754,126 @@
    },
    "uncertainty": {
     "engine": "piper",
-    "hash": "b8b155bc",
+    "hash": "269b5be4",
     "url": "/audio/recon-nemrut-dogu-terasi/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
+ "recon:patara-deniz-feneri": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "03daba85",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "9b4a1bc0",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "857562cf",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "65ab5d93",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "dc6b60c4",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "f4cf1edc",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "cc95d845",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "eacc5d8f",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-patara-deniz-feneri/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "61e7fdb5",
+    "url": "/audio/recon-patara-deniz-feneri/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "a2c82ce7",
+    "url": "/audio/recon-patara-deniz-feneri/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "2060086d",
+    "url": "/audio/recon-patara-deniz-feneri/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "baa66653",
+    "url": "/audio/recon-patara-deniz-feneri/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "ec346b47",
+    "url": "/audio/recon-patara-deniz-feneri/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "fb83c8b9",
+    "url": "/audio/recon-patara-deniz-feneri/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "97555495",
+    "url": "/audio/recon-patara-deniz-feneri/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "ef5bc270",
+    "url": "/audio/recon-patara-deniz-feneri/en/uncertainty.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    }
@@ -1522,6 +2087,124 @@
    }
   }
  },
+ "recon:sagalassos-antoninler-cesmesi": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "8c461b71",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "39e3d40d",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "5707a9cd",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "105802c8",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "6da6666e",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "4ae0b632",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "3f667e2f",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "6d1a630b",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sagalassos-antoninler-cesmesi/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "8e3c4f80",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "8679a6f3",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "6efc2034",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "53308752",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "1d9df729",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "18037702",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "d0585f0b",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "7636cf8a",
+    "url": "/audio/recon-sagalassos-antoninler-cesmesi/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
  "recon:side-tiyatrosu": {
   "de": {
    "intro": {
@@ -1621,6 +2304,388 @@
     "engine": "piper",
     "hash": "cd0898ab",
     "url": "/audio/recon-side-tiyatrosu/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
+ "recon:sumela-manastiri": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "a4c3214d",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "566a738b",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "d16296c7",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "da2c501e",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "e4b9285a",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "14d88380",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "87b5a65f",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "8874a44a",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "879cdaf9",
+    "url": "/audio/recon-sumela-manastiri/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "32657a40",
+    "url": "/audio/recon-sumela-manastiri/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "f4740e2d",
+    "url": "/audio/recon-sumela-manastiri/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "12a79e86",
+    "url": "/audio/recon-sumela-manastiri/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "1883648e",
+    "url": "/audio/recon-sumela-manastiri/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "8045b5f5",
+    "url": "/audio/recon-sumela-manastiri/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "f1640ab2",
+    "url": "/audio/recon-sumela-manastiri/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "052073ae",
+    "url": "/audio/recon-sumela-manastiri/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
+ "recon:troya-vi-surlari": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "d3c2f4cf",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "21bbed21",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "4e7b2c76",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "fc78c973",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "da9c8e1f",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "3f8744c0",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "cad3c9cd",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "56ae0b02",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-7.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-8": {
+    "engine": "piper",
+    "hash": "2ac07751",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/spot-8.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "effc81cf",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-troya-vi-surlari/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "f1148887",
+    "url": "/audio/recon-troya-vi-surlari/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "e10a52dd",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "9ef3ee07",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "7f0ad2be",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "3648d703",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "ea7c55a9",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "90d20ec6",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "1c6853c8",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-7.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-8": {
+    "engine": "piper",
+    "hash": "0d3cb288",
+    "url": "/audio/recon-troya-vi-surlari/en/spot-8.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "5ec8fb21",
+    "url": "/audio/recon-troya-vi-surlari/en/uncertainty.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   }
+  }
+ },
+ "recon:zeugma-villa": {
+  "de": {
+   "intro": {
+    "engine": "piper",
+    "hash": "6ca9567d",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/intro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "ecb7e05f",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/spot-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "425ba1fc",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/spot-2.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "1dab37e4",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/spot-3.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "8629fef1",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/spot-4.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "7fb6bca1",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/spot-5.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "433119b9",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/spot-6.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "79d43d0e",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-zeugma-villa/de/uncertainty.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   }
+  },
+  "en": {
+   "intro": {
+    "engine": "piper",
+    "hash": "a90e1a7b",
+    "url": "/audio/recon-zeugma-villa/en/intro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-1": {
+    "engine": "piper",
+    "hash": "e426d921",
+    "url": "/audio/recon-zeugma-villa/en/spot-1.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-2": {
+    "engine": "piper",
+    "hash": "f8fdd902",
+    "url": "/audio/recon-zeugma-villa/en/spot-2.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-3": {
+    "engine": "piper",
+    "hash": "6e23a51f",
+    "url": "/audio/recon-zeugma-villa/en/spot-3.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-4": {
+    "engine": "piper",
+    "hash": "e0363d47",
+    "url": "/audio/recon-zeugma-villa/en/spot-4.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-5": {
+    "engine": "piper",
+    "hash": "31e10684",
+    "url": "/audio/recon-zeugma-villa/en/spot-5.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "spot-6": {
+    "engine": "piper",
+    "hash": "d42bc53f",
+    "url": "/audio/recon-zeugma-villa/en/spot-6.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "uncertainty": {
+    "engine": "piper",
+    "hash": "20b77dff",
+    "url": "/audio/recon-zeugma-villa/en/uncertainty.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    }
@@ -3261,7 +4326,7 @@
    },
    "structure-1": {
     "engine": "piper",
-    "hash": "7adc88b0",
+    "hash": "39e94369",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-ani/de/structure-1.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
@@ -3312,7 +4377,7 @@
    },
    "structure-1": {
     "engine": "piper",
-    "hash": "aba4f111",
+    "hash": "43a240ee",
     "url": "/audio/site-ani/en/structure-1.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -5073,7 +6138,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "32e8e2a5",
+    "hash": "9086b31d",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-catalhoyuk/en/highlights.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -5096,6 +6161,13 @@
     "engine": "piper",
     "hash": "c0e31e44",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-catalhoyuk/en/outro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "1c74cb18",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-catalhoyuk/en/structure-1.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    }
@@ -7510,7 +8582,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "0752b28b",
+    "hash": "424b298c",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-hattusa/de/highlights.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
@@ -7533,6 +8605,13 @@
     "engine": "piper",
     "hash": "e3944e1f",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-hattusa/de/outro.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "cd6cb0e9",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-hattusa/de/structure-1.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
    },
@@ -7561,7 +8640,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "6e1f7b4a",
+    "hash": "e270d04f",
     "url": "/audio/site-hattusa/en/highlights.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -7584,6 +8663,13 @@
     "engine": "piper",
     "hash": "b3f003e9",
     "url": "/audio/site-hattusa/en/outro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "da137659",
+    "url": "/audio/site-hattusa/en/structure-1.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    },
@@ -11228,7 +12314,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "a36548a4",
+    "hash": "7e28b7cf",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-patara/en/highlights.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -11251,6 +12337,13 @@
     "engine": "piper",
     "hash": "fd0706a6",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-patara/en/outro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "structure-4": {
+    "engine": "piper",
+    "hash": "40c80116",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-patara/en/structure-4.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    }
@@ -11895,7 +12988,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "cdea7869",
+    "hash": "9b699f4e",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-sagalassos/en/highlights.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -11918,6 +13011,13 @@
     "engine": "piper",
     "hash": "54e148df",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-sagalassos/en/outro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "062b5548",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-sagalassos/en/structure-1.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    },
@@ -13340,7 +14440,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "6c018f02",
+    "hash": "a8be6ffa",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-sumela/de/highlights.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
@@ -13365,6 +14465,13 @@
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-sumela/de/outro.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
+   },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "cb1a36c9",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-sumela/de/structure-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
    }
   },
   "en": {
@@ -13377,7 +14484,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "6beb88ee",
+    "hash": "493b72eb",
     "url": "/audio/site-sumela/en/highlights.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -13400,6 +14507,13 @@
     "engine": "piper",
     "hash": "b942fba9",
     "url": "/audio/site-sumela/en/outro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "a90fa7ee",
+    "url": "/audio/site-sumela/en/structure-1.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    }
@@ -14005,7 +15119,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "94bcaa08",
+    "hash": "b24a79d2",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-troya/de/highlights.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
@@ -14031,6 +15145,13 @@
     "v": 3,
     "voice": "de_DE-mls-medium"
    },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "cfbc9664",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-troya/de/structure-1.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
    "structure-5": {
     "engine": "piper",
     "hash": "1f818c50",
@@ -14049,7 +15170,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "270c9755",
+    "hash": "2defcb44",
     "url": "/audio/site-troya/en/highlights.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -14072,6 +15193,13 @@
     "engine": "piper",
     "hash": "6a9b8068",
     "url": "/audio/site-troya/en/outro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "structure-1": {
+    "engine": "piper",
+    "hash": "589c644e",
+    "url": "/audio/site-troya/en/structure-1.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    },
@@ -15096,7 +16224,7 @@
    },
    "highlights": {
     "engine": "piper",
-    "hash": "c820f986",
+    "hash": "7446705d",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-zeugma/en/highlights.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -15119,6 +16247,13 @@
     "engine": "piper",
     "hash": "36592104",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-zeugma/en/outro.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
+   "structure-2": {
+    "engine": "piper",
+    "hash": "543931f7",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/site-zeugma/en/structure-2.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
    },
