@@ -1,3 +1,5 @@
+import { distanceTo, waterOf } from "./landscape-plan";
+import type { RockFace } from "./models/rockface";
 import {
   ashlar,
   FACING,
@@ -103,6 +105,10 @@ export type Material =
   | "conglomerate"
   /** Open water: a harbour basin. */
   | "water"
+  /** The raked sand of a race track: matt, with no shine at a low sun. */
+  | "sand"
+  /** Living rock: a cliff, grey and weathered (see `models/rockface.ts`). */
+  | "rock"
   /*
    * What is left on the stone after two thousand years: the letters of an
    * inscription, darker where the cut holds dirt and the trace of the red
@@ -203,6 +209,18 @@ type Base = {
    * need it; the tests use it to find a statue again in the flat list.
    */
   statue?: string;
+  /**
+   * A cliff: the block's front (-z, before `rotY`) is a rock face standing
+   * out of it by up to `relief` — ledges, fissures, an overhang (see
+   * `models/rockface.ts`). Boxes only.
+   */
+  rock?: RockFace;
+  /**
+   * A wall painting drawn over the block's front (+z, before `rotY`):
+   * registers of saints, made from the seed (see `scene/fresco.ts`). The
+   * block itself is not drawn. Boxes only.
+   */
+  fresco?: { seed: number; registers: number; perRow: number };
 };
 
 export type Part =
@@ -4721,7 +4739,7 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     }
   } else if (ch.annex === "harbour") {
     const cz = behind - 70;
-    parts.push(scenery(box("water", [0, 0.02, cz], [spec.caveaDiameter * 1.8, 0.05, 110])));
+    parts.push(scenery(box("water", [0, -0.6, cz], [spec.caveaDiameter * 1.8, 0.4, 110])));
     parts.push(scenery(box("stone", [0, 0, behind - 13], [spec.caveaDiameter * 1.8, 1.0, 4])));
   }
 
@@ -5686,6 +5704,19 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
     const lift = 0.06;
     const roofWidth = roofHalf + lift / (pitch / roofHalf);
     parts.push(prism("terracotta", [0, eaves, 0], [roofWidth * 2, pitch + lift, roofLength]));
+    /*
+     * The ceiling over the walkways, laid on the architraves: looking up
+     * between the columns, a visitor saw a coffered ceiling, not the black
+     * underside of the clay roof (which is what the walk showed until now).
+     * Its edges stay inside the entablature, so it shows only from below.
+     */
+    parts.push(
+      box(
+        "marbleWorn",
+        [0, eaves - 0.32, 0],
+        [gridWidth + radius * 1.6, 0.18, gridLength + radius * 1.6],
+      ),
+    );
     parts.push(
       ...gableTiles({
         at: [0, eaves, 0],
@@ -6516,7 +6547,7 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
 
   // The track's paving stops inside the podium wall, not in the plane of its back.
   parts.push(
-    box("stone", [0, 0, 0], [spec.arenaWidth + 2 * (spec.bow ?? 0) - 0.1, 0.12, endCentre * 2]),
+    box("sand", [0, 0, 0], [spec.arenaWidth + 2 * (spec.bow ?? 0) - 0.1, 0.12, endCentre * 2]),
   );
   for (const side of [-1, 1]) {
     if (spec.openEnd && side < 0) continue;
@@ -7793,6 +7824,27 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
 }
 
 export function partsFor(spec: ModelSpec): Part[] {
+  return dryScenery(buildParts(spec));
+}
+
+/**
+ * Scenery scattered round a site (loose stone, bedrock, the ridges on the
+ * skyline) is laid out in rings with no idea where the river or the sea is;
+ * whatever of it fell into the water is taken out again, so no slab floats on
+ * the Euphrates and no hill stands in the bay at Patara.
+ */
+function dryScenery(parts: Part[]): Part[] {
+  const water = waterOf(parts).filter((w) => w.hx * w.hz >= 40);
+  if (water.length === 0) return parts;
+  return parts.filter(
+    (part) =>
+      !part.decor ||
+      part.material === "water" ||
+      !water.some((w) => distanceTo(w, part.at[0], part.at[2]) < -0.5),
+  );
+}
+
+function buildParts(spec: ModelSpec): Part[] {
   switch (spec.kind) {
     case "roman-facade":
       return romanFacadeParts(spec);
@@ -7897,7 +7949,8 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       };
     case "mausoleum":
       return {
-        at: [0, -spec.baseDepth / 2 - 9],
+        // Before the offering table in the forecourt, not inside it.
+        at: [0, -spec.baseDepth / 2 - 12.5],
         floor: 0,
         look: [0, spec.podiumHeight * 0.8, -spec.baseDepth / 2],
       };

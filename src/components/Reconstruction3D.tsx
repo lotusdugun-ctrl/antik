@@ -75,23 +75,13 @@ import { CompareSlider } from "./CompareSlider";
 import { WalkJoystick } from "./WalkJoystick";
 import { arSupport, openQuickLook, startWebXR, type ARMode } from "./ar/launch-ar";
 import type { AtmosMode, PersonHit, SceneExtras, SceneInfo } from "./Reconstruction3DInner";
-import type { Biome } from "./scene/landscape";
+import { biomeFor } from "@/lib/landscape-plan";
 
 /**
  * What grows round each model. Olive and cypress are the default because most
  * of these buildings stand near the Aegean or Mediterranean coast; the three
  * that do not are named, since trees in the wrong place are a claim too.
  */
-const BIOME: Partial<Record<string, Biome>> = {
-  "gobeklitepe-d-yapisi": "steppe",
-  "aizanoi-zeus-tapinagi": "steppe",
-  "nemrut-dogu-terasi": "mountain",
-  "hattusa-aslanli-kapi": "steppe",
-  "catalhoyuk-dogu-hoyugu": "steppe",
-  "ani-katedrali": "steppe",
-  // A forested Pontic valley: mountain country; its weather is morning mist (see weather.ts).
-  "sumela-manastiri": "mountain",
-};
 
 /** Where the visitor's own choice of quality is remembered: "high" or "lite". */
 const QUALITY_KEY = "antik-3d-quality";
@@ -446,6 +436,21 @@ export function Reconstruction3D({
   const todayPhoto = todayPhotoFor(item);
   const [captureToken, setCaptureToken] = useState(0);
   const [still, setStill] = useState<string | null>(null);
+  // The comparison is a dialog over the page: Esc closes it, and the page
+  // behind does not scroll while it is open.
+  useEffect(() => {
+    if (!still) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setStill(null);
+    };
+    window.addEventListener("keydown", onKey);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+    };
+  }, [still]);
   const onCaptured = useCallback((url: string) => setStill(url), []);
   // Rebuilding the geometry on every render would rebuild the whole scene.
   const parts = useMemo(() => partsFor(item.model), [item.model]);
@@ -650,7 +655,7 @@ export function Reconstruction3D({
       defaultWeather({
         id: item.id,
         siteSlug: item.siteSlug,
-        biome: BIOME[item.id] ?? "mediterranean",
+        biome: biomeFor(item.id),
         kind: item.model.kind,
       }),
     [item],
@@ -951,7 +956,7 @@ export function Reconstruction3D({
               onExported={onExported}
               onReady={setSceneReady}
               exportWithoutGround={exportFor === "ar"}
-              biome={BIOME[item.id] ?? "mediterranean"}
+              biome={biomeFor(item.id)}
               quality={quality && !lite}
               captureToken={captureToken}
               onCaptured={onCaptured}
@@ -1576,7 +1581,14 @@ export function Reconstruction3D({
           </button>
         )}
         {todayPhoto && (
-          <button onClick={() => setCaptureToken((n) => n + 1)} className={chip}>
+          <button
+            onClick={() => {
+              // The comparison opens over the page; a full-screen model would hide it.
+              if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+              setCaptureToken((n) => n + 1);
+            }}
+            className={chip}
+          >
             <Columns2 className="h-3.5 w-3.5" /> {t("recon_compare")}
           </button>
         )}
@@ -1606,21 +1618,35 @@ export function Reconstruction3D({
       </p>
 
       {still && todayPhoto && (
-        <div className="mt-4">
-          <CompareSlider
-            before={todayPhoto}
-            after={still}
-            beforeLabel={t("recon_compare_today")}
-            afterLabel={t("recon_compare_then")}
-            alt={L(item.title)}
-            onClose={() => setStill(null)}
-          />
-          <p className="mt-2 text-xs text-muted-foreground">{t("recon_compare_hint")}</p>
-          {creditLine(todayPhoto) && (
-            <p className="mt-1 text-xs text-muted-foreground">
-              {L(RS.compareCredit)} {creditLine(todayPhoto)}
-            </p>
-          )}
+        /*
+         * Shown over the page, not below the model: below it sat out of sight
+         * on a phone, and pressing the button seemed to do nothing.
+         */
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={t("recon_compare")}
+          className="fixed inset-0 z-[1200] flex items-center justify-center bg-black/75 p-3 backdrop-blur-sm sm:p-6"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setStill(null);
+          }}
+        >
+          <div className="w-full max-w-5xl rounded-2xl bg-background p-3 shadow-2xl sm:p-4">
+            <CompareSlider
+              before={todayPhoto}
+              after={still}
+              beforeLabel={t("recon_compare_today")}
+              afterLabel={t("recon_compare_then")}
+              alt={L(item.title)}
+              onClose={() => setStill(null)}
+            />
+            <p className="mt-2 text-xs text-muted-foreground">{t("recon_compare_hint")}</p>
+            {creditLine(todayPhoto) && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                {L(RS.compareCredit)} {creditLine(todayPhoto)}
+              </p>
+            )}
+          </div>
         </div>
       )}
 

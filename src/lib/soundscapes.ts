@@ -9,6 +9,7 @@
  * public/ambience/voices, recorded on the owner's computer with a Piper voice
  * by scripts/generate_ambience_voices.py, and every scene works without it.
  */
+import { SYNTH_CALLS } from "./ambience-synth";
 import type { Reconstruction } from "./reconstructions";
 
 export type TimeOfDay = "day" | "golden" | "night";
@@ -90,11 +91,14 @@ export const VOICES = [
 export type Voice = (typeof VOICES)[number];
 
 /**
- * Calls made in the browser, where no recording with a licence that allows it
- * was to be had: a scops owl's note, a collared dove, herring gulls, a lark.
- * All are close to pure tones, which is what synthesis does well.
+ * Sounds made in the browser (src/lib/ambience-synth.ts), where no recording
+ * with a licence that allows it was to be had, or where a recording would
+ * repeat: birds, insects and frogs, goat bells and a donkey, hammers and
+ * querns, footsteps on stone, gravel and planks, voices without words, water
+ * lapping, wind gusts, bells, a wooden semantron, chant, and music made new
+ * each time on the aulos, the lyre and the drum.
  */
-export const CALLS = ["owl", "dove", "gull", "lark"] as const;
+export const CALLS = SYNTH_CALLS;
 
 export type Call = (typeof CALLS)[number];
 
@@ -158,6 +162,8 @@ export type Happening = {
   max?: number;
   /** Where it comes from, if from one place. */
   at?: Spot;
+  /** The chance that another answers it a moment later (a dog barking back). */
+  answer?: number;
 };
 
 /**
@@ -199,6 +205,8 @@ export type Soundscape = {
   voices?: readonly Voice[];
   synth: Synth;
   space: Space;
+  /** How busy the place is: above 1 things happen more often, below 1 less. */
+  density?: number;
 };
 
 /* ------------------------------------------------------------------ */
@@ -947,6 +955,448 @@ function monastery(): Soundscape {
 }
 
 export function soundscapeFor(item: Pick<Reconstruction, "id"> & { model: { kind: string } }) {
+  return flavour(item.id, kindScape(item));
+}
+
+/* ---- What makes one place not sound like another --------------------- */
+
+type Extra = Partial<Happening> & Pick<Happening, "sounds" | "every" | "level">;
+const ev = (h: Extra): Happening => ({ spread: 0.9, wet: 0.35, ...h });
+
+const DAYTIME = { day: 1, golden: 0.7 };
+const lvl = (k: number, shape: Partial<Record<TimeOfDay, number>> = DAYTIME): Levels =>
+  Object.fromEntries(Object.entries(shape).map(([t, v]) => [t, +(v * k).toFixed(3)]));
+
+/** Songbirds in the trees and the bushes, each kind its own call. */
+const SONGBIRDS = (k = 1, kinds: Call[] = ["blackbird", "sparrow", "finch"]) =>
+  ev({ sounds: kinds, every: [9, 30], level: lvl(0.5 * k, { day: 1, golden: 0.8 }), muffle: 9000 });
+/** Swifts screaming over the roofs of a town. */
+const SWIFTS = (k = 1) =>
+  ev({
+    sounds: ["swift"],
+    every: [25, 70],
+    level: lvl(0.5 * k, { day: 1, golden: 1.2 }),
+    spread: 1,
+  });
+/** Crickets chirping in rhythms of their own, the night's other clock. */
+const CRICKETS = (k = 1) =>
+  ev({
+    sounds: ["cricket"],
+    every: [6, 18],
+    level: lvl(0.5 * k, { golden: 0.4, night: 1 }),
+    spread: 1,
+  });
+const FROGS = (k = 1) =>
+  ev({
+    sounds: ["frog"],
+    every: [8, 25],
+    level: lvl(0.5 * k, { golden: 0.7, night: 1, day: 0.25 }),
+    muffle: 5000,
+    wet: 0.3,
+  });
+const GUSTS = (k = 1) =>
+  ev({
+    sounds: ["gust"],
+    every: [10, 30],
+    level: lvl(0.6 * k, { day: 1, golden: 1, night: 0.8 }),
+    spread: 0.8,
+    wet: 0.1,
+  });
+const STEPS = (surface: Call[], k = 1) =>
+  ev({
+    sounds: surface,
+    every: [12, 35],
+    level: lvl(0.5 * k, { day: 1, golden: 0.9, night: 0.3 }),
+    spread: 0.7,
+    wet: 0.3,
+  });
+/** People talking, laughing, calling out: no words in any language. */
+const PEOPLE = (k = 1, sounds: Call[] = ["chatter", "laugh", "shout"]) =>
+  ev({
+    sounds,
+    every: [10, 32],
+    level: lvl(0.5 * k, { day: 1, golden: 0.9, night: 0.15 }),
+    spread: 0.9,
+    muffle: 4200,
+    wet: 0.4,
+  });
+const GOATS = (k = 1) =>
+  ev({ sounds: ["goatbells"], every: [25, 70], level: lvl(0.5 * k), muffle: 6000, wet: 0.35 });
+const DONKEY = (k = 1) =>
+  ev({
+    sounds: ["donkey"],
+    every: [80, 200],
+    level: lvl(0.4 * k),
+    muffle: 3000,
+    wet: 0.45,
+    answer: 0.15,
+  });
+const WORK = (sounds: Call[], k = 1) =>
+  ev({
+    sounds,
+    every: [14, 40],
+    level: lvl(0.5 * k, { day: 1, golden: 0.5 }),
+    muffle: 6000,
+    wet: 0.4,
+  });
+const HARBOUR = (k = 1) => [
+  ev({
+    sounds: ["rigging"],
+    every: [8, 24],
+    level: lvl(0.45 * k, { day: 1, golden: 1, night: 0.8 }),
+    muffle: 5000,
+    wet: 0.3,
+  }),
+  ev({
+    sounds: ["lapping"],
+    every: [5, 14],
+    level: lvl(0.5 * k, { day: 1, golden: 1, night: 1 }),
+    muffle: 4000,
+    wet: 0.2,
+  }),
+];
+const RAPTORS = (k = 1, kinds: Call[] = ["hoopoe", "partridge"]) =>
+  ev({ sounds: kinds, every: [30, 80], level: lvl(0.4 * k), muffle: 7000, wet: 0.3 });
+
+/**
+ * Each model's own additions: the river under Zeugma, the masons at
+ * Aphrodisias, the bell over Ani, the forest and the monks round Sümela —
+ * and how busy each is. Every model ends up with a soundscape of its own.
+ */
+const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number }> = {
+  "celsus-kutuphanesi": {
+    add: [
+      SONGBIRDS(0.8, ["sparrow", "blackbird"]),
+      SWIFTS(),
+      PEOPLE(1.1),
+      STEPS(["steps-stone"]),
+      DONKEY(),
+      CRICKETS(),
+    ],
+    density: 1.2,
+  },
+  "aspendos-tiyatrosu": {
+    // The Eurymedon on the plain below the theatre.
+    add: [
+      SWIFTS(0.8),
+      PEOPLE(0.8, ["chatter", "laugh"]),
+      FROGS(0.7),
+      CRICKETS(),
+      STEPS(["steps-stone"], 0.7),
+    ],
+    density: 1.1,
+  },
+  "didyma-apollon-tapinagi": {
+    add: [
+      WORK(["chisel", "hammer"], 0.9),
+      RAPTORS(0.8, ["hoopoe"]),
+      SONGBIRDS(0.7, ["finch", "sparrow"]),
+      CRICKETS(0.8),
+    ],
+  },
+  "gobeklitepe-d-yapisi": {
+    add: [RAPTORS(1, ["partridge"]), GUSTS(1), WORK(["chisel"], 0.6), CRICKETS(0.6)],
+    density: 0.7,
+  },
+  "artemis-tapinagi": {
+    // The marshes of the Kaystros round the temple.
+    add: [
+      FROGS(1),
+      ev({ sounds: ["beeeater"], every: [20, 60], level: lvl(0.45) }),
+      SONGBIRDS(1, ["blackbird", "finch"]),
+      CRICKETS(),
+    ],
+  },
+  "pergamon-zeus-sunagi": {
+    add: [
+      GUSTS(0.7),
+      SWIFTS(1.1),
+      SONGBIRDS(0.6, ["blackbird"]),
+      PEOPLE(0.6, ["chatter", "shout"]),
+      CRICKETS(0.7),
+    ],
+  },
+  "aphrodisias-stadyumu": {
+    // The city of sculptors: marble being worked in the workshops beyond the stands.
+    add: [
+      WORK(["chisel", "hammer"], 1),
+      SWIFTS(0.8),
+      PEOPLE(0.9, ["shout", "laugh"]),
+      CRICKETS(0.6),
+    ],
+    density: 1.2,
+  },
+  "hierapolis-tiyatrosu": {
+    // The hot springs running down the travertine.
+    add: [
+      ev({
+        sounds: ["brook"],
+        every: [6, 16],
+        level: lvl(0.5, { day: 1, golden: 1, night: 1 }),
+        muffle: 5000,
+      }),
+      GUSTS(0.5),
+      SONGBIRDS(0.6, ["finch", "sparrow"]),
+      CRICKETS(),
+    ],
+  },
+  "milet-buyuk-tiyatro": {
+    // The Theatre Harbour below the stage building.
+    add: [
+      ...HARBOUR(0.7),
+      ev({
+        sounds: ["gull"],
+        every: [15, 45],
+        level: lvl(0.35, { day: 1, golden: 1, night: 0.15 }),
+        muffle: 6000,
+      }),
+      PEOPLE(0.7, ["chatter", "shout"]),
+      CRICKETS(0.7),
+    ],
+  },
+  "efes-yamac-evler": {
+    add: [
+      SONGBIRDS(0.9, ["sparrow", "blackbird", "finch"]),
+      STEPS(["steps-wood", "steps-stone"], 0.8),
+      PEOPLE(0.6, ["chatter", "laugh"]),
+      CRICKETS(0.8),
+    ],
+    density: 0.9,
+  },
+  "efes-buyuk-tiyatro": {
+    add: [
+      SWIFTS(1.1),
+      DONKEY(0.8),
+      PEOPLE(1, ["chatter", "shout", "laugh"]),
+      STEPS(["steps-stone"], 0.6),
+      CRICKETS(0.7),
+    ],
+    density: 1.3,
+  },
+  "side-tiyatrosu": {
+    // The sea on three sides of the town.
+    add: [
+      ...HARBOUR(0.5),
+      SONGBIRDS(0.6, ["sparrow"]),
+      PEOPLE(0.7, ["chatter", "laugh"]),
+      CRICKETS(),
+    ],
+    beds: [
+      {
+        clip: "sea",
+        level: { day: 0.18, golden: 0.22, night: 0.26 },
+        muffle: 1800,
+        pan: -0.5,
+        wet: 0.2,
+      },
+    ],
+  },
+  "perge-stadyumu": {
+    add: [
+      RAPTORS(0.8, ["hoopoe"]),
+      SONGBIRDS(0.7, ["sparrow", "finch"]),
+      PEOPLE(0.8, ["shout", "chatter"]),
+      STEPS(["steps-gravel"], 0.7),
+      CRICKETS(0.7),
+    ],
+  },
+  "aizanoi-zeus-tapinagi": {
+    add: [RAPTORS(1, ["partridge"]), GOATS(0.8), GUSTS(0.6), CRICKETS(0.8)],
+    density: 0.8,
+  },
+  "halikarnas-mozolesi": {
+    add: [...HARBOUR(0.8), PEOPLE(0.6, ["chatter"]), STEPS(["steps-stone"], 0.6), CRICKETS(0.7)],
+  },
+  "nemrut-dogu-terasi": {
+    add: [
+      GUSTS(1.3),
+      RAPTORS(0.8, ["partridge"]),
+      GOATS(0.5),
+      ev({ sounds: ["lark"], every: [40, 100], level: lvl(0.25), muffle: 7000 }),
+      CRICKETS(0.5),
+    ],
+    density: 0.6,
+  },
+  "hattusa-aslanli-kapi": {
+    add: [
+      GOATS(0.7),
+      DONKEY(0.9),
+      WORK(["hammer"], 0.7),
+      GUSTS(0.8),
+      RAPTORS(0.7, ["partridge", "hoopoe"]),
+      CRICKETS(0.7),
+    ],
+  },
+  "troya-vi-surlari": {
+    // The wind off the Dardanelles, and the bee-eaters of the Scamander plain.
+    add: [
+      GUSTS(1.1),
+      ev({ sounds: ["beeeater"], every: [18, 50], level: lvl(0.45) }),
+      WORK(["hammer"], 0.6),
+      STEPS(["steps-gravel"], 0.6),
+      CRICKETS(),
+    ],
+  },
+  "catalhoyuk-dogu-hoyugu": {
+    // A village of mud-brick roofs: querns grinding grain, fires, dogs, talk
+    // with no words, the marsh of the Çarşamba with its frogs.
+    add: [
+      WORK(["grind"], 1.1),
+      PEOPLE(0.9, ["chatter", "laugh", "shout"]),
+      { ...DOGS, every: [30, 80], answer: 0.4 },
+      FROGS(0.7),
+      STEPS(["steps-gravel"], 0.6),
+      CRICKETS(),
+    ],
+    density: 1.2,
+  },
+  "ani-katedrali": {
+    add: [
+      ev({
+        sounds: ["bell"],
+        every: [90, 200],
+        level: lvl(0.55, { day: 1, golden: 1.2, night: 0.4 }),
+        muffle: 7000,
+        wet: 0.5,
+        spread: 0.3,
+      }),
+      ev({
+        sounds: ["chant"],
+        every: [70, 160],
+        level: lvl(0.35, { golden: 1, night: 0.8, day: 0.5 }),
+        muffle: 2600,
+        wet: 0.6,
+        spread: 0.2,
+      }),
+      GUSTS(1),
+      PEOPLE(0.8, ["chatter", "shout"]),
+      DONKEY(0.8),
+      WORK(["hammer"], 0.5),
+    ],
+    beds: [
+      { clip: "market", level: { day: 0.16, golden: 0.12, night: 0 }, muffle: 1600, wet: 0.2 },
+    ],
+  },
+  "sagalassos-antoninler-cesmesi": {
+    add: [
+      ev({
+        sounds: ["brook"],
+        every: [5, 12],
+        level: lvl(0.45, { day: 1, golden: 1, night: 1 }),
+        at: "fountain",
+        muffle: 7000,
+      }),
+      GUSTS(0.8),
+      GOATS(0.6),
+      WORK(["chisel"], 0.5),
+      SWIFTS(0.7),
+      CRICKETS(0.6),
+    ],
+  },
+  "zeugma-villa": {
+    // The Euphrates below the terrace.
+    add: [
+      FROGS(0.9),
+      ev({ sounds: ["beeeater"], every: [20, 55], level: lvl(0.4) }),
+      SONGBIRDS(0.8, ["blackbird", "sparrow"]),
+      ev({
+        sounds: ["lapping"],
+        every: [8, 20],
+        level: lvl(0.3, { day: 1, golden: 1, night: 1 }),
+        muffle: 2500,
+      }),
+      CRICKETS(),
+    ],
+  },
+  "sumela-manastiri": {
+    // The forest of the gorge, the stream far below, the monks.
+    add: [
+      SONGBIRDS(1.2, ["blackbird", "finch"]),
+      ev({
+        sounds: ["cuckoo"],
+        every: [40, 110],
+        level: lvl(0.45, { day: 1, golden: 0.8 }),
+        muffle: 6000,
+        wet: 0.5,
+      }),
+      ev({
+        sounds: ["woodpecker"],
+        every: [30, 90],
+        level: lvl(0.5, { day: 1, golden: 0.6 }),
+        muffle: 7000,
+        wet: 0.5,
+      }),
+      ev({
+        sounds: ["brook"],
+        every: [5, 12],
+        level: lvl(0.35, { day: 1, golden: 1, night: 1 }),
+        muffle: 3000,
+        wet: 0.5,
+      }),
+      ev({
+        sounds: ["chant"],
+        every: [60, 150],
+        level: lvl(0.45, { day: 0.6, golden: 1, night: 0.9 }),
+        muffle: 2200,
+        wet: 0.65,
+        spread: 0.3,
+      }),
+      ev({
+        sounds: ["semantron"],
+        every: [150, 320],
+        level: lvl(0.45, { day: 0.8, golden: 1, night: 0.5 }),
+        muffle: 5000,
+        wet: 0.6,
+        spread: 0.3,
+      }),
+      ev({
+        sounds: ["bell"],
+        every: [160, 360],
+        level: lvl(0.35, { day: 1, golden: 1, night: 0.4 }),
+        muffle: 5000,
+        wet: 0.65,
+        spread: 0.3,
+      }),
+      GUSTS(0.6),
+      GOATS(0.5),
+      CRICKETS(0.6),
+    ],
+    beds: [
+      {
+        clip: "fountain",
+        level: { day: 0.12, golden: 0.12, night: 0.14 },
+        muffle: 1200,
+        pan: 0.4,
+        wet: 0.5,
+      },
+    ],
+    density: 0.9,
+  },
+  "patara-deniz-feneri": {
+    add: [
+      ...HARBOUR(1.1),
+      PEOPLE(0.8, ["chatter", "shout"]),
+      STEPS(["steps-wood", "steps-stone"], 0.7),
+      WORK(["hammer"], 0.6),
+      CRICKETS(0.6),
+    ],
+    density: 1.1,
+  },
+};
+
+/** The kind's soundscape with the model's own sources and pace added. */
+function flavour(id: string, base: Soundscape): Soundscape {
+  const extra = FLAVOUR[id];
+  if (!extra) return base;
+  return {
+    ...base,
+    beds: [...base.beds, ...(extra.beds ?? [])],
+    happenings: [...base.happenings, ...extra.add],
+    density: extra.density ?? base.density ?? 1,
+  };
+}
+
+function kindScape(item: Pick<Reconstruction, "id"> & { model: { kind: string } }): Soundscape {
   const { id } = item;
   switch (item.model.kind) {
     case "roman-theatre":
@@ -1023,6 +1473,15 @@ export const DIRECTOR_CLIPS: Record<Director | "none", readonly Clip[]> = {
   ],
   procession: ["aulos", "drum", "moo1", "moo2", "moo3"],
   rite: ["drum"],
+  none: [],
+};
+
+/** What each director makes in the browser: music made new every time. */
+export const DIRECTOR_CALLS: Record<Director | "none", readonly Call[]> = {
+  theatre: ["aulos-phrase", "lyre-phrase"],
+  races: [],
+  procession: ["aulos-phrase", "drum-phrase"],
+  rite: ["drum-phrase"],
   none: [],
 };
 
@@ -1163,5 +1622,18 @@ export function isClip(sound: string): sound is Clip {
 export function callsOf(scape: Soundscape): Call[] {
   const out = new Set<Call>();
   for (const h of scape.happenings) for (const s of h.sounds) if (isCall(s)) out.add(s);
+  for (const c of DIRECTOR_CALLS[scape.director ?? "none"]) out.add(c);
   return [...out];
+}
+
+/**
+ * Every distinct thing a soundscape can make heard: each recording and each
+ * synthesised call, the synthesised wind and cicadas.
+ */
+export function sourcesOf(scape: Soundscape): string[] {
+  const out = new Set<string>([...clipsOf(scape), ...callsOf(scape)]);
+  if (scape.synth.wind > 0) out.add("wind");
+  if (scape.synth.cicadas) out.add("cicadas");
+  if (scape.synth.crackle) out.add("sparks");
+  return [...out].sort();
 }

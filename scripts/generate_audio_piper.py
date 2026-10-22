@@ -106,6 +106,17 @@ def main() -> None:
     parser.add_argument("--jobs", type=int, default=max(1, (os.cpu_count() or 2) - 1))
     args = parser.parse_args()
 
+    # Without Piper every pool worker fails in its initializer and the pool
+    # spawns replacements for ever; stop here with a clear message instead.
+    try:
+        import piper  # noqa: F401
+        import lameenc  # noqa: F401
+    except ImportError as error:
+        sys.exit(
+            f"Piper yuklu degil ({error}). Python 3.10-3.13 ile calistirin: "
+            "py -3.12 -m pip install \"piper-tts>=1.3,<2\" lameenc"
+        )
+
     langs = [args.lang] if args.lang else LANGS
     forced = {lang: getattr(args, f"voice_{lang}") for lang in langs if getattr(args, f"voice_{lang}")}
     chosen = piper_voices.choose(langs, forced)

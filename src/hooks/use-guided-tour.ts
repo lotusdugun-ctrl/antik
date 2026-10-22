@@ -45,10 +45,44 @@ export function useGuidedTour({
     const stop = stopsRef.current[i];
     if (stop) stopRef.current(stop, i);
   }, []);
-  const audio = useAudioGuide(guide, lang, { onChapter });
+  /*
+   * When the voice moved on to each chapter, and whether the visitor asked
+   * for that move. A speech engine with no voice can report every chapter
+   * "said" the moment it starts, which sent the tour through all its stops
+   * in a few seconds; a chapter that ends far sooner than it could have been
+   * read is taken as the voice failing, and the clock takes over.
+   */
+  const spokenAt = useRef<{ i: number; at: number } | null>(null);
+  const jumped = useRef(false);
+  const [voiceFailed, setVoiceFailed] = useState(false);
+  const holdRef = useRef<(i: number) => void>(() => {});
+  const failedRef = useRef(false);
+  const stopVoiceRef = useRef<() => void>(() => {});
+  const onVoiceChapter = useCallback(
+    (i: number) => {
+      const now = Date.now();
+      const last = spokenAt.current;
+      if (failedRef.current) return;
+      const said = last ? guide.chapters[last.i] : undefined;
+      if (activeRef.current && last && said && !jumped.current && i === last.i + 1) {
+        if (now - last.at < dwellSeconds(pick(said.text, lang)) * 500) {
+          failedRef.current = true;
+          setVoiceFailed(true);
+          stopVoiceRef.current();
+          holdRef.current(last.i);
+          return;
+        }
+      }
+      jumped.current = false;
+      spokenAt.current = { i, at: now };
+      onChapter(i);
+    },
+    [guide, lang, onChapter],
+  );
+  const audio = useAudioGuide(guide, lang, { onChapter: onVoiceChapter });
+  stopVoiceRef.current = audio.stop;
   // No voice at all: the tour keeps time itself.
   // A voice that gives out mid-tour (no voice installed after all) hands over to the clock too.
-  const [voiceFailed, setVoiceFailed] = useState(false);
   const silent =
     voiceFailed ||
     !audio.supported ||
@@ -74,12 +108,15 @@ export function useGuidedTour({
     },
     [guide, lang, onChapter],
   );
+  holdRef.current = hold;
 
   const start = useCallback(() => {
     activeRef.current = true;
     userPaused.current = false;
     setActive(true);
     setPaused(false);
+    spokenAt.current = null;
+    jumped.current = true;
     if (silent) hold(0);
     else audio.goTo(0);
   }, [silent, hold, audio]);
@@ -113,6 +150,7 @@ export function useGuidedTour({
       exit();
       return;
     }
+    jumped.current = true;
     if (silent) hold(index + 1);
     else audio.goTo(index + 1);
   }, [silent, hold, index, audio, guide.chapters.length, exit]);
@@ -120,6 +158,7 @@ export function useGuidedTour({
   const prev = useCallback(() => {
     setPaused(false);
     const to = Math.max(0, index - 1);
+    jumped.current = true;
     if (silent) hold(to);
     else audio.goTo(to);
   }, [silent, hold, index, audio]);

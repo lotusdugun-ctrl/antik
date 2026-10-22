@@ -39,11 +39,18 @@ import {
   type TimeOfDay,
   type Voice,
 } from "./soundscapes";
+import { createSynth, type Note, type Placement } from "./ambience-synth";
+import {
+  bedPiece,
+  createPicker,
+  drumming,
+  hourDensity,
+  nextGap,
+  seeded,
+  vary,
+} from "./sound-scheduler";
 
 export type AmbienceScene = { scape: Soundscape; time: TimeOfDay };
-
-const rand = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
-const pick = <T>(list: readonly T[]): T => list[Math.floor(Math.random() * list.length)]!;
 
 /** An equal-power fade curve, so two crossfading copies never dip or bulge. */
 function curve(from: number, to: number, steps = 32) {
@@ -61,6 +68,8 @@ function curve(from: number, to: number, steps = 32) {
  * as it dies (stone and air both swallow the highs first), after a handful of
  * early reflections — the stage building and the first rows of seats.
  */
+const rand0 = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
+
 function impulse(ctx: BaseAudioContext, space: Space) {
   const rate = ctx.sampleRate;
   const length = Math.max(1, Math.floor(rate * space.seconds));
@@ -78,8 +87,8 @@ function impulse(ctx: BaseAudioContext, space: Space) {
       data[i] = low * decay * 0.6;
     }
     for (let n = 0; n < 7; n += 1) {
-      const at = predelay + Math.floor(rate * rand(0.008, 0.09));
-      if (at < length) data[at]! += (Math.random() < 0.5 ? -1 : 1) * space.early * rand(0.3, 0.8);
+      const at = predelay + Math.floor(rate * rand0(0.008, 0.09));
+      if (at < length) data[at]! += (Math.random() < 0.5 ? -1 : 1) * space.early * rand0(0.3, 0.8);
     }
   }
   return buffer;
@@ -100,8 +109,12 @@ type Out = { gain: GainNode; stop: (at: number) => void };
  * AudioContext), no timers, and the caller calls advance() every 200 ms of
  * render time, to render a soundscape to a file faster than real time.
  */
-export function createAmbience(options: { offline?: AudioContext } = {}) {
+export function createAmbience(options: { offline?: AudioContext; seed?: number } = {}) {
   if (typeof window === "undefined") return null;
+  // Seeded for a listening test that must come out the same twice.
+  const rng = options.seed === undefined ? Math.random : seeded(options.seed);
+  const rand = (lo: number, hi: number) => lo + rng() * (hi - lo);
+  const pick = <T>(list: readonly T[]): T => list[Math.floor(rng() * list.length)]!;
   const manual = Boolean(options.offline);
   let ctx: AudioContext;
   if (options.offline) ctx = options.offline;
@@ -130,11 +143,41 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
   limiter.release.value = 0.3;
   master.connect(limiter).connect(ctx.destination);
   const dry = ctx.createGain();
-  dry.connect(master);
+  /*
+   * A slow leveller before the master: it listens to the mix and eases it,
+   * within six decibels either way, towards one loudness, so a quiet house
+   * and a roaring stadium sit at about the same level under the narrator.
+   * It is before the master, so ducking under a voice is not undone by it.
+   */
+  const leveller = ctx.createGain();
+  leveller.connect(master);
+  const meter = ctx.createAnalyser();
+  meter.fftSize = 2048;
+  leveller.connect(meter);
+  const meterData = new Float32Array(meter.fftSize);
+  let loudness = 0;
+  /** The mean square the leveller aims at: -29 dBFS RMS, about -21 LUFS for these mixes. */
+  const AIM = 10 ** (-29 / 10);
+  const level_ = () => {
+    meter.getFloatTimeDomainData(meterData);
+    let sum = 0;
+    for (let i = 0; i < meterData.length; i += 1) sum += meterData[i]! * meterData[i]!;
+    const ms = sum / meterData.length;
+    const gain = leveller.gain.value || 1;
+    // What the mix would measure without the leveller, smoothed over seconds.
+    const raw = ms / (gain * gain);
+    // Over about forty seconds: a level, not a compressor — the roar at
+    // the finish of a race must still be louder than the wait before it.
+    loudness = loudness === 0 ? raw : loudness * 0.995 + raw * 0.005;
+    if (loudness < 1e-7) return;
+    const want = Math.max(0.5, Math.min(2, Math.sqrt(AIM / loudness)));
+    leveller.gain.setTargetAtTime(want, ctx.currentTime, 8);
+  };
+  dry.connect(leveller);
   const reverbIn = ctx.createGain();
   let reverb: ConvolverNode | null = null;
   const reverbOut = ctx.createGain();
-  reverbOut.connect(master);
+  reverbOut.connect(leveller);
 
   const white = noiseBuffer(ctx, 4);
 
@@ -318,60 +361,85 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
 
   /* ---- Beds -------------------------------------------------------------- */
 
+  /*
+   * A bed is never the recording going round. It is two layers of pieces,
+   * each piece a stretch of the recording chosen somewhere other than the
+   * last, for a length of its own, a hair faster or slower, crossfaded into
+   * the next — and the whole bed drifting slowly in loudness and brightness,
+   * as a crowd or the sea does. Two layers at independent offsets make a
+   * mix of the recording with itself that does not come round again.
+   */
+  type Layer = { next: number; last: number | undefined; playing: Out[]; level: number };
   type BedPlayer = {
     bed: Bed;
     out: GainNode;
     /** A multiplier the director turns: a hushed audience, a roaring one. */
     mod: GainNode;
-    next: number;
-    playing: Out[];
+    layers: Layer[];
   };
   let beds: BedPlayer[] = [];
 
   const makeBed = (bed: Bed): BedPlayer => {
     const out = ctx.createGain();
     out.gain.value = 0;
+    // Its brightness, wandering round the bed's own muffle.
+    const tone = ctx.createBiquadFilter();
+    tone.type = "lowpass";
+    tone.frequency.value = bed.muffle ?? 14000;
+    tone.Q.value = 0.5;
+    drift(0.05, (bed.muffle ?? 14000) * 0.25, tone.frequency);
+    // Its loudness, wandering by a couple of decibels either way.
+    const wander = ctx.createGain();
+    wander.gain.value = 1;
+    drift(0.04, 0.22, wander.gain);
     const mod = ctx.createGain();
-    out.connect(mod).connect(from(bed.at));
+    out.connect(tone).connect(wander).connect(mod).connect(from(bed.at));
     if (bed.wet) {
       const send = ctx.createGain();
       send.gain.value = bed.wet;
       mod.connect(send).connect(reverbIn);
     }
     want(clipUrl(bed.clip));
-    return { bed, out, mod, next: 0, playing: [] };
+    const layer = (level: number): Layer => ({ next: 0, last: undefined, playing: [], level });
+    return { bed, out, mod, layers: [layer(0.82), layer(0.5)] };
   };
 
-  /** Keeps every bed going: overlapping copies at random offsets, crossfaded. */
+  /** Keeps every bed going: piece after piece, two layers, crossfaded. */
   const feedBeds = (now: number) => {
     for (const player of beds) {
-      if (player.next > now + 3) continue;
       // A bed silent at this hour (the market at night) costs nothing.
       if (scene && levelAt(player.bed.level, scene.time) === 0) continue;
       const buffer = ready.get(clipUrl(player.bed.clip));
       if (!buffer) continue;
-      const at = Math.max(player.next, now + 0.05);
-      const span = buffer.duration;
-      const offset = span > 14 ? rand(0, span - 10) : 0;
-      const length = span - offset;
-      const fade = Math.min(2.5, length / 4);
-      const piece = play(buffer, {
-        at,
-        level: 1,
-        offset,
-        // A placed bed is panned by where it is; only a little wander is its own.
-        pan: player.bed.at ? rand(-0.1, 0.1) : (player.bed.pan ?? 0) + rand(-0.25, 0.25),
-        muffle: player.bed.muffle,
-        into: player.out,
-        fadeIn: 0.001,
-        fadeOut: 0.001,
+      player.layers.forEach((layer, n) => {
+        if (layer.next > now + 3) return;
+        // The second layer comes in later, so the two never fade together.
+        const at = Math.max(layer.next, now + 0.05 + (layer.next === 0 ? n * rand(2, 5) : 0));
+        const piece = bedPiece(buffer.duration, rng, layer.last);
+        layer.last = piece.offset;
+        const real = piece.length / piece.rate;
+        const fade = Math.min(piece.fade, real / 3);
+        const out = play(buffer, {
+          at,
+          level: layer.level,
+          offset: piece.offset,
+          duration: piece.length,
+          rate: piece.rate,
+          // A placed bed is panned by where it is; only a little wander is its own.
+          pan: player.bed.at
+            ? rand(-0.12, 0.12)
+            : (player.bed.pan ?? 0) + rand(-0.35, 0.35) * (n === 0 ? 0.7 : 1),
+          into: player.out,
+          fadeIn: 0.001,
+          fadeOut: 0.001,
+        });
+        // Equal-power fades over the linear ramps play() set.
+        out.gain.gain.cancelScheduledValues(at);
+        out.gain.gain.setValueCurveAtTime(curve(0, layer.level), at, fade);
+        out.gain.gain.setValueCurveAtTime(curve(layer.level, 0), at + real - fade, fade);
+        layer.playing = [...layer.playing.filter((p) => p !== out), out].slice(-3);
+        layer.next = at + real - fade;
       });
-      // Equal-power fades over the linear ramps play() set.
-      piece.gain.gain.cancelScheduledValues(at);
-      piece.gain.gain.setValueCurveAtTime(curve(0, 1), at, fade);
-      piece.gain.gain.setValueCurveAtTime(curve(1, 0), at + length - fade, fade);
-      player.playing = [...player.playing.filter((p) => p !== piece), piece].slice(-3);
-      player.next = at + length - fade;
     }
   };
 
@@ -379,32 +447,48 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
 
   /* ---- Happenings --------------------------------------------------------- */
 
-  type HappeningPlayer = { h: Happening; next: number };
+  type HappeningPlayer = {
+    h: Happening;
+    next: number;
+    pick: ReturnType<typeof createPicker<Clip | Voice | Call>>;
+    loudest: number;
+  };
   let happenings: HappeningPlayer[] = [];
+  /** Answers waiting their turn: a dog barking back from across the valley. */
+  let answers: { at: number; player: HappeningPlayer; pan: number }[] = [];
+  /** How many sounds may play at once: past this, happenings wait. */
+  const MAX_VOICES = 56;
+  /** What has been played, by name, for the listening tests. */
+  const played = new Map<string, number>();
 
-  const fire = (h: Happening, level: number) => {
-    const choices = h.sounds.filter((s) => isCall(s) || bufferOf(s));
-    if (choices.length === 0) return;
-    const sound = pick(choices);
-    const spread = h.spread ?? 0.6;
+  const fire = (player: HappeningPlayer, level: number, panAt?: number) => {
+    const { h } = player;
+    const sound = player.pick((s) => isCall(s) || bufferOf(s) !== null);
+    if (!sound) return;
+    played.set(sound, (played.get(sound) ?? 0) + 1);
+    const v = vary(rng, { rate: h.rate, spread: h.spread ?? 0.6, muffle: h.muffle, wet: h.wet });
+    const pan = panAt ?? (h.at ? v.pan * 0.25 : v.pan);
     if (isCall(sound)) {
-      call(sound, ctx.currentTime + 0.05, level, {
-        pan: rand(-spread, spread),
-        muffle: h.muffle,
-        wet: h.wet,
+      synth.call(sound, ctx.currentTime + 0.05, level * v.gain, {
+        pan,
+        muffle: v.cutoff,
+        wet: v.wet,
+        into: from(h.at),
+        pitch: h.rate ? v.rate : 1 + (v.rate - 1) * 0.6,
       });
       return;
     }
     const buffer = bufferOf(sound)!;
     const max = h.max;
+    const long = buffer.duration > (max ?? buffer.duration) * 1.5;
     play(buffer, {
-      level,
-      pan: h.at ? rand(-0.15, 0.15) : rand(-spread, spread),
+      level: level * v.gain,
+      pan,
       into: from(h.at),
-      rate: h.rate ? rand(h.rate[0], h.rate[1]) : 1,
-      muffle: h.muffle,
-      wet: h.wet,
-      offset: max && buffer.duration > max * 1.5 ? rand(0, buffer.duration - max) : 0,
+      rate: v.rate,
+      muffle: v.cutoff,
+      wet: v.wet,
+      offset: max && long ? rand(0, buffer.duration - max) : 0,
       duration: max,
       fadeIn: max ? 0.3 : 0.01,
       fadeOut: max ? 0.8 : 0.05,
@@ -413,26 +497,92 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
 
   /* ---- Synthesis: wind, cicadas, sparks, wheels, a roar ------------------ */
 
-  const loopNoise = () => {
-    const source = ctx.createBufferSource();
-    source.buffer = white;
-    source.loop = true;
-    source.start(0, Math.random() * white.duration);
-    return source;
+  /** Long noise for loops: two lengths, so no two loops come round together. */
+  const longNoise = [noiseBuffer(ctx, 11.3), noiseBuffer(ctx, 13.7)];
+  /*
+   * Noise for the wind and the cicadas, fed piece by piece like a bed: a
+   * stretch from somewhere in a long buffer, a little faster or slower,
+   * crossfaded into the next. A looped buffer, however long, comes round —
+   * and filtered noise that comes round is a gust on the dot.
+   */
+  const feeds: { into: AudioNode; next: number }[] = [];
+  const noiseFeed = () => {
+    const into = ctx.createGain();
+    feeds.push({ into, next: 0 });
+    return into;
+  };
+  const feedNoise = (now: number) => {
+    for (const feed of feeds) {
+      if (feed.next > now + 2) continue;
+      const at = Math.max(feed.next, now + 0.05);
+      const buffer = pick(longNoise);
+      const length = rand(5, 9);
+      const fade = 1.5;
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      source.playbackRate.value = rand(0.9, 1.1);
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+      gain.gain.setValueCurveAtTime(curve(0, 1), at, fade);
+      gain.gain.setValueCurveAtTime(curve(1, 0), at + length - fade, fade);
+      source.connect(gain).connect(feed.into);
+      source.start(at, rng() * buffer.duration);
+      source.stop(at + length + 0.05);
+      live.add(source);
+      source.onended = () => {
+        live.delete(source);
+        source.disconnect();
+        gain.disconnect();
+      };
+      feed.next = at + length - fade;
+    }
   };
   /*
-   * A slow, irregular modulator: noise smoothed down to a fraction of a hertz.
-   * Sine LFOs were the first try, and a sine at a few hertz on a band of noise
-   * is the sound of an idling engine — the one thing wind is not.
+   * A slow, irregular modulator: a random curve drawn through a point every
+   * second or so, two minutes long, played at a speed of its own. A sine LFO
+   * at a few hertz is the sound of an idling engine; noise looped every few
+   * seconds is a gust that comes back on the dot. This is neither.
    */
-  const drift = (smoothHz: number, depth: number, target: AudioParam) => {
-    const smoother = ctx.createBiquadFilter();
-    smoother.type = "lowpass";
-    smoother.frequency.value = smoothHz;
-    smoother.Q.value = 0.5;
+  const wanderRate = 3000;
+  const wanderCurve = (() => {
+    const seconds = 120;
+    const buffer = ctx.createBuffer(1, wanderRate * seconds, wanderRate);
+    const data = buffer.getChannelData(0);
+    const knots = (every: number) => {
+      const n = Math.ceil(seconds / every) + 2;
+      return Array.from({ length: n }, () => rng() * 2 - 1);
+    };
+    const coarse = knots(1.4);
+    const fine = knots(0.37);
+    const at = (k: number[], every: number, t: number) => {
+      const x = t / every;
+      const i = Math.floor(x);
+      const f = (1 - Math.cos((x - i) * Math.PI)) / 2;
+      // Wrap round, so the loop has no seam.
+      const a = k[i % (k.length - 2)]!;
+      const b = k[(i + 1) % (k.length - 2)]!;
+      return a + (b - a) * f;
+    };
+    let peak = 0;
+    for (let i = 0; i < data.length; i += 1) {
+      const t = i / wanderRate;
+      data[i] = at(coarse, 1.4, t) * 0.75 + at(fine, 0.37, t) * 0.25;
+      peak = Math.max(peak, Math.abs(data[i]!));
+    }
+    for (let i = 0; i < data.length; i += 1) data[i]! /= peak || 1;
+    return buffer;
+  })();
+  /** Moves `target` by up to ±depth, at about `speed` (1 = a change every second or so). */
+  const drift = (speed: number, depth: number, target: AudioParam) => {
+    const source = ctx.createBufferSource();
+    source.buffer = wanderCurve;
+    source.loop = true;
+    source.playbackRate.value = speed * rand(0.7, 1.3) * 8;
     const amount = ctx.createGain();
-    amount.gain.value = depth * (6 / Math.sqrt(smoothHz));
-    loopNoise().connect(smoother).connect(amount).connect(target);
+    amount.gain.value = depth;
+    source.connect(amount).connect(target);
+    source.start(0, rng() * wanderCurve.duration);
   };
 
   // Wind: two bands of hiss, one airy and one through the stones, each gusting
@@ -441,8 +591,8 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
   wind.gain.value = 0;
   wind.connect(dry);
   for (const [centre, q, level] of [
-    [700, 0.6, 0.55],
-    [2600, 0.9, 0.25],
+    [rand(600, 800), 0.6, 0.55],
+    [rand(2200, 3000), 0.9, 0.25],
   ] as const) {
     const high = ctx.createBiquadFilter();
     high.type = "highpass";
@@ -453,38 +603,39 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     band.Q.value = q;
     const gust = ctx.createGain();
     gust.gain.value = 0.45 * level;
-    loopNoise().connect(high).connect(band).connect(gust).connect(wind);
-    drift(0.12, 0.35 * level, gust.gain);
-    drift(0.08, centre * 0.35, band.frequency);
+    const pan = ctx.createStereoPanner();
+    noiseFeed().connect(high).connect(band).connect(gust).connect(pan).connect(wind);
+    drift(0.1, 0.38 * level, gust.gain);
+    drift(0.07, centre * 0.35, band.frequency);
+    drift(0.05, 0.5, pan.pan);
   }
 
-  // Cicadas: narrow bands near 5-6 kHz, pulsed fast, swelling slowly.
+  // Cicadas: narrow bands near 5-6 kHz, pulsed fast, swelling slowly — each
+  // its own pulse rate, wandering, and its own swell, so the chorus never
+  // locks into one beat.
   const cicadas = ctx.createGain();
   cicadas.gain.value = 0;
   cicadas.connect(dry);
   for (let i = 0; i < 3; i += 1) {
     const band = ctx.createBiquadFilter();
     band.type = "bandpass";
-    band.frequency.value = 4800 + i * 650;
+    band.frequency.value = rand(4600, 6200);
     band.Q.value = 9;
     const pulse = ctx.createGain();
     pulse.gain.value = 0.5;
     const swell = ctx.createGain();
-    swell.gain.value = 0.6;
+    swell.gain.value = 0.55;
     const pan = ctx.createStereoPanner();
-    pan.pan.value = -0.7 + i * 0.7;
-    loopNoise().connect(band).connect(pulse).connect(swell).connect(pan).connect(cicadas);
-    for (const [hz, depth, target] of [
-      [38 + i * 7, 0.5, pulse.gain],
-      [0.05 + i * 0.03, 0.55, swell.gain],
-    ] as const) {
-      const osc = ctx.createOscillator();
-      osc.frequency.value = hz;
-      const amount = ctx.createGain();
-      amount.gain.value = depth;
-      osc.connect(amount).connect(target);
-      osc.start();
-    }
+    pan.pan.value = -0.7 + i * 0.7 + rand(-0.15, 0.15);
+    noiseFeed().connect(band).connect(pulse).connect(swell).connect(pan).connect(cicadas);
+    const osc = ctx.createOscillator();
+    osc.frequency.value = rand(34, 52);
+    drift(0.05, 5, osc.frequency);
+    const amount = ctx.createGain();
+    amount.gain.value = 0.5;
+    osc.connect(amount).connect(pulse.gain);
+    osc.start();
+    drift(0.03, 0.5, swell.gain);
   }
 
   /** A spark or a split log over the recorded fire: a click of filtered noise. */
@@ -503,7 +654,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     const pan = ctx.createStereoPanner();
     pan.pan.value = rand(-0.3, 0.3);
     source.connect(band).connect(env).connect(pan).connect(into);
-    source.start(at, Math.random() * 3, len + 0.02);
+    source.start(at, rng() * 3, len + 0.02);
     source.onended = () => source.disconnect();
   };
 
@@ -610,7 +761,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     noise.connect(band).connect(rattle).connect(filter).connect(gain);
     route(gain, ctx.createStereoPanner());
     for (const s of [noise, shaker]) {
-      s.start(at, Math.random() * 3);
+      s.start(at, rng() * 3);
       s.stop(at + span + 0.2);
       live.add(s);
       s.onended = () => {
@@ -621,28 +772,10 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     return peak;
   };
 
-  /* ---- Calls: birds and a trumpet, made from tones ----------------------- */
+  /* ---- Calls: everything made from tones and noise (ambience-synth.ts) ---- */
 
-  /** A harmonic recipe: amplitudes of the partials, from the fundamental up. */
-  const waves = new Map<string, PeriodicWave>();
-  const wave = (name: string, partials: readonly number[]) => {
-    let w = waves.get(name);
-    if (!w) {
-      const real = new Float32Array(partials.length + 1);
-      const imag = new Float32Array([0, ...partials]);
-      w = ctx.createPeriodicWave(real, imag);
-      waves.set(name, w);
-    }
-    return w;
-  };
-
-  type Placement = {
-    pan?: number | undefined;
-    muffle?: number | undefined;
-    wet?: number | undefined;
-  };
   /** Where a synthesised sound goes: muffled with distance, panned, into the room. */
-  const place = (o: Placement) => {
+  const place = (o: Placement, at: number, end: number) => {
     const input = ctx.createGain();
     let node: AudioNode = input;
     if (o.muffle) {
@@ -653,9 +786,14 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
       node = node.connect(filter);
     }
     const panner = ctx.createStereoPanner();
-    panner.pan.value = Math.max(-1, Math.min(1, o.pan ?? 0));
+    const pan = Math.max(-1, Math.min(1, o.pan ?? 0));
+    panner.pan.value = pan;
+    if (o.panTo !== undefined && end > at) {
+      panner.pan.setValueAtTime(pan, at);
+      panner.pan.linearRampToValueAtTime(Math.max(-1, Math.min(1, o.panTo)), end);
+    }
     node = node.connect(panner);
-    node.connect(dry);
+    node.connect(o.into ?? dry);
     if (o.wet) {
       const send = ctx.createGain();
       send.gain.value = o.wet;
@@ -663,8 +801,16 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     }
     return input;
   };
-  const keep = (source: AudioScheduledSourceNode, from: number, to: number, tail: AudioNode) => {
-    source.start(from);
+  const keep = (
+    source: AudioScheduledSourceNode,
+    start: number,
+    to: number,
+    tail: AudioNode,
+    offset?: number,
+  ) => {
+    if (offset !== undefined && "buffer" in source)
+      (source as AudioBufferSourceNode).start(start, offset);
+    else source.start(start);
     source.stop(to);
     live.add(source);
     source.onended = () => {
@@ -673,133 +819,11 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
       tail.disconnect();
     };
   };
+  const synth = createSynth(ctx, { white, place, keep, rng });
+  const { sing, wave } = synth;
 
-  /**
-   * One oscillator for a whole call, its pitch and loudness drawn note by note
-   * with automation — a lark's minute-long song costs two nodes, not two hundred.
-   * Each note: [start, length, pitch from, pitch peak, pitch to, loudness].
-   */
-  type Note = readonly [number, number, number, number, number, number];
-  const sing = (
-    notes: readonly Note[],
-    at: number,
-    level: number,
-    timbre: PeriodicWave | "sine",
-    o: Placement & { attack?: number; release?: number; vibrato?: number; band?: number },
-  ) => {
-    if (notes.length === 0) return at;
-    const osc = ctx.createOscillator();
-    if (timbre === "sine") osc.type = "sine";
-    else osc.setPeriodicWave(timbre);
-    const env = ctx.createGain();
-    env.gain.value = 0;
-    let node: AudioNode = osc;
-    if (o.band) {
-      const band = ctx.createBiquadFilter();
-      band.type = "bandpass";
-      band.frequency.value = o.band;
-      band.Q.value = 0.9;
-      node = node.connect(band);
-    }
-    node.connect(env).connect(place(o));
-    const attack = o.attack ?? 0.02;
-    const release = o.release ?? 0.05;
-    let end = at;
-    for (const [start, length, from, peak, to, loud] of notes) {
-      const t = at + start;
-      osc.frequency.setValueAtTime(from, t);
-      osc.frequency.linearRampToValueAtTime(peak, t + length * 0.3);
-      osc.frequency.linearRampToValueAtTime(to, t + length);
-      env.gain.setValueAtTime(0, t);
-      env.gain.linearRampToValueAtTime(level * loud, t + Math.min(attack, length / 3));
-      env.gain.setValueAtTime(level * loud, t + length - Math.min(release, length / 2));
-      env.gain.linearRampToValueAtTime(0, t + length);
-      end = Math.max(end, t + length);
-    }
-    if (o.vibrato) {
-      const lfo = ctx.createOscillator();
-      lfo.frequency.value = rand(5, 6.5);
-      const depth = ctx.createGain();
-      depth.gain.value = o.vibrato;
-      lfo.connect(depth).connect(osc.frequency);
-      keep(lfo, at, end + 0.1, depth);
-    }
-    keep(osc, at, end + 0.1, env);
-    return end;
-  };
-
-  const call = (kind: Call, at: number, level: number, o: Placement) => {
-    switch (kind) {
-      case "owl": {
-        // Otus scops: one soft, pure "tyu" near 1.2 kHz, every two and a half
-        // seconds, a few times over.
-        const f = rand(1120, 1260);
-        const notes: Note[] = [];
-        const n = Math.floor(rand(3, 7));
-        for (let i = 0; i < n; i += 1)
-          notes.push([i * rand(2.3, 2.7), rand(0.16, 0.2), f * 0.95, f * 1.02, f * 0.97, 1]);
-        sing(notes, at, level * 0.5, wave("owl", [1, 0.08, 0.03]), {
-          ...o,
-          attack: 0.04,
-          release: 0.09,
-        });
-        return;
-      }
-      case "dove": {
-        // Streptopelia decaocto: "coo-COOO-coo", breathy and low, twice or thrice.
-        const f = rand(470, 540);
-        const notes: Note[] = [];
-        const n = Math.floor(rand(2, 5));
-        for (let i = 0; i < n; i += 1) {
-          const t = i * rand(1.7, 2);
-          notes.push([t, 0.26, f, f * 1.02, f * 0.94, 0.7]);
-          notes.push([t + 0.4, 0.55, f * 1.06, f * 1.1, f * 0.98, 1]);
-          notes.push([t + 1.08, 0.34, f * 0.94, f * 0.96, f * 0.86, 0.75]);
-        }
-        sing(notes, at, level * 0.55, wave("dove", [1, 0.22, 0.07, 0.02]), {
-          ...o,
-          attack: 0.06,
-          release: 0.12,
-          muffle: Math.min(o.muffle ?? 1600, 1600),
-        });
-        return;
-      }
-      case "gull": {
-        // Larus: the long call — a rising "kyow", then a run of shorter ones.
-        const f = rand(780, 900);
-        const notes: Note[] = [[0, 0.45, f * 0.8, f * 1.5, f * 1.1, 1]];
-        const n = Math.floor(rand(3, 8));
-        let t = 0.6;
-        for (let i = 0; i < n; i += 1) {
-          const len = rand(0.18, 0.26);
-          notes.push([t, len, f, f * 1.45, f * 0.95, rand(0.6, 0.9) * (1 - i * 0.06)]);
-          t += len + rand(0.12, 0.2);
-        }
-        sing(
-          notes,
-          at,
-          level * 0.32,
-          wave("gull", [1, 0.9, 0.75, 0.6, 0.45, 0.35, 0.25, 0.18, 0.12, 0.08]),
-          { ...o, attack: 0.03, release: 0.06, band: 1900 },
-        );
-        return;
-      }
-      case "lark": {
-        // Alauda: a high, fast, endless warble from far overhead.
-        const notes: Note[] = [];
-        const span = rand(6, 12);
-        for (let t = 0; t < span;) {
-          const len = rand(0.04, 0.13);
-          const f = rand(2600, 5200);
-          notes.push([t, len, f, f + rand(-900, 900), f + rand(-700, 700), rand(0.35, 1)]);
-          t += len + rand(0.01, 0.05) + (Math.random() < 0.06 ? rand(0.2, 0.5) : 0);
-        }
-        sing(notes, at, level * 0.22, "sine", { ...o, attack: 0.008, release: 0.015 });
-        return;
-      }
-      default:
-    }
-  };
+  const call = (kind: Call, at: number, level: number, o: Placement) =>
+    synth.call(kind, at, level, o);
 
   /**
    * The salpinx, the straight bronze trumpet that started the races: a few
@@ -859,8 +883,8 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     source
       .connect(band)
       .connect(env)
-      .connect(place({ pan: 0.3, wet: 0.35 }));
-    keep(source, at, at + beats[beats.length - 1]! + 0.4, env);
+      .connect(place({ pan: rand(-0.4, 0.4), wet: 0.35 }, at, at + beats[beats.length - 1]! + 0.4));
+    keep(source, at, at + beats[beats.length - 1]! + 0.4, env, rng() * 3);
   };
 
   /* ---- Crowd reactions --------------------------------------------------- */
@@ -966,9 +990,9 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         const lines = STAGE_LINES.filter((v) => bufferOf(v));
         const stage = { pan: rand(-0.1, 0.1), wet: 0.55, muffle: 6500, into: from("stage") };
         let comic = false;
-        if (lines.length > 0 && Math.random() < 0.65) {
+        if (lines.length > 0 && rng() < 0.65) {
           // An actor's voice from the stage, carried by the bowl.
-          const comedy = Math.random() < 0.5 && lines.some((l) => l.startsWith("actor-frogs"));
+          const comedy = rng() < 0.5 && lines.some((l) => l.startsWith("actor-frogs"));
           const order = comedy
             ? lines.filter((l) => l.startsWith("actor-frogs"))
             : lines.filter((l) => !l.startsWith("actor-frogs")).slice(0, 3);
@@ -979,9 +1003,23 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
           }
           end = at;
           comic = comedy;
+        } else if (rng() < 0.7) {
+          // A choral song: a tune on the aulos or the kithara, made now — a
+          // run of phrases, never the same one twice.
+          const instrument = rng() < 0.6 ? "aulos-phrase" : "lyre-phrase";
+          let at = now + 0.2;
+          for (let n = 0, phrases = 1 + Math.floor(rng() * 2); n < phrases; n += 1)
+            at =
+              call(instrument, at, 0.75, {
+                pan: stage.pan,
+                wet: stage.wet,
+                muffle: stage.muffle,
+                into: stage.into,
+              }) + rand(0.6, 1.6);
+          end = at;
         } else {
-          // A choral song: the aulos (or the kithara) from the stage.
-          const clip: Clip = Math.random() < 0.6 ? "aulos" : "lyre";
+          // Or the recorded song, from somewhere in it.
+          const clip: Clip = rng() < 0.6 ? "aulos" : "lyre";
           const buffer = ready.get(clipUrl(clip));
           if (buffer) {
             const length = Math.min(buffer.duration - 2, rand(16, 26));
@@ -1006,7 +1044,7 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         phase = { name: "applause", until: now + rand(2.5, 4) };
         return;
       case "applause": {
-        const strong = Math.random();
+        const strong = rng();
         applause(now + 0.1, 0.55 + strong * 0.3);
         if (strong > 0.5) cheer(now + rand(0.5, 1.5), 0.35, rand(-0.4, 0.4));
         if (strong > 0.6)
@@ -1047,10 +1085,10 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         });
         const blown = salpinx((herald?.end ?? now) + 0.4, 1, rand(-0.5, 0.5));
         crowd(1.25, blown, 3);
-        const runners = Math.random() < 0.35;
+        const runners = rng() < 0.35;
         race = {
           laps: runners ? 2 : Math.floor(rand(2, 4)),
-          direction: Math.random() < 0.5 ? 1 : -1,
+          direction: rng() < 0.5 ? 1 : -1,
           runners,
         };
         phase = { name: "lap", until: blown + 0.8 };
@@ -1063,8 +1101,8 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
         crowd(1.3, peak - 1.5, 1.5);
         crowd(1.05, peak + 2.5, 3);
         cheer(peak - 0.5, 0.55, 0.4 * race.direction);
-        if (Math.random() < 0.6) applause(peak + 0.3, 0.4, rand(3.5, 5));
-        if (!race.runners && Math.random() < 0.4) {
+        if (rng() < 0.6) applause(peak + 0.3, 0.4, rand(3.5, 5));
+        if (!race.runners && rng() < 0.4) {
           const n = ready.get(clipUrl(pick(["neigh1", "neigh2", "neigh3"] as const)));
           if (n)
             play(n, {
@@ -1123,43 +1161,54 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     // Coming up to the altar: heard from there once its place is known.
     const into = from("altar");
     const pan = places.altar ? rand(-0.15, 0.15) : rand(-0.5, 0.5);
-    if (aulos) {
-      const source = play(aulos, {
+    // Everything in the procession comes nearer and goes away together.
+    const approach = ctx.createGain();
+    approach.gain.value = 0;
+    approach.gain.setValueCurveAtTime(closeness, at, span);
+    const dull = ctx.createBiquadFilter();
+    dull.type = "lowpass";
+    dull.frequency.setValueCurveAtTime(
+      closeness.map((v) => 700 + 6500 * v),
+      at,
+      span,
+    );
+    approach.connect(dull).connect(into);
+    if (rng() < 0.6) {
+      // The pipers playing tunes made as they walk: phrase after phrase.
+      for (let t = at; t < at + span - 6;)
+        t = call("aulos-phrase", t, 0.9, { pan, wet: 0.45, into: approach }) + rand(0.4, 1.4);
+    } else if (aulos) {
+      play(aulos, {
         at,
-        level: 1,
+        level: 0.42,
         offset: rand(0, Math.max(0, aulos.duration - span)),
         duration: span,
         pan,
         wet: 0.45,
-        muffleCurve: closeness.map((v) => 700 + 6500 * v),
         fadeIn: 0.01,
         fadeOut: 0.01,
-        into,
+        into: approach,
       });
-      source.gain.gain.cancelScheduledValues(at);
-      source.gain.gain.setValueCurveAtTime(
-        closeness.map((v) => 0.42 * v),
-        at,
-        span,
-      );
     }
     const drum = ready.get(clipUrl("drum"));
-    if (drum) {
-      for (let t = 2; t < span - 2; t += rand(1.55, 1.85)) {
-        const near = Math.sin((t / span) * Math.PI) ** 1.5;
+    if (drum && rng() < 0.55) {
+      // A walking beat, its pattern changing as it goes.
+      for (const beat of drumming(rng, span - 4, rand(0.38, 0.5))) {
         play(drum, {
-          at: at + t,
-          level: 0.38 * near * (Math.round(t) % 2 === 0 ? 1 : 0.7),
+          at: at + 2 + beat.t,
+          level: 0.38 * beat.accent * (beat.tone === "dum" ? 1 : 0.6),
           pan,
-          rate: rand(0.9, 1.0),
-          muffle: 900 + 5000 * near,
+          rate: beat.tone === "dum" ? rand(0.88, 1.0) : rand(1.2, 1.4),
           wet: 0.4,
-          into,
+          into: approach,
         });
       }
+    } else {
+      for (let t = at + 2; t < at + span - 8;)
+        t = call("drum-phrase", t, 0.7, { pan, wet: 0.4, into: approach }) + rand(0.5, 2);
     }
     say(scene?.scape.voices ?? [], at + span * 0.45, 0.32, { pan, wet: 0.5, muffle: 4500, into });
-    if (Math.random() < 0.6) {
+    if (rng() < 0.6) {
       const moo = ready.get(clipUrl(pick(["moo1", "moo2", "moo3"] as const)));
       if (moo)
         play(moo, {
@@ -1185,27 +1234,23 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     const drum = ready.get(clipUrl("drum"));
     const night = scene?.time === "night";
     const at = now + 0.2;
-    const beat = night ? 0.62 : 0.5;
-    // Heavy, light, rest, heavy, rest, rest — a pattern, never quite metronomic.
-    const pattern = [1, 0.5, 0, 0.9, 0, 0, 0.8, 0.45];
-    let t = 0;
+    // A pattern chosen and varied bar by bar, slower at night.
+    const step = (night ? 0.31 : 0.25) * rand(0.9, 1.1);
     const span = rand(14, 22);
     const shakes: number[] = [];
     const gourd = scene?.scape.character === "neolithic";
     if (drum) {
-      for (let i = 0; t < span; i += 1, t += beat * rand(0.96, 1.04)) {
-        // At Göbeklitepe a rattle answers the drum on the off-beats.
-        if (gourd && t > 2 && t < span - 2) shakes.push(t + beat * 0.5, t + beat * 0.75);
-        const accent = pattern[i % pattern.length]!;
-        if (!accent) continue;
-        const swell = Math.min(1, t / 4, (span - t) / 4);
+      for (const beat of drumming(rng, span, step)) {
+        // At Göbeklitepe a rattle answers the drum on the light strokes.
+        if (gourd && beat.tone === "tek" && beat.t > 2 && beat.t < span - 2) shakes.push(beat.t);
+        const heavy = beat.tone === "dum";
         play(drum, {
-          at: at + t,
-          level: 0.45 * accent * Math.max(0.1, swell) * (night ? 0.8 : 1),
-          rate: rand(0.78, 0.84),
+          at: at + beat.t,
+          level: (heavy ? 0.45 : 0.22) * beat.accent * (night ? 0.8 : 1),
+          rate: heavy ? rand(0.76, 0.84) : rand(1.15, 1.35),
           pan: places.altar ? 0 : -0.25,
           wet: 0.55,
-          muffle: 2600,
+          muffle: heavy ? 2600 : 4200,
           into: from("altar"),
         });
       }
@@ -1250,11 +1295,33 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     if (!running || !scene || (!manual && ctx.state !== "running")) return;
     const now = ctx.currentTime;
     feedBeds(now);
+    feedNoise(now);
+    level_();
     for (const player of happenings) {
       if (now < player.next) continue;
       const level = levelAt(player.h.level, scene.time);
-      if (level > 0) fire(player.h, level);
-      player.next = now + rand(player.h.every[0], player.h.every[1]);
+      if (level > 0) {
+        // Too much at once already: wait a moment rather than pile on.
+        if (live.size >= MAX_VOICES) {
+          player.next = now + rand(1, 3);
+          continue;
+        }
+        fire(player, level);
+        if (player.h.answer && rng() < player.h.answer)
+          answers.push({ at: now + rand(1.2, 5), player, pan: rand(-1, 1) });
+      }
+      // Random gaps with a floor, thinner at the quiet hours and in an
+      // empty place, busier in a crowded one.
+      const busy = (scene.scape.density ?? 1) * hourDensity(level, player.loudest);
+      player.next = now + nextGap(player.h.every, rng, busy || 1);
+    }
+    if (answers.length) {
+      const due = answers.filter((a) => a.at <= now);
+      answers = answers.filter((a) => a.at > now);
+      for (const a of due) {
+        const level = levelAt(a.player.h.level, scene.time);
+        if (level > 0) fire(a.player, level * rand(0.5, 0.85), a.pan);
+      }
     }
     const fireBed = scene.scape.beds.find((b) => b.clip === "fire");
     if (scene.scape.synth.crackle && fireBed && now >= nextSpark) {
@@ -1285,13 +1352,16 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
     for (const player of beds) {
       player.out.gain.cancelScheduledValues(now);
       player.out.gain.setTargetAtTime(0, now, 0.4);
-      for (const piece of player.playing) piece.stop(now + 2);
+      for (const layer of player.layers) for (const piece of layer.playing) piece.stop(now + 2);
     }
     beds = scape.beds.map(makeBed);
+    answers = [];
     happenings = scape.happenings.map((h) => ({
       h,
       // The first of each comes sooner than the rest, so a short visit hears it.
       next: now + rand(h.every[0] * 0.2, h.every[0]),
+      pick: createPicker(h.sounds, rng),
+      loudest: Math.max(...(["day", "golden", "night"] as const).map((t) => levelAt(h.level, t))),
     }));
     for (const h of scape.happenings) for (const s of h.sounds) if (isClip(s)) want(clipUrl(s));
     for (const clip of DIRECTOR_CLIPS[scape.director ?? "none"]) want(clipUrl(clip));
@@ -1351,6 +1421,15 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
       listener = { at, forward };
       for (const [spot, bus] of buses) aim(spot, bus, 0.12);
     },
+    /** What has been played so far, by name, and how much is sounding now: for tests. */
+    stats() {
+      return {
+        played: Object.fromEntries(played),
+        live: live.size,
+        leveller: leveller.gain.value,
+        loudness: 10 * Math.log10(loudness || 1e-12),
+      };
+    },
     /** Offline only: run the clock once. */
     advance() {
       tick();
@@ -1372,7 +1451,8 @@ export function createAmbience(options: { offline?: AudioContext } = {}) {
             /* already stopped */
           }
         }
-        for (const player of beds) player.next = 0;
+        for (const player of beds) for (const layer of player.layers) layer.next = 0;
+        for (const feed of feeds) feed.next = 0;
         void ctx.suspend();
       }, 1500);
     },

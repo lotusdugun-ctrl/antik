@@ -67,10 +67,10 @@ export function villaParts(spec: TerraceVillaSpec): Part[] {
   /* ---- the slope, the river and the terrace ---- */
   parts.push(...setting(30, 2531, { hills: 0.8, stone: 0.7, grass: 0.9, ground: "limestone" }));
   // The Euphrates, broad and slow, below the terrace.
-  // Its surface stands a little over the plain round the model, so the
-  // rolling ground of the landscape does not swallow it; a bank holds it.
-  parts.push(scenery(box("water", [0, -0.6, edge - 76], [360, 1.5, 120])));
-  parts.push(scenery(worn(box("ground", [0, -0.2, edge - 14.5], [360, 1.2, 3]), 0.2)));
+  // Its surface lies a little under the plain; the landscape shelves its bed
+  // down under it (see landscape-plan.ts), and a low bank carries the path.
+  parts.push(scenery(box("water", [0, -2, edge - 76], [360, 1.7, 120])));
+  parts.push(scenery(worn(box("ground", [0, -0.4, edge - 14.5], [360, 0.55, 3]), 0.2)));
   for (let i = 0; i < 24; i += 1) {
     const x = -70 + i * 6.2 + ((i * 37) % 5);
     parts.push(...broadleaf([x, 0, edge - 11.5 - ((i * 13) % 2)], 6 + ((i * 7) % 5)));

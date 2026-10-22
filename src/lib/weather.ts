@@ -25,7 +25,12 @@ const MISTY =
 
 /** The weather a model opens with, when the visitor turns weather on. */
 export function defaultWeather(setting: Setting): Weather {
-  if (setting.biome === "forest" || MISTY.test(`${setting.id} ${setting.siteSlug}`)) return "mist";
+  if (
+    setting.biome === "forest" ||
+    setting.biome === "pontic" ||
+    MISTY.test(`${setting.id} ${setting.siteSlug}`)
+  )
+    return "mist";
   if (setting.biome === "mountain") return "dust";
   if (setting.biome === "steppe") return setting.kind === "neolithic-enclosure" ? "dust" : "clouds";
   return "clouds";

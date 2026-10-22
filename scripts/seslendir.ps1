@@ -18,20 +18,40 @@ function Step($text) { Write-Host ""; Write-Host "=== $text ===" -ForegroundColo
 
 # 1. Python, Piper and the MP3 encoder
 Step "Python kontrol ediliyor"
-$py = $null
-foreach ($candidate in @("py", "python", "python3")) {
-  try { & $candidate -3 --version 2>$null | Out-Null; if ($LASTEXITCODE -eq 0) { $py = @($candidate, "-3"); break } } catch {}
-  try { & $candidate --version 2>$null | Out-Null; if ($LASTEXITCODE -eq 0) { $py = @($candidate); break } } catch {}
+# Piper needs a Python its speech engine (onnxruntime) is built for: 3.10-3.13.
+# A newer one (3.14, 3.15) installs without it and every worker then fails, so
+# a supported version is looked for first and installed if missing.
+function Find-Python {
+  foreach ($v in @("3.12", "3.11", "3.13", "3.10")) {
+    try { & py "-$v" --version 2>$null | Out-Null; if ($LASTEXITCODE -eq 0) { return @("py", "-$v") } } catch {}
+  }
+  foreach ($candidate in @("python", "python3")) {
+    try {
+      $ver = & $candidate -c "import sys; print('%d.%d' % sys.version_info[:2])" 2>$null
+      if ($LASTEXITCODE -eq 0 -and @("3.10", "3.11", "3.12", "3.13") -contains "$ver".Trim()) { return @($candidate) }
+    } catch {}
+  }
+  return $null
 }
+$py = Find-Python
 if (-not $py) {
-  Write-Host "Python bulunamadi, kuruluyor (winget)..." -ForegroundColor Yellow
+  Write-Host "Piper icin uygun Python (3.12) bulunamadi, kuruluyor (winget)..." -ForegroundColor Yellow
   winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements
-  Write-Host "Python kuruldu. Lutfen bu pencereyi kapatip SESLENDIR.bat'i yeniden calistirin." -ForegroundColor Yellow
-  exit 1
+  $py = Find-Python
+  if (-not $py) {
+    Write-Host "Python 3.12 kuruldu. Lutfen bu pencereyi kapatip SESLENDIR.bat'i yeniden calistirin." -ForegroundColor Yellow
+    exit 1
+  }
 }
 $pyExe = $py[0]; $pyArgs = @(); if ($py.Count -gt 1) { $pyArgs = @($py[1]) }
+Write-Host ("Kullanilan Python: " + (& $pyExe @pyArgs --version))
 & $pyExe @pyArgs -m pip uninstall -y edge-tts 2>$null | Out-Null
 & $pyExe @pyArgs -m pip install --quiet --upgrade "piper-tts>=1.3,<2" lameenc | Out-Host
+& $pyExe @pyArgs -c "import piper, lameenc" 2>$null
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "Piper kurulamadi (yukaridaki pip mesajlarina bakin). Bu pencerenin ekran goruntusunu Claude'a gonderin." -ForegroundColor Red
+  exit 1
+}
 
 # 2. Latest code first, so the newest texts and manifest are used
 Step "Proje guncelleniyor"

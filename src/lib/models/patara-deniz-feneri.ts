@@ -51,7 +51,10 @@ export function lighthouseParts(spec: LighthouseSpec): Part[] {
 
   /* ---- the bay, the dunes and the hills of the Lycian shore ---- */
   parts.push(...setting(26, 6465, { hills: 1.3, stone: 0, grass: 0, ground: "limestone" }));
-  parts.push(scenery(box("water", [0, -1.2, 0], [420, 1.2 + SEA, 420])));
+  // The bay, out from the shore the mole runs off: the land (the dunes, the
+  // beach) begins at the mole's root, where the landscape rises out of it.
+  const shore = L.moleEnd + 1.5;
+  parts.push(scenery(box("water", [(shore - 210) / 2, -1.2, 0], [shore + 210, 1.2 + SEA, 420])));
 
   /* ---- the mole ---- */
   // Squared blocks from the sea bed to the quay, the lighthouse on its head.

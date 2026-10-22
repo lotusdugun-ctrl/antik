@@ -4,8 +4,16 @@ Antik Türkiye — ambient sound in the 3D models
 Every sound here is either in the public domain (CC0) or synthesised for this
 app. scripts/build_ambience.py in the project records exactly which file each
 clip came from and what was done to it, or how it was synthesised. Wind,
-cicadas, sparks, chariot wheels, the scops owl, doves, gulls and larks, the
-salpinx, the gourd rattle and the reverb are synthesised in the browser.
+cicadas, sparks, chariot wheels, the salpinx, the gourd rattle and the reverb
+are synthesised in the browser (src/lib/ambience.ts), and so is everything in
+src/lib/ambience-synth.ts: the birds (scops owl, collared dove, gull, lark,
+blackbird, sparrow, chaffinch, cuckoo, woodpecker, hoopoe, chukar partridge,
+swift, bee-eater), crickets and marsh frogs, goat bells, a donkey, hammers,
+chisels and a quern, footsteps on stone, gravel and planks, wordless voices
+(shouts, laughter, talk), ships' rigging, lapping water, a brook, wind gusts,
+a church bell, a semantron, distant chant, and music made new on each play
+for the aulos, the lyre and the frame drum. No recording is used for any of
+these.
 
 
 1. ESC-50 (Karol J. Piczak) — only clips whose freesound.org originals are

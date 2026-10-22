@@ -8,6 +8,10 @@ import {
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { SCANS } from "@/lib/scans";
 import { buildLandscape, type Biome } from "./scene/landscape";
+import { animateWater, cutWater } from "./scene/water";
+import { rockGeometry } from "./scene/rock";
+import { buildFrescoes, isFresco } from "./scene/fresco";
+import { waterOf } from "@/lib/landscape-plan";
 import { buildLettering, isPlate } from "./scene/lettering";
 import type { LifeHandle } from "./scene/life";
 import type { SceneLife } from "@/lib/scene-life";
@@ -321,6 +325,9 @@ const MATERIALS: Record<Material, Palette> = {
   },
   conglomerate: { color: 0xcfa57c, roughness: 0.92, metalness: 0 },
   water: { color: 0x3f7088, roughness: 0.18, metalness: 0.05, clearcoat: 0.6 },
+  sand: { color: 0xd2bf98, roughness: 1, metalness: 0 },
+  // The Pontic cliff: grey limestone, darkened by rain and lichen.
+  rock: { color: 0x8b877d, roughness: 0.96, metalness: 0 },
   /*
    * Weathered bronze, kept well off full metalness on purpose. A physically
    * correct metal has almost no diffuse colour — it is only a mirror — so at
@@ -2505,6 +2512,8 @@ export default function Reconstruction3DInner({
                */
               geometry = new THREE.PlaneGeometry(w, h);
               geometry.translate(0, h / 2, d / 2);
+            } else if (part.rock) {
+              geometry = rockGeometry(THREE, mergeGeometries, w, h, d, part.rock);
             } else if (part.weather) {
               /*
                * A weathered block: divided about every 12 cm and then pushed
@@ -2978,7 +2987,15 @@ export default function Reconstruction3DInner({
       }
 
       /** Materials that are not stone, and take no grain. */
-      const NOT_STONE: Material[] = ["shadow", "human", "linen", "foliage", "papyrus", "hide"];
+      const NOT_STONE: Material[] = [
+        "shadow",
+        "human",
+        "linen",
+        "foliage",
+        "papyrus",
+        "hide",
+        "water",
+      ];
       /** Marbles take the veined set; limestone and the rest the coarser block. */
       const stoneSetFor = (name: Material) =>
         name === "marble" ||
@@ -3044,14 +3061,17 @@ export default function Reconstruction3DInner({
        * the scene; the props of its life go into their own group, so they can
        * be hidden with the people without rebuilding anything.
        */
+      /** Every water surface, rippled by the clock (see `scene/water.ts`). */
+      const waters: ReturnType<typeof animateWater>[] = [];
       const addMerged = (source: Part[], parent: THREE_NS.Object3D) => {
         const byMaterial = new Map<Material, THREE_NS.BufferGeometry[]>();
         // Which statue each geometry belongs to, if any, in step with `byMaterial`.
         const statueOf = new Map<THREE_NS.BufferGeometry, string>();
         for (const part of source) {
           if (part.carving || part.scan) continue;
-          // A lettered plate is drawn by the lettering, on its own texture.
-          if (isPlate(part)) continue;
+          // A lettered plate is drawn by the lettering, on its own texture,
+          // and a painted wall by the frescoes.
+          if (isPlate(part) || isFresco(part)) continue;
           const list = byMaterial.get(part.material) ?? [];
           const geometry = flatten(geometryFor(part));
           list.push(geometry);
@@ -3084,6 +3104,7 @@ export default function Reconstruction3DInner({
             "linen",
             "lettering",
             "letteringDark",
+            "water",
           ].includes(name);
           const painted = masonry || list.some((geometry) => geometry.getAttribute("color"));
           if (painted) {
@@ -3130,6 +3151,10 @@ export default function Reconstruction3DInner({
           if (uv) merged.setAttribute("uv1", uv.clone());
           const material = surfaceFor(name, NOT_STONE.includes(name) ? null : stoneSetFor(name));
           if (painted) material.vertexColors = true;
+          if (name === "water") waters.push(animateWater(material));
+          // Raked sand has almost no sheen: at a low sun, stone's Fresnel
+          // glare turned the whole race track into a mirror.
+          if (name === "sand") material.specularIntensity = 0.15;
           /*
            * Paint, shadowed openings and dark trim are laid on a surface, often
            * flush with it: a band of colour on a frieze, a door's dark void in
@@ -3229,6 +3254,12 @@ export default function Reconstruction3DInner({
         const own = buildLettering(THREE, parts.filter(isPlate), anisotropy);
         scene.add(own.group);
         letterings.push(own);
+        const painted = parts.filter(isFresco);
+        if (painted.length) {
+          const walls = buildFrescoes(THREE, painted, anisotropy);
+          scene.add(walls.group);
+          letterings.push(walls);
+        }
         if (life) {
           const theirs = buildLettering(THREE, life.props.filter(isPlate), anisotropy);
           lifeGroup.add(theirs.group);
@@ -3256,6 +3287,8 @@ export default function Reconstruction3DInner({
         metalness: 0,
         map: groundTexture,
       });
+      // A river or a harbour lower than the site shows through it.
+      cutWater(apronMaterial, waterOf(parts));
       const apronMesh = new THREE.Mesh(apron, apronMaterial);
       apronMesh.receiveShadow = true;
       scene.add(apronMesh);
@@ -3269,6 +3302,8 @@ export default function Reconstruction3DInner({
           (bounds.max[2] - bounds.min[2]) / 2,
         ),
         biome,
+        // Nothing grows in the river, in a wall or on a road.
+        parts: life ? [...parts, ...life.props] : parts,
       });
       scene.add(landscape.group);
 
@@ -5031,6 +5066,7 @@ export default function Reconstruction3DInner({
       };
 
       /** One frame of walking: move, find the floor, settle the eye onto it. */
+      const personAt = new THREE.Vector3();
       const stepWalk = (dt: number) => {
         const pad = padRef.current;
         let forward = (held.forward ? 1 : 0) - (held.back ? 1 : 0) + pad.forward;
@@ -5081,6 +5117,31 @@ export default function Reconstruction3DInner({
           if (!tryStride(x + sx, z + sz) && !tryStride(x + sx, z) && !tryStride(x, z + sz)) {
             walker.feet = floorAt(x, z, walker.feet + walker.lift + STEP);
             break;
+          }
+        }
+        /*
+         * People are not walked through: anyone standing or walking within
+         * an arm's length on the same level eases the walker round them, as
+         * a circle on the plan — a few subtractions a person, every frame.
+         */
+        if (lifeGroup.visible && actorRoots.length && walker.lift < 0.5) {
+          const REACH = 0.6;
+          for (const { root } of actorRoots) {
+            if (!root.visible) continue;
+            const p = root.getWorldPosition(personAt);
+            const dx = stride.x - p.x;
+            const dz = stride.z - p.z;
+            if (Math.abs(dx) > REACH || Math.abs(dz) > REACH) continue;
+            if (Math.abs(p.y - walker.feet) > 1.2) continue;
+            const d = Math.hypot(dx, dz);
+            if (d >= REACH) continue;
+            const ux = d > 1e-4 ? dx / d : Math.cos(walker.yaw);
+            const uz = d > 1e-4 ? dz / d : -Math.sin(walker.yaw);
+            const { x, z } = stride;
+            if (!tryStride(p.x + ux * REACH, p.z + uz * REACH)) {
+              stride.x = x;
+              stride.z = z;
+            }
           }
         }
         camera.position.x = stride.x;
@@ -5201,6 +5262,7 @@ export default function Reconstruction3DInner({
       let lastFrame = performance.now() / 1000;
       const frame = () => {
         const now = performance.now() / 1000;
+        for (const water of waters) water.tick(now % 3600);
         const elapsed = now - lastFrame;
         const dt = Math.min(0.1, elapsed);
         lastFrame = now;
@@ -5472,7 +5534,22 @@ export default function Reconstruction3DInner({
          * milliseconds a ray. The search stops at a time budget and takes
          * the clearest approach found by then.
          */
-        const deadline = performance.now() + 120;
+        const deadline = performance.now() + 160;
+        /*
+         * Both faces of everything count for the search. With only the front
+         * faces, a ray that set out from inside a wall (the named point is
+         * often just inside its part) or ran on through a solid block passed
+         * clean through it, the way looked clear, and the tour parked the
+         * camera inside the terrace wall at Zeugma.
+         */
+        const sides = new Map<THREE_NS.Material, THREE_NS.Side>();
+        for (const object of solids) {
+          const m = (object as THREE_NS.Mesh).material;
+          for (const material of Array.isArray(m) ? m : [m]) {
+            if (!sides.has(material)) sides.set(material, material.side);
+            material.side = THREE.DoubleSide;
+          }
+        }
         search: for (const rise of [lift, 0.7, 0.92]) {
           for (let k = 0; k <= 12; k += 1) {
             // 0, +30°, -30°, +60°, -60° … round to the far side.
@@ -5497,6 +5574,7 @@ export default function Reconstruction3DInner({
             if (free >= close - 0.01 || performance.now() > deadline) break search;
           }
         }
+        for (const [material, side] of sides) material.side = side;
         // Nowhere entirely clear: as far back as the clearest way allows.
         const distance = Math.max(1.5, Math.min(close, start + bestFree - 0.5));
         return { position: point.clone().addScaledVector(best, distance), look: point };

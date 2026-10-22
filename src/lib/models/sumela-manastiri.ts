@@ -6,12 +6,12 @@ import {
   kitScenery as scenery,
   kitSeeded as seeded,
   kitWorn as worn,
-  type Material,
   type Part,
   type Vec3,
   type WalkStart,
 } from "@/lib/reconstruction-parts";
 import { arch, broadleaf, conifer } from "@/lib/models/craft";
+import { ledgeAt, rockOffset } from "@/lib/models/rockface";
 
 /**
  * A monastery built into a cliff: a cave turned into a church, its outer wall
@@ -82,30 +82,121 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
   const rangeRight = rangeLeft + spec.rangeLength;
 
   /* ---- the cliff ---- */
-  const rock = (at: Vec3, size: Vec3, wear = 0.9) =>
-    parts.push(scenery(worn(box("stoneDark", at, size), wear)));
-  const sky = 78;
-  // The mass behind the cave, and the face either side of it.
-  rock([0, 0, caveBack + 16], [200, sky, 32], 1.6);
-  rock([(caveLeft - 100) / 2, 0, (cliff + caveBack) / 2], [100 + caveLeft, sky, caveBack - cliff]);
-  rock(
-    [(caveRight + 100) / 2, 0, (cliff + caveBack) / 2],
-    [100 - caveRight, sky, caveBack - cliff],
-  );
-  // Over the cave, its roof; and the overhang that leans out over everything.
-  rock(
-    [(caveLeft + caveRight) / 2, C + spec.caveHeight, (cliff + caveBack) / 2],
-    [caveRight - caveLeft, sky - C - spec.caveHeight, caveBack - cliff],
-  );
-  rock([10, rangeTop + 6, cliff - 3], [90, sky - rangeTop - 6, 6], 1.2);
-  // Ledges and buttresses breaking the face, and the forest clinging to them.
+  /*
+   * The face is built of upright blocks of living rock a few metres wide,
+   * each its own height — tallest over the monastery, falling away to either
+   * side into the forested slope — and each with a rock face of its own
+   * (see `rockface.ts`): ledges with shrubs on them, joints running up it,
+   * the top leaning out over the buildings. A single block 200 m wide read
+   * from any distance as what it was, a flat slab.
+   */
+  const RELIEF = 2.6;
   const random = seeded(1923);
+  const sky = 78;
+  const back = caveBack + 32;
+  const rockBlock = (x0: number, x1: number, y0: number, top: number, z0: number) => {
+    const w = x1 - x0;
+    const h = top - y0;
+    if (w <= 0.5 || h <= 0.5) return;
+    const ledges: number[] = [];
+    for (let y = 5 + random() * 6; y < h - 6; y += 7 + random() * 9) ledges.push(y);
+    const face = {
+      relief: RELIEF,
+      seed: Math.floor(random() * 1e6),
+      ledges,
+      overhang: top > 50 ? 0.4 + random() * 0.5 : 0,
+    };
+    const front = z0 + RELIEF;
+    // A weathered crag along its top, so the crest is broken, not sawn.
+    if (top > C + spec.caveHeight + 4)
+      parts.push(
+        scenery(
+          worn(
+            box("rock", [(x0 + x1) / 2, top - 2.5, front + 3], [w + 1.5, 3 + random() * 4, 8]),
+            1.4,
+          ),
+        ),
+      );
+    parts.push(
+      scenery({
+        ...box("rock", [(x0 + x1) / 2, y0, (front + back) / 2], [w, h, back - front]),
+        rock: face,
+      }),
+    );
+    // Shrubs and a few small trees on the ledges, where a ledge is there.
+    face.ledges.forEach((y, k) => {
+      for (let u = -w / 2 + 1.2; u < w / 2 - 1.2; u += 1.6 + random() * 2.4) {
+        if (!ledgeAt(face, k, u) || random() < 0.35) continue;
+        const shelf = rockOffset(face, w, h, u, y - 0.2) * RELIEF;
+        const at: Vec3 = [(x0 + x1) / 2 + u, y0 + y, front - shelf * 0.55];
+        if (random() < 0.2) parts.push(...conifer(at, 2.5 + random() * 3));
+        else {
+          const r = 0.4 + random() * 0.6;
+          parts.push(scenery(cyl("foliage", at, r * 0.6, r, r * 0.9, 7)));
+        }
+      }
+    });
+  };
+  // The skyline: a slow wave of crags rather than a row of organ pipes.
+  const crest = [random(), random(), random()].map((p) => p * Math.PI * 2);
+  const heightAt = (x: number) => {
+    const fall = Math.min(1, Math.max(0, (Math.abs(x - 5) - 55) / 50));
+    const wave =
+      Math.sin(x / 23 + crest[0]!) * 4.5 +
+      Math.sin(x / 9 + crest[1]!) * 2.2 +
+      Math.sin(x / 4.3 + crest[2]!) * 1.1;
+    return sky * (1 - 0.62 * fall * fall * (3 - 2 * fall)) + wave;
+  };
+  for (let x = -112; x < 112;) {
+    const w = 13 + random() * 10;
+    const x0 = x;
+    const x1 = Math.min(112, x + w);
+    x = x1;
+    const top = heightAt((x0 + x1) / 2);
+    const z0 = cliff + (random() - 0.5) * 0.8;
+    if (x1 <= caveLeft || x0 >= caveRight) rockBlock(x0, x1, 0, top, z0);
+    else {
+      // Over the cave: the rock starts at its roof; either side, from the ground.
+      if (x0 < caveLeft) rockBlock(x0, caveLeft, 0, top, z0);
+      rockBlock(Math.max(x0, caveLeft), Math.min(x1, caveRight), C + spec.caveHeight, top, cliff);
+      if (x1 > caveRight) rockBlock(caveRight, x1, 0, top, z0);
+    }
+  }
+  // The back of the cave, and the rock behind it.
+  parts.push(
+    scenery(
+      worn(
+        box(
+          "rock",
+          [(caveLeft + caveRight) / 2, 0, (caveBack + back) / 2],
+          [caveRight - caveLeft, sky - 10, back - caveBack],
+        ),
+        0.6,
+      ),
+    ),
+  );
+  // The overhang that leans out over the range of rooms.
+  const lean = rangeTop + 6;
+  parts.push(
+    scenery({
+      ...box("rock", [10, lean, cliff - 1.5], [90, sky - 14 - lean, 5]),
+      rock: { relief: RELIEF, seed: 77, ledges: [], overhang: 0.6 },
+    }),
+  );
+  // Buttresses of rock standing out of the face, and the forest clinging to them.
   for (let i = 0; i < 14; i += 1) {
     const x = -95 + random() * 190;
     if (x > courtLeft - 50 && x < rangeRight + 4) continue;
     const h = 10 + random() * 40;
-    rock([x, 0, cliff - 2 - random() * 3], [4 + random() * 8, h, 5 + random() * 3], 0.7);
-    parts.push(...conifer([x + (random() - 0.5) * 3, h, cliff - 3], 4 + random() * 4));
+    const w = 4 + random() * 8;
+    const z = cliff - 2 - random() * 3;
+    parts.push(
+      scenery({
+        ...box("rock", [x, 0, z + 2.5], [w, h, 5 + random() * 3]),
+        rock: { relief: 1.6, seed: i * 13 + 5, ledges: [h * 0.5], overhang: 0 },
+      }),
+    );
+    parts.push(...conifer([x + (random() - 0.5) * 3, h, z + 2], 4 + random() * 4));
   }
   // The forest on the slope below and to either side: the higher, the more of it conifer.
   const coniferShare = Math.min(0.9, Math.max(0.2, (spec.altitude - 400) / 1100));
@@ -357,9 +448,10 @@ function balcony(at: Vec3, length: number, seed: number): Part[] {
 }
 
 /**
- * A wall of painted saints, in registers: each figure a standing robe under
- * a gilded halo on a deep blue ground, the registers parted by red bands.
- * The design is this app's own, after the manner of late Byzantine painting,
+ * A wall of painted saints, in registers, after the manner of late Byzantine
+ * painting: one sheet over the wall, painted by the renderer from the seed
+ * (see `scene/fresco.ts`) — haloed figures with faces, robes in folds, their
+ * names beside them, red borders, a deep blue ground. The app's own design,
  * not a copy of any figure at Sümela.
  */
 function frescoes(
@@ -370,64 +462,12 @@ function frescoes(
   registers: number,
   seed: number,
 ): Part[] {
-  const parts: Part[] = [];
-  const random = seeded(seed);
-  const out = (u: number, v: number, w: number): Vec3 => [
-    at[0] + u * Math.cos(rotY) + w * Math.sin(rotY),
-    at[1] + v,
-    at[2] - u * Math.sin(rotY) + w * Math.cos(rotY),
+  // A hair in front of the wall, along the wall's own outward normal.
+  const out: Vec3 = [at[0] + 0.012 * Math.sin(rotY), at[1], at[2] + 0.012 * Math.cos(rotY)];
+  const perRow = Math.max(1, Math.round(width / 1.45));
+  return [
+    { ...box("paintBlue", out, [width, height, 0.004], rotY), fresco: { seed, registers, perRow } },
   ];
-  const skin = (material: Material, u: number, v: number, w: number, h: number) =>
-    parts.push(box(material, out(u, v, 0.008), [w, h, 0.016], rotY));
-  const band = 0.16;
-  const regH = (height - band * (registers + 1)) / registers;
-  const robes: Material[] = ["paintRed", "fadedRed", "timber", "fadedBlue", "paintGold"];
-  for (let r = 0; r <= registers; r += 1) skin("paintRed", 0, r * (regH + band), width, band);
-  for (let r = 0; r < registers; r += 1) {
-    const v0 = band + r * (regH + band);
-    const figures = Math.max(1, Math.floor(width / 1.45));
-    const slot = width / figures;
-    const fw = slot * 0.56;
-    for (let k = 0; k < figures; k += 1) {
-      const u = -width / 2 + slot * (k + 0.5);
-      // The ground either side of the figure.
-      skin("paintBlue", u - slot / 2 + (slot - fw) / 4, v0, (slot - fw) / 2, regH);
-      skin("paintBlue", u + slot / 2 - (slot - fw) / 4, v0, (slot - fw) / 2, regH);
-      const robeH = regH * 0.72;
-      skin(robes[Math.floor(random() * robes.length)]!, u, v0, fw, robeH);
-      skin("paintBlue", u, v0 + robeH, fw, regH - robeH);
-      // The halo, a gilded disc, and the face within it.
-      const head = Math.min(fw * 0.42, regH * 0.11);
-      const hc = out(u, v0 + robeH + head * 1.25, 0.055);
-      parts.push(
-        cyl("paintGold", hc, head * 1.3, head * 1.3, 0.02, 14, { rotX: -Math.PI / 2, rotY }),
-      );
-      parts.push(
-        box("linen", out(u, v0 + robeH + head * 0.6, 0.065), [head * 0.8, head * 1.1, 0.02], rotY),
-      );
-      // A mantle over one shoulder, a little proud of the robe, and a beard.
-      const side = random() < 0.5 ? -1 : 1;
-      const mantle = robes[Math.floor(random() * robes.length)]!;
-      parts.push(
-        box(
-          mantle,
-          out(u + side * fw * 0.22, v0 + robeH * 0.3, 0.06),
-          [fw * 0.5, robeH * 0.7, 0.016],
-          rotY,
-        ),
-      );
-      if (random() < 0.6)
-        parts.push(
-          box(
-            "timber",
-            out(u, v0 + robeH + head * 0.15, 0.08),
-            [head * 0.7, head * 0.45, 0.012],
-            rotY,
-          ),
-        );
-    }
-  }
-  return parts;
 }
 
 /** In the court before the rock church, looking at its painted wall. */
