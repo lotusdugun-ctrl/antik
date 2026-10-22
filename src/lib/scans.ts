@@ -377,8 +377,8 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     license: "CC BY 4.0",
     licenseUrl: BY,
     note: l(
-      "Delos'taki kutsal yolu bekleyen arkaik mermer aslanlardan biri, karşılaştırma için. Nemrut'un aslanları Kommagene'nin kendi üslubundaydı; modeldeki aslanlar yanlarındaki tanrılarla aynı kireçtaşından, aynı üslupta yontulmuş olarak çizildi.",
-      "One of the archaic marble lions that guarded the sacred way on Delos, for comparison. Nemrut's lions were in Commagene's own style; the model's lions are cut from the same limestone and in the same manner as the gods beside them.",
+      "Delos'un arka ayakları üzerinde oturan, ağzı açık arkaik mermer aslanlarından biri. Modelde terasın iki ucundaki aslanların yerinde, terasın kireçtaşıyla duruyor. Nemrut'un kendi aslanlarından yalnızca parçalar kaldı ve onlar Kommagene'nin kendi üslubundaydı.",
+      "One of the archaic marble lions of Delos, seated on its haunches and roaring. In the model it stands in for the lions at both ends of the terrace, in the terrace's limestone. Only fragments of Nemrut's own lions survive, and they were in Commagene's own style.",
     ),
   },
   "ephesus-portrait": {
@@ -557,8 +557,8 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     license: "Free archive",
     licenseUrl: TDS,
     note: l(
-      "Saint Louis Sanat Müzesi'ndeki 16. yüzyıla ait mermer kartal, karşılaştırma için. Nemrut'un kartalları Kommagene'nin kendi üslubundaydı ve kayıp parçaları çok; modeldeki kartallar tanrılarla aynı kireçtaşından, aynı üslupta yontulmuş olarak çizildi.",
-      "A 16th-century marble eagle in the Saint Louis Art Museum, for comparison. Nemrut's eagles were in Commagene's own style and are badly broken; the model's eagles are cut from the same limestone and in the same manner as the gods.",
+      "Saint Louis Sanat Müzesi'ndeki 16. yüzyıla ait mermer kartal. Modelde terasın iki ucundaki kartalların yerinde, terasın kireçtaşıyla duruyor. Nemrut'un kendi kartalları Kommagene'nin kendi üslubundaydı ve kayıp parçaları çok.",
+      "A 16th-century marble eagle in the Saint Louis Art Museum. In the model it stands in for the eagles at both ends of the terrace, in the terrace's limestone. Nemrut's own eagles were in Commagene's own style and are badly broken.",
     ),
   },
 };

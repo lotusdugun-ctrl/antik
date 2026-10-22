@@ -359,14 +359,20 @@ function saint(
 }
 
 /** The paintings of a model, each on a sheet laid over its wall. */
-export function buildFrescoes(THREE: typeof THREE_NS, parts: FrescoPart[], anisotropy: number) {
+export function buildFrescoes(
+  THREE: typeof THREE_NS,
+  parts: FrescoPart[],
+  anisotropy: number,
+  /** The longest side a painting's canvas may have (smaller on a phone). */
+  maxSide = 2048,
+) {
   const group = new THREE.Group();
   group.name = "frescoes";
   const owned: { dispose: () => void }[] = [];
   if (typeof document === "undefined") return { group, dispose: () => {} };
   for (const part of parts) {
     const [w, h] = part.size;
-    const scale = Math.min(2048 / w, 2048 / h, 140);
+    const scale = Math.min(maxSide / w, maxSide / h, 140);
     const canvas = document.createElement("canvas");
     canvas.width = Math.max(64, Math.round(w * scale));
     canvas.height = Math.max(64, Math.round(h * scale));

@@ -264,8 +264,6 @@ export const de: Partial<Record<TKey, string>> = {
   recon_hint:
     "Ziehen zum Drehen, scrollen zum Heranzoomen an jede Stelle, Rechtsklick-Ziehen oder zwei Finger zum Verschieben. Doppelklick für Vollbild.",
   recon_views: "Ansichten",
-  recon_export: "3D-Datei herunterladen (.glb)",
-  recon_exporting: "Wird vorbereitet…",
   recon_view_front: "Vorne",
   recon_view_corner: "Ecke",
   recon_view_above: "Oben",

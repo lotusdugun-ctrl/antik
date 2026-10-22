@@ -10,10 +10,12 @@ import {
   lifeStall as stall,
   lifeTorchStand as torchStand,
   lifeBench as bench,
+  lifeAside as aside,
   type Era,
   type SceneLife,
 } from "@/lib/scene-life";
 import { nymphaeumLayout, type NymphaeumSpec } from "@/lib/models/sagalassos-antoninler-cesmesi";
+import * as trades from "@/lib/scene-trades";
 
 /**
  * The Upper Agora on a summer morning: women and boys at the basin with their
@@ -107,5 +109,24 @@ export function nymphaeumLife(spec: NymphaeumSpec, era: Era): SceneLife {
     const torch = torchStand([s * (L.half - 1.2), 0, f - 1.0], 2.0);
     fire(b, torch, 0.32, true);
   }
+
+  /*
+   * The rest of the market: a potter throwing the red-slipped ware
+   * Sagalassos sold across the empire, a money-changer and a spice seller
+   * at their tables, porters under a pole behind the stalls, children with
+   * a ball, old men on a bench in the sun.
+   */
+  const x = aside(b, 16081);
+  trades.potter(x, [-19, 0, f - 11], Math.PI / 2);
+  trades.changer(x, [11, 0, f - 21.6], 0);
+  trades.weigher(x, [-24, 0, f - 3], Math.PI / 2);
+  trades.ballGame(x, [0, 0, f - 17], [3, 0, f - 19]);
+  trades.porters(x, [
+    [-10, 0, f - 25],
+    [16, 0, f - 25],
+    [16, 0, f - 25.5],
+    [-10, 0, f - 25.5],
+  ]);
+  trades.elders(x, [-2, 0, f - 27], 0);
   return finish(b);
 }

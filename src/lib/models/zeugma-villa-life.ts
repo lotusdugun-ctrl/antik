@@ -10,10 +10,13 @@ import {
   lifeJar as jar,
   lifeLampstand as lampstand,
   lifeMake as make,
+  lifeAside as aside,
+  lifeAnimal as animal,
   type Era,
   type SceneLife,
 } from "@/lib/scene-life";
 import { villaLayout, type TerraceVillaSpec } from "@/lib/models/zeugma-villa";
+import * as trades from "@/lib/scene-trades";
 
 /**
  * The house in the evening: a dinner laid in the reception room, a slave
@@ -101,7 +104,7 @@ export function villaLife(spec: TerraceVillaSpec, era: Era): SceneLife {
   b.props.push(box("timber", [loomX + 1.0, F, loomZ], [0.08, 2.0, 0.08]));
   b.props.push(box("timber", [loomX, F + 1.9, loomZ], [2.1, 0.1, 0.1]));
   b.props.push(box("paintBlue", [loomX, F + 0.7, loomZ], [1.7, 1.2, 0.02]));
-  cast.add({ at: [loomX, F, loomZ - 0.7], rotY: 0, action: "tend", female: true });
+  cast.add({ at: [loomX, F, loomZ - 0.7], rotY: 0, action: "weave", female: true });
 
   /* The kitchen in the street range: the hearth, and the cook at it. */
   const kx = ox - 3.2;
@@ -125,5 +128,56 @@ export function villaLife(spec: TerraceVillaSpec, era: Era): SceneLife {
     ],
     { role: "worker", carry: "basket", speed: 0.8 },
   );
+
+  /*
+   * Zeugma is its mosaics: a mosaicist squats over a new floor in the side
+   * room, his tesserae in heaps beside him. A steward does the accounts by
+   * the door, a mother walks the colonnade with her child, a woman spins on
+   * the terrace, and on the river path a donkey goes by with its load.
+   */
+  const x = aside(b, 25301);
+  const mx = cw + walk + 2.6;
+  x.cast.add({
+    at: [mx, F, -2.6],
+    rotY: -Math.PI / 2,
+    action: "crouch",
+    carry: "chisel",
+    role: "worker",
+    outfit: { apron: 0x9a7a5a },
+  });
+  const tesserae = ["paintRed", "paintBlue", "marble", "stoneDark", "paintGold"] as const;
+  tesserae.forEach((m, i) =>
+    x.props.push(box(m, [mx + 0.25 + (i % 2) * 0.18, F, -2.2 - i * 0.16], [0.12, 0.05, 0.1], i)),
+  );
+  trades.scribe(x, [-6, F, -11], Math.PI / 2, { role: "official" });
+  trades.handInHand(
+    x,
+    [
+      [-4, F, -3.2],
+      [4, F, -3.2],
+      [4, F, 3.2],
+      [-4, F, 3.2],
+    ],
+    0.46,
+    { female: true },
+  );
+  x.cast.add({
+    at: [-1.0, F, edge + 1.6],
+    rotY: 0.4,
+    action: "spin",
+    carryLeft: "distaff",
+    female: true,
+  });
+  const path: Vec3[] = [
+    [18, 0, edge - 7.4],
+    [-18, 0, edge - 7.4],
+  ];
+  const donkey = animal(x, "donkey", path[0]!, -Math.PI / 2, "walk", {
+    route: path,
+    speed: 0.6,
+    load: true,
+  });
+  const driver = x.cast.walk(path, { role: "worker", carry: "staff", speed: 0.6 });
+  driver.phase = (donkey.phase * 5 - 1.6) / 7;
   return finish(b);
 }

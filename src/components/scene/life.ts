@@ -1,5 +1,9 @@
 import type * as THREE_NS from "three";
+import { compactAttribute, remapIndex, weldVertices } from "@/lib/geometry-weld";
+import { detailed } from "@/lib/render-budget";
+import { batchMeshes } from "./batch";
 import type {
+  Action,
   Animal,
   Carry,
   Chariot,
@@ -11,7 +15,19 @@ import type {
   Seat,
   Species,
 } from "@/lib/scene-life";
-import { FORE, HIP, SHIN, SHOULDER, THIGH, UPPER, figureKit, lookHash } from "./figure";
+import {
+  FORE,
+  HIP,
+  LAP,
+  NECK,
+  SEATED,
+  SHIN,
+  SHOULDER,
+  THIGH,
+  UPPER,
+  figureKit,
+  lookHash,
+} from "./figure";
 
 type Vec3Tuple = [number, number, number];
 
@@ -65,6 +81,18 @@ type Actor = {
   near: THREE_NS.Object3D[];
   far: THREE_NS.Object3D[];
   close: boolean;
+  /** A juggler's balls, moved every frame. */
+  balls?: THREE_NS.Object3D[];
+  /** Somebody this one does something with: a ball between them, a pole. */
+  link?: ActorLink;
+};
+
+type ActorLink = { other: Actor; first: boolean; kind: "pole" | "ball"; phase: number };
+
+/** Where a ball is in its flight, 0 to 1, the same for both of a pair. */
+const ballClock = (link: ActorLink, now: number) => {
+  const k = (now + link.phase) / BALL_PERIOD;
+  return k - Math.floor(k);
 };
 
 /** Collects the close and the far versions of somebody as they are built. */
@@ -107,6 +135,53 @@ const LONG: ReadonlySet<Look["garment"]> = new Set([
   "toga",
   "robe",
 ]);
+
+type Arm = readonly [rx: number, re: number, rz: number];
+
+/**
+ * How each trade holds its arms, before the work moves them: the shoulder's
+ * pitch (negative is forward and up), the elbow's bend and the arm's swing
+ * out from the side, right and left, and how far the body leans into it.
+ * The hand items that hang or stand upright are turned by the same angles,
+ * so a balance hangs plumb from the hand that holds it up.
+ */
+const HOLD: Partial<Record<Action, { r?: Arm; l?: Arm; lean?: number }>> = {
+  pot: { r: [-0.5, -0.25, 0.22], l: [-0.5, -0.25, -0.22], lean: 0.38 },
+  weave: { r: [-1.3, -0.45, -0.05], l: [-1.15, -0.55, 0.05] },
+  spin: { r: [-0.3, -0.65, 0.1], l: [-0.35, -1.45, -0.2] },
+  write: { r: [-0.5, -0.95, 0.32], l: [-0.45, -1.05, -0.4], lean: 0.12 },
+  count: { r: [-0.55, -0.8, 0.18], l: [-0.55, -0.8, -0.18], lean: 0.15 },
+  weigh: { r: [-1.05, -0.85, 0.05], l: [-0.35, -1.0, 0.1] },
+  haggle: { r: [-0.45, -1.2, -0.25], l: [-0.45, -1.2, 0.25] },
+  call: { r: [-0.85, -2.35, 0.3], l: [-2.6, -0.35, 0.35] },
+  knead: { r: [-0.75, -0.45, 0.15], l: [-0.75, -0.45, -0.15], lean: 0.32 },
+  grind: { r: [-0.85, -0.15, 0.12], l: [-0.85, -0.15, -0.12], lean: 0.62 },
+  chop: { r: [-1.5, -0.55, 0.05], l: [-0.8, -0.5, -0.1], lean: 0.2 },
+  stir: { r: [-0.7, -0.5, 0.1], l: [0.25, -1.5, 0.55], lean: 0.22 },
+  carve: { r: [-1.25, -1.05, 0.15], l: [-0.85, -0.7, -0.15], lean: 0.32 },
+  saw: { r: [-0.85, -0.85, 0.05], l: [-0.9, -0.45, -0.2], lean: 0.3 },
+  paint: { r: [-2.3, -0.35, 0.1], l: [-0.3, -0.5, 0.1] },
+  sweep: { r: [-0.75, -0.35, 0.25], l: [-0.55, -0.9, -0.35], lean: 0.3 },
+  hoe: { r: [-1.0, -0.35, 0.1], l: [-0.95, -0.55, -0.1], lean: 0.3 },
+  beg: { r: [-1.0, -0.45, 0.1], l: [-0.3, -0.4, 0.1], lean: -0.05 },
+  pour: { r: [-1.2, -0.45, 0.05], l: [-1.7, -0.35, 0.25] },
+  dance: { r: [-2.3, -0.4, -0.45], l: [-2.0, -0.5, 0.5] },
+  juggle: { r: [-0.45, -1.05, 0.12], l: [-0.45, -1.05, -0.12] },
+  stretch: { r: [-2.95, -0.1, 0.18], l: [-2.95, -0.1, -0.18] },
+  wrestle: { r: [-1.45, -0.55, 0.25], l: [-1.45, -0.55, -0.25], lean: 0.5 },
+  throw: { r: [0.85, -0.2, -0.55], l: [-1.0, -0.3, -0.4], lean: 0.4 },
+  toss: { r: [-0.9, -0.6, 0.2], l: [-0.9, -0.6, -0.2] },
+  crouch: { r: [-0.65, -0.55, 0.1], l: [-0.55, -0.6, -0.1], lean: 0.35 },
+  lean: { r: [-0.55, -1.95, 0.6], l: [-0.5, -1.9, -0.6], lean: -0.1 },
+  point: { r: [-1.85, -0.1, -0.12], l: [0.05, -0.15, 0.08] },
+  gaze: { r: [-0.25, -0.95, 0.42], l: [-0.25, -0.95, -0.42] },
+  lecture: { r: [-1.4, -0.7, -0.2], l: [-0.5, -1.15, -0.1] },
+  plough: { r: [-0.6, -0.3, 0.12], l: [-0.6, -0.3, -0.12], lean: 0.35 },
+  strike: { r: [-1.35, -0.45, 0.3], l: [-0.35, -2.1, 0.1] },
+};
+
+/** How long a ball takes there and back between two children. */
+const BALL_PERIOD = 2.6;
 
 export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
   const group = new THREE.Group();
@@ -160,10 +235,36 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       offset += n;
       piece.dispose();
     }
+    /*
+     * The pieces arrive flattened, one vertex per triangle corner; welding
+     * the exact copies back together (see `geometry-weld.ts`) leaves each
+     * figure looking exactly as it did with a third of the vertices. The
+     * colours are dye colours between 0 and 1, which sixteen bits a channel
+     * hold without a visible step, at half the memory of floats.
+     */
+    const weld = weldVertices(
+      [
+        { array: position, itemSize: 3 },
+        { array: normal, itemSize: 3 },
+        { array: color, itemSize: 3 },
+      ],
+      count,
+    );
+    const shade = compactAttribute(color, 3, weld.source);
+    const packed = new Uint16Array(shade.length);
+    for (let i = 0; i < shade.length; i += 1)
+      packed[i] = Math.round(Math.min(1, Math.max(0, shade[i]!)) * 65535);
     const merged = new THREE.BufferGeometry();
-    merged.setAttribute("position", new THREE.BufferAttribute(position, 3));
-    merged.setAttribute("normal", new THREE.BufferAttribute(normal, 3));
-    merged.setAttribute("color", new THREE.BufferAttribute(color, 3));
+    merged.setAttribute(
+      "position",
+      new THREE.BufferAttribute(compactAttribute(position, 3, weld.source), 3),
+    );
+    merged.setAttribute(
+      "normal",
+      new THREE.BufferAttribute(compactAttribute(normal, 3, weld.source), 3),
+    );
+    merged.setAttribute("color", new THREE.BufferAttribute(packed, 3, true));
+    merged.setIndex(new THREE.BufferAttribute(remapIndex(weld, null), 1));
     merged.computeBoundingSphere();
     geometries.push(merged);
     return merged;
@@ -257,7 +358,10 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       carried: (look, action, carry, carryLeft) => carried(look, action, carry, carryLeft),
       hairdo: (look) => hairdo(look),
       headwear: (look) => headwear(look.headwear, look),
-      handItems: (carry) => handItems(carry),
+      handItems: (carry, action, left) => handItems(carry, action, left),
+      menHair: (look, near) => menHair(look, near),
+      beard: (look, near) => beard(look, near),
+      accessories: (look, action, near) => accessories(look, action, near),
     },
     life.era,
   );
@@ -267,7 +371,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     const out: THREE_NS.BufferGeometry[] = [];
     const female = look.female;
     const long = LONG.has(look.garment);
-    const seated = action === "sit" || action === "kneel";
+    const seated = SEATED.has(action);
     const w = female ? 0.92 : 1;
     // Torso: waist, chest, shoulders, neck root.
     const torsoColour =
@@ -557,25 +661,46 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         break;
     }
 
-    /* The head. */
-    out.push(paint(cylinder(0.028, 0.032, 0.05, [0, 0.855, 0], 8), look.skin));
-    out.push(paint(sphere(0.062, [0, 0.925, 0.005], [0.9, 1.06, 1], 14, 11), look.skin));
-    out.push(paint(sphere(0.012, [0, 0.918, 0.066], [0.8, 1.3, 1], 6, 5), look.skin));
+    /* The head, on its own so it can turn. */
+    const head: THREE_NS.BufferGeometry[] = [];
+    head.push(paint(cylinder(0.028, 0.032, 0.05, [0, 0.855, 0], 8), look.skin));
+    head.push(paint(sphere(0.062, [0, 0.925, 0.005], [0.9, 1.06, 1], 10, 7), look.skin));
+    head.push(paint(sphere(0.012, [0, 0.918, 0.066], [0.8, 1.3, 1], 4, 3), look.skin));
     for (const side of [-1, 1])
-      out.push(paint(sphere(0.012, [side * 0.056, 0.925, 0.0], [0.6, 1, 0.8], 6, 5), look.skin));
+      head.push(paint(sphere(0.012, [side * 0.056, 0.925, 0.0], [0.6, 1, 0.8], 4, 3), look.skin));
     const masked = look.headwear === "mask";
     if (!masked) {
-      // Hair: a cap over the crown, longer for a woman, with a bun or a fall.
-      out.push(
-        paint(
-          sphere(0.066, [0, 0.945, -0.006], [0.94, female ? 0.78 : 0.68, 1.02], 14, 10),
-          look.hair,
-        ),
-      );
+      // Hair: a cap over the crown, longer for a woman, with a bun or a fall;
+      // a man's cropped, curled, long or tied, or gone from the crown.
+      if (look.bald && !female) {
+        head.push(
+          paint(
+            new THREE.SphereGeometry(
+              0.067,
+              12,
+              4,
+              Math.PI * 0.85,
+              Math.PI * 1.3,
+              Math.PI * 0.36,
+              Math.PI * 0.24,
+            )
+              .rotateX(-0.15)
+              .translate(0, 0.925, -0.004),
+            look.hair,
+          ),
+        );
+      } else {
+        head.push(
+          paint(
+            sphere(0.066, [0, 0.945, -0.006], [0.94, female ? 0.78 : 0.68, 1.02], 10, 6),
+            look.hair,
+          ),
+        );
+      }
       if (female) {
-        if (look.headwear !== "veil") out.push(...hairdo(look));
+        if (look.headwear !== "veil") head.push(...hairdo(look));
         else
-          out.push(
+          head.push(
             paint(
               stack(
                 [
@@ -587,17 +712,15 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
               look.hair,
             ),
           );
-      }
-      if (look.beard) {
-        out.push(paint(sphere(0.045, [0, 0.885, 0.03], [1.05, 0.9, 0.85], 10, 7), look.hair));
-      }
+      } else head.push(...menHair(look, false));
+      if (look.beard) head.push(...beard(look, false));
     }
     const hw = headwear(look.headwear, look);
-    out.push(...hw);
+    head.push(...hw);
     if (female && look.jewels && !masked) {
       // Gold drops at the ears and a thin collar of beads at the neck.
       for (const side of [-1, 1])
-        out.push(paint(sphere(0.009, [side * 0.058, 0.9, 0.004], [1, 1.4, 1], 6, 5), GOLD));
+        head.push(paint(sphere(0.009, [side * 0.058, 0.9, 0.004], [1, 1.4, 1], 6, 5), GOLD));
       out.push(
         paint(
           new THREE.TorusGeometry(0.04, 0.0055, 5, 16)
@@ -608,8 +731,9 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       );
     }
 
+    out.push(...accessories(look, action, false));
     out.push(...carried(look, action, carry, carryLeft));
-    return out;
+    return { body: out, head };
   };
 
   /** Things carried on the body rather than in a hand. */
@@ -710,6 +834,98 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         case "staff":
           out.push(paint(cylinder(0.012, 0.014, 1.15, [-0.2, 0.575, 0.12], 7), 0x6f4426));
           break;
+        case "crook":
+          // A shepherd's staff with its hook, taller than the man's shoulder.
+          out.push(paint(cylinder(0.011, 0.013, 1.2, [-0.2, 0.6, 0.12], 7), 0x7a5a3c));
+          out.push(
+            paint(
+              new THREE.TorusGeometry(0.035, 0.009, 5, 10, Math.PI * 1.3)
+                .rotateY(Math.PI / 2)
+                .translate(-0.2, 1.225, 0.155),
+              0x7a5a3c,
+            ),
+          );
+          break;
+        case "hoop": {
+          // Bowled along in front, and kept going with a stick.
+          out.push(
+            paint(
+              new THREE.TorusGeometry(0.17, 0.01, 5, 20)
+                .rotateY(Math.PI / 2)
+                .translate(-0.16, 0.2, 0.5),
+              0x8a6a48,
+            ),
+          );
+          out.push(
+            paint(
+              tube(
+                [
+                  [-0.15, 0.53, 0.24],
+                  [-0.155, 0.45, 0.31],
+                  [-0.16, 0.36, 0.37],
+                ],
+                0.006,
+                4,
+              ),
+              0x6f4426,
+            ),
+          );
+          break;
+        }
+        case "reeds":
+          // A long bundle of reeds over the right shoulder, tied in two places.
+          for (let i = 0; i < 5; i += 1) {
+            out.push(
+              paint(
+                cylinder(0.012, 0.01, 1.1, [0, 0, 0], 4)
+                  .rotateX(Math.PI / 2 - 0.25)
+                  .translate(-0.13 + (i % 3) * 0.016, 0.86 + Math.floor(i / 3) * 0.018, 0.0),
+                i % 2 ? 0xb59a62 : 0xc4ae74,
+              ),
+            );
+          }
+          break;
+        case "sack":
+          out.push(paint(sphere(0.12, [0.12, 0.86, -0.02], [0.8, 0.75, 1.3], 9, 7), 0xc4b08a));
+          break;
+        case "plough": {
+          // The ard: its two handles in the hands, the share in the earth, and
+          // the beam running forward to the yoke on the oxen's necks.
+          const share: [number, number, number] = [0, 0.27, 0.7];
+          const yoke: [number, number, number] = [0, 1.36, 1.53];
+          for (const side of [-1, 1])
+            out.push(
+              paint(
+                tube([[side * 0.14, 0.53, 0.25], [side * 0.07, 0.4, 0.48], share], 0.012, 5),
+                0x6f4426,
+              ),
+            );
+          out.push(paint(tube([share, [0, 0.62, 1.0], yoke], 0.018, 8), 0x6f4426));
+          out.push(
+            paint(
+              new THREE.ConeGeometry(0.03, 0.12, 6).rotateX(Math.PI * 0.6).translate(0, 0.25, 0.76),
+              0x7d776c,
+            ),
+          );
+          out.push(
+            paint(
+              cylinder(0.022, 0.022, 0.75, [0, 0, 0], 6)
+                .rotateZ(Math.PI / 2)
+                .translate(0, yoke[1], yoke[2]),
+              0x6f4426,
+            ),
+          );
+          break;
+        }
+        case "semantron":
+          // The long board balanced on the left shoulder.
+          out.push(
+            paint(
+              new THREE.BoxGeometry(0.06, 0.03, 0.95).rotateX(0.18).translate(0.15, 0.84, 0.18),
+              0x8a6a48,
+            ),
+          );
+          break;
         case "spear":
           out.push(paint(cylinder(0.009, 0.011, 1.45, [-0.21, 0.72, 0.13], 7), 0x6f4426));
           out.push(
@@ -793,6 +1009,178 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     g.scale(s, s, s);
     g.translate(...at);
     return [paint(g, 0xb06a44)];
+  };
+
+  /**
+   * A man's hair over the cap: curls in rows over the crown and brow, long
+   * hair to the shoulders, or long hair knotted up behind. Short hair is the
+   * cap alone. `near` draws it finer, for the close figure.
+   */
+  const menHair = (look: Look, near: boolean): THREE_NS.BufferGeometry[] => {
+    const out: THREE_NS.BufferGeometry[] = [];
+    const seg = near ? 7 : 5;
+    switch (look.hairStyle) {
+      case "curls":
+        if (look.bald) break;
+        for (let i = 0; i < (near ? 11 : 7); i += 1) {
+          const a = -Math.PI / 2 + (i / (near ? 10 : 6)) * Math.PI * 2;
+          const y = i % 2 ? 0.975 : 0.955;
+          out.push(
+            paint(
+              sphere(
+                near ? 0.018 : 0.022,
+                [Math.cos(a) * 0.052, y, Math.sin(a) * 0.052 - 0.006],
+                [1, 0.9, 1],
+                seg,
+                seg - 2,
+              ),
+              look.hair,
+            ),
+          );
+        }
+        out.push(paint(sphere(0.03, [0, 0.99, -0.01], [1.3, 0.7, 1.3], seg + 2, seg), look.hair));
+        break;
+      case "long":
+        out.push(
+          paint(
+            stack(
+              [
+                { y: 0.82, z: -0.045, rx: 0.06, rz: 0.022 },
+                { y: 0.87, z: -0.055, rx: 0.064, rz: 0.03 },
+                { y: 0.935, z: -0.05, rx: 0.062, rz: 0.04 },
+              ],
+              near ? 10 : 8,
+            ),
+            look.hair,
+          ),
+        );
+        break;
+      case "tied":
+        out.push(paint(sphere(0.026, [0, 0.95, -0.07], [1, 0.9, 1], seg + 1, seg), look.hair));
+        break;
+      default:
+        break;
+    }
+    return out;
+  };
+
+  /** A beard as it is cut: stubble, short, long down the chest, or pointed. */
+  const beard = (look: Look, near: boolean): THREE_NS.BufferGeometry[] => {
+    const w = near ? 10 : 8;
+    const h = near ? 7 : 6;
+    switch (look.beardStyle) {
+      case "stubble":
+        return [
+          paint(
+            sphere(0.047, [0, 0.897, 0.018], [1.12, 0.78, 0.86], w, h),
+            new THREE.Color(look.skin).lerp(new THREE.Color(look.hair), 0.42).getHex(),
+          ),
+        ];
+      case "long":
+        return [
+          paint(sphere(0.044, [0, 0.885, 0.026], [1.08, 0.95, 0.86], w, h), look.hair),
+          paint(
+            stack(
+              [
+                { y: 0.79, z: 0.05, rx: 0.012, rz: 0.01 },
+                { y: 0.82, z: 0.052, rx: 0.03, rz: 0.022 },
+                { y: 0.865, z: 0.045, rx: 0.042, rz: 0.03 },
+              ],
+              w,
+            ),
+            look.hair,
+          ),
+        ];
+      case "pointed":
+        return [
+          paint(sphere(0.043, [0, 0.888, 0.026], [1.05, 0.88, 0.85], w, h), look.hair),
+          paint(
+            new THREE.ConeGeometry(0.026, 0.06, w)
+              .rotateX(Math.PI)
+              .rotateX(-0.35)
+              .translate(0, 0.835, 0.05),
+            look.hair,
+          ),
+        ];
+      default:
+        return [paint(sphere(0.045, [0, 0.885, 0.03], [1.05, 0.9, 0.85], w, h), look.hair)];
+    }
+  };
+
+  /**
+   * What is worn besides the dress: a craftsman's apron, a bag slung across
+   * the body, a purse at the belt, a shawl round a woman's shoulders.
+   */
+  const accessories = (look: Look, action: Person["action"], near: boolean) => {
+    const out: THREE_NS.BufferGeometry[] = [];
+    const seated =
+      LAP.has(action) || action === "kneel" || action === "grind" || action === "crouch";
+    const around = near ? 10 : 6;
+    if (look.apron !== undefined) {
+      if (!seated) {
+        out.push(
+          paint(
+            new THREE.CylinderGeometry(0.128, 0.165, 0.3, around, 1, true, -0.75, 1.5).translate(
+              0,
+              0.455,
+              0.004,
+            ),
+            look.apron,
+          ),
+        );
+      }
+      // The bib and its strap round the neck.
+      out.push(
+        paint(
+          new THREE.CylinderGeometry(0.112, 0.118, 0.12, around, 1, true, -0.55, 1.1).translate(
+            0,
+            0.66,
+            0.006,
+          ),
+          look.apron,
+        ),
+      );
+    }
+    if (look.bag !== undefined) {
+      // Slung from the right shoulder to the left hip.
+      out.push(
+        paint(
+          tube(
+            [
+              [-0.1, 0.8, 0.02],
+              [-0.03, 0.72, 0.095],
+              [0.08, 0.58, 0.09],
+              [0.13, 0.5, 0.03],
+            ],
+            0.007,
+            near ? 10 : 6,
+          ),
+          look.bag,
+        ),
+      );
+      out.push(
+        paint(new THREE.BoxGeometry(0.035, 0.1, 0.12).translate(0.135, 0.45, 0.0), look.bag),
+      );
+    }
+    if (look.purse) {
+      out.push(paint(sphere(0.022, [-0.06, 0.565, 0.095], [1, 1.3, 0.7], around, 5), 0x6b4a30));
+    }
+    if (look.shawl !== undefined) {
+      out.push(
+        paint(
+          stack(
+            [
+              { y: 0.64, z: -0.035, rx: 0.13, rz: 0.06 },
+              { y: 0.72, z: -0.02, rx: 0.145, rz: 0.088 },
+              { y: 0.8, z: -0.012, rx: 0.13, rz: 0.08 },
+            ],
+            near ? 16 : 10,
+          ),
+          look.shawl,
+        ),
+      );
+    }
+    return out;
   };
 
   /** A woman's dressed hair, as `look.hairStyle` says; a knot at the nape by default. */
@@ -1022,9 +1410,34 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     return out;
   };
 
+  /**
+   * Something that hangs, or stands upright, whatever the arm is doing: built
+   * the way up it is in the world, with the hand at the origin, and turned
+   * back by the pitch `pitch` the forearm has in the pose that holds it.
+   */
+  const level = (g: THREE_NS.BufferGeometry, pitch: number) =>
+    g.rotateX(-pitch).translate(0, -FORE - 0.02, 0.01);
+
   /** What a hand holds, in the forearm's frame. */
-  const handItems = (carry?: Carry): THREE_NS.BufferGeometry[] => {
+  const handItems = (
+    carry?: Carry,
+    action?: Person["action"],
+    left = false,
+  ): THREE_NS.BufferGeometry[] => {
     const out: THREE_NS.BufferGeometry[] = [];
+    const held = action ? HOLD[action] : undefined;
+    const arm = held ? (left ? held.l : held.r) : undefined;
+    const pitch = arm ? arm[0] + arm[1] + (held?.lean ?? 0) : -1.2;
+    const wood = 0x6f4426;
+    const iron = 0x7d776c;
+    if (action === "spin" && !left) {
+      // The spindle turning below the hand on its thread, the whorl at its foot.
+      out.push(
+        paint(level(cylinder(0.0015, 0.0015, 0.08, [0, -0.04, 0.02], 3), pitch), 0xece4d4),
+        paint(level(cylinder(0.004, 0.005, 0.15, [0, -0.15, 0.02], 4), pitch), wood),
+        paint(level(cylinder(0.022, 0.018, 0.016, [0, -0.2, 0.02], 8), pitch), 0xa65f3c),
+      );
+    }
     switch (carry) {
       case "torch":
         // Held across the fist, so it stands up when the forearm is raised.
@@ -1038,19 +1451,39 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         );
         break;
       case "tablet":
-        out.push(
-          paint(new THREE.BoxGeometry(0.1, 0.012, 0.13).translate(0, -FORE - 0.03, 0.06), 0x8a6a3a),
-        );
+        if (action === "write")
+          // Lying in the palm, the wax face up.
+          out.push(
+            paint(
+              level(new THREE.BoxGeometry(0.13, 0.012, 0.1).translate(0, 0.012, 0.0), pitch),
+              0x8a6a3a,
+            ),
+            paint(
+              level(new THREE.BoxGeometry(0.11, 0.004, 0.08).translate(0, 0.02, 0.0), pitch),
+              0x3a2e24,
+            ),
+          );
+        else
+          out.push(
+            paint(
+              new THREE.BoxGeometry(0.1, 0.012, 0.13).translate(0, -FORE - 0.03, 0.06),
+              0x8a6a3a,
+            ),
+          );
         break;
       case "chisel":
-        out.push(
-          paint(
-            cylinder(0.008, 0.008, 0.12, [0, 0, 0], 6)
-              .rotateX(Math.PI / 2)
-              .translate(0, -FORE - 0.03, 0.05),
-            0x7d776c,
-          ),
-        );
+        if (action === "carve")
+          // Held point forward, against the stone.
+          out.push(paint(cylinder(0.007, 0.009, 0.13, [0, -FORE - 0.09, 0.012], 6), iron));
+        else
+          out.push(
+            paint(
+              cylinder(0.008, 0.008, 0.12, [0, 0, 0], 6)
+                .rotateX(Math.PI / 2)
+                .translate(0, -FORE - 0.03, 0.05),
+              iron,
+            ),
+          );
         break;
       case "incense":
         out.push(paint(cylinder(0.04, 0.025, 0.04, [0, -FORE - 0.06, 0.02], 10), 0xa8843e));
@@ -1077,6 +1510,182 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           ),
         );
         break;
+      case "stylus":
+        out.push(
+          paint(
+            cylinder(0.003, 0.004, 0.09, [0, 0, 0], 4)
+              .rotateX(Math.PI / 2 + 0.5)
+              .translate(0, -FORE - 0.03, 0.03),
+            0xb59a62,
+          ),
+        );
+        break;
+      case "distaff":
+        // The rod held up, the wool wound round its head.
+        out.push(
+          paint(level(cylinder(0.006, 0.008, 0.3, [0, 0.08, 0], 5).rotateX(-0.5), pitch), wood),
+          paint(level(sphere(0.036, [0, 0.19, -0.1], [1, 1.5, 1], 8, 6), pitch), 0xece4d4),
+        );
+        break;
+      case "balance": {
+        // The beam hanging from the hand by its cord, a pan at each end.
+        const g: THREE_NS.BufferGeometry[] = [
+          cylinder(0.003, 0.003, 0.08, [0, -0.04, 0], 4),
+          cylinder(0.006, 0.006, 0.36, [0, 0, 0], 5)
+            .rotateZ(Math.PI / 2)
+            .translate(0, -0.08, 0),
+        ];
+        for (const side of [-1, 1]) {
+          g.push(cylinder(0.002, 0.002, 0.16, [side * 0.17, -0.16, 0], 3));
+          g.push(cylinder(0.06, 0.045, 0.02, [side * 0.17, -0.25, 0], 10));
+        }
+        for (const piece of g) out.push(paint(level(piece, pitch), 0xa8843e));
+        break;
+      }
+      case "cleaver":
+        out.push(
+          paint(
+            cylinder(0.012, 0.012, 0.1, [0, 0, 0], 6)
+              .rotateX(Math.PI / 2)
+              .translate(0, -FORE - 0.02, 0.05),
+            wood,
+          ),
+          paint(
+            new THREE.BoxGeometry(0.006, 0.09, 0.14).translate(0, -FORE - 0.05, 0.16),
+            0x9a968c,
+          ),
+        );
+        break;
+      case "ladle":
+        // Down into the pot, whatever the arm: built plumb from the hand.
+        out.push(
+          paint(level(cylinder(0.006, 0.006, 0.34, [0, -0.15, 0.02], 5), pitch), wood),
+          paint(level(sphere(0.035, [0, -0.32, 0.03], [1, 0.6, 1], 8, 5), pitch), 0xa8843e),
+        );
+        break;
+      case "mallet":
+        out.push(
+          paint(
+            cylinder(0.01, 0.01, 0.14, [0, 0, 0], 6)
+              .rotateX(Math.PI / 2)
+              .translate(0, -FORE - 0.02, 0.06),
+            wood,
+          ),
+          paint(
+            cylinder(0.035, 0.035, 0.11, [0, 0, 0], 8).translate(0, -FORE - 0.02, 0.15),
+            0x8a6a48,
+          ),
+        );
+        break;
+      case "saw":
+        out.push(
+          paint(new THREE.BoxGeometry(0.03, 0.09, 0.05).translate(0, -FORE - 0.04, 0.01), wood),
+          paint(
+            new THREE.BoxGeometry(0.004, 0.52, 0.08).translate(0, -FORE - 0.34, 0.01),
+            0x9a968c,
+          ),
+        );
+        break;
+      case "brush":
+        out.push(
+          paint(cylinder(0.006, 0.006, 0.2, [0, -FORE - 0.1, 0.012], 5), wood),
+          paint(cylinder(0.014, 0.01, 0.05, [0, -FORE - 0.22, 0.012], 6), 0x3a2e24),
+        );
+        break;
+      case "trowel":
+        out.push(
+          paint(
+            new THREE.BoxGeometry(0.11, 0.006, 0.16).translate(0, -FORE - 0.06, 0.03),
+            0x8a7a62,
+          ),
+        );
+        break;
+      case "broom":
+        out.push(
+          paint(cylinder(0.011, 0.011, 1.0, [0, -FORE - 0.42, 0.02], 6), wood),
+          paint(cylinder(0.05, 0.02, 0.24, [0, -FORE - 1.02, 0.02], 7), 0xb59a62),
+        );
+        break;
+      case "hoe":
+        out.push(
+          paint(cylinder(0.011, 0.011, 0.7, [0, -FORE - 0.28, 0.02], 6), wood),
+          paint(new THREE.BoxGeometry(0.12, 0.04, 0.16).translate(0, -FORE - 0.64, 0.09), iron),
+        );
+        break;
+      case "bowl":
+        out.push(paint(level(cylinder(0.065, 0.035, 0.045, [0, 0.03, 0.03], 10), pitch), 0xa65f3c));
+        break;
+      case "phiale":
+        // The dish tipped to pour, a thin stream of wine falling from its lip.
+        out.push(
+          paint(
+            level(cylinder(0.08, 0.05, 0.02, [0, 0.02, 0.03], 12).rotateX(0.55), pitch),
+            0xc9a43c,
+          ),
+          paint(level(cylinder(0.005, 0.003, 0.42, [0, -0.2, 0.12], 4), pitch), 0x6a2430),
+        );
+        break;
+      case "drum":
+        // The frame drum held up flat to the side, struck with the other hand.
+        out.push(
+          paint(
+            cylinder(0.15, 0.15, 0.04, [0, 0, 0], 16)
+              .rotateZ(Math.PI / 2)
+              .translate(0.0, -FORE - 0.03, 0.08),
+            0xd9c9a6,
+          ),
+          paint(
+            new THREE.TorusGeometry(0.15, 0.012, 5, 18)
+              .rotateY(Math.PI / 2)
+              .translate(0.0, -FORE - 0.03, 0.08),
+            0x8a5a2c,
+          ),
+        );
+        break;
+      case "book":
+        out.push(
+          paint(
+            new THREE.BoxGeometry(0.11, 0.035, 0.15).translate(0, -FORE - 0.04, 0.05),
+            0x6a2a22,
+          ),
+          paint(
+            new THREE.BoxGeometry(0.1, 0.028, 0.145).translate(0.004, -FORE - 0.04, 0.05),
+            0xe8dfca,
+          ),
+        );
+        break;
+      case "candle":
+        out.push(
+          paint(
+            cylinder(0.011, 0.011, 0.2, [0, 0, 0], 6)
+              .rotateX(Math.PI / 2)
+              .translate(0, -FORE - 0.02, 0.1),
+            0xeadfb8,
+          ),
+        );
+        break;
+      case "fish":
+        out.push(
+          paint(
+            level(
+              stack(
+                [
+                  { y: -0.02, rx: 0.006, rz: 0.004 },
+                  { y: -0.12, rx: 0.03, rz: 0.012 },
+                  { y: -0.26, rx: 0.012, rz: 0.008 },
+                ],
+                6,
+              ),
+              pitch,
+            ),
+            0x9aa4a8,
+          ),
+          paint(
+            level(new THREE.BoxGeometry(0.05, 0.03, 0.004).translate(0, -0.005, 0), pitch),
+            0x7d8790,
+          ),
+        );
+        break;
       default:
         break;
     }
@@ -1084,7 +1693,13 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
   };
 
   /** One arm, hanging from the shoulder, with its elbow joint. */
-  const buildArm = (look: Look, side: -1 | 1, carry: Carry | undefined, lod: Lod) => {
+  const buildArm = (
+    look: Look,
+    side: -1 | 1,
+    carry: Carry | undefined,
+    lod: Lod,
+    action: Person["action"],
+  ) => {
     const pivot = new THREE.Group();
     pivot.position.set(side * (look.female ? 0.135 : 0.148), SHOULDER, 0);
     const sleeve =
@@ -1099,10 +1714,10 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     // An exomis leaves the right arm bare; everything else has a short sleeve.
     const upperColour = look.garment === "exomis" && side < 0 ? look.skin : sleeve;
     const upper = [
-      paint(sphere(0.04, [0, 0, 0], [1, 1, 1], 8, 6), upperColour),
+      paint(sphere(0.04, [0, 0, 0], [1, 1, 1], 6, 4), upperColour),
       paint(cylinder(0.033, 0.027, UPPER, [0, -UPPER / 2, 0], 8), upperColour),
     ];
-    const detail = figure.armPieces(look, side, carry);
+    const detail = figure.armPieces(look, side, carry, action);
     pivot.add(lod.far(meshOf(upper)), lod.near(meshOf(detail.upper)));
     const elbow = new THREE.Group();
     elbow.position.set(0, -UPPER, 0);
@@ -1110,9 +1725,9 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     const foreColour = look.garment === "persian" ? look.main : look.skin;
     const fore = [
       paint(cylinder(0.026, 0.021, FORE, [0, -FORE / 2, 0], 8), foreColour),
-      paint(sphere(0.026, [0, -FORE - 0.02, 0.005], [0.8, 1.1, 0.6], 8, 6), look.skin),
+      paint(sphere(0.026, [0, -FORE - 0.02, 0.005], [0.8, 1.1, 0.6], 6, 4), look.skin),
     ];
-    fore.push(...handItems(carry));
+    fore.push(...handItems(carry, action, side > 0));
     elbow.add(lod.far(meshOf(fore)), lod.near(meshOf(detail.fore)));
     return { pivot, elbow };
   };
@@ -1311,10 +1926,11 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         return o;
       },
     };
-    const seated = person.action === "sit" || person.action === "kneel" || person.action === "ride";
+    const seated = SEATED.has(person.action);
     const body = new THREE.Group();
     root.add(body);
-    body.add(lod.far(meshOf(bodyPieces(look, person.action, person.carry, person.carryLeft))));
+    const plain = bodyPieces(look, person.action, person.carry, person.carryLeft);
+    body.add(lod.far(meshOf(plain.body)));
     const detail = figure.bodyPieces(look, person.action, person.carry, person.carryLeft, seated);
     body.add(lod.near(meshOf(detail.body)));
     let hem: Pivot | null = null;
@@ -1325,17 +1941,47 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       hem.add(meshOf(detail.hem));
       body.add(lod.near(hem));
     }
-    // The head is part of the body mesh; a pivot is kept so a reader can bow.
+    // The head on its own pivot at the neck, so it can bow, turn and look about.
     const head = new THREE.Group();
-    head.position.set(0, 0.86, 0);
+    head.position.set(0, NECK, 0);
     body.add(head);
-    const r = buildArm(look, -1, person.carry, lod);
-    const l = buildArm(look, 1, person.carryLeft === "shield" ? undefined : person.carryLeft, lod);
+    for (const [pieces, put] of [
+      [plain.head, lod.far],
+      [detail.head, lod.near],
+    ] as const) {
+      for (const g of pieces) g.translate(0, -NECK, 0);
+      head.add(put(meshOf(pieces)));
+    }
+    // A child's head is bigger for its body than a grown person's.
+    if (person.height < 1.35) head.scale.setScalar(1.13);
+    // Built broad or slight: the body, and the legs under it.
+    const girth =
+      look.build === "heavy" ? [1.14, 1.16] : look.build === "slim" ? [0.9, 0.92] : null;
+    if (girth) {
+      body.scale.set(girth[0]!, 1, girth[1]!);
+      head.scale.set(head.scale.x / girth[0]!, head.scale.y, head.scale.z / girth[1]!);
+    }
+    const r = buildArm(look, -1, person.carry, lod, person.action);
+    const l = buildArm(
+      look,
+      1,
+      person.carryLeft === "shield" || person.carryLeft === "semantron"
+        ? undefined
+        : person.carryLeft,
+      lod,
+      person.action,
+    );
     body.add(r.pivot, l.pivot);
     const hidden = robed && !seated;
     const legR = buildLeg(look, -1, robed && seated, hidden, lod);
     const legL = buildLeg(look, 1, robed && seated, hidden, lod);
     root.add(legR.pivot, legL.pivot);
+    if (girth) {
+      for (const leg of [legR.pivot, legL.pivot]) {
+        leg.scale.set(girth[0]! * 0.96, 1, girth[1]! * 0.96);
+        leg.position.x *= girth[0]!;
+      }
+    }
     const actor: Actor = {
       person,
       root,
@@ -1366,10 +2012,99 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       // The flame rides at the head of the torch, in the hand's own frame.
       addFire({ at: person.at, size: 0.28 }, r.elbow, new THREE.Vector3(0, -FORE - 0.02, 0.39));
     }
+    if (person.carry === "candle") {
+      addFire({ at: person.at, size: 0.07 }, r.elbow, new THREE.Vector3(0, -FORE - 0.02, 0.21));
+    }
+    if (person.carry === "balls") {
+      actor.balls = [0xb5452f, 0xcfa548, 0x4b6a8f].map((hex) => {
+        const ball = meshOf([paint(sphere(0.028, [0, 0, 0], [1, 1, 1], 8, 6), hex)]);
+        body.add(ball);
+        return ball;
+      });
+    }
     actors.push(actor);
     return actor;
   }
   for (const person of life.people) makeActor(person, group);
+
+  /*
+   * Pairs: two porters under one pole, two children with one ball. The pole
+   * and the ball belong to neither, so they are moved between the two of
+   * them every frame.
+   */
+  type Shared = {
+    link: ActorLink;
+    a: Actor;
+    b: Actor;
+    thing: THREE_NS.Object3D;
+    load?: THREE_NS.Object3D;
+  };
+  const shared: Shared[] = [];
+  for (const l of life.links ?? []) {
+    const a = actors[l.a];
+    const b = actors[l.b];
+    if (!a || !b) continue;
+    const phase = a.person.phase;
+    a.link = { other: b, first: true, kind: l.kind, phase };
+    b.link = { other: a, first: false, kind: l.kind, phase };
+    if (l.kind === "ball") {
+      const ball = meshOf([paint(sphere(0.06, [0, 0, 0], [1, 1, 1], 10, 7), 0xb5452f)]);
+      group.add(ball);
+      shared.push({ link: a.link, a, b, thing: ball });
+    } else {
+      const pole = meshOf([paint(cylinder(0.022, 0.022, 1, [0, 0, 0], 6), 0x6f4426)]);
+      group.add(pole);
+      // The amphora slung from the middle of the pole on a rope.
+      const load = new THREE.Group();
+      load.add(
+        meshOf([
+          paint(cylinder(0.006, 0.006, 0.3, [0, -0.15, 0], 4), 0xb59a62),
+          ...amphoraPieces([0, -0.62, 0], 0.62, 0),
+        ]),
+      );
+      group.add(load);
+      shared.push({ link: a.link, a, b, thing: pole, load });
+    }
+  }
+  const upY = new THREE.Vector3(0, 1, 0);
+  const endA = new THREE.Vector3();
+  const endB = new THREE.Vector3();
+  const span = new THREE.Vector3();
+  /** A point in somebody's own frame (at one metre tall), in the scene. */
+  const onActor = (actor: Actor, x: number, y: number, z: number, out: THREE_NS.Vector3) => {
+    const h = actor.person.height;
+    const r = actor.root.rotation.y;
+    return out.set(
+      actor.root.position.x + (x * Math.cos(r) + z * Math.sin(r)) * h,
+      actor.root.position.y + y * h,
+      actor.root.position.z + (-x * Math.sin(r) + z * Math.cos(r)) * h,
+    );
+  };
+  const updateShared = (now: number) => {
+    for (const s of shared) {
+      if (s.link.kind === "ball") {
+        onActor(s.a, 0, 0.98, 0.3, endA);
+        onActor(s.b, 0, 0.98, 0.3, endB);
+        const u = ballClock(s.link, now);
+        const k = u < 0.5 ? u / 0.5 : (u - 0.5) / 0.5;
+        const [from, to] = u < 0.5 ? [endA, endB] : [endB, endA];
+        s.thing.position.lerpVectors(from, to, k);
+        s.thing.position.y += 4 * k * (1 - k) * 1.1;
+        continue;
+      }
+      // The pole from shoulder to shoulder, a hand's breadth past each.
+      onActor(s.a, -0.11, 0.835, 0, endA);
+      onActor(s.b, -0.11, 0.835, 0, endB);
+      span.subVectors(endA, endB);
+      const length = span.length();
+      if (length < 0.01) continue;
+      s.thing.position.addVectors(endA, endB).multiplyScalar(0.5);
+      s.thing.quaternion.setFromUnitVectors(upY, span.normalize());
+      s.thing.scale.set(1, length + 0.4, 1);
+      s.load!.position.copy(s.thing.position);
+      s.load!.rotation.y = Math.atan2(span.x, span.z);
+    }
+  };
 
   /* ---------------- animals ---------------- */
 
@@ -1408,9 +2143,29 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     wool?: boolean;
     mane?: boolean;
     dewlap?: boolean;
+    humps?: number;
     hoof: number;
   };
   const BUILD: Record<Species, Build> = {
+    // The two-humped Bactrian of the Silk Road caravans, shaggy and long-necked.
+    camel: {
+      withers: 1.85,
+      len: 1.55,
+      rx: 0.3,
+      ry: 0.36,
+      neckLen: 0.95,
+      neckRise: 0.55,
+      neckR: 0.12,
+      headLen: 0.48,
+      headR: 0.1,
+      headDrop: 0.25,
+      legR: 0.055,
+      legX: 0.17,
+      ears: "small",
+      tail: "tuft",
+      humps: 2,
+      hoof: 0x4a3e34,
+    },
     horse: {
       withers: 1.55,
       len: 1.65,
@@ -1649,6 +2404,13 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           paint(sphere(B.rx * 0.55, [x, cy + B.ry * 0.25, z], [1, 0.9, 1], 8, 6), colour),
         );
       }
+    }
+    for (let i = 0; i < (B.humps ?? 0); i += 1) {
+      // The humps on the back, the long winter hair standing up on them.
+      const z = (B.humps === 1 ? 0 : i === 0 ? -0.28 : 0.22) * half;
+      pieces.push(
+        paint(sphere(B.rx * 0.62, [0, cy + B.ry * 0.8, z], [0.9, 1.15, 1.1], 10, 7), colour),
+      );
     }
     if (B.dewlap) {
       pieces.push(
@@ -2237,57 +2999,119 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     return a + d * t;
   };
 
+  /** 0 outside [a, b], rising to 1 and back inside it: a gesture's envelope. */
+  const window01 = (u: number, a: number, b: number) => {
+    if (u <= a || u >= b) return 0;
+    const k = (u - a) / (b - a);
+    return Math.sin(k * Math.PI) ** 0.6;
+  };
+
+  /** Still actions that are only standing about, where the idle fidgets show. */
+  const IDLE: ReadonlySet<Person["action"]> = new Set<Person["action"]>([
+    "stand",
+    "gaze",
+    "lean",
+    "talk",
+  ]);
+
   const pose = (a: Actor, now: number, stride: number, moving: boolean) => {
     const p = a.person;
+    const look = p.look;
     const t = now + p.phase;
     const swing = Math.sin(stride);
+    // A walker who has stopped stands about like anybody else.
+    const act: Action =
+      !moving && p.route && (p.action === "walk" || p.action === "run") ? "stand" : p.action;
+    const base = HOLD[act];
     // Defaults: arms hanging, a little out from the sides.
-    let rx = 0.05;
-    let lx = 0.05;
-    let rz = -0.08;
-    let lz = 0.08;
-    let re = -0.15;
-    let le = -0.15;
+    let rx = base?.r?.[0] ?? 0.05;
+    let lx = base?.l?.[0] ?? 0.05;
+    let rz = base?.r?.[2] ?? -0.08;
+    let lz = base?.l?.[2] ?? 0.08;
+    let re = base?.r?.[1] ?? -0.15;
+    let le = base?.l?.[1] ?? -0.15;
     let legR = 0;
     let legL = 0;
     let kneeR = 0;
     let kneeL = 0;
     let legRz = 0;
     let legLz = 0;
-    let lean = 0;
+    let lean = base?.lean ?? 0;
     let headX = 0;
+    let headY = 0;
     let bob = 0;
     let drop = 0;
+    let sway = 0;
+    let bend = 0;
+    let yaw = 0;
 
     let twist = 0;
     let hemZ = 0;
     let hemX = 0;
     let hemFlare = 1;
+    const old = look.old === true;
+    const heavy = look.build === "heavy";
+    const child = p.height < 1.35;
     if (moving) {
-      const run = p.action === "run";
-      const amp = run ? 1.0 : 0.42;
-      rx = -swing * amp * 0.8;
-      lx = swing * amp * 0.8;
+      const run = act === "run";
+      const march = act === "march";
+      const slow = act === "sweep" || act === "plough";
+      let amp = run ? 1.0 : march ? 0.5 : slow ? 0.3 : 0.42;
+      if (old) amp *= 0.7;
+      const armAmp = old ? 0.45 : march ? 0.5 : 1;
+      rx = -swing * amp * 0.8 * armAmp;
+      lx = swing * amp * 0.8 * armAmp;
       // The arm bends more as it swings forward than as it swings back.
-      re = run ? -1.5 : -0.16 - Math.max(0, swing) * 0.32;
-      le = run ? -1.5 : -0.16 - Math.max(0, -swing) * 0.32;
+      re = run ? -1.5 : -0.16 - Math.max(0, swing) * 0.32 * armAmp;
+      le = run ? -1.5 : -0.16 - Math.max(0, -swing) * 0.32 * armAmp;
       // The shoulders turn against the hips, the hem swings from leg to leg
       // and spreads as the stride opens.
-      twist = swing * (run ? 0.1 : 0.05);
+      twist = swing * (run ? 0.1 : 0.05) * (heavy ? 1.5 : 1);
       const give = a.robed ? 1 : 0.6;
       hemZ = Math.sin(stride) * 0.035 * give;
       hemX = Math.cos(stride * 2) * 0.02 * give;
       hemFlare = 1 + Math.abs(swing) * (a.robed ? 0.14 : 0.1);
       legR = swing * amp;
       legL = -swing * amp;
-      kneeR = Math.max(0, -Math.cos(stride)) * (run ? 1.3 : 0.5);
-      kneeL = Math.max(0, Math.cos(stride)) * (run ? 1.3 : 0.5);
-      bob = Math.abs(Math.cos(stride)) * (run ? 0.03 : 0.012);
-      lean = run ? 0.18 : 0.03;
+      const lift = run ? 1.3 : march ? 0.25 : 0.5;
+      kneeR = Math.max(0, -Math.cos(stride)) * lift;
+      kneeL = Math.max(0, Math.cos(stride)) * lift;
+      bob = Math.abs(Math.cos(stride)) * (run ? 0.03 : 0.012) * (child ? 1.6 : old ? 0.6 : 1);
+      lean = run ? 0.18 : march ? 0 : 0.03;
+      // A heavy walker rolls a little from foot to foot.
+      if (heavy) bend = Math.sin(stride) * 0.035;
+      switch (act) {
+        case "sweep": {
+          const s2 = Math.sin(now * 2.2 + p.phase);
+          rx = -0.75;
+          re = -0.35;
+          rz = 0.25 + s2 * 0.3;
+          lx = -0.55;
+          le = -0.9;
+          lz = -0.35 + s2 * 0.3;
+          lean = 0.3;
+          headX = 0.25;
+          break;
+        }
+        case "plough":
+          rx = -0.6;
+          re = -0.3;
+          rz = 0.12;
+          lx = -0.6;
+          le = -0.3;
+          lz = -0.12;
+          lean = 0.35;
+          break;
+        case "spin":
+          ({ rx, re, rz, lx, le, lz } = spinArms(t, rx, re, rz, lx, le, lz));
+          break;
+        default:
+          break;
+      }
     } else {
       // Breathing, and the weight shifting from foot to foot.
       bob = Math.sin(t * 1.3) * 0.002;
-      switch (p.action) {
+      switch (act) {
         case "talk": {
           const g = Math.max(0, Math.sin(t * 0.9));
           rx = -0.4 - g * 0.6;
@@ -2345,6 +3169,15 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
             le = -1.7;
             rx = -0.6 + Math.sin(t * 6) * 0.12;
             re = -1.2;
+          } else if (p.carryLeft === "drum") {
+            // The drum held up to the side, the other hand beating it.
+            lx = -1.25;
+            lz = 0.55;
+            le = -0.75;
+            rx = -1.05 + Math.max(0, Math.sin(t * 7)) * 0.3;
+            re = -1.15;
+            rz = 0.35;
+            bob = Math.abs(Math.sin(t * 3.5)) * 0.01;
           } else {
             // A child at play: arms flung about, hopping.
             rx = Math.sin(t * 4) * 1.2;
@@ -2353,12 +3186,36 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           }
           break;
         case "sit":
+        case "chat":
+        case "write":
+        case "count":
           legR = -1.5;
           legL = -1.45;
           kneeR = 1.5;
           kneeL = 1.45;
           drop = HIP;
-          if (p.carry === "scroll") {
+          if (act === "write") {
+            // The tablet on the knee, the stylus moving over it.
+            headX = 0.45;
+            re += Math.sin(t * 5) * 0.06;
+            rz += Math.sin(t * 2.3) * 0.08;
+            lean = 0.12;
+          } else if (act === "count") {
+            rx += Math.max(0, Math.sin(t * 2.2)) * 0.18;
+            lx += Math.max(0, -Math.sin(t * 2.2)) * 0.18;
+            headX = 0.4;
+            lean = 0.15;
+          } else if (act === "chat") {
+            const g = Math.max(0, Math.sin(t * 0.8));
+            rx = -0.6 - g * 0.55;
+            re = -0.9 - g * 0.6;
+            rz = -0.12 - g * 0.25;
+            lx = -0.35;
+            le = -0.6;
+            headX = Math.sin(t * 1.7) * 0.06;
+            headY = Math.sin(t * 0.4) * 0.3;
+            lean = old ? 0.12 : 0;
+          } else if (p.carry === "scroll") {
             rx = -0.55;
             lx = -0.55;
             re = -1.15;
@@ -2369,7 +3226,22 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
             lx = -0.35;
             re = -0.6;
             le = -0.6;
+            headY = Math.sin(t * 0.3) * 0.35;
           }
+          break;
+        case "pot":
+          // Low on the stool, knees up either side of the wheel.
+          legR = -1.95;
+          legL = -1.95;
+          kneeR = 1.95;
+          kneeL = 1.95;
+          legRz = -0.28;
+          legLz = 0.28;
+          drop = HIP;
+          headX = 0.45;
+          rx += Math.sin(t * 2.6) * 0.05;
+          lx += Math.sin(t * 2.6 + 0.8) * 0.05;
+          re += Math.sin(t * 3.1) * 0.08;
           break;
         case "ride":
           // Astride: thighs spread round the barrel, lower legs hanging,
@@ -2426,19 +3298,294 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           lx = -0.7;
           le = -0.8;
           break;
+        case "grind": {
+          // On both knees, sitting back, pushing the stone to and fro.
+          legR = 0.12;
+          legL = 0.12;
+          kneeR = 1.62;
+          kneeL = 1.62;
+          drop = SHIN + 0.03;
+          const push = Math.sin(t * 2.4);
+          rx += push * 0.22;
+          lx += push * 0.22;
+          re -= push * 0.12;
+          le -= push * 0.12;
+          lean += push * 0.06;
+          headX = 0.3;
+          break;
+        }
+        case "crouch": {
+          // On the heels, knees up, reaching for the bones on the ground.
+          legR = -1.95;
+          legL = -1.85;
+          kneeR = 2.45;
+          kneeL = 2.4;
+          legRz = -0.2;
+          legLz = 0.2;
+          drop = 0.33;
+          headX = 0.4;
+          const toss = Math.max(0, Math.sin(t * 1.7)) ** 2;
+          rx -= toss * 0.9;
+          re -= toss * 0.4;
+          break;
+        }
+        case "beg":
+          // On the ground, legs out in front, the bowl held out.
+          legR = -1.45;
+          legL = -1.4;
+          kneeR = 0.35;
+          kneeL = 0.5;
+          legRz = -0.12;
+          legLz = 0.18;
+          drop = HIP - 0.035;
+          headX = 0.2 + Math.sin(t * 0.3) * 0.08;
+          headY = Math.sin(t * 0.21) * 0.4;
+          rx += Math.sin(t * 0.6) * 0.06;
+          break;
+        case "weave": {
+          // Passing the weft across, then beating it up.
+          const k = Math.sin(t * 1.1);
+          rx += k * 0.2;
+          rz += k * 0.35;
+          lx -= k * 0.2;
+          lz += k * 0.35;
+          headY = k * 0.25;
+          headX = -0.1;
+          break;
+        }
+        case "spin":
+          ({ rx, re, rz, lx, le, lz } = spinArms(t, rx, re, rz, lx, le, lz));
+          headX = 0.15;
+          break;
+        case "weigh":
+          headX = -0.1;
+          lx += Math.sin(t * 0.9) * 0.1;
+          re += Math.sin(t * 0.7) * 0.04;
+          break;
+        case "haggle": {
+          const g = Math.max(0, Math.sin(t * 1.3));
+          rx -= g * 0.3;
+          lx -= g * 0.3;
+          rz -= g * 0.2;
+          lz += g * 0.2;
+          headY = Math.sin(t * 3) * 0.25 * Math.max(0, Math.sin(t * 0.5));
+          lean = -0.04 + g * 0.05;
+          break;
+        }
+        case "call": {
+          const w = Math.sin(t * 3.2);
+          lz += w * 0.18;
+          headX = -0.15;
+          headY = Math.sin(t * 0.5) * 0.35;
+          bob = Math.abs(w) * 0.005;
+          break;
+        }
+        case "knead": {
+          const k = Math.sin(t * 2.6);
+          rx += k * 0.16;
+          lx -= k * 0.16;
+          lean += Math.abs(k) * 0.05;
+          headX = 0.3;
+          break;
+        }
+        case "chop": {
+          const k = Math.max(0, Math.sin(t * 2.8));
+          rx -= k * 1.0;
+          re -= k * 0.25;
+          headX = 0.35;
+          break;
+        }
+        case "stir": {
+          rx += Math.sin(t * 2) * 0.12;
+          rz += Math.cos(t * 2) * 0.16;
+          headX = 0.35;
+          break;
+        }
+        case "carve": {
+          // The mallet comes down on the chisel, again and again.
+          const k = Math.max(0, Math.sin(t * 4.2)) ** 1.5;
+          rx -= k * 0.65;
+          re += k * 0.35;
+          headX = 0.35;
+          break;
+        }
+        case "saw": {
+          const k = Math.sin(t * 3.4);
+          rx += k * 0.3;
+          re -= k * 0.38;
+          lean += k * 0.03;
+          headX = 0.4;
+          break;
+        }
+        case "paint":
+          rx += Math.sin(t * 1.7) * 0.28;
+          rz += Math.sin(t * 0.8) * 0.18;
+          headX = -0.25;
+          headY = Math.sin(t * 0.8) * 0.15;
+          break;
+        case "hoe": {
+          const k = Math.max(0, Math.sin(t * 1.8)) ** 1.5;
+          rx -= k * 0.7;
+          lx -= k * 0.7;
+          re += k * 0.2;
+          le += k * 0.2;
+          lean += k * 0.08;
+          headX = 0.3;
+          break;
+        }
+        case "pour":
+          headX = 0.28;
+          lx += Math.sin(t * 0.6) * 0.08;
+          break;
+        case "dance": {
+          // Turning, stepping, the arms raised and curving.
+          const k = Math.sin(t * 2.4);
+          rx += k * 0.35;
+          lx -= Math.cos(t * 2.4) * 0.35;
+          rz += k * 0.2;
+          lz += Math.cos(t * 2.4) * 0.2;
+          legR = Math.max(0, k) * 0.45;
+          legL = Math.max(0, -k) * 0.45;
+          kneeR = Math.max(0, k) * 0.8;
+          kneeL = Math.max(0, -k) * 0.8;
+          bob = Math.abs(k) * 0.025;
+          twist = Math.sin(t * 1.2) * 0.4;
+          yaw = Math.sin(t * 0.55) * 1.4;
+          hemFlare = 1.12 + Math.abs(Math.sin(t * 1.2)) * 0.12;
+          hemZ = Math.sin(t * 1.2) * 0.04;
+          headY = -twist * 0.6;
+          break;
+        }
+        case "juggle": {
+          re += Math.sin(t * 6.3) * 0.22;
+          le += Math.sin(t * 6.3 + Math.PI) * 0.22;
+          headX = -0.3;
+          break;
+        }
+        case "stretch": {
+          // Arms over the head, bending to one side and then the other.
+          bend = Math.sin(t * 0.8) * 0.32;
+          legRz = -0.16;
+          legLz = 0.16;
+          headX = 0.05;
+          break;
+        }
+        case "wrestle": {
+          const k = Math.sin(t * 1.3);
+          lean += k * 0.08;
+          legR = -0.3 + k * 0.1;
+          legL = 0.4 - k * 0.1;
+          kneeR = 0.45;
+          kneeL = 0.35;
+          twist = Math.sin(t * 0.9) * 0.15;
+          drop = 0.02;
+          break;
+        }
+        case "throw": {
+          const k = Math.sin(t * 1.1);
+          twist = -0.55 + k * 0.35;
+          rx += k * 0.4;
+          legR = -0.25;
+          legL = 0.25;
+          kneeR = 0.55;
+          kneeL = 0.3;
+          drop = 0.03;
+          break;
+        }
+        case "toss":
+          ({ rx, re, rz, lx, le, lz } = tossArms(a, now, rx, re, rz, lx, le, lz));
+          headX = -0.15;
+          break;
+        case "lean":
+          // Back against the wall, one foot crossed over the other.
+          legL = 0.12;
+          legLz = -0.2;
+          kneeL = 0.25;
+          break;
+        case "point":
+          headX = -0.25;
+          rx += Math.sin(t * 0.7) * 0.08;
+          break;
+        case "gaze":
+          headX = -0.4;
+          headY = Math.sin(t * 0.25) * 0.45;
+          break;
+        case "lecture": {
+          const g = Math.max(0, Math.sin(t * 0.7));
+          rx -= g * 0.5;
+          re += g * 0.3;
+          headY = Math.sin(t * 0.33) * 0.4;
+          headX = -0.05;
+          break;
+        }
+        case "strike": {
+          const k = Math.max(0, Math.sin(t * 6)) ** 2;
+          rx -= k * 0.5;
+          re += k * 0.3;
+          headX = 0.1;
+          break;
+        }
         default:
           break;
       }
+      /*
+       * Somebody only standing about does not stand still: they shift their
+       * weight, look about them, now and then scratch their head or fold
+       * their arms — each on a cycle of their own.
+       */
+      if (IDLE.has(act)) {
+        const clock = (now + p.phase * 9) / 13;
+        const u = clock - Math.floor(clock);
+        const which = Math.floor(clock + p.phase * 3) % 4;
+        sway = Math.sin(t * 0.31) * 0.012;
+        legRz = -Math.max(0, Math.sin(t * 0.31)) * 0.05;
+        legLz = Math.max(0, -Math.sin(t * 0.31)) * 0.05;
+        if (which === 1) headY += Math.sin(u * Math.PI * 2) * 0.55 * window01(u, 0.1, 0.9);
+        else if (which === 2 && act === "stand" && !p.carry) {
+          const e = window01(u, 0.35, 0.6);
+          rx = rx + (-2.65 - rx) * e;
+          re = re + (-2.2 - re) * e;
+          rz = rz + (0.45 - rz) * e;
+          headX += 0.15 * e;
+          headY -= 0.2 * e;
+        } else if (which === 3 && act === "stand" && !p.carry && !p.carryLeft) {
+          // The arms folded for a while.
+          const e = window01(u, 0.2, 0.8);
+          rx = rx + (-0.55 - rx) * e;
+          re = re + (-1.95 - re) * e;
+          rz = rz + (0.6 - rz) * e;
+          lx = lx + (-0.5 - lx) * e;
+          le = le + (-1.9 - le) * e;
+          lz = lz + (-0.6 - lz) * e;
+        }
+      }
+    }
+    // The old stoop, and lift their heads to see where they go.
+    if (old && !SEATED.has(act)) {
+      lean += 0.16;
+      headX -= 0.12;
     }
     // Carried things that fix the arms whatever else is going on.
     switch (p.carry) {
       case "amphora":
+      case "reeds":
         rx = -2.6;
         rz = -0.25;
         re = -2.0;
         break;
+      case "pole":
+        rx = -2.45;
+        rz = -0.1;
+        re = -2.15;
+        break;
+      case "sack":
+        lx = -2.6;
+        lz = 0.25;
+        le = -2.0;
+        break;
       case "basket":
       case "jar":
+        if (act === "tend") break;
         rx = -2.85;
         rz = -0.3;
         re = -0.45;
@@ -2449,7 +3596,8 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         break;
       case "spear":
       case "staff":
-        if (p.action === "drive" || p.action === "ride") break;
+      case "crook":
+        if (act === "drive" || act === "ride") break;
         rx = -0.35;
         re = -1.2;
         rz = -0.1;
@@ -2465,10 +3613,20 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       case "incense":
       case "barsom":
       case "tablet":
-        if (p.action !== "pray" && p.action !== "kneel") {
+      case "book":
+        if (act !== "pray" && act !== "kneel") {
           rx = -0.7;
           re = -0.9;
         }
+        break;
+      case "candle":
+        rx = -0.55;
+        re = -0.95;
+        break;
+      case "hoop":
+        rx = -0.6;
+        re = -0.2;
+        rz = 0.02;
         break;
       default:
         break;
@@ -2478,6 +3636,24 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       le = -1.4;
       lz = 0.15;
     }
+    if (p.carryLeft === "semantron") {
+      lx = -0.35;
+      le = -2.1;
+      lz = 0.1;
+    }
+    // A hand held out to someone walking alongside.
+    if (p.holds) {
+      const reach = child ? 1.0 : 0.38;
+      if (p.holds < 0) {
+        rx = 0.02 + swing * 0.08;
+        rz = -reach;
+        re = -0.12;
+      } else {
+        lx = 0.02 - swing * 0.08;
+        lz = reach;
+        le = -0.12;
+      }
+    }
     a.armR.rotation.set(rx, 0, rz);
     a.armL.rotation.set(lx, 0, lz);
     a.elbowR.rotation.set(re, 0, 0);
@@ -2486,9 +3662,9 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     a.legL.rotation.set(legL, 0, legLz);
     a.kneeR.rotation.set(kneeR, 0, 0);
     a.kneeL.rotation.set(kneeL, 0, 0);
-    a.body.rotation.x = lean;
-    a.body.rotation.y = twist;
-    a.body.position.y = bob - drop;
+    a.body.rotation.set(lean, twist, bend);
+    a.body.position.set(sway, bob - drop, 0);
+    if (yaw !== 0) a.root.rotation.y = p.rotY + yaw;
     if (a.hem && a.close) {
       // Hanging straight down whatever the lean, then swinging.
       a.hem.rotation.set(-lean * 0.6 + hemX, -twist * 0.8, hemZ);
@@ -2496,7 +3672,69 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     }
     a.legR.position.y = HIP + bob - drop;
     a.legL.position.y = HIP + bob - drop;
-    a.head.rotation.x = headX;
+    a.head.rotation.set(headX, headY, 0);
+    if (a.balls) {
+      // Three balls in the air, round and round over the hands.
+      a.balls.forEach((ball, i) => {
+        const ph = now * 4.2 + (i * Math.PI * 2) / 3;
+        ball.position.set(Math.cos(ph) * 0.13, 0.86 + Math.max(0, Math.sin(ph)) * 0.24, 0.27);
+      });
+    }
+  };
+
+  /** A spinner's arms: the distaff held up in the left, the right drawing the thread down. */
+  const spinArms = (
+    t: number,
+    rx: number,
+    re: number,
+    rz: number,
+    lx: number,
+    le: number,
+    lz: number,
+  ) => {
+    const s = HOLD.spin!;
+    void rx;
+    void re;
+    void rz;
+    void lx;
+    void le;
+    void lz;
+    return {
+      rx: s.r![0] + Math.sin(t * 2.2) * 0.12,
+      re: s.r![1] + Math.sin(t * 2.2) * 0.1,
+      rz: s.r![2],
+      lx: s.l![0],
+      le: s.l![1],
+      lz: s.l![2],
+    };
+  };
+
+  /** Throwing and catching: the arms follow where the ball is between the two. */
+  const tossArms = (
+    a: Actor,
+    now: number,
+    rx: number,
+    re: number,
+    rz: number,
+    lx: number,
+    le: number,
+    lz: number,
+  ) => {
+    const link = a.link;
+    if (!link) return { rx, re, rz, lx, le, lz };
+    const u = ballClock(link, now);
+    // u in [0, 0.5): the first throws to the second; [0.5, 1): back again.
+    const mine = link.first ? u : (u + 0.5) % 1;
+    const throwing = window01(mine, -0.08, 0.12) + window01(mine, 0.92, 1.12);
+    const catching = window01(mine, 0.36, 0.56);
+    return {
+      rx: -0.9 - throwing * 1.4 - catching * 0.5,
+      re: -0.6 + throwing * 0.4,
+      rz: 0.2,
+      lx: -0.9 - catching * 0.5,
+      le: -0.6,
+      lz: -0.2,
+    };
   };
 
   /** Where a distance along a looped path lands, and which way it faces. */
@@ -2613,7 +3851,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       const p = a.person;
       a.root.getWorldPosition(seen);
       const d = seen.distanceToSquared(camera.position);
-      const close = a.close ? d < NEAR_OUT * NEAR_OUT : d < NEAR_IN * NEAR_IN;
+      const close = detailed(a.close, d, NEAR_IN, NEAR_OUT);
       if (close !== a.close) {
         a.close = close;
         for (const o of a.near) o.visible = close;
@@ -2621,7 +3859,23 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       }
       if (a.path) {
         const speed = p.speed ?? 1.1;
-        let d = (now * speed + p.phase * 7) % a.path.total;
+        /*
+         * Somebody who stops now and then: of every few seconds, the last
+         * share they stand still, and only the time they walk moves them on.
+         */
+        let walked = now;
+        let still = false;
+        if (p.pause) {
+          const period = 9 + (p.phase % 1) * 6;
+          const stop = period * p.pause;
+          const clock = now + p.phase * 3;
+          const laps = Math.floor(clock / period);
+          const into = clock - laps * period;
+          walked = laps * (period - stop) + Math.min(into, period - stop) - p.phase * 3;
+          still = into > period - stop;
+        }
+        const total = a.path.total;
+        let d = (((walked * speed + p.phase * 7) % total) + total) % total;
         let i = 0;
         while (d > a.path.lengths[i]! && i < a.path.lengths.length - 1) {
           d -= a.path.lengths[i]!;
@@ -2635,12 +3889,21 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         const target = Math.atan2(to.x - from.x, to.z - from.z);
         a.heading = lerpAngle(a.heading, target, Math.min(1, dt * 6));
         a.root.rotation.y = a.heading;
-        const strideLength = p.action === "run" ? 1.6 : 0.75;
-        pose(a, now, ((now * speed + p.phase * 7) / (strideLength * p.height)) * Math.PI, true);
+        const strideLength = (p.action === "run" ? 1.6 : 0.75) * (p.look.old ? 0.72 : 1);
+        if (still) pose(a, now, 0, false);
+        else
+          pose(
+            a,
+            now,
+            ((walked * speed + p.phase * 7) / (strideLength * p.height)) * Math.PI,
+            true,
+          );
       } else {
         pose(a, now, 0, false);
       }
     }
+
+    updateShared(now);
 
     // Animals: walk their loops, gallop, graze, or lie still.
     for (const b of beasts) {
@@ -2704,9 +3967,17 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       (puff.sprite.material as THREE_NS.SpriteMaterial).opacity =
         Math.sin(k * Math.PI) * (1 - k) * (0.4 - glow * 0.15);
     }
+    for (const batch of batches) batch.sync();
   };
 
+  /*
+   * Everybody drawn in one call (see `batch.ts`): their pivots go on
+   * animating, and `update` copies where each piece has got to into the batch.
+   */
+  const batches = batchMeshes(THREE, group, cloth, { name: "people" });
+
   const dispose = () => {
+    for (const batch of batches) batch.dispose();
     geometries.forEach((g) => g.dispose());
     materials.forEach((m) => m.dispose());
     textures.forEach((t) => t.dispose());

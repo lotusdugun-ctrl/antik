@@ -8,7 +8,6 @@ import {
   Cloud,
   Columns2,
   Crosshair,
-  Download,
   Gauge,
   MessageCircle,
   Pause,
@@ -39,18 +38,18 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
-import { createAmbience, type Ambience, type AmbienceScene } from "@/lib/ambience";
+import type { Ambience } from "@/lib/ambience";
 import { partsFor } from "@/lib/reconstruction-parts";
-import { lifeFor } from "@/lib/scene-life";
-import { spotsFor } from "@/lib/sound-spots";
-import { soundscapeFor, type Places } from "@/lib/soundscapes";
+import type { Material } from "@/lib/reconstruction-parts";
+import type { SceneLife } from "@/lib/scene-life";
+import type { Places } from "@/lib/soundscapes";
 import type { Reconstruction } from "@/lib/reconstructions";
 import { useI18n } from "@/lib/i18n";
 import { reconstructionGuide } from "@/lib/narration";
 import { applyStories, type StoryText } from "@/lib/narration-stories";
 import { useTheme } from "@/lib/theme";
 import { assessDevice, framesTooSlow, isHeavy } from "@/lib/device-tier";
-import { personLine, spectatorLine, ROLE_NAMES, SPEECH_LANG } from "@/lib/person-stories";
+import type * as PersonStories from "@/lib/person-stories";
 import { creditLine } from "@/lib/photo-credits";
 import {
   badgeId,
@@ -62,7 +61,6 @@ import {
   type Quest,
 } from "@/lib/quests";
 import { boundsOf, type Part } from "@/lib/reconstruction-parts";
-import { STATUE_MATERIALS } from "@/lib/scene-life";
 import { RS, fill } from "@/lib/recon-strings";
 import { todayPhotoFor } from "@/lib/today-photo";
 import { planTour, type TourStop } from "@/lib/tour";
@@ -102,11 +100,11 @@ const writeKey = (key: string, value: string) => {
 };
 
 /** The named statues and the inscriptions of a model, for its quests. */
-function questSources(parts: Part[], props: Part[]) {
+function questSources(parts: Part[], props: Part[], stone: readonly Material[]) {
   const statues: { name: string; at: [number, number, number]; height: number }[] = [];
   const plates: { at: [number, number, number]; width: number; height: number }[] = [];
   for (const part of [...parts, ...props]) {
-    if (part.kind === "figure" && part.identity && STATUE_MATERIALS.includes(part.material))
+    if (part.kind === "figure" && part.identity && stone.includes(part.material))
       statues.push({ name: part.identity.name, at: part.at, height: part.height });
     if (part.kind === "box" && (part as { lettering?: unknown }).lettering)
       plates.push({ at: part.at, width: part.size[0], height: part.size[1] });
@@ -117,7 +115,34 @@ function questSources(parts: Part[], props: Part[]) {
 // three.js reaches for `window` and a canvas as it initialises, and it is the
 // heaviest thing this app can load — so it stays out of the SSR graph and out
 // of every bundle but this one.
-const Inner = lazy(() => import("./Reconstruction3DInner"));
+const loadInner = () => import("./Reconstruction3DInner");
+const Inner = lazy(loadInner);
+
+/*
+ * The life of the scene — who stands where, in what clothes, doing what —
+ * is a few hundred kilobytes of data and rules, needed only once the 3D view
+ * is about to be built. It is fetched alongside the renderer instead of with
+ * the page, so the page's own text and pictures do not wait for it.
+ */
+type LifeKit = {
+  lifeFor: typeof import("@/lib/scene-life").lifeFor;
+  statueMaterials: readonly Material[];
+  spotsFor: typeof import("@/lib/sound-spots").spotsFor;
+};
+let lifeKitLoad: Promise<LifeKit> | null = null;
+const loadLifeKit = () => {
+  lifeKitLoad ??= Promise.all([import("@/lib/scene-life"), import("@/lib/sound-spots")]).then(
+    ([life, spots]) => ({
+      lifeFor: life.lifeFor,
+      statueMaterials: life.STATUE_MATERIALS,
+      spotsFor: spots.spotsFor,
+    }),
+  );
+  lifeKitLoad.catch(() => {
+    lifeKitLoad = null;
+  });
+  return lifeKitLoad;
+};
 
 function Skeleton({ height, label }: { height: string; label: string }) {
   return (
@@ -335,19 +360,57 @@ export function Reconstruction3D({
       /* storage blocked: keep the default */
     }
   }, []);
-  const scape = useMemo(() => soundscapeFor(item), [item]);
-  const ambientScene = useMemo<AmbienceScene>(() => ({ scape, time: atmos }), [scape, atmos]);
-  const sceneRef = useRef(ambientScene);
-  sceneRef.current = ambientScene;
+  /*
+   * The sound engine and the soundscapes (a hundred kilobytes of synthesis
+   * and scores) are fetched only when the sound is about to start, so the
+   * page and the model never wait on them, and a visitor who keeps the sound
+   * off never downloads them.
+   */
+  const audioRef = useRef<{
+    createAmbience: typeof import("@/lib/ambience").createAmbience;
+    soundscapeFor: typeof import("@/lib/soundscapes").soundscapeFor;
+  } | null>(null);
+  const audioLoad = useRef<Promise<void> | null>(null);
+  const aliveRef = useRef(true);
+  const itemRef = useRef(item);
+  itemRef.current = item;
+  const atmosRef = useRef(atmos);
+  atmosRef.current = atmos;
+  const sceneNow = () => {
+    const audio = audioRef.current;
+    return audio ? { scape: audio.soundscapeFor(itemRef.current), time: atmosRef.current } : null;
+  };
   // Where the stage, the altar, the stalls are: set below, once the scene's life is.
   const placesRef = useRef<Places>({});
+  // Whether the sound should be playing now: it may be switched off while
+  // the engine is still on its way.
+  const wantSoundRef = useRef(false);
   const startAmbience = useCallback(() => {
-    ambienceRef.current ??= createAmbience();
-    const engine = ambienceRef.current;
-    if (!engine) return;
-    engine.setPlaces(placesRef.current);
-    engine.setScene(sceneRef.current);
-    void engine.start();
+    wantSoundRef.current = true;
+    audioLoad.current ??= Promise.all([import("@/lib/ambience"), import("@/lib/soundscapes")])
+      .then(([ambience, scapes]) => {
+        audioRef.current = {
+          createAmbience: ambience.createAmbience,
+          soundscapeFor: scapes.soundscapeFor,
+        };
+      })
+      .catch(() => {
+        // Offline and never fetched: no sound, and another try next time.
+        audioLoad.current = null;
+      });
+    void audioLoad.current.then(() => {
+      const audio = audioRef.current;
+      if (!audio || !aliveRef.current || !wantSoundRef.current) return;
+      ambienceRef.current ??= audio.createAmbience();
+      const engine = ambienceRef.current;
+      const scene = sceneNow();
+      if (!engine || !scene) return;
+      engine.setPlaces(placesRef.current);
+      engine.setScene(scene);
+      void engine.start();
+    });
+    // `sceneNow` reads refs only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (!ambient || !mounted) return;
@@ -375,18 +438,25 @@ export function Reconstruction3D({
     track("3D ambience", { model: item.id, on: next ? "on" : "off" });
     setAmbient(next);
     if (next) startAmbience();
-    else ambienceRef.current?.stop();
+    else {
+      wantSoundRef.current = false;
+      ambienceRef.current?.stop();
+    }
   };
   useEffect(() => {
-    ambienceRef.current?.setScene(ambientScene);
-  }, [ambientScene]);
-  useEffect(
-    () => () => {
+    const scene = sceneNow();
+    if (scene) ambienceRef.current?.setScene(scene);
+    // `sceneNow` reads the refs these two keep current.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item, atmos]);
+  useEffect(() => {
+    aliveRef.current = true;
+    return () => {
+      aliveRef.current = false;
       ambienceRef.current?.dispose();
       ambienceRef.current = null;
-    },
-    [],
-  );
+    };
+  }, []);
 
   /* The narrated tour turns the camera to each hotspot as the voice gets to it. */
   const guide = useMemo(() => applyStories(reconstructionGuide(item), stories), [item, stories]);
@@ -455,10 +525,34 @@ export function Reconstruction3D({
   // Rebuilding the geometry on every render would rebuild the whole scene.
   const parts = useMemo(() => partsFor(item.model), [item.model]);
   // The people, fires and furniture of the place, and whether they are shown.
-  const life = useMemo(() => lifeFor(item), [item]);
+  const [lifeKit, setLifeKit] = useState<LifeKit | null>(null);
+  const [lifeRetry, setLifeRetry] = useState(0);
+  useEffect(() => {
+    let live = true;
+    // The renderer's own chunk is asked for at the same moment, not after.
+    void loadInner().catch(() => {});
+    loadLifeKit().then(
+      (kit) => live && setLifeKit(kit),
+      // Offline before it was ever fetched: try again when the network is back.
+      () => {
+        const again = () => live && setLifeRetry((n) => n + 1);
+        window.addEventListener("online", again, { once: true });
+      },
+    );
+    return () => {
+      live = false;
+    };
+  }, [lifeRetry]);
+  const life = useMemo<SceneLife | null>(
+    () => (lifeKit ? lifeKit.lifeFor(item) : null),
+    [lifeKit, item],
+  );
   // The sound's spots are found in the same model and life, and the camera
   // is the listener: near the stage the actor is louder, and to the side he is on.
-  const places = useMemo(() => spotsFor(item, life), [item, life]);
+  const places = useMemo<Places>(
+    () => (lifeKit && life ? lifeKit.spotsFor(item, life) : {}),
+    [lifeKit, item, life],
+  );
   placesRef.current = places;
   useEffect(() => {
     ambienceRef.current?.setPlaces(places);
@@ -478,15 +572,17 @@ export function Reconstruction3D({
   );
 
   /*
-   * The model, handed over as a file. Everything here is generated from
-   * measurements at runtime, so until this there was nothing anyone could open
-   * in Blender — only a picture of it.
+   * The model, built in memory for AR only. The 3D models are not offered as
+   * files to download; AR needs the geometry handed to the phone's viewer,
+   * and that copy never leaves the page.
    */
   const [exportToken, setExportToken] = useState(0);
   const [exporting, setExporting] = useState(false);
-  const [exportFor, setExportFor] = useState<"download" | "ar">("download");
-  // Until the scene is built there is nothing to export; the buttons wait.
+  // Until the scene is built there is nothing to show in AR; the button waits.
   const [sceneReady, setSceneReady] = useState(false);
+  // How far the scene's build has got (see `onProgress`); 1 once it is drawn.
+  const [buildProgress, setBuildProgress] = useState(0);
+  useEffect(() => setBuildProgress(0), [item.id]);
   const onExported = useCallback(
     (data: ArrayBuffer | null) => {
       if (!data) {
@@ -495,24 +591,14 @@ export function Reconstruction3D({
         toast.error(t("offline_failed"));
         return;
       }
-      if (exportFor === "ar") {
-        // AR has to start inside a tap, and building the file can outlast the
-        // browser's patience with the first one — so it is kept, and the
-        // button asks for a second tap that launches at once.
-        arDataRef.current = data;
-        setExporting(false);
-        setArReady(true);
-        return;
-      }
-      const url = URL.createObjectURL(new Blob([data], { type: "model/gltf-binary" }));
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${item.id}.glb`;
-      link.click();
-      URL.revokeObjectURL(url);
+      // AR has to start inside a tap, and building the model can outlast the
+      // browser's patience with the first one — so it is kept, and the
+      // button asks for a second tap that launches at once.
+      arDataRef.current = data;
       setExporting(false);
+      setArReady(true);
     },
-    [item.id, exportFor, t],
+    [t],
   );
 
   const chosen = active === null ? undefined : item.hotspots[active];
@@ -567,6 +653,23 @@ export function Reconstruction3D({
     null,
   );
   const taps = useRef(new Map<string, number>());
+  /*
+   * What people say (well over a hundred kilobytes of lines in five
+   * languages) is fetched once the model is up, in idle time, rather than
+   * with the page: nobody can tap a person before then.
+   */
+  const storiesRef = useRef<typeof PersonStories | null>(null);
+  const storiesLoad = useRef<Promise<typeof PersonStories> | null>(null);
+  const loadStories = useCallback(() => {
+    storiesLoad.current ??= import("@/lib/person-stories").then((module) => {
+      storiesRef.current = module;
+      return module;
+    });
+    storiesLoad.current.catch(() => {
+      storiesLoad.current = null;
+    });
+    return storiesLoad.current;
+  }, []);
   const onPerson = useCallback(
     (hit: PersonHit | null) => {
       if (!hit) {
@@ -576,30 +679,42 @@ export function Reconstruction3D({
       const key = hit.kind === "person" ? `p${hit.index}` : `c${hit.seat}`;
       const count = taps.current.get(key) ?? 0;
       taps.current.set(key, count + 1);
-      const said =
-        hit.kind === "person"
-          ? life.people[hit.index]
-            ? personLine(life.era, life.people[hit.index]!, hit.index, count)
-            : null
-          : spectatorLine(life.era, hit.seat, count);
-      if (!said) return;
-      track("3D person", { model: item.id, role: said.role });
-      setQuestsOpen(false);
-      setSpeech({ role: ROLE_NAMES[said.role], text: said.text, key: `${key}-${count}` });
+      void loadStories().then(({ personLine, spectatorLine, ROLE_NAMES }) => {
+        if (!life) return;
+        const said =
+          hit.kind === "person"
+            ? life.people[hit.index]
+              ? personLine(life.era, life.people[hit.index]!, hit.index, count)
+              : null
+            : spectatorLine(life.era, hit.seat, count);
+        if (!said) return;
+        track("3D person", { model: item.id, role: said.role });
+        setQuestsOpen(false);
+        setSpeech({ role: ROLE_NAMES[said.role], text: said.text, key: `${key}-${count}` });
+      });
     },
-    [life, item.id],
+    [life, item.id, loadStories],
   );
   const speak = (text: string) => {
     if (!("speechSynthesis" in window)) return;
+    const stories = storiesRef.current;
+    if (!stories) return;
     claimSpeech("person-card");
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = SPEECH_LANG[lang];
+    utterance.lang = stories.SPEECH_LANG[lang];
     window.speechSynthesis.speak(utterance);
   };
   const [peopleHint, setPeopleHint] = useState(false);
   useEffect(() => {
-    if (!sceneReady || life.people.length === 0) return;
+    if (!sceneReady || !life || (life.people.length === 0 && life.crowd.length === 0)) return;
+    const run = () => void loadStories().catch(() => {});
+    if ("requestIdleCallback" in window) window.requestIdleCallback(run);
+    else setTimeout(run, 1500);
+  }, [sceneReady, life, loadStories]);
+  const peopleCount = life?.people.length ?? 0;
+  useEffect(() => {
+    if (!sceneReady || peopleCount === 0) return;
     try {
       if (window.sessionStorage.getItem("antik-people-hint")) return;
       window.sessionStorage.setItem("antik-people-hint", "1");
@@ -609,7 +724,7 @@ export function Reconstruction3D({
     setPeopleHint(true);
     const timer = window.setTimeout(() => setPeopleHint(false), 7000);
     return () => window.clearTimeout(timer);
-  }, [sceneReady, life.people.length]);
+  }, [sceneReady, peopleCount]);
 
   /* ---- Looking with the phone ---- */
   const [gyroOn, setGyroOn] = useState(false);
@@ -776,7 +891,11 @@ export function Reconstruction3D({
 
   /* ---- Discovery quests ---- */
   const quests = useMemo(() => {
-    const { statues, plates } = questSources(parts, life.props);
+    const { statues, plates } = questSources(
+      parts,
+      life?.props ?? [],
+      lifeKit?.statueMaterials ?? [],
+    );
     const bounds = boundsOf(parts);
     return generateQuests({
       modelId: item.id,
@@ -790,7 +909,7 @@ export function Reconstruction3D({
         bounds.max[2] - bounds.min[2],
       ),
     });
-  }, [parts, life.props, item.id, item.hotspots]);
+  }, [parts, life, lifeKit, item.id, item.hotspots]);
   const [done, setDone] = useState<string[]>([]);
   useEffect(() => setDone(readQuests()[item.id] ?? []), [item.id]);
   const [questsOpen, setQuestsOpen] = useState(false);
@@ -934,7 +1053,7 @@ export function Reconstruction3D({
             : "relative overflow-hidden rounded-2xl border border-border bg-card"
         } @container`}
       >
-        {mounted ? (
+        {mounted && life ? (
           <Suspense
             fallback={<Skeleton height={full ? "100%" : height} label={t("recon_loading")} />}
           >
@@ -955,7 +1074,7 @@ export function Reconstruction3D({
               exportToken={exportToken}
               onExported={onExported}
               onReady={setSceneReady}
-              exportWithoutGround={exportFor === "ar"}
+              exportWithoutGround
               biome={biomeFor(item.id)}
               quality={quality && !lite}
               captureToken={captureToken}
@@ -970,11 +1089,29 @@ export function Reconstruction3D({
               onPerson={onPerson}
               onPose={onPose}
               onInfo={onInfo}
+              onProgress={setBuildProgress}
+              lite={lite}
               onGyroSilent={onGyroSilent}
             />
           </Suspense>
         ) : (
           <Skeleton height={height} label={t("recon_loading")} />
+        )}
+        {mounted && life && buildProgress > 0 && buildProgress < 1 && (
+          <div
+            className="pointer-events-none absolute inset-0 z-[1] grid place-items-center bg-muted text-sm text-muted-foreground"
+            role="status"
+          >
+            <div className="flex w-48 flex-col items-center gap-2">
+              <span>{t("recon_loading")}</span>
+              <span className="h-1 w-full overflow-hidden rounded-full bg-border">
+                <span
+                  className="block h-full rounded-full bg-primary transition-[width] duration-300"
+                  style={{ width: `${Math.round(buildProgress * 100)}%` }}
+                />
+              </span>
+            </div>
+          </div>
         )}
 
         {/* Top right: the tour, walking, and full screen. */}
@@ -1555,8 +1692,8 @@ export function Reconstruction3D({
         </p>
       )}
 
-      {/* Under the model, only what takes the model elsewhere: AR, the file,
-          the photograph of today. Everything that changes the view is on it. */}
+      {/* Under the model, only what takes the model elsewhere: AR and the
+          photograph of today. Everything that changes the view is on it. */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {arMode && (
           <button
@@ -1565,7 +1702,6 @@ export function Reconstruction3D({
                 launchAR();
                 return;
               }
-              setExportFor("ar");
               setExporting(true);
               setExportToken((n) => n + 1);
             }}
@@ -1573,11 +1709,7 @@ export function Reconstruction3D({
             className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-3.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
           >
             <Glasses className="h-3.5 w-3.5" />
-            {exporting && exportFor === "ar"
-              ? t("recon_ar_preparing")
-              : arReady
-                ? t("recon_ar_start")
-                : t("recon_ar")}
+            {exporting ? t("recon_ar_preparing") : arReady ? t("recon_ar_start") : t("recon_ar")}
           </button>
         )}
         {todayPhoto && (
@@ -1592,18 +1724,6 @@ export function Reconstruction3D({
             <Columns2 className="h-3.5 w-3.5" /> {t("recon_compare")}
           </button>
         )}
-        <button
-          onClick={() => {
-            setExportFor("download");
-            setExporting(true);
-            setExportToken((n) => n + 1);
-          }}
-          disabled={exporting || !sceneReady}
-          className={chip}
-        >
-          <Download className="h-3.5 w-3.5" />
-          {exporting && exportFor === "download" ? t("recon_exporting") : t("recon_export")}
-        </button>
       </div>
       <p className="mt-2 text-xs text-muted-foreground">{t("recon_hint")}</p>
       <p className="mt-2 text-xs text-muted-foreground">

@@ -9,10 +9,12 @@ import {
   lifeFinish as finish,
   lifeFire as fire,
   lifeMake as make,
+  lifeAside as aside,
   type Era,
   type SceneLife,
 } from "@/lib/scene-life";
 import { lighthouseLayout, type LighthouseSpec } from "@/lib/models/patara-deniz-feneri";
+import * as trades from "@/lib/scene-trades";
 
 /**
  * The harbour at dusk: the keeper feeding the fire on the tower, a merchant
@@ -92,6 +94,29 @@ export function lighthouseLife(spec: LighthouseSpec, era: Era): SceneLife {
   animal(b, "donkey", [L.moleEnd - 9, 0, -2.6], Math.PI / 2, "stand", { load: true });
   dog(b, [shipX + 7, 0, 2.6]);
   fire(b, brazier([store[0] + 3.6, 0, store[2] - 0.2], 0.9), 0.3, true);
+
+  /*
+   * More of the quay: two porters with an amphora slung from a pole, the
+   * morning's catch sold off a table, a man shouldering a sack of grain for
+   * the ship, and two boys throwing a ball at the foot of the tower.
+   */
+  const x = aside(b, 6466);
+  const m0 = L.moleStart;
+  trades.porters(x, [
+    [m0 + 18, 0, -mw / 2 + 1.8],
+    [m0 + 34, 0, -mw / 2 + 1.8],
+    [m0 + 34, 0, -mw / 2 + 1.3],
+    [m0 + 18, 0, -mw / 2 + 1.3],
+  ]);
+  trades.fishmonger(x, [m0 + 17, 0, 0.6], 0);
+  x.cast.walk(
+    [
+      [m0 + 36, 0, -mw / 2 + 0.75],
+      [m0 + 16, 0, -mw / 2 + 0.75],
+    ],
+    { role: "worker", carry: "sack", speed: 0.7 },
+  );
+  trades.ballGame(x, [spec.baseSide / 2 + 1.5, 0, -2.6], [spec.baseSide / 2 + 4.6, 0, -1.6]);
   return finish(b);
 }
 

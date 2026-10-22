@@ -26,6 +26,7 @@ import { nymphaeumLife } from "@/lib/models/sagalassos-antoninler-cesmesi-life";
 import { villaLife } from "@/lib/models/zeugma-villa-life";
 import { monasteryLife } from "@/lib/models/sumela-manastiri-life";
 import { lighthouseLife } from "@/lib/models/patara-deniz-feneri-life";
+import * as trades from "@/lib/scene-trades";
 import type {
   GreatAltarSpec,
   IonicDipterosSpec,
@@ -107,7 +108,18 @@ export type Headwear =
   | "conical"
   | "turban"
   /** A pointed hood, as monks and priests wore it. */
-  | "hood";
+  | "hood"
+  /**
+   * The felt cap of craftsmen, sailors and travellers — Hephaistos wears it on
+   * the vases, and every potter and smith in the street did.
+   */
+  | "pilos"
+  /** The broad, peaked straw sun-hat of the Tanagra women. */
+  | "tholia"
+  /** A close leather or felt skullcap: a mason's, a smith's, a medieval workman's. */
+  | "skullcap"
+  /** A working woman's headscarf, knotted at the nape: not a veil. */
+  | "kerchief";
 
 /** What a person carries, and where the renderer puts it. */
 export type Carry =
@@ -126,7 +138,50 @@ export type Carry =
   | "chisel"
   | "shield"
   /** The bundle of rods a Persian priest held before him at the altar. */
-  | "barsom";
+  | "barsom"
+  /* The tools of the trades, each where that trade holds it. */
+  /** The distaff with its wool, held up in the left hand to spin from. */
+  | "distaff"
+  /** A merchant's hand balance: a beam and two pans. */
+  | "balance"
+  | "cleaver"
+  | "ladle"
+  /** The mason's and sculptor's wooden mallet, in the other hand from the chisel. */
+  | "mallet"
+  | "saw"
+  | "brush"
+  | "broom"
+  | "hoe"
+  /** A begging bowl, or a busker's for the coins. */
+  | "bowl"
+  /** The shallow libation dish. */
+  | "phiale"
+  /** The tympanon, the frame drum of the dancers. */
+  | "drum"
+  | "hoop"
+  /** A shepherd's crook. */
+  | "crook"
+  /** A bundle of reeds on the shoulder, for roofs and mats. */
+  | "reeds"
+  /** A sack of grain on the shoulder. */
+  | "sack"
+  /** A bound book, a codex: the monks' Gospels. */
+  | "book"
+  | "candle"
+  /** The wooden board a monk beats to call the brothers to church. */
+  | "semantron"
+  /** The handles of an ard, the scratch plough, its beam running ahead. */
+  | "plough"
+  /** The stylus that writes on wax, or the reed on clay. */
+  | "stylus"
+  /** One end of the carrying pole two porters share (see `SceneLife.links`). */
+  | "pole"
+  /** A plasterer's float. */
+  | "trowel"
+  /** A fish held up for a buyer. */
+  | "fish"
+  /** The juggler's balls, kept in the air. */
+  | "balls";
 
 /**
  * What they are doing. `walk` follows `route`; the others stay where they are
@@ -150,7 +205,81 @@ export type Action =
   /** Applauding: hands brought together again and again. */
   | "cheer"
   /** Standing in a chariot, the reins in both hands. */
-  | "drive";
+  | "drive"
+  /* The trades. */
+  /** At the wheel, seated low, both hands on the clay. */
+  | "pot"
+  /** At the upright loom, passing the weft and beating it up. */
+  | "weave"
+  /** Spinning: the distaff held up, the spindle twirling below the other hand. */
+  | "spin"
+  /** Writing on a tablet held in the other hand, or on the knee. */
+  | "write"
+  /** Counting coins out on a table. */
+  | "count"
+  /** Holding up a balance to weigh what is sold. */
+  | "weigh"
+  /** Bargaining: both hands open, the head shaking. */
+  | "haggle"
+  /** Crying wares: a hand at the mouth, the other waving. */
+  | "call"
+  /** Kneading dough on a board. */
+  | "knead"
+  /** Kneeling at a quern, pushing the rubbing stone to and fro. */
+  | "grind"
+  /** Bringing a cleaver down: a butcher, a fishmonger. */
+  | "chop"
+  /** Stirring a pot over the fire. */
+  | "stir"
+  /** Mallet and chisel at a block of stone. */
+  | "carve"
+  | "saw"
+  /** A brush on a wall: a painter, or plaster smoothed with a float. */
+  | "paint"
+  | "sweep"
+  /** Hoeing the ground. */
+  | "hoe"
+  /** Sitting on the ground with a hand held out. */
+  | "beg"
+  /** Pouring a libation from a dish. */
+  | "pour"
+  | "dance"
+  | "juggle"
+  /** An athlete loosening up: the arms swung over, the body bent. */
+  | "stretch"
+  /** Two wrestlers locked together (each one of the pair). */
+  | "wrestle"
+  /** The discus swung back to be thrown. */
+  | "throw"
+  /** Marching in step, the spear at the shoulder. */
+  | "march"
+  /** Throwing a ball to someone and catching it (see `SceneLife.links`). */
+  | "toss"
+  /** Squatting on the heels: knucklebones, or a closer look at something. */
+  | "crouch"
+  /** Leaning back against a wall, arms folded. */
+  | "lean"
+  /** Pointing something out. */
+  | "point"
+  /** Looking up at a building, hands behind the back. */
+  | "gaze"
+  /** Seated, and talking with the hands. */
+  | "chat"
+  /** Teaching: the scroll in one hand, the other raised to make the point. */
+  | "lecture"
+  /** Walking behind the plough, both hands on its handles. */
+  | "plough"
+  /** Beating the semantron. */
+  | "strike";
+
+/** How someone is built: most are neither, and the renderer leaves them as they are. */
+export type Build = "slim" | "heavy";
+
+/** How a man's beard is cut, when he has one. */
+export type BeardStyle = "stubble" | "short" | "long" | "pointed";
+
+/** A pattern woven into the main cloth. */
+export type Pattern = "stripes" | "checks" | "dots";
 
 export type Look = {
   garment: Garment;
@@ -163,17 +292,34 @@ export type Look = {
   female: boolean;
   beard: boolean;
   headwear?: Headwear;
-  /**
-   * How a woman's hair is dressed when no veil covers it: a knot at the nape,
-   * a braid wound round the head, the Roman "nodus" roll over the brow with a
-   * knot behind, or long hair tied and falling down the back.
-   */
+  /** How the hair is dressed (see `HairStyle`). */
   hairStyle?: HairStyle;
   /** Gold earrings and a necklace, for a woman dressed to go out. */
   jewels?: boolean;
+  build?: Build;
+  /** Grey or white hair, a stoop, a slower walk. */
+  old?: boolean;
+  /** A man gone bald on top, the hair left round the sides. */
+  bald?: boolean;
+  beardStyle?: BeardStyle;
+  pattern?: Pattern;
+  /** A leather or linen apron, the colour given: the craftsman's. */
+  apron?: number;
+  /** A bag slung from the shoulder: a traveller's, a pilgrim's. */
+  bag?: number;
+  /** A purse at the belt: a trader's. */
+  purse?: boolean;
+  /** A wool shawl round the shoulders. */
+  shawl?: number;
 };
 
-export type HairStyle = "bun" | "crown" | "nodus" | "fall";
+/**
+ * How the hair is dressed. A woman's, when no veil covers it: a knot at the
+ * nape, a braid wound round the head, the Roman "nodus" roll over the brow
+ * with a knot behind, or long hair tied and falling down the back. A man's:
+ * cropped short, in curls, worn long, or long and tied up behind.
+ */
+export type HairStyle = "bun" | "crown" | "nodus" | "fall" | "short" | "curls" | "long" | "tied";
 const HAIR_STYLES: HairStyle[] = ["bun", "crown", "nodus", "fall"];
 
 /**
@@ -202,7 +348,24 @@ export type Person = {
   speed?: number;
   /** Offsets their animation, so a crowd does not move in step. */
   phase: number;
+  /**
+   * A walker who stops now and then — to look, to rest, to greet someone —
+   * for this share of the time, in pauses of a few seconds.
+   */
+  pause?: number;
+  /**
+   * A hand held out to the side to hold somebody else's: a parent's to a
+   * child walking beside them, a couple's. -1 the right hand, 1 the left.
+   */
+  holds?: -1 | 1;
 };
+
+/**
+ * Two people doing one thing together: two porters with an amphora slung
+ * from the pole on their shoulders, two children throwing a ball. Indices
+ * into `SceneLife.people`.
+ */
+export type Link = { a: number; b: number; kind: "pole" | "ball" };
 
 /** A fire: a torch, a lamp, a brazier, an altar. */
 export type Flame = {
@@ -221,7 +384,16 @@ export type Flame = {
 /** A seat in a crowd, drawn as one instance of a seated spectator. */
 export type Seat = { at: Vec3; rotY: number; cloth: number; skin: number; hair: number };
 
-export type Species = "horse" | "ox" | "dog" | "goat" | "sheep" | "donkey" | "gazelle";
+export type Species =
+  | "horse"
+  | "ox"
+  | "dog"
+  | "goat"
+  | "sheep"
+  | "donkey"
+  | "gazelle"
+  /** The caravans of the Silk Road came into Ani on the backs of camels. */
+  | "camel";
 
 /**
  * An animal. Horses for the races, the white ox garlanded for the altar,
@@ -272,6 +444,8 @@ export type SceneLife = {
    * the racers are passing. Empty for a crowd that cheers at random.
    */
   cheerFor?: "racers";
+  /** People doing one thing together (see `Link`). */
+  links?: Link[];
   /** Where a walk through the scene begins (see `walkStartFor`). */
   walkStart?: WalkStart;
 };
@@ -365,6 +539,190 @@ type Role =
  * a crowd are dressed alike.
  */
 function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
+  return individualise(baseDress(rand, era, role, female), era, role);
+}
+
+const GREY_HAIR = 0x9a948a;
+const WHITE_HAIR = 0xd9d4ca;
+/** Fairer skins, more common in the north — the Pontic valleys, the Caucasus. */
+const FAIR_SKIN = [0xe0bc98, 0xd9b08c, 0xe6c4a2];
+/**
+ * Darker skins: the ports of Roman Asia had Egyptian, Nubian and Syrian
+ * sailors and traders in their streets, and Commagene looked south as well
+ * as west.
+ */
+const DARK_SKIN = [0x6e4630, 0x7c5236, 0x8a5a3a];
+
+/** How the men of each period wore their hair, most usual first. */
+const MEN_HAIR: Record<Era, HairStyle[]> = {
+  roman: ["short", "short", "curls", "short", "curls"],
+  hellenistic: ["curls", "short", "long", "curls"],
+  carian: ["curls", "short", "long"],
+  // Long, curled hair under the cap, as the Nemrut reliefs show it.
+  commagene: ["long", "curls", "curls"],
+  neolithic: ["long", "tied", "long", "short"],
+  "village-neolithic": ["long", "tied", "short", "long"],
+  // The Hittite reliefs give men long hair down the back, curled at the end.
+  hittite: ["long", "long", "tied"],
+  "bronze-age": ["long", "curls", "short"],
+  medieval: ["short", "long", "curls"],
+  byzantine: ["short", "curls", "long"],
+};
+
+/** Beards by period: the Antonine full beard, the philosopher's long one, the pointed Persian. */
+const BEARDS: Record<Era, BeardStyle[]> = {
+  roman: ["short", "short", "long", "stubble"],
+  hellenistic: ["short", "long", "pointed", "stubble"],
+  carian: ["short", "long", "pointed"],
+  commagene: ["pointed", "long", "short"],
+  neolithic: ["long", "short"],
+  "village-neolithic": ["short", "long"],
+  hittite: ["short", "pointed"],
+  "bronze-age": ["short", "pointed", "long"],
+  medieval: ["pointed", "short", "long"],
+  byzantine: ["long", "long", "short"],
+};
+
+const LEATHERS = [0x6b4a30, 0x7a5a3c, 0x5e4430, 0x8a6a48];
+
+/**
+ * What makes one person not another: age, build, the hair and beard a man
+ * wore, a cap, a purse, a shawl, a woven pattern, a darker or fairer skin.
+ * Every choice is drawn from the colours `baseDress` already rolled, never
+ * from a roll of its own, so nobody in a scene moves for it.
+ */
+function individualise(look: Look, era: Era, role: Role): Look {
+  const out: Look = { ...look };
+  const k =
+    ((look.main * 7) ^
+      (look.trim * 13) ^
+      (look.skin * 3) ^
+      (look.hair * 5) ^
+      (look.female ? 0x9e37 : 0)) >>>
+    0;
+  const c = (salt: number, n: number) => choose(k ^ salt, n);
+  const classical = era === "roman" || era === "hellenistic" || era === "carian";
+  const neolithic = era === "neolithic" || era === "village-neolithic";
+  const grown = role !== "child";
+  const masked = look.headwear === "mask";
+
+  // Skin: the mix each region had.
+  if (classical && c(0x11, 13) === 0) out.skin = DARK_SKIN[c(0x12, 2)]!;
+  else if (classical && c(0x13, 10) === 0) out.skin = FAIR_SKIN[c(0x14, 3)]!;
+  else if (era === "commagene" && c(0x11, 7) === 0) out.skin = DARK_SKIN[2]!;
+  else if ((era === "byzantine" || era === "medieval") && c(0x15, 3) === 0)
+    out.skin = FAIR_SKIN[c(0x16, 3)]!;
+  else if ((era === "hittite" || era === "bronze-age") && c(0x15, 9) === 0)
+    out.skin = FAIR_SKIN[c(0x16, 3)]!;
+
+  // Age: the old, grey or white, more often among priests and magistrates.
+  const ageless = !grown || role === "athlete" || role === "soldier" || role === "actor" || masked;
+  const odds = role === "priest" || role === "official" || role === "mourner" ? 3 : 6;
+  if (!ageless && c(0x21, odds) === 0) {
+    out.old = true;
+    out.hair = c(0x22, 2) === 0 ? WHITE_HAIR : GREY_HAIR;
+    // Hittite men were shaven, by the reliefs; elsewhere an old man let his beard grow.
+    if (!out.female && era !== "hittite" && c(0x23, 3) !== 0) out.beard = true;
+  }
+
+  // Build: some slight, some heavy; athletes and children as they are.
+  if (grown && role !== "athlete") {
+    const b = c(0x31, 10);
+    if (b < 2) out.build = "slim";
+    else if (b < 4 && role !== "soldier") out.build = "heavy";
+  }
+
+  // A man's hair and beard.
+  if (!out.female && !masked) {
+    const styles = MEN_HAIR[era];
+    out.hairStyle =
+      era === "byzantine" && role === "priest" ? "tied" : styles[c(0x41, styles.length)]!;
+    if (grown && (out.old ? c(0x42, 2) === 0 : c(0x43, 14) === 0)) out.bald = true;
+    if (out.beard) {
+      const cuts = BEARDS[era];
+      out.beardStyle = out.old && c(0x44, 3) !== 0 ? "long" : cuts[c(0x45, cuts.length)]!;
+    } else if (grown && !neolithic && era !== "hittite" && c(0x46, 7) === 0) {
+      // A few days unshaven.
+      out.beard = true;
+      out.beardStyle = "stubble";
+    }
+  }
+
+  // Caps and hats where the period wore them, for those still bareheaded.
+  if (!out.headwear) {
+    if (classical && role === "worker" && c(0x51, 3) === 0) out.headwear = "pilos";
+    else if (classical && out.female && role === "citizen" && c(0x52, 11) === 0)
+      out.headwear = "tholia";
+    else if (era === "byzantine" && !out.female && role !== "priest" && c(0x54, 3) === 0)
+      out.headwear = "pilos";
+    else if (
+      (era === "medieval" || era === "hittite" || era === "bronze-age") &&
+      role === "worker" &&
+      c(0x55, 3) === 0
+    )
+      out.headwear = "skullcap";
+    else if (era === "village-neolithic" && c(0x57, 5) === 0) out.headwear = "fillet";
+    else if (era === "medieval" && out.female && role === "citizen" && c(0x58, 4) === 0)
+      out.headwear = "kerchief";
+  } else if (era === "commagene" && look.headwear === "phrygian" && role !== "priest") {
+    // A Persian-influenced court: some men wound a cloth round the head instead.
+    if (c(0x53, 4) === 0) out.headwear = "turban";
+    else if (c(0x59, 6) === 0) delete out.headwear;
+  }
+
+  // What is worn besides: a purse, a bag, a shawl.
+  if (
+    grown &&
+    !out.female &&
+    !neolithic &&
+    role !== "soldier" &&
+    role !== "athlete" &&
+    c(0x61, 5) === 0
+  )
+    out.purse = true;
+  if (grown && role !== "soldier" && role !== "athlete" && role !== "actor" && c(0x62, 9) === 0)
+    out.bag = LEATHERS[c(0x63, LEATHERS.length)]!;
+  if (out.female && out.headwear !== "veil" && c(0x64, out.old ? 2 : 6) === 0)
+    out.shawl = c(0x65, 2) === 0 ? shade(look.trim, 0.85) : WORK_CLOTH[c(0x66, WORK_CLOTH.length)]!;
+
+  // Woven patterns, where the period's cloth carried them.
+  const woven = out.garment === "tunic" || out.garment === "robe";
+  if (
+    woven &&
+    (era === "hittite" ||
+      era === "bronze-age" ||
+      era === "medieval" ||
+      era === "village-neolithic") &&
+    role !== "priest" &&
+    role !== "soldier"
+  ) {
+    const p = c(0x71, 6);
+    if (p === 0) out.pattern = "stripes";
+    else if (p === 1) out.pattern = "checks";
+  } else if (era === "commagene" && out.garment === "persian" && c(0x72, 3) === 0) {
+    // The Nemrut reliefs dress king and gods in cloth sown with rosettes.
+    out.pattern = "dots";
+  } else if (
+    classical &&
+    out.female &&
+    (out.garment === "chiton" || out.garment === "peplos") &&
+    role === "citizen" &&
+    c(0x73, 6) === 0
+  ) {
+    out.pattern = "dots";
+  }
+  return out;
+}
+
+/** A colour a little darker or lighter. */
+function shade(hex: number, k: number): number {
+  const r = Math.min(255, Math.round(((hex >> 16) & 255) * k));
+  const g = Math.min(255, Math.round(((hex >> 8) & 255) * k));
+  const b = Math.min(255, Math.round((hex & 255) * k));
+  return (r << 16) | (g << 8) | b;
+}
+
+function baseDress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
   const isFemale =
     female ??
     (role === "priestess"
@@ -734,43 +1092,66 @@ type PersonInit = Omit<Person, "look" | "height" | "phase"> & {
   role?: Role;
   female?: boolean;
   height?: number;
+  /** What the part needs over what the die gave: an apron, a cap, old age. */
+  outfit?: Partial<Look>;
+};
+
+type WalkInit = Omit<PersonInit, "at" | "rotY" | "action" | "route"> & {
+  /** How they go: a march, a sweep of the broom, a run — a walk by default. */
+  gait?: Action;
 };
 
 class Cast {
   people: Person[] = [];
+  /** Pairs doing one thing together, resolved to indices when the scene is finished. */
+  links: [Person, Person, Link["kind"]][] = [];
   constructor(
     private rand: Rand,
     private era: Era,
   ) {}
   add(init: PersonInit): Person {
-    const { role = "citizen", female, height, ...rest } = init;
-    const look = dress(this.rand, this.era, role, female);
+    const { role = "citizen", female, height, outfit, ...rest } = init;
+    const rolled = dress(this.rand, this.era, role, female);
+    const look: Look = outfit ? { ...rolled, ...outfit } : rolled;
+    if (outfit?.old && outfit.hair === undefined && !rolled.old) {
+      look.hair = choose(rolled.main ^ rolled.skin, 2) === 0 ? WHITE_HAIR : GREY_HAIR;
+    }
+    // Children from four or five years old to ten or so; grown people of every height.
+    const tall =
+      height ??
+      (role === "child"
+        ? between(this.rand, 1.02, 1.34)
+        : look.female
+          ? between(this.rand, 1.48, 1.7)
+          : between(this.rand, 1.58, 1.86));
     const person: Person = {
       ...rest,
       look,
-      height:
-        height ??
-        (role === "child"
-          ? between(this.rand, 1.05, 1.3)
-          : look.female
-            ? between(this.rand, 1.52, 1.68)
-            : between(this.rand, 1.62, 1.82)),
+      // The old stoop, and stand a little shorter for it.
+      height: look.old && height === undefined ? tall * 0.97 : tall,
       phase: this.rand() * TAU,
     };
+    // The old go slower about the town; a procession keeps its own pace.
+    if (look.old && person.speed !== undefined && person.speed > 0.85) person.speed *= 0.72;
     this.people.push(person);
     return person;
   }
   /** Someone walking a loop, starting at its first point. */
-  walk(route: Vec3[], init: Omit<PersonInit, "at" | "rotY" | "action" | "route"> = {}) {
+  walk(route: Vec3[], init: WalkInit = {}) {
     const [a, b] = [route[0]!, route[1] ?? route[0]!];
+    const { gait, ...rest } = init;
     return this.add({
-      ...init,
+      ...rest,
       at: a,
       rotY: facing(b[0] - a[0], b[2] - a[2]),
-      action: init.carry === "torch" || init.role !== "athlete" ? "walk" : "run",
+      action: gait ?? (init.carry === "torch" || init.role !== "athlete" ? "walk" : "run"),
       route,
       speed: init.speed ?? between(this.rand, 0.9, 1.35),
     });
+  }
+  /** Two people doing one thing together. */
+  link(a: Person, b: Person, kind: Link["kind"]) {
+    this.links.push([a, b, kind]);
   }
   /** Two or three people facing each other in conversation. */
   group(centre: Vec3, count: number, radius = 0.75, role: Role = "citizen") {
@@ -1412,6 +1793,8 @@ type Builder = {
   chariots: Chariot[];
   era: Era;
   cheerFor?: "racers";
+  /** The casts of `aside`, joined to this one when the scene is finished. */
+  extras: Cast[];
 };
 
 function make(era: Era, seed: number): Builder {
@@ -1425,19 +1808,38 @@ function make(era: Era, seed: number): Builder {
     animals: [],
     chariots: [],
     era,
+    extras: [],
   };
 }
 
+/**
+ * The same scene, with a die of its own: what is added through it — more
+ * people, their benches and workshops — takes none of the scene's own rolls,
+ * so everyone already there stays exactly where they were.
+ */
+function aside(b: Builder, salt: number): Builder {
+  const rand = seeded((salt * 2654435761) >>> 0);
+  const cast = new Cast(rand, b.era);
+  b.extras.push(cast);
+  return { ...b, rand, cast };
+}
+
 function finish(b: Builder): SceneLife {
+  const casts = [b.cast, ...b.extras];
+  const people = casts.flatMap((c) => c.people);
+  const links: Link[] = casts.flatMap((c) =>
+    c.links.map(([x, y, kind]) => ({ a: people.indexOf(x), b: people.indexOf(y), kind })),
+  );
   return {
     era: b.era,
-    people: b.cast.people,
+    people,
     flames: b.flames,
     props: b.props,
     crowd: b.crowd,
     animals: b.animals,
     chariots: b.chariots,
     ...(b.cheerFor ? { cheerFor: b.cheerFor } : {}),
+    ...(links.length ? { links } : {}),
   };
 }
 
@@ -1449,6 +1851,7 @@ const COATS: Record<Species, number[]> = {
   sheep: [0xe6dccb, 0xd8ccb4, 0x4a3e34],
   donkey: [0x8a8070, 0x6e6458, 0x9a8e7c],
   gazelle: [0xc49a62, 0xb88a52],
+  camel: [0xb08a5a, 0x9a7a52, 0xc4a070],
 };
 
 /** An animal of the scene, its coat picked from what that kind comes in. */
@@ -1620,7 +2023,7 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   cast.add({
     at: [-8.6, 0, stairFoot - 1.4],
     rotY: Math.PI * 0.85,
-    action: "talk",
+    action: "lecture",
     carry: "scroll",
     role: "official",
   });
@@ -1789,6 +2192,45 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
     [4, 0, stairFoot - 4],
   ]);
   dog(b, [7.6, 0, stairFoot - 1.6]);
+
+  /*
+   * The square's own business, beside the library's: children at
+   * knucklebones by the steps, a letter-writer for those who could not
+   * write, a money-changer at the corner by the agora gate, a philosopher
+   * with his listeners, a piper, a beggar at the horseman's base, a slave
+   * sweeping the foot of the stair, porters under a pole, old men on a bench.
+   */
+  const x = aside(b, 9002);
+  const sf = stairFoot;
+  trades.knucklebones(x, [-1.2, 0, sf - 4.8], 0.4);
+  trades.scribe(x, [-3.1, 0, sf - 1.3], Math.PI, { outfit: { old: true } });
+  trades.changer(x, [-11.5, 0, sf - 11.5], Math.PI / 2);
+  trades.lecture(x, [-5.5, 0, sf - 15.2], 0, 2);
+  trades.busker(x, [3.0, 0, sf - 12.9], 0, "aulos");
+  trades.beggar(x, [10.0, 0, sf - 4.7], Math.PI);
+  trades.sweeper(x, [
+    [-3, 0, sf - 0.9],
+    [3.4, 0, sf - 0.9],
+  ]);
+  trades.porters(x, [
+    [-10, 0, sf - 9.4],
+    [9, 0, sf - 9.4],
+    [9, 0, sf - 8.95],
+    [-10, 0, sf - 8.95],
+  ]);
+  trades.handInHand(
+    x,
+    [
+      [-8, 0, sf - 10],
+      [6, 0, sf - 10],
+      [6, 0, sf - 9.6],
+      [-8, 0, sf - 9.6],
+    ],
+    0.46,
+    { female: true },
+  );
+  trades.gazer(x, [3.0, 0, sf - 5.2], [1.5, 6, 0], {}, true);
+  trades.elders(x, [5.2, 0, sf - 15.0], 0);
   return finish(b);
 }
 
@@ -1984,6 +2426,86 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
       egyptian && i === Math.floor(layout.statueSlots.length / 2) ? HERMANUBIS : undefined;
     statue(b, slot.at, slot.height, 0, i * 7 + seed, "marble", true, special);
   });
+
+  /*
+   * Behind the stage building, the town goes about its day while the play
+   * is on: what is there depends on what the theatre backs onto.
+   */
+  const x = aside(b, (seed ^ 0x51d3) >>> 0);
+  const behind = layout.wallZ - 9;
+  const annex = layout.character.annex;
+  if (annex === "harbour-street") {
+    // Ephesus: Harbour Street, colonnaded down to the sea, its paving 10 cm up.
+    const y = 0.1;
+    trades.fishmonger(x, [2.7, y, behind - 21], -Math.PI / 2);
+    trades.weigher(x, [-2.6, y, behind - 6.5], Math.PI / 2);
+    trades.ballGame(x, [-1.6, y, behind - 29], [1.9, y, behind - 31.5]);
+    trades.beggar(x, [4.7, y, behind - 11.5], -Math.PI / 2);
+    trades.porters(x, [
+      [0.55, y, behind - 3],
+      [0.55, y, behind - 44],
+      [-0.55, y, behind - 44],
+      [-0.55, y, behind - 3],
+    ]);
+    trades.handInHand(
+      x,
+      [
+        [-1.75, y, behind - 24],
+        [-1.75, y, behind - 42],
+        [-1.25, y, behind - 42],
+        [-1.25, y, behind - 24],
+      ],
+      0.46,
+      {},
+    );
+    trades.juggler(x, [0.4, y, behind - 38], 0, 2);
+  } else if (annex === "agora") {
+    // Side: the square agora behind the stage, its stoas full of shops.
+    const y = 0.08;
+    trades.bakery(x, [-30, y, behind - 12], Math.PI / 2);
+    trades.butcher(x, [-30, y, behind - 24], Math.PI / 2);
+    trades.fishmonger(x, [-30, y, behind - 35], Math.PI / 2);
+    trades.changer(x, [30, y, behind - 12], -Math.PI / 2);
+    trades.weigher(x, [30, y, behind - 24], -Math.PI / 2);
+    trades.cook(x, [30, y, behind - 36], -Math.PI / 2);
+    trades.juggler(x, [-12, y, behind - 40], 0, 2);
+    trades.knucklebones(x, [16, y, behind - 40], 0.6);
+    trades.porters(x, [
+      [-24, y, behind - 8],
+      [22, y, behind - 8],
+      [22, y, behind - 8.5],
+      [-24, y, behind - 8.5],
+    ]);
+    trades.elders(x, [-22, y, behind - 30], Math.PI / 2);
+  } else {
+    // Open ground behind the stage: the street round the theatre.
+    trades.beggar(x, [6.5, 0, behind - 0.7], Math.PI);
+    trades.ballGame(x, [-8, 0, behind - 8], [-4.5, 0, behind - 9.5]);
+    trades.porters(x, [
+      [-20, 0, behind - 6.5],
+      [20, 0, behind - 6.5],
+      [20, 0, behind - 7],
+      [-20, 0, behind - 7],
+    ]);
+    trades.elders(x, [15, 0, behind - 3], Math.PI);
+    trades.hawker(x, [-16, 0, behind - 5.5], Math.PI);
+    trades.handInHand(
+      x,
+      [
+        [-18, 0, behind - 10],
+        [12, 0, behind - 10],
+        [12, 0, behind - 10.4],
+        [-18, 0, behind - 10.4],
+      ],
+      0.46,
+      { female: true },
+    );
+    trades.juggler(x, [17, 0, behind - 8], Math.PI, 2);
+    if (annex === "harbour") {
+      // Miletus: fish sold straight off the quay of the Theatre Harbour.
+      trades.fishmonger(x, [10, 1.0, behind - 14.2], 0);
+    }
+  }
   return finish(b);
 }
 
@@ -2244,6 +2766,38 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
       }
     }
   }
+
+  /*
+   * Round the altar and the forecourt: a priest pouring the libation, a
+   * pilgrim looking up at the columns, a beggar at the way in, a seller of
+   * offering cakes, old men on a bench, children chasing. Didyma was never
+   * finished — masons worked on it for five centuries, and the building
+   * accounts were kept on stone — so its forecourt has a mason's yard and
+   * the clerk who wrote them; at Aizanoi a sculptor works on a votive
+   * statue; at Ephesus the girls dance for Artemis.
+   */
+  const x = aside(b, id.length * 977 + 31);
+  x.cast.add({
+    at: [2.4, 0, altarZ + altarW * 0.42 + 0.1],
+    rotY: Math.PI,
+    action: "pour",
+    role: "priest",
+    carry: "phiale",
+  });
+  trades.gazer(x, [11, 0, front - 4.8], [0, 12, front + 10]);
+  trades.beggar(x, [-7.5, 0, altarZ - 11], Math.PI / 2);
+  trades.hawker(x, [9.5, 0, altarZ - 11], -Math.PI / 2);
+  trades.elders(x, [24, 0, front - 4], -Math.PI / 2);
+  trades.chase(x, [-24, 0, front - 3], 2, 1.3);
+  if (id === "didyma-apollon-tapinagi") {
+    trades.mason(x, [-20, 0, front - 6], Math.PI / 2, "marble");
+    trades.mason(x, [-20, 0, front - 9], Math.PI / 2, "marble");
+    trades.scribe(x, [-17.6, 0, front - 7.6], -Math.PI / 2, { role: "official" });
+  } else if (id === "artemis-tapinagi") {
+    trades.dancers(x, [-19, 0, altarZ - 13], 3);
+  } else {
+    trades.sculptor(x, [-20, 0, front - 6], Math.PI / 2);
+  }
   return finish(b);
 }
 
@@ -2369,6 +2923,35 @@ function enclosureLife(spec: NeolithicEnclosureSpec, era: Era): SceneLife {
   ]);
   flock(b, "gazelle", [24, 0, -12], 6, 5);
   flock(b, "gazelle", [-20, 0, 18], 4, 4);
+
+  /*
+   * The work of the gathering: wild grain ground on a quern — the site has
+   * given up thousands of grinding stones — a knapper squatting over his
+   * flint with a child watching, a hide scraped on its frame, and somebody
+   * bringing in a basket of grain.
+   */
+  const x = aside(b, 1134);
+  trades.grinder(x, [-3.0, floor, 4.2], Math.PI);
+  const knapper: Vec3 = [1.0, floor, 9.6];
+  x.cast.add({ at: knapper, rotY: Math.PI, action: "crouch", carry: "chisel" });
+  for (let i = 0; i < 8; i += 1)
+    x.props.push(
+      box(
+        "stoneDark",
+        [knapper[0] - 0.3 + (i % 4) * 0.16, floor, knapper[2] - 0.45 - Math.floor(i / 4) * 0.14],
+        [0.05, 0.015, 0.035],
+        i * 0.8,
+      ),
+    );
+  x.cast.add({ at: [2.2, floor, 9.0], rotY: -2.0, action: "crouch", role: "child" });
+  x.cast.add({ at: [7.65, floor, -0.5], rotY: Math.PI / 2, action: "tend", carry: "chisel" });
+  x.cast.walk(
+    [
+      [-11, floor, -4],
+      [-5, floor, -9],
+    ],
+    { carry: "basket", female: true, speed: 0.7 },
+  );
   return finish(b);
 }
 
@@ -2503,7 +3086,8 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
       const t = i / count;
       const at: Vec3 = [from[0] + (to[0] - from[0]) * t, roof, from[2] + (to[2] - from[2]) * t];
       if (Math.abs(at[0]) < spec.stairWidth / 2 - 1 && at[2] < 0) continue;
-      if (n % 3 === 2) b.props.push(...horseStatue("marble", at, rotY + Math.PI, 0.9).map(decor));
+      if (n % 3 === 2)
+        b.props.push(...horseStatue("marble", at, rotY + Math.PI, 0.9, -1, 0.032).map(decor));
       else statue(b, at, 2.3, rotY, n);
       n += 1;
     }
@@ -2536,6 +3120,25 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
       paint: PALETTES[0]!,
     }),
   );
+
+  /*
+   * The square at the foot: a scribe at work — Pergamon gave its name to
+   * parchment — a philosopher holding forth, children chasing each other,
+   * a beggar at the edge of the crowd; and in the court a priest pouring
+   * the libation of wine on the fire altar.
+   */
+  const x = aside(b, 7311);
+  trades.scribe(x, [-5.5, 0, foot - 10], 0);
+  trades.lecture(x, [14, 0, foot - 10], Math.PI, 2);
+  trades.chase(x, [4.5, 0, foot - 11.5], 1.8, 1.2);
+  trades.beggar(x, [13.5, 0, foot - 1.6], Math.PI);
+  x.cast.add({
+    at: [-2.2, terrace, courtZ + 3.2],
+    rotY: Math.PI,
+    action: "pour",
+    role: "priest",
+    carry: "phiale",
+  });
   return finish(b);
 }
 
@@ -2740,6 +3343,66 @@ function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
       load: true,
     });
   }
+
+  /*
+   * Along the arena's edge, outside the chariots' lanes: athletes waiting
+   * their turn — wrestlers at grips with their trainer watching, one
+   * stretching, one swinging a discus.
+   */
+  const x = aside(b, (seed ^ 0x2c41) >>> 0);
+  const edge = arenaHalf - 2;
+  trades.wrestlers(x, [-edge, 0.12, L.trackMin + 22], 0);
+  x.cast.add({
+    at: [-edge + 0.9, 0.12, L.trackMin + 20.4],
+    rotY: -0.6,
+    action: "point",
+    role: "official",
+    carry: "staff",
+  });
+  x.cast.add({
+    at: [-edge, 0.12, L.trackMin + 31],
+    rotY: Math.PI / 2,
+    action: "stretch",
+    role: "athlete",
+  });
+  x.cast.add({
+    at: [edge, 0.12, L.trackMin + 26],
+    rotY: -Math.PI / 2,
+    action: "throw",
+    role: "athlete",
+  });
+  if (spec.vaults) {
+    /*
+     * The other shops under the seats: a potter, a butcher, a baker, a
+     * money-changer, a cook selling hot food, a carpenter — each in front of
+     * its own arch.
+     */
+    const bay = (2 * endCentre) / spec.vaults;
+    const outer = L.halfWidth + 1.2;
+    const shops = [
+      trades.potter,
+      trades.butcher,
+      trades.bakery,
+      trades.changer,
+      trades.cook,
+      trades.carpenter,
+      trades.weigher,
+      trades.fishmonger,
+    ] as const;
+    shops.forEach((shop, k) => {
+      const i = 4 + k * 3;
+      if (i > spec.vaults! - 4) return;
+      const side = k % 2 === 0 ? 1 : -1;
+      const z = -endCentre + bay * (i + 0.5);
+      shop(x, [side * (outer + 1.0), 0, z], side > 0 ? Math.PI / 2 : -Math.PI / 2);
+    });
+  } else {
+    // Outside, where the crowd came in: hot food, and children at play.
+    const out = L.halfWidth + 1.2 + (spec.bow ?? 0) + 4.5;
+    trades.cook(x, [out - 2.2, 0, 7], -Math.PI / 2);
+    trades.ballGame(x, [out - 2.5, 0, 40], [out - 1.6, 0, 44.5]);
+    trades.hawker(x, [out - 1.8, 0, -31], -Math.PI / 2);
+  }
   return finish(b);
 }
 
@@ -2813,7 +3476,7 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
   b.props.push(box("paintBlue", [loomX, 0.7, -0.3], [0.02, 1.2, 1.6]));
   for (let i = 0; i < 6; i += 1)
     b.props.push(cyl("terracotta", [loomX, 0.55, -1.0 + i * 0.28], 0.04, 0.05, 0.1, 6));
-  cast.add({ at: [loomX + 0.6, 0, -0.3], rotY: -Math.PI / 2, action: "tend", female: true });
+  cast.add({ at: [loomX + 0.6, 0, -0.3], rotY: -Math.PI / 2, action: "weave", female: true });
   // A child at the pool, and someone reading in the colonnade.
   cast.add({
     at: [spec.poolWidth / 2 + 0.6, 0, -0.6],
@@ -2973,6 +3636,35 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
     );
   }
   fire(b, lampstand([wallX + 0.45, 0, lz], 1.15), 0.08, false);
+
+  /*
+   * The household's day besides the dinner: a painter freshening the
+   * frescoes of the side room — the Terrace Houses were repainted again and
+   * again — a slave sweeping the colonnade, a boy at his letters with his
+   * tutor, and a woman spinning.
+   */
+  const x = aside(b, 2719);
+  // On a trestle at the painted wall of the room, between the shelves and the shrine.
+  trades.painter(x, [-(sideX + spec.roomDepth / 2) + 0.6, 0, 0.05], -Math.PI / 2);
+  trades.sweeper(x, [
+    [-halfW + 1.6, 0, -halfD + 2.9],
+    [-halfW + 1.6, 0, halfD - 1.9],
+  ]);
+  trades.scribe(x, [1.2, 0, halfD - 1.8], Math.PI, { role: "child" });
+  x.cast.add({
+    at: [2.2, 0, halfD - 2.9],
+    rotY: facing(-1.0, 1.1),
+    action: "lecture",
+    carryLeft: "scroll",
+    outfit: { old: true },
+  });
+  x.cast.add({
+    at: [ox - 0.4, 0, 2.2],
+    rotY: Math.PI / 2,
+    action: "spin",
+    carryLeft: "distaff",
+    female: true,
+  });
   return finish(b);
 }
 
@@ -3078,6 +3770,25 @@ function mausoleumLife(spec: MausoleumSpec, era: Era): SceneLife {
     colour: 0xece6d8,
     dressed: 0xc0392b,
   });
+
+  /*
+   * The funeral games: wrestlers, a discus thrower winding up, a runner
+   * loosening his limbs, people cheering them on. And at the side, the
+   * sculptors still at work: Pliny says they went on with the building
+   * after Artemisia died, for their own glory.
+   */
+  const x = aside(b, 3532);
+  trades.wrestlers(x, [-12, 0, altarZ - 10], 0.2);
+  for (const [px, pz, r] of [
+    [-10.2, altarZ - 11.2, -0.9],
+    [-13.9, altarZ - 7.8, 2.4],
+  ] as const)
+    x.cast.add({ at: [px, 0, pz], rotY: r, action: "cheer" });
+  x.cast.add({ at: [10, 0, altarZ - 12], rotY: -0.6, action: "throw", role: "athlete" });
+  x.cast.add({ at: [4, 0, altarZ - 13], rotY: 0.3, action: "stretch", role: "athlete" });
+  trades.sculptor(x, [28, 0, -8], -Math.PI / 2);
+  trades.mason(x, [28, 0, -3.5], -Math.PI / 2, "marble");
+  void rand;
   return finish(b);
 }
 
@@ -3194,8 +3905,34 @@ function tumulusLife(spec: TumulusSanctuarySpec, era: Era): SceneLife {
     rotY: 2.4,
     action: "stand",
     role: "worker",
-    carry: "staff",
+    carry: "crook",
   });
+
+  /*
+   * The feast the law ordered, being made ready: meat cut up from the
+   * sacrifice and boiled in the cauldrons, a lyre at the tables, a priest
+   * pouring wine on the ground before the gods, the king's scribe at the
+   * end of the court, an old pilgrim looking up at the colossi.
+   */
+  const x = aside(b, 6235);
+  trades.cook(x, [24.5, 0, halfCourt - 3.5], Math.PI);
+  trades.butcher(x, [24.5, 0, -halfCourt + 3.5], 0);
+  x.cast.add({
+    at: [altarX - 3.6, 0, -3.4],
+    rotY: Math.PI / 2,
+    action: "pour",
+    role: "priest",
+    carry: "phiale",
+  });
+  trades.scribe(x, [27, 0, -halfCourt + 2.2], 0, { role: "official" });
+  x.cast.add({
+    at: [14.6, 0, halfCourt - 1.3],
+    rotY: -2.6,
+    action: "play",
+    role: "musician",
+    carry: "lyre",
+  });
+  trades.gazer(x, [5.6, 0, -4.6], [-1, 8, -4.6], { outfit: { old: true } });
   return finish(b);
 }
 
@@ -3725,6 +4462,7 @@ function occupies(part: Part, x: number, y: number, z: number): boolean {
     part.kind === "relief" ||
     part.kind === "carving" ||
     part.kind === "loft" ||
+    part.kind === "sculpt" ||
     part.kind === "figure"
   ) {
     const b = boundsOf([{ ...part, decor: false }]);
@@ -3950,6 +4688,8 @@ function hittiteGateLife(spec: HittiteGateSpec, era: Era): SceneLife {
     [ramp.top + ramp.run - 0.05, 0, z],
     [ramp.top + 0.8, R, z],
     [6, R, front - 5.5],
+    // Round the right-hand lion, not through it, and in at the middle.
+    [0.7, R, front - 2.6],
     [0.7, floor, front + 1.5],
     [0.7, paving, L.zi + 14],
   ];
@@ -3979,7 +4719,7 @@ function hittiteGateLife(spec: HittiteGateSpec, era: Era): SceneLife {
   // Storage jars set down by a trader.
   for (let i = 0; i < 4; i += 1)
     b.props.push(...jar([14 + (i % 2) * 0.8, R, front - 12 - Math.floor(i / 2) * 0.8], 1.1));
-  cast.add({ at: [14.4, R, front - 10.6], rotY: S, action: "talk", role: "worker" });
+  cast.add({ at: [14.4, R, front - 10.6], rotY: S, action: "call", role: "worker" });
 
   // Sentries on the wall walk east of the gate.
   const walk = R + spec.wallHeight - 1.25;
@@ -4036,7 +4776,47 @@ function hittiteGateLife(spec: HittiteGateSpec, era: Era): SceneLife {
     rotY: 0.6,
     action: "stand",
     role: "worker",
-    carry: "staff",
+    carry: "crook",
+  });
+
+  /*
+   * The gate's business: a scribe at the gate taking down what comes in on
+   * a tablet, a patrol before the towers (no round shields: the Hittites
+   * carried tall waisted ones, not the hoplite's), a caravan of donkeys
+   * following the first one up the ramp with their driver, a woman at the
+   * quern, another spinning.
+   */
+  const x = aside(b, 5142);
+  trades.scribe(x, [-10.5, R, front - 4.5], Math.PI / 2, { role: "official" });
+  trades.patrol(
+    x,
+    [
+      [-13, R, front - 2.2],
+      [-8.4, R, front - 2.2],
+      [-8.4, R, front - 2.8],
+      [-13, R, front - 2.8],
+    ],
+    3,
+    false,
+  );
+  const lead = b.animals.find((a) => a.species === "donkey")!;
+  for (let i = 1; i <= 2; i += 1) {
+    const d = animal(x, "donkey", lead.route![0]!, lead.rotY, "walk", {
+      route: lead.route!,
+      speed: lead.speed!,
+      load: true,
+    });
+    d.phase = lead.phase - (i * 2.3) / 5;
+  }
+  const driver = x.cast.walk(lead.route!, { role: "worker", carry: "staff", speed: lead.speed! });
+  driver.phase = (lead.phase * 5 - 3 * 2.3 - 0.4) / 7;
+  trades.grinder(x, [11.0, R, front - 13.2], 0);
+  x.cast.add({
+    at: [-11.2, R, front - 9.6],
+    rotY: 0.9,
+    action: "spin",
+    carryLeft: "distaff",
+    female: true,
   });
   return finish(b);
 }
@@ -4116,7 +4896,7 @@ function troyLife(spec: TroyCitadelSpec, era: Era): SceneLife {
   cast.add({
     at: [hx - 1.8, t, hz - 1.4],
     rotY: Math.PI,
-    action: "tend",
+    action: "weave",
     role: "citizen",
     female: true,
   });
@@ -4147,7 +4927,49 @@ function troyLife(spec: TroyCitadelSpec, era: Era): SceneLife {
   });
   flock(b, "horse", [-26, 0, -33], 4, 4);
   flock(b, "sheep", [18, 0, -46], 8, 5);
-  cast.add({ at: [14, 0, -43], rotY: 0.4, action: "stand", role: "worker", carry: "staff" });
+  cast.add({ at: [14, 0, -43], rotY: 0.4, action: "stand", role: "worker", carry: "crook" });
+
+  /*
+   * More of the citadel and the plain: a potter at his wheel between the
+   * houses, a woman spinning by the hearth, another fetching water, children
+   * with knucklebones; out on the plain a ploughman behind his oxen, and a
+   * rider on one of the horses Troy was famous for.
+   */
+  const x = aside(b, 6114);
+  trades.potter(x, [4.5, t, 17], Math.PI / 2);
+  x.cast.add({
+    at: [hx + 9.5, t, hz - 2],
+    rotY: -Math.PI / 2,
+    action: "spin",
+    carryLeft: "distaff",
+    female: true,
+  });
+  x.cast.walk(
+    [
+      [-8, t, hz + 0.5],
+      [6, t, hz + 0.5],
+    ],
+    { carry: "jar", female: true, speed: 0.75 },
+  );
+  trades.knucklebones(x, [-3.0, t, 6.5], 0.3, false);
+  trades.ploughing(x, [
+    [-40, 0, -13],
+    [-18, 0, -13],
+    [-18, 0, -16],
+    [-40, 0, -16],
+  ]);
+  dog(x, [12.8, 0, -42]);
+  const ride: Vec3[] = [
+    [20, 0, -22],
+    [40, 0, -22],
+    [40, 0, -28],
+    [20, 0, -28],
+  ];
+  animal(x, "horse", ride[0]!, Math.PI / 2, "walk", {
+    route: ride,
+    speed: 1.6,
+    rider: dress(x.rand, era, "citizen", false),
+  });
   return finish(b);
 }
 
@@ -4281,6 +5103,24 @@ function townLife(spec: NeolithicTownSpec, era: Era): SceneLife {
     ],
     { female: true, carry: "jar", speed: 0.7 },
   );
+
+  /*
+   * More of the roofs' work: reeds carried over for matting and roofing, a
+   * second quern, a spinner — spindle whorls are common finds here — and
+   * children with a handful of sheep's knucklebones, which the houses also
+   * give up.
+   */
+  const x = aside(b, 7202);
+  x.cast.walk([on(3, -2.0, -1.0), on(3, 1.8, -1.0)], { carry: "reeds", speed: 0.55 });
+  trades.grinder(x, on(10, 0.5, -0.8), 0);
+  trades.knucklebones(x, on(1, -1.4, -1.0), 0.3);
+  x.cast.add({
+    at: on(7, -1.4, -0.9),
+    rotY: 0.5,
+    action: "spin",
+    carryLeft: "distaff",
+    female: true,
+  });
   return finish(b);
 }
 
@@ -4386,6 +5226,42 @@ function cathedralLife(spec: CathedralSpec, era: Era): SceneLife {
     ],
     { role: "citizen", female: true, carry: "basket" },
   );
+
+  /*
+   * Ani as the Silk Road knew it: a camel caravan coming across the square
+   * with its driver, a merchant weighing out spice for a customer, a
+   * money-changer, masons at work on the church's dressed tuff, and the
+   * clergy going round the cathedral with the Gospel book and a candle.
+   */
+  const x = aside(b, 1002);
+  const road: Vec3[] = [
+    [32, 0, front - 19],
+    [-32, 0, front - 20],
+  ];
+  const camels = [0, 1].map((i) =>
+    animal(x, "camel", road[0]!, -Math.PI / 2, "walk", { route: road, speed: 0.7, load: true }),
+  );
+  camels[1]!.phase = camels[0]!.phase - 3.2 / 5;
+  const driver = x.cast.walk(road, {
+    role: "worker",
+    carry: "staff",
+    speed: 0.7,
+    outfit: { headwear: "turban", purse: true, bag: 0x6b4a30 },
+  });
+  driver.phase = (camels[0]!.phase * 5 + 2.4) / 7;
+  trades.weigher(x, [16, 0, front - 6], -Math.PI / 2, { role: "citizen", outfit: { purse: true } });
+  trades.changer(x, [-22, 0, front - 16], Math.PI / 2);
+  trades.mason(x, [-17, 0, 6], Math.PI / 2, "conglomerate");
+  trades.mason(x, [-17, 0, 9.5], Math.PI / 2, "conglomerate");
+  const round: Vec3[] = [
+    [-14, 0, front - 2.6],
+    [14, 0, front - 2.6],
+    [14.5, 0, spec.length / 2 + 2],
+    [-14.5, 0, spec.length / 2 + 2],
+  ];
+  const priest = x.cast.walk(round, { role: "priest", carry: "book", speed: 0.45 });
+  const deacon = x.cast.walk(round, { role: "priest", carry: "candle", speed: 0.45 });
+  deacon.phase = priest.phase - 1.3 / 7;
   return finish(b);
 }
 
@@ -4410,4 +5286,11 @@ export {
   torchStand as lifeTorchStand,
   brazier as lifeBrazier,
   lampstand as lifeLampstand,
+  aside as lifeAside,
+  loft as lifeLoft,
+  decor as lifeDecor,
+  table as lifeTable,
+  stoneBench as lifeStoneBench,
+  smallAmphora as lifeSmallAmphora,
 };
+export type { Builder as LifeBuilder, Role as LifeRole };

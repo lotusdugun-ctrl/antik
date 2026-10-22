@@ -1,4 +1,5 @@
 import type { Part } from "./reconstruction-parts";
+import { sculptBounds } from "./sculpt";
 
 /**
  * Where the country round a building rises and what grows in it — worked out
@@ -253,6 +254,11 @@ export function footprintOf(part: Part): (Footprint & { top: number }) | null {
       for (const s of part.sections)
         r = Math.max(r, Math.hypot(s.c[0], s.c[2]) + Math.max(s.rx, s.ry));
       return { x, z, hx: r, hz: r, rot: 0, top: y + r };
+    }
+    case "sculpt": {
+      const b = sculptBounds(part.masses);
+      const r = Math.max(...b.min.map(Math.abs), ...b.max.map(Math.abs));
+      return { x, z, hx: r, hz: r, rot: 0, top: y + b.max[1] };
     }
     default:
       return null;

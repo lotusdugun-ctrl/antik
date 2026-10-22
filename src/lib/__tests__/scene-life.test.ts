@@ -306,3 +306,78 @@ describe("how women are dressed", () => {
     expect(styles.size).toBeGreaterThanOrEqual(3);
   });
 });
+
+describe("what people are doing", () => {
+  test("every scene has trades and pastimes, not only walking and talking", () => {
+    const common = new Set([
+      "stand",
+      "walk",
+      "talk",
+      "sit",
+      "run",
+      "play",
+      "cheer",
+      "drive",
+      "ride",
+    ]);
+    const all = new Set<string>();
+    for (const { item, life } of lives) {
+      const busy = new Set(life.people.map((p) => p.action).filter((a) => !common.has(a)));
+      expect(`${item.id}: ${busy.size >= 2}`).toBe(`${item.id}: true`);
+      for (const a of busy) all.add(a);
+    }
+    expect(all.size).toBeGreaterThanOrEqual(30);
+  });
+
+  test("people differ in age and build, and the men in hair and beard", () => {
+    const people = lives.flatMap(({ life }) => life.people);
+    const share = (f: (p: (typeof people)[number]) => boolean) =>
+      people.filter(f).length / people.length;
+    expect(share((p) => p.look.old === true)).toBeGreaterThan(0.08);
+    expect(share((p) => p.look.build !== undefined)).toBeGreaterThan(0.15);
+    expect(share((p) => p.height < 1.35)).toBeGreaterThan(0.05);
+    const men = people.filter((p) => !p.look.female);
+    expect(new Set(men.map((p) => p.look.hairStyle)).size).toBeGreaterThanOrEqual(4);
+    expect(new Set(men.map((p) => p.look.beardStyle).filter(Boolean)).size).toBeGreaterThanOrEqual(
+      4,
+    );
+    expect(men.some((p) => p.look.bald)).toBe(true);
+  });
+
+  test("pairs are pairs: a pole between two porters, a ball between two children", () => {
+    for (const { item, life } of lives) {
+      for (const link of life.links ?? []) {
+        const a = life.people[link.a];
+        const b = life.people[link.b];
+        expect(`${item.id}: ${Boolean(a && b) && link.a !== link.b}`).toBe(`${item.id}: true`);
+        if (link.kind === "pole") {
+          expect(a!.carry).toBe("pole");
+          expect(b!.carry).toBe("pole");
+          expect(JSON.stringify(a!.route)).toBe(JSON.stringify(b!.route));
+          expect(a!.speed).toBe(b!.speed);
+        } else {
+          expect(Math.hypot(a!.at[0] - b!.at[0], a!.at[2] - b!.at[2])).toBeLessThan(6);
+        }
+      }
+    }
+  });
+
+  test("nobody stands inside the furniture", () => {
+    const wrong: string[] = [];
+    for (const { item, life } of lives) {
+      const near = gridOf(life.props);
+      life.people.forEach((p, i) => {
+        if (p.route) return;
+        const q: Point = [p.at[0], p.at[1] + 0.95, p.at[2]];
+        const hit = near(q).find(
+          (part) => part.material !== "linen" && within({ ...part, decor: false }, q),
+        );
+        if (hit)
+          wrong.push(
+            `${item.id} person ${i} (${p.action}) in ${hit.material} at ${hit.at.map((v) => v.toFixed(1))}`,
+          );
+      });
+    }
+    expect(wrong).toEqual([]);
+  });
+});

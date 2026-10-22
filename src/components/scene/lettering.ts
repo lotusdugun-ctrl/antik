@@ -176,6 +176,12 @@ export function buildLettering(
   THREE: typeof THREE_NS,
   plates: Plate[],
   anisotropy: number,
+  /**
+   * The widest a page may be uploaded. Pages are always laid out and drawn
+   * at full size, so the layout never changes; a smaller limit (a phone's)
+   * halves the drawn page before it goes to the GPU.
+   */
+  maxSide = PAGE,
 ): { group: THREE_NS.Group; dispose: () => void } {
   const group = new THREE.Group();
   group.name = "lettering";
@@ -233,7 +239,19 @@ export function buildLettering(
     const mine = slots.filter((slot) => slot.page === index);
     for (const slot of mine) draw(context, slot);
 
-    const texture = new THREE.CanvasTexture(canvas);
+    let upload = canvas;
+    if (maxSide < PAGE) {
+      const f = maxSide / PAGE;
+      upload = document.createElement("canvas");
+      upload.width = Math.round(canvas.width * f);
+      upload.height = Math.max(4, Math.round(canvas.height * f));
+      const small = upload.getContext("2d");
+      if (small) {
+        small.imageSmoothingQuality = "high";
+        small.drawImage(canvas, 0, 0, upload.width, upload.height);
+      } else upload = canvas;
+    }
+    const texture = new THREE.CanvasTexture(upload);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = anisotropy;
     texture.generateMipmaps = true;

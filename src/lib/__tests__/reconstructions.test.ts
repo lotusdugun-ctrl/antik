@@ -216,6 +216,7 @@ describe("the geometry", () => {
         if (part.kind === "carving") return part.outline.length < 3 || part.depth <= 0;
         if (part.kind === "loft")
           return part.sections.length < 2 || part.sections.some((s) => s.rx <= 0 || s.ry <= 0);
+        if (part.kind === "sculpt") return part.masses.length === 0 || part.cell <= 0;
         return part.height <= 0;
       });
       expect(degenerate.map((p) => `${item.id}: ${p.kind}`)).toEqual([]);
@@ -527,10 +528,11 @@ describe("the six models added in September 2026", () => {
       (part) => part.kind === "cylinder" && part.flutes !== undefined && part.height > drumHeight,
     );
     expect(drums.length / SHAFT_DRUMS).toBe(spec.columns);
-    // Four horses on the summit, each ten lofts, and twenty lions on the
-    // ledge, each standing in the scan of a Greek tomb lion.
-    const lofts = partsOf(tomb).filter((part) => part.kind === "loft");
-    expect(lofts.length).toBeGreaterThanOrEqual(40);
+    // Four horses on the summit, each one carved body, and twenty lions on
+    // the ledge, each standing in the scan of a Greek tomb lion.
+    const horses = partsOf(tomb).filter((part) => part.kind === "sculpt");
+    expect(horses.length).toBe(4);
+    expect(horses.every((part) => part.statue === "Horse")).toBe(true);
     expect(partsOf(tomb).filter((part) => part.scan?.id === "lion-met").length).toBe(spec.lions);
     expect(spec.columnsShort * 2 + spec.columnsLong * 2 - 4).toBe(spec.columns);
   });
@@ -563,6 +565,8 @@ describe("the six models added in September 2026", () => {
         const top = part.at[1] + part.height * Math.cos(part.rotX ?? 0);
         return dir > 0 ? Math.max(part.at[1], top) : Math.min(part.at[1], top);
       }
+      // A scan stands on `at` and is scaled to its `height`.
+      if (part.kind === "figure") return part.at[1] + (dir > 0 ? part.height : 0);
       if (part.kind !== "loft") return part.at[1];
       const ends = part.sections.map((section, i) => {
         const a = part.sections[Math.max(0, i - 1)]!.c;
@@ -618,20 +622,29 @@ describe("the six models added in September 2026", () => {
     const nemrut = reconstructions.find((r) => r.id === "nemrut-dogu-terasi")!;
     const sculpture = partsOf(nemrut).filter((part) => part.statue);
     expect(sculpture.length).toBeGreaterThan(100);
-    // The same limestone for every god, eagle and lion, and none of them a
-    // photographed marble set down among lofted stone.
+    // The same limestone for every god, eagle and lion. The gods are lofted;
+    // the eagles and lions are scans of real marble ones, cut in the same
+    // limestone.
     expect(new Set(sculpture.map((part) => part.material))).toEqual(new Set(["limestone"]));
-    expect(partsOf(nemrut).filter((part) => part.scan)).toEqual([]);
-    expect(partsOf(nemrut).filter((part) => part.kind === "figure")).toEqual([]);
+    const scanned = partsOf(nemrut).filter((part) => part.scan);
+    expect(scanned.map((part) => `${part.statue}:${part.scan?.id}`).sort()).toEqual([
+      "Eagle:eagle",
+      "Eagle:eagle",
+      "Lion:lion-delos",
+      "Lion:lion-delos",
+    ]);
+    expect(partsOf(nemrut).filter((part) => part.kind === "figure" && !part.scan)).toEqual([]);
     // Every piece is turned to look out over the court, +x.
     for (const part of sculpture)
       if (part.kind === "loft") expect(Math.sin(part.rotY)).toBeCloseTo(1, 5);
     /*
      * The triangles the renderer will make of them (a loft is 20 round and
      * 6 rings between sections, capped; a cylinder is its sides and caps):
-     * all nine statues together stay well inside what a phone draws easily.
+     * the five lofted colossi together stay well inside what a phone draws
+     * easily (the guardian scans are held to their own budget in scans.test.ts).
      */
     const triangles = sculpture.reduce((sum, part) => {
+      if (part.scan) return sum;
       if (part.kind === "loft") return sum + 240 * (part.sections.length - 1) + 40;
       if (part.kind === "cylinder") return sum + 4 * part.segments;
       return sum + 12;

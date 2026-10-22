@@ -2,17 +2,16 @@ import { FACING, onFace } from "@/lib/reconstruction-detail";
 import {
   kitBox as box,
   kitCyl as cyl,
-  kitLoft as loft,
   kitScenery as scenery,
   kitSeeded as seeded,
   kitSetting as setting,
   kitWorn as worn,
-  type LoftSection,
   type Material,
   type Part,
   type Vec3,
   type WalkStart,
 } from "@/lib/reconstruction-parts";
+import { gateLion } from "@/lib/beasts";
 import { bands, polygonalFace, slopedSlab, steppedRamp } from "./masonry";
 
 /**
@@ -82,124 +81,27 @@ export function hittiteGateLayout(spec: HittiteGateSpec) {
 
 /**
  * One of the gate lions, standing out of the face of its jamb: the forepart
- * only — the forelegs planted side by side, the deep chest, the mane in
- * flame-shaped locks, and the head with its jaws open — and behind them the
- * stone it is cut from. The frame is the foot of the lion on the face of the
- * jamb, `+z` straight out of the stone; `size` is its height to the top of
- * the mane.
+ * only — the forelegs planted side by side, the deep chest, the mane in rows
+ * of flame-shaped locks, and the head with its jaws open and the eye sockets
+ * that held the inlay — carved as one body out of the stone it is cut from
+ * (see `gateLion` in `beasts.ts`). The frame is the foot of the lion on the
+ * face of the jamb, `+z` straight out of the stone; `size` is its height to
+ * the top of the mane.
  */
 export function hittiteLion(material: Material, at: Vec3, rotY: number, size: number): Part[] {
-  const parts: Part[] = [];
-  const S = (x: number, y: number, z: number, rx: number, ry: number): LoftSection => ({
-    c: [x * size, y * size, z * size],
-    rx: rx * size,
-    ry: ry * size,
-  });
-  const skin = (sections: LoftSection[]) =>
-    parts.push({ ...loft(material, at, rotY, sections), statue: "Lion" });
-
-  for (const side of [-1, 1]) {
-    // The foreleg, thick and straight from the shoulder, and the broad paw.
-    skin([
-      S(side * 0.16, 0.6, 0.06, 0.12, 0.13),
-      S(side * 0.16, 0.42, 0.17, 0.105, 0.11),
-      S(side * 0.16, 0.2, 0.21, 0.085, 0.09),
-      S(side * 0.16, 0.06, 0.22, 0.09, 0.095),
-      S(side * 0.16, 0.01, 0.22, 0.07, 0.07),
-    ]);
-    skin([
-      S(side * 0.16, 0.05, 0.14, 0.095, 0.045),
-      S(side * 0.16, 0.045, 0.3, 0.1, 0.045),
-      S(side * 0.16, 0.035, 0.35, 0.06, 0.028),
-    ]);
-    for (let toe = 0; toe < 4; toe += 1) {
-      const x = side * 0.16 + (toe - 1.5) * 0.045;
-      skin([
-        S(x, 0.035, 0.3, 0.026, 0.03),
-        S(x, 0.03, 0.36, 0.022, 0.024),
-        S(x, 0.022, 0.38, 0.008, 0.008),
-      ]);
-    }
-  }
-  // The chest, swelling out of the stone between the legs.
-  skin([
-    S(0, 0.32, -0.12, 0.22, 0.16),
-    S(0, 0.44, 0.08, 0.25, 0.18),
-    S(0, 0.6, 0.18, 0.26, 0.2),
-    S(0, 0.74, 0.14, 0.25, 0.18),
-  ]);
-  // The mane: a heavy collar round the neck, coming out of the stone, and
-  // covered in curled tufts, ring behind ring.
-  const collar: [number, number, number, number][] = [
-    [-0.16, 0.8, 0.37, 0.33],
-    [0.08, 0.82, 0.37, 0.33],
-    [0.24, 0.84, 0.3, 0.27],
-    [0.34, 0.86, 0.15, 0.14],
-  ];
-  skin(collar.map(([z, y, rx, ry]) => S(0, y, z, rx, ry)));
-  for (const [z, y, rx, ry, n, r] of [
-    [-0.02, 0.8, 0.37, 0.33, 14, 0.065],
-    [0.1, 0.82, 0.36, 0.32, 13, 0.062],
-    [0.21, 0.84, 0.31, 0.28, 11, 0.058],
-  ] as const) {
-    for (let i = 0; i < n; i += 1) {
-      const a = (i / n) * Math.PI * 2 + z * 3;
-      const x = Math.cos(a) * rx * 0.97;
-      const yy = y + Math.sin(a) * ry * 0.97;
-      skin([
-        S(x, yy, z + r * 0.9, r * 0.3, r * 0.3),
-        S(x * 1.02, yy, z, r, r * 0.8),
-        S(x, yy, z - r, r * 0.3, r * 0.25),
-      ]);
-    }
-  }
-  // The head: a broad skull and muzzle, the jaws open in a roar.
-  skin([
-    S(0, 0.9, 0.22, 0.19, 0.18),
-    S(0, 0.92, 0.36, 0.19, 0.17),
-    S(0, 0.91, 0.47, 0.16, 0.13),
-    S(0, 0.9, 0.56, 0.13, 0.09),
-    S(0, 0.895, 0.62, 0.1, 0.065),
-    S(0, 0.895, 0.645, 0.05, 0.035),
-  ]);
-  // The lower jaw, dropped open, with the dark of the mouth behind the teeth.
-  skin([
-    S(0, 0.78, 0.34, 0.13, 0.07),
-    S(0, 0.755, 0.48, 0.1, 0.05),
-    S(0, 0.75, 0.56, 0.075, 0.035),
-    S(0, 0.755, 0.59, 0.03, 0.015),
-  ]);
-  parts.push({
-    ...loft("stoneDark", at, rotY, [
-      S(0, 0.83, 0.42, 0.09, 0.05),
-      S(0, 0.82, 0.54, 0.08, 0.045),
-      S(0, 0.825, 0.58, 0.02, 0.01),
-    ]),
-    statue: "Lion",
-  });
-  for (const side of [-1, 1]) {
-    // The fangs, two up and two down.
-    skin([S(side * 0.06, 0.865, 0.6, 0.016, 0.016), S(side * 0.06, 0.82, 0.605, 0.004, 0.004)]);
-    skin([S(side * 0.055, 0.765, 0.565, 0.014, 0.014), S(side * 0.055, 0.805, 0.57, 0.004, 0.004)]);
-    // The brow over each eye, the cheek, and a small round ear set back.
-    skin([
-      S(side * 0.02, 1.0, 0.47, 0.035, 0.028),
-      S(side * 0.09, 1.01, 0.46, 0.05, 0.04),
-      S(side * 0.16, 0.99, 0.39, 0.035, 0.03),
-    ]);
-    skin([S(side * 0.12, 0.88, 0.4, 0.07, 0.07), S(side * 0.12, 0.86, 0.52, 0.05, 0.045)]);
-    skin([S(side * 0.15, 1.05, 0.26, 0.055, 0.04), S(side * 0.16, 1.08, 0.28, 0.014, 0.012)]);
-    // The eyes: hollows that once held inlay.
-    parts.push({
-      ...loft("stoneDark", at, rotY, [
-        S(side * 0.085, 0.96, 0.5, 0.024, 0.018),
-        S(side * 0.088, 0.96, 0.525, 0.028, 0.022),
-        S(side * 0.09, 0.96, 0.535, 0.006, 0.005),
-      ]),
+  return [
+    {
+      kind: "sculpt",
+      material,
+      at,
+      rotY,
+      masses: gateLion(size),
+      cell: size * 0.013,
+      // Its back is the face of the jamb, and is not drawn.
+      back: size * 0.01,
       statue: "Lion",
-    });
-  }
-  return parts;
+    },
+  ];
 }
 
 /**

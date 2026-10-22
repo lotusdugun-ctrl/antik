@@ -1,5 +1,5 @@
 import type { Lang, Localized } from "@/lib/i18n";
-import type { Era, Person } from "@/lib/scene-life";
+import type { Action, Era, Person } from "@/lib/scene-life";
 
 /**
  * What the people of a model say when they are tapped.
@@ -37,7 +37,24 @@ export type StoryRole =
   | "torch"
   | "child"
   | "official"
-  | "spectator";
+  | "spectator"
+  | "potter"
+  | "weaver"
+  | "scribe"
+  | "merchant"
+  | "baker"
+  | "butcher"
+  | "cook"
+  | "carpenter"
+  | "painter"
+  | "servant"
+  | "porter"
+  | "farmer"
+  | "herder"
+  | "elder"
+  | "beggar"
+  | "performer"
+  | "teacher";
 
 /** tr, en, de, ru. */
 type Line = readonly [string, string, string, string];
@@ -45,12 +62,74 @@ type Pool = Partial<Record<StoryRole, readonly Line[]>>;
 
 const WHITE = 0xf0ece2;
 
+/**
+ * The voice each thing a person can be doing gives them, or `null` where
+ * the doing says nothing of who they are and their dress and gear decide.
+ * A `Record` over every action, so a new action in `scene-life` does not
+ * compile until somebody has decided whose lines it speaks.
+ */
+const ACTION_VOICE: Record<Action, StoryRole | null> = {
+  stand: null,
+  walk: null,
+  talk: null,
+  sit: null,
+  read: null,
+  pray: null,
+  perform: null,
+  tend: null,
+  kneel: null,
+  run: null,
+  play: null,
+  ride: null,
+  cheer: null,
+  drive: null,
+  pot: "potter",
+  weave: "weaver",
+  spin: "weaver",
+  write: "scribe",
+  count: "merchant",
+  weigh: "merchant",
+  haggle: "merchant",
+  call: "merchant",
+  knead: "baker",
+  grind: "baker",
+  chop: "butcher",
+  stir: "cook",
+  carve: "mason",
+  saw: "carpenter",
+  paint: "painter",
+  sweep: "servant",
+  hoe: "farmer",
+  plough: "farmer",
+  beg: "beggar",
+  pour: "priest",
+  dance: "performer",
+  juggle: "performer",
+  stretch: "athlete",
+  wrestle: "athlete",
+  throw: "athlete",
+  march: "soldier",
+  toss: "child",
+  crouch: null,
+  lean: null,
+  point: null,
+  gaze: null,
+  chat: null,
+  lecture: "teacher",
+  strike: "priest",
+};
+
 /** The part someone plays, read off how the scene dressed and equipped them. */
 export function storyRole(person: Person): StoryRole {
   const { look, action, carry, carryLeft } = person;
   if (person.height < 1.35) return "child";
   if (look.headwear === "mask") return "actor";
-  if (carry === "lyre" || carry === "aulos") return "musician";
+  const voice = ACTION_VOICE[action];
+  if (voice) return voice;
+  if (carry === "lyre" || carry === "aulos" || carryLeft === "drum") return "musician";
+  if (carry === "pole" || carry === "sack" || carry === "reeds") return "porter";
+  if (carry === "crook") return "herder";
+  if (look.old && (action === "sit" || action === "chat")) return "elder";
   if (action === "run") return "athlete";
   if (look.garment === "exomis" && look.main === WHITE && look.trim === WHITE) return "athlete";
   if (carry === "chisel") return "mason";
@@ -472,6 +551,690 @@ const CLASSICAL: Pool = {
       "I brought my lunch too: bread, cheese and a few figs.",
       "Ich habe auch mein Essen dabei: Brot, Käse und ein paar Feigen.",
       "Я и еду взял: хлеб, сыр и несколько смокв.",
+    ],
+  ],
+  potter: [
+    [
+      "Çarkı ayağımla döndürürüm; ellerim çamuru yukarı çeker.",
+      "I turn the wheel with my foot; my hands draw the clay upward.",
+      "Ich drehe die Scheibe mit dem Fuß; meine Hände ziehen den Ton nach oben.",
+      "Я кручу круг ногой, а руки вытягивают глину вверх.",
+    ],
+    [
+      "Kaplar önce gölgede kurur, sonra fırında pişer.",
+      "The pots dry in the shade first, then they are fired in the kiln.",
+      "Die Gefäße trocknen erst im Schatten, dann werden sie im Ofen gebrannt.",
+      "Сосуды сначала сохнут в тени, потом их обжигают в печи.",
+    ],
+    [
+      "Parlak kırmızı astar çok ince kilden yapılır; pişince ışıldar.",
+      "The glossy red slip is made of very fine clay; once fired, it shines.",
+      "Der glänzend rote Überzug ist aus sehr feinem Ton; gebrannt leuchtet er.",
+      "Блестящий красный ангоб делают из тончайшей глины; после обжига он сияет.",
+    ],
+    [
+      "Atölyemin adını kabın dibine mühürle basarım.",
+      "I stamp my workshop's name on the base of the pot.",
+      "Ich stemple den Namen meiner Werkstatt auf den Gefäßboden.",
+      "Я ставлю клеймо своей мастерской на дно сосуда.",
+    ],
+    [
+      "Herkes çanak çömlek kullanır; kırılan hemen yenisiyle değişir.",
+      "Everyone uses pottery, and what breaks is replaced at once.",
+      "Jeder braucht Töpferware, und was zerbricht, wird gleich ersetzt.",
+      "Глиняной посудой пользуются все, а разбитую сразу заменяют.",
+    ],
+    [
+      "Kili dere kenarından getirir, günlerce suda dinlendiririm.",
+      "I fetch the clay from the riverbank and leave it to rest in water for days.",
+      "Den Ton hole ich vom Flussufer und lasse ihn tagelang im Wasser ruhen.",
+      "Глину я беру у реки и много дней вымачиваю в воде.",
+    ],
+  ],
+  weaver: [
+    [
+      "Tezgâhın ipleri pişmiş toprak ağırlıklarla gerilir; bu ağırlıklar her evde bulunur.",
+      "The loom's threads are held taut by clay weights; such weights turn up in every house.",
+      "Die Kettfäden werden mit Tongewichten gespannt; solche Gewichte findet man in jedem Haus.",
+      "Нити основы натягивают глиняными грузилами; такие грузила находят в каждом доме.",
+    ],
+    [
+      "Önce yünü örekeden eğiririm, sonra dokurum.",
+      "First I spin the wool from the distaff, then I weave it.",
+      "Erst spinne ich die Wolle vom Rocken, dann webe ich sie.",
+      "Сначала я пряду шерсть с прялки, потом тку.",
+    ],
+    [
+      "Bir pelerin dokumak haftalar sürer.",
+      "Weaving a single cloak takes weeks.",
+      "Einen einzigen Mantel zu weben dauert Wochen.",
+      "Чтобы соткать один плащ, нужны недели.",
+    ],
+    [
+      "Boyalar bitkilerden gelir: kökboya kırmızı, muhabbet çiçeği sarı verir.",
+      "The dyes come from plants: madder gives red, weld gives yellow.",
+      "Die Farben kommen von Pflanzen: Krapp gibt Rot, Wau Gelb.",
+      "Краски дают растения: марена — красную, резеда — жёлтую.",
+    ],
+    [
+      "Evin kumaşını kadınlar dokur; artanı pazarda satılır.",
+      "The women of the house weave its cloth; what is left over is sold at market.",
+      "Die Frauen des Hauses weben seinen Stoff; was übrig ist, wird auf dem Markt verkauft.",
+      "Ткань для дома ткут женщины, а лишнее продают на рынке.",
+    ],
+    [
+      "İğ dönerken ipliği parmaklarımla inceltirim.",
+      "While the spindle turns, I draw the thread thin with my fingers.",
+      "Während die Spindel sich dreht, ziehe ich den Faden mit den Fingern dünn.",
+      "Пока веретено крутится, я истончаю нить пальцами.",
+    ],
+  ],
+  scribe: [
+    [
+      "Balmumu tablete kalemin sivri ucuyla yazar, düz ucuyla silerim.",
+      "I write on the wax with the pointed end of the stylus and smooth it out with the flat end.",
+      "Ich schreibe mit der Spitze des Griffels ins Wachs und glätte es mit dem flachen Ende.",
+      "Я пишу на воске острым концом стиля и стираю плоским.",
+    ],
+    [
+      "Yazı bilmeyenler için mektup yazarım; ücreti satır başına.",
+      "I write letters for those who cannot; I charge by the line.",
+      "Ich schreibe Briefe für die, die es nicht können; bezahlt wird nach Zeilen.",
+      "Пишу письма для неграмотных; плата — за строку.",
+    ],
+    [
+      "Önemli olanı sonra papirüse ya da parşömene temize çekerim.",
+      "Whatever matters I copy out fair later, on papyrus or parchment.",
+      "Was wichtig ist, schreibe ich später ins Reine, auf Papyrus oder Pergament.",
+      "Важное я потом переписываю набело на папирус или пергамент.",
+    ],
+    [
+      "Sözleşme, makbuz, vasiyet: hepsi yazılı olmalı.",
+      "Contracts, receipts, wills: all of it has to be written down.",
+      "Verträge, Quittungen, Testamente: alles muss schriftlich sein.",
+      "Договоры, расписки, завещания — всё надо записать.",
+    ],
+    [
+      "Harfleri okulda tabletlere kazıyarak öğrendim; hâlâ aynı tür kalemi kullanırım.",
+      "I learned my letters scratching them into tablets at school; I still use the same kind of stylus.",
+      "Die Buchstaben lernte ich in der Schule auf Wachstafeln; ich benutze noch immer solch einen Griffel.",
+      "Буквы я учил в школе на восковых табличках и до сих пор пишу таким же стилем.",
+    ],
+    [
+      "Hesap tutmak kolay değil: sayılar da harflerle yazılır.",
+      "Keeping accounts is not easy: numbers are written with letters too.",
+      "Rechnungen führen ist nicht leicht: Auch Zahlen schreibt man mit Buchstaben.",
+      "Вести счёт непросто: числа тоже пишутся буквами.",
+    ],
+  ],
+  merchant: [
+    [
+      "Teraziyle tartarım; pazar denetçisi ağırlıklarımı sık sık kontrol eder.",
+      "I weigh on the balance; the market inspector checks my weights often.",
+      "Ich wiege auf der Waage; der Marktaufseher prüft meine Gewichte oft.",
+      "Я взвешиваю на весах, а рыночный надзиратель часто проверяет мои гири.",
+    ],
+    [
+      "Bu fiyata mı? Bu baharat çok uzaklardan geldi!",
+      "At that price? This spice came from very far away!",
+      "Zu dem Preis? Dieses Gewürz kam von sehr weit her!",
+      "За такую цену? Эта пряность прибыла издалека!",
+    ],
+    [
+      "Yabancı sikkeleri değiştiririm; her kentin kendi parası var.",
+      "I change foreign coins; every city has its own money.",
+      "Ich wechsle fremde Münzen; jede Stadt hat ihr eigenes Geld.",
+      "Я меняю чужие монеты: у каждого города свои деньги.",
+    ],
+    [
+      "Sikkeyi tartar, sesine kulak veririm; sahtesini hemen anlarım.",
+      "I weigh a coin and listen to its ring; I know a false one at once.",
+      "Ich wiege die Münze und höre auf ihren Klang; eine falsche erkenne ich sofort.",
+      "Я взвешиваю монету и слушаю её звон — фальшивку узнаю сразу.",
+    ],
+    [
+      "Pazarlık etmeden alan iki kat öder.",
+      "Whoever buys without haggling pays twice.",
+      "Wer ohne Feilschen kauft, zahlt doppelt.",
+      "Кто покупает не торгуясь, платит вдвое.",
+    ],
+    [
+      "Gelin, bakın! Taze, ucuz, en iyisi!",
+      "Come and look! Fresh, cheap, the best there is!",
+      "Kommt und schaut! Frisch, billig, das Beste!",
+      "Подходите, смотрите! Свежее, дёшево, лучшее!",
+    ],
+  ],
+  baker: [
+    [
+      "Hamuru gün doğmadan yoğururum; ekmek sıcakken satılır.",
+      "I knead the dough before dawn; bread sells while it is warm.",
+      "Ich knete den Teig vor Tagesanbruch; Brot verkauft sich, solange es warm ist.",
+      "Я замешиваю тесто до рассвета: хлеб продают горячим.",
+    ],
+    [
+      "Kubbeli fırını odunla ısıtır, külü süpürür, ekmekleri içine sürerim.",
+      "I heat the domed oven with wood, sweep out the ashes and slide the loaves in.",
+      "Ich heize den Kuppelofen mit Holz, kehre die Asche aus und schiebe die Brote hinein.",
+      "Я топлю купольную печь дровами, выметаю золу и сажаю хлебы.",
+    ],
+    [
+      "Unu taş değirmenlerde öğütürüz; ekmekte biraz kum olması bundandır.",
+      "The flour is ground between millstones; that is why bread has a little grit in it.",
+      "Das Mehl wird zwischen Mühlsteinen gemahlen; darum ist etwas Sand im Brot.",
+      "Муку мелют жерновами — оттого в хлебе бывает песок.",
+    ],
+    [
+      "Somunları pişirmeden önce dilimlere çizerim, kolay bölünsün diye.",
+      "I score the loaves into wedges before baking, so they break apart easily.",
+      "Ich ritze die Laibe vor dem Backen in Stücke, damit man sie leicht bricht.",
+      "Перед выпечкой я надрезаю караваи на доли, чтобы их легко было ломать.",
+    ],
+    [
+      "Buğday ekmeği varlıklıların, arpa ekmeği yoksulların.",
+      "Wheat bread is for those with money, barley bread for the poor.",
+      "Weizenbrot ist für die Wohlhabenden, Gerstenbrot für die Armen.",
+      "Пшеничный хлеб — для богатых, ячменный — для бедных.",
+    ],
+    [
+      "Komşular kendi hamurlarını getirir, ben fırınımda pişiririm.",
+      "The neighbours bring their own dough and I bake it in my oven.",
+      "Die Nachbarn bringen ihren eigenen Teig, und ich backe ihn in meinem Ofen.",
+      "Соседи приносят своё тесто, а я пеку его в своей печи.",
+    ],
+  ],
+  butcher: [
+    [
+      "Satırı bir kez indiririm; kemik temiz ayrılmalı.",
+      "I bring the cleaver down once; the bone must part cleanly.",
+      "Ich lasse das Hackmesser einmal niederfahren; der Knochen muss sauber brechen.",
+      "Я опускаю тесак один раз — кость должна разойтись чисто.",
+    ],
+    [
+      "Kurban edilen hayvanın etinin çoğu satılır ya da şölende yenir.",
+      "Most of the meat of a sacrificed animal is sold, or eaten at the feast.",
+      "Das meiste Fleisch eines Opfertiers wird verkauft oder beim Festmahl gegessen.",
+      "Большую часть мяса жертвенного животного продают или съедают на пиру.",
+    ],
+    [
+      "En çok keçi ve koyun eti satılır; sığır eti pahalıdır.",
+      "Goat and mutton sell best; beef is dear.",
+      "Ziegen- und Hammelfleisch gehen am besten; Rindfleisch ist teuer.",
+      "Лучше всего берут козлятину и баранину; говядина дорогая.",
+    ],
+    [
+      "Et çabuk bozulur; tuzlar ya da tütsülerim.",
+      "Meat spoils fast, so I salt it or smoke it.",
+      "Fleisch verdirbt schnell, also salze oder räuchere ich es.",
+      "Мясо быстро портится, поэтому я его солю или копчу.",
+    ],
+    [
+      "Çengellerdeki parçalar gün bitmeden satılmalı.",
+      "What hangs on the hooks has to be sold before the day is out.",
+      "Was an den Haken hängt, muss vor Abend verkauft sein.",
+      "Всё, что висит на крюках, надо продать до вечера.",
+    ],
+    [
+      "Önlüğüm kandan kararmış; bu iş temiz değildir.",
+      "My apron is dark with blood; this is not clean work.",
+      "Meine Schürze ist dunkel vom Blut; das ist keine saubere Arbeit.",
+      "Мой фартук потемнел от крови — работа нечистая.",
+    ],
+  ],
+  cook: [
+    [
+      "Kazanda mercimekle et kaynıyor; bir kepçesi bir bakır sikke.",
+      "Lentils and meat are boiling in the pot; a ladleful costs a copper coin.",
+      "Im Kessel kochen Linsen und Fleisch; eine Kelle kostet eine Kupfermünze.",
+      "В котле варятся чечевица и мясо; черпак стоит медную монету.",
+    ],
+    [
+      "Evlerin çoğunda mutfak yok; insanlar sıcak yemeği sokaktan alır.",
+      "Most homes have no kitchen; people buy their hot food in the street.",
+      "Die meisten Wohnungen haben keine Küche; warmes Essen kauft man auf der Straße.",
+      "В большинстве жилищ нет кухни; горячую еду покупают на улице.",
+    ],
+    [
+      "Tuz, kekik, sirke: yemeğin tadı bunlarla çıkar.",
+      "Salt, thyme and vinegar: that is what gives food its taste.",
+      "Salz, Thymian und Essig: Das gibt dem Essen den Geschmack.",
+      "Соль, чабрец и уксус — вот что даёт еде вкус.",
+    ],
+    [
+      "Ateşi canlı tutmak, karıştırmak kadar önemlidir.",
+      "Keeping the fire alive matters as much as stirring.",
+      "Das Feuer am Leben zu halten ist so wichtig wie das Rühren.",
+      "Поддерживать огонь так же важно, как помешивать.",
+    ],
+    [
+      "Bayram yemeği için sabahtan beri pişiriyorum.",
+      "I have been cooking since morning for the festival meal.",
+      "Ich koche seit dem Morgen für das Festmahl.",
+      "С утра готовлю праздничную трапезу.",
+    ],
+    [
+      "Arpa lapası karın doyurmanın en ucuz yoludur.",
+      "Barley porridge is the cheapest way to fill a belly.",
+      "Gerstenbrei ist der billigste Weg, satt zu werden.",
+      "Ячменная каша — самый дешёвый способ наесться.",
+    ],
+  ],
+  carpenter: [
+    [
+      "Testere demirden; dişlerini her gün eğeyle bilerim.",
+      "The saw is iron; I sharpen its teeth with a file every day.",
+      "Die Säge ist aus Eisen; ich schärfe ihre Zähne jeden Tag mit der Feile.",
+      "Пила железная; каждый день я точу её зубья напильником.",
+    ],
+    [
+      "Tavan kirişleri, kapılar, sandıklar: hepsi benim işim.",
+      "Roof beams, doors, chests: all of that is my work.",
+      "Dachbalken, Türen, Truhen: das alles ist meine Arbeit.",
+      "Балки, двери, сундуки — всё это моя работа.",
+    ],
+    [
+      "Çivi pahalı; tahtaları zıvanayla birleştiririm.",
+      "Nails are dear, so I join the timbers with mortise and tenon.",
+      "Nägel sind teuer, also verbinde ich die Hölzer mit Zapfen.",
+      "Гвозди дороги, поэтому я соединяю доски шипом и пазом.",
+    ],
+    [
+      "En iyi kereste dağlardan gelir: sedir ve çam.",
+      "The best timber comes down from the mountains: cedar and pine.",
+      "Das beste Holz kommt aus den Bergen: Zeder und Kiefer.",
+      "Лучший лес везут с гор: кедр и сосну.",
+    ],
+    [
+      "Tahtayı sehpaya bastırır, çizgiye göre keserim.",
+      "I hold the plank down on the trestle and cut to the line.",
+      "Ich drücke das Brett auf den Bock und säge an der Linie entlang.",
+      "Я прижимаю доску к козлам и пилю по разметке.",
+    ],
+    [
+      "İskeleyi de biz kurarız; ustalar onsuz yükselemez.",
+      "We put up the scaffolding too; the masons cannot climb without it.",
+      "Auch die Gerüste bauen wir; ohne sie kommen die Maurer nicht hinauf.",
+      "Леса тоже ставим мы — без них каменщикам не подняться.",
+    ],
+  ],
+  painter: [
+    [
+      "Fresk, sıva yaşken boyanır; acele etmem gerek.",
+      "A fresco is painted while the plaster is wet, so I have to be quick.",
+      "Ein Fresko malt man, solange der Putz feucht ist; ich muss mich beeilen.",
+      "Фреску пишут по сырой штукатурке, так что надо спешить.",
+    ],
+    [
+      "Kırmızı aşı toprağından, mavi ise pahalı Mısır mavisinden.",
+      "The red comes from ochre, the blue from costly Egyptian blue.",
+      "Das Rot kommt aus Ocker, das Blau aus teurem Ägyptisch Blau.",
+      "Красный — из охры, синий — из дорогой египетской лазури.",
+    ],
+    [
+      "Ev sahibi duvarlarında bahçeler, kuşlar ve tiyatro maskeleri istiyor.",
+      "The owner wants gardens, birds and theatre masks on his walls.",
+      "Der Hausherr will Gärten, Vögel und Theatermasken an seinen Wänden.",
+      "Хозяин хочет на стенах сады, птиц и театральные маски.",
+    ],
+    [
+      "Duvarlar birkaç kuşakta bir yeniden boyanır; moda değişir.",
+      "Walls are repainted every few generations; fashions change.",
+      "Die Wände werden alle paar Generationen neu bemalt; die Mode ändert sich.",
+      "Стены перекрашивают каждые несколько поколений: мода меняется.",
+    ],
+    [
+      "Fırçalarım hayvan kılından; ince işler için en yumuşağı.",
+      "My brushes are made of animal hair, the softest for fine work.",
+      "Meine Pinsel sind aus Tierhaar, die weichsten für feine Arbeit.",
+      "Мои кисти из звериного волоса, самые мягкие — для тонкой работы.",
+    ],
+    [
+      "Önce hatları kazırım, sonra renkleri sürerim.",
+      "First I scratch in the outlines, then I lay on the colours.",
+      "Zuerst ritze ich die Umrisse ein, dann trage ich die Farben auf.",
+      "Сначала я процарапываю контуры, потом кладу краски.",
+    ],
+  ],
+  servant: [
+    [
+      "Avluyu her sabah süpürürüm; toz hiç bitmez.",
+      "I sweep the court every morning; the dust never ends.",
+      "Ich fege jeden Morgen den Hof; der Staub nimmt kein Ende.",
+      "Каждое утро я мету двор — пыли нет конца.",
+    ],
+    [
+      "Evin suyunu çeşmeden ben taşırım.",
+      "I carry the household's water from the fountain.",
+      "Ich trage das Wasser des Hauses vom Brunnen.",
+      "Воду для дома ношу из фонтана я.",
+    ],
+    [
+      "Efendimin konukları gelecek; her yer temiz olmalı.",
+      "My master's guests are coming; everything has to be clean.",
+      "Die Gäste meines Herrn kommen; alles muss sauber sein.",
+      "К хозяину придут гости — всё должно быть чисто.",
+    ],
+    [
+      "Süpürgem çalı dallarından bağlanmış.",
+      "My broom is a bundle of twigs tied together.",
+      "Mein Besen ist ein Bündel zusammengebundener Zweige.",
+      "Моя метла — пучок связанных прутьев.",
+    ],
+    [
+      "Azat edilmeyi umuyorum; biraz biriktirdim.",
+      "I hope to be freed one day; I have put a little money by.",
+      "Ich hoffe, eines Tages freigelassen zu werden; ich habe etwas gespart.",
+      "Надеюсь когда-нибудь получить свободу — я кое-что скопил.",
+    ],
+    [
+      "Akşam kandilleri yakmak ve yağlarını doldurmak da bana düşer.",
+      "Lighting the lamps at dusk and filling their oil is my job too.",
+      "Die Lampen am Abend anzuzünden und Öl nachzufüllen ist auch meine Aufgabe.",
+      "Зажигать вечером светильники и подливать масло — тоже моя забота.",
+    ],
+  ],
+  porter: [
+    [
+      "Amforayı sırığa asar, iki kişi omuzlarımızda taşırız.",
+      "We hang the amphora from the pole and carry it on our two shoulders.",
+      "Wir hängen die Amphore an die Stange und tragen sie zu zweit auf den Schultern.",
+      "Мы подвешиваем амфору на шест и несём её вдвоём на плечах.",
+    ],
+    [
+      "Dolu bir amfora, bir adamın uzağa taşıyabileceğinden ağırdır.",
+      "A full amphora is more than one man can carry far.",
+      "Eine volle Amphore ist mehr, als ein Mann weit tragen kann.",
+      "Полная амфора — больше, чем один человек унесёт далеко.",
+    ],
+    [
+      "Gemiden ambara, ambardan pazara: bütün gün yürürüz.",
+      "From ship to store, from store to market: we walk all day.",
+      "Vom Schiff zum Speicher, vom Speicher zum Markt: Wir laufen den ganzen Tag.",
+      "С корабля на склад, со склада на рынок — весь день на ногах.",
+    ],
+    [
+      "Ücretimizi yük başına alırız.",
+      "We are paid by the load.",
+      "Wir werden nach Ladungen bezahlt.",
+      "Нам платят за каждую ношу.",
+    ],
+    [
+      "Adımımızı uydurmazsak yük sallanır.",
+      "If we do not keep in step, the load swings.",
+      "Wenn wir nicht im Gleichschritt gehen, schaukelt die Last.",
+      "Если не идти в ногу, груз раскачивается.",
+    ],
+    [
+      "Bir çuval buğday: bu kentin ekmeği uzak tarlalardan gelir.",
+      "A sack of wheat: this town's bread comes from fields far away.",
+      "Ein Sack Weizen: Das Brot dieser Stadt kommt von fernen Feldern.",
+      "Мешок пшеницы: хлеб этого города растёт на далёких полях.",
+    ],
+  ],
+  farmer: [
+    [
+      "Karasaban toprağı çizer, devirmez; o yüzden iki kez, çapraz süreriz.",
+      "The ard scratches the soil rather than turning it, so we plough twice, crosswise.",
+      "Der Hakenpflug ritzt den Boden, statt ihn zu wenden; darum pflügen wir zweimal, über Kreuz.",
+      "Рало царапает землю, а не переворачивает, поэтому пашем дважды, крест-накрест.",
+    ],
+    [
+      "Öküzlerim boyunduruğa alışkın; sesimi tanırlar.",
+      "My oxen are used to the yoke; they know my voice.",
+      "Meine Ochsen sind ans Joch gewöhnt; sie kennen meine Stimme.",
+      "Мои волы привыкли к ярму и знают мой голос.",
+    ],
+    [
+      "Ekim sonbaharda, yağmurlar başlayınca yapılır.",
+      "We sow in autumn, when the rains begin.",
+      "Gesät wird im Herbst, wenn der Regen einsetzt.",
+      "Сеем осенью, когда начинаются дожди.",
+    ],
+    [
+      "Bir yıl buğday, bir yıl nadas: toprak dinlenmeli.",
+      "A year of wheat, a year of fallow: the land has to rest.",
+      "Ein Jahr Weizen, ein Jahr Brache: Der Boden muss ruhen.",
+      "Год пшеница, год пар — земле нужен отдых.",
+    ],
+    [
+      "Çapayla yabani otları temizlerim, yoksa ürün cılız kalır.",
+      "I clear the weeds with the hoe, or the crop will be thin.",
+      "Ich jäte mit der Hacke, sonst wird die Ernte mager.",
+      "Я выпалываю сорняки мотыгой, иначе урожай будет скудным.",
+    ],
+    [
+      "Hasadın bir kısmı vergi olarak gider.",
+      "Part of the harvest goes in tax.",
+      "Ein Teil der Ernte geht als Steuer weg.",
+      "Часть урожая уходит в налог.",
+    ],
+  ],
+  herder: [
+    [
+      "Değneğimin kancasıyla kaçan kuzuyu bacağından yakalarım.",
+      "With the hook of my crook I catch a straying lamb by the leg.",
+      "Mit dem Haken meines Stabs fange ich ein ausreißendes Lamm am Bein.",
+      "Крюком посоха я ловлю отбившегося ягнёнка за ногу.",
+    ],
+    [
+      "Yazın sürüyü yaylaya çıkarırız.",
+      "In summer we take the flock up to the high pastures.",
+      "Im Sommer treiben wir die Herde auf die Hochweiden.",
+      "Летом мы гоним стадо на горные пастбища.",
+    ],
+    [
+      "Köpeklerim kurdu uzak tutar.",
+      "My dogs keep the wolves away.",
+      "Meine Hunde halten die Wölfe fern.",
+      "Мои собаки отгоняют волков.",
+    ],
+    [
+      "Sütten peynir yapılır; yün de kırkımda satılır.",
+      "The milk becomes cheese, and the wool is sold at shearing.",
+      "Aus der Milch wird Käse, die Wolle verkauft man bei der Schur.",
+      "Из молока делают сыр, а шерсть продают после стрижки.",
+    ],
+    [
+      "Her hayvanımı tanırım; akşam yine sayarım.",
+      "I know every one of my animals, and I count them again at dusk.",
+      "Ich kenne jedes meiner Tiere und zähle sie abends noch einmal.",
+      "Я знаю каждое животное и вечером снова их пересчитываю.",
+    ],
+    [
+      "Bugün bir kuzum kurbanlık olarak tapınağa satıldı.",
+      "Today one of my lambs was sold to the temple for a sacrifice.",
+      "Heute wurde eines meiner Lämmer als Opfer an den Tempel verkauft.",
+      "Сегодня одного из моих ягнят продали храму для жертвы.",
+    ],
+  ],
+  elder: [
+    [
+      "Ben gençken bu meydan daha küçüktü.",
+      "When I was young this square was smaller.",
+      "Als ich jung war, war dieser Platz kleiner.",
+      "Когда я был молод, эта площадь была меньше.",
+    ],
+    [
+      "Torunlarım okula gidiyor; ben gidemedim.",
+      "My grandchildren go to school; I never could.",
+      "Meine Enkel gehen zur Schule; ich konnte das nie.",
+      "Мои внуки ходят в школу, а мне не довелось.",
+    ],
+    [
+      "Her gün bu bankta oturur, kentin haberlerini konuşuruz.",
+      "Every day we sit on this bench and talk over the town's news.",
+      "Jeden Tag sitzen wir auf dieser Bank und besprechen die Neuigkeiten der Stadt.",
+      "Каждый день мы сидим на этой скамье и обсуждаем городские новости.",
+    ],
+    [
+      "Yaşlılara saygı gösterilir; sözümüz dinlenir.",
+      "The old are respected here; people listen to what we say.",
+      "Die Alten werden geachtet; man hört auf uns.",
+      "Стариков здесь уважают и слушают.",
+    ],
+    [
+      "Dizlerim ağrıyor ama hâlâ her sabah yürürüm.",
+      "My knees ache, but I still walk every morning.",
+      "Meine Knie schmerzen, aber ich gehe noch jeden Morgen spazieren.",
+      "Колени болят, но я всё ещё гуляю каждое утро.",
+    ],
+    [
+      "Kaç bayram, kaç kıtlık gördüm, sayamam.",
+      "I have seen more festivals and famines than I can count.",
+      "Ich habe mehr Feste und Hungersnöte gesehen, als ich zählen kann.",
+      "Я видел больше праздников и голодных лет, чем могу сосчитать.",
+    ],
+  ],
+  beggar: [
+    [
+      "Bir sikke, bir lokma ekmek... Tanrılar cömertleri sever.",
+      "A coin, a mouthful of bread... the gods love the generous.",
+      "Eine Münze, ein Bissen Brot... die Götter lieben die Freigebigen.",
+      "Монетку, кусок хлеба... боги любят щедрых.",
+    ],
+    [
+      "Savaşta yaralandım; artık çalışamıyorum.",
+      "I was wounded in war; I can no longer work.",
+      "Ich wurde im Krieg verwundet; arbeiten kann ich nicht mehr.",
+      "Меня ранили на войне, работать я больше не могу.",
+    ],
+    [
+      "En çok bayram günlerinde, tapınak kapısında verilir.",
+      "People give most on feast days, at the temple gate.",
+      "Am meisten gibt man an Festtagen, am Tempeltor.",
+      "Больше всего подают в праздники, у ворот храма.",
+    ],
+    [
+      "Kent bazen yoksullara tahıl dağıtır, ama herkese yetmez.",
+      "Sometimes the city hands out grain to the poor, but there is never enough for all.",
+      "Manchmal verteilt die Stadt Getreide an die Armen, doch es reicht nie für alle.",
+      "Иногда город раздаёт бедным зерно, но всем не хватает.",
+    ],
+    [
+      "Geceyi revaklarda geçiririm; çatısı yağmuru tutar.",
+      "I spend the night in the colonnades; their roof keeps off the rain.",
+      "Die Nacht verbringe ich in den Säulenhallen; ihr Dach hält den Regen ab.",
+      "Ночую под портиками — их крыша укрывает от дождя.",
+    ],
+    [
+      "Bana değil, kâseye bak.",
+      "Don't look at me, look at the bowl.",
+      "Schau nicht mich an, schau in die Schale.",
+      "Не на меня смотри — на чашу.",
+    ],
+  ],
+  performer: [
+    [
+      "Üç topu havada tutmak kolay; dördüncüsü zor.",
+      "Three balls in the air are easy; the fourth is hard.",
+      "Drei Bälle in der Luft sind leicht; der vierte ist schwer.",
+      "Три мяча в воздухе — легко; четвёртый — трудно.",
+    ],
+    [
+      "Bayramlarda meydanda oynarız, kalabalık sikke atar.",
+      "On feast days we perform in the square and the crowd throws coins.",
+      "An Festtagen treten wir auf dem Platz auf, und die Leute werfen Münzen.",
+      "По праздникам мы выступаем на площади, и толпа бросает монеты.",
+    ],
+    [
+      "Def ve aulos çalarken dans ederiz.",
+      "We dance to the frame drum and the pipes.",
+      "Wir tanzen zur Rahmentrommel und zum Aulos.",
+      "Мы танцуем под бубен и авлос.",
+    ],
+    [
+      "Bu dans tanrıça için; adımlarını annemden öğrendim.",
+      "This dance is for the goddess; I learned its steps from my mother.",
+      "Dieser Tanz ist für die Göttin; die Schritte lernte ich von meiner Mutter.",
+      "Этот танец — для богини; шаги я выучила у матери.",
+    ],
+    [
+      "Kentten kente dolaşırız; bir yerde mutlaka bayram vardır.",
+      "We go from town to town; somewhere there is always a festival.",
+      "Wir ziehen von Stadt zu Stadt; irgendwo ist immer ein Fest.",
+      "Мы ходим из города в город — где-нибудь всегда праздник.",
+    ],
+    [
+      "Hokkabazlar ve cambazlar oyun aralarında seyirciyi eğlendirir.",
+      "Jugglers and acrobats keep the crowd amused between the plays.",
+      "Gaukler und Akrobaten unterhalten das Publikum zwischen den Stücken.",
+      "Жонглёры и акробаты развлекают публику между представлениями.",
+    ],
+  ],
+  teacher: [
+    [
+      "Önce harfler, sonra heceler, sonra Homeros.",
+      "First the letters, then the syllables, then Homer.",
+      "Erst die Buchstaben, dann die Silben, dann Homer.",
+      "Сначала буквы, потом слоги, потом Гомер.",
+    ],
+    [
+      "Ders şafakta başlar, öğleye kadar sürer.",
+      "Lessons begin at dawn and go on till noon.",
+      "Der Unterricht beginnt im Morgengrauen und dauert bis Mittag.",
+      "Уроки начинаются на рассвете и идут до полудня.",
+    ],
+    [
+      "Ailelerden ayda birkaç sikke alırım; az ama düzenli.",
+      "Parents pay me a few coins a month: not much, but regular.",
+      "Die Eltern zahlen mir ein paar Münzen im Monat: wenig, aber regelmäßig.",
+      "Родители платят мне несколько монет в месяц — немного, зато регулярно.",
+    ],
+    [
+      "Düşünmek soruyla başlar: ben sorarım, siz cevap verin.",
+      "Thinking begins with a question: I ask, and you answer.",
+      "Denken beginnt mit einer Frage: Ich frage, ihr antwortet.",
+      "Мысль начинается с вопроса: я спрашиваю, вы отвечаете.",
+    ],
+    [
+      "Hatip olmak isteyen ezberlemeli ve güzel konuşmalı.",
+      "Whoever would be an orator must learn by heart and speak well.",
+      "Wer Redner werden will, muss auswendig lernen und gut sprechen.",
+      "Кто хочет стать оратором, должен учить наизусть и говорить красиво.",
+    ],
+    [
+      "Felsefe meydanda ve revakta öğretilir; okul binası gerekmez.",
+      "Philosophy is taught in the square and the stoa; it needs no school building.",
+      "Philosophie lehrt man auf dem Platz und in der Stoa; ein Schulhaus braucht sie nicht.",
+      "Философии учат на площади и в портике — школьное здание ей не нужно.",
+    ],
+  ],
+  mason: [
+    [
+      "Tokmakla keskiye vururum; taş yavaş yavaş biçim alır.",
+      "I strike the chisel with the mallet, and the stone takes shape bit by bit.",
+      "Ich schlage mit dem Klöpfel auf den Meißel, und der Stein nimmt nach und nach Gestalt an.",
+      "Я бью киянкой по зубилу, и камень понемногу обретает форму.",
+    ],
+    [
+      "Mermer ocaktan kaba yontulmuş gelir; inceliği burada verilir.",
+      "The marble comes from the quarry roughly shaped; the fine work is done here.",
+      "Der Marmor kommt grob behauen aus dem Bruch; die Feinarbeit geschieht hier.",
+      "Мрамор привозят из каменоломни грубо обтёсанным; тонкая работа — здесь.",
+    ],
+    [
+      "Heykel önce kabaca çıkarılır, sonra törpü ve zımparayla düzeltilir.",
+      "A statue is first blocked out, then smoothed with rasps and abrasives.",
+      "Eine Statue wird erst grob herausgehauen, dann mit Raspeln und Schleifmitteln geglättet.",
+      "Статую сначала грубо вырубают, потом выравнивают рашпилем и шлифуют.",
+    ],
+    [
+      "Bitince heykel boyanır; çıplak mermer bırakılmaz.",
+      "When it is finished the statue is painted; marble is not left bare.",
+      "Wenn sie fertig ist, wird die Statue bemalt; nackter Marmor bleibt nicht.",
+      "Готовую статую раскрашивают — голым мрамор не оставляют.",
+    ],
+    [
+      "Taş ustalarına gündelik ödenir; yapı hesapları taşa yazılır.",
+      "Masons are paid by the day, and the building accounts are cut in stone.",
+      "Steinmetze werden tageweise bezahlt, und die Bauabrechnungen meißelt man in Stein.",
+      "Каменщикам платят поденно, а строительные счета высекают на камне.",
+    ],
+    [
+      "Sütun tamburları tek tek yerine oturtulur, demir kenetle bağlanır.",
+      "The column drums are set one by one and tied with iron clamps.",
+      "Die Säulentrommeln werden einzeln versetzt und mit Eisenklammern verbunden.",
+      "Барабаны колонн ставят по одному и скрепляют железными скобами.",
     ],
   ],
 };
@@ -1075,6 +1838,26 @@ const NEOLITHIC: Pool = {
       "I kneel and lay my hands on the stone; it is cool and old.",
       "Ich knie nieder und lege die Hände auf den Stein; er ist kühl und alt.",
       "Я становлюсь на колени и кладу руки на камень — он прохладный и древний.",
+    ],
+  ],
+  baker: [
+    [
+      "Yabani tahılı taşta öğütürüz; bu tepe binlerce öğütme taşıyla dolu.",
+      "We grind the wild grain on stone; this hill is full of thousands of grinding stones.",
+      "Wir mahlen das wilde Getreide auf Stein; dieser Hügel ist voller Mahlsteine.",
+      "Мы мелем дикое зерно на камне — этот холм полон тысяч зернотёрок.",
+    ],
+    [
+      "Ezilen tahıldan lapa yapılır, belki şölen için içki de.",
+      "The ground grain makes porridge, and perhaps drink for the feast.",
+      "Aus dem gemahlenen Korn wird Brei, vielleicht auch ein Trank fürs Fest.",
+      "Из молотого зерна варят кашу, а может, и напиток для пира.",
+    ],
+    [
+      "Taşı taşa sürterim; kollarım güçlü olmalı.",
+      "I rub stone against stone; my arms have to be strong.",
+      "Ich reibe Stein auf Stein; meine Arme müssen kräftig sein.",
+      "Я тру камень о камень — руки должны быть сильными.",
     ],
   ],
 };
@@ -1693,6 +2476,106 @@ const HITTITE: Pool = {
       "Пиво варят из ячменя и на празднике раздают всем.",
     ],
   ],
+  baker: [
+    [
+      "Tahılı el değirmeninde öğütürüm; ekmeğin unu böyle olur.",
+      "I grind the grain on the hand quern; that is how bread flour is made.",
+      "Ich mahle das Getreide auf dem Handmahlstein; so entsteht Brotmehl.",
+      "Я мелю зерно на ручной зернотёрке — так получается мука для хлеба.",
+    ],
+    [
+      "Tabletlerde onlarca çeşit ekmeğin adı geçer.",
+      "The tablets name dozens of different kinds of bread.",
+      "Die Tontafeln nennen Dutzende Arten von Brot.",
+      "На табличках названы десятки сортов хлеба.",
+    ],
+    [
+      "Tanrılara da ekmek sunulur, ayinlerde bölünür.",
+      "Bread is offered to the gods too, and broken in the rites.",
+      "Auch den Göttern opfert man Brot und bricht es im Ritual.",
+      "Хлеб приносят и богам, и преломляют его в обрядах.",
+    ],
+  ],
+  herder: [
+    [
+      "Koyunlar ve keçiler ovada; kuzular ilkbaharda doğar.",
+      "Sheep and goats on the plain; the lambs are born in spring.",
+      "Schafe und Ziegen auf der Ebene; die Lämmer kommen im Frühjahr.",
+      "Овцы и козы на равнине; ягнята родятся весной.",
+    ],
+    [
+      "Hayvanların bir kısmı tapınaklara adanır.",
+      "Some of the animals are given to the temples.",
+      "Ein Teil der Tiere wird den Tempeln geweiht.",
+      "Часть скота посвящают храмам.",
+    ],
+    [
+      "Kışın sürüyü korunaklı vadilere indiririz.",
+      "In winter we bring the flock down into the sheltered valleys.",
+      "Im Winter treiben wir die Herde in die geschützten Täler.",
+      "Зимой мы сгоняем стадо в укрытые долины.",
+    ],
+  ],
+  merchant: [
+    [
+      "Küplerde yağ ve şarap var; gelin bakın!",
+      "There is oil and wine in the jars: come and see!",
+      "In den Krügen ist Öl und Wein: Kommt und seht!",
+      "В кувшинах масло и вино — подходите, смотрите!",
+    ],
+    [
+      "Burada sikke yok; tartılmış gümüşle ödenir.",
+      "There are no coins here; we pay in weighed silver.",
+      "Hier gibt es keine Münzen; man zahlt mit abgewogenem Silber.",
+      "Монет здесь нет — платят взвешенным серебром.",
+    ],
+    [
+      "Asurlu tüccarlar bu yolları çok önceden açtı.",
+      "Assyrian merchants opened these roads long ago.",
+      "Assyrische Kaufleute haben diese Wege schon vor langer Zeit erschlossen.",
+      "Ассирийские купцы проложили эти пути давным-давно.",
+    ],
+  ],
+  scribe: [
+    [
+      "Kil tablete kamışla çivi yazısı bastırırım.",
+      "I press cuneiform signs into the clay tablet with a reed.",
+      "Ich drücke mit dem Schilfgriffel Keilschrift in die Tontafel.",
+      "Я выдавливаю клинопись на глиняной табличке тростинкой.",
+    ],
+    [
+      "Kapıdan giren yükleri kaydederim; saray her şeyi bilmek ister.",
+      "I record the loads that come through the gate; the palace wants to know everything.",
+      "Ich verzeichne die Lasten, die durchs Tor kommen; der Palast will alles wissen.",
+      "Я записываю грузы, что проходят через ворота: дворец хочет знать всё.",
+    ],
+    [
+      "Hititçenin yanında Akadca da öğrendim; krallara mektuplar o dilde yazılır.",
+      "Besides Hittite I learned Akkadian; letters to other kings are written in it.",
+      "Neben Hethitisch lernte ich Akkadisch; Briefe an andere Könige schreibt man darin.",
+      "Кроме хеттского я выучил аккадский — на нём пишут письма другим царям.",
+    ],
+  ],
+  weaver: [
+    [
+      "Yün eğiriyorum; kumaşın çoğu evlerde dokunur.",
+      "I am spinning wool; most cloth is woven at home.",
+      "Ich spinne Wolle; der meiste Stoff wird zu Hause gewebt.",
+      "Я пряду шерсть — большую часть ткани ткут дома.",
+    ],
+    [
+      "Tanrı heykellerine de giysi dokunur; tabletler bunu yazar.",
+      "Clothes are woven for the statues of the gods too; the tablets record it.",
+      "Auch für die Götterbilder webt man Gewänder; die Tafeln verzeichnen es.",
+      "Ткут одежды и для статуй богов — это записано на табличках.",
+    ],
+    [
+      "İğ dönerken ipliği ince ve eşit çekerim.",
+      "As the spindle turns I draw the thread thin and even.",
+      "Während die Spindel kreist, ziehe ich den Faden dünn und gleichmäßig.",
+      "Пока крутится веретено, я тяну нить тонкой и ровной.",
+    ],
+  ],
 };
 
 const TROY: Pool = {
@@ -1778,6 +2661,86 @@ const TROY: Pool = {
       "We ask the gods to protect the city.",
       "Wir bitten die Götter, die Stadt zu schützen.",
       "Мы просим богов защитить город.",
+    ],
+  ],
+  farmer: [
+    [
+      "Arpa ve buğday ekeriz; ovanın toprağı bereketli.",
+      "We sow barley and wheat; the soil of the plain is rich.",
+      "Wir säen Gerste und Weizen; der Boden der Ebene ist fruchtbar.",
+      "Мы сеем ячмень и пшеницу — земля на равнине плодородна.",
+    ],
+    [
+      "Saban ağaçtan, ucu sert; öküzler çeker.",
+      "The plough is wooden with a hardened point, and oxen pull it.",
+      "Der Pflug ist aus Holz mit harter Spitze, und Ochsen ziehen ihn.",
+      "Плуг деревянный, с твёрдым наконечником, тянут его волы.",
+    ],
+    [
+      "Hasattan sonra tahıl kaledeki büyük küplere konur.",
+      "After the harvest the grain goes into the great jars in the citadel.",
+      "Nach der Ernte kommt das Getreide in die großen Vorratsgefäße der Burg.",
+      "После жатвы зерно ссыпают в большие пифосы в крепости.",
+    ],
+  ],
+  herder: [
+    [
+      "Koyunlarımın yünü dokumacılara gider.",
+      "My sheep's wool goes to the weavers.",
+      "Die Wolle meiner Schafe geht an die Weberinnen.",
+      "Шерсть моих овец идёт ткачихам.",
+    ],
+    [
+      "Ovada atlar da otlar; ozanlar bize 'at terbiyecileri' der.",
+      "Horses graze the plain as well; the singers call us horse-tamers.",
+      "Auf der Ebene weiden auch Pferde; die Sänger nennen uns Pferdebändiger.",
+      "На равнине пасутся и кони; певцы зовут нас укротителями коней.",
+    ],
+    [
+      "Akşam sürüyü surların dibine getiririm.",
+      "At dusk I bring the flock in under the walls.",
+      "Abends treibe ich die Herde unter die Mauern.",
+      "К вечеру я пригоняю стадо к стенам.",
+    ],
+  ],
+  potter: [
+    [
+      "Gri, perdahlı kaplar yaparım; bu kentin kendine özgü çanağı.",
+      "I make grey, burnished pots, this town's own ware.",
+      "Ich mache graue, polierte Gefäße, die eigene Ware dieser Stadt.",
+      "Я делаю серую лощёную посуду — особую керамику этого города.",
+    ],
+    [
+      "Çark hızlı döner; kap ince ve düzgün çıkar.",
+      "The wheel spins fast and the pot comes out thin and even.",
+      "Die Scheibe dreht sich schnell, und das Gefäß wird dünn und gleichmäßig.",
+      "Круг вращается быстро, и сосуд выходит тонким и ровным.",
+    ],
+    [
+      "Kaplarım denizden gelen tüccarlara da satılır.",
+      "My pots are sold to the traders who come by sea, too.",
+      "Meine Gefäße kaufen auch die Händler, die übers Meer kommen.",
+      "Мои сосуды покупают и купцы, что приплывают морем.",
+    ],
+  ],
+  weaver: [
+    [
+      "Ağırlıklı tezgâhta dokurum; ağırşaklar ipi gergin tutar.",
+      "I weave at the weighted loom; the weights keep the threads taut.",
+      "Ich webe am Gewichtswebstuhl; die Gewichte halten die Fäden straff.",
+      "Я тку на станке с грузилами — они держат нити натянутыми.",
+    ],
+    [
+      "Kalenin her evinde iğ ağırşakları bulunur; hepimiz ip eğiririz.",
+      "Every house in the citadel has spindle whorls; we all spin.",
+      "In jedem Haus der Burg gibt es Spinnwirtel; wir alle spinnen.",
+      "В каждом доме крепости есть пряслица — прядём все.",
+    ],
+    [
+      "Yünü koyunlarımızdan, rengi bitkilerden alırız.",
+      "The wool comes from our sheep, the colours from plants.",
+      "Die Wolle kommt von unseren Schafen, die Farben von Pflanzen.",
+      "Шерсть — от наших овец, краски — из растений.",
     ],
   ],
 };
@@ -1905,6 +2868,46 @@ const BYZANTINE: Pool = {
       "На праздничной литургии церковь полна до дверей.",
     ],
   ],
+  farmer: [
+    [
+      "Manastırın sebzesini kendimiz yetiştiririz: lahana, soğan, fasulye.",
+      "We grow the monastery's vegetables ourselves: cabbage, onions, beans.",
+      "Das Gemüse des Klosters ziehen wir selbst: Kohl, Zwiebeln, Bohnen.",
+      "Овощи для монастыря мы растим сами: капусту, лук, бобы.",
+    ],
+    [
+      "Dua ve emek: kuralımız ikisini de ister.",
+      "Prayer and labour: our rule asks for both.",
+      "Gebet und Arbeit: Unsere Regel verlangt beides.",
+      "Молитва и труд — наш устав требует того и другого.",
+    ],
+    [
+      "Dağda toprak az; bahçeyi taş setlerle yaptık.",
+      "There is little soil on the mountain; we built the garden on stone terraces.",
+      "Am Berg gibt es wenig Erde; den Garten haben wir auf Steinterrassen angelegt.",
+      "На горе мало земли — огород мы устроили на каменных террасах.",
+    ],
+  ],
+  scribe: [
+    [
+      "Kitapları elle kopyalarım; bir İncil aylar sürer.",
+      "I copy books by hand; a single Gospel book takes months.",
+      "Ich schreibe Bücher von Hand ab; ein einziges Evangeliar dauert Monate.",
+      "Я переписываю книги от руки; одно Евангелие занимает месяцы.",
+    ],
+    [
+      "Mürekkebi meşe mazısından, kalemi kamıştan yaparım.",
+      "I make ink from oak galls and pens from reeds.",
+      "Die Tinte mache ich aus Eichengallen, die Feder aus Schilfrohr.",
+      "Чернила я делаю из дубовых орешков, перо — из тростника.",
+    ],
+    [
+      "Sayfalar parşömen; her biri bir hayvanın derisinden.",
+      "The pages are parchment, each made from an animal's skin.",
+      "Die Seiten sind Pergament, jede aus der Haut eines Tieres.",
+      "Страницы из пергамента — каждая из шкуры животного.",
+    ],
+  ],
 };
 
 const ARMENIAN: Pool = {
@@ -1971,6 +2974,24 @@ const ARMENIAN: Pool = {
       "Ich verbrenne Weihrauch und segne die Gemeinde.",
       "Я возжигаю ладан и благословляю прихожан.",
     ],
+    [
+      "İncil kitabını kiliseye taşırım; kapağı gümüş işlemeli.",
+      "I carry the Gospel book into the church; its cover is worked in silver.",
+      "Ich trage das Evangeliar in die Kirche; sein Deckel ist mit Silber beschlagen.",
+      "Я несу Евангелие в храм; его оклад украшен серебром.",
+    ],
+    [
+      "Mumu önden taşırız; ışık Mesih'in ışığıdır.",
+      "We carry the candle before it; the light stands for the light of Christ.",
+      "Wir tragen die Kerze voraus; ihr Licht steht für das Licht Christi.",
+      "Свечу несут впереди: её свет — знак света Христова.",
+    ],
+    [
+      "Ayinler Ermenice yapılır; alfabemizi Mesrop Maştots yarattı.",
+      "The services are in Armenian; our alphabet was made by Mesrop Mashtots.",
+      "Der Gottesdienst ist armenisch; unser Alphabet schuf Mesrop Maschtoz.",
+      "Службы идут на армянском; наш алфавит создал Месроп Маштоц.",
+    ],
   ],
   soldier: [
     [
@@ -2010,6 +3031,64 @@ const ARMENIAN: Pool = {
       "At the feast-day service we all sing the hymns together.",
       "Beim Festgottesdienst singen wir alle zusammen die Hymnen.",
       "На праздничной службе мы все вместе поём гимны.",
+    ],
+  ],
+  merchant: [
+    [
+      "Kervan İran'dan geldi: ipek, baharat, boya.",
+      "The caravan has come from Persia: silk, spices, dyes.",
+      "Die Karawane kam aus Persien: Seide, Gewürze, Farbstoffe.",
+      "Караван пришёл из Персии: шёлк, пряности, краски.",
+    ],
+    [
+      "Ani'den geçen yol doğuyu batıya bağlar.",
+      "The road through Ani joins the east to the west.",
+      "Die Straße durch Ani verbindet den Osten mit dem Westen.",
+      "Дорога через Ани соединяет восток с западом.",
+    ],
+    [
+      "Develer günde uzun yol alır ve susuzluğa dayanır.",
+      "Camels cover long stages in a day and bear thirst well.",
+      "Kamele schaffen weite Tagesstrecken und ertragen den Durst.",
+      "Верблюды проходят за день долгий путь и легко терпят жажду.",
+    ],
+    [
+      "Bizans altını, Arap gümüşü: hepsini tartarak alırım.",
+      "Byzantine gold, Arab silver: I take them all by weight.",
+      "Byzantinisches Gold, arabisches Silber: Ich nehme alles nach Gewicht.",
+      "Византийское золото, арабское серебро — всё принимаю на вес.",
+    ],
+    [
+      "Kırmız böceğinden yapılan kırmızı boya buranın en değerli malı.",
+      "The red dye made from the cochineal insect is the costliest thing we sell here.",
+      "Das Rot aus der Cochenilleschildlaus ist die kostbarste Ware hier.",
+      "Красная краска из червеца — самый ценный товар здесь.",
+    ],
+    [
+      "Gece handa kalır, sabah yola devam ederiz.",
+      "We stay the night at the inn and go on at dawn.",
+      "Wir übernachten in der Herberge und ziehen im Morgengrauen weiter.",
+      "Ночуем на постоялом дворе, а на рассвете — снова в путь.",
+    ],
+  ],
+  mason: [
+    [
+      "Kesme tüfü kırmızı ve siyah taşla dönüşümlü dizeriz.",
+      "We lay the dressed tuff in courses of red and black stone.",
+      "Wir setzen den behauenen Tuff in Lagen aus rotem und schwarzem Stein.",
+      "Мы кладём тёсаный туф рядами красного и чёрного камня.",
+    ],
+    [
+      "Taşın yüzünü keskiyle düzeltirim; derzler incecik olmalı.",
+      "I dress the face of the stone with the chisel; the joints must be hair-thin.",
+      "Ich glätte die Steinfläche mit dem Meißel; die Fugen müssen haarfein sein.",
+      "Я ровняю лицо камня зубилом — швы должны быть тонкими, как волос.",
+    ],
+    [
+      "Duvarın içi harç ve molozla doldurulur; dışı kesme taşla kaplanır.",
+      "The core of the wall is filled with mortar and rubble, its face clad in dressed stone.",
+      "Das Mauerinnere füllt man mit Mörtel und Bruchstein, außen verkleidet man es mit Quadern.",
+      "Сердцевину стены заполняют раствором и бутом, снаружи облицовывают тёсаным камнем.",
     ],
   ],
 };
@@ -2124,6 +3203,24 @@ const VILLAGE_NEOLITHIC: Pool = {
       "Meine Mutter hat unsere Handabdrücke an die Wand gedrückt.",
       "Мама отпечатала наши ладошки на стене.",
     ],
+    [
+      "Aşık kemikleriyle oynuyoruz; kendi koyunlarımızın kemikleri.",
+      "We are playing knucklebones, from our own sheep.",
+      "Wir spielen mit Knöchelchen von unseren eigenen Schafen.",
+      "Мы играем в бабки — косточки от наших овец.",
+    ],
+    [
+      "Damdan dama atlamak yasak, ama herkes yapar.",
+      "Jumping from roof to roof is forbidden, but everyone does it.",
+      "Von Dach zu Dach springen ist verboten, aber alle tun es.",
+      "Прыгать с крыши на крышу запрещено, но все прыгают.",
+    ],
+    [
+      "Annem duvarları yeniden sıvarken ben de yardım ederim.",
+      "When my mother replasters the walls, I help her.",
+      "Wenn meine Mutter die Wände neu verputzt, helfe ich ihr.",
+      "Когда мама заново штукатурит стены, я ей помогаю.",
+    ],
   ],
   worshipper: [
     [
@@ -2163,6 +3260,66 @@ const VILLAGE_NEOLITHIC: Pool = {
       "When an old house comes down we build the new one in the same place, on top of it.",
       "Wenn ein altes Haus verfällt, bauen wir das neue an derselben Stelle, darauf.",
       "Когда старый дом рушится, новый строим на том же месте, поверх него.",
+    ],
+  ],
+  baker: [
+    [
+      "Tahılı taşta öğütür, ekmeği evdeki fırında pişiririz.",
+      "We grind the grain on a stone and bake the bread in the oven inside the house.",
+      "Wir mahlen das Korn auf dem Stein und backen das Brot im Ofen im Haus.",
+      "Мы мелем зерно на камне и печём хлеб в домашней печи.",
+    ],
+    [
+      "Buğday ve arpa köyün çevresindeki tarlalarda yetişir.",
+      "Wheat and barley grow in the fields round the village.",
+      "Weizen und Gerste wachsen auf den Feldern rund ums Dorf.",
+      "Пшеница и ячмень растут на полях вокруг селения.",
+    ],
+    [
+      "Öğütme taşları kuşaktan kuşağa geçer.",
+      "Grinding stones are handed down from one generation to the next.",
+      "Mahlsteine werden von Generation zu Generation weitergegeben.",
+      "Зернотёрки передаются из поколения в поколение.",
+    ],
+  ],
+  porter: [
+    [
+      "Sazları bataklıktan keseriz; hasır ve dam için.",
+      "We cut reeds in the marsh, for mats and for roofs.",
+      "Wir schneiden Schilf im Sumpf, für Matten und Dächer.",
+      "Мы режем тростник на болоте — для циновок и крыш.",
+    ],
+    [
+      "Damlar kirişlerin üstüne saz ve çamurla örtülür.",
+      "The roofs are laid with reeds and mud over the beams.",
+      "Die Dächer deckt man mit Schilf und Lehm über den Balken.",
+      "Крыши кроют тростником и глиной поверх балок.",
+    ],
+    [
+      "Yük ağır ama yol kısa: damdan dama yürürüz.",
+      "The load is heavy but the way is short: we walk from roof to roof.",
+      "Die Last ist schwer, doch der Weg kurz: Wir gehen von Dach zu Dach.",
+      "Ноша тяжёлая, но путь короткий — идём с крыши на крышу.",
+    ],
+  ],
+  weaver: [
+    [
+      "İği döndürürüm; ağırşak ipliği eşit tutar.",
+      "I twirl the spindle; the whorl keeps the thread even.",
+      "Ich drehe die Spindel; der Wirtel hält den Faden gleichmäßig.",
+      "Я кручу веретено — пряслице делает нить ровной.",
+    ],
+    [
+      "Bitki liflerinden ince kumaş dokunur; ölülerimizi de onunla sararız.",
+      "Fine cloth is woven from plant fibre; we wrap our dead in it too.",
+      "Aus Pflanzenfasern webt man feinen Stoff; auch unsere Toten hüllen wir darin.",
+      "Из растительных волокон ткут тонкую ткань; в неё же заворачивают умерших.",
+    ],
+    [
+      "Kemik iğnelerle dikeriz.",
+      "We sew with bone needles.",
+      "Wir nähen mit Knochennadeln.",
+      "Мы шьём костяными иглами.",
     ],
   ],
 };
@@ -2280,6 +3437,23 @@ export const ROLE_NAMES: Record<StoryRole, Localized> = {
   child: { tr: "Çocuk", en: "Child", de: "Kind", ru: "Ребёнок" },
   official: { tr: "Yönetici", en: "Magistrate", de: "Amtsträger", ru: "Магистрат" },
   spectator: { tr: "Seyirci", en: "Spectator", de: "Zuschauer", ru: "Зритель" },
+  potter: { tr: "Çömlekçi", en: "Potter", de: "Töpfer", ru: "Гончар" },
+  weaver: { tr: "Dokumacı", en: "Weaver", de: "Weberin", ru: "Ткачиха" },
+  scribe: { tr: "Kâtip", en: "Scribe", de: "Schreiber", ru: "Писец" },
+  merchant: { tr: "Tüccar", en: "Trader", de: "Händler", ru: "Купец" },
+  baker: { tr: "Fırıncı", en: "Baker", de: "Bäcker", ru: "Пекарь" },
+  butcher: { tr: "Kasap", en: "Butcher", de: "Metzger", ru: "Мясник" },
+  cook: { tr: "Aşçı", en: "Cook", de: "Koch", ru: "Повар" },
+  carpenter: { tr: "Marangoz", en: "Carpenter", de: "Zimmermann", ru: "Плотник" },
+  painter: { tr: "Ressam", en: "Painter", de: "Maler", ru: "Живописец" },
+  servant: { tr: "Hizmetkâr", en: "Servant", de: "Diener", ru: "Слуга" },
+  porter: { tr: "Hamal", en: "Porter", de: "Träger", ru: "Носильщик" },
+  farmer: { tr: "Çiftçi", en: "Farmer", de: "Bauer", ru: "Земледелец" },
+  herder: { tr: "Çoban", en: "Shepherd", de: "Hirte", ru: "Пастух" },
+  elder: { tr: "Yaşlı", en: "Elder", de: "Alter", ru: "Старик" },
+  beggar: { tr: "Dilenci", en: "Beggar", de: "Bettler", ru: "Нищий" },
+  performer: { tr: "Gösterici", en: "Performer", de: "Gaukler", ru: "Артист" },
+  teacher: { tr: "Öğretmen", en: "Teacher", de: "Lehrer", ru: "Учитель" },
 };
 
 /** The BCP 47 tag the device voice is asked for. */

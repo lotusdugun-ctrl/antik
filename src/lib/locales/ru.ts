@@ -258,8 +258,6 @@ export const ru: Partial<Record<TKey, string>> = {
   recon_hint:
     "Перетаскивайте для вращения, прокручивайте, чтобы приблизиться к любой точке, правой кнопкой или двумя пальцами — сдвиг. Двойной щелчок — во весь экран.",
   recon_views: "Ракурсы",
-  recon_export: "Скачать 3D-файл (.glb)",
-  recon_exporting: "Подготовка…",
   recon_view_front: "Спереди",
   recon_view_corner: "С угла",
   recon_view_above: "Сверху",

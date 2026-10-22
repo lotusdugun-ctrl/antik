@@ -1397,8 +1397,6 @@ const dict = {
     en: "Drag to orbit, scroll to zoom into any spot, right-drag or two fingers to pan. Double-click for full screen.",
   },
   recon_views: { tr: "Bakış", en: "Views" },
-  recon_export: { tr: "3B dosyayı indir (.glb)", en: "Download the 3D file (.glb)" },
-  recon_exporting: { tr: "Hazırlanıyor…", en: "Preparing…" },
   recon_view_front: { tr: "Önden", en: "Front" },
   recon_view_corner: { tr: "Köşeden", en: "Corner" },
   recon_view_above: { tr: "Üstten", en: "Above" },

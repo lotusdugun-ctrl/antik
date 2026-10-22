@@ -95,6 +95,39 @@ describe("talking people", () => {
     }
   });
 
+  test("every trade in a scene speaks as that trade, not as a passer-by", () => {
+    const TRADES = new Set<StoryRole>([
+      "potter",
+      "weaver",
+      "scribe",
+      "merchant",
+      "baker",
+      "butcher",
+      "cook",
+      "carpenter",
+      "painter",
+      "servant",
+      "porter",
+      "farmer",
+      "herder",
+      "elder",
+      "beggar",
+      "performer",
+      "teacher",
+      "mason",
+    ]);
+    for (const { item, life } of lives) {
+      for (const person of life.people) {
+        const role = storyRole(person);
+        if (!TRADES.has(role)) continue;
+        const own = linesFor(life.era, role);
+        expect(`${item.id} ${role}: ${own !== linesFor(life.era, "citizen")}`).toBe(
+          `${item.id} ${role}: true`,
+        );
+      }
+    }
+  });
+
   test("every era with lines has at least six for ordinary people", () => {
     for (const era of STORY_ERAS) expect(linesFor(era, "citizen").length).toBeGreaterThanOrEqual(6);
   });

@@ -1,5 +1,5 @@
 import type * as THREE_NS from "three";
-import type { Carry, Era, Look, Person } from "@/lib/scene-life";
+import type { Action, Carry, Era, Look, Person } from "@/lib/scene-life";
 
 /**
  * The close-up figure: the same person as the plain one in `life.ts`, built
@@ -37,13 +37,43 @@ export const FORE = 0.15;
 export const THIGH = 0.235;
 export const SHIN = 0.23;
 
+/** The height of the neck, where the head turns: its pieces hang from here. */
+export const NECK = 0.86;
+
+/** Everything done sitting, kneeling or squatting: the legs fold, the skirt with them. */
+export const SEATED: ReadonlySet<Action> = new Set<Action>([
+  "sit",
+  "kneel",
+  "ride",
+  "pot",
+  "write",
+  "count",
+  "chat",
+  "beg",
+  "grind",
+  "crouch",
+]);
+
+/** Seated on something, so a long skirt lies over the lap and falls from the knees. */
+export const LAP: ReadonlySet<Action> = new Set<Action>([
+  "sit",
+  "pot",
+  "write",
+  "count",
+  "chat",
+  "beg",
+]);
+
 /** What the figure borrows from the plain builder, so both agree. */
 export type Kit = {
   paint: (geometry: Geo, hex: number) => Geo;
   carried: (look: Look, action: Person["action"], carry?: Carry, carryLeft?: Carry) => Geo[];
   hairdo: (look: Look) => Geo[];
   headwear: (look: Look) => Geo[];
-  handItems: (carry?: Carry) => Geo[];
+  handItems: (carry?: Carry, action?: Action, left?: boolean) => Geo[];
+  menHair: (look: Look, near: boolean) => Geo[];
+  beard: (look: Look, near: boolean) => Geo[];
+  accessories: (look: Look, action: Action, near: boolean) => Geo[];
 };
 
 const GOLD = 0xc9a43c;
@@ -92,6 +122,22 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
   const tmp2 = new THREE.Color();
   const mix = (a: number, b: number, t: number) => tmp.set(a).lerp(tmp2.set(b), t).getHex();
   const shade = (hex: number, k: number) => tmp.set(hex).multiplyScalar(k).getHex();
+  /**
+   * The cloth's woven pattern, face by face (row `k`, column `j`): stripes
+   * of the trim colour, a darker check, or a scatter of dots. Only on the
+   * main cloth (`on`), never on a border.
+   */
+  const patterned = (look: Look, cloth: number, k: number, j: number, on = true) => {
+    if (!on || !look.pattern) return cloth;
+    switch (look.pattern) {
+      case "stripes":
+        return j % 4 === 0 ? (look.trim === look.main ? shade(cloth, 0.7) : look.trim) : cloth;
+      case "checks":
+        return (Math.floor(j / 2) + Math.floor(k / 2)) % 2 === 0 ? shade(cloth, 0.78) : cloth;
+      case "dots":
+        return (j + 2 * k) % 5 === 0 && k % 2 === 0 ? look.trim : cloth;
+    }
+  };
 
   /**
    * A skin over rings of vertices, each vertex placed by `vertex(k, j, a)`
@@ -374,18 +420,33 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
       ),
     );
     if (!masked) {
-      // Hair: a cap from a hairline over the brow to the nape.
-      const cap = new THREE.SphereGeometry(0.069, 16, 6, 0, TAU, 0, Math.PI / 2);
-      cap.scale(0.93, look.female ? 1.0 : 0.94, 1);
-      cap.rotateX(-0.42);
-      cap.translate(0, 0.929, -0.004);
-      out.push(kit.paint(cap, look.hair));
+      if (look.bald && !look.female) {
+        // Bald on the crown: the hair left round the back and over the ears.
+        const fringe = new THREE.SphereGeometry(
+          0.0695,
+          16,
+          4,
+          Math.PI * 0.85,
+          Math.PI * 1.3,
+          Math.PI * 0.36,
+          Math.PI * 0.22,
+        );
+        fringe.scale(0.93, 0.94, 1);
+        fringe.rotateX(-0.18);
+        fringe.translate(0, 0.925, -0.004);
+        out.push(kit.paint(fringe, look.hair));
+      } else {
+        // Hair: a cap from a hairline over the brow to the nape.
+        const cap = new THREE.SphereGeometry(0.069, 16, 6, 0, TAU, 0, Math.PI / 2);
+        cap.scale(0.93, look.female ? 1.0 : 0.94, 1);
+        cap.rotateX(-0.42);
+        cap.translate(0, 0.929, -0.004);
+        out.push(kit.paint(cap, look.hair));
+      }
       if (look.female) {
         if (look.headwear !== "veil") out.push(...kit.hairdo(look));
-      }
-      if (look.beard) {
-        out.push(ball(0.041, [0, 0.884, 0.022], [1.1, 0.9, 0.9], look.hair, 10, 7));
-      }
+      } else out.push(...kit.menHair(look, true));
+      if (look.beard) out.push(...kit.beard(look, true));
     }
     if (look.headwear === "helmet") out.push(...helmet(look));
     else if (look.headwear === "phrygian") out.push(...phrygian(look));
@@ -524,7 +585,13 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         return [x * grow, y, z * grow];
       },
       (k, j) => {
-        const cloth = shade(o.cloth, 0.93 + 0.07 * Math.min(1, k / (ys.length - 1) + 0.2));
+        const cloth = patterned(
+          look,
+          shade(o.cloth, 0.93 + 0.07 * Math.min(1, k / (ys.length - 1) + 0.2)),
+          k,
+          j,
+          o.cloth === look.main,
+        );
         if (o.colour) return o.colour(k, j, cloth);
         if (o.style !== undefined && o.edge !== undefined) {
           const b = border(o.style, k, j, rows);
@@ -662,8 +729,14 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
 
     /* The torso, coloured by what covers it. */
     const torsoColour = (y: number, a: number): number => {
-      const x = Math.cos(a);
       if (y > neckline) return look.skin;
+      const plain = torsoPlain(y, a);
+      return plain === look.main
+        ? patterned(look, plain, Math.round(y * 60), Math.floor((a / TAU) * 24))
+        : plain;
+    };
+    const torsoPlain = (y: number, a: number): number => {
+      const x = Math.cos(a);
       switch (g) {
         case "exomis": {
           const s = Math.min(1, Math.max(0, -x * 1.2 - 0.2));
@@ -707,7 +780,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     const long =
       g === "chiton" || g === "peplos" || g === "himation" || g === "toga" || g === "robe";
     const showSkirt = !seated || !long;
-    if (long && action === "sit") {
+    if (long && LAP.has(action)) {
       // Sitting, the long skirt lies over the lap and falls from the knees.
       const cloth =
         g === "himation" || g === "toga" ? (g === "toga" ? look.main : look.trim) : look.main;
@@ -1115,15 +1188,16 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
       for (const side of [-1, 1])
         body.push(ball(0.05, [side * 0.1, 0.792, 0], [1.05, 0.35, 1.1], look.main, 10, 5));
     }
-    body.push(...headPieces(look));
+    const head = headPieces(look);
+    body.push(...kit.accessories(look, action, true));
     body.push(...kit.carried(look, action, carry, carryLeft));
-    return { body, hem };
+    return { body, hem, head };
   };
 
   /* ---------------- limbs ---------------- */
 
   /** One arm, hanging from the shoulder: the upper arm and the forearm with its hand. */
-  const armPieces = (look: Look, side: -1 | 1, carry: Carry | undefined) => {
+  const armPieces = (look: Look, side: -1 | 1, carry: Carry | undefined, action?: Action) => {
     const g = look.garment;
     const left = side > 0;
     // How far down the upper arm the cloth comes: 0 bare, 1 to the shoulder
@@ -1240,7 +1314,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         look.skin,
       ),
     ];
-    fore.push(...kit.handItems(carry));
+    fore.push(...kit.handItems(carry, action, side > 0));
     return { upper, fore };
   };
 

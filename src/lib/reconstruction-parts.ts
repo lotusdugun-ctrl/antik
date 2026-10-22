@@ -23,6 +23,8 @@ import {
   type Lettering,
 } from "@/lib/epigraphy";
 import type { ScanId } from "@/lib/scans";
+import { sculptBounds, type Mass } from "@/lib/sculpt";
+import { horse, lionMask } from "@/lib/beasts";
 import { hittiteGateParts, hittiteGateWalkStart } from "@/lib/models/hattusa-aslanli-kapi";
 import { troyCitadelParts, troyWalkStart } from "@/lib/models/troya-vi-surlari";
 import { neolithicTownParts, neolithicTownWalkStart } from "@/lib/models/catalhoyuk-dogu-hoyugu";
@@ -378,6 +380,21 @@ export type Part =
       at: Vec3;
       rotY: number;
       sections: LoftSection[];
+    })
+  /**
+   * A carved body: masses — tapering rods and ellipsoids, in the part's own
+   * frame — merged into one surface with fillets between them and hollows
+   * cut out of it (see `sculpt.ts`), meshed every `cell` metres. What a
+   * horse or a lion is made of, where lofted tubes would show their seams.
+   */
+  | (Base & {
+      kind: "sculpt";
+      at: Vec3;
+      rotY: number;
+      masses: Mass[];
+      cell: number;
+      /** Faces wholly behind this `z` are not drawn: the side against a wall. */
+      back?: number;
     });
 
 /**
@@ -1852,267 +1869,60 @@ function animalCarving(
 }
 
 /* ------------------------------------------------------------------ *
- * A bronze horse and rider
+ * A horse in stone
  * ------------------------------------------------------------------ */
 
 /**
- * A horse, built the way a sculptor builds one: as a skin lofted over the
- * animal's cross-sections. Rump, loin, barrel, girth and chest; a neck that
- * rises and thins to the poll; a head that tapers to the muzzle with pricked
- * ears; four legs with the joints a horse has — stifle, hock and fetlock
- * behind, elbow, knee and fetlock in front — and a tail falling from the
- * dock. The proportions are those of the Capitoline Marcus Aurelius, the one
- * Roman bronze horseman that survives whole: withers at about 1.5 m, the body
- * as long as it is tall, the near foreleg raised with the hoof hanging.
+ * A horse statue: one carved body, the masses of `beasts.ts` merged into a
+ * single surface — the deep chest, the arched neck under its hogged mane,
+ * the wedge of the head, the dry legs with their knees, hocks, fetlocks and
+ * hooves — in the stone of `material`.
  *
  * The horse stands at `at` facing `-z` before `rotY` turns it, one unit of
- * `scale` being a life-sized animal. The mane is a serrated crest cut along
- * the neck; the rider is a bearded figure astride, arm out in address.
+ * `scale` being a life-sized animal with its withers at 1.55 m. `raised`
+ * lifts a foreleg (−1 its left, +1 its right, 0 neither). `cell` is how
+ * finely it is cut, in metres at life size.
  */
 export function horseStatue(
   material: Material,
   at: Vec3,
   rotY: number,
   scale = 1,
-  raised: -1 | 1 = -1,
+  raised: -1 | 0 | 1 = -1,
+  cell = 0.024,
 ): Part[] {
-  const parts: Part[] = [];
-  const S = (c: Vec3, rx: number, ry: number): LoftSection => ({
-    c: [c[0] * scale, c[1] * scale, c[2] * scale],
-    rx: rx * scale,
-    ry: ry * scale,
-  });
-  const skin = (sections: LoftSection[]) => parts.push(loft(material, at, rotY, sections));
-
-  /*
-   * The body, from the dock of the tail forward to the point of the breast:
-   * the croup rounding down behind, the back dipping a little behind the
-   * withers, the belly hanging lower than the girth, the chest deep and
-   * narrow between the forelegs.
-   */
-  skin([
-    S([0, 1.12, 0.86], 0.06, 0.08),
-    S([0, 1.12, 0.78], 0.17, 0.2),
-    S([0, 1.1, 0.62], 0.26, 0.3),
-    S([0, 1.06, 0.42], 0.29, 0.34),
-    S([0, 1.0, 0.2], 0.3, 0.38),
-    S([0, 0.98, 0.0], 0.31, 0.4),
-    S([0, 1.0, -0.22], 0.31, 0.39),
-    S([0, 1.04, -0.44], 0.29, 0.38),
-    S([0, 1.06, -0.62], 0.24, 0.36),
-    S([0, 1.06, -0.78], 0.17, 0.3),
-    S([0, 1.06, -0.9], 0.1, 0.2),
-    S([0, 1.06, -0.95], 0.04, 0.08),
-  ]);
-  // The muscles that make a horse a horse rather than a tube: the shoulder
-  // blade and the forearm on each side, and the great mass of the quarters.
-  for (const side of [-1, 1]) {
-    skin([
-      S([side * 0.12, 1.32, -0.5], 0.06, 0.08),
-      S([side * 0.2, 1.18, -0.62], 0.1, 0.16),
-      S([side * 0.21, 0.98, -0.72], 0.1, 0.15),
-      S([side * 0.19, 0.82, -0.7], 0.08, 0.1),
-      S([side * 0.17, 0.74, -0.68], 0.04, 0.05),
-    ]);
-    skin([
-      S([side * 0.1, 1.3, 0.36], 0.08, 0.1),
-      S([side * 0.2, 1.22, 0.52], 0.13, 0.18),
-      S([side * 0.21, 1.02, 0.6], 0.13, 0.19),
-      S([side * 0.19, 0.82, 0.6], 0.1, 0.13),
-      S([side * 0.17, 0.66, 0.62], 0.05, 0.06),
-    ]);
-  }
-  // The neck, arched from the withers to the poll, thick at the base and
-  // fine at the throat.
-  skin([
-    S([0, 1.14, -0.56], 0.22, 0.36),
-    S([0, 1.32, -0.78], 0.2, 0.36),
-    S([0, 1.52, -0.98], 0.17, 0.32),
-    S([0, 1.72, -1.16], 0.14, 0.26),
-    S([0, 1.88, -1.3], 0.115, 0.2),
-    S([0, 1.98, -1.39], 0.1, 0.15),
-    S([0, 2.03, -1.44], 0.09, 0.12),
-  ]);
-  /*
-   * The head, lowered against the rein: the flat forehead, the long face
-   * narrowing down the nose, the soft muzzle — and laid over it the round
-   * plates of the cheek, the eyes set out at the side, the flared nostrils.
-   */
-  skin([
-    S([0, 2.04, -1.4], 0.095, 0.13),
-    S([0, 1.98, -1.49], 0.115, 0.18),
-    S([0, 1.9, -1.58], 0.11, 0.17),
-    S([0, 1.8, -1.68], 0.09, 0.13),
-    S([0, 1.72, -1.77], 0.08, 0.11),
-    S([0, 1.65, -1.85], 0.082, 0.1),
-    S([0, 1.6, -1.91], 0.08, 0.092),
-    S([0, 1.575, -1.95], 0.068, 0.075),
-    S([0, 1.565, -1.97], 0.035, 0.04),
-  ]);
-  for (const side of [-1, 1]) {
-    // The jowl.
-    skin([
-      S([side * 0.05, 1.92, -1.45], 0.03, 0.05),
-      S([side * 0.07, 1.86, -1.52], 0.055, 0.12),
-      S([side * 0.065, 1.81, -1.6], 0.045, 0.09),
-      S([side * 0.04, 1.78, -1.68], 0.015, 0.03),
-    ]);
-    // The eye, and the bone ridge over it.
-    skin([
-      S([side * 0.085, 2.0, -1.55], 0.012, 0.02),
-      S([side * 0.098, 2.0, -1.575], 0.02, 0.022),
-      S([side * 0.09, 2.0, -1.6], 0.012, 0.016),
-    ]);
-    // The nostril, flared.
-    skin([
-      S([side * 0.045, 1.63, -1.88], 0.012, 0.015),
-      S([side * 0.055, 1.62, -1.91], 0.026, 0.03),
-      S([side * 0.045, 1.6, -1.95], 0.012, 0.016),
-    ]);
-  }
-  // Ears pricked forward.
-  for (const side of [-1, 1]) {
-    skin([
-      S([side * 0.06, 2.04, -1.42], 0.035, 0.025),
-      S([side * 0.085, 2.14, -1.44], 0.025, 0.02),
-      S([side * 0.1, 2.22, -1.46], 0.006, 0.006),
-    ]);
-  }
-  // The forelock, falling between the ears onto the forehead.
-  skin([
-    S([0, 2.08, -1.42], 0.03, 0.02),
-    S([0, 2.05, -1.5], 0.04, 0.02),
-    S([0, 1.98, -1.56], 0.03, 0.015),
-  ]);
-
-  /*
-   * The legs. Each has a forearm or gaskin full of muscle, a bony knee or
-   * hock, a slender cannon, the knob of the fetlock, a short sloping
-   * pastern and a hoof that flares to the ground.
-   */
-  const leg = (x: number, path: [Vec3, number, number][]) =>
-    skin(path.map(([c, rx, ry]) => S([x + c[0], c[1], c[2]], rx * 1.15, ry * 1.12)));
-  for (const side of [-1, 1]) {
-    const x = side * 0.17;
-    if (side === raised) {
-      // The near foreleg lifted: knee brought up and forward, cannon hanging.
-      leg(x, [
-        [[0, 1.02, -0.66], 0.11, 0.14],
-        [[0, 0.86, -0.78], 0.085, 0.1],
-        [[0, 0.72, -0.92], 0.06, 0.07],
-        [[0, 0.66, -0.98], 0.058, 0.066],
-        [[0, 0.52, -0.97], 0.04, 0.05],
-        [[0, 0.4, -0.93], 0.04, 0.05],
-        [[0, 0.34, -0.9], 0.05, 0.058],
-        [[0, 0.28, -0.84], 0.042, 0.048],
-        [[0, 0.22, -0.82], 0.058, 0.064],
-        [[0, 0.17, -0.81], 0.066, 0.07],
-      ]);
-    } else {
-      leg(x, [
-        [[0, 1.02, -0.64], 0.11, 0.14],
-        [[0, 0.8, -0.67], 0.085, 0.1],
-        [[0, 0.6, -0.68], 0.06, 0.07],
-        [[0, 0.52, -0.68], 0.058, 0.068],
-        [[0, 0.4, -0.67], 0.042, 0.052],
-        [[0, 0.24, -0.66], 0.042, 0.05],
-        [[0, 0.17, -0.665], 0.052, 0.06],
-        [[0, 0.1, -0.69], 0.044, 0.05],
-        [[0, 0.05, -0.71], 0.06, 0.066],
-        [[0, 0.0, -0.72], 0.068, 0.074],
-      ]);
-    }
-    const hx = side * 0.16;
-    leg(hx, [
-      [[0, 1.0, 0.44], 0.14, 0.17],
-      [[0, 0.76, 0.56], 0.1, 0.13],
-      [[0, 0.56, 0.68], 0.06, 0.09],
-      [[0, 0.5, 0.7], 0.055, 0.08],
-      [[0, 0.4, 0.64], 0.045, 0.055],
-      [[0, 0.22, 0.6], 0.042, 0.05],
-      [[0, 0.15, 0.59], 0.052, 0.06],
-      [[0, 0.09, 0.6], 0.044, 0.05],
-      [[0, 0.05, 0.6], 0.06, 0.066],
-      [[0, 0.0, 0.6], 0.068, 0.074],
-    ]);
-  }
-  // The tail: a thick dock, then the hair falling in three locks.
-  skin([
-    S([0, 1.12, 0.84], 0.05, 0.06),
-    S([0, 1.06, 0.94], 0.07, 0.08),
-    S([0, 0.94, 1.0], 0.08, 0.09),
-  ]);
-  for (const k of [-1, 0, 1]) {
-    skin([
-      S([k * 0.02, 0.96, 0.99], 0.04, 0.05),
-      S([k * 0.04, 0.72, 1.03], 0.05, 0.05),
-      S([k * 0.05, 0.48, 1.0 + k * 0.02], 0.04, 0.04),
-      S([k * 0.05, 0.28, 0.96], 0.02, 0.02),
-    ]);
-  }
-
-  // The mane, falling over the off side of the neck in heavy locks.
-  for (let i = 0; i < 9; i += 1) {
-    const t = i / 8;
-    const z = -0.6 - t * 0.82;
-    const y = 1.42 + t * 0.66 - t * t * 0.06;
-    const fall = 0.2 - t * 0.08;
-    skin([
-      S([0.0, y + 0.04, z], 0.03, 0.03),
-      S([0.07, y - fall * 0.4, z - 0.01], 0.045, 0.035),
-      S([0.12, y - fall, z + 0.01], 0.025, 0.02),
-    ]);
-  }
-
-  /*
-   * The mane: a crest of clipped tufts standing along the top of the neck,
-   * cut as one serrated silhouette in the plane of the neck. Its foot is
-   * buried in the neck so it grows out of it rather than sitting on it.
-   */
-  const crest: [number, number][] = [
-    [-0.56, 1.42],
-    [-0.86, 1.68],
-    [-1.08, 1.88],
-    [-1.26, 2.02],
-    [-1.4, 2.1],
-    [-1.46, 2.13],
+  return [
+    {
+      kind: "sculpt",
+      material,
+      at,
+      rotY,
+      masses: horse(raised, scale),
+      cell: cell * scale,
+      statue: "Horse",
+    },
   ];
-  const crestAt = (z: number) => {
-    for (let i = 0; i < crest.length - 1; i += 1) {
-      const [z0, y0] = crest[i]!;
-      const [z1, y1] = crest[i + 1]!;
-      if (z <= z0 && z >= z1) return y0 + ((z - z0) / (z1 - z0)) * (y1 - y0);
-    }
-    return z > crest[0]![0] ? crest[0]![1] : crest[crest.length - 1]![1];
-  };
-  const mane: [number, number][] = [];
-  const tufts = 14;
-  const zFrom = -0.58;
-  const zTo = -1.44;
-  // Along the top, one tuft after another; the outline's `u` runs towards
-  // the head, which the carving's turn below maps onto the horse's `-z`.
-  for (let i = 0; i <= tufts; i += 1) {
-    const z = zFrom + ((zTo - zFrom) * i) / tufts;
-    const tall = i % 2 === 0 ? 0.13 : 0.08;
-    mane.push([-z * scale, (crestAt(z) + tall) * scale]);
-  }
-  // Then back along the foot, inside the neck.
-  for (let i = tufts; i >= 0; i -= 1) {
-    const z = zFrom + ((zTo - zFrom) * i) / tufts;
-    mane.push([-z * scale, (crestAt(z) - 0.1) * scale]);
-  }
-  parts.push({
-    kind: "carving",
-    material,
-    at,
-    outline: mane,
-    depth: 0.06 * scale,
-    sink: 0.5,
-    // A quarter turn lays the silhouette in the horse's own x = 0 plane.
-    rotY: rotY + Math.PI / 2,
-  });
+}
 
-  return parts;
+/**
+ * A lion's head carved as a waterspout on the face of a wall or a sima, the
+ * water running from its open mouth (see `lionMask` in `beasts.ts`). `at` is
+ * the middle of the back of the mask, on the wall; it looks along `+z`
+ * before `rotY` turns it; `size` is the height of its ring of mane. Plain and
+ * coarse by default — big locks, no creases — for the long rows along a
+ * temple's sima, seen from far below; `plain` false for one seen close.
+ */
+export function lionSpout(
+  material: Material,
+  at: Vec3,
+  rotY: number,
+  size: number,
+  cell = size / 13,
+  plain = true,
+): Part[] {
+  return [
+    { kind: "sculpt", material, at, rotY, masses: lionMask(size, plain), cell, back: 0.01 * size },
+  ];
 }
 
 /* ------------------------------------------------------------------ *
@@ -2122,11 +1932,13 @@ export function horseStatue(
 /*
  * One workshop cut every figure on the terrace, out of the same local
  * limestone, in the same manner: big, simple, rounded masses, the forms
- * read from across the court rather than from arm's length. So the gods,
- * the eagles and the lions here are built the same way — every one of them
- * lofted from the same smooth skins, in the same stone, at one scale — and
- * none of them is a scan. A photographed marble lion of Delos beside a
- * lofted god read as two different sets, and that is not what stood here.
+ * read from across the court rather than from arm's length. So the gods here
+ * are built the same way — lofted from the same smooth skins, in the same
+ * stone, at one scale. The guardians are the exception: an eagle or a lion
+ * built of lofted tubes read as a toy, so scans of real marble ones — a
+ * seated lion of Delos, maned and roaring, and an eagle with its wings
+ * half spread — given the terrace's limestone stand in for them (see the
+ * uncertainty note).
  *
  * Each builder works in its own frame — `+z` the way the statue looks, `y`
  * up, the origin on the surface it rests on — and every piece is turned by
@@ -2208,7 +2020,7 @@ function sculptor(material: Material, at: Vec3, rotY: number, unit: number, stat
  *
  * Read from across the court, a colossus is about fifteen thousand
  * triangles: enough for the forms to turn smoothly in a raking light, few
- * enough that five of them, two eagles and two lions are lighter together
+ * enough that all five of them are lighter together
  * than one of the scans they replace.
  */
 export function nemrutColossus(
@@ -2524,250 +2336,6 @@ export function nemrutColossus(
       break;
     }
   }
-  return parts;
-}
-
-/**
- * A lion seated upright on its haunches, the guardian at each end of the
- * row, looking straight out over the court: a deep chest, long straight
- * forelegs ending in heavy paws with the toes cut, the haunches bunched at
- * its sides and the tail curled round onto the base. The head is the lion of
- * Commagene's own sculptors — a long muzzle ending in a flat nose, a heavy
- * brow, the line of the closed jaw — and round it the mane, cut as rows of
- * stiff flame-shaped locks that frame the face and fall over the chest.
- * `size` is its height from the base to the top of the mane.
- */
-export function nemrutLion(material: Material, at: Vec3, rotY: number, size: number): Part[] {
-  const { parts, S, skin, rod } = sculptor(material, at, rotY, size, "Lion");
-  /** One lock of the mane: a flame from its root to its point. */
-  const lock = (from: Vec3, to: Vec3, r: number, swell = true) =>
-    skin([
-      S(from[0], from[1], from[2], r, r * 0.85),
-      ...(swell
-        ? [S((from[0] + to[0]) / 2, (from[1] + to[1]) / 2, (from[2] + to[2]) / 2, r * 0.8, r * 0.7)]
-        : []),
-      S(to[0], to[1], to[2], r * 0.2, r * 0.18),
-    ]);
-  for (const side of [-1, 1]) {
-    // The haunch, bunched at the side, and the hind paw forward beside it.
-    skin([
-      S(side * 0.15, 0.15, -0.26, 0.08, 0.09),
-      S(side * 0.165, 0.18, -0.1, 0.12, 0.17),
-      S(side * 0.16, 0.14, 0.05, 0.1, 0.12),
-      S(side * 0.15, 0.07, 0.11, 0.05, 0.06),
-    ]);
-    skin([
-      S(side * 0.19, 0.035, 0.04, 0.05, 0.035),
-      S(side * 0.2, 0.03, 0.18, 0.055, 0.03),
-      S(side * 0.2, 0.025, 0.215, 0.02, 0.01),
-    ]);
-    // The foreleg, long and straight, and the paw with its four toes.
-    skin([
-      S(side * 0.085, 0.58, 0.11, 0.065, 0.08),
-      S(side * 0.085, 0.38, 0.15, 0.05, 0.06),
-      S(side * 0.085, 0.12, 0.17, 0.042, 0.05),
-      S(side * 0.085, 0.04, 0.175, 0.05, 0.05),
-    ]);
-    skin([S(side * 0.085, 0.032, 0.14, 0.055, 0.032), S(side * 0.085, 0.03, 0.235, 0.06, 0.03)]);
-    for (let toe = 0; toe < 4; toe += 1) {
-      const x = side * 0.085 + (toe - 1.5) * 0.028;
-      rod([x, 0.022, 0.225], [x, 0.016, 0.27], 0.017, 0.013, 6);
-    }
-  }
-  // The body, from the rump on the base up to the deep chest.
-  skin([
-    S(0, 0.15, -0.22, 0.15, 0.14),
-    S(0, 0.3, -0.12, 0.17, 0.18),
-    S(0, 0.48, 0.0, 0.16, 0.2),
-    S(0, 0.64, 0.05, 0.13, 0.15),
-  ]);
-  // The ruff the locks grow from, round the neck and behind the head.
-  skin([
-    S(0, 0.56, 0.04, 0.15, 0.13),
-    S(0, 0.72, 0.05, 0.21, 0.17),
-    S(0, 0.9, 0.03, 0.2, 0.16),
-    S(0, 0.99, 0.0, 0.03, 0.03),
-  ]);
-  // Two rings of locks round the face, the outer ones longer.
-  for (let i = 0; i < 11; i += 1) {
-    const a = -2.7 + (i * 5.4) / 10;
-    const c = 0.81;
-    lock(
-      [Math.sin(a) * 0.15, c + Math.cos(a) * 0.15, 0.18],
-      [Math.sin(a) * 0.23, c + Math.cos(a) * 0.23, 0.12],
-      0.06,
-    );
-  }
-  for (let i = 0; i < 8; i += 1) {
-    const a = -2.45 + (i * 4.9) / 7;
-    const c = 0.8;
-    lock(
-      [Math.sin(a) * 0.2, c + Math.cos(a) * 0.2, 0.08],
-      [Math.sin(a) * 0.29, c + Math.cos(a) * 0.29, 0.0],
-      0.075,
-      false,
-    );
-  }
-  // And the locks falling down over the chest.
-  for (const [x, y] of [
-    [-0.08, 0.64],
-    [0.08, 0.64],
-    [0, 0.6],
-  ] as const)
-    lock([x, y, 0.16], [x * 1.1, y - 0.08, 0.185], 0.06);
-  // The head: the skull, narrowing to the long muzzle and its flat nose.
-  skin([
-    S(0, 0.84, 0.1, 0.12, 0.12),
-    S(0, 0.85, 0.18, 0.12, 0.11),
-    S(0, 0.83, 0.25, 0.1, 0.09),
-    S(0, 0.8, 0.32, 0.075, 0.07),
-    S(0, 0.79, 0.38, 0.065, 0.058),
-    S(0, 0.792, 0.402, 0.05, 0.04),
-    S(0, 0.795, 0.412, 0.025, 0.018),
-  ]);
-  // The bridge of the nose, and the lower jaw closed under the muzzle.
-  skin([
-    S(0, 0.875, 0.24, 0.035, 0.03),
-    S(0, 0.84, 0.38, 0.03, 0.025),
-    S(0, 0.83, 0.41, 0.026, 0.02),
-  ]);
-  skin([
-    S(0, 0.735, 0.2, 0.07, 0.04),
-    S(0, 0.74, 0.33, 0.055, 0.035),
-    S(0, 0.748, 0.375, 0.03, 0.02),
-  ]);
-  // The heavy brow, an arch over each eye, and the small round ears.
-  for (const side of [-1, 1]) {
-    skin([
-      S(side * 0.015, 0.885, 0.275, 0.022, 0.02),
-      S(side * 0.06, 0.9, 0.27, 0.03, 0.03),
-      S(side * 0.11, 0.885, 0.22, 0.02, 0.02),
-    ]);
-    skin([S(side * 0.1, 0.95, 0.14, 0.04, 0.035), S(side * 0.11, 0.97, 0.17, 0.008, 0.008)]);
-  }
-  // The tail, round the right flank and onto the base, its tuft forward.
-  skin([
-    S(0.15, 0.06, -0.3, 0.03, 0.03),
-    S(0.27, 0.035, -0.12, 0.026, 0.026),
-    S(0.28, 0.035, 0.08, 0.024, 0.024),
-    S(0.26, 0.045, 0.17, 0.045, 0.04),
-    S(0.25, 0.045, 0.21, 0.008, 0.008),
-  ]);
-  return parts;
-}
-
-/**
- * An eagle standing tall and upright with its wings folded, the bird that
- * guards the rows of gods: the breast a keel tapering down to the legs, a
- * ruff of feathers round the neck, and the head turned aside to show the
- * short beak hooked sharply down under a jutting brow. The wings lie folded
- * down the flanks, their flight feathers stepped along the lower edge and
- * crossing behind over a fanned tail that rests on the base; the legs are
- * feathered to the ankle and the talons grip the front edge of the base.
- * `size` is its height from the base to the crown of the head.
- */
-export function nemrutEagle(material: Material, at: Vec3, rotY: number, size: number): Part[] {
-  const { parts, S, skin, rod } = sculptor(material, at, rotY, size, "Eagle");
-  /** A tapering feather, from its root to its tip. */
-  const feather = (from: Vec3, to: Vec3, w: number, t: number) =>
-    skin([S(from[0], from[1], from[2], w, t), S(to[0], to[1], to[2], w * 0.15, t * 0.5)]);
-  // The breast, a keel tapering down, and the ridge of the keel itself.
-  skin([
-    S(0, 0.2, -0.06, 0.07, 0.08),
-    S(0, 0.36, -0.01, 0.1, 0.12),
-    S(0, 0.56, 0.05, 0.125, 0.16),
-    S(0, 0.7, 0.06, 0.115, 0.15),
-    S(0, 0.8, 0.05, 0.075, 0.09),
-  ]);
-  skin([S(0, 0.34, 0.08, 0.03, 0.03), S(0, 0.54, 0.17, 0.04, 0.035), S(0, 0.7, 0.17, 0.03, 0.025)]);
-  // The ruff of neck feathers.
-  for (let i = 0; i < 9; i += 1) {
-    const a = -2.4 + (i * 4.8) / 8;
-    feather(
-      [Math.sin(a) * 0.07, 0.83, 0.05 + Math.cos(a) * 0.075],
-      [Math.sin(a) * 0.1, 0.75, 0.05 + Math.cos(a) * 0.105],
-      0.04,
-      0.025,
-    );
-  }
-  /*
-   * The head, turned a third of the way to its right: the skull, the brow
-   * jutting over each eye, and the beak — short, deep at the root, and
-   * hooked sharply down at the tip.
-   */
-  const turn = 0.6;
-  const big = 1.3;
-  const along = (t: number, y: number, across = 0): Vec3 => [
-    (Math.sin(turn) * t + Math.cos(turn) * across) * big,
-    0.84 + (y - 0.84) * big,
-    0.05 + (Math.cos(turn) * t - Math.sin(turn) * across) * big,
-  ];
-  const H = (t: number, y: number, rx: number, ry: number, across = 0) => {
-    const [x, yy, z] = along(t, y, across);
-    return S(x, yy, z, rx * big, ry * big);
-  };
-  skin([
-    H(-0.07, 0.875, 0.045, 0.045),
-    H(-0.02, 0.888, 0.072, 0.07),
-    H(0.05, 0.888, 0.068, 0.064),
-    H(0.11, 0.878, 0.052, 0.054),
-  ]);
-  skin([
-    H(0.09, 0.876, 0.05, 0.056),
-    H(0.155, 0.872, 0.04, 0.046),
-    H(0.2, 0.86, 0.028, 0.035),
-    H(0.224, 0.836, 0.016, 0.021),
-    H(0.224, 0.81, 0.004, 0.006),
-  ]);
-  for (const side of [-1, 1])
-    skin([H(-0.01, 0.915, 0.02, 0.018, side * 0.05), H(0.09, 0.905, 0.006, 0.006, side * 0.035)]);
-
-  for (const side of [-1, 1]) {
-    /*
-     * The folded wing, lying close down the flank from the shoulder, its tip
-     * crossing behind the tail; a ridge where the coverts end, and below it
-     * the stepped primaries.
-     */
-    skin([
-      S(side * 0.095, 0.82, -0.02, 0.035, 0.05),
-      S(side * 0.13, 0.72, -0.02, 0.045, 0.09),
-      S(side * 0.14, 0.52, -0.06, 0.04, 0.1),
-      S(side * 0.1, 0.3, -0.13, 0.03, 0.07),
-      S(side * 0.02, 0.15, -0.22, 0.018, 0.04),
-      S(-side * 0.04, 0.08, -0.27, 0.006, 0.01),
-    ]);
-    skin([
-      S(side * 0.16, 0.52, 0.09, 0.015, 0.018),
-      S(side * 0.175, 0.48, -0.02, 0.02, 0.022),
-      S(side * 0.155, 0.44, -0.13, 0.012, 0.015),
-    ]);
-    for (let k = 0; k < 4; k += 1)
-      feather(
-        [side * 0.15, 0.42 - k * 0.04, 0.07 - k * 0.055],
-        [side * (0.12 - k * 0.025), 0.25 - k * 0.035, -0.02 - k * 0.06],
-        0.022,
-        0.035,
-      );
-    // The leg, feathered to the ankle, and the talons over the base's edge.
-    skin([
-      S(side * 0.06, 0.27, 0.0, 0.065, 0.07),
-      S(side * 0.065, 0.13, 0.03, 0.055, 0.06),
-      S(side * 0.06, 0.07, 0.05, 0.03, 0.032),
-    ]);
-    rod([side * 0.06, 0.07, 0.05], [side * 0.06, 0.03, 0.07], 0.022, 0.02, 6);
-    for (const k of [-1, 0, 1]) {
-      const tip: Vec3 = [side * 0.06 + k * 0.035, 0.008, 0.165];
-      rod([side * 0.06, 0.025, 0.07], tip, 0.018, 0.014, 6);
-      rod(tip, [tip[0], -0.03, tip[2] + 0.012], 0.013, 0.006, 6);
-    }
-    rod([side * 0.06, 0.025, 0.07], [side * 0.06, 0.01, 0.0], 0.016, 0.01, 6);
-  }
-  // The tail, fanned out behind and resting its tip on the base.
-  skin([
-    S(0, 0.22, -0.13, 0.05, 0.03),
-    S(0, 0.1, -0.22, 0.09, 0.022),
-    S(0, 0.012, -0.29, 0.12, 0.012),
-  ]);
   return parts;
 }
 
@@ -5338,21 +4906,7 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
           const u = -r.len / 2 + 3.2 * (i + 0.5);
           const px = r.c[0] + r.out[0] * ((t + 0.56) / 2 + 0.1);
           parts.push(
-            cyl("marble", [px, beamTop + H * 0.95, u], H * 0.06, H * 0.05, 0.25, 10, {
-              rotX: Math.PI / 2,
-              rotY: r.out[0] * (Math.PI / 2),
-            }),
-          );
-          parts.push(
-            cyl(
-              "marble",
-              [px + r.out[0] * 0.05, beamTop + H * 0.9, u],
-              H * 0.025,
-              H * 0.02,
-              0.35,
-              6,
-              { rotX: Math.PI / 2, rotY: r.out[0] * (Math.PI / 2) },
-            ),
+            ...lionSpout("marble", [px, beamTop + H * 0.93, u], r.out[0] * (Math.PI / 2), H * 0.17),
           );
         }
       }
@@ -7555,14 +7109,16 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
   parts.push(box("marble", [0, summitY, 0], [summit, pedestal, summit]));
   const horseScale = (spec.quadrigaHeight - pedestal) / 2.3;
   const groupY = summitY + pedestal;
+  // The two inner horses under the yoke stand; the trace horses outside
+  // them each lift the outer foreleg.
   for (const x of [-1.5, -0.5, 0.5, 1.5]) {
     parts.push(
       ...horseStatue(
         "marble",
-        [x * 1.05 * horseScale, groupY, 0.6 * horseScale],
+        [x * 0.98 * horseScale, groupY, 0.6 * horseScale],
         0,
         horseScale,
-        x < 0 ? -1 : 1,
+        Math.abs(x) > 1 ? (x < 0 ? -1 : 1) : 0,
       ),
     );
   }
@@ -7731,26 +7287,41 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
     );
   }
   // The guardians: an eagle then a lion beyond the last throne at each end,
-  // looking out over the court with the gods, in the same stone and cut in
-  // the same way.
+  // looking out over the court with the gods, in the same stone.
   const edge = ((spec.colossi - 1) / 2) * (spec.throneBase + 0.8) + spec.throneBase / 2;
   for (const side of [-1, 1]) {
-    const eagleZ = side * (edge + 1.6);
+    const eagleZ = side * (edge + 1.85);
     const lionZ = side * (edge + 4.6);
-    parts.push(box("limestone", [-1.0, seatY, eagleZ], [3.0, 0.6, 3.0]));
-    parts.push(
-      // Set forward so its talons grip the front edge of its base.
-      ...nemrutEagle(
-        "limestone",
-        [0.5 - 0.17 * spec.guardianHeight, seatY + 0.6, eagleZ],
-        Math.PI / 2,
-        spec.guardianHeight,
-      ),
-    );
-    parts.push(box("limestone", [-1.0, seatY, lionZ], [3.2, 0.6, 3.0]));
-    parts.push(
-      ...nemrutLion("limestone", [-1.3, seatY + 0.6, lionZ], Math.PI / 2, spec.guardianHeight),
-    );
+    /*
+     * The eagle: the scan of a real marble eagle, standing with its wings
+     * half spread, cut here in the terrace's limestone and at the guardians'
+     * height, on a base wide enough for its wings and its own round plinth.
+     */
+    parts.push(box("limestone", [-1.0, seatY, eagleZ], [3.8, 0.6, 3.5]));
+    parts.push({
+      kind: "figure",
+      material: "limestone",
+      at: [-1.0, seatY + 0.6, eagleZ],
+      height: spec.guardianHeight,
+      rotY: Math.PI / 2,
+      statue: "Eagle",
+      scan: { id: "eagle" },
+    });
+    /*
+     * The lion, seated on its haunches on a base deep enough for it: the
+     * scan of a seated marble lion of Delos, cut here in the terrace's
+     * limestone and at the guardians' height.
+     */
+    parts.push(box("limestone", [-1.25, seatY, lionZ], [4.0, 0.6, 3.0]));
+    parts.push({
+      kind: "figure",
+      material: "limestone",
+      at: [-1.3, seatY + 0.6, lionZ],
+      height: spec.guardianHeight,
+      rotY: Math.PI / 2,
+      statue: "Lion",
+      scan: { id: "lion-delos" },
+    });
   }
 
   // The stepped altar across the court from the gods.
@@ -8086,6 +7657,17 @@ export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
         grow(px - r, py - r, pz - r);
         grow(px + r, py + r, pz + r);
       }
+    } else if (part.kind === "sculpt") {
+      const c = Math.cos(part.rotY);
+      const s = Math.sin(part.rotY);
+      const b = sculptBounds(part.masses);
+      for (const cx of [b.min[0], b.max[0]])
+        for (const cz of [b.min[2], b.max[2]]) {
+          const px = x + cx * c + cz * s;
+          const pz = z - cx * s + cz * c;
+          grow(px, y + b.min[1], pz);
+          grow(px, y + b.max[1], pz);
+        }
     } else {
       // A figure: a rider's legs hang below the seat given as `at`.
       const r = part.height * 0.25;

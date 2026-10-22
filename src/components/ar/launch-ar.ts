@@ -11,8 +11,8 @@
  *   model is converted on the device and handed over as a blob, also at
  *   tabletop size; Quick Look's own pinch scales it up.
  *
- * The model comes in as the same GLB the download button makes, so AR shows
- * exactly the measured geometry and nothing extra.
+ * The model comes in as a GLB built in memory from the scene (never offered
+ * as a download), so AR shows exactly the measured geometry and nothing extra.
  */
 export type ARMode = "webxr" | "quicklook";
 
@@ -64,6 +64,7 @@ export async function openQuickLook(glb: ArrayBuffer, name: string) {
   const anchor = document.createElement("a");
   anchor.rel = "ar";
   anchor.href = `${url}#allowsContentScaling=1`;
+  // Quick Look needs a file name for a blob; this opens AR, not a save dialog.
   anchor.download = `${name}.usdz`;
   // Quick Look only answers an anchor that wraps an image.
   anchor.appendChild(document.createElement("img"));

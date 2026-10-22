@@ -9,10 +9,12 @@ import {
   lifeJar as jar,
   lifeLampstand as lampstand,
   lifeMake as make,
+  lifeAside as aside,
   type Era,
   type SceneLife,
 } from "@/lib/scene-life";
 import { monasteryLayout, type CliffMonasterySpec } from "@/lib/models/sumela-manastiri";
+import * as trades from "@/lib/scene-trades";
 
 /**
  * The monastery on a feast day: monks in the court and on the balconies,
@@ -111,5 +113,30 @@ export function monasteryLife(spec: CliffMonasterySpec, era: Era): SceneLife {
     role: "worker",
   });
   flock(b, "goat", [foot - 4, 0, gateZ - 14], 6, 3.5);
+
+  /*
+   * The hours of the house: a monk beating the semantron, the wooden board
+   * that called Orthodox monks to prayer; another carrying the Gospel book
+   * to the church, one going before him with a candle; a brother hoeing the
+   * vegetable beds, and one copying a manuscript in the court's light.
+   */
+  const x = aside(b, 1861);
+  x.cast.add({
+    at: [cx + 3, C, courtFront + 1.2],
+    rotY: 0.3,
+    action: "strike",
+    role: "priest",
+    carry: "mallet",
+    carryLeft: "semantron",
+  });
+  const toChurch: Vec3[] = [
+    [courtLeft + 6, C, courtFront + 4.6],
+    [door - 1.8, C, churchZ - 4.2],
+  ];
+  const bearer = x.cast.walk(toChurch, { role: "priest", carry: "book", speed: 0.4 });
+  const light = x.cast.walk(toChurch, { role: "priest", carry: "candle", speed: 0.4 });
+  light.phase = bearer.phase + 1.2 / 7;
+  trades.garden(x, [courtLeft + 4.5, C, courtFront + 4.4], Math.PI, { role: "priest" });
+  trades.scribe(x, [cx + 6.5, C, courtFront + 2.0], Math.PI, { role: "priest" });
   return finish(b);
 }

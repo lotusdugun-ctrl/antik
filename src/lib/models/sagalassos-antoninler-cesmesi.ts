@@ -8,6 +8,7 @@ import {
   kitRing as ring,
   kitScenery as scenery,
   kitSetting as setting,
+  lionSpout,
   type Material,
   type Part,
   type Vec3,
@@ -237,10 +238,12 @@ export function nymphaeumParts(spec: NymphaeumSpec): Part[] {
   for (const s of [-1, 1]) {
     const xs = [L.centres[0]! - 2.4, ...L.centres.slice(1).map((c, i) => (c + L.centres[i]!) / 2)];
     for (const x of xs) {
-      const at: Vec3 = [s * x, P * 0.6, -0.55];
-      parts.push(cyl("marble", at, 0.12, 0.1, 0.18, 10, { rotX: -Math.PI / 2 }));
+      // The mask on the podium face, its pipe at the height the water leaves.
       parts.push(
-        box("water", [s * x, L.waterTop, -0.82], [0.12, P * 0.6 - L.waterTop + 0.04, 0.08]),
+        ...lionSpout("marble", [s * x, P * 0.6 + 0.08, -0.55], Math.PI, 0.45, 0.45 / 26, false),
+      );
+      parts.push(
+        box("water", [s * x, L.waterTop, -0.82], [0.1, P * 0.6 - L.waterTop - 0.015, 0.08]),
       );
     }
   }

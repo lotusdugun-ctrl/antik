@@ -7,6 +7,7 @@ import {
 } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { SCANS } from "@/lib/scans";
+import { sculptMeshCached } from "@/lib/sculpt";
 import { buildLandscape, type Biome } from "./scene/landscape";
 import { animateWater, cutWater } from "./scene/water";
 import { rockGeometry } from "./scene/rock";
@@ -14,6 +15,13 @@ import { buildFrescoes, isFresco } from "./scene/fresco";
 import { waterOf } from "@/lib/landscape-plan";
 import { buildLettering, isPlate } from "./scene/lettering";
 import type { LifeHandle } from "./scene/life";
+import { HIDDEN_LAYER, batchMeshes, type MeshBatch } from "./scene/batch";
+import {
+  compactAttribute,
+  remapIndex,
+  weldVertices,
+  type AttributeArray,
+} from "@/lib/geometry-weld";
 import type { SceneLife } from "@/lib/scene-life";
 import type * as THREE_NS from "three";
 import {
@@ -31,6 +39,7 @@ import {
 } from "@/lib/reconstruction-parts";
 import type { ModelSpec } from "@/lib/reconstructions";
 import { LOW_SETTINGS } from "@/lib/device-tier";
+import { AdaptiveResolution, FrameGate } from "@/lib/render-budget";
 import { angleDelta, orientationToLook, smoothAngle } from "@/lib/gyro";
 import { chooseScaleRefs, layoutScaleRefs, type ScaleRef } from "@/lib/scale-refs";
 import { DAY_LOOP_SECONDS, timeOfDay, type Weather } from "@/lib/weather";
@@ -170,7 +179,7 @@ type Props = {
   onPickLabel: (index: number) => void;
   /** Bumped by the caller to swing the camera to a named viewpoint. */
   view: { name: "front" | "above" | "corner"; token: number } | null;
-  /** Bumped by the caller to hand back the model as a .glb file. */
+  /** Bumped by the caller to hand back the model, in memory, for AR (never as a download). */
   exportToken: number;
   /**
    * The file, or `null` when there was none to give — the scene was not built
@@ -225,6 +234,10 @@ type Props = {
   onPose?: ((eye: [number, number, number], dir: [number, number, number]) => void) | undefined;
   /** What was measured: the GPU once built, the frame times once the first seconds are drawn. */
   onInfo?: ((info: SceneInfo) => void) | undefined;
+  /** How far the build has got, 0 to 1; 1 once the first frame is drawn. */
+  onProgress?: ((fraction: number) => void) | undefined;
+  /** The light setting, as chosen when the scene is built (later changes go through `setLite`). */
+  lite?: boolean | undefined;
   /** Told when looking with the phone was turned on but no reading has come. */
   onGyroSilent?: (() => void) | undefined;
 };
@@ -473,6 +486,16 @@ const VIEWPOINT: Partial<Record<ModelSpec["kind"], [number, number, number]>> = 
 const viewpointOf = (kind: string): [number, number, number] =>
   (VIEWPOINT as Partial<Record<string, [number, number, number]>>)[kind] ?? [0.65, 0.35, -0.9];
 
+/**
+ * The painted stone (see `buildStone`), by seed and size. Painting a set is a
+ * few hundred milliseconds of a phone's time; kept here, it is paid once a
+ * visit rather than once a model.
+ */
+const stoneCanvases = new Map<
+  string,
+  { map: HTMLCanvasElement; normal: HTMLCanvasElement; ao: HTMLCanvasElement }
+>();
+
 export default function Reconstruction3DInner({
   parts,
   kind,
@@ -506,6 +529,8 @@ export default function Reconstruction3DInner({
   onPerson,
   onPose,
   onInfo,
+  onProgress,
+  lite = false,
   onGyroSilent,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -518,6 +543,10 @@ export default function Reconstruction3DInner({
   poseRef.current = onPose;
   const infoRef = useRef(onInfo);
   infoRef.current = onInfo;
+  const progressRef = useRef(onProgress);
+  progressRef.current = onProgress;
+  const liteRef = useRef(lite);
+  liteRef.current = lite;
   const gyroSilentRef = useRef(onGyroSilent);
   gyroSilentRef.current = onGyroSilent;
   /*
@@ -578,6 +607,7 @@ export default function Reconstruction3DInner({
     let disposed = false;
     let cleanup = () => {};
 
+    progressRef.current?.(0.05);
     void (async () => {
       const THREE = await import("three");
       const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
@@ -639,6 +669,28 @@ export default function Reconstruction3DInner({
       } catch {
         gpu = undefined;
       }
+
+      // A touch screen: a phone or a tablet, drawn with a lighter hand.
+      const coarse = window.matchMedia("(pointer: coarse)").matches;
+      // Anisotropic filtering keeps stone sharp at a glancing angle; a phone's
+      // GPU pays for every tap of it, and four is most of the gain.
+      const anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), coarse ? 4 : 16);
+
+      /*
+       * The build is a few seconds of work on a phone. Done in one go, the
+       * page froze for all of it — no scrolling, no taps, no spinner. Between
+       * its big steps it hands the main thread back for a moment and reports
+       * how far it has got, which the viewer shows as a progress bar. If the
+       * view was closed in the meantime, the half-built scene is dropped.
+       */
+      const breathe = async (fraction: number) => {
+        progressRef.current?.(fraction);
+        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+        if (!disposed) return true;
+        renderer.dispose();
+        renderer.forceContextLoss();
+        return false;
+      };
 
       const scene = new THREE.Scene();
       const bounds = boundsOf(parts);
@@ -2660,6 +2712,20 @@ export default function Reconstruction3DInner({
             if (part.rotY) geometry.rotateY(part.rotY);
             break;
           }
+          case "sculpt": {
+            // Cut once per set of masses: a team of horses shares one mesh.
+            const mesh = sculptMeshCached(part.masses, part.cell, part.back);
+            geometry = new THREE.BufferGeometry();
+            geometry.setAttribute("position", new THREE.BufferAttribute(mesh.positions.slice(), 3));
+            geometry.setAttribute("normal", new THREE.BufferAttribute(mesh.normals.slice(), 3));
+            geometry.setAttribute(
+              "uv",
+              new THREE.BufferAttribute(new Float32Array((mesh.positions.length / 3) * 2), 2),
+            );
+            geometry.setIndex(new THREE.BufferAttribute(mesh.indices, 1));
+            if (part.rotY) geometry.rotateY(part.rotY);
+            break;
+          }
           default: {
             geometry = figureGeometry(part);
             if (part.rotY) geometry.rotateY(part.rotY);
@@ -2675,6 +2741,45 @@ export default function Reconstruction3DInner({
        * not uniform, and an indexed box next to a non-indexed extrusion is
        * exactly that. Everything is flattened first so the merge always holds.
        */
+      /**
+       * Join the exact duplicate vertices a flattened, merged geometry is full
+       * of (see `geometry-weld.ts`): the same surface, shading and texture
+       * coordinates, bit for bit, in a fraction of the vertices.
+       */
+      const weldGeometry = (geometry: THREE_NS.BufferGeometry) => {
+        const position = geometry.attributes["position"];
+        if (geometry.index || !position || geometry.morphAttributes["position"]) return geometry;
+        const count = position.count;
+        const names = Object.keys(geometry.attributes);
+        const attributes = names.map(
+          (name) => geometry.attributes[name] as THREE_NS.BufferAttribute,
+        );
+        if (attributes.some((a) => !a.isBufferAttribute || a.array.length !== count * a.itemSize))
+          return geometry;
+        const weld = weldVertices(
+          attributes.map((a) => ({ array: a.array as AttributeArray, itemSize: a.itemSize })),
+          count,
+        );
+        if (weld.count > count * 0.95) return geometry;
+        const out = new THREE.BufferGeometry();
+        names.forEach((name, k) => {
+          const a = attributes[k]!;
+          out.setAttribute(
+            name,
+            new THREE.BufferAttribute(
+              compactAttribute(a.array as AttributeArray, a.itemSize, weld.source),
+              a.itemSize,
+              a.normalized,
+            ),
+          );
+        });
+        out.setIndex(new THREE.BufferAttribute(remapIndex(weld, null), 1));
+        for (const group of geometry.groups)
+          out.addGroup(group.start, group.count, group.materialIndex);
+        geometry.dispose();
+        return out;
+      };
+
       const flatten = (geometry: THREE_NS.BufferGeometry) => {
         if (!geometry.index) return geometry;
         const flat = geometry.toNonIndexed();
@@ -2745,133 +2850,148 @@ export default function Reconstruction3DInner({
         seed: number,
         tune: { coarse: number; medium: number; vein: number },
       ): StoneSet => {
-        const size = 1024;
-        const mapCanvas = document.createElement("canvas");
-        const normalCanvas = document.createElement("canvas");
-        const aoCanvas = document.createElement("canvas");
-        for (const canvas of [mapCanvas, normalCanvas, aoCanvas]) {
-          canvas.width = size;
-          canvas.height = size;
-        }
-        const mapCtx = mapCanvas.getContext("2d")!;
-        const normalCtx = normalCanvas.getContext("2d")!;
-        const aoCtx = aoCanvas.getContext("2d")!;
-        const image = mapCtx.createImageData(size, size);
-        const normalImage = normalCtx.createImageData(size, size);
-        const aoImage = aoCtx.createImageData(size, size);
-        const random = (() => {
-          let state = seed >>> 0;
-          return () => {
-            state = (state * 1664525 + 1013904223) >>> 0;
-            return state / 4294967296;
+        /*
+         * Painted once per page visit, not once per model: the canvases are
+         * kept (see `stoneCanvases`), so switching to the next model only
+         * uploads them again. A phone gets them at half the size — a quarter
+         * of the memory and of the time to paint, and at a phone's size the
+         * grain is still finer than its pixels.
+         */
+        const size = coarse ? 512 : 1024;
+        // Patterns are laid out in the 1024-pixel original's units.
+        const k = 1024 / size;
+        const key = `${seed}|${size}`;
+        const paint = () => {
+          const mapCanvas = document.createElement("canvas");
+          const normalCanvas = document.createElement("canvas");
+          const aoCanvas = document.createElement("canvas");
+          for (const canvas of [mapCanvas, normalCanvas, aoCanvas]) {
+            canvas.width = size;
+            canvas.height = size;
+          }
+          const mapCtx = mapCanvas.getContext("2d")!;
+          const normalCtx = normalCanvas.getContext("2d")!;
+          const aoCtx = aoCanvas.getContext("2d")!;
+          const image = mapCtx.createImageData(size, size);
+          const normalImage = normalCtx.createImageData(size, size);
+          const aoImage = aoCtx.createImageData(size, size);
+          const random = (() => {
+            let state = seed >>> 0;
+            return () => {
+              state = (state * 1664525 + 1013904223) >>> 0;
+              return state / 4294967296;
+            };
+          })();
+          const smooth = (t: number) => t * t * (3 - 2 * t);
+          const coarseCells = tune.coarse;
+          const coarseLattice: number[] = [];
+          for (let i = 0; i < (coarseCells + 1) * (coarseCells + 1); i += 1)
+            coarseLattice.push(random());
+          const sampleCoarse = (x: number, y: number) => {
+            const fx = (x / size) * coarseCells;
+            const fy = (y / size) * coarseCells;
+            const x0 = Math.floor(fx);
+            const y0 = Math.floor(fy);
+            const tx = smooth(fx - x0);
+            const ty = smooth(fy - y0);
+            const at = (cx: number, cy: number) =>
+              coarseLattice[(cy % coarseCells) * (coarseCells + 1) + (cx % coarseCells)]!;
+            return (
+              (at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx) * (1 - ty) +
+              (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
+            );
           };
-        })();
-        const smooth = (t: number) => t * t * (3 - 2 * t);
-        const coarseCells = tune.coarse;
-        const coarseLattice: number[] = [];
-        for (let i = 0; i < (coarseCells + 1) * (coarseCells + 1); i += 1)
-          coarseLattice.push(random());
-        const sampleCoarse = (x: number, y: number) => {
-          const fx = (x / size) * coarseCells;
-          const fy = (y / size) * coarseCells;
-          const x0 = Math.floor(fx);
-          const y0 = Math.floor(fy);
-          const tx = smooth(fx - x0);
-          const ty = smooth(fy - y0);
-          const at = (cx: number, cy: number) =>
-            coarseLattice[(cy % coarseCells) * (coarseCells + 1) + (cx % coarseCells)]!;
-          return (
-            (at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx) * (1 - ty) +
-            (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
-          );
-        };
-        const medCells = tune.medium;
-        const medLattice: number[] = [];
-        for (let i = 0; i < (medCells + 1) * (medCells + 1); i += 1) medLattice.push(random());
-        const sampleMed = (x: number, y: number) => {
-          const fx = (x / size) * medCells;
-          const fy = (y / size) * medCells;
-          const x0 = Math.floor(fx);
-          const y0 = Math.floor(fy);
-          const tx = smooth(fx - x0);
-          const ty = smooth(fy - y0);
-          const at = (cx: number, cy: number) =>
-            medLattice[(cy % medCells) * (medCells + 1) + (cx % medCells)]!;
-          return (
-            (at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx) * (1 - ty) +
-            (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
-          );
-        };
-        const values = new Float32Array(size * size);
-        for (let y = 0; y < size; y += 1) {
-          for (let x = 0; x < size; x += 1) {
-            const mottle = sampleCoarse(x, y);
-            const grain2 = sampleMed(x, y);
-            const jitter = random();
-            // Veining: faint diagonal streaks. The sine makes the streak, the
-            // mottle modulates its strength so veins do not cross every block.
-            const vein =
-              Math.sin((x * 0.008 + y * 0.012 + mottle * 6) * 2.5) *
-              (0.5 + 0.5 * Math.sin((x * 0.003 - y * 0.005 + grain2 * 4) * 5)) *
-              tune.vein *
-              mottle;
-            const value =
-              214 + (mottle - 0.5) * 24 + (grain2 - 0.5) * 14 + (jitter - 0.5) * 12 + vein * 28;
-            values[y * size + x] = value;
-            const index = (y * size + x) * 4;
-            image.data[index] = value;
-            image.data[index + 1] = value - 1;
-            image.data[index + 2] = value - 5;
-            image.data[index + 3] = 255;
+          const medCells = tune.medium;
+          const medLattice: number[] = [];
+          for (let i = 0; i < (medCells + 1) * (medCells + 1); i += 1) medLattice.push(random());
+          const sampleMed = (x: number, y: number) => {
+            const fx = (x / size) * medCells;
+            const fy = (y / size) * medCells;
+            const x0 = Math.floor(fx);
+            const y0 = Math.floor(fy);
+            const tx = smooth(fx - x0);
+            const ty = smooth(fy - y0);
+            const at = (cx: number, cy: number) =>
+              medLattice[(cy % medCells) * (medCells + 1) + (cx % medCells)]!;
+            return (
+              (at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx) * (1 - ty) +
+              (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty
+            );
+          };
+          const values = new Float32Array(size * size);
+          for (let y = 0; y < size; y += 1) {
+            for (let x = 0; x < size; x += 1) {
+              const mottle = sampleCoarse(x, y);
+              const grain2 = sampleMed(x, y);
+              const jitter = random();
+              // Veining: faint diagonal streaks. The sine makes the streak, the
+              // mottle modulates its strength so veins do not cross every block.
+              const vein =
+                Math.sin((x * k * 0.008 + y * k * 0.012 + mottle * 6) * 2.5) *
+                (0.5 + 0.5 * Math.sin((x * k * 0.003 - y * k * 0.005 + grain2 * 4) * 5)) *
+                tune.vein *
+                mottle;
+              const value =
+                214 + (mottle - 0.5) * 24 + (grain2 - 0.5) * 14 + (jitter - 0.5) * 12 + vein * 28;
+              values[y * size + x] = value;
+              const index = (y * size + x) * 4;
+              image.data[index] = value;
+              image.data[index + 1] = value - 1;
+              image.data[index + 2] = value - 5;
+              image.data[index + 3] = 255;
+            }
           }
-        }
-        for (let y = 0; y < size; y += 1) {
-          for (let x = 0; x < size; x += 1) {
-            const at = (xx: number, yy: number) =>
-              values[((yy + size) % size) * size + ((xx + size) % size)]!;
-            const v = at(x, y);
-            // The gradient of the same height that made the colour, turned into
-            // a tangent-space normal: the tooth of the stone, not a flat map.
-            const dzx = at(x + 1, y) - at(x - 1, y);
-            const dzy = at(x, y + 1) - at(x, y - 1);
-            const scale = 255 / 70;
-            const r = Math.max(0, Math.min(255, 128 - dzx * scale));
-            const g = Math.max(0, Math.min(255, 128 + dzy * scale));
-            const ni = (y * size + x) * 4;
-            normalImage.data[ni] = r;
-            normalImage.data[ni + 1] = g;
-            normalImage.data[ni + 2] = 255;
-            normalImage.data[ni + 3] = 255;
-            // Ambient occlusion: wherever this height sits below its three
-            // neighbours, light cannot reach it — a pit, a seam, a chip — so
-            // those are the places that go dark.
-            let tallest = 0;
-            for (let yy = -1; yy <= 1; yy += 1)
-              for (let xx = -1; xx <= 1; xx += 1) tallest = Math.max(tallest, at(x + xx, y + yy));
-            const pit = Math.max(0, tallest - v);
-            const ao = Math.max(0.62, 1 - pit * 0.055);
-            const ai = (y * size + x) * 4;
-            const aov = ao * 255;
-            aoImage.data[ai] = aov;
-            aoImage.data[ai + 1] = aov;
-            aoImage.data[ai + 2] = aov;
-            aoImage.data[ai + 3] = 255;
+          for (let y = 0; y < size; y += 1) {
+            for (let x = 0; x < size; x += 1) {
+              const at = (xx: number, yy: number) =>
+                values[((yy + size) % size) * size + ((xx + size) % size)]!;
+              const v = at(x, y);
+              // The gradient of the same height that made the colour, turned into
+              // a tangent-space normal: the tooth of the stone, not a flat map.
+              const dzx = at(x + 1, y) - at(x - 1, y);
+              const dzy = at(x, y + 1) - at(x, y - 1);
+              const scale = 255 / 70;
+              const r = Math.max(0, Math.min(255, 128 - dzx * scale));
+              const g = Math.max(0, Math.min(255, 128 + dzy * scale));
+              const ni = (y * size + x) * 4;
+              normalImage.data[ni] = r;
+              normalImage.data[ni + 1] = g;
+              normalImage.data[ni + 2] = 255;
+              normalImage.data[ni + 3] = 255;
+              // Ambient occlusion: wherever this height sits below its three
+              // neighbours, light cannot reach it — a pit, a seam, a chip — so
+              // those are the places that go dark.
+              let tallest = 0;
+              for (let yy = -1; yy <= 1; yy += 1)
+                for (let xx = -1; xx <= 1; xx += 1) tallest = Math.max(tallest, at(x + xx, y + yy));
+              const pit = Math.max(0, tallest - v);
+              const ao = Math.max(0.62, 1 - pit * 0.055);
+              const ai = (y * size + x) * 4;
+              const aov = ao * 255;
+              aoImage.data[ai] = aov;
+              aoImage.data[ai + 1] = aov;
+              aoImage.data[ai + 2] = aov;
+              aoImage.data[ai + 3] = 255;
+            }
           }
-        }
-        mapCtx.putImageData(image, 0, 0);
-        normalCtx.putImageData(normalImage, 0, 0);
-        aoCtx.putImageData(aoImage, 0, 0);
+          mapCtx.putImageData(image, 0, 0);
+          normalCtx.putImageData(normalImage, 0, 0);
+          aoCtx.putImageData(aoImage, 0, 0);
+          return { map: mapCanvas, normal: normalCanvas, ao: aoCanvas };
+        };
+        const canvases = stoneCanvases.get(key) ?? paint();
+        stoneCanvases.set(key, canvases);
         const wrap = (texture: THREE_NS.CanvasTexture) => {
           texture.wrapS = THREE.RepeatWrapping;
           texture.wrapT = THREE.RepeatWrapping;
-          texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+          texture.anisotropy = anisotropy;
           return texture;
         };
-        const map = wrap(new THREE.CanvasTexture(mapCanvas));
+        const map = wrap(new THREE.CanvasTexture(canvases.map));
         map.colorSpace = THREE.SRGBColorSpace;
-        const normal = wrap(new THREE.CanvasTexture(normalCanvas));
+        const normal = wrap(new THREE.CanvasTexture(canvases.normal));
         normal.colorSpace = THREE.NoColorSpace;
-        const ao = wrap(new THREE.CanvasTexture(aoCanvas));
+        const ao = wrap(new THREE.CanvasTexture(canvases.ao));
         ao.colorSpace = THREE.NoColorSpace;
         return { map, normal, ao };
       };
@@ -2879,6 +2999,7 @@ export default function Reconstruction3DInner({
       const stoneSet = buildStone(20260907, { coarse: 8, medium: 24, vein: 0.06 });
       // Limestone and block stone: coarser, yellower patchiness, no veins.
       const blockSet = buildStone(48712347, { coarse: 12, medium: 30, vein: 0 });
+      if (!(await breathe(0.25))) return;
       // The name the rest of this file still talks in: the marble surface.
       const stoneTexture = stoneSet.map;
 
@@ -2954,7 +3075,7 @@ export default function Reconstruction3DInner({
               texture.wrapT = THREE.RepeatWrapping;
               texture.repeat.set(carving.repeat[0], carving.repeat[1]);
             }
-            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            texture.anisotropy = anisotropy;
             // Only a colour carving puts the photograph on the surface. A depth
             // one has already had the stone laid on it, and uses the photo for
             // nothing but height.
@@ -3145,10 +3266,9 @@ export default function Reconstruction3DInner({
           if (!merged) continue;
           if (list.length > 1) list.forEach((geometry) => geometry.dispose());
           worldUVs(merged);
-          // The ambient occlusion map is read from the second UV channel, so the
-          // same world-projected coordinates are duplicated there for it.
-          const uv = merged.getAttribute("uv");
-          if (uv) merged.setAttribute("uv1", uv.clone());
+          // The ambient occlusion map reads the same world-projected
+          // coordinates as the grain (channel 0), so no second set is kept.
+          const welded = weldGeometry(merged);
           const material = surfaceFor(name, NOT_STONE.includes(name) ? null : stoneSetFor(name));
           if (painted) material.vertexColors = true;
           if (name === "water") waters.push(animateWater(material));
@@ -3184,7 +3304,7 @@ export default function Reconstruction3DInner({
             material.polygonOffsetFactor = 0;
             material.polygonOffsetUnits = -2 - DECALS.indexOf(name) * 0.5;
           }
-          const mesh = new THREE.Mesh(merged, material);
+          const mesh = new THREE.Mesh(welded, material);
           mesh.castShadow = true;
           mesh.receiveShadow = true;
           parent.add(mesh);
@@ -3192,10 +3312,11 @@ export default function Reconstruction3DInner({
           // labels go, which is what leaves the clean archaeological view.
           if (name === "human") scaleFigure = mesh;
           materialsOwned.push(material);
-          geometriesOwned.push(merged);
+          geometriesOwned.push(welded);
         }
       };
       addMerged(parts, scene);
+      if (!(await breathe(0.55))) return;
 
       /*
        * The life of the place: its furniture merged like the building, its
@@ -3240,6 +3361,7 @@ export default function Reconstruction3DInner({
         });
       }
       lifeGroup.visible = showLifeRef.current;
+      if (!(await breathe(0.8))) return;
 
       /*
        * The inscriptions: real texts, drawn letter by letter onto a canvas
@@ -3250,18 +3372,19 @@ export default function Reconstruction3DInner({
       const letterings: { dispose: () => void }[] = [];
       const letteringTimer = setTimeout(() => {
         if (disposed) return;
-        const anisotropy = renderer.capabilities.getMaxAnisotropy();
-        const own = buildLettering(THREE, parts.filter(isPlate), anisotropy);
+        // A phone keeps its letter pages and paintings at half the size.
+        const pageSide = coarse ? 1024 : 2048;
+        const own = buildLettering(THREE, parts.filter(isPlate), anisotropy, pageSide);
         scene.add(own.group);
         letterings.push(own);
         const painted = parts.filter(isFresco);
         if (painted.length) {
-          const walls = buildFrescoes(THREE, painted, anisotropy);
+          const walls = buildFrescoes(THREE, painted, anisotropy, pageSide);
           scene.add(walls.group);
           letterings.push(walls);
         }
         if (life) {
-          const theirs = buildLettering(THREE, life.props.filter(isPlate), anisotropy);
+          const theirs = buildLettering(THREE, life.props.filter(isPlate), anisotropy, pageSide);
           lifeGroup.add(theirs.group);
           letterings.push(theirs);
         }
@@ -3306,6 +3429,7 @@ export default function Reconstruction3DInner({
         parts: life ? [...parts, ...life.props] : parts,
       });
       scene.add(landscape.group);
+      if (!(await breathe(0.9))) return;
 
       /*
        * The scans. Each file is fetched once, however many parts use it (the
@@ -3327,6 +3451,7 @@ export default function Reconstruction3DInner({
       ];
       const scanned = placed.map(({ part }) => part);
       const scanResources: { dispose: () => void }[] = [];
+      const scanBatches: MeshBatch[] = [];
       if (scanned.length > 0) {
         void (async () => {
           const [{ GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
@@ -3545,6 +3670,31 @@ export default function Reconstruction3DInner({
             holder.scale.setScalar(scale);
             into.add(holder);
           }
+          /*
+           * The same scan set many times over — the Mausoleum's frieze slabs
+           * and its lions, seventy-odd pieces — is drawn as one batch per
+           * surface, rather than as a draw call (and a shadow) each. The
+           * holders stay, so the light setting can still hide the far ones.
+           */
+          for (const root of [scanGroup, lifeGroup]) {
+            const surfaces = new Set<THREE_NS.Material>();
+            for (const holder of root.children) {
+              if (!holder.name.startsWith("scan:")) continue;
+              holder.traverse((object) => {
+                const mesh = object as THREE_NS.Mesh;
+                if (mesh.isMesh && !Array.isArray(mesh.material)) surfaces.add(mesh.material);
+              });
+            }
+            for (const surface of surfaces) {
+              const made = batchMeshes(THREE, root, surface, {
+                still: true,
+                min: 3,
+                name: "scans",
+              });
+              scanBatches.push(...made);
+              scanResources.push(...made);
+            }
+          }
         })();
       }
 
@@ -3558,7 +3708,7 @@ export default function Reconstruction3DInner({
       sun.castShadow = true;
       // A phone's GPU pays four times over for a 2048 map; 1024 still keeps
       // the colonnade shadows readable at the distances a phone is held.
-      const shadowSize = window.matchMedia("(pointer: coarse)").matches ? 1024 : 2048;
+      const shadowSize = coarse ? 1024 : 2048;
       sun.shadow.mapSize.set(shadowSize, shadowSize);
       sun.shadow.bias = -0.0006;
       sun.shadow.radius = 2.5;
@@ -3631,7 +3781,7 @@ export default function Reconstruction3DInner({
 
       // Phones draw at up to 3x; past 1.5x the difference is invisible on a
       // small screen and the fill cost is not.
-      const touch = window.matchMedia("(pointer: coarse)").matches;
+      const touch = coarse;
       const maxRatio = Math.min(window.devicePixelRatio, touch ? 1.5 : 2);
       // Lowered by the light setting for weak devices (see `setLite`).
       let ratioCap = maxRatio;
@@ -3707,6 +3857,7 @@ export default function Reconstruction3DInner({
           target,
           span,
           scene,
+          renderer,
         };
       }
 
@@ -4080,9 +4231,25 @@ export default function Reconstruction3DInner({
         dispose: () => void;
       } | null = null;
       let qualityOn = false;
+      /*
+       * Dynamic resolution (see `render-budget.ts`): when frames take longer
+       * than a sixtieth of a second, the pixel ratio steps down until they do
+       * not, and back up once there is room. A desktop that keeps up never
+       * sees it; a phone never goes below three quarters of a CSS pixel, a
+       * desktop never below one.
+       */
+      let lastFrame = performance.now() / 1000;
+      let viewWidth = host.clientWidth;
+      let viewHeight = host.clientHeight;
+      const resolution = new AdaptiveResolution({
+        max: maxRatio,
+        min: Math.min(maxRatio, touch ? 0.75 : 1),
+      });
       const resize = () => {
         const { clientWidth, clientHeight } = host;
         if (!clientWidth || !clientHeight) return;
+        viewWidth = clientWidth;
+        viewHeight = clientHeight;
         camera.aspect = clientWidth / clientHeight;
         camera.updateProjectionMatrix();
         /*
@@ -4093,7 +4260,10 @@ export default function Reconstruction3DInner({
          * bigger rather than the frame rate smaller.
          */
         const budget = Math.sqrt(4_100_000 / (clientWidth * clientHeight));
-        renderer.setPixelRatio(Math.max(1, Math.min(ratioCap, budget)));
+        const ceiling = Math.max(1, Math.min(ratioCap, budget));
+        // The measured frame rate may hold the ratio under that (see `frame`).
+        if (Math.abs(ceiling - resolution.max) > 0.01) resolution.setMax(ceiling, lastFrame);
+        renderer.setPixelRatio(resolution.ratio);
         renderer.setSize(clientWidth, clientHeight, false);
         composer?.setSize(clientWidth, clientHeight);
       };
@@ -4200,8 +4370,10 @@ export default function Reconstruction3DInner({
       };
       const placePins = () => {
         if (!pins.length) return;
-        const width = host.clientWidth;
-        const height2 = host.clientHeight;
+        // Read in `resize`, not here: a layout read every frame is a forced
+        // layout every frame whenever anything on the page has changed.
+        const width = viewWidth;
+        const height2 = viewHeight;
         const active = latestRef.current.activeLabel;
         let shown = 0;
         for (let i = 0; i < pins.length; i += 1) {
@@ -4462,13 +4634,45 @@ export default function Reconstruction3DInner({
        * column of the plan, they also say whether a spot is open or inside
        * something solid, which is what stops a walker at a wall.
        */
-      const floorExtent =
-        Math.max(bounds.max[0] - bounds.min[0], bounds.max[2] - bounds.min[2]) + 2;
+      /*
+       * The grid covers every floor there is, not only the building's own
+       * bounds: a square's paving, a forecourt's steps and the furniture
+       * round a model stand outside those, and a walker who left the grid
+       * was given the bare ground under them — and sank through the paving.
+       * Set when the floors are first sorted (see `buildFloors`).
+       */
+      let floorExtent = Math.max(bounds.max[0] - bounds.min[0], bounds.max[2] - bounds.min[2]) + 2;
       // About a metre a cell, so a cell holds a step's tread or two, not a flight.
-      const FLOOR_GRID = Math.max(32, Math.min(192, Math.ceil(floorExtent)));
-      const floorMinX = bounds.min[0] - 1;
-      const floorMinZ = bounds.min[2] - 1;
-      const floorCell = floorExtent / FLOOR_GRID;
+      let FLOOR_GRID = Math.max(32, Math.min(192, Math.ceil(floorExtent)));
+      let floorMinX = bounds.min[0] - 1;
+      let floorMinZ = bounds.min[2] - 1;
+      let floorCell = floorExtent / FLOOR_GRID;
+      const fitFloorGrid = () => {
+        const box = new THREE.Box3(
+          new THREE.Vector3(bounds.min[0], bounds.min[1], bounds.min[2]),
+          new THREE.Vector3(bounds.max[0], bounds.max[1], bounds.max[2]),
+        );
+        const each = new THREE.Box3();
+        for (const object of scene.children) {
+          const mesh = object as THREE_NS.Mesh;
+          if (!mesh.isMesh || mesh === apronMesh || mesh === scaleFigure) continue;
+          mesh.geometry.computeBoundingBox();
+          if (!mesh.geometry.boundingBox) continue;
+          mesh.updateMatrixWorld();
+          box.union(each.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld));
+        }
+        // Never further than the paved apron reaches: beyond it is landscape.
+        const limit = apronRadius;
+        const minX = Math.max(box.min.x, centre.x - limit);
+        const maxX = Math.min(box.max.x, centre.x + limit);
+        const minZ = Math.max(box.min.z, centre.z - limit);
+        const maxZ = Math.min(box.max.z, centre.z + limit);
+        floorExtent = Math.max(maxX - minX, maxZ - minZ) + 2;
+        FLOOR_GRID = Math.max(32, Math.min(256, Math.ceil(floorExtent)));
+        floorMinX = minX - 1;
+        floorMinZ = minZ - 1;
+        floorCell = floorExtent / FLOOR_GRID;
+      };
       let floorTris: Float32Array | null = null;
       // 1 where a face looks up, 0 where it looks down.
       let floorUp = new Uint8Array(0);
@@ -4476,6 +4680,7 @@ export default function Reconstruction3DInner({
       let floorStart = new Int32Array(0);
       let floorIds = new Int32Array(0);
       const buildFloors = () => {
+        fitFloorGrid();
         const a = new THREE.Vector3();
         const b = new THREE.Vector3();
         const c = new THREE.Vector3();
@@ -4865,6 +5070,9 @@ export default function Reconstruction3DInner({
        */
       const tap = { id: -1, x: 0, y: 0, at: 0, pointers: 0 };
       const pickRay = new THREE.Raycaster();
+      // People are drawn by their batch; their own meshes, still there to be
+      // hit, sit on a layer of their own (see `scene/batch.ts`).
+      pickRay.layers.enable(HIDDEN_LAYER);
       const pickNdc = new THREE.Vector2();
       const pickHead = new THREE.Vector3();
       const onTapDown = (event: PointerEvent) => {
@@ -5202,6 +5410,45 @@ export default function Reconstruction3DInner({
             heldVertical.down = up < 0;
           },
           floorAt: (x: number, z: number, reach: number) => floorAt(x, z, reach),
+          /**
+           * What is straight above and below the walker's feet: the nearest
+           * surfaces, their height and whether they face up. A floor just
+           * above the feet means the walker has sunk under it.
+           */
+          under: () => {
+            const solids = scene.children.filter(
+              (o) => (o as THREE_NS.Mesh).isMesh && o !== apronMesh && o !== scaleFigure,
+            );
+            const ray = new THREE.Raycaster();
+            const feet = new THREE.Vector3(
+              camera.position.x,
+              walker.feet + 0.05,
+              camera.position.z,
+            );
+            const hit = (dir: THREE_NS.Vector3) => {
+              ray.set(feet, dir);
+              ray.far = 4;
+              const h = ray.intersectObjects(solids, false)[0];
+              if (!h) return null;
+              const n = h.face?.normal.clone().transformDirection(h.object.matrixWorld);
+              const m = (h.object as THREE_NS.Mesh).material as THREE_NS.Material;
+              return {
+                d: +h.distance.toFixed(2),
+                up: n ? +n.y.toFixed(2) : null,
+                what: `${h.object.name || h.object.type}/${m?.type}/${(m as THREE_NS.MeshStandardMaterial)?.color?.getHexString?.() ?? ""}/${(h.object as THREE_NS.Mesh).geometry.attributes["position"]?.count}/${h.object.parent === scene ? "root" : h.object.parent?.name || "child"}/${(h.object as THREE_NS.InstancedMesh).isInstancedMesh ? "inst" : ""}`,
+              };
+            };
+            feet.y = walker.feet + 1.2;
+            const down = hit(new THREE.Vector3(0, -1, 0));
+            return {
+              feet: +walker.feet.toFixed(2),
+              view: +walker.view.toFixed(2),
+              ground: +groundAt(camera.position.x, camera.position.z).toFixed(2),
+              // A floor this far above the feet, facing up: sunk under it.
+              sunk: down && down.up !== null && down.up > 0.7 ? +(1.2 - down.d).toFixed(2) : 0,
+              what: down?.what ?? "",
+            };
+          },
           // Where the camera is and what it is aimed at, so a test can wait
           // for a flight to land however slowly the frames come.
           pose: () => [...camera.position.toArray(), ...controls.target.toArray()],
@@ -5220,7 +5467,12 @@ export default function Reconstruction3DInner({
               const key = child.name || ((child as THREE_NS.Mesh).isMesh ? "building" : "other");
               child.traverseVisible((object) => {
                 const mesh = object as THREE_NS.Mesh;
-                if (!mesh.isMesh || !mesh.geometry) return;
+                if (
+                  !mesh.isMesh ||
+                  !mesh.geometry ||
+                  (mesh as { isBatchedMesh?: boolean }).isBatchedMesh
+                )
+                  return;
                 const index = mesh.geometry.index;
                 const position = mesh.geometry.attributes["position"];
                 const count = (index ? index.count : (position?.count ?? 0)) / 3;
@@ -5229,6 +5481,18 @@ export default function Reconstruction3DInner({
                   (tally[key] ?? 0) + count * (instanced.isInstancedMesh ? instanced.count : 1);
               });
             }
+            // The figures alone — people, animals, chariots — without the
+            // furniture merged beside them or the instanced crowd.
+            lifeHandle?.group.traverseVisible((object) => {
+              const mesh = object as THREE_NS.Mesh;
+              if (!mesh.isMesh || !mesh.geometry) return;
+              if ((mesh as unknown as THREE_NS.InstancedMesh).isInstancedMesh) return;
+              if ((mesh as { isBatchedMesh?: boolean }).isBatchedMesh) return;
+              const index = mesh.geometry.index;
+              const position = mesh.geometry.attributes["position"];
+              tally["figures"] =
+                (tally["figures"] ?? 0) + (index ? index.count : (position?.count ?? 0)) / 3;
+            });
             return tally;
           },
           shot: () => {
@@ -5259,9 +5523,12 @@ export default function Reconstruction3DInner({
         tell([camera.position.x, camera.position.y, camera.position.z], [earFacing.x, earFacing.z]);
       };
 
-      let lastFrame = performance.now() / 1000;
+      // At most sixty frames a second, on a 90 or 120 Hz phone too.
+      const gate = new FrameGate(60);
       const frame = () => {
-        const now = performance.now() / 1000;
+        const nowMs = performance.now();
+        if (!gate.tick(nowMs)) return;
+        const now = nowMs / 1000;
         for (const water of waters) water.tick(now % 3600);
         const elapsed = now - lastFrame;
         const dt = Math.min(0.1, elapsed);
@@ -5358,6 +5625,7 @@ export default function Reconstruction3DInner({
           }
         }
         lifeHandle?.update(now, dt, glow, liteOn ? liteEye : camera);
+        for (const batch of scanBatches) batch.sync();
         if (walker.on && now - poseAt > 0.25 && poseRef.current) {
           poseAt = now;
           camera.getWorldDirection(poseDir);
@@ -5427,9 +5695,15 @@ export default function Reconstruction3DInner({
         else renderer.render(scene, camera);
         placePins();
         listen(now);
+        if (perf.done) {
+          const ratio = resolution.sample(elapsed * 1000, now);
+          if (ratio !== null) resize();
+        }
         if (!perf.done) {
-          if (perf.firstAt < 0) perf.firstAt = now;
-          else if (now - perf.firstAt > 1.5) perf.samples.push(elapsed * 1000);
+          if (perf.firstAt < 0) {
+            perf.firstAt = now;
+            progressRef.current?.(1);
+          } else if (now - perf.firstAt > 1.5) perf.samples.push(elapsed * 1000);
           if (now - perf.firstAt > 6.5) {
             perf.done = true;
             const sorted = [...perf.samples].sort((a, b) => a - b);
@@ -5450,8 +5724,17 @@ export default function Reconstruction3DInner({
        * do not lurch to catch up on the time they were away.
        */
       let drawing = false;
+      /*
+       * Every shader the model needs — fifty or sixty programs, one for each
+       * kind of surface, light and shadow — is compiled before the first
+       * frame, and where the browser can (KHR_parallel_shader_compile) off
+       * the main thread. Left to the first frame, the compiling all happened
+       * inside it, and a phone froze for seconds with the page unscrollable.
+       */
+      let compiled = false;
       loop.resume = () => {
-        if (!drawing) return;
+        if (!drawing || !compiled || contextLost) return;
+        gate.reset();
         lastFrame = performance.now() / 1000;
         renderer.setAnimationLoop(frame);
       };
@@ -5459,8 +5742,11 @@ export default function Reconstruction3DInner({
         const visible = entries[entries.length - 1]?.isIntersecting ?? true;
         if (contextLost || visible === drawing) return;
         drawing = visible;
-        if (visible) lastFrame = performance.now() / 1000;
-        renderer.setAnimationLoop(visible ? frame : null);
+        if (visible) {
+          gate.reset();
+          lastFrame = performance.now() / 1000;
+        }
+        renderer.setAnimationLoop(visible && compiled ? frame : null);
       });
       onScreen.observe(host);
 
@@ -5625,12 +5911,8 @@ export default function Reconstruction3DInner({
          * thing rather than as being teleported somewhere unrecognisable.
          */
         /*
-         * The model, as a file.
-         *
-         * Everything here is generated at runtime from measurements, so there
-         * is no asset to hand anyone — until this. glTF binary is what Blender,
-         * Unity and Unreal all read without a converter, and the export carries
-         * the geometry with its materials rather than a picture of it.
+         * The model as glTF binary, in memory, for AR: the phone's viewer is
+         * handed exactly the measured geometry. It is never offered as a file.
          */
         exportGLB: async (withGround) => {
           const { GLTFExporter } = await import("three/addons/exporters/GLTFExporter.js");
@@ -5638,15 +5920,21 @@ export default function Reconstruction3DInner({
           // The sky, clouds and birds are the building's surroundings, not the
           // building; they drop out of a model file the way they would drop
           // out of a section drawing.
-          const wasVisible = decorations.map((object) => object.visible);
-          decorations.forEach((object) => (object.visible = false));
+          // Nor do the drawing aids that stand in for parts already in it.
+          const aids: THREE_NS.Object3D[] = [];
+          scene.traverse((object) => {
+            if (object.userData["noExport"] && object.visible) aids.push(object);
+          });
+          const hidden = [...decorations, ...aids];
+          const wasVisible = hidden.map((object) => object.visible);
+          hidden.forEach((object) => (object.visible = false));
           const apronWas = apronMesh.visible;
           if (!withGround) apronMesh.visible = false;
           try {
             const result = await exporter.parseAsync(scene, { binary: true, onlyVisible: true });
             return result as ArrayBuffer;
           } finally {
-            decorations.forEach((object, index) => (object.visible = wasVisible[index]!));
+            hidden.forEach((object, index) => (object.visible = wasVisible[index]!));
             apronMesh.visible = apronWas;
           }
         },
@@ -5759,7 +6047,9 @@ export default function Reconstruction3DInner({
         takePhoto: async ({ vignette, dof, mark }) => {
           const { clientWidth: w, clientHeight: h } = host;
           if (!w || !h) return null;
-          const scale = photoScale(w, h, renderer.getPixelRatio());
+          // From the ratio the screen could take, not wherever dynamic resolution
+          // has it at this moment: a photo is not held to a frame budget.
+          const scale = photoScale(w, h, resolution.max);
           const out = document.createElement("canvas");
           out.width = Math.round(w * scale);
           out.height = Math.round(h * scale);
@@ -5811,6 +6101,16 @@ export default function Reconstruction3DInner({
         },
       };
       extrasRef.current?.(extras);
+      // The light setting first, if it is already chosen, so the shaders
+      // compiled are the ones it draws with (no shadows), not twice the set.
+      if (liteRef.current) extras.setLite(true);
+      void renderer
+        .compileAsync(scene, camera)
+        .catch(() => undefined)
+        .then(() => {
+          compiled = true;
+          if (!disposed) loop.resume?.();
+        });
       setReady(true);
 
       cleanup = () => {
