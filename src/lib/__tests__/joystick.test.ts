@@ -31,3 +31,17 @@ describe("walk joystick", () => {
     expect(joystickRuns(0, -1.5)).toBe(true);
   });
 });
+
+import { walkFov } from "@/lib/walk-view";
+
+describe("walking field of view", () => {
+  test("about 90° across, within sane vertical limits", () => {
+    // A landscape monitor: 90° across is about 64° up and down.
+    expect(walkFov(16 / 10)).toBeGreaterThan(60);
+    expect(walkFov(16 / 10)).toBeLessThan(68);
+    // An upright phone: as wide as the limit allows, never fish-eye.
+    expect(walkFov(9 / 20)).toBe(85);
+    // Never narrower than the orbit view.
+    expect(walkFov(3)).toBeGreaterThanOrEqual(55);
+  });
+});

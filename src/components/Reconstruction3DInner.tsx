@@ -12,6 +12,7 @@ import { buildLandscape, type Biome } from "./scene/landscape";
 import { animateWater, cutWater } from "./scene/water";
 import { rockGeometry } from "./scene/rock";
 import { buildFrescoes, isFresco } from "./scene/fresco";
+import { ORBIT_FOV, walkFov } from "@/lib/walk-view";
 import { waterOf } from "@/lib/landscape-plan";
 import { buildLettering, isPlate } from "./scene/lettering";
 import type { LifeHandle } from "./scene/life";
@@ -479,9 +480,22 @@ const VIEWPOINT: Partial<Record<ModelSpec["kind"], [number, number, number]>> = 
   nymphaeum: [0.3, 0.3, -1],
   "peristyle-villa": [0.55, 0.6, -0.9],
   "terrace-villa": [0.55, 0.6, -0.9],
-  "cliff-monastery": [0.45, 0.12, -1],
+  // From across the valley and a little below the ledge: the monastery high
+  // on its cliff, the drop under it and the forest at its foot.
+  "cliff-monastery": [0.3, -0.1, -1],
   lighthouse: [0.75, 0.3, -0.8],
 } as Partial<Record<string, [number, number, number]>>;
+/**
+ * Where the view is aimed, as a share of the model's height from its foot
+ * (0.75 of the way to its middle unless chosen), and how much sky over the
+ * model's top the first frame keeps, as a share of its height. A monastery on
+ * a ledge 80 m up a cliff is looked at, not the rock under it, and the cliff
+ * over it belongs in the picture.
+ */
+const FRAMING: Partial<Record<ModelSpec["kind"], { aim: number; headroom: number }>> = {
+  "cliff-monastery": { aim: 0.62, headroom: 0.12 },
+} as Partial<Record<string, { aim: number; headroom: number }>>;
+
 /** A kind without a chosen view: three-quarters, a little above. */
 const viewpointOf = (kind: string): [number, number, number] =>
   (VIEWPOINT as Partial<Record<string, [number, number, number]>>)[kind] ?? [0.65, 0.35, -0.9];
@@ -3733,11 +3747,13 @@ export default function Reconstruction3DInner({
       scene.add(fill);
 
       const aspect = Math.max(0.5, (host.clientWidth || 16) / (host.clientHeight || 9));
-      const camera = new THREE.PerspectiveCamera(45, aspect, 0.5, span * 12);
+      const camera = new THREE.PerspectiveCamera(ORBIT_FOV, aspect, 0.5, span * 12);
       // A building is read from a little below its middle, not from its middle.
+      const framing = (FRAMING as Partial<Record<string, { aim: number; headroom: number }>>)[kind];
+      const height = bounds.max[1] - bounds.min[1];
       const target = new THREE.Vector3(
         centre.x,
-        bounds.min[1] + (centre.y - bounds.min[1]) * 0.75,
+        bounds.min[1] + (framing ? height * framing.aim : (centre.y - bounds.min[1]) * 0.75),
         centre.z,
       );
       const direction = new THREE.Vector3(...viewpointOf(kind)).normalize();
@@ -3753,7 +3769,7 @@ export default function Reconstruction3DInner({
        */
       const corners: THREE_NS.Vector3[] = [];
       for (const x of [bounds.min[0], bounds.max[0]]) {
-        for (const y of [bounds.min[1], bounds.max[1]]) {
+        for (const y of [bounds.min[1], bounds.max[1] + height * (framing?.headroom ?? 0)]) {
           for (const z of [bounds.min[2], bounds.max[2]]) {
             corners.push(new THREE.Vector3(x, y, z));
           }
@@ -4245,13 +4261,19 @@ export default function Reconstruction3DInner({
         max: maxRatio,
         min: Math.min(maxRatio, touch ? 0.75 : 1),
       });
+      // Wider when walking (see `walkFov`); the orbit view keeps its 45°.
+      let walkingView = false;
+      const fitFov = () => {
+        camera.fov = walkingView ? walkFov(camera.aspect) : ORBIT_FOV;
+        camera.updateProjectionMatrix();
+      };
       const resize = () => {
         const { clientWidth, clientHeight } = host;
         if (!clientWidth || !clientHeight) return;
         viewWidth = clientWidth;
         viewHeight = clientHeight;
         camera.aspect = clientWidth / clientHeight;
-        camera.updateProjectionMatrix();
+        fitFov();
         /*
          * Full screen on a large monitor at 2x is some fifteen million pixels a
          * frame, most of them invisible at that size. The cap above still
@@ -4863,6 +4885,8 @@ export default function Reconstruction3DInner({
       const orbitTarget = new THREE.Vector3();
       const enterWalk = () => {
         if (walker.on) return;
+        walkingView = true;
+        fitFov();
         if (!floorTris) buildFloors();
         flight = null;
         drift = null;
@@ -4932,6 +4956,8 @@ export default function Reconstruction3DInner({
       const exitWalk = (returnToOrbit: boolean) => {
         if (!walker.on) return;
         walker.on = false;
+        walkingView = false;
+        fitFov();
         held.forward = held.back = held.left = held.right = false;
         heldVertical.up = heldVertical.down = heldVertical.run = false;
         looking.clear();

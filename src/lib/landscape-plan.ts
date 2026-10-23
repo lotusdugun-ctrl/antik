@@ -347,6 +347,63 @@ export function keepOutGrid(
   };
 }
 
+/**
+ * The foot of a face of living rock (a part with a `rock` face, see
+ * `models/rockface.ts`) that stands on the ground: the line of the face on
+ * the plan and which way it looks, and how high the scree is banked against it.
+ */
+export type Scree = {
+  x: number;
+  z: number;
+  /** The face's direction along the plan, and out of it (unit vectors). */
+  along: [number, number];
+  out: [number, number];
+  half: number;
+  height: number;
+};
+
+/** How far out from a face its scree runs, per metre of its height: a slope of about 30°. */
+const SCREE_RUN = 1.7;
+
+export function screesOf(parts: readonly Part[], groundY: number): Scree[] {
+  const out: Scree[] = [];
+  for (const part of parts) {
+    if (part.kind !== "box" || !part.rock || part.rotX) continue;
+    if (part.at[1] > groundY + 1.5) continue;
+    const [w, h, d] = part.size;
+    const c = Math.cos(part.rotY);
+    const s = Math.sin(part.rotY);
+    // The front of a rock block is its -z face, turned by rotY.
+    out.push({
+      x: part.at[0] - (d / 2) * s,
+      z: part.at[2] - (d / 2) * c,
+      along: [c, -s],
+      out: [-s, -c],
+      half: w / 2,
+      height: Math.min(18, h * 0.45),
+    });
+  }
+  return out;
+}
+
+/** How high the scree stands at (x, z) above the ground, the highest of any face's. */
+export function screeAt(screes: readonly Scree[], x: number, z: number) {
+  let best = 0;
+  for (const f of screes) {
+    const dx = x - f.x;
+    const dz = z - f.z;
+    const v = dx * f.out[0] + dz * f.out[1];
+    const reach = f.height * SCREE_RUN;
+    if (v > reach) continue;
+    const u = Math.abs(dx * f.along[0] + dz * f.along[1]) - f.half;
+    if (u > 8) continue;
+    // Behind the face it is under the rock; out from it, falling away.
+    const h = f.height * (1 - smooth(0, reach, v)) * (1 - smooth(0, 8, u));
+    if (h > best) best = h;
+  }
+  return best;
+}
+
 export type LandscapeOptions = {
   centre: { x: number; z: number };
   span: number;
@@ -372,6 +429,12 @@ export function planLandscape(options: LandscapeOptions) {
   const parts = options.parts ?? [];
   const water = waterOf(parts);
   const clear = footprint * 1.25;
+  /*
+   * Where a cliff stands on the ground the ground is banked up against its
+   * foot: the broken rock that has fallen from it over the centuries, with
+   * the forest growing on it (Sümela's gorge; nothing else has rock faces).
+   */
+  const screes = screesOf(parts, groundY);
 
   const natural = (x: number, z: number) => {
     const dx = x - centre.x;
@@ -380,7 +443,8 @@ export function planLandscape(options: LandscapeOptions) {
     const rise = smooth(clear, clear + span * 1.1, d);
     const far = smooth(span * 2.2, span * 5, d);
     const n = hills(dx / (span * 1.3), dz / (span * 1.3));
-    return groundY - 0.12 + rise * (n * span * look.relief * 0.55 + far * span * look.relief);
+    const h = groundY - 0.12 + rise * (n * span * look.relief * 0.55 + far * span * look.relief);
+    return screes.length ? Math.max(h, groundY - 0.12 + screeAt(screes, x, z)) : h;
   };
 
   /*
@@ -433,7 +497,9 @@ export function planLandscape(options: LandscapeOptions) {
 
   const trees: PlannedTree[] = [];
   if (look.trees > 0) {
-    const inner = clear * (biome === "pontic" ? 1.0 : 1.05);
+    // In a Pontic gorge the forest runs right up to the foot of the rock;
+    // the keep-out grid alone holds it off the rock and the buildings.
+    const inner = clear * (biome === "pontic" ? 0.3 : 1.05);
     const outer = span * 2.8;
     const area = Math.PI * (outer * outer - inner * inner);
     const cap = biome === "pontic" ? 1000 : 700;
@@ -487,6 +553,23 @@ export function planLandscape(options: LandscapeOptions) {
       const at = place(Math.max(0.6, w * 0.3));
       if (!at) continue;
       trees.push({ kind, x: at.x, y: at.y, z: at.z, h, w, rot, shade });
+    }
+    // The forest on the scree, thick along the foot of the rock.
+    for (const f of screes) {
+      const reach = f.height * SCREE_RUN;
+      for (let u = -f.half; u < f.half; u += 3.2) {
+        const v = 1.5 + random() * reach * 0.85;
+        const along = u + random() * 3.2;
+        const x = f.x + f.along[0] * along + f.out[0] * v;
+        const z = f.z + f.along[1] * along + f.out[1] * v;
+        const kind: TreeKind = random() < look.conifer ? "conifer" : "crown";
+        const h = kind === "conifer" ? 14 + random() * 14 : 9 + random() * 8;
+        const w = h * (kind === "conifer" ? 0.2 + random() * 0.06 : 0.55 + random() * 0.25);
+        const rot = random() * Math.PI * 2;
+        const shade = random();
+        if (!free(x, z, Math.max(0.6, w * 0.3))) continue;
+        trees.push({ kind, x, y: heightAt(x, z), z, h, w, rot, shade });
+      }
     }
   }
 

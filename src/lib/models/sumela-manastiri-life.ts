@@ -19,8 +19,9 @@ import * as trades from "@/lib/scene-trades";
 /**
  * The monastery on a feast day: monks in the court and on the balconies,
  * one at prayer before the painted church and one drawing water at the
- * spring, pilgrims climbing the long stair from the valley path with a
- * loaded mule, goats on the slope, and lamps at the church door.
+ * spring, pilgrims coming along the path on the mountainside and climbing
+ * the long stair with a loaded mule, goats grazing a shelf of the rock below
+ * the ledge, and lamps at the church door.
  */
 export function monasteryLife(spec: CliffMonasterySpec, era: Era): SceneLife {
   const b = make(era, 1860);
@@ -86,14 +87,14 @@ export function monasteryLife(spec: CliffMonasterySpec, era: Era): SceneLife {
     });
   }
 
-  /* Pilgrims on the stair, a mule with their load, goats on the slope. */
+  /* Pilgrims on the path and the stair, a mule with their load, goats on the rock. */
   const gateX = courtLeft - 4;
   const gateZ = courtFront + 2;
   const steps = Math.round((C + 1.2) / 0.2);
   const foot = gateX - 0.36 * steps;
   // A tenth over the treads, so the walk never dips below a step's front.
   const climb: Vec3[] = [
-    [foot - 6, 0, gateZ],
+    [L.pathTurn + 8, 0, gateZ],
     [foot - 0.25, 0, gateZ],
     [foot, 0.1, gateZ],
     [gateX, C + 1.3, gateZ],
@@ -105,14 +106,15 @@ export function monasteryLife(spec: CliffMonasterySpec, era: Era): SceneLife {
     speed: 0.42,
     carry: "basket",
   });
-  animal(b, "donkey", [foot - 8, 0, gateZ - 3], Math.PI / 2, "stand", { load: true });
+  animal(b, "donkey", [foot - 8, 0, gateZ - 1.6], Math.PI / 2, "stand", { load: true });
   cast.add({
-    at: [foot - 9.2, 0, gateZ - 3.4],
+    at: [foot - 9.6, 0, gateZ - 2.4],
     rotY: Math.PI / 2,
     action: "stand",
     role: "worker",
   });
-  flock(b, "goat", [foot - 4, 0, gateZ - 14], 6, 3.5);
+  // On the grassy shelf east of the range, a storey below the ledge.
+  flock(b, "goat", L.pasture, 5, 2.2);
 
   /*
    * The hours of the house: a monk beating the semantron, the wooden board

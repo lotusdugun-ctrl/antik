@@ -1133,10 +1133,10 @@ export const tm: Record<string, [string, string]> = {
     "4. Jahrhundert – 1923 (Modell: 19. Jahrhundert)",
     "IV век – 1923 г. (модель: XIX век)",
   ],
-  "The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The cliff, the valley below and the mist are left out or simplified. The paintings on the outer walls of the rock church and the chapel are this app's own drawings — standing, haloed saints after the manner of late Byzantine painting — and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.":
+  "The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The monastery really stands about 300 m above the floor of the valley; in the model the drop is shortened to about 80 m, so that the building and the cliff under it fit one view. The stepped rock faces and the trees on their ledges, the height of the substructure walls and buttresses, the line of the path along the slope, the stream in the valley and the mist are representative. The paintings on the outer walls of the rock church and the chapel are this app's own drawings — standing, haloed saints after the manner of late Byzantine painting — and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.":
     [
-      "Die Höhe über dem Meer stammt aus der englischen Wikipedia; das Modell nutzt sie nur für die Mischung des Waldes ringsum. Die Bauten sind nicht gemessen: die Breite der Höhle, die Höhe des Hofes, die Länge des Trakts und die Höhe seiner Geschosse sowie die Zahl der Aquäduktbögen sind nach Fotos und dem bekannten Plan des Klosters modelliert, die Geschosse nach Fotos gezählt. Die Felswand, das Tal darunter und der Nebel sind weggelassen oder vereinfacht. Die Malereien an den Außenwänden der Felskirche und der Kapelle sind eigene Zeichnungen dieser App — stehende Heilige mit Nimbus nach Art der spätbyzantinischen Malerei — und kopieren kein Fresko in Sümela; die echten Wände tragen drei Malschichten aus verschiedenen Jahrhunderten.",
-      "Высота над уровнем моря взята из английской Википедии; модель использует её только для состава окружающего леса. Постройки не измерены: ширина пещеры, уровень двора, длина корпуса и высота его этажей, число арок акведука смоделированы по фотографиям и известному плану монастыря, этажи сосчитаны по фотографиям. Скала, долина внизу и туман опущены или упрощены. Росписи на наружных стенах пещерной церкви и часовни — собственные рисунки приложения: стоящие святые с нимбами в манере поздневизантийской живописи; они не копируют ни одну фреску Сумелы, а настоящие стены несут три слоя росписей разных веков.",
+      "Die Höhe über dem Meer stammt aus der englischen Wikipedia; das Modell nutzt sie nur für die Mischung des Waldes ringsum. Die Bauten sind nicht gemessen: die Breite der Höhle, die Höhe des Hofes, die Länge des Trakts und die Höhe seiner Geschosse sowie die Zahl der Aquäduktbögen sind nach Fotos und dem bekannten Plan des Klosters modelliert, die Geschosse nach Fotos gezählt. Das Kloster steht in Wirklichkeit etwa 300 m über dem Talboden; im Modell ist der Abfall auf etwa 80 m verkürzt, damit der Bau und die Felswand darunter in ein Bild passen. Die gestuften Felswände und die Bäume auf ihren Simsen, die Höhe der Unterbaumauern und Strebepfeiler, der Verlauf des Hangwegs, der Bach im Tal und der Nebel sind stellvertretend. Die Malereien an den Außenwänden der Felskirche und der Kapelle sind eigene Zeichnungen dieser App — stehende Heilige mit Nimbus nach Art der spätbyzantinischen Malerei — und kopieren kein Fresko in Sümela; die echten Wände tragen drei Malschichten aus verschiedenen Jahrhunderten.",
+      "Высота над уровнем моря взята из английской Википедии; модель использует её только для состава окружающего леса. Постройки не измерены: ширина пещеры, уровень двора, длина корпуса и высота его этажей, число арок акведука смоделированы по фотографиям и известному плану монастыря, этажи сосчитаны по фотографиям. На самом деле монастырь стоит примерно в 300 м над дном долины; в модели этот обрыв сокращён примерно до 80 м, чтобы здание и скала под ним поместились в один вид. Ступенчатые скальные стены и деревья на их уступах, высота подпорных стен и контрфорсов, ход тропы по склону, ручей в долине и туман условны. Росписи на наружных стенах пещерной церкви и часовни — собственные рисунки приложения: стоящие святые с нимбами в манере поздневизантийской живописи; они не копируют ни одну фреску Сумелы, а настоящие стены несут три слоя росписей разных веков.",
     ],
   "Height of the monastery above the sea": [
     "Höhe des Klosters über dem Meer",
@@ -1163,15 +1163,22 @@ export const tm: Record<string, [string, string]> = {
     "Арочный водовод вдоль скалы, приносивший монастырю воду с горы.",
   ],
   "The stair and the gate": ["Die Treppe und das Tor", "Лестница и ворота"],
-  "The long stair climbs from the valley path to the gate, and down from it into the court.": [
-    "Die lange Treppe steigt vom Talweg zum Tor hinauf und von dort in den Hof hinab.",
-    "Длинная лестница поднимается от тропы в долине к воротам, а от них спускается во двор.",
-  ],
+  "The path comes in from the west, cut along the mountainside; the long stair climbs from it to the gate, and from the gate steps lead down into the court.":
+    [
+      "Der Weg kommt von Westen, in den Berghang gehauen; die lange Treppe steigt von ihm zum Tor hinauf, und vom Tor führen Stufen in den Hof hinab.",
+      "Тропа подходит с запада, вырубленная в склоне горы; длинная лестница поднимается от неё к воротам, а от ворот ступени ведут вниз во двор.",
+    ],
   "A chapel": ["Eine Kapelle", "Часовня"],
   "The small chapel at the west end of the court, its outer wall painted as well.": [
     "Die kleine Kapelle am Westende des Hofes, auch ihre Außenwand bemalt.",
     "Маленькая часовня в западном конце двора, её наружная стена тоже расписана.",
   ],
+  "The walls on the rock": ["Die Mauern auf dem Fels", "Стены на скале"],
+  "The walls of the range and the court do not stop at the edge of the ledge: they go on down as tall substructure walls and buttresses to the rock below, and under them the cliff drops to the valley.":
+    [
+      "Die Mauern des Trakts und des Hofes enden nicht am Rand des Felsbandes: Als hohe Unterbaumauern mit Strebepfeilern reichen sie bis auf den Fels darunter, und unter ihnen fällt die Wand ins Tal ab.",
+      "Стены корпуса и двора не кончаются у края уступа: высокими подпорными стенами с контрфорсами они спускаются до скалы ниже, а под ними обрыв уходит в долину.",
+    ],
   "The holy spring": ["Die heilige Quelle", "Святой источник"],
   "Water seeping from the back of the cave, which pilgrims took away for healing.": [
     "Wasser, das hinten aus der Höhle sickert und das Pilger zur Heilung mitnahmen.",

@@ -31,7 +31,11 @@ import { neolithicTownParts, neolithicTownWalkStart } from "@/lib/models/catalho
 import { cathedralParts, cathedralWalkStart } from "@/lib/models/ani-katedrali";
 import { nymphaeumParts, nymphaeumWalkStart } from "@/lib/models/sagalassos-antoninler-cesmesi";
 import { villaParts, villaWalkStart } from "@/lib/models/zeugma-villa";
-import { cliffMonasteryParts, monasteryWalkStart } from "@/lib/models/sumela-manastiri";
+import {
+  cliffMonasteryParts,
+  monasteryGround,
+  monasteryWalkStart,
+} from "@/lib/models/sumela-manastiri";
 import { lighthouseParts, lighthouseWalkStart } from "@/lib/models/patara-deniz-feneri";
 import type {
   GreatAltarSpec,
@@ -7548,6 +7552,15 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
     case "lighthouse":
       return lighthouseWalkStart(spec);
   }
+}
+
+/**
+ * The level of the open ground round a model. Nearly every building stands
+ * on it, at 0; Sümela stands on a ledge high on a cliff, and the ground round
+ * it is the floor of the valley far below (see `models/sumela-manastiri.ts`).
+ */
+export function groundOf(spec: ModelSpec): number {
+  return spec.kind === "cliff-monastery" ? monasteryGround(spec) : 0;
 }
 
 /** The axis-aligned box every part of a model fits inside, in metres. */

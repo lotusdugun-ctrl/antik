@@ -220,8 +220,8 @@ export const SAGALASSOS_ZEUGMA_SUMELA_PATARA: Reconstruction[] = [
       },
     ],
     uncertainty: l(
-      "Denizden yükseklik İngilizce Wikipedia'dan alınmıştır; model onu yalnızca çevredeki ormanın karışımında kullanır. Yapıların ölçüleri ölçülmüş değildir: mağaranın genişliği, avlunun düzeyi, odalar dizisinin uzunluğu ve kat yükseklikleri, su kemerinin kemer sayısı fotoğraflardan ve manastırın bilinen planından modellenmiştir; kat sayısı da fotoğraflardan sayılmıştır. Kayalık, aşağıdaki vadi ve sis gösterilmez ya da basitleştirilmiştir. Kaya kilisesinin ve şapelin dış duvarlarındaki resimler bu uygulamanın kendi çizimleridir — geç Bizans resminin yolunda, ayakta duran haleli azizler — Sümela'daki hiçbir freskin kopyası değildir; asıl duvarlarda farklı dönemlerden üç kat resim vardır.",
-      "The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The cliff, the valley below and the mist are left out or simplified. The paintings on the outer walls of the rock church and the chapel are this app's own drawings — standing, haloed saints after the manner of late Byzantine painting — and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.",
+      "Denizden yükseklik İngilizce Wikipedia'dan alınmıştır; model onu yalnızca çevredeki ormanın karışımında kullanır. Yapıların ölçüleri ölçülmüş değildir: mağaranın genişliği, avlunun düzeyi, odalar dizisinin uzunluğu ve kat yükseklikleri, su kemerinin kemer sayısı fotoğraflardan ve manastırın bilinen planından modellenmiştir; kat sayısı da fotoğraflardan sayılmıştır. Manastır gerçekte vadi tabanından yaklaşık 300 m yüksekte durur; modelde bu düşüş, yapı ve altındaki uçurum aynı görüntüye sığsın diye yaklaşık 80 m'ye kısaltılmıştır. Basamaklı kaya yüzleri, raflarındaki ağaçlar, alt yapı duvarlarının ve payandaların yüksekliği, yamaçtaki patikanın gidişi, vadideki dere ve sis temsilîdir. Kaya kilisesinin ve şapelin dış duvarlarındaki resimler bu uygulamanın kendi çizimleridir — geç Bizans resminin yolunda, ayakta duran haleli azizler — Sümela'daki hiçbir freskin kopyası değildir; asıl duvarlarda farklı dönemlerden üç kat resim vardır.",
+      "The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The monastery really stands about 300 m above the floor of the valley; in the model the drop is shortened to about 80 m, so that the building and the cliff under it fit one view. The stepped rock faces and the trees on their ledges, the height of the substructure walls and buttresses, the line of the path along the slope, the stream in the valley and the mist are representative. The paintings on the outer walls of the rock church and the chapel are this app's own drawings — standing, haloed saints after the manner of late Byzantine painting — and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.",
     ),
     hotspots: [
       spot(
@@ -249,8 +249,8 @@ export const SAGALASSOS_ZEUGMA_SUMELA_PATARA: Reconstruction[] = [
         [-28, 12, -4],
         "Merdiven ve kapı",
         "The stair and the gate",
-        "Vadideki patikadan tırmanan uzun merdiven, kapıdan avluya iner.",
-        "The long stair climbs from the valley path to the gate, and down from it into the court.",
+        "Patika batıdan, yamaca oyularak gelir; uzun merdiven onu kapıya çıkarır, kapıdan da avluya inilir.",
+        "The path comes in from the west, cut along the mountainside; the long stair climbs from it to the gate, and from the gate steps lead down into the court.",
       ),
       spot(
         [-19.4, 12.5, 5],
@@ -265,6 +265,13 @@ export const SAGALASSOS_ZEUGMA_SUMELA_PATARA: Reconstruction[] = [
         "The holy spring",
         "Mağaranın dibinden sızan su; hacılar şifa için buradan su alırdı.",
         "Water seeping from the back of the cave, which pilgrims took away for healing.",
+      ),
+      spot(
+        [6, -6, -8.6],
+        "Kayaya oturan duvarlar",
+        "The walls on the rock",
+        "Odalar dizisinin ve avlunun duvarları kayanın kenarında bitmez: yüksek alt yapı duvarları ve payandalarla aşağıdaki kayaya kadar iner; altında uçurum vadiye düşer.",
+        "The walls of the range and the court do not stop at the edge of the ledge: they go on down as tall substructure walls and buttresses to the rock below, and under them the cliff drops to the valley.",
       ),
     ],
     sources: [

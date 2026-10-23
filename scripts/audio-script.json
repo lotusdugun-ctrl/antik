@@ -42480,9 +42480,9 @@
    "folder": "recon-sumela-manastiri",
    "lang": "tr",
    "chapter": "spot-4",
-   "text": "Merdiven ve kapı. Vadideki patikadan tırmanan uzun merdiven, kapıdan avluya iner.",
-   "speech": "Merdiven ve kapı. Vadideki patikadan tırmanan uzun merdiven, kapıdan avluya iner.",
-   "hash": "feea10d7",
+   "text": "Merdiven ve kapı. Patika batıdan, yamaca oyularak gelir; uzun merdiven onu kapıya çıkarır, kapıdan da avluya inilir.",
+   "speech": "Merdiven ve kapı. Patika batıdan, yamaca oyularak gelir; uzun merdiven onu kapıya çıkarır, kapıdan da avluya inilir.",
+   "hash": "5330a478",
    "target": "app"
   },
   {
@@ -42509,10 +42509,20 @@
    "key": "recon:sumela-manastiri",
    "folder": "recon-sumela-manastiri",
    "lang": "tr",
+   "chapter": "spot-7",
+   "text": "Kayaya oturan duvarlar. Odalar dizisinin ve avlunun duvarları kayanın kenarında bitmez: yüksek alt yapı duvarları ve payandalarla aşağıdaki kayaya kadar iner; altında uçurum vadiye düşer.",
+   "speech": "Kayaya oturan duvarlar. Odalar dizisinin ve avlunun duvarları kayanın kenarında bitmez: yüksek alt yapı duvarları ve payandalarla aşağıdaki kayaya kadar iner; altında uçurum vadiye düşer.",
+   "hash": "df1684bc",
+   "target": "app"
+  },
+  {
+   "key": "recon:sumela-manastiri",
+   "folder": "recon-sumela-manastiri",
+   "lang": "tr",
    "chapter": "uncertainty",
-   "text": "Son olarak, bu modelin bilmediği şeyler. Denizden yükseklik İngilizce Wikipedia'dan alınmıştır; model onu yalnızca çevredeki ormanın karışımında kullanır. Yapıların ölçüleri ölçülmüş değildir: mağaranın genişliği, avlunun düzeyi, odalar dizisinin uzunluğu ve kat yükseklikleri, su kemerinin kemer sayısı fotoğraflardan ve manastırın bilinen planından modellenmiştir; kat sayısı da fotoğraflardan sayılmıştır. Kayalık, aşağıdaki vadi ve sis gösterilmez ya da basitleştirilmiştir. Kaya kilisesinin ve şapelin dış duvarlarındaki resimler bu uygulamanın kendi çizimleridir — geç Bizans resminin yolunda, ayakta duran haleli azizler — Sümela'daki hiçbir freskin kopyası değildir; asıl duvarlarda farklı dönemlerden üç kat resim vardır.",
-   "speech": "Son olarak, bu modelin bilmediği şeyler. Denizden yükseklik İngilizce Wikipedia'dan alınmıştır; model onu yalnızca çevredeki ormanın karışımında kullanır. Yapıların ölçüleri ölçülmüş değildir: mağaranın genişliği, avlunun düzeyi, odalar dizisinin uzunluğu ve kat yükseklikleri, su kemerinin kemer sayısı fotoğraflardan ve manastırın bilinen planından modellenmiştir; kat sayısı da fotoğraflardan sayılmıştır. Kayalık, aşağıdaki vadi ve sis gösterilmez ya da basitleştirilmiştir. Kaya kilisesinin ve şapelin dış duvarlarındaki resimler bu uygulamanın kendi çizimleridir, geç Bizans resminin yolunda, ayakta duran haleli azizler, Sümela'daki hiçbir freskin kopyası değildir; asıl duvarlarda farklı dönemlerden üç kat resim vardır.",
-   "hash": "f30c9ea8",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Denizden yükseklik İngilizce Wikipedia'dan alınmıştır; model onu yalnızca çevredeki ormanın karışımında kullanır. Yapıların ölçüleri ölçülmüş değildir: mağaranın genişliği, avlunun düzeyi, odalar dizisinin uzunluğu ve kat yükseklikleri, su kemerinin kemer sayısı fotoğraflardan ve manastırın bilinen planından modellenmiştir; kat sayısı da fotoğraflardan sayılmıştır. Manastır gerçekte vadi tabanından yaklaşık 300 m yüksekte durur; modelde bu düşüş, yapı ve altındaki uçurum aynı görüntüye sığsın diye yaklaşık 80 m'ye kısaltılmıştır. Basamaklı kaya yüzleri, raflarındaki ağaçlar, alt yapı duvarlarının ve payandaların yüksekliği, yamaçtaki patikanın gidişi, vadideki dere ve sis temsilîdir. Kaya kilisesinin ve şapelin dış duvarlarındaki resimler bu uygulamanın kendi çizimleridir — geç Bizans resminin yolunda, ayakta duran haleli azizler — Sümela'daki hiçbir freskin kopyası değildir; asıl duvarlarda farklı dönemlerden üç kat resim vardır.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Denizden yükseklik İngilizce Wikipedia'dan alınmıştır; model onu yalnızca çevredeki ormanın karışımında kullanır. Yapıların ölçüleri ölçülmüş değildir: mağaranın genişliği, avlunun düzeyi, odalar dizisinin uzunluğu ve kat yükseklikleri, su kemerinin kemer sayısı fotoğraflardan ve manastırın bilinen planından modellenmiştir; kat sayısı da fotoğraflardan sayılmıştır. Manastır gerçekte vadi tabanından yaklaşık 300 metre yüksekte durur; modelde bu düşüş, yapı ve altındaki uçurum aynı görüntüye sığsın diye yaklaşık 80 metre'ye kısaltılmıştır. Basamaklı kaya yüzleri, raflarındaki ağaçlar, alt yapı duvarlarının ve payandaların yüksekliği, yamaçtaki patikanın gidişi, vadideki dere ve sis temsilîdir. Kaya kilisesinin ve şapelin dış duvarlarındaki resimler bu uygulamanın kendi çizimleridir, geç Bizans resminin yolunda, ayakta duran haleli azizler, Sümela'daki hiçbir freskin kopyası değildir; asıl duvarlarda farklı dönemlerden üç kat resim vardır.",
+   "hash": "a94e7a3f",
    "target": "app"
   },
   {
@@ -42560,9 +42570,9 @@
    "folder": "recon-sumela-manastiri",
    "lang": "en",
    "chapter": "spot-4",
-   "text": "The stair and the gate. The long stair climbs from the valley path to the gate, and down from it into the court.",
-   "speech": "The stair and the gate. The long stair climbs from the valley path to the gate, and down from it into the court.",
-   "hash": "1883648e",
+   "text": "The stair and the gate. The path comes in from the west, cut along the mountainside; the long stair climbs from it to the gate, and from the gate steps lead down into the court.",
+   "speech": "The stair and the gate. The path comes in from the west, cut along the mountainside; the long stair climbs from it to the gate, and from the gate steps lead down into the court.",
+   "hash": "bea9cfd7",
    "target": "app"
   },
   {
@@ -42589,10 +42599,20 @@
    "key": "recon:sumela-manastiri",
    "folder": "recon-sumela-manastiri",
    "lang": "en",
+   "chapter": "spot-7",
+   "text": "The walls on the rock. The walls of the range and the court do not stop at the edge of the ledge: they go on down as tall substructure walls and buttresses to the rock below, and under them the cliff drops to the valley.",
+   "speech": "The walls on the rock. The walls of the range and the court do not stop at the edge of the ledge: they go on down as tall substructure walls and buttresses to the rock below, and under them the cliff drops to the valley.",
+   "hash": "25897922",
+   "target": "app"
+  },
+  {
+   "key": "recon:sumela-manastiri",
+   "folder": "recon-sumela-manastiri",
+   "lang": "en",
    "chapter": "uncertainty",
-   "text": "Finally, what this model does not know. The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The cliff, the valley below and the mist are left out or simplified. The paintings on the outer walls of the rock church and the chapel are this app's own drawings — standing, haloed saints after the manner of late Byzantine painting — and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.",
-   "speech": "Finally, what this model does not know. The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The cliff, the valley below and the mist are left out or simplified. The paintings on the outer walls of the rock church and the chapel are this app's own drawings, standing, haloed saints after the manner of late Byzantine painting, and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.",
-   "hash": "052073ae",
+   "text": "Finally, what this model does not know. The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The monastery really stands about 300 m above the floor of the valley; in the model the drop is shortened to about 80 m, so that the building and the cliff under it fit one view. The stepped rock faces and the trees on their ledges, the height of the substructure walls and buttresses, the line of the path along the slope, the stream in the valley and the mist are representative. The paintings on the outer walls of the rock church and the chapel are this app's own drawings — standing, haloed saints after the manner of late Byzantine painting — and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.",
+   "speech": "Finally, what this model does not know. The height above the sea is from the English Wikipedia; the model uses it only for the mix of the forest round it. The buildings are not measured: the width of the cave, the level of the court, the length of the range and the height of its storeys, and the number of arches of the aqueduct are modelled from photographs and the known plan of the monastery, and the storeys are counted from photographs. The monastery really stands about 300 metres above the floor of the valley; in the model the drop is shortened to about 80 metres, so that the building and the cliff under it fit one view. The stepped rock faces and the trees on their ledges, the height of the substructure walls and buttresses, the line of the path along the slope, the stream in the valley and the mist are representative. The paintings on the outer walls of the rock church and the chapel are this app's own drawings, standing, haloed saints after the manner of late Byzantine painting, and copy no fresco at Sümela; the real walls carry three layers of painting from different centuries.",
+   "hash": "4af11ac9",
    "target": "app"
   },
   {
@@ -42640,9 +42660,9 @@
    "folder": "recon-sumela-manastiri",
    "lang": "de",
    "chapter": "spot-4",
-   "text": "Die Treppe und das Tor. Die lange Treppe steigt vom Talweg zum Tor hinauf und von dort in den Hof hinab.",
-   "speech": "Die Treppe und das Tor. Die lange Treppe steigt vom Talweg zum Tor hinauf und von dort in den Hof hinab.",
-   "hash": "e4b9285a",
+   "text": "Die Treppe und das Tor. Der Weg kommt von Westen, in den Berghang gehauen; die lange Treppe steigt von ihm zum Tor hinauf, und vom Tor führen Stufen in den Hof hinab.",
+   "speech": "Die Treppe und das Tor. Der Weg kommt von Westen, in den Berghang gehauen; die lange Treppe steigt von ihm zum Tor hinauf, und vom Tor führen Stufen in den Hof hinab.",
+   "hash": "4068fe01",
    "target": "remote"
   },
   {
@@ -42669,10 +42689,20 @@
    "key": "recon:sumela-manastiri",
    "folder": "recon-sumela-manastiri",
    "lang": "de",
+   "chapter": "spot-7",
+   "text": "Die Mauern auf dem Fels. Die Mauern des Trakts und des Hofes enden nicht am Rand des Felsbandes: Als hohe Unterbaumauern mit Strebepfeilern reichen sie bis auf den Fels darunter, und unter ihnen fällt die Wand ins Tal ab.",
+   "speech": "Die Mauern auf dem Fels. Die Mauern des Trakts und des Hofes enden nicht am Rand des Felsbandes: Als hohe Unterbaumauern mit Strebepfeilern reichen sie bis auf den Fels darunter, und unter ihnen fällt die Wand ins Tal ab.",
+   "hash": "0ac8c7f6",
+   "target": "remote"
+  },
+  {
+   "key": "recon:sumela-manastiri",
+   "folder": "recon-sumela-manastiri",
+   "lang": "de",
    "chapter": "uncertainty",
-   "text": "Zum Schluss: was dieses Modell nicht weiß. Die Höhe über dem Meer stammt aus der englischen Wikipedia; das Modell nutzt sie nur für die Mischung des Waldes ringsum. Die Bauten sind nicht gemessen: die Breite der Höhle, die Höhe des Hofes, die Länge des Trakts und die Höhe seiner Geschosse sowie die Zahl der Aquäduktbögen sind nach Fotos und dem bekannten Plan des Klosters modelliert, die Geschosse nach Fotos gezählt. Die Felswand, das Tal darunter und der Nebel sind weggelassen oder vereinfacht. Die Malereien an den Außenwänden der Felskirche und der Kapelle sind eigene Zeichnungen dieser App — stehende Heilige mit Nimbus nach Art der spätbyzantinischen Malerei — und kopieren kein Fresko in Sümela; die echten Wände tragen drei Malschichten aus verschiedenen Jahrhunderten.",
-   "speech": "Zum Schluss: was dieses Modell nicht weiß. Die Höhe über dem Meer stammt aus der englischen Wikipedia; das Modell nutzt sie nur für die Mischung des Waldes ringsum. Die Bauten sind nicht gemessen: die Breite der Höhle, die Höhe des Hofes, die Länge des Trakts und die Höhe seiner Geschosse sowie die Zahl der Aquäduktbögen sind nach Fotos und dem bekannten Plan des Klosters modelliert, die Geschosse nach Fotos gezählt. Die Felswand, das Tal darunter und der Nebel sind weggelassen oder vereinfacht. Die Malereien an den Außenwänden der Felskirche und der Kapelle sind eigene Zeichnungen dieser App, stehende Heilige mit Nimbus nach Art der spätbyzantinischen Malerei, und kopieren kein Fresko in Sümela; die echten Wände tragen drei Malschichten aus verschiedenen Jahrhunderten.",
-   "hash": "8874a44a",
+   "text": "Zum Schluss: was dieses Modell nicht weiß. Die Höhe über dem Meer stammt aus der englischen Wikipedia; das Modell nutzt sie nur für die Mischung des Waldes ringsum. Die Bauten sind nicht gemessen: die Breite der Höhle, die Höhe des Hofes, die Länge des Trakts und die Höhe seiner Geschosse sowie die Zahl der Aquäduktbögen sind nach Fotos und dem bekannten Plan des Klosters modelliert, die Geschosse nach Fotos gezählt. Das Kloster steht in Wirklichkeit etwa 300 m über dem Talboden; im Modell ist der Abfall auf etwa 80 m verkürzt, damit der Bau und die Felswand darunter in ein Bild passen. Die gestuften Felswände und die Bäume auf ihren Simsen, die Höhe der Unterbaumauern und Strebepfeiler, der Verlauf des Hangwegs, der Bach im Tal und der Nebel sind stellvertretend. Die Malereien an den Außenwänden der Felskirche und der Kapelle sind eigene Zeichnungen dieser App — stehende Heilige mit Nimbus nach Art der spätbyzantinischen Malerei — und kopieren kein Fresko in Sümela; die echten Wände tragen drei Malschichten aus verschiedenen Jahrhunderten.",
+   "speech": "Zum Schluss: was dieses Modell nicht weiß. Die Höhe über dem Meer stammt aus der englischen Wikipedia; das Modell nutzt sie nur für die Mischung des Waldes ringsum. Die Bauten sind nicht gemessen: die Breite der Höhle, die Höhe des Hofes, die Länge des Trakts und die Höhe seiner Geschosse sowie die Zahl der Aquäduktbögen sind nach Fotos und dem bekannten Plan des Klosters modelliert, die Geschosse nach Fotos gezählt. Das Kloster steht in Wirklichkeit etwa 300 Meter über dem Talboden; im Modell ist der Abfall auf etwa 80 Meter verkürzt, damit der Bau und die Felswand darunter in ein Bild passen. Die gestuften Felswände und die Bäume auf ihren Simsen, die Höhe der Unterbaumauern und Strebepfeiler, der Verlauf des Hangwegs, der Bach im Tal und der Nebel sind stellvertretend. Die Malereien an den Außenwänden der Felskirche und der Kapelle sind eigene Zeichnungen dieser App, stehende Heilige mit Nimbus nach Art der spätbyzantinischen Malerei, und kopieren kein Fresko in Sümela; die echten Wände tragen drei Malschichten aus verschiedenen Jahrhunderten.",
+   "hash": "f27c2219",
    "target": "remote"
   },
   {
@@ -42720,9 +42750,9 @@
    "folder": "recon-sumela-manastiri",
    "lang": "ru",
    "chapter": "spot-4",
-   "text": "Лестница и ворота. Длинная лестница поднимается от тропы в долине к воротам, а от них спускается во двор.",
-   "speech": "Лестница и ворота. Длинная лестница поднимается от тропы в долине к воротам, а от них спускается во двор.",
-   "hash": "69998ac0",
+   "text": "Лестница и ворота. Тропа подходит с запада, вырубленная в склоне горы; длинная лестница поднимается от неё к воротам, а от ворот ступени ведут вниз во двор.",
+   "speech": "Лестница и ворота. Тропа подходит с запада, вырубленная в склоне горы; длинная лестница поднимается от неё к воротам, а от ворот ступени ведут вниз во двор.",
+   "hash": "ecbff34f",
    "target": "remote"
   },
   {
@@ -42749,10 +42779,20 @@
    "key": "recon:sumela-manastiri",
    "folder": "recon-sumela-manastiri",
    "lang": "ru",
+   "chapter": "spot-7",
+   "text": "Стены на скале. Стены корпуса и двора не кончаются у края уступа: высокими подпорными стенами с контрфорсами они спускаются до скалы ниже, а под ними обрыв уходит в долину.",
+   "speech": "Стены на скале. Стены корпуса и двора не кончаются у края уступа: высокими подпорными стенами с контрфорсами они спускаются до скалы ниже, а под ними обрыв уходит в долину.",
+   "hash": "67378193",
+   "target": "remote"
+  },
+  {
+   "key": "recon:sumela-manastiri",
+   "folder": "recon-sumela-manastiri",
+   "lang": "ru",
    "chapter": "uncertainty",
-   "text": "И напоследок — чего эта модель не знает. Высота над уровнем моря взята из английской Википедии; модель использует её только для состава окружающего леса. Постройки не измерены: ширина пещеры, уровень двора, длина корпуса и высота его этажей, число арок акведука смоделированы по фотографиям и известному плану монастыря, этажи сосчитаны по фотографиям. Скала, долина внизу и туман опущены или упрощены. Росписи на наружных стенах пещерной церкви и часовни — собственные рисунки приложения: стоящие святые с нимбами в манере поздневизантийской живописи; они не копируют ни одну фреску Сумелы, а настоящие стены несут три слоя росписей разных веков.",
-   "speech": "И напоследок, чего эта модель не знает. Высота над уровнем моря взята из английской Википедии; модель использует её только для состава окружающего леса. Постройки не измерены: ширина пещеры, уровень двора, длина корпуса и высота его этажей, число арок акведука смоделированы по фотографиям и известному плану монастыря, этажи сосчитаны по фотографиям. Скала, долина внизу и туман опущены или упрощены. Росписи на наружных стенах пещерной церкви и часовни, собственные рисунки приложения: стоящие святые с нимбами в манере поздневизантийской живописи; они не копируют ни одну фреску Сумелы, а настоящие стены несут три слоя росписей разных веков.",
-   "hash": "57367143",
+   "text": "И напоследок — чего эта модель не знает. Высота над уровнем моря взята из английской Википедии; модель использует её только для состава окружающего леса. Постройки не измерены: ширина пещеры, уровень двора, длина корпуса и высота его этажей, число арок акведука смоделированы по фотографиям и известному плану монастыря, этажи сосчитаны по фотографиям. На самом деле монастырь стоит примерно в 300 м над дном долины; в модели этот обрыв сокращён примерно до 80 м, чтобы здание и скала под ним поместились в один вид. Ступенчатые скальные стены и деревья на их уступах, высота подпорных стен и контрфорсов, ход тропы по склону, ручей в долине и туман условны. Росписи на наружных стенах пещерной церкви и часовни — собственные рисунки приложения: стоящие святые с нимбами в манере поздневизантийской живописи; они не копируют ни одну фреску Сумелы, а настоящие стены несут три слоя росписей разных веков.",
+   "speech": "И напоследок, чего эта модель не знает. Высота над уровнем моря взята из английской Википедии; модель использует её только для состава окружающего леса. Постройки не измерены: ширина пещеры, уровень двора, длина корпуса и высота его этажей, число арок акведука смоделированы по фотографиям и известному плану монастыря, этажи сосчитаны по фотографиям. На самом деле монастырь стоит примерно в 300 метров над дном долины; в модели этот обрыв сокращён примерно до 80 метров, чтобы здание и скала под ним поместились в один вид. Ступенчатые скальные стены и деревья на их уступах, высота подпорных стен и контрфорсов, ход тропы по склону, ручей в долине и туман условны. Росписи на наружных стенах пещерной церкви и часовни, собственные рисунки приложения: стоящие святые с нимбами в манере поздневизантийской живописи; они не копируют ни одну фреску Сумелы, а настоящие стены несут три слоя росписей разных веков.",
+   "hash": "3482e3d1",
    "target": "remote"
   },
   {

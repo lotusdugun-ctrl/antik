@@ -4,6 +4,7 @@ import {
   bankHeight,
   boundsOf,
   CARVINGS,
+  groundOf,
   IDENTITIES,
   NEMRUT_CROWN,
   NEMRUT_SOLE,
@@ -291,7 +292,7 @@ describe("the geometry", () => {
   test("nothing is built below the ground it stands on", () => {
     for (const item of reconstructions) {
       const { min } = boundsOf(partsOf(item));
-      expect(min[1]).toBeGreaterThanOrEqual(-1);
+      expect(min[1]).toBeGreaterThanOrEqual(groundOf(item.model) - 1);
     }
   });
 
