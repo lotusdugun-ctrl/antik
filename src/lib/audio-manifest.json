@@ -2341,7 +2341,7 @@
    },
    "spot-4": {
     "engine": "piper",
-    "hash": "e4b9285a",
+    "hash": "4068fe01",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-4.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
@@ -2360,9 +2360,16 @@
     "v": 3,
     "voice": "de_DE-mls-medium"
    },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "0ac8c7f6",
+    "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/spot-7.mp3",
+    "v": 3,
+    "voice": "de_DE-mls-medium"
+   },
    "uncertainty": {
     "engine": "piper",
-    "hash": "8874a44a",
+    "hash": "f27c2219",
     "url": "https://lotusdugun-ctrl.github.io/antik-audio/audio/recon-sumela-manastiri/de/uncertainty.mp3",
     "v": 3,
     "voice": "de_DE-mls-medium"
@@ -2399,7 +2406,7 @@
    },
    "spot-4": {
     "engine": "piper",
-    "hash": "1883648e",
+    "hash": "bea9cfd7",
     "url": "/audio/recon-sumela-manastiri/en/spot-4.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
@@ -2418,9 +2425,16 @@
     "v": 3,
     "voice": "en_US-ljspeech-high"
    },
+   "spot-7": {
+    "engine": "piper",
+    "hash": "25897922",
+    "url": "/audio/recon-sumela-manastiri/en/spot-7.mp3",
+    "v": 3,
+    "voice": "en_US-ljspeech-high"
+   },
    "uncertainty": {
     "engine": "piper",
-    "hash": "052073ae",
+    "hash": "4af11ac9",
     "url": "/audio/recon-sumela-manastiri/en/uncertainty.mp3",
     "v": 3,
     "voice": "en_US-ljspeech-high"
