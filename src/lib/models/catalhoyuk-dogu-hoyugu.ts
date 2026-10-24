@@ -43,6 +43,9 @@ export type NeolithicTownSpec = {
 type House = {
   cx: number;
   cz: number;
+  /** Its cell in the plan. */
+  i: number;
+  j: number;
   /** Outside size: x by z. */
   w: number;
   d: number;
@@ -60,7 +63,7 @@ export function townLayout(spec: NeolithicTownSpec) {
   const gap = 0.18;
   const cells: [number, number, number, House["open"]?][] = [
     [-2, -1, 0],
-    [-1, -1, 0.3],
+    [-1, -1, 0.55],
     [0, -1, 0, "full"],
     [-2, 0, -0.3],
     [-1, 0, 0, "beams"],
@@ -68,12 +71,14 @@ export function townLayout(spec: NeolithicTownSpec) {
     [1, 0, 0],
     [-1, 1, -0.3],
     [0, 1, 0],
-    [1, 1, 0.3],
+    [1, 1, 0.6],
     [-2, 1, 0],
   ];
   const houses: House[] = cells.slice(0, spec.houses).map(([i, j, dy, open]) => ({
     cx: i * (w + gap),
     cz: j * (d + gap),
+    i,
+    j,
     w,
     d,
     roof: spec.wallHeight + 0.25 + dy,
@@ -84,6 +89,38 @@ export function townLayout(spec: NeolithicTownSpec) {
   /** The roof hole of a house: its middle, near the south wall. */
   const hole = (h: House): [number, number] => [h.cx + 0.9, h.cz - h.d / 2 + t + 0.75];
   return { t, w, d, houses, yard, hole };
+}
+
+/**
+ * The lip round a house's roof: a half-round roll of mud along each edge,
+ * lumpy as hand-laid mud is.
+ */
+function roofLip(h: House): Part[] {
+  const parts: Part[] = [];
+  const r = 0.11;
+  const x0 = h.cx - h.w / 2 + r * 0.8;
+  const x1 = h.cx + h.w / 2 - r * 0.8;
+  const z0 = h.cz - h.d / 2 + r * 0.8;
+  const z1 = h.cz + h.d / 2 - r * 0.8;
+  const roll = (from: [number, number], to: [number, number]) => {
+    const length = Math.hypot(to[0] - from[0], to[1] - from[1]);
+    parts.push(
+      worn(
+        cyl("ground", [from[0], h.roof - 0.02, from[1]], r, r, length, 6, {
+          rotX: Math.PI / 2,
+          rotY: Math.atan2(to[0] - from[0], to[1] - from[1]),
+          thetaStart: Math.PI / 2,
+          thetaLength: Math.PI,
+        }),
+        0.025,
+      ),
+    );
+  };
+  roll([x0, z0], [x1, z0]);
+  roll([x1, z1], [x0, z1]);
+  roll([x0, z1 - r], [x0, z0 + r]);
+  roll([x1, z0 + r], [x1, z1 - r]);
+  return parts;
 }
 
 /** Thin plates of white plaster laid on the inside of the walls. */
@@ -300,7 +337,31 @@ export function neolithicTownParts(spec: NeolithicTownSpec): Part[] {
     // A low kerb of mud round the hole, against the rain.
     parts.push(box("ground", [hx, h.roof, hz - hd - 0.06], [2 * hw + 0.24, 0.1, 0.12]));
     parts.push(box("ground", [hx, h.roof, hz + hd + 0.06], [2 * hw + 0.24, 0.1, 0.12]));
+    // The roof's edge, the tops of its own walls smoothed over with mud and
+    // rounded by the rain: a hand-made lip that marks where one house's roof
+    // ends and the next begins.
+    parts.push(...roofLip(h));
   });
+  // Where a roof stands well above its neighbour's, the strip of wall between
+  // the two was high enough for a small window, as Mellaart found.
+  for (const a of L.houses) {
+    for (const b of L.houses) {
+      const step = a.roof - b.roof;
+      const across = Math.abs(a.i - b.i) + Math.abs(a.j - b.j);
+      if (a.open || across !== 1 || step < 0.45) continue;
+      const sx = b.i - a.i;
+      const sz = b.j - a.j;
+      // The face of a's wall towards b, in the gap between the two houses.
+      const face: Vec3 = [a.cx + (sx * a.w) / 2, b.roof, a.cz + (sz * a.d) / 2];
+      const rotY = Math.atan2(sx, sz);
+      const along = sx !== 0 ? ((a.i + a.j) % 2 ? -0.9 : 0.8) : (a.i + a.j) % 2 ? 1.2 : -1.1;
+      const x = face[0] + Math.cos(rotY) * along + Math.sin(rotY) * 0.006;
+      const z = face[2] - Math.sin(rotY) * along + Math.cos(rotY) * 0.006;
+      parts.push(
+        box("shadow", [x, b.roof + (step - 0.25) / 2 - 0.05, z], [0.34, 0.24, 0.012], rotY),
+      );
+    }
+  }
   // The yard: trodden ash and rubbish where a house had been.
   const y = L.yard;
   parts.push(box("stone", [y.cx, 0, y.cz], [y.w - 0.6, 0.12, y.d - 0.6]));

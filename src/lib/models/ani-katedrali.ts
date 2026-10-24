@@ -1,4 +1,4 @@
-import { ashlar, FACING, onFace } from "@/lib/reconstruction-detail";
+import { ashlar, FACING, onFace, tiledSlope } from "@/lib/reconstruction-detail";
 import {
   kitBox as box,
   kitCyl as cyl,
@@ -204,6 +204,10 @@ function front(
         sink: 0.5,
         rotY,
       });
+      // The frame carried down the sides as a roll moulding, and a sill.
+      for (const side of [-1, 1])
+        parts.push(cyl(STONE, P(at + side * 0.42, o.y, 0.055), 0.07, 0.07, 2.0, 6));
+      parts.push(box(STONE, P(at, o.y - 0.16, 0.06), [1.0, 0.16, 0.14], rotY));
     }
   }
   // The blind arcade: paired shafts at every bay, arches springing from them.
@@ -235,8 +239,15 @@ function front(
       rotY,
     });
   }
-  // A cornice under the eave.
+  // A cornice under the eave, stepped out in two members, and a row of
+  // small blocks — the dentil course of Trdat's cornices — beneath it.
   parts.push(box(STONE, P(0, E - 0.35, 0.12), [width + 0.24, 0.35, 0.3], rotY));
+  parts.push(box(STONE, P(0, E - 0.55, 0.06), [width + 0.12, 0.2, 0.2], rotY));
+  const dentils = Math.floor((width - 0.4) / 0.36);
+  for (let i = 0; i < dentils; i += 1) {
+    const x = -((dentils - 1) * 0.36) / 2 + i * 0.36;
+    parts.push(box(STONE, P(x, E - 0.78, 0.07), [0.18, 0.23, 0.14], rotY));
+  }
   void seed;
   return parts;
 }
@@ -348,12 +359,67 @@ export function cathedralParts(spec: CathedralSpec): Part[] {
       ),
     );
   }
-  // A cornice along the gables' rakes on the fronts.
+  // The slabs of the roofs are laid in rows down the slope, every joint
+  // between two rows covered by a ridge of stone.
+  for (const side of [-1, 1]) {
+    parts.push(
+      ...tiledSlope({
+        eave: [side * (arm / 2 + 0.3), top + 0.02, 0],
+        rotY: side < 0 ? FACING.east : FACING.west,
+        width: L + 0.6,
+        run: arm / 2 + 0.3,
+        rise,
+        slab: false,
+        spacing: 0.82,
+        cover: 0.075,
+        antefixes: false,
+        material: "stoneDark",
+      }),
+      ...tiledSlope({
+        eave: [0, top + 0.02, side * (arm / 2 + 0.3)],
+        rotY: side < 0 ? FACING.north : FACING.south,
+        width: W + 0.6,
+        run: arm / 2 + 0.3,
+        rise,
+        slab: false,
+        spacing: 0.82,
+        cover: 0.075,
+        antefixes: false,
+        material: "stoneDark",
+      }),
+    );
+  }
+  // A cornice along the gables' rakes on the fronts, under the roof's edge.
+  for (const [z, x0, facing] of [
+    [-L / 2, 0, 0],
+    [L / 2, 0, 0],
+    [0, -W / 2, 1],
+    [0, W / 2, 1],
+  ] as const) {
+    for (const side of [-1, 1]) {
+      const along = side * (arm / 2 + 0.1);
+      parts.push(
+        slopedSlab(
+          STONE,
+          facing ? [x0, top - 0.22, along] : [along, top - 0.22, z],
+          facing ? (side < 0 ? FACING.north : FACING.south) : side < 0 ? FACING.east : FACING.west,
+          0.5,
+          arm / 2 + 0.1,
+          rise - 0.05,
+          0.3,
+        ),
+      );
+    }
+  }
   // The drum on its square base over the crossing, and the cone on it.
   const r = spec.drumDiameter / 2;
   const base = spec.gableHeight + 0.2;
   parts.push(box(STONE, [0, top + 1, 0], [r * 2 + 1.2, base - top - 1 + 0.6, r * 2 + 1.2]));
   const d0 = base + 0.6;
+  // A moulded course round the top of the square base, and a plinth ring
+  // at the foot of the drum.
+  parts.push(box(STONE, [0, d0 - 0.3, 0], [r * 2 + 1.5, 0.3, r * 2 + 1.5]));
+  parts.push(cyl(STONE, [0, d0, 0], r + 0.18, r + 0.12, 0.35, 32));
   parts.push(cyl(STONE, [0, d0, 0], r, r, spec.drumHeight, 32));
   parts.push(cyl(STONE, [0, d0 + spec.drumHeight - 0.4, 0], r + 0.28, r + 0.28, 0.4, 32));
   const around = 16;
@@ -442,6 +508,9 @@ export function cathedralParts(spec: CathedralSpec): Part[] {
         thetaLength: Math.PI,
       }),
     );
+    // Its back, where it rises over the wall-walk: a wall closing the half
+    // round, so from the city side it is a tower, not a row of merlons in the air.
+    parts.push(box(STONE, [x, 11, wz + 1.9], [2 * R - 0.75, 2, 0.6]));
     for (let k = 0; k < 9; k += 1) {
       const a = -Math.PI / 2 + ((k + 0.5) * Math.PI) / 9;
       parts.push(merlon(x + Math.sin(a) * (R - 0.6), 13, wz + 1.6 + Math.cos(a) * (R - 0.6), a));

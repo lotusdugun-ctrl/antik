@@ -31,10 +31,10 @@ function planFor(item: (typeof reconstructions)[number]) {
 const plans = reconstructions.map((item) => ({ item, ...planFor(item) }));
 
 describe("the country round each model", () => {
-  test("no tree or rock stands in water", () => {
+  test("no tree, bush or rock stands in water", () => {
     for (const { item, plan } of plans) {
       const water = waterOf(plans.find((p) => p.item === item)!.all);
-      for (const t of [...plan.trees, ...plan.rocks]) {
+      for (const t of [...plan.trees, ...plan.rocks, ...plan.shrubs]) {
         for (const w of water) {
           const d = distanceTo(w, t.x, t.z);
           expect(`${item.id} ${t.x.toFixed(1)},${t.z.toFixed(1)}: ${d > 1}`).toBe(
@@ -45,10 +45,10 @@ describe("the country round each model", () => {
     }
   }, 60000);
 
-  test("no tree or rock stands inside a wall, a road, a cliff or the model's own trees", () => {
+  test("no tree, bush or rock stands inside a wall, a road, a cliff or the model's own trees", () => {
     for (const { item, plan, all } of plans) {
       const solid = obstaclesOf(all);
-      for (const t of [...plan.trees, ...plan.rocks]) {
+      for (const t of [...plan.trees, ...plan.rocks, ...plan.shrubs]) {
         const inside = solid.find((f) => distanceTo(f, t.x, t.z) < 0.3);
         expect(`${item.id} ${t.x.toFixed(1)},${t.z.toFixed(1)}: ${inside === undefined}`).toBe(
           `${item.id} ${t.x.toFixed(1)},${t.z.toFixed(1)}: true`,

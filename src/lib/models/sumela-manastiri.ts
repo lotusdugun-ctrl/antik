@@ -11,7 +11,7 @@ import {
   type WalkStart,
 } from "@/lib/reconstruction-parts";
 import { arch, broadleaf, conifer } from "@/lib/models/craft";
-import { ledgeAt, rockOffset } from "@/lib/models/rockface";
+import { ledgeAt, ledgeHeight, rockOffset, type RockFace } from "@/lib/models/rockface";
 
 /**
  * A monastery built into a cliff: a cave turned into a church, its outer wall
@@ -158,6 +158,21 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
     /** Only scrub on its ledges, no trees: the faces seen from across the valley. */
     scrub?: boolean;
     rng?: () => number;
+    /**
+     * One of a run of blocks that make one cliff: the rock is laid out in
+     * the cliff's coordinates from this seed, the ledges are the cliff's (world
+     * heights), and the edges named run straight on into the neighbours.
+     */
+    cliffOf?: {
+      seed: number;
+      ledges: number[];
+      open: [[number, number][], [number, number][]];
+      leanBetween?: [number, number];
+    };
+    /** How strongly bedded the rock is (see `RockFace.strata`). */
+    strata?: number;
+    /** Where the block's middle is along its cliff, if not its `x`: a turned face. */
+    along?: number;
   };
   const rockBlock = (
     x0: number,
@@ -173,12 +188,24 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
     const rand = options.rng ?? random;
     const relief = options.relief ?? RELIEF;
     const ledges: number[] = [];
-    for (let y = 5 + rand() * 6; y < h - 6; y += 7 + rand() * 9) ledges.push(y);
-    const face = {
+    const of = options.cliffOf;
+    if (of) {
+      for (const y of of.ledges) if (y - y0 > 4 && y - y0 < h - 5) ledges.push(y - y0);
+    } else for (let y = 5 + rand() * 6; y < h - 6; y += 7 + rand() * 9) ledges.push(y);
+    const mid = (x0 + x1) / 2;
+    const face: RockFace = {
       relief,
-      seed: Math.floor(rand() * 1e6),
+      seed: of ? of.seed : Math.floor(rand() * 1e6),
       ledges,
       overhang: options.lean ?? (top > 50 ? 0.4 + rand() * 0.5 : 0),
+      ...(of
+        ? {
+            origin: [options.along ?? mid, y0] as const,
+            open: of.open,
+            ...(of.leanBetween ? { leanBetween: of.leanBetween } : {}),
+          }
+        : { origin: [mid, y0] as const }),
+      ...(options.strata ? { strata: options.strata } : {}),
     };
     const front = z0 + relief;
     const end = options.back ?? back;
@@ -195,7 +222,6 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
     const turn = options.turn ?? 0;
     const sin = Math.sin(turn);
     const cos = Math.cos(turn);
-    const mid = (x0 + x1) / 2;
     const depth = end - front;
     const body: Part = {
       ...box("rock", [mid + (sin * depth) / 2, y0, front + (cos * depth) / 2], [w, h, depth], turn),
@@ -204,16 +230,25 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
     parts.push(options.solid ? body : scenery(body));
     // Shrubs and a few small trees on the ledges, where a ledge is there.
     const green = options.green ?? 0.65;
-    face.ledges.forEach((y, k) => {
+    face.ledges.forEach((_, k) => {
       for (let u = -w / 2 + 1.2; u < w / 2 - 1.2; u += 1.6 + rand() * 2.4) {
         if (!ledgeAt(face, k, u) || rand() < 1 - green) continue;
-        const shelf = rockOffset(face, w, h, u, y - 0.2) * relief;
-        const out = shelf * 0.55;
-        const at: Vec3 = [mid + u * cos - out * sin, y0 + y, front - u * sin - out * cos];
-        if (!options.scrub && rand() < 0.2) parts.push(...conifer(at, 2.5 + rand() * 3));
+        const y = ledgeHeight(face, k, u);
+        // The shelf is cut by the mesh a metre or so a cell, so its top is a
+        // slope back to the face: a plant is set down into the rock and back
+        // from the lip, where there is rock all round its foot.
+        const shelf = rockOffset(face, w, h, u, y - 1.2) * relief;
+        const out = shelf * 0.4;
+        const at: Vec3 = [mid + u * cos - out * sin, y0 + y - 0.9, front - u * sin - out * cos];
+        if (!options.scrub && rand() < 0.2) parts.push(...conifer(at, 3 + rand() * 3));
         else {
-          const r = 0.4 + rand() * 0.6;
-          parts.push(scenery(cyl("foliage", at, r * 0.6, r, r * 0.9, options.scrub ? 5 : 7)));
+          // A low, rounded bush rather than a bowl.
+          const r = 0.5 + rand() * 0.6;
+          parts.push(
+            scenery(
+              worn(cyl("foliage", at, r, r * 0.35, r * 1.5, options.scrub ? 5 : 7), r * 0.12),
+            ),
+          );
         }
       }
     });
@@ -236,20 +271,90 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
         ? -(x - 103) * 1.6
         : 0;
   const ledgeTop = (x: number) => Math.min(0, capAt(x));
+  /*
+   * The cliff over the ledge is one face of rock: its blocks stand on one
+   * line and share one grain, one set of beds and ledges, one lean at the
+   * top, so the rock runs on from block to block; only their tops differ,
+   * the crest broken by the crags along it.
+   */
+  const crags: { x0: number; x1: number; y0: number; top: number }[] = [];
   for (let x = -112; x < 112;) {
     const w = 13 + random() * 10;
     const x0 = x;
     const x1 = Math.min(112, x + w);
     x = x1;
     const top = heightAt((x0 + x1) / 2);
-    const z0 = cliff + (random() - 0.5) * 0.8;
+    // Drawn and not used, so everything after it is placed as before.
+    random();
     const y0 = ledgeTop((x0 + x1) / 2);
-    if (x1 <= caveLeft || x0 >= caveRight) rockBlock(x0, x1, y0, top, z0);
+    if (x1 <= caveLeft || x0 >= caveRight) crags.push({ x0, x1, y0, top });
     else {
       // Over the cave: the rock starts at its roof; either side, from the ledge.
-      if (x0 < caveLeft) rockBlock(x0, caveLeft, y0, top, z0);
-      rockBlock(Math.max(x0, caveLeft), Math.min(x1, caveRight), C + spec.caveHeight, top, cliff);
-      if (x1 > caveRight) rockBlock(caveRight, x1, y0, top, z0);
+      if (x0 < caveLeft) crags.push({ x0, x1: caveLeft, y0, top });
+      crags.push({
+        x0: Math.max(x0, caveLeft),
+        x1: Math.min(x1, caveRight),
+        y0: C + spec.caveHeight,
+        top,
+      });
+      if (x1 > caveRight) crags.push({ x0: caveRight, x1, y0, top });
+    }
+  }
+  const cliffLedges: number[] = [];
+  {
+    const r = seeded(4471);
+    for (let y = 7 + r() * 4; y < sky; y += 8 + r() * 7) cliffLedges.push(y);
+  }
+  crags.forEach((b, i) => {
+    // Where each neighbour stands beside this block, up its edge.
+    const beside = (n: (typeof crags)[number] | undefined): [number, number][] =>
+      n && n.x1 - n.x0 > 0.5
+        ? [[Math.max(b.y0, n.y0) - b.y0 + 0.5, Math.min(b.top, n.top) - b.y0 - 1.5]]
+        : [];
+    rockBlock(b.x0, b.x1, b.y0, b.top, cliff, {
+      lean: 0.55,
+      strata: 0.55,
+      cliffOf: {
+        seed: 6060,
+        ledges: cliffLedges,
+        open: [beside(crags[i - 1]), beside(crags[i + 1])],
+        leanBetween: [sky - 24, sky - 4],
+      },
+    });
+  });
+  /*
+   * The crest itself: each block of the cliff ends in a flat top, and side
+   * by side they stepped along the skyline like a flight of stairs. A row
+   * of weathered boulders along the lip, each sized to reach the smooth
+   * skyline the blocks were cut from, rounds the steps off and breaks the
+   * flat tops into crags. From a stream of its own, so nothing else moves.
+   */
+  {
+    const r = seeded(7717);
+    for (let x = -110 + r() * 2; x < 110; x += 4.5 + r() * 3) {
+      const block = crags.find((b) => x >= b.x0 && x < b.x1);
+      if (!block) continue;
+      const smoothTop = heightAt(x);
+      const s = 2.6 + r() * 3.2;
+      const lift = Math.max(0, smoothTop - block.top);
+      const tall = s + lift;
+      // A squat cone of few sides, broken up by the weather: a crag for a
+      // couple of hundred triangles, not a subdivided block of thousands.
+      parts.push(
+        scenery(
+          worn(
+            cyl(
+              "rock",
+              [x, block.top - s * 0.45, cliff + RELIEF + 1.5 + r() * 3],
+              s * (0.85 + r() * 0.35),
+              s * (0.25 + r() * 0.25),
+              tall,
+              5,
+            ),
+            Math.min(1.2, s * 0.28),
+          ),
+        ),
+      );
     }
   }
   // The back of the cave, and the rock behind it.
@@ -265,14 +370,41 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
       ),
     ),
   );
-  // The overhang that leans out over the range of rooms.
+  // The overhang that leans out over the range of rooms: one mass of rock,
+  // in stretches whose undersides hang lower or higher, the rock running on
+  // from one into the next.
   const lean = rangeTop + 6;
-  parts.push(
-    scenery({
-      ...box("rock", [10, lean, cliff - 1.5], [90, sky - 14 - lean, 5]),
-      rock: { relief: RELIEF, seed: 77, ledges: [], overhang: 0.6 },
-    }),
-  );
+  {
+    const hang = [
+      [-35, -18, 2.2],
+      [-18, -2, 0],
+      [-2, 13, 3.4],
+      [13, 31, 1.1],
+      [31, 44, 4.2],
+      [44, 55, 6.5],
+    ] as const;
+    hang.forEach(([x0, x1, up], i) => {
+      const y0 = lean + up;
+      const top = sky - 14 - (i === 0 || i === hang.length - 1 ? 5 : 0);
+      const beside = (n: (typeof hang)[number] | undefined): [number, number][] =>
+        n ? [[Math.max(y0, lean + n[2]) - y0 + 0.5, top - y0 - 1]] : [];
+      parts.push(
+        scenery({
+          ...box("rock", [(x0 + x1) / 2, y0, cliff - 1.5], [x1 - x0, top - y0, 5]),
+          rock: {
+            relief: RELIEF,
+            seed: 77,
+            ledges: [],
+            overhang: 0.6,
+            origin: [(x0 + x1) / 2, y0],
+            open: [beside(hang[i - 1]), beside(hang[i + 1])],
+            strata: 0.55,
+            hung: true,
+          },
+        }),
+      );
+    });
+  }
   // Buttresses of rock standing out of the face, and the forest clinging to them.
   for (let i = 0; i < 14; i += 1) {
     const x = -95 + random() * 190;
@@ -352,13 +484,13 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
     // Under the path, the shelf it is built on; elsewhere the ledge at the cliff's foot.
     let top = onPath ? pathLevel(L, x0) - 0.6 : ledgeTop(xm);
     let front = built ? -1.5 : xm < courtLeft ? -10.2 + wobble * 0.3 : -3.4 + wobble;
-    const faces: { top: number; front: number; turn: number }[] = [];
+    const faces: { top: number; front: number; turn: number; square: boolean }[] = [];
     const end = i === 0 || i + 2 === breaks.length;
     while (top > L.valley + 1) {
       const first = faces.length === 0;
       // The faces the path, the parapet and the walls stand on stay square to them.
       const square = end || first || (faces.length === 1 && (built || grazed));
-      faces.push({ top, front, turn: square ? 0 : (drop() - 0.5) * 0.22 });
+      faces.push({ top, front, turn: square ? 0 : (drop() - 0.5) * 0.22, square });
       top -= first && (built || grazed) ? top - L.foot : 12 + drop() * 16;
       // Too little left for another face: this one goes down to the valley floor.
       if (top < L.valley + 10) break;
@@ -374,15 +506,60 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
       // so the view is set from the valley floor up; it reaches back only as
       // far as the face above it.
       const solid = !below && k > 0 && x0 >= L.pathTurn && x1 <= rangeRight;
-      rockBlock(x0, x1, bottom, f.top, f.front, {
-        rng: drop,
-        scrub: true,
-        relief: DROP_RELIEF,
-        green: 0.06,
-        lean: f.top - bottom > 14 ? drop() * 0.6 : 0,
-        turn: f.turn,
-        ...(solid ? { solid: true, back: faces[k - 1]!.front + 3 } : {}),
+      const lean = f.top - bottom > 14 ? drop() * 0.6 : 0;
+      /*
+       * A face nothing stands on is broken along its top into crags of its
+       * own widths, some standing up past the shelf, some a little short of
+       * it, the rock running on from one to the next: its lip is a ragged
+       * line, not the edge of a slab. (Never lower than the face above
+       * reaches down, or a slot would open under it.)
+       */
+      const width = x1 - x0;
+      const pieces: [number, number, number][] = [];
+      if (f.square || f.top - bottom < 8) pieces.push([-width / 2, width / 2, 0]);
+      else {
+        let u = -width / 2;
+        while (u < width / 2 - 0.1) {
+          let w = 4 + drop() * 5;
+          if (width / 2 - u - w < 3) w = width / 2 - u;
+          pieces.push([u, u + w, -0.7 + drop() * 2.9]);
+          u += w;
+        }
+      }
+      const ledges: number[] = [];
+      for (let y = bottom + 5 + drop() * 4; y < f.top - 4; y += 7 + drop() * 7) ledges.push(y);
+      const seed = Math.floor(drop() * 1e6);
+      const cos = Math.cos(f.turn);
+      const sin = Math.sin(f.turn);
+      pieces.forEach(([u0, u1, dy], j) => {
+        const uc = (u0 + u1) / 2;
+        const cx = (x0 + x1) / 2 + uc * cos;
+        const top = f.top + dy;
+        const beside = (n: [number, number, number] | undefined): [number, number][] =>
+          n ? [[0.5, Math.min(top, f.top + n[2]) - bottom - 1.5]] : [];
+        rockBlock(cx - (u1 - u0) / 2, cx + (u1 - u0) / 2, bottom, top, f.front - uc * sin, {
+          rng: drop,
+          scrub: true,
+          strata: 0.5,
+          relief: DROP_RELIEF,
+          green: 0.06,
+          lean,
+          turn: f.turn,
+          along: (x0 + x1) / 2 + uc,
+          cliffOf: {
+            seed,
+            ledges,
+            open: [beside(pieces[j - 1]), beside(pieces[j + 1])],
+            leanBetween: [f.top - 12, f.top - 1],
+          },
+          ...(solid ? { solid: true, back: faces[k - 1]!.front + 3 } : {}),
+        });
       });
+      const shelfAt = (x: number) => {
+        const u = (x - (x0 + x1) / 2) / cos;
+        const piece = pieces.find(([a, b]) => u >= a && u <= b) ?? pieces[0]!;
+        return f.top + piece[2];
+      };
       if (k === 0 || (k === 1 && (built || grazed))) return;
       // On the shelf in front of the face above: spruce, a beech, scrub.
       const z0 = f.front + DROP_RELIEF + 0.2 + Math.abs(Math.sin(f.turn)) * ((x1 - x0) / 2);
@@ -392,9 +569,10 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
         const z = z0 + drop() * (z1 - z0);
         const r = drop();
         if (r < 0.2) continue;
-        if (r < 0.62) parts.push(...spruce([x, f.top, z], 4 + drop() * (k > 1 ? 11 : 5)));
-        else if (r < 0.72) parts.push(...broadleaf([x, f.top, z], 6 + drop() * 4));
-        else parts.push(scenery(cyl("foliage", [x, f.top, z], 0.9, 0.5, 0.9 + drop() * 0.6, 6)));
+        const y = shelfAt(x);
+        if (r < 0.62) parts.push(...spruce([x, y, z], 4 + drop() * (k > 1 ? 11 : 5)));
+        else if (r < 0.72) parts.push(...broadleaf([x, y, z], 6 + drop() * 4));
+        else parts.push(scenery(cyl("foliage", [x, y, z], 0.9, 0.5, 0.9 + drop() * 0.6, 6)));
       }
     });
     if (onPath) {
@@ -772,7 +950,8 @@ export function cliffMonasteryParts(spec: CliffMonasterySpec): Part[] {
   const aqZ = cliff - 1.8;
   for (let i = 0; i <= n; i += 1) {
     const x = aqRight - i * (span + pier);
-    parts.push(box("stone", [x, 0, aqZ], [pier, channel - span / 2, 1.6]));
+    // Each pier runs up to the channel, carrying the arches either side of it.
+    parts.push(box("stone", [x, 0, aqZ], [pier, channel, 1.6]));
   }
   for (let i = 0; i < n; i += 1) {
     const x = aqRight - pier / 2 - span / 2 - i * (span + pier);

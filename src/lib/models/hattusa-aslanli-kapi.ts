@@ -12,7 +12,7 @@ import {
   type WalkStart,
 } from "@/lib/reconstruction-parts";
 import { gateLion } from "@/lib/beasts";
-import { bands, polygonalFace, slopedSlab, steppedRamp } from "./masonry";
+import { bands, pitchedFace, polygonalFace, slopedSlab, steppedRamp } from "./masonry";
 
 /**
  * The Lion Gate of Hattusa: the south-west gate of the Upper City, in the
@@ -250,7 +250,8 @@ function tower(
         height: socle,
         size: 1.15,
         seed: s,
-        proud: 0.06,
+        proud: 0.1,
+        gap: 0.07,
       }),
     );
   face([cx, floor, z0], FACING.south, w, seed);
@@ -302,6 +303,27 @@ function tower(
       );
     }
   }
+  // The ends of the beams of the top floor, standing out of the brick under
+  // the parapet, as the clay models of Hittite towers show them.
+  for (const [at, rotY, span] of [
+    [[cx, 0, z0 + set], FACING.south, w - 2 * set],
+    [[cx, 0, z1 - set], FACING.north, w - 2 * set],
+    [[x0 + set, 0, cz], FACING.west, d - 2 * set],
+    [[x1 - set, 0, cz], FACING.east, d - 2 * set],
+  ] as [Vec3, number, number][]) {
+    const n = Math.max(2, Math.floor(span / 1.05));
+    for (let i = 0; i < n; i += 1) {
+      const along = -span / 2 + (span * (i + 0.5)) / n;
+      parts.push(
+        box(
+          "timber",
+          onFace([at[0], floor + height - 0.62, at[2]], rotY, along, 0, 0.17),
+          [0.2, 0.2, 0.38],
+          rotY,
+        ),
+      );
+    }
+  }
   // The crenellations round the top.
   const y = floor + height;
   const e = set + 0.35;
@@ -333,20 +355,36 @@ export function hittiteGateParts(spec: HittiteGateSpec): Part[] {
       [wallMax - wallMin, R, backZ - berm],
     ),
   );
+  // The glacis: a bed of earth and packing, and on it the facing of rough
+  // slabs laid in courses up the slope (left out where the forecourt covers it).
   parts.push(
-    worn(
-      slopedSlab(
-        "stone",
-        [(wallMin + wallMax) / 2, 0, toe],
-        0,
-        wallMax - wallMin,
-        berm - toe,
-        R,
-        0.35,
-      ),
-      0.06,
+    slopedSlab(
+      "stoneDark",
+      [(wallMin + wallMax) / 2, 0, toe],
+      0,
+      wallMax - wallMin,
+      berm - toe,
+      R,
+      0.35,
     ),
   );
+  for (const [a, b, s] of [
+    [wallMin, court.x0 - 0.02, 61],
+    [court.x1 + 0.02, wallMax, 67],
+  ] as const) {
+    parts.push(
+      ...pitchedFace({
+        material: "stone",
+        foot: [(a + b) / 2, 0, toe],
+        rotY: 0,
+        width: b - a,
+        run: berm - toe,
+        rise: R,
+        size: [1.45, 1.05],
+        seed: s,
+      }),
+    );
+  }
   // The forecourt the road arrives at, retained in stone.
   const cw = court.x1 - court.x0;
   parts.push(
@@ -365,6 +403,8 @@ export function hittiteGateParts(spec: HittiteGateSpec): Part[] {
       height: R,
       size: 1.0,
       seed: 41,
+      proud: 0.1,
+      gap: 0.07,
     }),
     ...polygonalFace({
       material: "stone",
@@ -374,6 +414,8 @@ export function hittiteGateParts(spec: HittiteGateSpec): Part[] {
       height: R,
       size: 1.0,
       seed: 43,
+      proud: 0.1,
+      gap: 0.07,
     }),
     ...polygonalFace({
       material: "stone",
@@ -383,6 +425,8 @@ export function hittiteGateParts(spec: HittiteGateSpec): Part[] {
       height: R,
       size: 1.0,
       seed: 47,
+      proud: 0.1,
+      gap: 0.07,
     }),
   );
   // The ramp up to it, along the foot of the rampart.
@@ -498,6 +542,8 @@ export function hittiteGateParts(spec: HittiteGateSpec): Part[] {
           height: spec.socleHeight,
           size: 1.1,
           seed: seed++,
+          proud: 0.1,
+          gap: 0.07,
         }),
         ...polygonalFace({
           material: "stone",
@@ -507,6 +553,8 @@ export function hittiteGateParts(spec: HittiteGateSpec): Part[] {
           height: spec.socleHeight,
           size: 1.1,
           seed: seed++,
+          proud: 0.1,
+          gap: 0.07,
         }),
       );
       const top = R + spec.socleHeight;

@@ -1,8 +1,9 @@
-import { ashlar, FACING } from "@/lib/reconstruction-detail";
+import { ashlar, FACING, gableTiles } from "@/lib/reconstruction-detail";
 import {
   kitBox as box,
   kitCornice as cornice,
   kitCyl as cyl,
+  kitPrism as prism,
   kitScenery as scenery,
   kitSetting as setting,
   kitWorn as worn,
@@ -95,9 +96,41 @@ export function lighthouseParts(spec: LighthouseSpec): Part[] {
       ),
     );
   // A warehouse at the landward end of the mole, for what the ships brought.
-  parts.push(box("limestone", [L.moleEnd - 4, QUAY, -mw / 2 + 2.2], [7, 4.2, 4]));
-  parts.push(box("terracotta", [L.moleEnd - 4, QUAY + 4.2, -mw / 2 + 2.2], [7.4, 0.2, 4.4]));
-  parts.push(box("timber", [L.moleEnd - 4, QUAY, -mw / 2 + 4.21], [1.8, 2.6, 0.04]));
+  const wx = L.moleEnd - 4;
+  const wz = -mw / 2 + 2.2;
+  parts.push(box("limestone", [wx, QUAY, wz], [7, 4.2, 4]));
+  parts.push(
+    ...ashlar({
+      at: [wx, QUAY, wz + 2],
+      rotY: FACING.north,
+      length: 7,
+      height: 4.2,
+      material: "limestone",
+      foot: false,
+      coping: false,
+      course: 0.5,
+      blocks: 1.2,
+      gaps: [[-1.2, 1.2]],
+    }),
+  );
+  // A tiled roof pitched along the quay, its gables at the two ends.
+  parts.push(prism("limestone", [wx, QUAY + 4.2, wz], [4, 1.1, 7], FACING.east));
+  parts.push(
+    ...gableTiles({
+      at: [wx, QUAY + 4.2, wz],
+      rotY: FACING.east,
+      halfWidth: 2.2,
+      length: 7.4,
+      pitch: 1.2,
+    }),
+  );
+  // The door, in a stone frame under a lintel, and two slit windows.
+  parts.push(box("timber", [wx, QUAY, wz + 2.01], [1.8, 2.6, 0.04]));
+  for (const side of [-1, 1])
+    parts.push(box("limestone", [wx + side * 1.05, QUAY, wz + 2.06], [0.3, 2.6, 0.14]));
+  parts.push(box("limestone", [wx, QUAY + 2.6, wz + 2.08], [2.6, 0.38, 0.18]));
+  for (const side of [-1, 1])
+    parts.push(box("shadow", [wx + side * 2.4, QUAY + 2.9, wz + 2.01], [0.22, 0.7, 0.02]));
 
   /* ---- the base ---- */
   // Two steps round it, the square block, a cornice.

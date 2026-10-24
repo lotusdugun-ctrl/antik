@@ -2734,6 +2734,29 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       ),
     );
     /*
+     * The architrave of the upper order in its fasciae: two bands, each
+     * stepping a little further out than the one below, so the beam reads
+     * as an architrave and not a plain block. (Below, the architrave is the
+     * building inscription's, and is left smooth for it.)
+     */
+    if (!frieze && base > y0 + 1e-6) {
+      const course = entablature / 3;
+      const span = spread * 2 + diameter * 2.4;
+      const face = z - diameter * 1.4;
+      parts.push(
+        box(
+          "marble",
+          [centre, base + pedestal + shaft + course * 0.34, face - 0.01],
+          [span - 0.04, course * 0.3, 0.04],
+        ),
+        box(
+          "marble",
+          [centre, base + pedestal + shaft + course * 0.66, face - 0.025],
+          [span - 0.06, course * 0.34, 0.08],
+        ),
+      );
+    }
+    /*
      * The lettering: the statue's name on the die of the pedestal under it —
      * the four virtues are named on theirs, "Sophia of Celsus" and the rest,
      * and Celsus' own bases above carry the family's dedications — and on the
@@ -4037,6 +4060,39 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     );
   }
 
+  /*
+   * The coursing of the wall behind the columns: the stage front was built of
+   * squared blocks in courses some sixty centimetres high, and the beds of
+   * those courses, running the width of the wall behind the aediculae, are
+   * what give it its scale. Left out over the doors (and Ephesus' windows).
+   */
+  storeys.forEach((storey, s) => {
+    const top = s === storeys.length - 1 ? crown - 0.8 : storey.base + storey.height - 0.7;
+    const gaps: [number, number][] =
+      s === 0
+        ? doors.map(([d, dw]) => [d - dw / 2 - 0.5, d + dw / 2 + 0.5] as [number, number])
+        : ch.screen === "ephesus"
+          ? Array.from({ length: bays }, (_, i) => {
+              const x = -(screenSpan / 2) + (i + 0.5) * bayWidth;
+              return [x - bayWidth * 0.2, x + bayWidth * 0.2] as [number, number];
+            })
+          : [];
+    const bottom = s === 0 ? stageTop + 0.1 : storey.base;
+    parts.push(
+      ...ashlar({
+        at: [0, bottom, wallZ],
+        rotY: FACING.north,
+        length: stageWidth * 0.93,
+        height: top - bottom,
+        course: 0.62,
+        material: backWall === "conglomerate" ? "conglomerate" : screenStone,
+        foot: false,
+        coping: false,
+        gaps,
+      }),
+    );
+  });
+
   // Beam sockets: a row of small square holes across each storey.
   for (const storey of storeys) {
     for (let i = 0; i < 26; i += 1) {
@@ -5293,6 +5349,50 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
       parts.push(
         prism("marble", [0, eaves, side * (roofLength / 2 - 0.57)], [roofHalf * 2, pitch, 1.2]),
       );
+      /*
+       * The Artemision's pediment was pierced: the Roman coins of Ephesus
+       * show three openings in it, a tall one in the middle and a smaller one
+       * either side — windows, it is thought, where the goddess could be
+       * shown to the crowd. Framed in moulded marble.
+       */
+      /*
+       * At Aizanoi the middle of each tympanum carried a round shield, a
+       * clipeus, with a bust in it and acanthus scrolls running out either
+       * side; the shield and its rim are cut here, the bust and the scrolls
+       * (too broken to draw from) are not.
+       */
+      if (spec.cultStatue === "zeus") {
+        const face = side * (roofLength / 2 + 0.03);
+        const r = Math.min(1.3, pitch * 0.2);
+        const cy = eaves + 0.5 + r;
+        parts.push(
+          cyl("marble", [0, cy, face], r, r, 0.12, 28, { rotX: (side * Math.PI) / 2 }),
+          cyl("marble", [0, cy, face], r + 0.14, r + 0.14, 0.07, 28, {
+            rotX: (side * Math.PI) / 2,
+          }),
+        );
+      }
+      if (spec.cultStatue === "artemis") {
+        const face = side * (roofLength / 2 + 0.03);
+        for (const [x, w, h] of [
+          [0, 3.2, Math.min(4.6, pitch * 0.5)],
+          [-roofHalf * 0.27, 2.0, Math.min(3.0, pitch * 0.32)],
+          [roofHalf * 0.27, 2.0, Math.min(3.0, pitch * 0.32)],
+        ] as const) {
+          const y = eaves + 0.7;
+          parts.push(box("shadow", [x, y, face + side * 0.01], [w, h, 0.02]));
+          for (const e of [-1, 1])
+            parts.push(
+              box(
+                "marble",
+                [x + e * (w / 2 + 0.12), y - 0.1, face + side * 0.05],
+                [0.24, h + 0.2, 0.1],
+              ),
+            );
+          parts.push(box("marble", [x, y + h, face + side * 0.06], [w + 0.7, 0.26, 0.12]));
+          parts.push(box("marble", [x, y - 0.22, face + side * 0.06], [w + 0.6, 0.14, 0.14]));
+        }
+      }
     }
     // The cult statue, standing in the dark at the back of the cella.
     parts.push(box("marbleWorn", [0, y0, courtCentre + halfCL - 6], [4, 1.2, 4]));
@@ -5562,47 +5662,45 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
 
     /*
      * What makes these two stones people rather than posts, carved in the
-     * lowest relief the excavators describe: an arm folded down each narrow
-     * side, the hands brought together above a belt, and a fox-pelt loincloth
-     * hanging from it. Modelled as geometry, a few centimetres proud, because
-     * that is exactly how deep the carving is.
+     * lowest relief the excavators describe (Pillar 18): an arm running down
+     * the broad side from the shoulder under the head, bent at the elbow, the
+     * forearm brought forward to the narrow front, where the two hands meet
+     * above a belt, their fingers almost touching, and a fox pelt hanging
+     * from the belt over the loins. Modelled as geometry, a few centimetres
+     * proud, because that is exactly how deep the carving is. The inner broad
+     * face carries the animals, so the arm is cut on the outer one only.
      */
     const proud = 0.035;
-    const armTop = base + shaft * 0.72;
+    const armTop = base + shaft * 0.86;
     const beltY = base + shaft * 0.42;
-    for (const edge of [-1, 1]) {
-      // The upper arm, running down the narrow side of the pillar.
-      parts.push(
-        box(
-          "limestone",
-          [x, armTop - shaft * 0.3, edge * (0.75 + proud / 2)],
-          [0.62, shaft * 0.3, proud],
-        ),
-      );
-      // The forearm, turning in across the face towards the belt.
-      parts.push(
-        box(
-          "limestone",
-          [x - side * (0.31 + proud / 2), beltY + 0.18, edge * 0.45],
-          [proud, 0.16, 0.62],
-        ),
-      );
-      // A hand, five fingers wide, laid over the belt.
-      parts.push(
-        box(
-          "limestone",
-          [x - side * (0.31 + proud / 2), beltY + 0.1, edge * 0.16],
-          [proud, 0.22, 0.28],
-        ),
-      );
-    }
-    // The belt, running round three faces, with its buckle at the front.
-    parts.push(box("limestone", [x, beltY, 0], [0.62 + proud * 2, 0.16, 1.5 + proud * 2]));
-    parts.push(box("limestone", [x - side * (0.31 + proud), beltY - 0.02, 0], [proud, 0.2, 0.3]));
-    // The loincloth hanging below it.
+    const outerFace = x + side * (0.31 + proud / 2);
+    // The front is the narrow face towards -z, the way both stones look.
+    const front = -(0.75 + proud / 2);
+    // The upper arm, down the outer broad face from the shoulder at the back.
     parts.push(
-      box("limestone", [x - side * (0.31 + proud / 2), beltY - 0.62, 0], [proud, 0.62, 0.78]),
+      box("limestone", [outerFace, beltY + 0.34, 0.32], [proud, armTop - beltY - 0.34, 0.2]),
     );
+    // The forearm, from the elbow forward to the front edge.
+    parts.push(box("limestone", [outerFace, beltY + 0.2, -0.24], [proud, 0.16, 1.02]));
+    // The hands on the front, fingers pointing in towards one another.
+    for (const edge of [-1, 1]) {
+      parts.push(box("limestone", [edge * 0.15 + x, beltY + 0.18, front], [0.22, 0.2, proud]));
+      // The fingers, four grooves across each hand.
+      for (let f = 0; f < 4; f += 1)
+        parts.push(
+          box(
+            "stoneDark",
+            [x + edge * (0.08 + f * 0.035), beltY + 0.2, front - proud / 2 - 0.004],
+            [0.008, 0.14, 0.008],
+          ),
+        );
+    }
+    // The belt, running round the stone, with its buckle at the front.
+    parts.push(box("limestone", [x, beltY, 0], [0.62 + proud * 2, 0.16, 1.5 + proud * 2]));
+    parts.push(box("limestone", [x, beltY - 0.02, front - proud / 2], [0.3, 0.2, proud]));
+    // The fox pelt hanging from it over the front: the body, and the tail.
+    parts.push(box("limestone", [x, beltY - 0.52, front], [0.34, 0.52, proud]));
+    parts.push(box("limestone", [x, beltY - 0.82, front], [0.1, 0.3, proud]));
   }
 
   // A limestone plateau above the Harran plain: bare rock through thin soil,
@@ -6689,6 +6787,40 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
     }
   }
 
+  /*
+   * The scheme of the terrace houses' walls, in three zones: a dark dado,
+   * a main zone of red fields framed in ochre, each field with a thin inner
+   * line and a small picture at its middle (a bird, a basket of fruit — here
+   * only the pale ground of the vignette), and over them a light upper zone
+   * divided by slender painted stems, under a blue band.
+   */
+  const panelTop = 0.55 + spec.wallHeight * 0.62;
+  const fieldDecor = (at: Vec3, rotY: number, w: number, h: number) => {
+    const out = (x: number, y: number, size: Vec3, m: Material) =>
+      parts.push(box(m, onFace(at, rotY, x, y, 0.052), size, rotY));
+    for (const y of [0.16, h - 0.2]) out(0, y, [w - 0.32, 0.035, 0.015], "paintGold");
+    for (const x of [-(w / 2 - 0.16), w / 2 - 0.16])
+      out(x, 0.16, [0.035, h - 0.36 + 0.035, 0.015], "paintGold");
+    out(0, h * 0.42, [Math.min(0.5, w * 0.3), 0.4, 0.015], "fadedBlue");
+  };
+  const upperZone = (at: Vec3, rotY: number, length: number) => {
+    const height = beam - 0.32 - panelTop - 0.04;
+    if (height < 0.2) return;
+    parts.push(
+      box("terrazzo", onFace(at, rotY, 0, panelTop + 0.02, -0.03), [length, height, 0.09], rotY),
+    );
+    const stems = Math.max(2, Math.round(length / 1.6));
+    for (let i = 0; i <= stems; i += 1)
+      parts.push(
+        box(
+          i % 2 ? "paintGold" : "paintRed",
+          onFace(at, rotY, -length / 2 + (length * i) / stems, panelTop + 0.06, 0.04),
+          [0.04, height - 0.08, 0.015],
+          rotY,
+        ),
+      );
+  };
+
   // Painted panels on the court faces of the side piers.
   for (const side of [-1, 1]) {
     const face = side * (halfW + 0.005);
@@ -6700,7 +6832,14 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
       parts.push(
         box("paintRed", [face - side * 0.03, 0.61, z], [0.03, spec.wallHeight * 0.62 - 0.12, w]),
       );
+      fieldDecor(
+        [face - side * 0.03, 0.61, z],
+        side > 0 ? FACING.west : FACING.east,
+        w,
+        spec.wallHeight * 0.62 - 0.12,
+      );
     }
+    upperZone([face, 0, 0], side > 0 ? FACING.west : FACING.east, spec.courtDepth - 0.5);
     // A dark dado along the foot of the wall, as Roman walls had.
     parts.push(box("stoneDark", [face, 0, 0], [0.03, 0.55, spec.courtDepth]));
   }
@@ -6738,7 +6877,14 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
           [to - from - 0.12, spec.wallHeight * 0.62 - 0.12, 0.03],
         ),
       );
+      fieldDecor(
+        [x, 0.61, face - 0.03],
+        FACING.south,
+        to - from - 0.12,
+        spec.wallHeight * 0.62 - 0.12,
+      );
     }
+    upperZone([0, 0, face], FACING.south, spec.courtWidth - 0.5);
     parts.push(box("paintBlue", [0, beam - 0.32, face], [spec.courtWidth, 0.22, 0.03]));
     parts.push(
       ...inscription({
@@ -6801,6 +6947,34 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
     const x = -halfW * 0.75 + (halfW * 1.5 * i) / 3;
     parts.push(box("shadow", [x, floorY + 0.9, shellBack - 0.02], [0.9, 1.3, 0.06]));
     parts.push(box("timber", [x, floorY + 0.85, shellBack - 0.06], [1.05, 0.08, 0.12]));
+  }
+  // The timber gallery of the upper storey along the back wall: beams
+  // carried out from the wall, a plank floor on them, posts and a rail.
+  {
+    const out = 0.9;
+    const z0 = shellBack - out;
+    const length = spec.courtWidth + wall * 2;
+    const beams = Math.round(length / 1.5);
+    for (let i = 0; i <= beams; i += 1)
+      parts.push(
+        box(
+          "timber",
+          [-length / 2 + (length * i) / beams, floorY - 0.18, z0 + out / 2],
+          [0.12, 0.16, out],
+        ),
+      );
+    parts.push(box("timber", [0, floorY - 0.02, z0 + out / 2], [length, 0.06, out]));
+    const posts = Math.round(length / 1.8);
+    for (let i = 0; i <= posts; i += 1)
+      parts.push(
+        box(
+          "timber",
+          [-length / 2 + (length * i) / posts, floorY + 0.04, z0 + 0.06],
+          [0.07, 0.9, 0.07],
+        ),
+      );
+    parts.push(box("timber", [0, floorY + 0.94, z0 + 0.06], [length, 0.07, 0.1]));
+    parts.push(box("timber", [0, floorY + 0.5, z0 + 0.06], [length, 0.04, 0.05]));
   }
   /*
    * Water in the pool, and a marble youth over it as the fountain, from the
@@ -7197,10 +7371,38 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
 export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
   const parts: Part[] = [];
   const R = spec.tumulusDiameter / 2;
-  // The mound, its foot just behind the plinth the statues sit on.
+  // The mound, its foot just behind the plinth the statues sit on: grey
+  // limestone chips, darker than the dressed stone of the gods in front of it.
   parts.push(
-    scenery(worn(cyl("stone", [-R - 2.5, -0.5, 0], R, R * 0.06, spec.tumulusHeight, 72), 1.6)),
+    scenery(worn(cyl("rock", [-R - 2.5, -0.5, 0], R, R * 0.06, spec.tumulusHeight, 72), 1.6)),
   );
+  /*
+   * The mound is loose scree, fist-sized chips of limestone heaped up, and
+   * the rain has run it into lobes and gullies of paler and darker stone.
+   * Two more heaps a little off the first, each weathered its own way and a shade
+   * apart, break
+   * through its surface here and there: the cone stops reading as a cone.
+   */
+  for (const [dx, dz, k, material] of [
+    [2.2, -3.4, 0.975, "stoneDark"],
+    [-1.6, 3.8, 0.97, "stone"],
+  ] as const) {
+    parts.push(
+      scenery(
+        worn(
+          cyl(
+            material,
+            [-R - 2.5 - dx, -0.5, dz],
+            R * k,
+            R * 0.05,
+            spec.tumulusHeight * (k + 0.012),
+            72,
+          ),
+          1.7,
+        ),
+      ),
+    );
+  }
 
   // The terrace: the paved court, and the plinth along its west side.
   const halfCourt = spec.courtWidth / 2;

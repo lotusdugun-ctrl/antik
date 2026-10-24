@@ -121,30 +121,87 @@ export function lighthouseLife(spec: LighthouseSpec, era: Era): SceneLife {
 }
 
 /**
- * A small merchant ship along the quay: a round hull, a deck, a mast with the
- * yard and the sail furled on it, and the steering oar at the stern.
+ * A small merchant ship along the quay: a beamy hull planked up to a
+ * bulwark above the deck, the stern drawn up into a post curling forward
+ * (the goose-neck of Roman merchantmen), a mast with the yard and the sail
+ * furled on it, and the steering oar at the stern quarter.
  */
 function ship(at: Vec3): Part[] {
   const [x, , z] = at;
   const parts: Part[] = [];
-  // The hull, lofted from stern to bow along x, its keel under the water.
+  // Half the beam at points along the hull, stern (-x) to bow (+x).
+  const plan: [number, number][] = [
+    [-6.4, 0.25],
+    [-5.0, 1.25],
+    [-2.2, 1.85],
+    [2.0, 1.85],
+    [4.8, 1.35],
+    [6.6, 0.2],
+  ];
+  const sea = -0.4;
+  const deck = 0.32;
+  const rail = 0.8;
+  for (let i = 0; i + 1 < plan.length; i += 1) {
+    const [x0, h0] = plan[i]!;
+    const [x1, h1] = plan[i + 1]!;
+    const mid = (x0 + x1) / 2;
+    const length = Math.hypot(x1 - x0, h1 - h0);
+    // The deck over this stretch, as wide as its narrower end.
+    parts.push(
+      box("timber", [x + mid, deck - 0.06, z], [x1 - x0 + 0.02, 0.06, 2 * Math.min(h0, h1)]),
+    );
+
+    for (const side of [-1, 1]) {
+      // The planking, up to the rail: a board along each side of the stretch.
+      const angle = Math.atan2(side * (h1 - h0), x1 - x0);
+      parts.push(
+        hung(
+          [x + mid, rail, z + (side * (h0 + h1)) / 2],
+          [length + 0.12, rail - sea + 0.3, 0.12],
+          -angle,
+        ),
+      );
+      // The rail capping it, a shade paler where hands have worn it.
+      parts.push(
+        box(
+          "hide",
+          [x + mid, rail, z + (side * (h0 + h1)) / 2],
+          [length + 0.12, 0.08, 0.18],
+          -angle,
+        ),
+      );
+    }
+  }
+  // Under the deck the body of the hull, rounding down into the water.
   parts.push({
     kind: "loft",
     material: "timber",
     at: [x, 0, z],
     rotY: Math.PI / 2,
-    decor: true,
-    sections: [
-      { c: [0, 0.2, -6.5], rx: 0.4, ry: 0.5 },
-      { c: [0, 0.0, -5.2], rx: 1.4, ry: 0.75 },
-      { c: [0, -0.1, -2], rx: 2.0, ry: 0.85 },
-      { c: [0, -0.1, 2], rx: 2.0, ry: 0.85 },
-      { c: [0, 0.0, 5], rx: 1.5, ry: 0.8 },
-      { c: [0, 0.35, 6.6], rx: 0.35, ry: 0.55 },
-    ],
+    sections: plan.map(([u, h]) => ({
+      c: [0, -0.5, u] as Vec3,
+      rx: Math.max(0.15, h - 0.04),
+      ry: 0.78,
+    })),
   });
-  parts.push(box("timber", [x, 0.26, z], [11.4, 0.06, 3.6]));
-  parts.push(cyl("timber", [x - 0.5, 0.32, z], 0.12, 0.09, 8.5, 8));
+  // The sternpost, rising out of the stern and curling forward over the deck.
+  let px = x - 6.45;
+  let py = deck;
+  let lean = -0.35;
+  for (let k = 0; k < 4; k += 1) {
+    const len = 0.75;
+    parts.push(
+      cyl("timber", [px, py, z], 0.14 - k * 0.02, 0.12 - k * 0.02, len, 6, {
+        rotX: lean,
+        rotY: Math.PI / 2,
+      }),
+    );
+    px += Math.sin(lean) * len;
+    py += Math.cos(lean) * len;
+    lean += 0.55;
+  }
+  // The mast, the yard across it, and the sail furled along the yard.
+  parts.push(cyl("timber", [x - 0.5, deck, z], 0.12, 0.09, 8.5, 8));
   parts.push(
     cyl("timber", [x - 0.5 - 4, 7.4, z], 0.07, 0.07, 8, 6, {
       rotX: Math.PI / 2,
@@ -157,6 +214,13 @@ function ship(at: Vec3): Part[] {
       rotY: Math.PI / 2,
     }),
   );
-  parts.push(box("timber", [x + 6.2, 0.3, z + 1.2], [0.15, 0.15, 2.6]));
-  return parts;
+  // The steering oar over the quarter, its blade in the water.
+  parts.push(cyl("timber", [x - 5.2, 1.0, z + 1.35], 0.07, 0.07, 2.5, 6, { rotX: Math.PI - 0.35 }));
+  parts.push(hung([x - 5.2, 0, z + 2.05], [0.06, 0.8, 0.45], 0));
+  return parts.map((part) => ({ ...part, decor: true }));
+}
+
+/** A timber hanging down from `top`: a part of the hull below the waterline. */
+function hung(top: Vec3, size: Vec3, rotY: number): Part {
+  return { kind: "box", material: "timber", at: top, size, rotY, rotX: Math.PI };
 }

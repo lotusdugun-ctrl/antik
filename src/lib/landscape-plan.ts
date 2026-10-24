@@ -59,6 +59,18 @@ export type PlannedRock = {
   rz: number;
 };
 
+/** A low bush — maquis, steppe scrub, juniper, rhododendron — or a tussock. */
+export type PlannedShrub = {
+  x: number;
+  y: number;
+  z: number;
+  /** Width in metres; its height is a share of it. */
+  s: number;
+  sy: number;
+  rot: number;
+  shade: number;
+};
+
 /** A footprint on the ground, turned by `rot` about the vertical. */
 export type Footprint = { x: number; z: number; hx: number; hz: number; rot: number };
 export type WaterBody = Footprint & { top: number };
@@ -78,6 +90,17 @@ export type BiomeLook = {
   rocks: number;
   rockColour: number;
   rockScale: number;
+  /** Bushes and tussocks scattered through the country round the site. */
+  shrubs: number;
+  shrubColour: number;
+  /**
+   * The far skyline: how high the ridges rise, as a share of their distance
+   * (0.05 is about three degrees over the horizon), and how jagged they are.
+   */
+  ridge: number;
+  jagged: number;
+  /** The colour of the far slopes before the haze takes them. */
+  ridgeColour: number;
 };
 
 export const BIOMES: Record<Biome, BiomeLook> = {
@@ -93,6 +116,12 @@ export const BIOMES: Record<Biome, BiomeLook> = {
     rocks: 90,
     rockColour: 0x9c9284,
     rockScale: 1,
+    // Maquis: mastic, kermes oak, myrtle; the Aegean hills behind, low and blue.
+    shrubs: 420,
+    shrubColour: 0x6b744a,
+    ridge: 0.07,
+    jagged: 0.35,
+    ridgeColour: 0x5e6b5a,
   },
   steppe: {
     relief: 0.18,
@@ -106,11 +135,17 @@ export const BIOMES: Record<Biome, BiomeLook> = {
     rocks: 90,
     rockColour: 0x9c9284,
     rockScale: 1,
+    // Thorny cushions and tussocks on the plain; a far low line of hills.
+    shrubs: 300,
+    shrubColour: 0x8a8556,
+    ridge: 0.035,
+    jagged: 0.2,
+    ridgeColour: 0x8a7f6a,
   },
   // Nemrut's summit: bare rock and scree.
   mountain: {
     relief: 0.75,
-    palette: [0x8f8478, 0x7c7266, 0xa49a8c],
+    palette: [0x6e665c, 0x5e574e, 0x80776b],
     trees: 0,
     cypress: 0,
     conifer: 0,
@@ -120,6 +155,12 @@ export const BIOMES: Record<Biome, BiomeLook> = {
     rocks: 260,
     rockColour: 0x8a8076,
     rockScale: 1.8,
+    shrubs: 70,
+    shrubColour: 0x7a7a52,
+    // The Anti-Taurus all round, the summit among peaks.
+    ridge: 0.11,
+    jagged: 0.8,
+    ridgeColour: 0x6f6862,
   },
   // The Taurus at 1,500 m: grey limestone, thin grass, black pine and juniper.
   alpine: {
@@ -134,20 +175,31 @@ export const BIOMES: Record<Biome, BiomeLook> = {
     rocks: 200,
     rockColour: 0xb2ab9e,
     rockScale: 1.4,
+    shrubs: 340,
+    shrubColour: 0x56603e,
+    ridge: 0.12,
+    jagged: 0.75,
+    ridgeColour: 0x7a7a76,
   },
   // A Pontic gorge: oriental spruce and fir on the slopes, beech lower down.
   pontic: {
     relief: 0.85,
-    palette: [0x5f6e3f, 0x4c5c34, 0x6c7448],
+    palette: [0x56603c, 0x46522f, 0x626842],
     trees: 3.2,
     cypress: 0,
     conifer: 0.65,
     thinning: 0.3,
-    crownColour: 0x5a7a38,
-    coniferColour: 0x2c3f27,
+    crownColour: 0x3f5230,
+    coniferColour: 0x22322a,
     rocks: 110,
     rockColour: 0x8c877c,
     rockScale: 1.2,
+    // Rhododendron and hazel under the forest; the gorge's far walls high.
+    shrubs: 420,
+    shrubColour: 0x34432a,
+    ridge: 0.17,
+    jagged: 0.55,
+    ridgeColour: 0x2f4630,
   },
 };
 
@@ -589,5 +641,27 @@ export function planLandscape(options: LandscapeOptions) {
     rocks.push({ x, y: heightAt(x, z) - s * 0.3, z, s, sy, sz, rx, ry, rz });
   }
 
-  return { look, heightAt, trees, rocks, water, tint, blocked };
+  /*
+   * ---- bushes ----
+   * From a stream of their own, so adding them moved no tree and no rock.
+   * Thick near the site, where the eye is, and thinning towards the hills.
+   */
+  const shrubs: PlannedShrub[] = [];
+  const bush = seededRandom(Math.round(span * 1000) + 17);
+  for (let i = 0; i < look.shrubs; i += 1) {
+    const a = bush() * Math.PI * 2;
+    const r = clear * 1.08 + Math.pow(bush(), 1.6) * span * 2.4;
+    const x = centre.x + Math.cos(a) * r;
+    const z = centre.z + Math.sin(a) * r;
+    const s = (0.35 + bush() * bush() * 1.4) * (biome === "steppe" ? 0.7 : 1);
+    const sy = s * (0.45 + bush() * 0.3);
+    const rot = bush() * Math.PI * 2;
+    const shade = bush();
+    // Bushes clump where the ground holds water, like the trees.
+    if (tint(x / (span * 0.3) - 5, z / (span * 0.3)) < 0.3 + bush() * 0.25) continue;
+    if (!free(x, z, s * 0.6)) continue;
+    shrubs.push({ x, y: heightAt(x, z), z, s, sy, rot, shade });
+  }
+
+  return { look, heightAt, trees, rocks, shrubs, water, tint, blocked };
 }

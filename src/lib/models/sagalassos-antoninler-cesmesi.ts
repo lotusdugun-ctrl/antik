@@ -104,6 +104,25 @@ export function nymphaeumParts(spec: NymphaeumSpec): Part[] {
   for (const s of [-1, 1]) {
     const cx = s * (apseR + 0.6 + wingLength / 2);
     parts.push(box("limestone", [cx, 0, wallDepth / 2], [wingLength, top - 0.8, wallDepth]));
+    // The coursing of its face behind the aediculae, clear of the niches.
+    parts.push(
+      ...ashlar({
+        at: [cx, P, 0],
+        rotY: FACING.south,
+        length: wingLength,
+        height: top - 0.8 - P,
+        course: 0.58,
+        material: "limestone",
+        blocks: 1.25,
+        foot: false,
+        coping: false,
+        gaps: L.centres.map((c) => {
+          const u = s * c - cx;
+          const nicheW = 3.0 - d * 3;
+          return [-(u + nicheW / 2 + 0.15), -(u - nicheW / 2 - 0.15)] as [number, number];
+        }),
+      }),
+    );
     // The podium course along the foot of the wall, where the spouts are.
     parts.push(box("marble", [cx, 0, -0.25], [wingLength, P, 0.5]));
     parts.push(box("marble", [cx, P - 0.18, -0.32], [wingLength, 0.18, 0.64]));

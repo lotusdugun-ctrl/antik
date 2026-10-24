@@ -365,8 +365,10 @@ export function villaParts(spec: TerraceVillaSpec): Part[] {
     const z = -cd + (spec.courtDepth * i) / (m - 1);
     posts.push([-cw, z], [cw, z]);
   }
+  // Limestone drums coated in stucco and fluted in it, as the peristyle
+  // columns of the Roman houses of Zeugma and the cities round it were.
   for (const [x, z] of posts)
-    parts.push(...column("limestone", [x, F, z], 0.44, shaft, "ionic", 0));
+    parts.push(...column("limestone", [x, F, z], 0.44, shaft, "ionic", 20));
   // The beams over them, and the roofs of the walks, draining into the court.
   for (const s of [-1, 1]) {
     parts.push(box("limestone", [0, F + shaft, s * cd], [spec.courtWidth + 0.48, 0.36, 0.48]));

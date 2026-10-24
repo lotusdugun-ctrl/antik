@@ -137,6 +137,8 @@ type AtmosPalette = {
   cloudColor: number;
   birdOpacity: number;
   exposure: number;
+  /** How bright the halo round the sun (or the moon) is in the sky, 0..1. */
+  glow: number;
 };
 
 /**
@@ -161,6 +163,8 @@ type LiveAtmos = {
   cloudColor: THREE_NS.Color;
   birdOpacity: number;
   exposure: number;
+  /** How bright the halo round the sun (or the moon) is in the sky, 0..1. */
+  glow: number;
 };
 
 type Props = {
@@ -367,7 +371,8 @@ const MATERIALS: Record<Material, Palette> = {
     sheenRoughness: 0.7,
     sheenColor: 0xffffff,
   },
-  foliage: { color: 0x56683a, roughness: 0.9, metalness: 0 },
+  // A muted leaf green, not a lawn: what a forest reads as from across a valley.
+  foliage: { color: 0x4b5a36, roughness: 0.9, metalness: 0 },
   papyrus: { color: 0xd9c591, roughness: 0.8, metalness: 0 },
   hide: { color: 0x8a6a48, roughness: 0.95, metalness: 0 },
   // Letters cut in the stone: darker where the cut holds dirt, a ghost of red.
@@ -389,22 +394,30 @@ const paletteFor = (theme: "light" | "dark", atmos: AtmosMode): AtmosPalette => 
   const dark = theme === "dark";
   switch (atmos) {
     case "golden": {
+      /*
+       * A sun some fifteen degrees up: its light has crossed so much air that
+       * the blue is scattered out of it and it comes in orange and strong,
+       * while the shade it casts is lit by the still-blue sky above — warm
+       * faces, cool shadows, which is what makes the hour golden rather than
+       * merely orange. The haze is a pale peach, not the sun's own colour.
+       */
       return {
-        sky: dark ? { top: "#151b25", horizon: "#5c3f22" } : { top: "#5d86a8", horizon: "#f3a45c" },
-        fog: dark ? 0x3a2b20 : 0xefc493,
-        ground: dark ? 0x4a3c2d : 0xaa8b5e,
-        hemiSky: 0xffd9a6,
-        hemiGround: 0x9a7b4f,
-        hemiIntensity: dark ? 0.72 : 1.05,
-        sunColor: 0xff9d4d,
-        sunIntensity: dark ? 1.4 : 2.2,
-        fillColor: 0xf6c58b,
-        fillIntensity: 0.55,
+        sky: dark ? { top: "#151b25", horizon: "#5c3f22" } : { top: "#4d6f9c", horizon: "#f0b07a" },
+        fog: dark ? 0x3a2b20 : 0xc9a98a,
+        ground: dark ? 0x4a3c2d : 0xa88c64,
+        hemiSky: 0xaebbd2,
+        hemiGround: 0x8a6c48,
+        hemiIntensity: dark ? 0.6 : 1,
+        sunColor: 0xffa055,
+        sunIntensity: dark ? 1.6 : 2.9,
+        fillColor: 0x8fa3c8,
+        fillIntensity: 0.3,
         starOpacity: 0,
-        cloudOpacity: dark ? 0.22 : 0.5,
-        cloudColor: 0xffd9b0,
+        cloudOpacity: dark ? 0.22 : 0.55,
+        cloudColor: 0xffd2a8,
         birdOpacity: 1,
-        exposure: 1.08,
+        exposure: 1.14,
+        glow: 1,
       };
     }
     case "night": {
@@ -424,29 +437,44 @@ const paletteFor = (theme: "light" | "dark", atmos: AtmosMode): AtmosPalette => 
         cloudColor: 0x33405a,
         birdOpacity: 0,
         exposure: 1.18,
+        glow: 0.35,
       };
     }
     default: {
+      /*
+       * High summer sun, a little under sixty degrees: white light, a deep
+       * blue overhead paling to a hazy horizon, and shade lit by the sky —
+       * the hemisphere is kept below the sun so the shadows have weight.
+       */
       return {
-        sky: dark ? { top: "#0d1218", horizon: "#2b3440" } : { top: "#7fa6cc", horizon: "#dfe6ec" },
-        fog: dark ? 0x141a20 : 0xdfe6ec,
+        sky: dark ? { top: "#0d1218", horizon: "#2b3440" } : { top: "#5f93c8", horizon: "#d6e2ec" },
+        fog: dark ? 0x141a20 : 0xbac7d0,
         ground: dark ? 0x4a4436 : 0xb5a487,
-        hemiSky: 0xffffff,
+        hemiSky: 0xdfeaff,
         hemiGround: 0x8d8264,
-        hemiIntensity: dark ? 0.75 : 1.05,
-        sunColor: 0xfff3e0,
-        sunIntensity: dark ? 1.5 : 2.4,
+        hemiIntensity: dark ? 0.7 : 0.92,
+        sunColor: 0xfff1dc,
+        sunIntensity: dark ? 1.6 : 2.75,
         fillColor: 0xdce8ff,
-        fillIntensity: 0.5,
+        fillIntensity: 0.4,
         starOpacity: 0,
         cloudOpacity: dark ? 0.25 : 0.6,
         cloudColor: 0xffffff,
         birdOpacity: 1,
         exposure: 1.05,
+        glow: 0.55,
       };
     }
   }
 };
+
+/**
+ * How high the sun (or, at night, the moon) stands over the model, as a share
+ * of its span against a horizontal reach of about 0.85 of it: some 54° at
+ * midday, 17° in the golden hour — low enough for long raking shadows that
+ * draw out every moulding — and a moon at about 47°.
+ */
+const SUN_LIFT: Record<AtmosMode, number> = { day: 1.15, golden: 0.26, night: 0.9 };
 
 /**
  * Where the camera starts, per kind of building — chosen, not computed. Each
@@ -3141,6 +3169,140 @@ export default function Reconstruction3DInner({
           ? stoneSet
           : blockSet;
       /**
+       * Weathering, worked out in the shader from where each point is, at the
+       * cost of two more looks at the grain texture:
+       *
+       * - the grain again at a twelfth of its scale, so a wall is patchy over
+       *   metres as well as centimetres and the tile never shows as a grid;
+       * - rising damp and splashed dirt along the foot of every wall, darkest
+       *   at the ground and gone by about a metre and a half;
+       * - on upright faces, faint streaks running down where rain has washed
+       *   over the stone for centuries;
+       * - bronze turning to verdigris where the rain sits and runs, going
+       *   matte and losing its metal there.
+       *
+       * And the fine relief of the normal map eases off with distance, where
+       * it was only sparkle finer than a pixel.
+       */
+      const groundLevel = bounds.min[1];
+      /*
+       * The surf: wherever stone, sand or rock goes down into the largest sea
+       * or river — a quay, a mole, a bank, a rock — a broken white line of
+       * foam just over the water and the stone darkened wet above it, rising
+       * and falling a little with the clock. Shared by every such material;
+       * a weak device turns it off (`surf.on`).
+       */
+      const seaBody = waterOf(parts)
+        .filter((w) => w.hx * w.hz >= 40)
+        .sort((a, b) => b.hx * b.hz - a.hx * a.hz)[0];
+      const surf = {
+        uSurfRect: {
+          value: new THREE.Vector4(
+            seaBody?.x ?? 0,
+            seaBody?.z ?? 0,
+            seaBody?.hx ?? -1,
+            seaBody?.hz ?? -1,
+          ),
+        },
+        uSurfTurn: { value: seaBody?.rot ?? 0 },
+        uSurfTop: { value: seaBody?.top ?? -1e6 },
+        uSurf: { value: seaBody ? 1 : 0 },
+        uSurfTime: { value: 0 },
+      };
+      const weather_ = (material: THREE_NS.MeshPhysicalMaterial, bronze: boolean) => {
+        material.onBeforeCompile = (shader) => {
+          shader.uniforms["uStoneGround"] = { value: groundLevel };
+          Object.assign(shader.uniforms, surf);
+          shader.vertexShader = shader.vertexShader
+            .replace(
+              "#include <common>",
+              "#include <common>\nvarying vec3 vStoneWorld;\nvarying float vStoneUp;",
+            )
+            .replace(
+              "#include <worldpos_vertex>",
+              `#include <worldpos_vertex>
+{
+  vec4 stoneP = vec4(transformed, 1.0);
+  #ifdef USE_BATCHING
+  stoneP = batchingMatrix * stoneP;
+  #endif
+  #ifdef USE_INSTANCING
+  stoneP = instanceMatrix * stoneP;
+  #endif
+  vStoneWorld = (modelMatrix * stoneP).xyz;
+  vStoneUp = normalize((modelMatrix * vec4(objectNormal, 0.0)).xyz).y;
+}`,
+            );
+          shader.fragmentShader = shader.fragmentShader
+            .replace(
+              "#include <common>",
+              `#include <common>
+varying vec3 vStoneWorld;
+varying float vStoneUp;
+uniform float uStoneGround;
+uniform vec4 uSurfRect;
+uniform float uSurfTurn;
+uniform float uSurfTop;
+uniform float uSurf;
+uniform float uSurfTime;`,
+            )
+            .replace(
+              "#include <map_fragment>",
+              `#include <map_fragment>
+float stonePatina = 0.0;
+#ifdef USE_MAP
+{
+  float macro = texture2D(map, vMapUv * 0.083 + 0.31).g;
+  float upright = 1.0 - smoothstep(0.35, 0.7, abs(vStoneUp));
+  float streak = texture2D(map, vec2((vStoneWorld.x + vStoneWorld.z) * 0.21, vStoneWorld.y * 0.018)).g;
+  float rise = vStoneWorld.y - uStoneGround;
+  float damp = (1.0 - smoothstep(0.0, 1.5, rise)) * (0.55 + 0.45 * macro / 0.67);
+  float shade = (0.9 + 0.15 * macro / 0.67) * (1.0 - 0.2 * damp) * (1.0 - upright * clamp((0.7 - streak) * 0.7, -0.06, 0.16));
+  ${
+    bronze
+      ? `stonePatina = clamp(smoothstep(0.2, 0.9, vStoneUp) * 0.55 + upright * smoothstep(0.62, 0.8, streak) * 0.6 + (macro - 0.6) * 0.8, 0.0, 0.85);
+  diffuseColor.rgb = mix(diffuseColor.rgb * shade, vec3(0.16, 0.3, 0.24), stonePatina);`
+      : "diffuseColor.rgb *= shade;"
+  }
+}
+#endif
+if (uSurf > 0.0) {
+  vec2 q = vStoneWorld.xz - uSurfRect.xy;
+  float c = cos(uSurfTurn);
+  float s = sin(uSurfTurn);
+  q = abs(vec2(q.x * c - q.y * s, q.x * s + q.y * c)) - uSurfRect.zw;
+  float away = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+  float h = vStoneWorld.y - uSurfTop;
+  if (away < 4.0 && h > -0.3 && h < 0.8) {
+    float n = 0.5 + 0.25 * sin(vStoneWorld.x * 2.3 + uSurfTime * 0.8) + 0.25 * sin(vStoneWorld.z * 3.1 - uSurfTime * 0.6 + vStoneWorld.x);
+    float line = 0.1 + 0.06 * sin(uSurfTime * 0.9 + n * 5.0);
+    float band = 1.0 - smoothstep(0.04, 0.12 + 0.1 * n, abs(h - line));
+    float wet = 1.0 - smoothstep(0.0, 0.6, h);
+    diffuseColor.rgb *= 1.0 - 0.32 * wet * uSurf;
+    diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.92, 0.94, 0.93), band * uSurf * (0.4 + 0.6 * n));
+  }
+}`,
+            )
+            .replace(
+              "#include <metalnessmap_fragment>",
+              `#include <metalnessmap_fragment>
+metalnessFactor *= 1.0 - stonePatina;`,
+            )
+            .replace(
+              "#include <roughnessmap_fragment>",
+              `#include <roughnessmap_fragment>
+roughnessFactor = mix(roughnessFactor, 0.85, stonePatina);`,
+            )
+            .replace(
+              "#include <normal_fragment_maps>",
+              `#include <normal_fragment_maps>
+normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, length(vViewPosition)) * 0.75));`,
+            );
+        };
+        material.customProgramCacheKey = () => (bronze ? "antik-bronze" : "antik-stone");
+      };
+
+      /**
        * The surface of one material: its palette, and the stone's grain,
        * normals and pits when it is stone. Shared by the merged building and by
        * the scans that stand in its stone, so a statue and the plinth under it
@@ -3160,7 +3322,7 @@ export default function Reconstruction3DInner({
          * façade reading as matte plaster, which is a reconstruction that never
          * happened (Roman façades were polished, the Celsus front famously so).
          */
-        return new THREE.MeshPhysicalMaterial({
+        const material = new THREE.MeshPhysicalMaterial({
           color: palette.color,
           roughness: palette.roughness,
           metalness: palette.metalness,
@@ -3189,6 +3351,8 @@ export default function Reconstruction3DInner({
               }
             : {}),
         });
+        if (maps) weather_(material, name === "bronze");
+        return material;
       };
 
       /**
@@ -3408,8 +3572,8 @@ export default function Reconstruction3DInner({
       let glowTarget = startAtmos === "night" ? 1 : startAtmos === "golden" ? 0.45 : 0.08;
       let glow = glowTarget;
       // The sun's height over the model, a share of its span: lower at dusk.
-      let sunLift = 1.15;
-      let sunLiftTarget = 1.15;
+      let sunLift = SUN_LIFT[startAtmos];
+      let sunLiftTarget = sunLift;
 
       // A wide apron under everything, so the model does not float in a void.
       const apron = new THREE.CircleGeometry(span * 2.2, 64);
@@ -3426,6 +3590,55 @@ export default function Reconstruction3DInner({
       });
       // A river or a harbour lower than the site shows through it.
       cutWater(apronMaterial, waterOf(parts));
+      /*
+       * The apron thins out into the country instead of ending at a circle.
+       * Its edge was the one thing that made every model read as a model on
+       * a turntable: a perfect ring of paving with grass rising round it. Past
+       * where the hills begin it fades, along a wavering line, into the
+       * terrain under it.
+       */
+      {
+        const footprint = Math.hypot(
+          (bounds.max[0] - bounds.min[0]) / 2,
+          (bounds.max[2] - bounds.min[2]) / 2,
+        );
+        // Done by the time the hills begin to rise (see `planLandscape`),
+        // or the rising ground would cut it off along a hard line again.
+        const fadeFrom = Math.min(span * 1.5, footprint * 0.95);
+        const fadeTo = Math.min(span * 2.05, footprint * 1.22);
+        const cut = apronMaterial.onBeforeCompile.bind(apronMaterial);
+        const cutKey = apronMaterial.customProgramCacheKey.bind(apronMaterial);
+        apronMaterial.transparent = true;
+        apronMaterial.depthWrite = false;
+        apronMaterial.onBeforeCompile = (shader, made) => {
+          cut(shader, made);
+          shader.uniforms["uApron"] = {
+            value: new THREE.Vector4(centre.x, centre.z, fadeFrom, fadeTo),
+          };
+          shader.vertexShader = shader.vertexShader
+            .replace("#include <common>", "#include <common>\nvarying vec2 vApronWorld;")
+            .replace(
+              "#include <worldpos_vertex>",
+              "#include <worldpos_vertex>\nvApronWorld = (modelMatrix * vec4(transformed, 1.0)).xz;",
+            );
+          shader.fragmentShader = shader.fragmentShader
+            .replace(
+              "#include <common>",
+              "#include <common>\nvarying vec2 vApronWorld;\nuniform vec4 uApron;",
+            )
+            .replace(
+              "#include <alphamap_fragment>",
+              `#include <alphamap_fragment>
+{
+  vec2 q = vApronWorld - uApron.xy;
+  float a = atan(q.y, q.x);
+  float wobble = 1.0 + 0.05 * sin(a * 3.0 + 0.7) + 0.04 * sin(a * 7.0 + 2.1) + 0.02 * sin(a * 17.0) - 0.08;
+  diffuseColor.a *= 1.0 - smoothstep(uApron.z * wobble, uApron.w * wobble, length(q));
+}`,
+            );
+        };
+        apronMaterial.customProgramCacheKey = () => `${cutKey()}|apron`;
+      }
       const apronMesh = new THREE.Mesh(apron, apronMaterial);
       apronMesh.receiveShadow = true;
       scene.add(apronMesh);
@@ -3880,60 +4093,68 @@ export default function Reconstruction3DInner({
       /**
        * The sky, as a gradient rather than a flat fill: pale at the horizon and
        * deeper overhead, which is what makes a model read as standing outdoors
-       * instead of being pasted onto a colour swatch. Painted into a strip and
-       * wrapped round the scene, then repainted in place as its colours ease
-       * between one time of day and the next — so changing the light is a dusk
-       * the scene passes through, not a hard cut.
-       */
-      const skyCanvas = document.createElement("canvas");
-      skyCanvas.width = 4;
-      skyCanvas.height = 256;
-      const sky = new THREE.CanvasTexture(skyCanvas);
-      sky.mapping = THREE.EquirectangularReflectionMapping;
-      sky.colorSpace = THREE.SRGBColorSpace;
-      const repaintSky = (top: THREE_NS.Color, horizon: THREE_NS.Color) => {
-        const ctx = skyCanvas.getContext("2d")!;
-        const gradient = ctx.createLinearGradient(0, 0, 0, 256);
-        gradient.addColorStop(0, `#${top.getHexString()}`);
-        gradient.addColorStop(0.62, `#${horizon.getHexString()}`);
-        gradient.addColorStop(1, `#${horizon.getHexString()}`);
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 4, 256);
-        sky.needsUpdate = true;
-      };
-      /*
-       * What is seen of the sky is a dome round the camera painted by a
-       * shader from two colours, not the strip itself: three.js turns an
-       * equirectangular background into a cube map once and keeps it, so a
-       * repainted strip never reached the screen and the night kept a day
-       * sky over a dark land. Uniforms change every frame for nothing.
-       * Drawn first and without depth, it is behind everything however near.
+       * instead of being pasted onto a colour swatch — with the sun's disc and
+       * the glow of the air round it (the moon's, at night), and below the
+       * horizon the colour of the land. Its colours ease between one time of
+       * day and the next, so changing the light is a dusk the scene passes
+       * through, not a hard cut.
+       *
+       * It is a dome round the camera painted by a shader from a handful of
+       * uniforms, drawn first and without depth so it is behind everything
+       * however near. The same shader, without the disc, is rendered into the
+       * prefiltered environment that every surface reflects (see `regenEnv`).
        */
       const skyUniforms = {
         top: { value: new THREE.Color() },
         horizon: { value: new THREE.Color() },
+        ground: { value: new THREE.Color() },
+        sunDir: { value: new THREE.Vector3(0, 1, 0) },
+        sunColour: { value: new THREE.Color() },
+        glow: { value: 0 },
+        disc: { value: 1 },
       };
+      const skyVertex = `
+        varying vec3 vDirection;
+        void main() {
+          vDirection = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }`;
+      // Colours are linear; the dome on screen writes sRGB (it is not tone
+      // mapped), the environment linear, as a render target wants.
+      const skyFragment = `
+        uniform vec3 top;
+        uniform vec3 horizon;
+        uniform vec3 ground;
+        uniform vec3 sunDir;
+        uniform vec3 sunColour;
+        uniform float glow;
+        uniform float disc;
+        varying vec3 vDirection;
+        void main() {
+          vec3 d = normalize(vDirection);
+          float up = d.y;
+          float f = 0.5 - asin(clamp(up, -1.0, 1.0)) / 3.14159265;
+          vec3 c = mix(top, horizon, pow(clamp(f / 0.62, 0.0, 1.0), 1.35));
+          float cs = max(dot(d, sunDir), 0.0);
+          // Forward scattering: a wide warm wash low round the sun, a tight halo.
+          float low = 1.0 - smoothstep(0.0, 0.45, abs(up));
+          c += sunColour * glow * (0.16 * pow(cs, 5.0) * (0.35 + 0.65 * low) + 0.3 * pow(cs, 60.0));
+          c += sunColour * disc * smoothstep(0.99965, 0.99985, cs) * 8.0;
+          c = mix(c, ground, smoothstep(0.0, 0.2, -up));
+          #ifdef SRGB_OUT
+          c = clamp(c, 0.0, 1.0);
+          c = mix(c * 12.92, 1.055 * pow(c, vec3(0.41666)) - 0.055, step(0.0031308, c));
+          #endif
+          gl_FragColor = vec4(c, 1.0);
+        }`;
+      const skyGeometry = new THREE.SphereGeometry(1, 32, 16);
       const skyDome = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 24, 12),
+        skyGeometry,
         new THREE.ShaderMaterial({
           uniforms: skyUniforms,
-          vertexShader: `
-            varying vec3 vDirection;
-            void main() {
-              vDirection = position;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }`,
-          // The strip's own gradient: top colour at the zenith, horizon colour
-          // from a little below the horizon down — mixed in sRGB as the
-          // canvas mixes it, and written out as it is.
-          fragmentShader: `
-            uniform vec3 top;
-            uniform vec3 horizon;
-            varying vec3 vDirection;
-            void main() {
-              float f = 0.5 - asin(clamp(normalize(vDirection).y, -1.0, 1.0)) / 3.14159265;
-              gl_FragColor = vec4(mix(top, horizon, clamp(f / 0.62, 0.0, 1.0)), 1.0);
-            }`,
+          vertexShader: skyVertex,
+          fragmentShader: skyFragment,
+          defines: { SRGB_OUT: 1 },
           side: THREE.BackSide,
           depthTest: false,
           depthWrite: false,
@@ -3947,16 +4168,48 @@ export default function Reconstruction3DInner({
       // In a group of its own, so the walk's search for floors passes it by.
       const skyGroup = new THREE.Group();
       skyGroup.add(skyDome);
+      // The far hills, drawn just after the sky and behind everything else.
+      const skyline = landscape.skyline;
+      skyline.mesh.scale.setScalar(span * 3.5);
+      skyline.mesh.renderOrder = -1e6 + 1;
+      skyGroup.add(skyline.mesh);
+      const SKYLINE_LAND = skyline.uniforms.land.value.clone();
       scene.add(skyGroup);
       /*
-       * The strip is the light that metal reflects. Without it a bronze horse
-       * renders black: a metal in a physically based renderer has almost no
-       * colour of its own, it only shows what is around it, and what was
-       * around it was nothing. Its prefiltered copy is also made once and
-       * kept, so a repaint has to let the old one go (see repaintSky).
+       * The sky is also the light that metal and polished marble reflect.
+       * Without it a bronze horse renders black: a metal in a physically based
+       * renderer has almost no colour of its own, it only shows what is round
+       * it. Rendered from the same shader into a prefiltered environment, so a
+       * cornice's underside picks up the warm ground and a column's flank the
+       * glow round the sun — but without the disc, whose highlight is the sun
+       * light's own. Remade only when the light changes (see `repaintSkyIfChanged`).
        */
-      scene.environment = sky;
-      const fog = new THREE.Fog(0xdfe6ec, span * 1.8, span * 5.5);
+      const envMaterial = new THREE.ShaderMaterial({
+        uniforms: { ...skyUniforms, disc: { value: 0 } },
+        vertexShader: skyVertex,
+        fragmentShader: skyFragment,
+        side: THREE.BackSide,
+        depthTest: false,
+        depthWrite: false,
+      });
+      const envScene = new THREE.Scene();
+      const envDome = new THREE.Mesh(skyGeometry, envMaterial);
+      envDome.scale.setScalar(10);
+      envScene.add(envDome);
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      let envTarget: THREE_NS.WebGLRenderTarget | null = null;
+      const regenEnv = () => {
+        const next = pmrem.fromScene(envScene, 0, 0.1, 100);
+        envTarget?.dispose();
+        envTarget = next;
+        scene.environment = next.texture;
+      };
+      /*
+       * Aerial perspective: thin, so the hills a few hundred metres off keep
+       * their colour and only pale towards the horizon; the terrain's own
+       * edge goes fully into it (see `landscape.ts`).
+       */
+      const fog = new THREE.Fog(0xdfe6ec, span * 1.6, span * 9);
       scene.fog = fog;
 
       /*
@@ -4103,7 +4356,7 @@ export default function Reconstruction3DInner({
         reducedMotion,
       });
       scene.add(weather.group);
-      const baseFog = { near: span * 1.8, far: span * 5.5 };
+      const baseFog = { near: span * 1.6, far: span * 9 };
       let fogScale = 1;
       let scaleRefs: ScaleRefsHandle | null = null;
       /* The day going round by itself (`setTimeFlow`). */
@@ -4141,6 +4394,7 @@ export default function Reconstruction3DInner({
         cloudColor: new THREE.Color(p.cloudColor),
         birdOpacity: p.birdOpacity,
         exposure: p.exposure,
+        glow: p.glow,
       });
 
       /** Part of the way from one atmosphere to another, for the passing day. */
@@ -4163,6 +4417,7 @@ export default function Reconstruction3DInner({
           cloudColor: a.cloudColor.clone().lerp(b.cloudColor, f),
           birdOpacity: n(a.birdOpacity, b.birdOpacity),
           exposure: n(a.exposure, b.exposure),
+          glow: n(a.glow, b.glow),
         };
       };
 
@@ -4191,7 +4446,16 @@ export default function Reconstruction3DInner({
           liveAtmos.ground.g / DAY_GROUND.g,
           liveAtmos.ground.b / DAY_GROUND.b,
         );
-        renderer.toneMappingExposure = liveAtmos.exposure;
+        // The far hills in the same light, and sunk in the same haze.
+        skyline.uniforms.land.value.copy(SKYLINE_LAND).multiply(landscape.terrain.color);
+        skyline.uniforms.air.value.copy(liveAtmos.fog).convertLinearToSRGB();
+        skyline.uniforms.sunLight.value = Math.min(1, liveAtmos.sunIntensity / 2.75);
+        /*
+         * A bare summit of pale limestone (Nemrut, at 2,100 m) under a hard
+         * sun is mostly white stone on white scree; drawn at the lowland's
+         * exposure it washed out, the heads lost against the mound.
+         */
+        renderer.toneMappingExposure = liveAtmos.exposure * (biome === "mountain" ? 0.86 : 1);
         starMaterial.opacity = liveAtmos.starOpacity;
         cloudMaterial.color.set(liveAtmos.cloudColor);
         cloudMaterial.opacity = liveAtmos.cloudOpacity;
@@ -4204,26 +4468,37 @@ export default function Reconstruction3DInner({
        * to do every frame on a phone: it catches up four times a second and
        * once more when the light has settled.
        */
-      const lastSky: [number, number] = [-1, -1];
+      let skyKey = "";
       let envPaintedAt = -Infinity;
       let envStale = false;
+      const sunWay = new THREE.Vector3();
       const repaintSkyIfChanged = (now = 0) => {
-        const top = liveAtmos.skyTop.getHex();
-        const horizon = liveAtmos.skyHorizon.getHex();
-        if (top !== lastSky[0] || horizon !== lastSky[1]) {
-          lastSky[0] = top;
-          lastSky[1] = horizon;
-          skyUniforms.top.value.copy(liveAtmos.skyTop).convertLinearToSRGB();
-          skyUniforms.horizon.value.copy(liveAtmos.skyHorizon).convertLinearToSRGB();
+        sunWay.copy(sun.position).sub(sun.target.position).normalize();
+        skyline.uniforms.sunDir.value.copy(sunWay);
+        const key = `${liveAtmos.skyTop.getHex()}|${liveAtmos.skyHorizon.getHex()}|${liveAtmos.ground.getHex()}|${liveAtmos.sunColor.getHex()}|${Math.round(liveAtmos.glow * 100)}|${Math.round(sunWay.y * 200)}`;
+        if (key !== skyKey) {
+          skyKey = key;
+          skyUniforms.top.value.copy(liveAtmos.skyTop);
+          skyUniforms.horizon.value.copy(liveAtmos.skyHorizon);
+          // The land seen from above: its colour in its own light, dimmer
+          // than the sky — what a cornice's underside sees.
+          skyUniforms.ground.value
+            .copy(liveAtmos.ground)
+            .multiplyScalar(0.3 + 0.25 * Math.min(1, liveAtmos.sunIntensity / 2.75));
+          skyUniforms.sunDir.value.copy(sunWay);
+          skyUniforms.sunColour.value.copy(liveAtmos.sunColor);
+          skyUniforms.glow.value = liveAtmos.glow;
           envStale = true;
         }
+        /*
+         * The prefiltered copy costs too much to remake every frame on a
+         * phone: during a change of light it catches up four times a second,
+         * and once more when the light has settled.
+         */
         if (!envStale || now - envPaintedAt < 0.25) return;
         envStale = false;
         envPaintedAt = now;
-        // Letting the texture go drops the renderer's prefiltered copy of it;
-        // the next frame makes a new one from the repainted canvas.
-        sky.dispose();
-        repaintSky(liveAtmos.skyTop, liveAtmos.skyHorizon);
+        regenEnv();
       };
 
       // The decorations are the model's surroundings, not the model. They drop
@@ -5556,6 +5831,8 @@ export default function Reconstruction3DInner({
         if (!gate.tick(nowMs)) return;
         const now = nowMs / 1000;
         for (const water of waters) water.tick(now % 3600);
+        landscape.surf.tick(now % 3600);
+        surf.uSurfTime.value = now % 3600;
         const elapsed = now - lastFrame;
         const dt = Math.min(0.1, elapsed);
         lastFrame = now;
@@ -5573,6 +5850,7 @@ export default function Reconstruction3DInner({
           liveAtmos.cloudOpacity += (atmosTarget.cloudOpacity - liveAtmos.cloudOpacity) * rate;
           liveAtmos.birdOpacity += (atmosTarget.birdOpacity - liveAtmos.birdOpacity) * rate;
           liveAtmos.exposure += (atmosTarget.exposure - liveAtmos.exposure) * rate;
+          liveAtmos.glow += (atmosTarget.glow - liveAtmos.glow) * rate;
           liveAtmos.skyTop.lerp(atmosTarget.skyTop, rate);
           liveAtmos.skyHorizon.lerp(atmosTarget.skyHorizon, rate);
           liveAtmos.fog.lerp(atmosTarget.fog, rate);
@@ -5618,12 +5896,20 @@ export default function Reconstruction3DInner({
             atmosTarget = mixLive(a, b, f);
             const glowOf = (m: AtmosMode) => (m === "night" ? 1 : m === "golden" ? 0.45 : 0.08);
             glowTarget = glowOf(from) + (glowOf(to) - glowOf(from)) * f;
-            const liftOf = (m: AtmosMode) => (m === "night" ? 0.9 : m === "golden" ? 0.32 : 1.15);
-            sunLiftTarget = liftOf(from) + (liftOf(to) - liftOf(from)) * f;
+            sunLiftTarget = SUN_LIFT[from] + (SUN_LIFT[to] - SUN_LIFT[from]) * f;
           }
         }
         sunLift += (sunLiftTarget - sunLift) * rate;
-        sun.position.y = bounds.min[1] + span * sunLift;
+        /*
+         * Along the same bearing at any height, and always two spans out from
+         * the model's middle: a low golden-hour sun placed by height alone
+         * stood below a tall roof, which then fell behind the shadow camera
+         * and cast no shadow at all.
+         */
+        sun.position
+          .set(span * 0.65, bounds.min[1] + span * sunLift - centre.y, -span * 0.55)
+          .setLength(span * 2)
+          .add(centre);
         // Mist and dust bring the fog in.
         fogScale += (weather.fogScale() - fogScale) * rate;
         fog.near = baseFog.near * fogScale * fogScale;
@@ -5896,6 +6182,7 @@ export default function Reconstruction3DInner({
         setAtmos: (light: "light" | "dark", mode: AtmosMode) => {
           atmosTarget = makeLive(paletteFor(light, mode));
           glowTarget = mode === "night" ? 1 : mode === "golden" ? 0.45 : 0.08;
+          if (!flow.on) sunLiftTarget = SUN_LIFT[mode];
         },
         setLife: (on) => {
           lifeGroup.visible = on;
@@ -5956,12 +6243,15 @@ export default function Reconstruction3DInner({
           hidden.forEach((object) => (object.visible = false));
           const apronWas = apronMesh.visible;
           if (!withGround) apronMesh.visible = false;
+          // The fade into the country is the landscape's; a file gets a solid disc.
+          apronMaterial.transparent = false;
           try {
             const result = await exporter.parseAsync(scene, { binary: true, onlyVisible: true });
             return result as ArrayBuffer;
           } finally {
             hidden.forEach((object, index) => (object.visible = wasVisible[index]!));
             apronMesh.visible = apronWas;
+            apronMaterial.transparent = true;
           }
         },
         focus: (at) => {
@@ -6029,7 +6319,6 @@ export default function Reconstruction3DInner({
             flow.phase = mode === "day" ? 0 : mode === "golden" ? 0.42 : 0.62;
           } else {
             apiRef.current?.setAtmos(latestRef.current.theme, latestRef.current.atmos);
-            sunLiftTarget = 1.15;
           }
         },
         setWeather: (kind) => weather.set(kind),
@@ -6065,6 +6354,9 @@ export default function Reconstruction3DInner({
           resize();
           sun.castShadow = !on;
           weather.setLite(on);
+          if (landscape.shrubs) landscape.shrubs.visible = !on;
+          landscape.surf.setOn(!on);
+          surf.uSurf.value = !on && seaBody ? 1 : 0;
           if (!on) {
             for (const holder of [...scanGroup.children, ...lifeGroup.children])
               if (holder.name.startsWith("scan:")) holder.visible = true;
@@ -6154,8 +6446,10 @@ export default function Reconstruction3DInner({
         geometriesOwned.forEach((geometry) => geometry.dispose());
         materialsOwned.forEach((material) => material.dispose());
         textures.forEach((texture) => texture.dispose());
-        sky.dispose();
-        skyDome.geometry.dispose();
+        envTarget?.dispose();
+        pmrem.dispose();
+        envMaterial.dispose();
+        skyGeometry.dispose();
         skyDome.material.dispose();
         starGeometry.dispose();
         starMaterial.dispose();

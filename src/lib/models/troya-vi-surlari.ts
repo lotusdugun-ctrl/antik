@@ -1,4 +1,4 @@
-import { FACING, onFace } from "@/lib/reconstruction-detail";
+import { ashlar, FACING, onFace } from "@/lib/reconstruction-detail";
 import {
   kitBox as box,
   kitSetting as setting,
@@ -181,7 +181,51 @@ function house(at: Vec3, rotY: number, w: number, d: number, seed: number): Part
       parts.push(box("timber", P(side * (w / 2 + 0.1), z, top - 0.2), [0.3, 0.18, 0.18], rotY));
   }
   parts.push(box("ground", P(0, -porch / 2 + 0.0, top + 0.35), [w + 0.3, 0.3, 0.3], rotY));
-  void random;
+  // The dressing of the walls: the socle laid in squared courses, a timber
+  // band through the brick, and small windows high under the roof.
+  const long = d + porch;
+  for (const side of [-1, 1]) {
+    const face = side < 0 ? rotY - Math.PI / 2 : rotY + Math.PI / 2;
+    const at = P(side * (w / 2), 0, 0);
+    parts.push(
+      ...ashlar({
+        at,
+        rotY: face,
+        length: long,
+        height: socle,
+        course: 0.55,
+        material: "limestone",
+        joint: "stone",
+        blocks: 1.3 + random() * 0.3,
+        foot: false,
+        coping: false,
+      }),
+      ...bands("timber", onFace(at, face, 0, socle, -0.05), face, long - 0.1, [1.3], 0.13, 0.08),
+    );
+    for (const z of [back + 1.8, (back + front) / 2, front - 1.8])
+      parts.push(
+        box(
+          "shadow",
+          onFace(P(side * (w / 2 - 0.05), z, top - 0.85), face, 0, 0, 0.01),
+          [0.42, 0.3, 0.02],
+          face,
+        ),
+      );
+  }
+  parts.push(
+    ...ashlar({
+      at: P(0, back - wall / 2),
+      rotY: rotY + Math.PI,
+      length: w,
+      height: socle,
+      course: 0.55,
+      material: "limestone",
+      joint: "stone",
+      blocks: 1.4,
+      foot: false,
+      coping: false,
+    }),
+  );
   return parts;
 }
 

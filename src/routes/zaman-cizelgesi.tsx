@@ -19,6 +19,8 @@ import { seoTags } from "@/lib/seo";
 const DEFAULT_YEAR = -500;
 const SLIDER_STEPS = 1000;
 const SHOWN = 12;
+/** Fewer year labels on a phone, so they never run into each other. */
+const PHONE_TICKS = [-3000, 0, 1000, 1923];
 
 export const Route = createFileRoute("/zaman-cizelgesi")({
   // The chosen year lives in the address, so "Anatolia in 500 BCE" can be shared.
@@ -82,7 +84,7 @@ function TimelinePage() {
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("timeline_sub")}</p>
       </header>
 
-      <section className="rounded-2xl surface-panel p-4 sm:p-5">
+      <section className="flex flex-col rounded-2xl surface-panel p-4 sm:p-5">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
             {t("timeline_year")}
@@ -92,9 +94,74 @@ function TimelinePage() {
           </span>
         </div>
 
-        {/* Bars, scrollable sideways on a phone so the names stay legible. */}
-        <div className="-mx-1 overflow-x-auto px-1 pb-1">
-          <div className="relative min-w-[720px]">
+        {/*
+         * Phone: one row per civilization, its name beside the bar, so the
+         * whole span of time fits the screen without sideways scrolling.
+         */}
+        <div className="order-2 sm:hidden">
+          <div className="relative">
+            <ul className="space-y-0.5">
+              {rows.map(({ civ }, i) => {
+                const left = yearToPos(civ.start) * 100;
+                const width = Math.max(1.5, (yearToPos(civ.end) - yearToPos(civ.start)) * 100);
+                const on = civ.start <= year && year <= civ.end;
+                return (
+                  <li key={civ.id}>
+                    <Link
+                      to="/medeniyet/$id"
+                      params={{ id: civ.id }}
+                      title={`${L(civ.name)} · ${L(civ.periodLabel)}`}
+                      className="grid grid-cols-[6.75rem_1fr] items-center gap-2 py-0.5"
+                    >
+                      <span
+                        className={`truncate text-[11px] font-semibold ${
+                          on ? "text-foreground" : "text-muted-foreground"
+                        }`}
+                      >
+                        {L(civ.name)}
+                      </span>
+                      <span className="relative block h-3 rounded-full bg-muted/60">
+                        <span
+                          className="absolute inset-y-0 rounded-full transition-opacity"
+                          style={{
+                            left: `${left}%`,
+                            width: `${width}%`,
+                            background: PALETTE[i % PALETTE.length],
+                            opacity: on ? 1 : 0.35,
+                          }}
+                        />
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            {/* The chosen year, drawn over the bar column only. */}
+            <div className="pointer-events-none absolute inset-y-0 left-[7.25rem] right-0">
+              <div
+                className="absolute inset-y-0 w-0.5 bg-foreground"
+                style={{ left: `${pos * 100}%` }}
+              />
+            </div>
+          </div>
+          <div className="relative ml-[7.25rem] mt-2 h-4 text-[10px] text-muted-foreground">
+            {PHONE_TICKS.map((tick) => (
+              <span
+                key={tick}
+                className={`absolute whitespace-nowrap ${
+                  tick === TIMELINE_END ? "-translate-x-full" : "-translate-x-1/2"
+                }`}
+                style={{ left: `${yearToPos(tick) * 100}%` }}
+              >
+                {formatYear(tick, lang)}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Wider screens: overlapping civilizations share lanes. */}
+        <div className="order-2 hidden sm:block">
+          <div className="relative">
             <div className="relative" style={{ height: laneCount * 30 }}>
               {rows.map(({ civ, lane }, i) => {
                 const left = yearToPos(civ.start) * 100;
@@ -140,30 +207,33 @@ function TimelinePage() {
           </div>
         </div>
 
-        <input
-          type="range"
-          min={0}
-          max={SLIDER_STEPS}
-          value={Math.round(pos * SLIDER_STEPS)}
-          onChange={(e) => commit(posToYear(Number(e.target.value) / SLIDER_STEPS))}
-          aria-label={t("timeline_year")}
-          aria-valuetext={formatYear(year, lang)}
-          className="mt-4 w-full accent-primary"
-        />
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {[-7000, -1300, -500, 150, 1200, 1550].map((preset) => (
-            <button
-              key={preset}
-              onClick={() => commit(preset)}
-              className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                preset === year
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-card text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {formatYear(preset, lang)}
-            </button>
-          ))}
+        {/* On a phone the slider sits above the bars, so it stays in reach. */}
+        <div className="order-1 mb-4 sm:order-3 sm:mb-0">
+          <input
+            type="range"
+            min={0}
+            max={SLIDER_STEPS}
+            value={Math.round(pos * SLIDER_STEPS)}
+            onChange={(e) => commit(posToYear(Number(e.target.value) / SLIDER_STEPS))}
+            aria-label={t("timeline_year")}
+            aria-valuetext={formatYear(year, lang)}
+            className="w-full accent-primary sm:mt-4"
+          />
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {[-7000, -1300, -500, 150, 1200, 1550].map((preset) => (
+              <button
+                key={preset}
+                onClick={() => commit(preset)}
+                className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                  preset === year
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {formatYear(preset, lang)}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
