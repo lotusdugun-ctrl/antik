@@ -1,3 +1,4 @@
+import { excludeSeeThroughFromAo } from "@/lib/ao-visibility";
 import {
   useEffect,
   useRef,
@@ -4767,6 +4768,8 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           thickness: 1,
         });
         ao.blendIntensity = 0.85;
+        // Smoke, glows and clouds would read to it as solid blocks.
+        excludeSeeThroughFromAo(ao, scene);
         made.addPass(ao);
         made.addPass(new OutputPass());
         made.setSize(clientWidth, clientHeight);
