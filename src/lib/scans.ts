@@ -23,16 +23,11 @@ export type ScanId =
   | "mausoleum-amazon-1"
   | "mausoleum-amazon-2"
   | "nemrut-head"
-  | "athena-arezzo"
   | "neptune"
-  | "arringatore"
-  | "efebo"
   | "magdalensberg-youth"
   | "penelope"
   | "hermes-sandal"
   | "pan"
-  | "hermanubis"
-  | "centaur"
   | "glykon"
   | "herm-thucydides-herodotus"
   | "herm-epicurus-metrodorus"
@@ -44,7 +39,6 @@ export type ScanId =
   | "caryatid"
   | "tiberius-velatus"
   | "hadrian-troy"
-  | "augustus"
   | "antinous"
   | "amazon-wounded"
   | "nike"
@@ -177,18 +171,6 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
       "A scan of a bearded Nemrut head in a tall tiara. The colossi's bodies are ruined, so it is not set into the model; it can be turned on its own below.",
     ),
   },
-  "athena-arezzo": {
-    url: "/scans/athena-arezzo.glb",
-    title: l("Arezzo Minerva'sı (Athena)", "The Minerva of Arezzo (Athena)"),
-    author: "Three D Scans (Oliver Laric)",
-    source: "https://threedscans.com/museo-archeologico-nazionale/athena/",
-    license: "Free archive",
-    licenseUrl: TDS,
-    note: l(
-      "Floransa Arkeoloji Müzesi'ndeki, Yunan özgününden yapılmış Roma dönemi bronz Athena'nın taraması. Bu yapıda Athena'nın gerçek heykeli kayıp; modelde onun yerine, dönemin bu tipteki bir Athena'sı duruyor.",
-      "A scan of the Roman bronze Athena after a Greek original, in the Archaeological Museum of Florence. The Athena that stood here is lost; the model sets a real Athena of the type in her place.",
-    ),
-  },
   neptune: {
     url: "/scans/neptune.glb",
     title: l("Nîmes Neptün'ü (Zeus tipi)", "The Neptune of Nîmes (a Zeus type)"),
@@ -199,30 +181,6 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     note: l(
       "Nîmes'taki Musée de la Romanité'de duran, sakallı, yarı çıplak, mantolu bir tanrının Roma heykeli. Zeus ile Poseidon aynı kalıptan yontulurdu; kült heykeli kayıp olduğu için modelde Zeus'un yerine bu tarama kullanıldı. Ayağının dibindeki yunus Poseidon'dan kalma.",
       "A Roman statue of a bearded, half-draped god in the Musée de la Romanité, Nîmes. Zeus and Poseidon were carved to the same type; the cult statue is lost, so this scan stands in for Zeus. The dolphin at his foot is Poseidon's.",
-    ),
-  },
-  arringatore: {
-    url: "/scans/arringatore.glb",
-    title: l("Arringatore (Aule Meteli)", "The Arringatore (Aule Meteli)"),
-    author: "Three D Scans (Oliver Laric)",
-    source: "https://threedscans.com/museo-archeologico-nazionale/aule/",
-    license: "Free archive",
-    licenseUrl: TDS,
-    note: l(
-      "MÖ 1. yüzyıldan, togalı, kolunu kaldırarak konuşan bir adamın bronz heykelinin taraması. Celsus ile oğlu Aquila'nın heykelleri ve imparator heykelleri kayıp; modelde onların yerine dönemin bu togalı portre heykeli duruyor.",
-      "A scan of the 1st-century BC bronze of a man in a toga, raising his arm to speak. The statues of Celsus, his son Aquila and the emperors are lost; the model sets this real togate portrait of the period in their place.",
-    ),
-  },
-  efebo: {
-    url: "/scans/efebo.glb",
-    title: l("Idolino (Pesaro Efebi)", "The Idolino (Ephebe of Pesaro)"),
-    author: "Three D Scans (Oliver Laric)",
-    source: "https://threedscans.com/museo-archeologico-nazionale/efebo/",
-    license: "Free archive",
-    licenseUrl: TDS,
-    note: l(
-      "Floransa Arkeoloji Müzesi'ndeki, MÖ 30 dolayına tarihlenen bronz genç heykeli. Modelde sahne cephelerindeki genç Apollon heykellerinin yerine duruyor; o heykellerin kendileri kayıp.",
-      "The bronze youth of about 30 BC in the Archaeological Museum of Florence. In the model it stands in for the youthful Apollos of the stage fronts, which are lost.",
     ),
   },
   "magdalensberg-youth": {
@@ -271,30 +229,6 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     note: l(
       "Kandiye (Heraklion) Arkeoloji Müzesi'ndeki mermer Pan heykeli; tarama, kırık yerleri dijital olarak tamamlanmış. Tiyatro Dionysos'un alanıydı; keçi ayaklı Pan da onun maiyetindendi.",
       "The marble Pan in the Heraklion Archaeological Museum, scanned and completed digitally where it is broken. The theatre was Dionysos' ground, and goat-legged Pan was of his company.",
-    ),
-  },
-  hermanubis: {
-    url: "/scans/hermanubis.glb",
-    title: l("Hermanubis", "Hermanubis"),
-    author: "Three D Scans (Oliver Laric)",
-    source: "https://threedscans.com/vatican-museums/hermanubis/",
-    license: "Free archive",
-    licenseUrl: TDS,
-    note: l(
-      "Vatikan Müzeleri'ndeki MS 1.-2. yüzyıla ait heykel: Hermes ile Mısır tanrısı Anubis'in birleşimi. Efes'te büyük bir Serapis tapınağı vardı; Mısır tanrıları kentin tanrıları arasındaydı. Tiyatro cephesindeki yeri modelin yorumu.",
-      "The statue of the 1st-2nd century AD in the Vatican Museums: Hermes merged with the Egyptian Anubis. Ephesus had a great temple of Serapis, and Egypt's gods were among the city's. Its place on the stage front is the model's reading.",
-    ),
-  },
-  centaur: {
-    url: "/scans/centaur.glb",
-    title: l("Kentaur", "Centaur"),
-    author: "Three D Scans (Oliver Laric)",
-    source: "https://threedscans.com/uncategorized/centaur/",
-    license: "Free archive",
-    licenseUrl: TDS,
-    note: l(
-      "Oplontis'teki Poppaea Villası'nın bahçesinden MS 1. yüzyıla ait bir kentaur; tarama, eksik yerleri dijital olarak tamamlanmış. Modelde evin bahçesine, zengin Roma evlerinin bahçe heykellerine örnek olarak kondu.",
-      "A centaur of the 1st century AD from the garden of the Villa of Poppaea at Oplontis, scanned and completed digitally. In the model it stands in the house's garden, as the garden sculpture of a wealthy Roman house.",
     ),
   },
   glykon: {
@@ -425,20 +359,8 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     license: "CC BY 4.0",
     licenseUrl: BY,
     note: l(
-      "Truva kazılarında bulunan, MS 117-138'e ait zırhlı Hadrianus heykeli; bugün Çanakkale'deki Troya Müzesi'nde. Bacakları dizden aşağısı kayıp.",
-      "The cuirassed Hadrian of AD 117-138 from the excavations at Troy, now in the Troy Museum at \u00c7anakkale. The legs are lost below the knee.",
-    ),
-  },
-  augustus: {
-    url: "/scans/augustus.glb",
-    title: l("Prima Porta Augustus'u", "The Augustus of Prima Porta"),
-    author: "juanbrualla",
-    source: "https://sketchfab.com/3d-models/42b5fd63307b48cfb073370be3ff259b",
-    license: "CC BY 4.0",
-    licenseUrl: BY,
-    note: l(
-      "Vatikan Müzeleri'ndeki, zırhlı ve elini kaldırmış Augustus heykeli. Tiyatroların ve kütüphanenin imparator heykellerinin yerinde, dönemin bilinen bir imparator heykeli olarak kullanıldı.",
-      "The cuirassed Augustus with raised arm in the Vatican Museums, used for the emperors' statues of the theatres and the library as a known imperial statue of the period.",
+      "Truva kazılarında bulunan, MS 117-138'e ait zırhlı Hadrianus heykeli; bugün Çanakkale'deki Troya Müzesi'nde. Bacakları dizden aşağısı kayıp. Modelde kayıp imparator heykellerinin yerinde duruyor.",
+      "The cuirassed Hadrian of AD 117-138 from the excavations at Troy, now in the Troy Museum at \u00c7anakkale. The legs are lost below the knee. In the model it stands for the lost statues of emperors.",
     ),
   },
   antinous: {
@@ -497,8 +419,8 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     license: "CC BY 4.0",
     licenseUrl: BY,
     note: l(
-      "Amsterdam Allard Pierson Müzesi'ndeki sakallı, bukleli Roma Asklepios heykeli. Bergama'daki Asklepieion antik dünyanın en ünlü şifa yeriydi.",
-      "The bearded, curled Roman Asklepios in the Allard Pierson Museum, Amsterdam. The Asklepieion at Pergamon was the most famous healing sanctuary of the ancient world.",
+      "Amsterdam Allard Pierson Müzesi'ndeki sakallı, bukleli Roma Asklepios heykeli. Bergama'daki Asklepieion antik dünyanın en ünlü şifa yeriydi. Modelde, mantosuna sarınmış sakallı bir adam olarak, kayıp onur heykellerinin bir kısmının yerinde de duruyor.",
+      "The bearded, curled Roman Asklepios in the Allard Pierson Museum, Amsterdam. The Asklepieion at Pergamon was the most famous healing sanctuary of the ancient world. In the model, as a bearded man wrapped in his mantle, it also stands for some of the lost honorific statues.",
     ),
   },
   "apollo-kitharoidos": {
@@ -601,17 +523,15 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "muse-polyhymnia",
     "caryatid",
     "tiberius-velatus",
-    "arringatore",
     "ephesus-portrait",
-    "augustus",
-    "athena-arezzo",
     "herm-thucydides-herodotus",
     "herm-plato",
     "herm-socrates-seneca",
     "herm-epicurus-metrodorus",
+    "asklepios",
+    "hadrian-troy",
   ],
   "aspendos-tiyatrosu": [
-    "augustus",
     "asklepios",
     "cybele",
     "amazon-wounded",
@@ -624,11 +544,11 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "pan",
     "hermes-sandal",
     "muse-polyhymnia",
-    "arringatore",
     "tiberius-velatus",
     "caryatid",
+    "hadrian-troy",
   ],
-  "didyma-apollon-tapinagi": ["didyma-medusa", "tiberius-velatus", "arringatore"],
+  "didyma-apollon-tapinagi": ["didyma-medusa", "tiberius-velatus", "asklepios"],
   "artemis-tapinagi": [
     "artemision-drum",
     "antinous",
@@ -643,28 +563,25 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "penelope",
     "hadrian-troy",
     "caryatid",
-    "arringatore",
-    "efebo",
+    "asklepios",
   ],
   "pergamon-zeus-sunagi": [
     "magdalensberg-youth",
     "penelope",
     "cybele",
-    "augustus",
     "nike",
     "muse-thalia",
     "amazon-wounded",
     "hermes-sandal",
     "antinous",
-    "arringatore",
     "neptune",
-    "athena-arezzo",
     "caryatid",
     "ephesus-portrait",
+    "hadrian-troy",
+    "tiberius-velatus",
   ],
   "hierapolis-tiyatrosu": [
     "muse-polyhymnia",
-    "augustus",
     "asklepios",
     "cybele",
     "amazon-wounded",
@@ -677,9 +594,9 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "pan",
     "hermes-sandal",
     "antinous",
-    "arringatore",
     "tiberius-velatus",
     "caryatid",
+    "hadrian-troy",
   ],
   "milet-buyuk-tiyatro": [
     "hadrian-troy",
@@ -691,21 +608,12 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "penelope",
     "neptune",
     "magdalensberg-youth",
-    "arringatore",
     "tiberius-velatus",
     "caryatid",
   ],
-  "efes-yamac-evler": [
-    "centaur",
-    "glykon",
-    "magdalensberg-youth",
-    "efebo",
-    "antinous",
-    "tiberius-velatus",
-  ],
+  "efes-yamac-evler": ["glykon", "magdalensberg-youth", "antinous", "tiberius-velatus", "pan"],
   "efes-buyuk-tiyatro": [
     "amazon-wounded",
-    "efebo",
     "muse-thalia",
     "penelope",
     "neptune",
@@ -716,13 +624,12 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "muse-polyhymnia",
     "hadrian-troy",
     "asklepios",
-    "hermanubis",
     "apollo-kitharoidos",
-    "arringatore",
     "tiberius-velatus",
     "caryatid",
     "ephesus-portrait",
     "antinous",
+    "cybele",
   ],
   "side-tiyatrosu": [
     "neptune",
@@ -739,11 +646,9 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "muse-thalia",
     "penelope",
     "antinous",
-    "arringatore",
     "tiberius-velatus",
     "ephesus-portrait",
     "caryatid",
-    "efebo",
   ],
   "aizanoi-zeus-tapinagi": [
     "neptune",
@@ -755,10 +660,10 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "amazon-wounded",
     "hermes-sandal",
     "penelope",
-    "arringatore",
     "caryatid",
     "tiberius-velatus",
-    "efebo",
+    "magdalensberg-youth",
+    "asklepios",
   ],
   "halikarnas-mozolesi": [
     "mausoleum-amazon-1",
@@ -769,10 +674,10 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus-lod",
     "caryatid-lod",
     "tiberius-velatus",
-    "arringatore",
+    "asklepios",
   ],
   "aphrodisias-stadyumu": ["caryatid", "ephesus-portrait"],
-  "perge-stadyumu": ["tiberius-velatus", "arringatore"],
+  "perge-stadyumu": ["tiberius-velatus", "asklepios"],
   "nemrut-dogu-terasi": ["eagle", "lion-delos", "nemrut-head"],
   "sagalassos-antoninler-cesmesi": [
     "antinous",

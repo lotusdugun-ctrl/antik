@@ -64,7 +64,7 @@ describe("scans", () => {
       partsFor(reconstructions.find((r) => r.id === "celsus-kutuphanesi")!.model).filter(
         (p) => p.scan?.id === id && p.material !== "bronze",
       ).length;
-    for (const id of ["tiberius-velatus", "arringatore", "ephesus-portrait", "augustus"] as const)
+    for (const id of ["tiberius-velatus", "asklepios", "ephesus-portrait", "hadrian-troy"] as const)
       expect(marble(id)).toBe(1);
     expect(count("celsus-kutuphanesi", "muse-polyhymnia")).toBe(1);
     expect(count("celsus-kutuphanesi", "caryatid")).toBe(1);
@@ -100,7 +100,7 @@ describe("scans", () => {
     expect(dynasts.every((p) => p.scan)).toBe(true);
     const celsus = partsFor(reconstructions.find((r) => r.id === "celsus-kutuphanesi")!.model);
     const bronzes = celsus.filter((p) => p.kind === "figure" && p.material === "bronze");
-    expect(bronzes.map((p) => p.scan?.id).sort()).toEqual(["arringatore", "tiberius-velatus"]);
+    expect(bronzes.map((p) => p.scan?.id).sort()).toEqual(["asklepios", "tiberius-velatus"]);
     // Feet on the top of the base: 2.68 m of plinth and a 0.26 m cap.
     for (const p of bronzes) expect(p.at[1]).toBeCloseTo(2.94, 2);
     for (const item of reconstructions.filter((r) => r.model.kind === "roman-theatre")) {
@@ -161,7 +161,6 @@ const HERO_BUDGET: Partial<Record<ScanId, number>> = {
   "herm-epicurus-metrodorus": 35_000,
   "herm-socrates-seneca": 35_000,
   "herm-plato": 35_000,
-  centaur: 35_000,
   glykon: 35_000,
   eagle: 35_000,
   "lion-delos": 35_000,

@@ -229,6 +229,22 @@ function CreditsPage() {
             <li>
               {t("credits_map")}{" "}
               <a
+                href="https://openfreemap.org"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                OpenFreeMap
+              </a>{" "}
+              <a
+                href="https://www.openmaptiles.org/"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                © OpenMapTiles
+              </a>{" "}
+              <a
                 href="https://www.openstreetmap.org/copyright"
                 target="_blank"
                 rel="noreferrer"

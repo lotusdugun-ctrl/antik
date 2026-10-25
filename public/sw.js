@@ -125,7 +125,8 @@ self.addEventListener("fetch", (event) => {
     url.hostname === "lotusdugun-ctrl.github.io" ||
     url.hostname === "upload.wikimedia.org" ||
     url.hostname.endsWith(".tile.openstreetmap.org") ||
-    url.hostname === "tile.openstreetmap.org";
+    url.hostname === "tile.openstreetmap.org" ||
+    url.hostname === "tiles.openfreemap.org";
 
   // Byte ranges (audio, video) never go through the caching paths below.
   if (req.headers.has("range")) {

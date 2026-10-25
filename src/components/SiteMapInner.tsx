@@ -1,5 +1,11 @@
 import "leaflet/dist/leaflet.css";
+import "maplibre-gl/dist/maplibre-gl.css";
 import L from "leaflet";
+import { maplibreGL } from "@maplibre/maplibre-gl-leaflet";
+import { setWorkerUrl } from "maplibre-gl";
+// MapLibre finds its worker next to its own module, which bundling breaks:
+// hand it the worker file's built URL instead.
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?url";
 import { Link } from "@tanstack/react-router";
 import { Check, ExternalLink } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -8,6 +14,39 @@ import { Photo } from "@/components/Photo";
 import { coverImage, type Site } from "@/lib/sites";
 import { useI18n } from "@/lib/i18n";
 import { useProgress } from "@/lib/progress";
+
+/*
+ * The base map comes from OpenFreeMap: free, no key, and its terms allow
+ * use in a published app (OpenStreetMap's own tile server does not). Its
+ * tiles are vector, drawn with MapLibre over WebGL; a device without WebGL
+ * gets OpenStreetMap's raster tiles instead, which at that rarity is the
+ * light use OSM's tile policy accepts.
+ */
+const OPENFREEMAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
+const MAP_ATTRIBUTION =
+  '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+
+function hasWebGL(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(canvas.getContext("webgl2") ?? canvas.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
+function baseLayer(): L.Layer {
+  if (hasWebGL()) {
+    setWorkerUrl(maplibreWorkerUrl);
+    return maplibreGL({
+      style: OPENFREEMAP_STYLE,
+      attributionControl: { customAttribution: MAP_ATTRIBUTION },
+    });
+  }
+  return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  });
+}
 
 /** Pin footprint in screen pixels; two sites closer than this would overlap. */
 const CLUSTER_CELL_PX = 56;
@@ -346,10 +385,7 @@ export default function SiteMapInner({
     const host = hostRef.current;
     if (!host) return;
     const made = L.map(host, { center, zoom, scrollWheelZoom: true });
-    // The single tile host OSM asks apps to use (the a/b/c subdomains are retired).
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(made);
+    baseLayer().addTo(made);
     setMap(made);
     return () => {
       setMap(null);

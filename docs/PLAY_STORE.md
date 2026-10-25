@@ -86,7 +86,11 @@ başlarsa hem `src/lib/legal.ts` hem bu liste güncellenmeli.
 
 - [ ] Künye sayfası: `https://SITE/gorseller` — her fotoğrafın yazarı ve lisansı, 3D taramalar, ses kaynakları, yazı tipleri, harita, açık kaynak yazılım lisansları (`/third-party-notices.txt`). Her sayfanın altında "Bu sayfadaki fotoğrafların künyeleri" de var.
 - [ ] Sesli rehber yalnızca lisansı ticari kullanıma izin veren Piper sesleriyle kaydedilir (`docs/SESLER.md`); yoksa cihaz sesi kullanılır.
-- [ ] Mağaza ekran görüntülerinde görünen fotoğraflar uygulamadakilerle aynı lisanslı fotoğraflar olmalı; künyesi olmayan görsel kullanmayın.
+- [ ] Mağaza ekran görüntülerinde **Wikimedia fotoğrafı göstermeyin**: mağaza sayfasında künye yazacak yer yok. Ekran görüntülerini 3D modellerden, menüden, haritadan alın (bunlar uygulamanın kendi üretimi).
+- [ ] Harita: OpenFreeMap (ücretsiz, anahtarsız, uygulamada kullanıma izinli; künye harita köşesinde ve `/gorseller`'de). OpenStreetMap'in kendi karo sunucusu yalnızca WebGL'i olmayan nadir cihazlarda yedek olarak kullanılır.
+- [ ] Rota: dış yol servisi yok; mesafe ve süreler uygulamada tahmin edilir (kuş uçuşu × 1,3, 70 km/s) ve sayfada "tahmini" diye yazar.
+- [ ] Heykel taramaları: İtalya devlet müzeleri ve Vatikan'daki eserlerin taramaları kaldırıldı (bu ülkelerde kültür varlığı görüntülerinin ticari kullanımı izin/ücret isteyebilir). Yunanistan'daki müzelerden gelen üç tarama (Pan – Kandiye, Antinoos – Delfi, Delos aslanı) ve Türkiye'deki eserlerin taramaları duruyor; Yunanistan'ın da benzer bir kuralı var, yayından önce bir hukukçuya sorun.
+- [ ] Yapay zekâ rehberi Gemini'nin **ücretsiz** katmanını kullanıyor. Google'ın Gemini API ek şartlarında ücretsiz katmanın AB/İngiltere/İsviçre'de kullanımıyla ilgili kısıt olup olmadığını yayından önce kontrol edin (Iova LTD'nin bulunduğu ülke önemli).
 
 ## Sorun giderme
 

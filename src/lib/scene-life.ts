@@ -1179,18 +1179,19 @@ class Cast {
 
 /**
  * Every statue stands in a real scan of an ancient statue of the same type,
- * never in the procedural figure, which reads as a doll: Athena in the
- * Minerva of Arezzo, Zeus in the bearded Neptune of Nîmes, a togate emperor
- * or magistrate in the Arringatore. A bronze or gilded statue takes the same
+ * never in the procedural figure, which reads as a doll: Athena in a
+ * caryatid of her own Erechtheion, Zeus in the bearded Neptune of Nîmes, an
+ * emperor in the veiled Tiberius. A bronze or gilded statue takes the same
  * scans; the renderer gives the surface the colour of the metal.
  */
 const SCAN_OF: Partial<Record<string, ScanId[]>> = {
   /** A goddess draped and standing: no scan of an Aphrodite of the kind survives here. */
   Aphrodite: ["ephesus-portrait", "caryatid"],
-  Athena: ["athena-arezzo"],
+  /** Athena in her peplos: a maiden of her own temple on the Acropolis. */
+  Athena: ["caryatid"],
   Zeus: ["neptune"],
-  Emperor: ["arringatore", "augustus", "tiberius-velatus", "hadrian-troy"],
-  Apollon: ["efebo", "apollo-kitharoidos"],
+  Emperor: ["tiberius-velatus", "hadrian-troy"],
+  Apollon: ["apollo-kitharoidos"],
   Dionysos: ["magdalensberg-youth", "antinous"],
   Hermes: ["hermes-sandal"],
   /**
@@ -1199,9 +1200,8 @@ const SCAN_OF: Partial<Record<string, ScanId[]>> = {
    * cast of the Lansdowne Herakles once used here was licensed for
    * non-commercial use only.)
    */
-  Herakles: ["efebo", "hermes-sandal", "antinous"],
+  Herakles: ["magdalensberg-youth", "hermes-sandal", "antinous"],
   Pan: ["pan"],
-  Hermanubis: ["hermanubis"],
   Asklepios: ["asklepios"],
   Nike: ["nike"],
   /** Tyche wore the same mural crown as the Cybele of Pergamon. */
@@ -1694,11 +1694,12 @@ function cart(at: Vec3, rotY: number, rand: Rand): Part[] {
 
 /**
  * The honorific statues of benefactors, in turn: a man in his toga, as the
- * bronze Arringatore is, or the veiled Tiberius; a woman wrapped in her
- * mantle, the Ephesian portrait statue, or standing in her Ionic chiton.
+ * veiled Tiberius is, or wrapped in the Greek mantle, as the bearded
+ * Asklepios is; a woman wrapped in her mantle, the Ephesian portrait statue,
+ * or standing in her Ionic chiton.
  */
 const HONORIFIC_SCANS: Record<"male" | "female", ScanId[]> = {
-  male: ["arringatore", "tiberius-velatus"],
+  male: ["asklepios", "tiberius-velatus"],
   female: ["ephesus-portrait", "caryatid"],
 };
 
@@ -2419,12 +2420,8 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
    * god stands where is dealt from this theatre's own seed, so no two stage
    * fronts carry the same company in the same order.
    */
-  // Ephesus kept a great temple of Serapis: one of its gods stands with them.
-  const egyptian = layout.character.screen === "ephesus";
   layout.statueSlots.forEach((slot, i) => {
-    const special =
-      egyptian && i === Math.floor(layout.statueSlots.length / 2) ? HERMANUBIS : undefined;
-    statue(b, slot.at, slot.height, 0, i * 7 + seed, "marble", true, special);
+    statue(b, slot.at, slot.height, 0, i * 7 + seed, "marble", true);
   });
 
   /*
@@ -3507,7 +3504,8 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
     { role: "worker", speed: 0.5 },
   );
   // Plants in pots round the pool, and lamps on stands for the evening.
-  // A garden statue on its plinth in one corner: a centaur, as at Oplontis.
+  // A garden statue on its plinth in one corner: goat-legged Pan, the god of
+  // the countryside, a favourite of Roman gardens.
   b.props.push(box("marbleWorn", [-halfW + 1, 0, -halfD + 1], [0.7, 0.4, 0.9]));
   b.props.push(
     decor({
@@ -3516,7 +3514,7 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
       at: [-halfW + 1, 0.4, -halfD + 1],
       height: 1.0,
       rotY: Math.PI / 4,
-      scan: { id: "centaur" },
+      scan: { id: "pan" },
     }),
   );
   for (const [x, z] of [
@@ -3612,7 +3610,8 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
   /*
    * The two Lares, little bronzes of youths: the household's statuettes
    * are lost, so they stand in scans of two Roman youths of the same
-   * Polykleitan kind, the Efebo and the Antinous of Delphi, cast in bronze.
+   * Polykleitan kind, the Youth of the Magdalensberg and the Antinous of
+   * Delphi, cast in bronze.
    */
   for (const dz of [-0.18, 0.18]) {
     b.props.push(
@@ -3631,7 +3630,7 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
           right: "phiale",
           left: "cornucopia",
         },
-        scan: { id: dz < 0 ? "efebo" : "antinous" },
+        scan: { id: dz < 0 ? "magdalensberg-youth" : "antinous" },
       }),
     );
   }
@@ -4057,15 +4056,6 @@ const PANTHEON: FigureIdentity[] = [
   { name: "Pan", sex: "male", bearded: true, hair: "curls", dress: "himation" },
 ];
 
-/** The Egyptian god Ephesus honoured beside its own: Hermes with Anubis' head. */
-const HERMANUBIS: FigureIdentity = {
-  name: "Hermanubis",
-  sex: "male",
-  bearded: false,
-  hair: "short",
-  dress: "himation",
-};
-
 const PALETTES: FigurePaint[] = [
   { cloth: 0xe9e0cc, mantle: 0x7e98b4, hair: 0x6e4a2c, accent: 0xc8a24a, skin: 0xf2dcc6 },
   { cloth: 0xead8b4, mantle: 0xb4644f, hair: 0x5a3a22, accent: 0xc8a24a, skin: 0xeed2b6 },
@@ -4084,19 +4074,40 @@ function statue(
   index: number,
   material: Material = "marble",
   plinth = true,
-  identity?: FigureIdentity,
 ) {
-  const who = identity ?? PANTHEON[index % PANTHEON.length]!;
+  const who = PANTHEON[index % PANTHEON.length]!;
   const base = plinth ? height * 0.08 : 0;
+  const foot: Vec3 = [at[0], at[1] + base, at[2]];
+  /*
+   * The scan is picked by place, as everywhere; but a scan already standing
+   * twice in this scene gives way to the next of its type, so a gallery of
+   * statues does not show one figure three times over.
+   */
+  const choices = SCAN_OF[who.name];
+  let scan: ScanId | undefined;
+  if (choices && STATUE_MATERIALS.includes(material)) {
+    const placed = pickScan(choices, foot);
+    const uses = (id: ScanId) => b.props.filter((part) => part.scan?.id === id).length;
+    const start = choices.indexOf(placed);
+    scan = placed;
+    for (let k = 0; k < choices.length; k += 1) {
+      const next = choices[(start + k) % choices.length]!;
+      if (uses(next) < 2) {
+        scan = next;
+        break;
+      }
+    }
+  }
   if (plinth) b.props.push(box("marbleWorn", at, [height * 0.36, base, height * 0.32], rotY));
   b.props.push(
     decor({
       kind: "figure",
       material,
-      at: [at[0], at[1] + base, at[2]],
+      at: foot,
       height,
       rotY,
       identity: who,
+      ...(scan ? { scan: { id: scan } } : {}),
       ...(material === "marble" ? { paint: PALETTES[(index * 5) % PALETTES.length]! } : {}),
     }),
   );

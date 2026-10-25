@@ -42,7 +42,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         h: "Üçüncü taraf hizmetler",
         p: [
-          "Sayfalar açılırken cihazınız şu hizmetlerden doğrudan içerik indirir ve bu sırada IP adresiniz onlara görünür: Wikimedia Commons (fotoğraflar), OpenStreetMap (harita), Google Fonts (yazı tipleri), GitHub Pages (kayıtlı sesler). Rota planlarken seçtiğiniz yerlerin koordinatları sürüş mesafesi için OSRM hizmetine gönderilir. Haber bağlantıları Google Haberler'i ve Bakanlık sayfalarını tarayıcınızda açar.",
+          "Sayfalar açılırken cihazınız şu hizmetlerden doğrudan içerik indirir ve bu sırada IP adresiniz onlara görünür: Wikimedia Commons (fotoğraflar), OpenFreeMap (harita, OpenStreetMap verisi), Google Fonts (yazı tipleri), GitHub Pages (kayıtlı sesler). Haber bağlantıları Google Haberler'i ve Bakanlık sayfalarını tarayıcınızda açar.",
           'Kullanım istatistiği açıksa çerezsiz, kişisel veri içermeyen Plausible sayımı kullanılır (sayfa görüntüleme ve "rehber çalındı" gibi olaylar). Reklam yoktur; veriler satılmaz ya da paylaşılmaz.',
           "Sunucu, barındırma sağlayıcımızın standart erişim günlüklerini (IP, zaman, adres) kısa süre tutabilir.",
         ],
@@ -90,7 +90,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         h: "Third-party services",
         p: [
-          "As pages load, your device fetches content directly from these services, which therefore see your IP address: Wikimedia Commons (photos), OpenStreetMap (map), Google Fonts (fonts), GitHub Pages (recorded audio). When you plan a route, the coordinates of the chosen places are sent to the OSRM routing service for driving distances. News links open Google News and the Ministry's pages in your browser.",
+          "As pages load, your device fetches content directly from these services, which therefore see your IP address: Wikimedia Commons (photos), OpenFreeMap (map, OpenStreetMap data), Google Fonts (fonts), GitHub Pages (recorded audio). News links open Google News and the Ministry's pages in your browser.",
           'If usage statistics are enabled, we use cookieless Plausible counts that contain no personal data (page views and events such as "guide played"). There are no ads; data is not sold or shared.',
           "Our hosting provider may keep standard access logs (IP address, time, URL) for a short time.",
         ],
@@ -138,7 +138,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         h: "Dienste Dritter",
         p: [
-          "Beim Laden der Seiten ruft Ihr Gerät Inhalte direkt von diesen Diensten ab, die dabei Ihre IP-Adresse sehen: Wikimedia Commons (Fotos), OpenStreetMap (Karte), Google Fonts (Schriften), GitHub Pages (aufgenommene Audios). Bei der Routenplanung werden die Koordinaten der gewählten Orte für Fahrstrecken an den Routingdienst OSRM gesendet. Nachrichtenlinks öffnen Google News und die Seiten des Ministeriums in Ihrem Browser.",
+          "Beim Laden der Seiten ruft Ihr Gerät Inhalte direkt von diesen Diensten ab, die dabei Ihre IP-Adresse sehen: Wikimedia Commons (Fotos), OpenFreeMap (Karte, OpenStreetMap-Daten), Google Fonts (Schriften), GitHub Pages (aufgenommene Audios). Nachrichtenlinks öffnen Google News und die Seiten des Ministeriums in Ihrem Browser.",
           "Falls Nutzungsstatistiken aktiviert sind, verwenden wir cookielose Plausible-Zählungen ohne personenbezogene Daten. Es gibt keine Werbung; Daten werden weder verkauft noch weitergegeben.",
           "Unser Hosting-Anbieter kann übliche Zugriffsprotokolle (IP, Zeit, Adresse) kurzzeitig speichern.",
         ],
@@ -186,7 +186,7 @@ const privacy: Record<Lang, LegalDoc> = {
       {
         h: "Сторонние сервисы",
         p: [
-          "При загрузке страниц устройство напрямую получает содержимое с этих сервисов, которые видят ваш IP-адрес: Wikimedia Commons (фото), OpenStreetMap (карта), Google Fonts (шрифты), GitHub Pages (записанное аудио). При планировании маршрута координаты выбранных мест отправляются в сервис маршрутизации OSRM. Ссылки на новости открывают Google Новости и страницы министерства в браузере.",
+          "При загрузке страниц устройство напрямую получает содержимое с этих сервисов, которые видят ваш IP-адрес: Wikimedia Commons (фото), OpenFreeMap (карта, данные OpenStreetMap), Google Fonts (шрифты), GitHub Pages (записанное аудио). Ссылки на новости открывают Google Новости и страницы министерства в браузере.",
           "Если статистика включена, используется подсчёт Plausible без cookie и без персональных данных. Рекламы нет; данные не продаются и не передаются.",
           "Хостинг-провайдер может недолго хранить стандартные журналы доступа (IP, время, адрес).",
         ],

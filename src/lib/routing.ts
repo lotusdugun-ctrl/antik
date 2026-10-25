@@ -9,39 +9,22 @@ const MIN_DAYS = 1;
 const MAX_DAYS = 3;
 
 /**
- * How many candidate sites go into the driving matrix. A trip is at most
- * `days * PER_DAY` stops, but the nearest-neighbour walk needs alternatives to
- * choose from at every step, so we hand it a few times that many. Keeping the
- * number small matters: OSRM bills a table request as width x height, and the
- * public demo server is a shared courtesy service, not infrastructure we own.
+ * How many candidate sites the nearest-neighbour walk chooses from. A trip is
+ * at most `days * PER_DAY` stops, but the walk needs alternatives at every
+ * step, so it gets a few times that many.
  */
 const CANDIDATE_MULTIPLIER = 3;
 const MIN_CANDIDATES = 12;
 
-async function fetchDrivingMatrix(points: { lat: number; lng: number }[]) {
-  const coords = points.map((p) => `${p.lng},${p.lat}`).join(";");
-  const url = `https://router.project-osrm.org/table/v1/driving/${coords}?annotations=distance,duration`;
-  const res = await fetch(url, {
-    headers: { accept: "application/json" },
-    signal: AbortSignal.timeout(20_000),
-  });
-  if (!res.ok) throw new Error(`OSRM HTTP ${res.status}`);
-  const json = (await res.json()) as {
-    code?: string;
-    distances?: number[][];
-    durations?: number[][];
-  };
-  if (json.code !== "Ok" || !json.distances || !json.durations)
-    throw new Error("OSRM table failed");
-  const n = json.distances.length;
-  const cells: Cell[][] = Array.from({ length: n }, (_, i) =>
-    Array.from({ length: n }, (_, j) => ({
-      km: Math.max(0, (json.distances![i]?.[j] ?? 0) / 1000),
-      min: Math.round((json.durations![i]?.[j] ?? 0) / 60),
-    })),
-  );
-  return cells;
-}
+/*
+ * Distances and times are estimated here, with no outside routing service:
+ * the free public ones are demo servers whose terms do not allow an app to
+ * lean on them. Roads in Türkiye run about a third longer than the straight
+ * line between two sites, and a mix of motorway and mountain road averages
+ * near 70 km/h. The page says these are estimates.
+ */
+const ROAD_FACTOR = 1.3;
+const AVERAGE_KMH = 70;
 
 /**
  * Great-circle distance without the whole-kilometre rounding of
@@ -58,16 +41,12 @@ function exactKm(a: { lat: number; lng: number }, b: { lat: number; lng: number 
   return 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
-/**
- * Straight-line stand-in for when OSRM is unreachable. The kilometres are
- * honest; the durations are left at 0 so the caller can tell this apart from
- * real driving data instead of presenting a guess as a measurement.
- */
-function haversineMatrix(points: { lat: number; lng: number }[]) {
-  const n = points.length;
-  return Array.from({ length: n }, (_, i) =>
-    Array.from({ length: n }, (_, j) => {
-      return { km: exactKm(points[i]!, points[j]!), min: 0 };
+/** Estimated road kilometres and driving minutes between every pair. */
+function estimateMatrix(points: { lat: number; lng: number }[]): Cell[][] {
+  return points.map((p) =>
+    points.map((q) => {
+      const km = exactKm(p, q) * ROAD_FACTOR;
+      return { km, min: (km / AVERAGE_KMH) * 60 };
     }),
   );
 }
@@ -75,7 +54,7 @@ function haversineMatrix(points: { lat: number; lng: number }[]) {
 export const buildRouteServerFn = createServerFn({ method: "GET" })
   // A server function is a public endpoint: the input is whatever a request
   // carries, not what the type says. An unchecked `days` of 1e6 used to size
-  // the candidate list and the OSRM table from it.
+  // the candidate list from it.
   .validator((input: { startSlug: string; days: number }) => {
     const raw = (input ?? {}) as { startSlug?: unknown; days?: unknown };
     const startSlug = typeof raw.startSlug === "string" ? raw.startSlug.slice(0, 100) : "";
@@ -91,11 +70,9 @@ export const buildRouteServerFn = createServerFn({ method: "GET" })
     const maxSites = days * PER_DAY;
 
     /*
-     * Shortlist by straight-line distance before asking OSRM anything. The
-     * itinerary never leaves the start's neighbourhood — a nearest-neighbour
-     * walk of nine stops cannot reach a site on the far side of the country —
-     * so routing all 100 sites meant requesting a 100x100 table (10,000 pairs,
-     * measured at ~8.5s against the demo server) to use nine of its rows.
+     * Shortlist by straight-line distance. The itinerary never leaves the
+     * start's neighbourhood — a nearest-neighbour walk of nine stops cannot
+     * reach a site on the far side of the country.
      */
     const candidates = [...sites]
       .filter((s) => s.slug !== start.slug)
@@ -107,15 +84,7 @@ export const buildRouteServerFn = createServerFn({ method: "GET" })
     const pool = [start, ...candidates];
     const points = pool.map((s) => ({ lat: s.lat, lng: s.lng }));
 
-    let matrix: Cell[][];
-    let usingDriving: boolean;
-    try {
-      matrix = await fetchDrivingMatrix(points);
-      usingDriving = true;
-    } catch {
-      matrix = haversineMatrix(points);
-      usingDriving = false;
-    }
+    const matrix = estimateMatrix(points);
 
     const legKm = (i: number, j: number) => matrix[i]?.[j]?.km ?? 0;
 
@@ -150,14 +119,11 @@ export const buildRouteServerFn = createServerFn({ method: "GET" })
       const cell = matrix[from]?.[to] ?? { km: legKm(from, to), min: 0 };
       legs.push({
         km: Math.round(cell.km),
-        // No OSRM means no duration to report. 60 km/h is a plain guess, and
-        // `usingDriving: false` is what tells the UI to label it as one.
-        min: cell.min > 0 ? cell.min : Math.max(1, Math.round(cell.km)),
+        min: Math.max(1, Math.round(cell.min)),
       });
     }
 
     return {
-      usingDriving,
       slugs,
       legs,
       totalKm: legs.reduce((a, l) => a + l.km, 0),

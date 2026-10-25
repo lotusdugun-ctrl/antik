@@ -938,16 +938,10 @@ const dict = {
   route_to_next: { tr: "sonraki durağa", en: "to next stop" },
   route_from_start: { tr: "Başlangıç", en: "Start" },
   route_auto_note: {
-    tr: "Rota, en yakın kent algoritmasıyla üretilir; mesafeler ve süreler gerçek araç rotasına göre hesaplanır.",
-    en: "The route is auto-generated using a nearest-city algorithm; distances and times use real driving routes.",
-  },
-  route_crow_note: {
-    tr: "Yol servisine ulaşılamadı: mesafeler kuş uçuşu, süreler 60 km/s üzerinden kaba tahmindir. Gerçek sürüş bundan uzun sürer.",
-    en: "The routing service was unreachable: distances are straight-line and times a rough 60 km/h estimate. Real driving takes longer.",
+    tr: "Rota, en yakın kent algoritmasıyla üretilir. Mesafe ve süreler tahminidir: kuş uçuşu mesafenin yaklaşık 1,3 katı yol ve ortalama 70 km/s hız esas alınır. Gerçek süre yola ve trafiğe göre değişir.",
+    en: "The route is generated with a nearest-city algorithm. Distances and times are estimates: about 1.3 times the straight-line distance by road, at an average of 70 km/h. Actual times depend on the road and traffic.",
   },
   route_est_time: { tr: "Tahmini araç süresi", en: "Estimated driving time" },
-  route_rough_time: { tr: "Kaba süre tahmini", en: "Rough time estimate" },
-  route_crow_distance: { tr: "Kuş uçuşu mesafe", en: "Straight-line distance" },
   route_min: { tr: "dk", en: "min" },
   route_driving: { tr: "Araç", en: "Driving" },
   route_loading: { tr: "En yakın kentler hesaplanıyor…", en: "Finding the nearest cities…" },

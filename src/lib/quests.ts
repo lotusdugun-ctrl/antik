@@ -60,7 +60,6 @@ export const STATUE_NAMES: Record<string, Localized> = {
   Athena: { tr: "Athena", en: "Athena", de: "Athena", ru: "Афины" },
   Zeus: { tr: "Zeus", en: "Zeus", de: "Zeus", ru: "Зевса" },
   Asklepios: { tr: "Asklepios", en: "Asclepius", de: "Asklepios", ru: "Асклепия" },
-  Hermanubis: { tr: "Hermanubis", en: "Hermanubis", de: "Hermanubis", ru: "Германубиса" },
   Apollon: { tr: "Apollon", en: "Apollo", de: "Apollon", ru: "Аполлона" },
   Hermes: { tr: "Hermes", en: "Hermes", de: "Hermes", ru: "Гермеса" },
   Dionysos: { tr: "Dionysos", en: "Dionysus", de: "Dionysos", ru: "Диониса" },

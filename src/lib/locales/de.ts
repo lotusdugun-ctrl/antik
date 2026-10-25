@@ -120,12 +120,8 @@ export const de: Partial<Record<TKey, string>> = {
   route_to_next: "bis zum nächsten Halt",
   route_from_start: "Start",
   route_auto_note:
-    "Die Route wird automatisch nach dem Prinzip der nächstgelegenen Stadt erstellt; Entfernungen und Zeiten beruhen auf echten Fahrstrecken.",
-  route_crow_note:
-    "Der Routing-Dienst war nicht erreichbar: Entfernungen sind Luftlinie, Zeiten grob mit 60 km/h geschätzt. Die tatsächliche Fahrt dauert länger.",
+    "Die Route wird automatisch nach dem Prinzip der nächstgelegenen Stadt erstellt. Entfernungen und Zeiten sind Schätzungen: etwa das 1,3-Fache der Luftlinie auf der Straße bei durchschnittlich 70 km/h. Die tatsächliche Fahrzeit hängt von Straße und Verkehr ab.",
   route_est_time: "Geschätzte Fahrzeit",
-  route_rough_time: "Grobe Zeitschätzung",
-  route_crow_distance: "Luftlinie",
   route_min: "Min.",
   route_driving: "Auto",
   route_loading: "Nächstgelegene Städte werden gesucht…",

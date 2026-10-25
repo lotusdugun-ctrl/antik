@@ -1,15 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowRight,
-  CalendarDays,
-  Car,
-  Clock,
-  MapPin,
-  Route as RouteIcon,
-  TriangleAlert,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, Car, Clock, MapPin, Route as RouteIcon } from "lucide-react";
 import { AudioGuide } from "@/components/AudioGuide";
 import { OfflinePanel } from "@/components/OfflinePanel";
 import { SiteMap } from "@/components/SiteMap";
@@ -58,7 +50,6 @@ function RouteBuilderPage() {
     () => (data ? data.slugs.map(getSite).filter((s): s is Site => Boolean(s)) : []),
     [data],
   );
-  const driving = data?.usingDriving ?? false;
   const center: [number, number] =
     ordered.length > 0
       ? [
@@ -148,30 +139,26 @@ function RouteBuilderPage() {
 
         <div className="flex items-end gap-3 sm:flex-col sm:gap-1 sm:text-right">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            {driving ? t("route_total") : t("route_crow_distance")}
+            {t("route_total")}
           </span>
           <span className="font-display text-xl font-semibold text-primary">
-            {isLoading ? "…" : `${data?.totalKm ?? 0} ${t("route_km")}`}
+            {isLoading ? "…" : `~${data?.totalKm ?? 0} ${t("route_km")}`}
           </span>
         </div>
 
         <div className="flex items-end gap-3 sm:flex-col sm:gap-1 sm:text-right">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            {driving ? t("route_est_time") : t("route_rough_time")}
+            {t("route_est_time")}
           </span>
           <span className="font-display text-xl font-semibold text-primary">
-            {isLoading ? "…" : `${driving ? "" : "~"}${data?.totalMin ?? 0} ${t("route_min")}`}
+            {isLoading ? "…" : `~${data?.totalMin ?? 0} ${t("route_min")}`}
           </span>
         </div>
       </div>
 
       <p className="mb-5 flex items-start gap-1.5 text-xs text-muted-foreground">
-        {driving ? (
-          <Car className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        ) : (
-          <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-destructive" />
-        )}
-        {driving ? t("route_auto_note") : t("route_crow_note")}
+        <Car className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        {t("route_auto_note")}
       </p>
 
       {isLoading && (

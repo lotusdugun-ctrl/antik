@@ -2382,9 +2382,9 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
    */
   const upperStandIns: ScanId[] = [
     "tiberius-velatus",
-    "arringatore",
+    "asklepios",
     "ephesus-portrait",
-    "augustus",
+    "hadrian-troy",
   ];
   let upperIndex = 0;
   const parts: Part[] = [];
@@ -2690,9 +2690,10 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
               : who.dress === "toga"
                 ? upperStandIns[upperIndex++ % upperStandIns.length]!
                 : null;
-    // Statues with a raised arm lean back from it: they stand further out of
-    // the niche, or their shoulders would be in its back wall.
-    const out = scanned === "arringatore" || scanned === "augustus" ? 0.42 : scanned ? 0.15 : 0;
+    // The deeper statues — the bearded man in his mantle, the cuirassed
+    // Hadrian — stand further out of the niche, or their backs would be in
+    // its back wall.
+    const out = scanned === "asklepios" || scanned === "hadrian-troy" ? 0.42 : scanned ? 0.15 : 0;
     parts.push({
       ...person(
         [centre, base + pedestal - 0.02, -0.045 - out],
@@ -3024,10 +3025,9 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     /*
      * The statue on it, in bronze, a little over life size, turned a touch
      * towards the stair so the pair address whoever climbs it. What stood
-     * here is lost; the two stand in scans of Roman togate statues — the
-     * Arringatore, the one bronze honorific statue of a magistrate to
-     * survive whole, and the veiled Tiberius — which is what such bases
-     * carried.
+     * here is lost; the two stand in scans of Roman statues of the kind such
+     * bases carried — a bearded man wrapped in his mantle, the dress of the
+     * Greek East's honorific statues, and the veiled Tiberius in his toga.
      */
     parts.push({
       kind: "figure",
@@ -3043,7 +3043,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
         dress: "toga",
         gesture: "raised",
       },
-      scan: { id: side < 0 ? "arringatore" : "tiberius-velatus" },
+      scan: { id: side < 0 ? "asklepios" : "tiberius-velatus" },
     });
   }
 
@@ -4761,9 +4761,9 @@ function theatreWingEnds(
       // The ledge the statue stands on, deep enough to carry it.
       parts.push(box(screenStone, on(niche, sill - 0.2, 0.42), [nw + 0.8, 0.2, 0.9], rotY));
       /*
-       * The benefactor in the niche, in the round: a togate statue standing
-       * on the ledge, from the scans of the Arringatore and the veiled
-       * Tiberius, one each side. It was once cut as a silhouette in relief,
+       * The benefactor in the niche, in the round: a draped statue standing
+       * on the ledge, from the scans of a bearded man in his mantle and the
+       * veiled Tiberius, one each side. It was once cut as a silhouette in relief,
        * which read as a cardboard cut-out from anywhere but square on.
        */
       parts.push({
@@ -4780,7 +4780,7 @@ function theatreWingEnds(
           dress: "toga",
           left: "scroll",
         },
-        scan: { id: side > 0 ? "arringatore" : "tiberius-velatus" },
+        scan: { id: side > 0 ? "asklepios" : "tiberius-velatus" },
       });
       // Under it, the panel with its text: the formula such bases open with.
       parts.push(
