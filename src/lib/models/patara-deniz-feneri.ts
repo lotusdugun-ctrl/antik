@@ -55,7 +55,9 @@ export function lighthouseParts(spec: LighthouseSpec): Part[] {
   // The bay, out from the shore the mole runs off: the land (the dunes, the
   // beach) begins at the mole's root, where the landscape rises out of it.
   const shore = L.moleEnd + 1.5;
-  parts.push(scenery(box("water", [(shore - 210) / 2, -1.2, 0], [shore + 210, 1.2 + SEA, 420])));
+  // The open sea runs out to the horizon (beyond where the haze closes in): a basin
+  // ending a couple of hundred metres out read as a pond walled in by earth.
+  parts.push(scenery(box("water", [(shore - 1600) / 2, -1.2, 0], [shore + 1600, 1.2 + SEA, 3200])));
 
   /* ---- the mole ---- */
   // Squared blocks from the sea bed to the quay, the lighthouse on its head.

@@ -452,11 +452,62 @@ function stoa(options: {
   // The back wall, with shop doorways at every other bay.
   const wallH = height + 1.4;
   parts.push(box("stone", P(mid, wallLine + back * 0.35, 0.24), S(length, wallH, 0.7)));
+  const doorsAt: number[] = [];
   for (let i = 0; i < bays; i += 1) {
     if (i % 2 === 1) continue;
     const a = from + (length * (i + 0.5)) / bays;
-    parts.push(box("shadow", P(a, wallLine - back * 0.01, 0.24), S(1.6, 2.4, 0.06)));
-    parts.push(box("timber", P(a, wallLine - back * 0.04, 2.64), S(2.0, 0.22, 0.12)));
+    doorsAt.push(a);
+    parts.push(box("shadow", P(a, wallLine - back * 0.03, 0.24), S(1.6, 2.4, 0.06)));
+    parts.push(box("timber", P(a, wallLine - back * 0.06, 2.64), S(2.0, 0.22, 0.12)));
+  }
+  /*
+   * Both faces of the back wall in squared courses, so the long wall reads as
+   * built stone rather than a blank slab: the inner face round the shop doors,
+   * the outer face whole, with a coping along the top.
+   */
+  {
+    // which way each face looks, and how the street's direction runs along it
+    const inner =
+      axis === "z"
+        ? back > 0
+          ? FACING.west
+          : FACING.east
+        : back > 0
+          ? FACING.south
+          : FACING.north;
+    const outer =
+      axis === "z"
+        ? back > 0
+          ? FACING.east
+          : FACING.west
+        : back > 0
+          ? FACING.north
+          : FACING.south;
+    const along = (rotY: number) => (rotY === FACING.east || rotY === FACING.south ? -1 : 1);
+    const gaps = (rotY: number): [number, number][] =>
+      doorsAt.map((a) => {
+        const u = along(rotY) * (a - mid);
+        return [u - 0.85, u + 0.85];
+      });
+    parts.push(
+      ...ashlar({
+        at: P(mid, wallLine, 0.24),
+        rotY: inner,
+        length,
+        height: wallH,
+        material: "stone",
+        blocks: 1.3,
+        gaps: gaps(inner),
+      }),
+      ...ashlar({
+        at: P(mid, wallLine + back * 0.7, 0.24),
+        rotY: outer,
+        length,
+        height: wallH,
+        material: "stone",
+        blocks: 1.3,
+      }),
+    );
   }
   // The ceiling under the roof, and the roof itself falling to the street.
   parts.push(
@@ -619,6 +670,16 @@ export function streetParts(): Part[] {
   });
   // Marble Street: the agora's east wall on one side, a stoa on the other.
   parts.push(box("stone", [(M.x0 + GATE.back) / 2, 0, M.z1 + 0.7], [GATE.back - M.x0, 5.2, 1.2]));
+  parts.push(
+    ...ashlar({
+      at: [(M.x0 + GATE.back) / 2, 0, M.z1 + 0.1],
+      rotY: FACING.south,
+      length: GATE.back - M.x0,
+      height: 5.2,
+      material: "stone",
+      blocks: 1.3,
+    }),
+  );
   parts.push(
     ...stoa({
       axis: "x",

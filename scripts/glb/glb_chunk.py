@@ -77,6 +77,23 @@ for im in j.get("images", []):
         o = v.get("byteOffset", 0)
         im["bufferView"] = image_view.setdefault(im["bufferView"], put(np.frombuffer(bin0, np.uint8, v["byteLength"], o)))
 
+# The web's skyline: flat-topped drums of earth ringed round the site ("the ridges on the
+# skyline" in reconstruction-parts.ts setting()). Unity's sky draws its own hazy mountains,
+# and seen from the app's higher camera the drums read as discs, so they are left out:
+# primitives in the earth colour (#a9977a) lying wholly far out.
+EARTH = np.array([0.397, 0.309, 0.195])
+
+
+def is_ridge(p, attrs):
+    mat = j["materials"][p["material"]] if "material" in p else {}
+    c = mat.get("pbrMetallicRoughness", {}).get("baseColorFactor")
+    if not c or np.abs(np.array(c[:3]) - EARTH).max() > 0.02:
+        return False
+    pos = attrs["POSITION"]
+    return bool(np.hypot(pos[:, 0], pos[:, 2]).min() > 60)
+
+
+dropped_ridges = 0
 new_meshes, new_nodes = [], []
 node_map = {}
 total_tiles = 0
@@ -97,7 +114,12 @@ for ni, node in enumerate(j["nodes"]):
     for p in mesh["primitives"]:
         attrs = {k: read(v) for k, v in p["attributes"].items()}
         idx = read(p["indices"]).reshape(-1) if "indices" in p else np.arange(attrs["POSITION"].shape[0])
+        if is_ridge(p, attrs):
+            dropped_ridges += 1
+            continue
         prims.append((p, attrs, idx.astype(np.int64)))
+    if not prims:
+        continue
     if not cut:
         newp = []
         for p, attrs, idx in prims:
@@ -154,4 +176,4 @@ js += b" " * ((4 - len(js) % 4) % 4)
 glb = struct.pack("<III", 0x46546C67, 2, 12 + 8 + len(js) + 8 + len(out))
 glb += struct.pack("<II", len(js), 0x4E4F534A) + js + struct.pack("<II", len(out), 0x004E4942) + bytes(out)
 open(dst, "wb").write(glb)
-print(dst, "tiles", total_tiles, "MB", round(len(glb) / 1e6, 1))
+print(dst, "ridges dropped", dropped_ridges, "tiles", total_tiles, "MB", round(len(glb) / 1e6, 1))

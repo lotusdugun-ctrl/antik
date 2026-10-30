@@ -354,8 +354,8 @@ describe("the cost of the new detail", () => {
   const ALLOW: Record<string, number> = {
     "hattusa-aslanli-kapi": 1.42,
     // The library gained its square and streets: the paving, the Mazaeus-Mithridates
-    // gate, the stoas of Curetes and Marble Streets, and the gallery in the hall.
-    "celsus-kutuphanesi": 1.9,
+    // gate, the stoas of Curetes and Marble Streets with their coursed walls, and the gallery.
+    "celsus-kutuphanesi": 2.6,
   };
   test("no building grows by more than 15%", () => {
     for (const item of reconstructions) {

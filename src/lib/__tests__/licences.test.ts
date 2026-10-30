@@ -93,9 +93,10 @@ describe("recorded voices", () => {
       expect(manifest.engine).toBe("piper");
       expect(manifest.voice).toBe(voiceCreditsByLang.el?.voice);
     }
-    const scripts = readdirSync(join(root, "scripts")).map((f) =>
-      readFileSync(join(root, "scripts", f), "utf-8"),
-    );
+    // Files only: scripts/glb (the Unity export tools) is a folder.
+    const scripts = readdirSync(join(root, "scripts"), { withFileTypes: true })
+      .filter((entry) => entry.isFile())
+      .map((entry) => readFileSync(join(root, "scripts", entry.name), "utf-8"));
     for (const code of scripts)
       expect(code).not.toMatch(/import edge_tts|edge_tts\.|pip install[^\n]*edge-tts/);
   });
