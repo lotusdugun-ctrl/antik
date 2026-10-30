@@ -1,0 +1,13 @@
+diff --git a/src/components/Reconstruction3DInner.tsx b/src/components/Reconstruction3DInner.tsx
+index 21847e7..3278bff 100644
+--- a/src/components/Reconstruction3DInner.tsx
++++ b/src/components/Reconstruction3DInner.tsx
+@@ -4088,6 +4088,8 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
+           span,
+           scene,
+           renderer,
++          lifeHandle,
++          life,
+         };
+       }
+ 

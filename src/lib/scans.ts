@@ -530,6 +530,11 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "herm-epicurus-metrodorus",
     "asklepios",
     "hadrian-troy",
+    // The statues on the bases along Curetes and Marble Streets.
+    "ephesus-portrait-lod",
+    "tiberius-velatus-lod",
+    "caryatid-lod",
+    "asklepios-lod",
   ],
   "aspendos-tiyatrosu": [
     "asklepios",

@@ -37,6 +37,14 @@ import {
   monasteryWalkStart,
 } from "@/lib/models/sumela-manastiri";
 import { lighthouseParts, lighthouseWalkStart } from "@/lib/models/patara-deniz-feneri";
+import {
+  lightColumn,
+  mazaeusGateParts,
+  onGateOrSquare,
+  onStreets,
+  squarePaving,
+  streetParts,
+} from "@/lib/models/efes-mazaeus-kapisi";
 import type {
   GreatAltarSpec,
   IonicDipterosSpec,
@@ -107,6 +115,8 @@ export type Material =
   | "granite"
   | "gialloAntico"
   | "pavonazzetto"
+  /** Polished black marble: the lining of the Mazaeus-Mithridates gate's vault. */
+  | "marbleBlack"
   /** The warm, pebbly conglomerate Aspendos is built of. */
   | "conglomerate"
   /** Open water: a harbour basin. */
@@ -2486,42 +2496,85 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
    * at night like any other building, and a black hole where a door belongs is
    * the detail that most makes a reconstruction look unfinished.
    */
+  /*
+   * Timber leaves sheathed in bronze, as the doors of a great Roman public
+   * building were (the Pantheon's survive): each leaf in two sunk panels,
+   * studded along its stiles and rails, with a ring knocker. A moulded
+   * marble frame stands round each opening.
+   */
+  const leafParts = (cx: number, z: number, leaf: number, rotY: number, side: number) => {
+    // `cx`, `z` the leaf's centre on its face; `u` across the leaf, `out` off its face.
+    const at = (u: number, y: number, out: number): Vec3 => [
+      cx + u * Math.cos(rotY) + out * Math.sin(rotY),
+      y,
+      z - u * Math.sin(rotY) + out * Math.cos(rotY),
+    ];
+    parts.push(box("bronze", at(0, y0, 0), [leaf, doorHeight, 0.1], rotY));
+    for (let panel = 0; panel < 2; panel += 1) {
+      parts.push(
+        box(
+          "bronze",
+          at(0, y0 + 0.25 + panel * (doorHeight * 0.46), -0.06),
+          [leaf * 0.68, doorHeight * 0.38, 0.06],
+          rotY,
+        ),
+      );
+    }
+    // Studs down the stiles and across the rails.
+    for (let k = 0; k <= 8; k += 1) {
+      const y = y0 + 0.12 + ((doorHeight - 0.24) * k) / 8;
+      for (const u of [-leaf * 0.42, leaf * 0.42])
+        parts.push(box("paintGold", at(u, y, -0.075), [0.05, 0.05, 0.05], rotY));
+    }
+    for (const y of [y0 + 0.12, y0 + doorHeight * 0.5, y0 + doorHeight - 0.12])
+      for (let k = 1; k < 4; k += 1)
+        parts.push(
+          box(
+            "paintGold",
+            at(-leaf * 0.42 + (leaf * 0.84 * k) / 4, y, -0.075),
+            [0.05, 0.05, 0.05],
+            rotY,
+          ),
+        );
+    // The ring knocker, near the meeting stile.
+    parts.push(
+      cyl("paintGold", at(-side * leaf * 0.3, y0 + doorHeight * 0.42, -0.08), 0.1, 0.1, 0.03, 16, {
+        rotX: Math.PI / 2,
+        rotY: rotY + Math.PI,
+      }),
+    );
+  };
   for (const door of doors) {
     const leaf = door.width / 2 - 0.04;
+    // The frame: two moulded jambs and a lintel standing out of the wall.
+    for (const side of [-1, 1]) {
+      parts.push(
+        box(
+          "marble",
+          [door.centre + side * (door.width / 2 + 0.16), y0, -0.04],
+          [0.32, doorHeight + 0.3, 0.12],
+        ),
+      );
+    }
+    parts.push(box("marble", [door.centre, y0 + doorHeight, -0.06], [door.width + 0.9, 0.3, 0.16]));
+    parts.push(
+      box("marble", [door.centre, y0 + doorHeight + 0.3, -0.1], [door.width + 1.1, 0.12, 0.24]),
+    );
     if (door.open) {
       // Swung back into the vestibule, flat against the reveals.
       for (const side of [-1, 1]) {
-        parts.push(
-          box(
-            "timber",
-            [door.centre + side * (door.width / 2 - 0.06), y0, wallDepth + leaf / 2],
-            [leaf, doorHeight, 0.1],
-            Math.PI / 2,
-          ),
+        leafParts(
+          door.centre + side * (door.width / 2 - 0.06),
+          wallDepth + leaf / 2,
+          leaf,
+          side < 0 ? Math.PI / 2 : -Math.PI / 2,
+          side,
         );
       }
       continue;
     }
     for (const side of [-1, 1]) {
-      const cx = door.centre + side * (leaf / 2 + 0.02);
-      parts.push(box("timber", [cx, y0, wallDepth - 0.14], [leaf, doorHeight, 0.1]));
-      // Two sunk panels per leaf, and the frame that holds them.
-      for (let panel = 0; panel < 2; panel += 1) {
-        parts.push(
-          box(
-            "timber",
-            [cx, y0 + 0.25 + panel * (doorHeight * 0.46), wallDepth - 0.2],
-            [leaf * 0.68, doorHeight * 0.38, 0.06],
-          ),
-        );
-      }
-      parts.push(
-        box(
-          "paintGold",
-          [cx - side * leaf * 0.36, y0 + doorHeight * 0.44, wallDepth - 0.22],
-          [0.09, 0.16, 0.06],
-        ),
-      );
+      leafParts(door.centre + side * (leaf / 2 + 0.02), wallDepth - 0.14, leaf, 0, side);
     }
   }
 
@@ -2588,6 +2641,23 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     parts.push(
       box("paintGold", [window.centre, windowBase - 0.12, 0.02], [window.width * 1.18, 0.12, 0.1]),
     );
+    /*
+     * Under the sill, a panel of veined marble — purple-veined pavonazzetto
+     * in a white frame — as the inside of the hall was revetted; on the
+     * front it is the model's reading, not a find.
+     */
+    {
+      const ph = (windowBase - lowerTop) * 0.55;
+      const py = windowBase - 0.3 - ph;
+      parts.push(
+        box(
+          "marble",
+          [window.centre, py - 0.08, -0.04],
+          [window.width * 0.9 + 0.16, ph + 0.16, 0.08],
+        ),
+      );
+      parts.push(box("pavonazzetto", [window.centre, py, -0.09], [window.width * 0.9, ph, 0.04]));
+    }
   }
   parts.push(
     box(
@@ -2734,6 +2804,35 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
         entablature,
       ),
     );
+    /*
+     * The soffit of the entablature between the columns, coffered: sunk
+     * square panels painted blue, each with a gilded rosette, between moulded
+     * ribs — what someone standing on the pedestal's step looked up into.
+     */
+    {
+      const soffit = base + pedestal + shaft;
+      const sx = spread - diameter / 2 - 0.12;
+      const sz = diameter * 1.4 - 0.16;
+      const nx = 2;
+      const nz = 2;
+      const cw = (sx * 2) / nx;
+      const cd = (sz * 2) / nz;
+      for (let i = 0; i < nx; i += 1)
+        for (let k = 0; k < nz; k += 1) {
+          const cx = centre - sx + cw * (i + 0.5);
+          const cz = z - sz + cd * (k + 0.5);
+          parts.push(box("paintBlue", [cx, soffit - 0.02, cz], [cw - 0.14, 0.015, cd - 0.14]));
+          parts.push(cyl("paintGold", [cx, soffit - 0.05, cz], 0.09, 0.06, 0.03, 10));
+        }
+      for (let i = 0; i <= nx; i += 1)
+        parts.push(
+          box("marble", [centre - sx + cw * i, soffit - 0.07, z], [0.07, 0.07, sz * 2 + 0.07]),
+        );
+      for (let k = 0; k <= nz; k += 1)
+        parts.push(
+          box("marble", [centre, soffit - 0.07, z - sz + cd * k], [sx * 2 + 0.07, 0.07, 0.07]),
+        );
+    }
     /*
      * The architrave of the upper order in its fasciae: two bands, each
      * stepping a little further out than the one below, so the beam reads
@@ -3224,13 +3323,121 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     );
   }
 
+  /*
+   * The gallery. The hall's niches rose in two (perhaps three) storeys, and
+   * the upper ones could only be reached from a gallery carried on columns
+   * standing on the podium that runs round the walls — which is why the
+   * podium is there. Modelled at the level of the second row of niches,
+   * along the two sides and the back on either side of the apse, its floor
+   * coffered underneath and a bronze railing along its edge. How it was
+   * reached (stairs in the side corridors) is not shown.
+   */
+  {
+    const galleryY = y0 + 1 + spec.nicheHeight + 0.25;
+    const deep = 1.4;
+    const ledgeTop = y0 + 1;
+    const colH = galleryY - ledgeTop - 0.3;
+    const runs: { a0: number; a1: number; line: number; axis: "z" | "x"; inward: number }[] = [];
+    for (const side of [-1, 1]) {
+      runs.push({
+        a0: hallFront + 0.3,
+        a1: hallBack - 0.05,
+        line: side * halfHall,
+        axis: "z",
+        inward: -side,
+      });
+      runs.push({
+        a0: side < 0 ? -halfHall : apseHalf + 0.35,
+        a1: side < 0 ? -(apseHalf + 0.35) : halfHall,
+        line: hallBack,
+        axis: "x",
+        inward: -1,
+      });
+    }
+    // The podium carried along the back wall too, either side of the apse.
+    for (const side of [-1, 1]) {
+      const from = apseHalf + 0.35;
+      const to = halfHall - 1;
+      parts.push(box("stone", [(side * (from + to)) / 2, y0, hallBack - 0.5], [to - from, 1, 1]));
+    }
+    for (const r of runs) {
+      const length = r.a1 - r.a0;
+      const mid = (r.a0 + r.a1) / 2;
+      const P = (a: number, c: number, y: number): Vec3 => (r.axis === "z" ? [c, y, a] : [a, y, c]);
+      const S = (a: number, h: number, c: number): Vec3 => (r.axis === "z" ? [c, h, a] : [a, h, c]);
+      const edge = r.line + r.inward * deep;
+      // Floor: a marble slab on timber joists.
+      parts.push(box("marble", P(mid, (r.line + edge) / 2, galleryY), S(length, 0.16, deep)));
+      parts.push(
+        box("marble", P(mid, edge + r.inward * 0.04, galleryY - 0.06), S(length, 0.3, 0.12)),
+      );
+      // Coffers on its underside.
+      const n = Math.max(1, Math.round(length / 1.1));
+      for (let i = 0; i < n; i += 1) {
+        const a = r.a0 + (length * (i + 0.5)) / n;
+        parts.push(
+          box(
+            "paintBlue",
+            P(a, r.line + r.inward * (deep / 2), galleryY - 0.015),
+            S(length / n - 0.2, 0.012, deep - 0.3),
+          ),
+        );
+        parts.push(
+          cyl(
+            "paintGold",
+            P(a, r.line + r.inward * (deep / 2), galleryY - 0.05),
+            0.07,
+            0.05,
+            0.03,
+            10,
+          ),
+        );
+        parts.push(
+          box(
+            "marble",
+            P(r.a0 + (length * i) / n, r.line + r.inward * (deep / 2), galleryY - 0.08),
+            S(0.08, 0.08, deep),
+          ),
+        );
+      }
+      // The columns carrying it, on the podium.
+      const cols = Math.max(2, Math.round(length / 2.6));
+      for (let i = 0; i <= cols; i += 1) {
+        const a = r.a0 + 0.25 + ((length - 0.5) * i) / cols;
+        parts.push(...lightColumn("marble", P(a, r.line + r.inward * 0.75, ledgeTop), 0.3, colH));
+      }
+      // The railing: bronze posts and two rails.
+      const posts = Math.max(2, Math.round(length / 1.2));
+      for (let i = 0; i <= posts; i += 1) {
+        const a = r.a0 + (length * i) / posts;
+        parts.push(
+          box("bronze", P(a, edge + r.inward * 0.05, galleryY + 0.16), S(0.05, 0.95, 0.05)),
+        );
+      }
+      for (const y of [galleryY + 0.55, galleryY + 1.08])
+        parts.push(box("bronze", P(mid, edge + r.inward * 0.05, y), S(length, 0.05, 0.06)));
+    }
+  }
+
   // Someone at the foot of the stairs, so 16 metres reads as 16 metres.
   /*
    * The library stood on a paved courtyard in the middle of a city, so the
    * ground round it is worked stone, not countryside: little rock, no grass,
    * and Bülbül Dağı well back on the skyline.
    */
-  parts.push(...setting(w * 0.62, 4101, { stone: 0.35, grass: 0.12, hills: 0.55 }));
+  /*
+   * The square in front, paved, and the Gate of Mazaeus and Mithridates on
+   * its north side (see `models/efes-mazaeus-kapisi.ts`). The loose stone
+   * of the setting is kept off both.
+   */
+  parts.push(...squarePaving(), ...mazaeusGateParts(), ...streetParts());
+  parts.push(
+    ...setting(w * 0.62, 4101, { stone: 0.35, grass: 0.12, hills: 0.55 }).filter(
+      (part) =>
+        part.material === "ground" ||
+        (!onGateOrSquare(part.at[0], part.at[2], 1.5) && !onStreets(part.at[0], part.at[2], 1.5)),
+    ),
+  );
   return parts;
 }
 

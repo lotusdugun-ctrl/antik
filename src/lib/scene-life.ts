@@ -167,6 +167,11 @@ export type Carry =
   | "sack"
   /** A bound book, a codex: the monks' Gospels. */
   | "book"
+  /**
+   * A capsa: the round leather box, with its lid and carrying strap, that
+   * Roman readers and library slaves carried rolls in, standing on end.
+   */
+  | "capsa"
   | "candle"
   /** The wooden board a monk beats to call the brothers to church. */
   | "semantron"
@@ -319,8 +324,25 @@ export type Look = {
  * with a knot behind, or long hair tied and falling down the back. A man's:
  * cropped short, in curls, worn long, or long and tied up behind.
  */
-export type HairStyle = "bun" | "crown" | "nodus" | "fall" | "short" | "curls" | "long" | "tied";
+export type HairStyle =
+  | "bun"
+  | "crown"
+  | "nodus"
+  | "fall"
+  /**
+   * The Trajanic "orbis": a high crescent of tight curls built up over the
+   * brow on a frame, the hair behind braided and coiled into a nest at the
+   * crown — the fashion of the empress Plotina and of the well-off women of
+   * the years the library was built.
+   */
+  | "orbis"
+  | "short"
+  | "curls"
+  | "long"
+  | "tied";
 const HAIR_STYLES: HairStyle[] = ["bun", "crown", "nodus", "fall"];
+/** In the Roman East of the second century, the orbis joins them. */
+const ROMAN_HAIR_STYLES: HairStyle[] = [...HAIR_STYLES, "orbis"];
 
 /**
  * A choice made from colours already rolled, so it costs no extra roll of
@@ -1055,7 +1077,8 @@ function baseDress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
          * or out in the sun — not the rule.
          */
         const veiled = rand() < 0.12;
-        const style = HAIR_STYLES[choose(main ^ (trim << 1) ^ skin, HAIR_STYLES.length)]!;
+        const styles = era === "roman" ? ROMAN_HAIR_STYLES : HAIR_STYLES;
+        const style = styles[choose(main ^ (trim << 1) ^ skin, styles.length)]!;
         const band = choose(trim ^ hair, 5);
         return {
           ...base,
@@ -1510,7 +1533,7 @@ function tree(at: Vec3, kind: "laurel" | "olive" | "cypress", rand: Rand, scale 
 }
 
 /** A market stall: a table under a striped awning on four posts. */
-type Goods = "pottery" | "fruit" | "shrines" | "amphorae" | "cloth" | "baskets";
+type Goods = "pottery" | "fruit" | "shrines" | "amphorae" | "cloth" | "baskets" | "books";
 function stall(at: Vec3, rotY: number, rand: Rand, goods: Goods): Part[] {
   const parts: Part[] = [...table(at, 2.2, 0.9, 0.85, rotY)];
   for (const sx of [-1, 1]) {
@@ -1542,6 +1565,16 @@ function stall(at: Vec3, rotY: number, rand: Rand, goods: Goods): Part[] {
           rotY: rotY + between(rand, -0.15, 0.15),
         }),
       );
+    } else if (goods === "books") {
+      /*
+       * A bookseller's counter: rolls laid in twos and threes, a round
+       * leather capsa of them stood on end, and an inkpot.
+       */
+      if (i % 3 === 1) {
+        parts.push(cyl("hide", p, 0.11, 0.11, 0.3, 10));
+        parts.push(cyl("timber", [p[0], p[1] + 0.3, p[2]], 0.115, 0.115, 0.04, 10));
+      } else parts.push(...scrolls(p, 2 + (i % 2), rotY, rand));
+      if (i === 5) parts.push(cyl("terracotta", [p[0], p[1], p[2] + 0.25], 0.04, 0.05, 0.07, 8));
     } else if (goods === "baskets") {
       // Wicker baskets heaped with what the country brought in.
       parts.push(cyl("papyrus", p, 0.13, 0.17, 0.16, 9));
@@ -1977,6 +2010,63 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
       },
     );
   }
+  /*
+   * Through the Gate of Mazaeus and Mithridates (`models/efes-mazaeus-kapisi.ts`):
+   * people coming out of the agora by the middle opening, crossing the square,
+   * and going back in by the side ones.
+   */
+  // (Not by the opening on the library side: the horseman's plinth stands in front of it.)
+  for (let i = 0; i < 4; i += 1) {
+    const lane = [-9.2, -9.2, -14.0, -14.0][i]!;
+    const off = between(rand, -0.3, 0.3);
+    cast.walk(
+      [
+        [-27, 0, lane + off],
+        [-13.5, 0, lane + off],
+        [between(rand, -7, -3), 0, between(rand, stairFoot - 14, stairFoot - 5.8)],
+        [-13.5, 0, lane - off],
+      ],
+      {
+        role: rand() < 0.4 ? "worker" : "citizen",
+        ...(rand() < 0.5
+          ? { carry: pick(rand, ["amphora", "basket", "jar", "scroll"] as const) }
+          : {}),
+      },
+    );
+  }
+  /*
+   * Down Curetes Street to the square, and back up it; and along Marble
+   * Street from the north (`models/efes-mazaeus-kapisi.ts`).
+   */
+  for (let i = 0; i < 5; i += 1) {
+    const x = between(rand, 2.2, 7.8);
+    cast.walk(
+      [
+        [x, 0, -50],
+        [x + between(rand, -0.6, 0.6), 0, -24],
+        [between(rand, 3, 8), 0, between(rand, stairFoot - 14, stairFoot - 6)],
+        [x, 0, -24],
+      ],
+      {
+        role: rand() < 0.35 ? "worker" : "citizen",
+        ...(rand() < 0.4 ? { carry: pick(rand, ["amphora", "basket", "jar"] as const) } : {}),
+      },
+    );
+  }
+  for (let i = 0; i < 3; i += 1) {
+    const z = between(rand, -31.8, -27.8);
+    cast.walk(
+      [
+        [-50, 0, z],
+        [-14, 0, z],
+        [between(rand, -9, -4), 0, between(rand, stairFoot - 15, stairFoot - 8)],
+        [-14, 0, z],
+      ],
+      { role: rand() < 0.5 ? "worker" : "citizen" },
+    );
+  }
+  cast.group([4.6, 0, -40], 2, 0.6);
+  cast.group([-40, 0, -30.4], 3);
   cast.group([-4.5, 0, stairFoot - 2.4], 3);
   cast.group([5.2, 0, stairFoot - 4.2], 2, 0.6);
   cast.group([-8.5, 0, stairFoot - 6.5], 2, 0.6);
@@ -2000,7 +2090,7 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   };
   for (const x of [bayCentres[0]! + 0.4, 1.2, bayCentres[2]! - 0.4]) {
     cast.walk(stair(x), {
-      carry: x > 3 ? "basket" : "scroll",
+      carry: x > 3 ? "basket" : x > 0 ? "capsa" : "scroll",
       role: x > 3 ? "worker" : "citizen",
       speed: 0.8,
     });
@@ -2038,7 +2128,7 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   }
 
   // A stall selling ink, pens and papyrus at the edge of the square.
-  b.props.push(...stall([-11.8, 0, stairFoot - 7.5], 0.35, rand, "pottery"));
+  b.props.push(...stall([-11.8, 0, stairFoot - 7.5], 0.35, rand, "books"));
   cast.add({ at: [-11.4, 0, stairFoot - 8.4], rotY: 0.35, action: "talk", role: "worker" });
 
   // Torches either side of each door, and a brazier at each horseman.
@@ -2169,7 +2259,8 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
       [5.7, floor, hallBack - 1.6],
       [5.7, floor, hallFront + 1.6],
     ],
-    { role: "worker", carry: "basket", speed: 0.7 },
+    // A library slave fetching rolls from the cupboards, in their round box.
+    { role: "worker", carry: "capsa", speed: 0.7 },
   );
   // A donkey with panniers led across the square, and the town's dogs.
   animal(b, "donkey", [12, 0, stairFoot - 5.6], 0, "walk", {
@@ -4228,9 +4319,11 @@ function marketFor(item: Reconstruction): Piece[] {
       // The square before the library: the city's market came up to its steps.
       const sf = -spec.steps * 0.44;
       return [
-        p("stall", -15.2, sf - 3.9, E, "amphorae"),
+        // (Its north side is the Mazaeus-Mithridates gate: the stalls there
+        // stand out in the square instead.)
+        p("stall", -8.4, sf - 10.4, 0, "amphorae"),
         p("stall", 15.2, sf - 3.9, -E, "cloth"),
-        p("stall", -15.2, sf - 6.7, E, "baskets"),
+        p("stall", 9.2, sf - 10.6, 0, "baskets"),
         p("stall", 15.2, sf - 6.7, -E, "amphorae"),
         p("fountain", 0, sf - 11.6, 0),
         p("honorific", -15, sf + 0.6, E),

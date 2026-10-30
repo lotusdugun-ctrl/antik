@@ -472,6 +472,83 @@ export type LandscapeOptions = {
 const SHORE_SLOPE = 0.12;
 const BED_DEPTH = 2.5;
 
+/**
+ * How far the ground is held level by paving: 1 under a street or a paved
+ * square laid on the ground (a slab no more than 30 cm thick, whose foot is
+ * at the building's level), fading to 0 over about ten metres from its edge.
+ * Away from the site the land rolls; a street running out into it must not
+ * be swallowed by the first hill.
+ */
+export function pavedLevel(
+  parts: readonly Part[],
+  centre: { x: number; z: number },
+  reach: number,
+  groundY: number,
+) {
+  const slabs: Footprint[] = [];
+  for (const part of parts) {
+    // Loose stone (weathered, or turned at an angle) is not paving.
+    if (part.kind !== "box" || part.rotX || part.weather || part.rock) continue;
+    if (part.material === "water" || part.material === "grass") continue;
+    if (Math.abs(Math.sin(part.rotY * 2)) > 1e-6) continue;
+    if (part.size[1] > 0.3 || Math.abs(part.at[1] - groundY) > 0.06) continue;
+    if (part.size[0] * part.size[2] < 0.8) continue;
+    const f = footprintOf(part);
+    if (f) slabs.push(f);
+  }
+  if (slabs.length === 0) return () => 0;
+  const cell = 1;
+  const n = Math.ceil((reach * 2) / cell);
+  const x0 = centre.x - reach;
+  const z0 = centre.z - reach;
+  // Distance, in cells, to the nearest paved cell: a two-pass chamfer.
+  const far = 1e6;
+  const d = new Float32Array(n * n).fill(far);
+  for (const f of slabs) {
+    const r = Math.hypot(f.hx, f.hz);
+    const i0 = Math.max(0, Math.floor((f.x - r - x0) / cell));
+    const i1 = Math.min(n - 1, Math.ceil((f.x + r - x0) / cell));
+    const j0 = Math.max(0, Math.floor((f.z - r - z0) / cell));
+    const j1 = Math.min(n - 1, Math.ceil((f.z + r - z0) / cell));
+    for (let j = j0; j <= j1; j += 1)
+      for (let i = i0; i <= i1; i += 1)
+        if (distanceTo(f, x0 + (i + 0.5) * cell, z0 + (j + 0.5) * cell) <= cell * 0.71)
+          d[j * n + i] = 0;
+  }
+  const D = Math.SQRT2;
+  for (let j = 0; j < n; j += 1)
+    for (let i = 0; i < n; i += 1) {
+      const k = j * n + i;
+      let v = d[k]!;
+      if (i > 0) v = Math.min(v, d[k - 1]! + 1);
+      if (j > 0) {
+        v = Math.min(v, d[k - n]! + 1);
+        if (i > 0) v = Math.min(v, d[k - n - 1]! + D);
+        if (i < n - 1) v = Math.min(v, d[k - n + 1]! + D);
+      }
+      d[k] = v;
+    }
+  for (let j = n - 1; j >= 0; j -= 1)
+    for (let i = n - 1; i >= 0; i -= 1) {
+      const k = j * n + i;
+      let v = d[k]!;
+      if (i < n - 1) v = Math.min(v, d[k + 1]! + 1);
+      if (j < n - 1) {
+        v = Math.min(v, d[k + n]! + 1);
+        if (i < n - 1) v = Math.min(v, d[k + n + 1]! + D);
+        if (i > 0) v = Math.min(v, d[k + n - 1]! + D);
+      }
+      d[k] = v;
+    }
+  return (x: number, z: number) => {
+    const i = Math.floor((x - x0) / cell);
+    const j = Math.floor((z - z0) / cell);
+    if (i < 0 || j < 0 || i >= n || j >= n) return 0;
+    const m = d[j * n + i]! * cell;
+    return 1 - smooth(2.5, 11, m);
+  };
+}
+
 export function planLandscape(options: LandscapeOptions) {
   const { centre, span, groundY, footprint, biome } = options;
   const look = BIOMES[biome];
@@ -487,8 +564,14 @@ export function planLandscape(options: LandscapeOptions) {
    * the forest growing on it (Sümela's gorge; nothing else has rock faces).
    */
   const screes = screesOf(parts, groundY);
+  const level = pavedLevel(parts, centre, span * 3.6, groundY);
 
   const natural = (x: number, z: number) => {
+    const h = rolling(x, z);
+    const w = level(x, z);
+    return w > 0 ? h + (groundY - 0.12 - h) * w : h;
+  };
+  const rolling = (x: number, z: number) => {
     const dx = x - centre.x;
     const dz = z - centre.z;
     const d = Math.hypot(dx, dz);

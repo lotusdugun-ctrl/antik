@@ -1203,6 +1203,33 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         out.push(paint(sphere(0.022, [0, 0.99, 0.045], [1.2, 0.9, 0.9], 8, 6), look.hair));
         out.push(paint(sphere(0.028, [0, 0.965, -0.066], [1, 0.9, 1], 8, 7), look.hair));
         break;
+      case "orbis": {
+        // The crescent of curls over the brow, two tiers of them on a frame...
+        for (const [ring, y, r] of [
+          [9, 0.985, 0.012],
+          [7, 1.012, 0.011],
+        ] as const) {
+          for (let i = 0; i < ring; i += 1) {
+            const a = -1.05 + (2.1 * i) / (ring - 1);
+            out.push(
+              paint(
+                sphere(r, [Math.sin(a) * 0.058, y, 0.012 + Math.cos(a) * 0.05], [1, 1, 1], 6, 5),
+                look.hair,
+              ),
+            );
+          }
+        }
+        // ...and the braids coiled into a nest at the crown behind.
+        out.push(
+          paint(
+            new THREE.TorusGeometry(0.026, 0.011, 6, 14)
+              .rotateX(Math.PI / 2 - 0.5)
+              .translate(0, 0.985, -0.05),
+            look.hair,
+          ),
+        );
+        break;
+      }
       case "fall":
         // Tied at the nape and falling down the back.
         out.push(
@@ -1639,6 +1666,22 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
               .rotateY(Math.PI / 2)
               .translate(0.0, -FORE - 0.03, 0.08),
             0x8a5a2c,
+          ),
+        );
+        break;
+      case "capsa":
+        // The round box of rolls, on end in the hand: leather, a lid, a strap.
+        out.push(
+          paint(cylinder(0.07, 0.07, 0.26, [0, -FORE - 0.17, 0.07], 10), 0x7a4a2a),
+          paint(cylinder(0.074, 0.074, 0.035, [0, -FORE - 0.03, 0.07], 10), 0x5a3420),
+          paint(
+            new THREE.BoxGeometry(0.15, 0.012, 0.02).translate(0, -FORE - 0.01, 0.07),
+            0x3e2a1a,
+          ),
+          // The ends of the rolls standing up under the lid, the tags on them.
+          paint(
+            new THREE.BoxGeometry(0.02, 0.03, 0.006).translate(0.03, -FORE + 0.0, 0.11),
+            0xb83a2a,
           ),
         );
         break;

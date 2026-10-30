@@ -321,6 +321,13 @@ const MATERIALS: Record<Material, Palette> = {
   // The coloured stones Roman builders shipped across the empire for their
   // showpiece columns: grey-pink granite from the Troad, yellow giallo
   // antico from Numidia, purple-veined pavonazzetto from Phrygia.
+  marbleBlack: {
+    color: 0x2a2724,
+    roughness: 0.34,
+    metalness: 0,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.2,
+  },
   granite: {
     color: 0x9a8a86,
     roughness: 0.42,
@@ -3165,6 +3172,7 @@ export default function Reconstruction3DInner({
         name === "marble" ||
         name === "marbleWorn" ||
         name === "pavonazzetto" ||
+        name === "marbleBlack" ||
         name === "gialloAntico" ||
         name === "granite"
           ? stoneSet

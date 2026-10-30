@@ -27,9 +27,11 @@ export type Script =
  * How the letters were made: chiselled, painted on plaster, or scratched into
  * it — or chiselled and then filled with red paint, as Roman inscriptions
  * meant to be read from a distance were (rubrication: minium or red ochre in
- * the grooves; traces survive on many stones).
+ * the grooves; traces survive on many stones). `gilded` is the grandest of
+ * all: letters cast in bronze, gilded and pinned into sockets cut for them —
+ * which is why on such stones only the sockets and the pin holes survive.
  */
-export type Finish = "cut" | "rubricated" | "painted" | "scratched";
+export type Finish = "cut" | "rubricated" | "painted" | "scratched" | "gilded";
 
 export type EpigraphicText = {
   /**
@@ -519,6 +521,79 @@ export const TEXTS = {
       "https://www.livius.org/pictures/turkey/selcuk-ephesus/ephesus-library-of-celsus/ephesus-library-of-celsus-latin-inscription/",
     attested: true,
     note: "The stone gives Celsus' full career in Latin; only the opening and the dedicator are cut here.",
+  },
+
+  /* -------- Ephesus: the statue bases lining Curetes Street -------- */
+  /**
+   * The street was lined with honorific statues on inscribed bases, set up
+   * by the council and the people to benefactors and officials. Which base
+   * stood where is not recorded for every one, so the bases here carry the
+   * formula they share rather than any one man's career.
+   */
+  ephesusHonorificCouncil: {
+    text: ["Ἡ βουλὴ καὶ ὁ δῆμος", "ἐτείμησεν"],
+    script: "greek-lunate",
+    lang: "grc",
+    ref: "formula of Ephesian honorific bases of the Roman period",
+    source: PHI(248946),
+    attested: false,
+    note: "The common formula; no single base is copied. The source is the library's own honorific base, for the lettering of the period.",
+  },
+  ephesusHonorificPeople: {
+    text: ["Ὁ δῆμος", "τὸν εὐεργέτην"],
+    script: "greek-lunate",
+    lang: "grc",
+    ref: "formula of Ephesian honorific bases of the Roman period",
+    source: PHI(248946),
+    attested: false,
+    note: "The common formula; no single base is copied.",
+  },
+
+  /* -------- Ephesus: the Gate of Mazaeus and Mithridates (4/3 BC) -------- */
+  /**
+   * The gate's three dedications, one over each opening, in letters of gilded
+   * bronze of which only the sockets survive. Over the left opening, Latin:
+   * to Augustus and Livia; over the right, Latin: to Agrippa and Julia — both
+   * set up by Mazaeus and Mithridates, freedmen of the two, to their patrons.
+   */
+  gateAugustus: {
+    text: [
+      "IMP·CAESARI·DIVI·F·AVGVSTO·PONTIFICI·MAXIMO",
+      "COS·XII·TRIBVNIC·POTEST·XX·ET·LIVIAE·CAESARIS·AVGVSTI",
+      "MAZAEVS·ET·MITHRIDATES·PATRONIS",
+    ],
+    script: "latin",
+    lang: "la",
+    finish: "gilded",
+    ref: "IEph 3006; EDCS-05300041",
+    source: "https://www.turkisharchaeonews.net/object/gate-mazaeus-and-mithridates-ephesus",
+    attested: true,
+    note: "LIVIAE CAESARIS AVGVSTI as on the stone. Line breaks and letter heights are the model's.",
+  },
+  gateAgrippa: {
+    text: [
+      "M·AGRIPPAE·L·F·COS·TERT·IMB·TRIBVNIC·POTEST·VI",
+      "ET·IVLIAE·CAESARIS·AVGVSTI·F",
+      "MAZAEVS·ET·MITHRIDATES·PATRONIS",
+    ],
+    script: "latin",
+    lang: "la",
+    finish: "gilded",
+    ref: "IEph 3006; EDCS-05300041",
+    source: "https://www.turkisharchaeonews.net/object/gate-mazaeus-and-mithridates-ephesus",
+    attested: true,
+    note: "IMB (for IMP) as cut on the stone.",
+  },
+  /** Over the middle opening, the Greek: to their patrons, and to the people. */
+  gateGreek: {
+    text: ["ΜΑΖΑΙΟΣ ΚΑΙ ΜΙΘΡΙΔΑΤΗΣ", "ΤΟΙΣ ΠΑΤΡΩΣΙ ΚΑΙ ΤΩΙ ΔΗΜΩΙ"],
+    script: "greek",
+    lang: "grc",
+    finish: "gilded",
+    ref: "IEph 3006",
+    source: "https://www.turkisharchaeonews.net/object/gate-mazaeus-and-mithridates-ephesus",
+    attested: true,
+    note: "Restored where the stone is broken (Μαζ[αῖ]ος, τ[οῖς] πά[τ]ρωσι).",
   },
 
   /* -------- Ephesus: the Temple of Artemis (4th century BC) -------- */

@@ -112,7 +112,8 @@ describe("the inscriptions on the models", () => {
 
   test("each site writes in its own script and language", () => {
     // The library's bases are bilingual; its dedication Greek, with the lunate sigma.
-    expect([...scriptsOf("celsus-kutuphanesi")].sort()).toEqual(["greek-lunate", "latin"]);
+    // The Augustan gate on its square still cuts the four-barred sigma.
+    expect([...scriptsOf("celsus-kutuphanesi")].sort()).toEqual(["greek", "greek-lunate", "latin"]);
     expect([...scriptsOf("aspendos-tiyatrosu")].sort()).toEqual(["greek-lunate", "latin"]);
     // Hellenistic stones: the four-barred sigma.
     expect([...scriptsOf("pergamon-zeus-sunagi")]).toEqual(["greek"]);
@@ -350,7 +351,12 @@ describe("the cost of the new detail", () => {
    * carvings (which this count prices at nothing): +40% here is about +6%
    * of what the renderer draws.
    */
-  const ALLOW: Record<string, number> = { "hattusa-aslanli-kapi": 1.42 };
+  const ALLOW: Record<string, number> = {
+    "hattusa-aslanli-kapi": 1.42,
+    // The library gained its square and streets: the paving, the Mazaeus-Mithridates
+    // gate, the stoas of Curetes and Marble Streets, and the gallery in the hall.
+    "celsus-kutuphanesi": 1.9,
+  };
   test("no building grows by more than 15%", () => {
     for (const item of reconstructions) {
       const now = partsFor(item.model).reduce((sum, part) => sum + triangles(part), 0);

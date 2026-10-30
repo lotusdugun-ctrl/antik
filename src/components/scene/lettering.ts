@@ -25,7 +25,8 @@ import type { Part } from "@/lib/reconstruction-parts";
  * a little red, where dirt and the trace of the paint that filled them sit;
  * its upper wall in shadow and its lower lip catching the light. Painted
  * letters are flat ochre; scratched ones a fine line; rubricated ones are cut
- * and filled with a strong red, as the stones meant to be read from afar were.
+ * and filled with a strong red, as the stones meant to be read from afar were;
+ * gilded ones are bronze letters, cast, gilded and pinned to the stone.
  */
 
 type Plate = Extract<Part, { kind: "box" }> & { lettering: Lettering };
@@ -91,7 +92,10 @@ function serifs(strokes: Stroke[]): [number, number, number, number][] {
 function pathOf(lettering: Lettering, px: number, left: number, top: number): Path2D {
   const path = new Path2D();
   const widest = Math.max(...lettering.lines.map(measure));
-  const cut = lettering.finish === "cut" || lettering.finish === "rubricated";
+  const cut =
+    lettering.finish === "cut" ||
+    lettering.finish === "rubricated" ||
+    lettering.finish === "gilded";
   lettering.lines.forEach((line, row) => {
     const baseline = top + (PAD + 1 + row * LEADING) * px;
     const start = left + (PAD + (widest - measure(line)) / 2) * px;
@@ -146,6 +150,18 @@ function draw(context: CanvasRenderingContext2D, slot: Slot) {
   if (lettering.finish === "scratched") {
     pass("rgba(255, 250, 240, 0.45)", width * 0.42, 0.025);
     pass("rgba(52, 42, 34, 0.85)", width * 0.32, 0);
+    return;
+  }
+  if (lettering.finish === "gilded") {
+    /*
+     * Cast bronze letters, gilded, pinned a finger's depth proud of the
+     * stone: a soft shadow thrown down and to the right, a dark edge where
+     * the metal meets the marble, the gold itself, and a bright lit edge.
+     */
+    pass("rgba(40, 28, 12, 0.35)", width * 1.5, 0.09);
+    pass("rgba(92, 62, 18, 1)", width * 1.3, 0);
+    pass("rgba(201, 160, 64, 1)", width * 1.05, 0);
+    pass("rgba(255, 228, 150, 0.85)", width * 0.4, -0.04);
     return;
   }
   if (lettering.finish === "rubricated") {
