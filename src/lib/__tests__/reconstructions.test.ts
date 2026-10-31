@@ -81,12 +81,13 @@ describe("the reconstruction records", () => {
       expect(reconstructionForStructure(item.siteSlug, item.structure.tr)?.id).toBe(item.id);
     }
     expect(reconstructionForStructure("efes", "Kuretler Caddesi")).toBeUndefined();
-    // Ephesus has four, which is the case the lookup has to keep apart.
+    // Ephesus has five, which is the case the lookup has to keep apart.
     expect(reconstructionsFor("efes").map((r) => r.id)).toEqual([
       "celsus-kutuphanesi",
       "artemis-tapinagi",
       "efes-yamac-evler",
       "efes-buyuk-tiyatro",
+      "efes-hadrianus-tapinagi",
     ]);
   });
 
@@ -167,6 +168,8 @@ describe("the claims a visitor could check", () => {
   test("no source sits in a record unused, claiming to have been read", () => {
     const unused = reconstructions.flatMap((item) =>
       item.sources
+        // A source read for the words (date, order, builder), where none gives a number.
+        .filter((source) => !source.context)
         .filter((source) => !item.measures.some((measure) => measure.source === source.key))
         .map((source) => `${item.id}: ${source.key}`),
     );

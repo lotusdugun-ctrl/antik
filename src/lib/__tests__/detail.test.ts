@@ -68,6 +68,10 @@ describe("roof tiles", () => {
       "artemis-tapinagi",
       "efes-buyuk-tiyatro",
       "efes-yamac-evler",
+      "pergamon-trajan-tapinagi",
+      "priene-athena-tapinagi",
+      "sardes-artemis-tapinagi",
+      "side-apollon-tapinagi",
       "side-tiyatrosu",
     ]);
     for (const item of roofed) {

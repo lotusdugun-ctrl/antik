@@ -7,7 +7,12 @@ import type { NymphaeumSpec } from "@/lib/models/sagalassos-antoninler-cesmesi";
 import type { TerraceVillaSpec } from "@/lib/models/zeugma-villa";
 import type { CliffMonasterySpec } from "@/lib/models/sumela-manastiri";
 import type { LighthouseSpec } from "@/lib/models/patara-deniz-feneri";
+import type { RomanGateSpec } from "@/lib/models/roma-kapilari";
+import type { ProstyleTempleSpec } from "@/lib/models/hadrian-tapinagi";
+import type { LycianHeroonSpec } from "@/lib/models/nereid-aniti";
+import type { RockTombsSpec } from "@/lib/models/kaunos-kaya-mezarlari";
 import { SAGALASSOS_ZEUGMA_SUMELA_PATARA } from "@/lib/models/sagalassos-zeugma-sumela-patara";
+import { ON_YENI } from "@/lib/models/on-yeni-kayitlar";
 
 /**
  * Measured reconstructions — the structures the app can show in three
@@ -31,6 +36,12 @@ export type Source = {
   key: string;
   title: Localized;
   url: string;
+  /**
+   * Read for what the record says in words — the date, the order, who built
+   * it — rather than for a number in `measures`. Where no source that could be
+   * opened gives the building's dimensions, this is the only kind it has.
+   */
+  context?: true;
 };
 
 /**
@@ -158,7 +169,26 @@ export type IonicDipterosSpec = {
    * Who stands in the cella. Each temple housed its own god: the old goddess
    * at Ephesus, Zeus at Aizanoi — not one statue for all of them.
    */
-  cultStatue?: "apollo" | "artemis" | "zeus";
+  cultStatue?: "apollo" | "artemis" | "zeus" | "athena";
+  /**
+   * The order of the capitals: Ionic, or Corinthian for the Roman temples
+   * (their acanthus bell drawn as the composite's, which carries it).
+   */
+  order?: "ionic" | "corinthian";
+  /** Which text runs along the front architrave (a key of `TEXTS`), where not the god's formula; `"none"` for none. */
+  dedication?: string;
+  /**
+   * Built on a high Roman podium reached by a stair on the front, instead of
+   * a stepped crepis all round: the height of the podium, in metres.
+   */
+  podium?: number;
+  /** Left unfinished, as at Sardis: the shafts behind the east porch never got their flutes. */
+  unfinished?: boolean;
+  /**
+   * The head of a colossal statue found in the cella (Sardis: Faustina the
+   * Elder's, 1.76 m): the statue is drawn eight heads tall from it.
+   */
+  colossusHead?: number;
   /**
    * Rings of columns round the building: two for a true dipteros, one for a
    * pseudodipteros, which keeps the second ring's spacing and leaves its
@@ -329,7 +359,11 @@ export type ModelSpec =
   | NymphaeumSpec
   | TerraceVillaSpec
   | CliffMonasterySpec
-  | LighthouseSpec;
+  | LighthouseSpec
+  | RomanGateSpec
+  | ProstyleTempleSpec
+  | LycianHeroonSpec
+  | RockTombsSpec;
 
 /**
  * A named part of the building, pinned to the point in the model where it is.
@@ -2576,6 +2610,7 @@ export const reconstructions: Reconstruction[] = [
     },
   },
   ...SAGALASSOS_ZEUGMA_SUMELA_PATARA,
+  ...ON_YENI,
 ];
 
 export function getReconstruction(id: string): Reconstruction | undefined {

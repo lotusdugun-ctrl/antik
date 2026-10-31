@@ -344,6 +344,16 @@ describe("the cost of the new detail", () => {
     "zeugma-villa": 64980,
     "sumela-manastiri": 30340,
     "patara-deniz-feneri": 12360,
+    "priene-athena-tapinagi": 114364,
+    "termessos-tiyatrosu": 94122,
+    "antalya-hadrianus-kapisi": 54220,
+    "aphrodisias-tetrapylon": 52176,
+    "efes-hadrianus-tapinagi": 65936,
+    "pergamon-trajan-tapinagi": 88818,
+    "side-apollon-tapinagi": 85432,
+    "ksanthos-nereidler-aniti": 63756,
+    "kaunos-kaya-mezarlari": 55872,
+    "sardes-artemis-tapinagi": 189956,
   };
   /*
    * Allowed more, with the reason. Hattusa's glacis is now faced with its

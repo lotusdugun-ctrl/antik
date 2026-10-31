@@ -28,6 +28,8 @@ const BIOME_OF: Partial<Record<string, Biome>> = {
   "sumela-manastiri": "pontic",
   // The city stands at 1,500 m in the Taurus: black pine, juniper, bare limestone.
   "sagalassos-antoninler-cesmesi": "alpine",
+  // Termessos stands at about 1,000 m in the Taurus, in pine forest.
+  "termessos-tiyatrosu": "alpine",
 };
 
 export const biomeFor = (id: string): Biome => BIOME_OF[id] ?? "mediterranean";
@@ -432,7 +434,7 @@ export function screesOf(parts: readonly Part[], groundY: number): Scree[] {
       along: [c, -s],
       out: [-s, -c],
       half: w / 2,
-      height: Math.min(18, h * 0.45),
+      height: Math.min(18, h * 0.45) * (part.rock.scree ?? 1),
     });
   }
   return out;
@@ -601,7 +603,10 @@ export function planLandscape(options: LandscapeOptions) {
       // The water is a box; its shore should not be a ruler line. Along the
       // box's edge a band of uneven width stays land (raised to just over the
       // surface where it is low), so the water ends where the ground does.
-      const shore = Math.min(w.hx, w.hz) > 30 ? 3 + 26 * Math.min(1, Math.max(0, wiggle(x / 70, z / 70) - 0.25)) : 0;
+      const shore =
+        Math.min(w.hx, w.hz) > 30
+          ? 3 + 26 * Math.min(1, Math.max(0, wiggle(x / 70, z / 70) - 0.25))
+          : 0;
       const d = distanceTo(w, x, z) + shore;
       if (d < 0) {
         const bed = w.top + Math.max(-BED_DEPTH, SHORE_SLOPE * d) - 0.05;

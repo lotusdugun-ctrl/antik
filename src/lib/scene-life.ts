@@ -4,6 +4,8 @@ import {
   bankHeight,
   boundsOf,
   partsFor,
+  podiumStairRun,
+  podiumStairs,
   stadiumLayout as layoutOfStadium,
   theatreLayout,
   horseStatue,
@@ -26,6 +28,9 @@ import { nymphaeumLife } from "@/lib/models/sagalassos-antoninler-cesmesi-life";
 import { villaLife } from "@/lib/models/zeugma-villa-life";
 import { monasteryLife } from "@/lib/models/sumela-manastiri-life";
 import { lighthouseLife } from "@/lib/models/patara-deniz-feneri-life";
+import { gateLayout } from "@/lib/models/roma-kapilari";
+import { prostyleLayout } from "@/lib/models/hadrian-tapinagi";
+import { gateLife, heroonLife, prostyleLife, rockTombLife } from "@/lib/models/on-yeni-life";
 import * as trades from "@/lib/scene-trades";
 import type {
   GreatAltarSpec,
@@ -2605,8 +2610,8 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
 function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
   const b = make(era, id.length * 977);
   const { cast, rand } = b;
-  const platform = spec.crepidomaSteps * 0.5;
-  const front = -spec.crepidomaLength / 2;
+  const platform = spec.podium ?? spec.crepidomaSteps * 0.5;
+  const front = -spec.crepidomaLength / 2 - podiumStairRun(spec);
   const gridWidth = spec.stylobateWidth - 3;
   const gridLength = spec.stylobateLength - 3;
   const stepZ = gridLength / (spec.outerColumnsLong - 1);
@@ -2673,7 +2678,7 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
   }
   cast.group([-stepX * 1.5, platform, pteronZ - 0.2], 3, 0.7);
   cast.group([stepX * 2.5, platform, pteronZ + 0.3], 2, 0.6);
-  for (let i = 0; i < 3; i += 1) {
+  for (let i = 0; i < (spec.podium ? 0 : 3); i += 1) {
     const s = 1 + Math.floor(rand() * (spec.crepidomaSteps - 2));
     const insetL = (spec.crepidomaLength - spec.stylobateLength) / 2 / spec.crepidomaSteps;
     const z = front + s * insetL + insetL * 0.4;
@@ -2682,6 +2687,22 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
       rotY: Math.PI,
       action: rand() < 0.5 ? "sit" : "talk",
     });
+  }
+  if (spec.podium) {
+    // A few sitting on the podium stair, out of the sun.
+    const n = podiumStairs(spec);
+    for (let i = 0; i < 3; i += 1) {
+      const s = 2 + Math.floor(rand() * (n - 4));
+      cast.add({
+        at: [
+          between(rand, -gridWidth * 0.3, gridWidth * 0.3),
+          ((s + 1) * spec.podium) / n,
+          -spec.crepidomaLength / 2 - (n - s - 0.5) * (podiumStairRun(spec) / n),
+        ],
+        rotY: Math.PI,
+        action: rand() < 0.6 ? "sit" : "talk",
+      });
+    }
   }
   // Torches along the front of the platform, braziers by the altar.
   for (let i = 0; i < 6; i += 1) {
@@ -2737,7 +2758,7 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
     }
   } else {
     // Inside the cella: lamps before the cult statue.
-    const statueZ = courtCentre + spec.courtLength / 2 - 6;
+    const statueZ = courtCentre + spec.courtLength / 2 - (spec.colossusHead ? 9 : 6);
     for (const side of [-1, 1]) {
       fire(b, lampstand([side * 3.2, platform, statueZ - 2.4], 1.8), 0.18, side > 0);
     }
@@ -4229,6 +4250,16 @@ const ERA: Record<string, Era> = {
   "zeugma-villa": "roman",
   "sumela-manastiri": "byzantine",
   "patara-deniz-feneri": "roman",
+  "priene-athena-tapinagi": "hellenistic",
+  "termessos-tiyatrosu": "roman",
+  "antalya-hadrianus-kapisi": "roman",
+  "aphrodisias-tetrapylon": "roman",
+  "efes-hadrianus-tapinagi": "roman",
+  "pergamon-trajan-tapinagi": "roman",
+  "side-apollon-tapinagi": "roman",
+  "ksanthos-nereidler-aniti": "hellenistic",
+  "kaunos-kaya-mezarlari": "hellenistic",
+  "sardes-artemis-tapinagi": "roman",
 };
 
 /** The scene for one reconstruction. */
@@ -4275,6 +4306,14 @@ function sceneFor(item: Reconstruction): SceneLife {
       return monasteryLife(spec, era);
     case "lighthouse":
       return lighthouseLife(spec, era);
+    case "roman-gate":
+      return gateLife(spec, era, item.id);
+    case "prostyle-temple":
+      return prostyleLife(spec, era);
+    case "lycian-heroon":
+      return heroonLife(spec, era);
+    case "rock-tombs":
+      return rockTombLife(spec, era);
   }
 }
 
@@ -4337,7 +4376,7 @@ function marketFor(item: Reconstruction): Piece[] {
     case "ionic-dipteros": {
       // The forecourt: basins at the way in, statues along the sacred way,
       // and the sellers of offerings by the road.
-      const front = -spec.crepidomaLength / 2;
+      const front = -spec.crepidomaLength / 2 - podiumStairRun(spec);
       const altarZ = front - Math.min(17, spec.crepidomaWidth * 0.3);
       const side = spec.crepidomaWidth / 2;
       return [
@@ -4463,6 +4502,40 @@ function marketFor(item: Reconstruction): Piece[] {
         p("basin", -(hw + 2.2), -hd + 4),
         p("bench", hw + 3, 2, -E),
         p("bench", -(hw + 3), 2, E),
+      ];
+    }
+    case "roman-gate": {
+      const D = spec.depth;
+      if (spec.variant === "arch") {
+        // Sellers outside the gate along the road, a fountain inside the walls.
+        const out = gateLayout(spec).width / 2 + (spec.towerSide ?? 7) + 4;
+        return [
+          p("stall", out, -D / 2 - 6, -E + 0.3, "fruit"),
+          p("stall", out, -D / 2 - 10, -E + 0.1, "pottery"),
+          p("stall", -out, -D / 2 - 8, E - 0.2, "baskets"),
+          p("trough", -out + 2, -D / 2 - 13, 0.2),
+          p("fountain", 8, D / 2 + 10, -E),
+          p("bench", -8, D / 2 + 6, E),
+        ];
+      }
+      return [
+        p("stall", -9, -D / 2 - 4, E - 0.3, "baskets"),
+        p("stall", 9, -D / 2 - 6, -E + 0.3, "shrines"),
+        p("honorific", -9.5, -D / 2 - 0.5, E),
+        p("honorific", 9.5, -D / 2 - 0.5, -E),
+        p("fountain", -8, D / 2 + 9, E),
+        p("bench", 8, D / 2 + 9, -E),
+      ];
+    }
+    case "prostyle-temple": {
+      const L = prostyleLayout(spec);
+      const fz = L.street - 7.6;
+      return [
+        p("stall", -15, fz + 1.4, 0, "cloth"),
+        p("stall", -5, fz + 1.4, 0, "books"),
+        p("stall", 10, fz + 1.4, 0, "pottery"),
+        p("stall", 20, fz + 1.4, 0, "fruit"),
+        p("fountain", -spec.facadeWidth / 2 - 4, L.street + 0.2, Math.PI),
       ];
     }
     default:
@@ -5396,5 +5469,7 @@ export {
   table as lifeTable,
   stoneBench as lifeStoneBench,
   smallAmphora as lifeSmallAmphora,
+  tree as lifeTree,
+  altar as lifeAltar,
 };
 export type { Builder as LifeBuilder, Role as LifeRole };

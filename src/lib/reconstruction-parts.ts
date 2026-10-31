@@ -37,6 +37,10 @@ import {
   monasteryWalkStart,
 } from "@/lib/models/sumela-manastiri";
 import { lighthouseParts, lighthouseWalkStart } from "@/lib/models/patara-deniz-feneri";
+import { gateParts, gateWalkStart } from "@/lib/models/roma-kapilari";
+import { prostyleParts, prostyleWalkStart } from "@/lib/models/hadrian-tapinagi";
+import { heroonParts, heroonWalkStart } from "@/lib/models/nereid-aniti";
+import { rockTombParts, rockTombWalkStart } from "@/lib/models/kaunos-kaya-mezarlari";
 import {
   lightColumn,
   mazaeusGateParts,
@@ -780,6 +784,27 @@ export const IDENTITIES = {
     dress: "ependytes",
     gesture: "forward",
   },
+  /** Athena Polias of Priene: helmeted, in the peplos, spear and shield. */
+  athena: {
+    name: "Athena Polias",
+    sex: "female",
+    hair: "long",
+    headgear: "helmet",
+    dress: "peplos",
+    left: "shield",
+    right: "spear",
+    gesture: "rest",
+  },
+  /** Faustina the Elder, veiled, as the empress was shown in the cult of the emperors. */
+  faustina: {
+    name: "Faustina",
+    sex: "female",
+    hair: "bun",
+    headgear: "veil",
+    dress: "himation",
+    right: "phiale",
+    gesture: "veil",
+  },
   /** Zeus of Aizanoi, standing, with his sceptre and his thunderbolt. */
   zeus: {
     name: "Zeus",
@@ -906,6 +931,8 @@ export const PAINT = {
     accent: 0xd4ae52,
     skin: 0xe6c8a8,
   },
+  athena: { cloth: 0xe8dcc4, mantle: 0x5a7a9a, hair: 0x6a4a2a, accent: 0xc8a24a, skin: 0xeed2b6 },
+  faustina: { cloth: 0xe8dcc4, mantle: 0x9a6a5a, hair: 0x4a3020, accent: 0xc8a24a, skin: 0xeed2b6 },
   zeus: { cloth: 0xe8dcc4, mantle: 0x8a5a7e, hair: 0x5a4a3a, accent: 0xc8a24a, skin: 0xeed2b6 },
   apollo: { cloth: 0xe8dcc4, mantle: 0x7e98b4, hair: 0x8a6a3a, accent: 0xc8a24a, skin: 0xeed2b6 },
   maussollos: {
@@ -5012,15 +5039,71 @@ function theatreWingEnds(
  * ------------------------------------------------------------------ */
 
 /** Length runs along z, width along x; the front (pronaos) faces -z. */
+/** The going of a podium stair, and how many steps climb a podium. */
+const PODIUM_TREAD = 0.34;
+export const podiumStairs = (spec: IonicDipterosSpec) => Math.ceil((spec.podium ?? 0) / 0.24);
+/** How far a podium stair runs out in front of the temple. */
+export const podiumStairRun = (spec: IonicDipterosSpec) =>
+  spec.podium ? (podiumStairs(spec) - 1) * PODIUM_TREAD + 0.3 : 0;
+
 export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
   const parts: Part[] = [];
   const stepRise = 0.5;
-  const platform = spec.crepidomaSteps * stepRise;
+  const platform = spec.podium ?? spec.crepidomaSteps * stepRise;
   const insetW = (spec.crepidomaWidth - spec.stylobateWidth) / 2 / spec.crepidomaSteps;
   const insetL = (spec.crepidomaLength - spec.stylobateLength) / 2 / spec.crepidomaSteps;
 
   const crepidoma: number[] = [];
-  for (let i = 0; i < spec.crepidomaSteps; i += 1) {
+  if (spec.podium) {
+    /*
+     * A Roman podium: a solid block with a moulded foot and crown, climbed
+     * only by the stair on its front, which runs out in front of it between
+     * two cheek walls — Trajan's temple at Pergamon stood so on its terrace.
+     */
+    const P = spec.podium;
+    const W = spec.crepidomaWidth;
+    const D = spec.crepidomaLength;
+    crepidoma.push(parts.length);
+    parts.push(box("marbleWorn", [0, 0, 0], [W, P - 0.5, D]));
+    parts.push(box("marble", [0, 0, 0], [W + 0.4, 0.45, D + 0.4]));
+    parts.push(...cornice("marble", [0, P - 0.5, 0], W + 0.5, D + 0.5, 0.5));
+    for (const [rotY, length, out] of [
+      [FACING.south, W, D / 2],
+      [FACING.north, W, D / 2],
+      [FACING.west, D, W / 2],
+      [FACING.east, D, W / 2],
+    ] as const) {
+      parts.push(
+        ...ashlar({
+          at: [Math.sin(rotY) * out, 0.45, Math.cos(rotY) * out],
+          rotY,
+          length,
+          height: P - 0.95,
+          course: 0.55,
+          material: "marbleWorn",
+          foot: false,
+          coping: false,
+        }),
+      );
+    }
+    const n = podiumStairs(spec);
+    const sw = Math.min(W - 3, spec.stylobateWidth * 0.8);
+    // Each step runs back to the podium's face; the last riser is the face itself.
+    const run = podiumStairRun(spec);
+    for (let i = 0; i < n - 1; i += 1) {
+      const depth = (n - 1 - i) * PODIUM_TREAD + 0.3;
+      parts.push(box("marble", [0, i * (P / n), -D / 2 - depth / 2], [sw, P / n, depth]));
+    }
+    for (const s of [-1, 1])
+      parts.push(
+        box(
+          "marbleWorn",
+          [s * (sw / 2 + 0.6), 0, -D / 2 - 0.3 - (run - 0.3) / 2],
+          [1.2, P - 0.04, run - 0.3],
+        ),
+      );
+  }
+  for (let i = 0; i < (spec.podium ? 0 : spec.crepidomaSteps); i += 1) {
     crepidoma.push(parts.length);
     parts.push(
       box(
@@ -5039,15 +5122,17 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
   const raise = (x: number, z: number) => {
     if (raised >= spec.totalColumns) return;
     raised += 1;
+    // At Sardis only the columns of the east porch were ever fluted.
+    const rough = spec.unfinished && z > -gridLength / 2 + stepZ * 1.5;
     parts.push(
       ...column(
-        "marble",
+        rough ? "marbleWorn" : "marble",
         [x, y0, z],
         spec.columnDiameter,
         spec.columnHeight,
-        "ionic",
+        spec.order === "corinthian" ? "composite" : "ionic",
         undefined,
-        true,
+        !rough,
       ),
     );
   };
@@ -5207,13 +5292,15 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
    * sanctuary, as its votive inscriptions give it: to Artemis of Ephesus, to
    * Apollo of Didyma, to Zeus of the Aizanoi and the emperor (see
    * `epigraphy.ts`, where each is marked as a formula, not the text).
+   * A temple whose dedication is not known (`dedication: "none"`) is left bare.
    */
-  {
+  if (spec.dedication !== "none") {
     const H = spec.entablatureHeight;
     const t = radius * 2.6;
     const face = -(gridLength / 2) - t / 2 - 0.12;
-    const text =
-      spec.cultStatue === "artemis"
+    const text = spec.dedication
+      ? TEXTS[spec.dedication as keyof typeof TEXTS]
+      : spec.cultStatue === "artemis"
         ? TEXTS.artemisDedication
         : spec.cultStatue === "zeus"
           ? TEXTS.aizanoiDedication
@@ -5579,7 +5666,7 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
           }),
         );
       }
-      if (spec.cultStatue === "artemis") {
+      if (spec.cultStatue === "artemis" && spec.reliefColumns) {
         const face = side * (roofLength / 2 + 0.03);
         for (const [x, w, h] of [
           [0, 3.2, Math.min(4.6, pitch * 0.5)],
@@ -5603,9 +5690,31 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
     }
     // The cult statue, standing in the dark at the back of the cella.
     parts.push(box("marbleWorn", [0, y0, courtCentre + halfCL - 6], [4, 1.2, 4]));
+    /*
+     * At Sardis the cella was split in two under Antoninus Pius, its west
+     * half given to the emperor's cult: there stood colossal statues of the
+     * imperial couple, of which Faustina's head survives. Drawn eight heads
+     * tall in the west half, behind the goddess's.
+     */
+    if (spec.colossusHead) {
+      const tall = spec.colossusHead * 8;
+      const z = courtCentre + halfCL - 3.2;
+      parts.push(box("marbleWorn", [0, y0, z], [3.6, 0.9, 3.6]));
+      parts.push({
+        ...person(
+          [0, y0 + 0.9, z],
+          Math.min(tall, spec.sekosWallHeight - 1.5),
+          Math.PI,
+          "marbleWorn",
+          IDENTITIES.faustina,
+          PAINT.faustina,
+        ),
+        scan: { id: "celsus-arete" },
+      });
+    }
     parts.push({
       ...person(
-        [0, y0 + 1.2, courtCentre + halfCL - 6],
+        [0, y0 + 1.2, courtCentre + halfCL - (spec.colossusHead ? 9 : 6)],
         6,
         Math.PI,
         "marbleWorn",
@@ -5613,12 +5722,16 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
           ? IDENTITIES.artemisEphesia
           : spec.cultStatue === "zeus"
             ? IDENTITIES.zeus
-            : IDENTITIES.didymaApollo,
+            : spec.cultStatue === "athena"
+              ? IDENTITIES.athena
+              : IDENTITIES.didymaApollo,
         spec.cultStatue === "artemis"
           ? PAINT.artemisEphesia
           : spec.cultStatue === "zeus"
             ? PAINT.zeus
-            : PAINT.apollo,
+            : spec.cultStatue === "athena"
+              ? PAINT.athena
+              : PAINT.apollo,
       ),
       /*
        * Zeus stands in a real Roman scan of the bearded god of the type, and
@@ -5630,7 +5743,11 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
         ? { scan: { id: "neptune" as const } }
         : spec.cultStatue === "artemis"
           ? { scan: { id: "cybele" as const } }
-          : {}),
+          : spec.cultStatue === "athena"
+            ? { scan: { id: "celsus-sophia" as const } }
+            : spec.cultStatue === "apollo"
+              ? { scan: { id: "apollo-kitharoidos" as const } }
+              : {}),
     });
   } else {
     // The naiskos: a small temple standing alone in the open court, over the
@@ -6774,7 +6891,9 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
     for (let i = 0; i < 16; i += 1) {
       const z = -endCentre * 1.6 + (endCentre * 3.2 * i) / 15;
       const back = 44 + ridge() * 14;
-      ridge(); ridge(); ridge(); // (the cones' draws, so the rocks keep their places)
+      ridge();
+      ridge();
+      ridge(); // (the cones' draws, so the rocks keep their places)
       parts.push(
         scenery(
           worn(
@@ -7855,6 +7974,14 @@ function buildParts(spec: ModelSpec): Part[] {
       return cliffMonasteryParts(spec);
     case "lighthouse":
       return lighthouseParts(spec);
+    case "roman-gate":
+      return gateParts(spec);
+    case "prostyle-temple":
+      return prostyleParts(spec);
+    case "lycian-heroon":
+      return heroonParts(spec);
+    case "rock-tombs":
+      return rockTombParts(spec);
   }
 }
 
@@ -7892,9 +8019,15 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
     }
     case "ionic-dipteros":
       return {
-        at: [0, -spec.crepidomaLength / 2 - 6],
+        // Six metres before the front, or nearer where the altar stands close.
+        at: [
+          0,
+          -spec.crepidomaLength / 2 -
+            podiumStairRun(spec) -
+            Math.min(6, Math.min(17, spec.crepidomaWidth * 0.3) - 2.5),
+        ],
         floor: 0,
-        look: [0, spec.columnHeight * 0.45, -spec.crepidomaLength / 2],
+        look: [0, spec.columnHeight * 0.45, -spec.crepidomaLength / 2 + 2],
       };
     case "great-altar":
       return {
@@ -7951,6 +8084,14 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return monasteryWalkStart(spec);
     case "lighthouse":
       return lighthouseWalkStart(spec);
+    case "roman-gate":
+      return gateWalkStart(spec);
+    case "prostyle-temple":
+      return prostyleWalkStart(spec);
+    case "lycian-heroon":
+      return heroonWalkStart(spec);
+    case "rock-tombs":
+      return rockTombWalkStart(spec);
   }
 }
 

@@ -49,11 +49,15 @@ const EXPECTED: Record<string, { character: Soundscape["character"]; must: strin
   "terrace-villa": { character: "house", must: ["fountain", "market", "footsteps", "lyre"] },
   "cliff-monastery": { character: "mountain", must: ["birds", "fountain", "crow", "sheep"] },
   lighthouse: { character: "harbour", must: ["sea", "market", "saw", "fire"] },
+  "roman-gate": { character: "agora", must: ["market", "footsteps", "dog1"] },
+  "prostyle-temple": { character: "agora", must: ["market", "footsteps", "dog1"] },
+  "lycian-heroon": { character: "mountain", must: ["fire", "crow"] },
+  "rock-tombs": { character: "harbour", must: ["sea", "market"] },
 };
 
 describe("soundscapes", () => {
-  test("all twenty-four models have one", () => {
-    expect(reconstructions.length).toBe(24);
+  test("all thirty-four models have one", () => {
+    expect(reconstructions.length).toBe(34);
   });
 
   for (const item of reconstructions) {

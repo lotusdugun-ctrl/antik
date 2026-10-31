@@ -312,7 +312,17 @@
   "recon:sagalassos-antoninler-cesmesi",
   "recon:zeugma-villa",
   "recon:sumela-manastiri",
-  "recon:patara-deniz-feneri"
+  "recon:patara-deniz-feneri",
+  "recon:priene-athena-tapinagi",
+  "recon:termessos-tiyatrosu",
+  "recon:antalya-hadrianus-kapisi",
+  "recon:aphrodisias-tetrapylon",
+  "recon:efes-hadrianus-tapinagi",
+  "recon:pergamon-trajan-tapinagi",
+  "recon:side-apollon-tapinagi",
+  "recon:ksanthos-nereidler-aniti",
+  "recon:kaunos-kaya-mezarlari",
+  "recon:sardes-artemis-tapinagi"
  ],
  "items": [
   {
@@ -383,6 +393,16 @@
    "text": "Kuretler Caddesi, Efes'in ana caddesi. Celsus Kütüphanesi'nden tiyatroya doğru uzanıyor ve iki yanı anıtlar ve heykellerle süslü. Bu taşlara basarken, yüzyıllar önce aynı yoldan geçen kalabalıkları düşünün.",
    "speech": "Kuretler Caddesi, Efes'in ana caddesi. Celsus Kütüphanesi'nden tiyatroya doğru uzanıyor ve iki yanı anıtlar ve heykellerle süslü. Bu taşlara basarken, yüzyıllar önce aynı yoldan geçen kalabalıkları düşünün.",
    "hash": "9c2ede46",
+   "target": "app"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "tr",
+   "chapter": "structure-6",
+   "text": "Şimdi Hadrianus Tapınağı önündesiniz. Kuretler Caddesi'nde küçük bir tapınak: iki sütun ile iki payenin üstünde ortası Suriye kemeriyle yükselen bir cephe, kilit taşında Tykhe büstü; içeride Efes'in kuruluş efsanesini anlatan friz. P. Quintilius Valens Varius, Artemis'e, Hadrianus'a ve Efes halkına adadı.",
+   "speech": "Şimdi Hadrianus Tapınağı önündesiniz. Kuretler Caddesi'nde küçük bir tapınak: iki sütun ile iki payenin üstünde ortası Suriye kemeriyle yükselen bir cephe, kilit taşında Tykhe büstü; içeride Efes'in kuruluş efsanesini anlatan friz. P. Quintilius Valens Varius, Artemis'e, Hadrianus'a ve Efes halkına adadı.",
+   "hash": "72137c29",
    "target": "app"
   },
   {
@@ -479,6 +499,16 @@
    "key": "site:efes",
    "folder": "site-efes",
    "lang": "en",
+   "chapter": "structure-6",
+   "text": "You are now in front of the Temple of Hadrian. A small temple on Curetes Street: a front of two columns between two pillars rising in a Syrian arch, a bust of Tyche on its keystone; inside, a frieze of the founding of Ephesus. P. Quintilius Valens Varius dedicated it to Artemis, to Hadrian and to the people of Ephesus.",
+   "speech": "You are now in front of the Temple of Hadrian. A small temple on Curetes Street: a front of two columns between two pillars rising in a Syrian arch, a bust of Tyche on its keystone; inside, a frieze of the founding of Ephesus. P. Quintilius Valens Varius dedicated it to Artemis, to Hadrian and to the people of Ephesus.",
+   "hash": "6432f88d",
+   "target": "app"
+  },
+  {
+   "key": "site:efes",
+   "folder": "site-efes",
+   "lang": "en",
    "chapter": "facts",
    "text": "Did you know? The Temple of Artemis was one of the Seven Wonders; a single re-erected column remains today. The Great Theatre seated 24,000 people. According to Acts, the two-hour chant of 'Great is Artemis of the Ephesians!' against Saint Paul filled this very bowl. The Terrace Houses had underfloor and wall heating, enclosed drains and glazed windows — in the first century AD. And one last secret: Ephesus was a port. Silt from the Küçük Menderes filled the harbour, and today the sea lies 5 km from the ruins.",
    "speech": "Did you know? The Temple of Artemis was one of the Seven Wonders; a single re-erected column remains today. The Great Theatre seated 24,000 people. According to Acts, the two-hour chant of 'Great is Artemis of the Ephesians!' against Saint Paul filled this very bowl. The Terrace Houses had underfloor and wall heating, enclosed drains and glazed windows, in the first century AD. And one last secret: Ephesus was a port. Silt from the Küçük Menderes filled the harbour, and today the sea lies 5 kilometres from the ruins.",
@@ -494,186 +524,6 @@
    "speech": "This brings our journey through Ephesus to an end. Before you go, a small request: please leave the stones untouched, keep to the marked paths and carry water with you. These stones have waited for centuries; let them keep waiting for those who come after you. Enjoy your visit.",
    "hash": "2e042eba",
    "target": "app"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "intro",
-   "text": "Willkommen beim Audioguide für Ephesos in der Provinz İzmir. Epoche: 10. Jahrhundert v. Chr. Eine der am besten erhaltenen römischen Städte der Antike, berühmt für die Celsus-Bibliothek.",
-   "speech": "Willkommen beim Audioguide für Ephesos in der Provinz İzmir. Epoche: 10. Jahrhundert vor Christus Eine der am besten erhaltenen römischen Städte der Antike, berühmt für die Celsus-Bibliothek.",
-   "hash": "e3d99a23",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "history",
-   "text": "Von ionischen Siedlern gegründet, wuchs die Stadt rund um den Tempel der Artemis. Unter Rom wurde sie mit über 200.000 Einwohnern Hauptstadt der Provinz Asia und verlor dann an Bedeutung, als ihr Hafen verlandete.",
-   "speech": "Von ionischen Siedlern gegründet, wuchs die Stadt rund um den Tempel der Artemis. Unter Rom wurde sie mit über 200.000 Einwohnern Hauptstadt der Provinz Asia und verlor dann an Bedeutung, als ihr Hafen verlandete.",
-   "hash": "32f80c41",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "structure-1",
-   "text": "Celsus-Bibliothek. Die Marmorfront in Ephesos ist nicht die Fassade einer Bibliothek, sondern die eines Grabmals: Der Sarkophag des Celsus liegt noch immer in der Kammer unter der Apsis. Das Modell zeigt die 1970–78 wieder aufgerichtete Fassade in voller Höhe und die Halle dahinter nur so hoch, wie ihre Mauern erhalten sind.",
-   "speech": "Celsus-Bibliothek. Die Marmorfront in Ephesos ist nicht die Fassade einer Bibliothek, sondern die eines Grabmals: Der Sarkophag des Celsus liegt noch immer in der Kammer unter der Apsis. Das Modell zeigt die 1970 bis 1978 wieder aufgerichtete Fassade in voller Höhe und die Halle dahinter nur so hoch, wie ihre Mauern erhalten sind.",
-   "hash": "d6fd7106",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "structure-2",
-   "text": "Großes Theater. Eines der größten Theater der Antike: eine dreirangige Cavea, in den Hang des Berges Pion gehauen, die die Hafenstraße hinab auf ein römisches Bühnengebäude blickt. Hier spielt der Aufstand der Silberschmiede aus der Apostelgeschichte.",
-   "speech": "Großes Theater. Eines der größten Theater der Antike: eine dreirangige Cavea, in den Hang des Berges Pion gehauen, die die Hafenstraße hinab auf ein römisches Bühnengebäude blickt. Hier spielt der Aufstand der Silberschmiede aus der Apostelgeschichte.",
-   "hash": "35718695",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "structure-3",
-   "text": "Hanghäuser. Sechs Luxuswohnhäuser am Hang gegenüber der Kuretenstraße, ihre Böden mit Mosaiken, ihre Wände mit Fresken. Mit Fußbodenheizung, geschlossenen Abwasserkanälen und verglasten Fenstern sind sie der einzige Ort, der zeigt, wie das Haus eines reichen Römers im ersten Jahrhundert n. Chr. tatsächlich aussah. Das Modell zeigt das Innere einer Wohneinheit rund um ihren Säulenhof.",
-   "speech": "Hanghäuser. Sechs Luxuswohnhäuser am Hang gegenüber der Kuretenstraße, ihre Böden mit Mosaiken, ihre Wände mit Fresken. Mit Fußbodenheizung, geschlossenen Abwasserkanälen und verglasten Fenstern sind sie der einzige Ort, der zeigt, wie das Haus eines reichen Römers im ersten Jahrhundert nach Christus tatsächlich aussah. Das Modell zeigt das Innere einer Wohneinheit rund um ihren Säulenhof.",
-   "hash": "b76561dc",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "structure-4",
-   "text": "Tempel der Artemis. Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert v. Chr. neu errichtet wurde.",
-   "speech": "Tempel der Artemis. Eines der Sieben Weltwunder, von dem heute eine einzige, aus Fragmenten wieder aufgerichtete Säule steht: ein 137 Meter langer Wald aus Marmor, errichtet auf sumpfigem Boden. Laut Plinius waren 36 der Säulen am Fuß mit Reliefs verziert. Das Modell zeigt den dritten Tempel, der im 4. Jahrhundert vor Christus neu errichtet wurde.",
-   "hash": "56466541",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "structure-5",
-   "text": "Kuretenstraße. Die von Säulen gesäumte Hauptstraße, die die Celsus-Bibliothek mit dem Theater verbindet, gesäumt von Monumenten und Statuen.",
-   "speech": "Kuretenstraße. Die von Säulen gesäumte Hauptstraße, die die Celsus-Bibliothek mit dem Theater verbindet, gesäumt von Monumenten und Statuen.",
-   "hash": "a58ad49b",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "facts",
-   "text": "Wussten Sie schon? Der Tempel der Artemis war eines der Sieben Weltwunder; heute steht von ihm nur noch eine einzige, wieder aufgerichtete Säule. Das Große Theater bot 24.000 Menschen Platz. Laut der Apostelgeschichte erfüllte der zweistündige Ruf „Groß ist die Artemis der Epheser!“ gegen den Apostel Paulus dieses Rund. Die Hanghäuser hatten Fußboden- und Wandheizung, geschlossene Abwasserkanäle und verglaste Fenster – im ersten Jahrhundert n. Chr. Ephesos war eine Hafenstadt. Schlamm des Küçük Menderes füllte den Hafen, und heute liegt das Meer 5 km von den Ruinen entfernt.",
-   "speech": "Wussten Sie schon? Der Tempel der Artemis war eines der Sieben Weltwunder; heute steht von ihm nur noch eine einzige, wieder aufgerichtete Säule. Das Große Theater bot 24.000 Menschen Platz. Laut der Apostelgeschichte erfüllte der zweistündige Ruf „Groß ist die Artemis der Epheser!“ gegen den Apostel Paulus dieses Rund. Die Hanghäuser hatten Fußboden- und Wandheizung, geschlossene Abwasserkanäle und verglaste Fenster, im ersten Jahrhundert nach Christus Ephesos war eine Hafenstadt. Schlamm des Küçük Menderes füllte den Hafen, und heute liegt das Meer 5 Kilometer von den Ruinen entfernt.",
-   "hash": "e774bafd",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "de",
-   "chapter": "outro",
-   "text": "Damit endet unser Rundgang durch Ephesos. Bitte berühren Sie die Steine nicht, bleiben Sie auf den markierten Wegen und nehmen Sie Wasser mit. Viel Freude beim Besuch.",
-   "speech": "Damit endet unser Rundgang durch Ephesos. Bitte berühren Sie die Steine nicht, bleiben Sie auf den markierten Wegen und nehmen Sie Wasser mit. Viel Freude beim Besuch.",
-   "hash": "e05aabcc",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "intro",
-   "text": "Добро пожаловать в аудиогид: Эфес, провинция Измир. Период: X век до н. э. Один из наиболее сохранившихся римских городов античности, знаменитый библиотекой Цельса.",
-   "speech": "Добро пожаловать в аудиогид: Эфес, провинция Измир. Период: X век до нашей эры Один из наиболее сохранившихся римских городов античности, знаменитый библиотекой Цельса.",
-   "hash": "eae065b6",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "history",
-   "text": "Основанный ионийскими переселенцами, город вырос вокруг храма Артемиды. При римлянах он стал столицей провинции Азия с населением более 200 000 человек, а затем пришёл в упадок, когда его гавань занесло илом.",
-   "speech": "Основанный ионийскими переселенцами, город вырос вокруг храма Артемиды. При римлянах он стал столицей провинции Азия с населением более 200 000 человек, а затем пришёл в упадок, когда его гавань занесло илом.",
-   "hash": "479a4fa0",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "structure-1",
-   "text": "Библиотека Цельса. Мраморный фасад в Эфесе — это лицо не библиотеки, а гробницы: саркофаг Цельса до сих пор покоится в камере под апсидой. Модель показывает фасад, заново возведённый в 1970–78 годах, во всю высоту, а зал за ним — лишь на ту высоту, на которую сохранились его стены.",
-   "speech": "Библиотека Цельса. Мраморный фасад в Эфесе, это лицо не библиотеки, а гробницы: саркофаг Цельса до сих пор покоится в камере под апсидой. Модель показывает фасад, заново возведённый в 1970-1978 годах, во всю высоту, а зал за ним, лишь на ту высоту, на которую сохранились его стены.",
-   "hash": "dda60ccd",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "structure-2",
-   "text": "Большой театр. Один из крупнейших театров античности: трёхъярусная кавея, высеченная в склоне горы Пион, обращена вдоль Портовой улицы к римскому сценическому зданию. Именно здесь происходит бунт серебряных дел мастеров, описанный в Деяниях апостолов.",
-   "speech": "Большой театр. Один из крупнейших театров античности: трёхъярусная кавея, высеченная в склоне горы Пион, обращена вдоль Портовой улицы к римскому сценическому зданию. Именно здесь происходит бунт серебряных дел мастеров, описанный в Деяниях апостолов.",
-   "hash": "f7c267a2",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "structure-3",
-   "text": "Террасные дома. Шесть роскошных жилищ на склоне напротив улицы Куретов, с мозаичными полами и расписанными фресками стенами. С подпольным отоплением, закрытой канализацией и застеклёнными окнами они — единственное место, которое показывает, каким на самом деле был дом богатого римлянина в I веке н. э. Модель показывает интерьер одного из домов вокруг его двора с колоннадой.",
-   "speech": "Террасные дома. Шесть роскошных жилищ на склоне напротив улицы Куретов, с мозаичными полами и расписанными фресками стенами. С подпольным отоплением, закрытой канализацией и застеклёнными окнами они, единственное место, которое показывает, каким на самом деле был дом богатого римлянина в I веке нашей эры Модель показывает интерьер одного из домов вокруг его двора с колоннадой.",
-   "hash": "54c9a83a",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "structure-4",
-   "text": "Храм Артемиды. Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до н. э.",
-   "speech": "Храм Артемиды. Одно из семи чудес света, от которого сегодня стоит лишь одна колонна, вновь собранная из фрагментов: мраморный лес длиной 137 метров, возведённый на болотистой почве. По словам Плиния, 36 колонн были украшены рельефами у основания. Модель показывает третий храм, отстроенный заново в IV веке до нашей эры",
-   "hash": "2598b510",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "structure-5",
-   "text": "Улица Куретов. Главная улица с колоннадой, соединяющая библиотеку Цельса с театром, вдоль которой стоят памятники и статуи.",
-   "speech": "Улица Куретов. Главная улица с колоннадой, соединяющая библиотеку Цельса с театром, вдоль которой стоят памятники и статуи.",
-   "hash": "6bfd2207",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "facts",
-   "text": "А вы знали? Храм Артемиды был одним из семи чудес света; сегодня от него осталась лишь одна заново установленная колонна. Большой театр вмещал 24 000 зрителей. Согласно Деяниям апостолов, двухчасовой крик «Велика Артемида Ефесская!», направленный против святого Павла, наполнял эту чашу. В террасных домах были подпольное и настенное отопление, закрытая канализация и застеклённые окна — в I веке н. э. Эфес был портом. Наносы реки Кючюк-Мендерес заполнили гавань, и теперь море находится в 5 км от руин.",
-   "speech": "А вы знали? Храм Артемиды был одним из семи чудес света; сегодня от него осталась лишь одна заново установленная колонна. Большой театр вмещал 24 000 зрителей. Согласно Деяниям апостолов, двухчасовой крик «Велика Артемида Ефесская!», направленный против святого Павла, наполнял эту чашу. В террасных домах были подпольное и настенное отопление, закрытая канализация и застеклённые окна, в I веке нашей эры Эфес был портом. Наносы реки Кючюк-Мендерес заполнили гавань, и теперь море находится в 5 километров от руин.",
-   "hash": "dfdaeeb7",
-   "target": "remote"
-  },
-  {
-   "key": "site:efes",
-   "folder": "site-efes",
-   "lang": "ru",
-   "chapter": "outro",
-   "text": "На этом наша экскурсия заканчивается. Пожалуйста, не трогайте камни, держитесь отмеченных троп и берите с собой воду. Приятной прогулки.",
-   "speech": "На этом наша экскурсия заканчивается. Пожалуйста, не трогайте камни, держитесь отмеченных троп и берите с собой воду. Приятной прогулки.",
-   "hash": "eb0042a1",
-   "target": "remote"
   },
   {
    "key": "site:pergamon",
@@ -703,6 +553,16 @@
    "text": "Şimdi Zeus Sunağı'nın terasındasınız. Burası bir sunaktan çok bir sahneydi. Yapının çevresini 113 metrelik Gigantomakhia frizi dolaşıyordu: taştan bir savaş anlatısı. Peki o friz şimdi nerede? 1878-86 yıllarında sökülüp Berlin'e taşındı. Bugün Bergama'da ondan geriye yalnızca terası ve temeli kaldı. Bir an durun ve bu boşlukta yükselen sunağı hayal edin.",
    "speech": "Şimdi Zeus Sunağı'nın terasındasınız. Burası bir sunaktan çok bir sahneydi. Yapının çevresini 113 metrelik Gigantomakhia frizi dolaşıyordu: taştan bir savaş anlatısı. Peki o friz şimdi nerede? 1878 ile 1886 yıllarında sökülüp Berlin'e taşındı. Bugün Bergama'da ondan geriye yalnızca terası ve temeli kaldı. Bir an durun ve bu boşlukta yükselen sunağı hayal edin.",
    "hash": "febfbf8d",
+   "target": "app"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "tr",
+   "chapter": "structure-3",
+   "text": "Şimdi Trajan Tapınağı önündesiniz. Akropolün en yüksek noktasında, tonozlu bir terasın üstünde yüksek bir podyumda duran Korint düzeninde tapınak: Zeus Philios ile İmparator Trajan'ın ortak tapınağı. Beyaz mermer sütunları ovadan görünür.",
+   "speech": "Şimdi Trajan Tapınağı önündesiniz. Akropolün en yüksek noktasında, tonozlu bir terasın üstünde yüksek bir podyumda duran Korint düzeninde tapınak: Zeus Philios ile İmparator Trajan'ın ortak tapınağı. Beyaz mermer sütunları ovadan görünür.",
+   "hash": "e09ac91e",
    "target": "app"
   },
   {
@@ -779,6 +639,16 @@
    "key": "site:pergamon",
    "folder": "site-pergamon",
    "lang": "en",
+   "chapter": "structure-3",
+   "text": "You are now in front of the Temple of Trajan. A Corinthian temple on a tall podium over a vaulted terrace at the highest point of the acropolis: the shared temple of Zeus Philios and the emperor Trajan. Its white marble columns are seen from the plain.",
+   "speech": "You are now in front of the Temple of Trajan. A Corinthian temple on a tall podium over a vaulted terrace at the highest point of the acropolis: the shared temple of Zeus Philios and the emperor Trajan. Its white marble columns are seen from the plain.",
+   "hash": "4669874a",
+   "target": "app"
+  },
+  {
+   "key": "site:pergamon",
+   "folder": "site-pergamon",
+   "lang": "en",
    "chapter": "structure-5",
    "text": "Here stands the Red Basilica, the great brick complex of Pergamon. Step back and take in its scale, and imagine it in another age, when this was a sanctuary of the Egyptian gods.",
    "speech": "Here stands the Red Basilica, the great brick complex of Pergamon. Step back and take in its scale, and imagine it in another age, when this was a sanctuary of the Egyptian gods.",
@@ -816,146 +686,6 @@
    "target": "app"
   },
   {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "de",
-   "chapter": "intro",
-   "text": "Willkommen beim Audioguide für Pergamon in der Provinz İzmir. Epoche: 3. Jahrhundert v. Chr. Eine königliche Hauptstadt auf einer steilen Akropolis, Heimat des steilsten Theaters der antiken Welt.",
-   "speech": "Willkommen beim Audioguide für Pergamon in der Provinz İzmir. Epoche: 3. Jahrhundert vor Christus Eine königliche Hauptstadt auf einer steilen Akropolis, Heimat des steilsten Theaters der antiken Welt.",
-   "hash": "0717a167",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "de",
-   "chapter": "history",
-   "text": "Als Hauptstadt der Attaliden-Dynastie gab sie mit ihrer Bibliothek von 200.000 Schriftrollen dem Pergament seinen Namen. 133 v. Chr. an Rom vererbt, wurde sie für das Heilzentrum Asklepieion berühmt.",
-   "speech": "Als Hauptstadt der Attaliden-Dynastie gab sie mit ihrer Bibliothek von 200.000 Schriftrollen dem Pergament seinen Namen. 133 vor Christus an Rom vererbt, wurde sie für das Heilzentrum Asklepieion berühmt.",
-   "hash": "0e644db8",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "de",
-   "chapter": "structure-2",
-   "text": "Terrasse des Großen Altars. Weniger ein Altar als eine Bühne: Der 113 Meter lange Gigantomachie-Fries umhüllt den Bau mit einer in Stein erzählten Schlacht. Er wurde zwischen 1878 und 1886 abgebaut und nach Berlin verschifft; in Pergamon stehen heute nur noch die Terrasse und die Fundamente.",
-   "speech": "Terrasse des Großen Altars. Weniger ein Altar als eine Bühne: Der 113 Meter lange Gigantomachie-Fries umhüllt den Bau mit einer in Stein erzählten Schlacht. Er wurde zwischen 1878 und 1886 abgebaut und nach Berlin verschifft; in Pergamon stehen heute nur noch die Terrasse und die Fundamente.",
-   "hash": "f06317f8",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "de",
-   "chapter": "structure-5",
-   "text": "Rote Halle. Der große Ziegelkomplex in Pergamon, einst ein Heiligtum der ägyptischen Götter.",
-   "speech": "Rote Halle. Der große Ziegelkomplex in Pergamon, einst ein Heiligtum der ägyptischen Götter.",
-   "hash": "6d3a6d80",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "de",
-   "chapter": "highlights",
-   "text": "Verpassen Sie beim Rundgang nicht: Akropolis, Trajanstempel und Asklepieion.",
-   "speech": "Verpassen Sie beim Rundgang nicht: Akropolis, Trajanstempel und Asklepieion.",
-   "hash": "51ec3d9b",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "de",
-   "chapter": "facts",
-   "text": "Wussten Sie schon? Das Wort „Pergament“ stammt von Pergamon: Als Ägypten die Papyruslieferungen einstellte, perfektionierte die Stadt die Verarbeitung von Tierhäuten. Das Theater der Akropolis ist das steilste der antiken Welt: 80 Reihen, fast wie eine Klippe geneigt, mit Platz für 10.000 Menschen. Im Asklepieion bestand die Behandlung aus Traumdeutung, Wasserkuren und Theater. Der Arzt Galen wurde hier ausgebildet. Der Große Altar wurde zwischen 1878 und 1886 abgebaut und nach Berlin verschifft; nach ihm ist das Pergamonmuseum benannt.",
-   "speech": "Wussten Sie schon? Das Wort „Pergament“ stammt von Pergamon: Als Ägypten die Papyruslieferungen einstellte, perfektionierte die Stadt die Verarbeitung von Tierhäuten. Das Theater der Akropolis ist das steilste der antiken Welt: 80 Reihen, fast wie eine Klippe geneigt, mit Platz für 10.000 Menschen. Im Asklepieion bestand die Behandlung aus Traumdeutung, Wasserkuren und Theater. Der Arzt Galen wurde hier ausgebildet. Der Große Altar wurde zwischen 1878 und 1886 abgebaut und nach Berlin verschifft; nach ihm ist das Pergamonmuseum benannt.",
-   "hash": "cab43f3a",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "de",
-   "chapter": "outro",
-   "text": "Damit endet unser Rundgang durch Pergamon. Bitte berühren Sie die Steine nicht, bleiben Sie auf den markierten Wegen und nehmen Sie Wasser mit. Viel Freude beim Besuch.",
-   "speech": "Damit endet unser Rundgang durch Pergamon. Bitte berühren Sie die Steine nicht, bleiben Sie auf den markierten Wegen und nehmen Sie Wasser mit. Viel Freude beim Besuch.",
-   "hash": "444640c0",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "ru",
-   "chapter": "intro",
-   "text": "Добро пожаловать в аудиогид: Пергам, провинция Измир. Период: III век до н. э. Царская столица на крутом акрополе, где находится самый крутой театр античного мира.",
-   "speech": "Добро пожаловать в аудиогид: Пергам, провинция Измир. Период: III век до нашей эры Царская столица на крутом акрополе, где находится самый крутой театр античного мира.",
-   "hash": "93645b64",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "ru",
-   "chapter": "history",
-   "text": "Столица династии Атталидов, чья библиотека в 200 000 свитков дала название пергаменту. Завещанный Риму в 133 году до н. э., город прославился лечебным центром Асклепион.",
-   "speech": "Столица династии Атталидов, чья библиотека в 200 000 свитков дала название пергаменту. Завещанный Риму в 133 году до нашей эры, город прославился лечебным центром Асклепион.",
-   "hash": "ae53ed86",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "ru",
-   "chapter": "structure-2",
-   "text": "Терраса Большого алтаря. Не столько алтарь, сколько сцена: 113-метровый фриз Гигантомахии опоясывает здание битвой, рассказанной в камне. Его разобрали и вывезли в Берлин между 1878 и 1886 годами; в Пергаме сегодня остались лишь терраса и фундамент.",
-   "speech": "Терраса Большого алтаря. Не столько алтарь, сколько сцена: 113-метровый фриз Гигантомахии опоясывает здание битвой, рассказанной в камне. Его разобрали и вывезли в Берлин между 1878 и 1886 годами; в Пергаме сегодня остались лишь терраса и фундамент.",
-   "hash": "0f0df479",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "ru",
-   "chapter": "structure-5",
-   "text": "Красная базилика. Большой кирпичный комплекс в Пергаме, некогда святилище египетских богов.",
-   "speech": "Красная базилика. Большой кирпичный комплекс в Пергаме, некогда святилище египетских богов.",
-   "hash": "85fe2a1b",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "ru",
-   "chapter": "highlights",
-   "text": "Во время прогулки не пропустите: Акрополь, Храм Траяна и Асклепион.",
-   "speech": "Во время прогулки не пропустите: Акрополь, Храм Траяна и Асклепион.",
-   "hash": "60e437ec",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "ru",
-   "chapter": "facts",
-   "text": "А вы знали? Слово «пергамент» происходит от Пергама: когда Египет прекратил поставки папируса, город довёл до совершенства выделку кож. Театр акрополя — самый крутой в античном мире: 80 рядов с наклоном почти как у утёса, на 10 000 зрителей. В Асклепионе лечение состояло из толкования снов, водолечения и театра. Здесь учился врач Гален. Большой алтарь был разобран и вывезен в Берлин между 1878 и 1886 годами; именно в его честь назван Пергамский музей.",
-   "speech": "А вы знали? Слово «пергамент» происходит от Пергама: когда Египет прекратил поставки папируса, город довёл до совершенства выделку кож. Театр акрополя, самый крутой в античном мире: 80 рядов с наклоном почти как у утёса, на 10 000 зрителей. В Асклепионе лечение состояло из толкования снов, водолечения и театра. Здесь учился врач Гален. Большой алтарь был разобран и вывезен в Берлин между 1878 и 1886 годами; именно в его честь назван Пергамский музей.",
-   "hash": "c2757a50",
-   "target": "remote"
-  },
-  {
-   "key": "site:pergamon",
-   "folder": "site-pergamon",
-   "lang": "ru",
-   "chapter": "outro",
-   "text": "На этом наша экскурсия заканчивается. Пожалуйста, не трогайте камни, держитесь отмеченных троп и берите с собой воду. Приятной прогулки.",
-   "speech": "На этом наша экскурсия заканчивается. Пожалуйста, не трогайте камни, держитесь отмеченных троп и берите с собой воду. Приятной прогулки.",
-   "hash": "eb0042a1",
-   "target": "remote"
-  },
-  {
    "key": "site:aphrodisias",
    "folder": "site-aphrodisias",
    "lang": "tr",
@@ -983,6 +713,16 @@
    "text": "Şimdi stadyumdasınız. Antik dünyanın en iyi korunmuş stadyumu burası. İki ucu da hâlâ ayakta ve otuz sıra oturma basamağı çepeçevre dolanıyor. Kentin surlarının içinde, kuzey kenarına gömülü duruyor. Basamaklara bakın ve onları dolduran kalabalığın sesini hayal edin.",
    "speech": "Şimdi stadyumdasınız. Antik dünyanın en iyi korunmuş stadyumu burası. İki ucu da hâlâ ayakta ve otuz sıra oturma basamağı çepeçevre dolanıyor. Kentin surlarının içinde, kuzey kenarına gömülü duruyor. Basamaklara bakın ve onları dolduran kalabalığın sesini hayal edin.",
    "hash": "555d93c8",
+   "target": "app"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "tr",
+   "chapter": "structure-3",
+   "text": "Şimdi Tetrapylon önündesiniz. Ana caddeden Aphrodite kutsal alanının ön avlusuna açılan anıtsal kapı: dörde dört sütun, iki cephede ortası kemerle yükselen alınlıklar. Heykeltıraşlarıyla ünlü kentin en çok fotoğraflanan yapısı.",
+   "speech": "Şimdi Tetrapylon önündesiniz. Ana caddeden Aphrodite kutsal alanının ön avlusuna açılan anıtsal kapı: dörde dört sütun, iki cephede ortası kemerle yükselen alınlıklar. Heykeltıraşlarıyla ünlü kentin en çok fotoğraflanan yapısı.",
+   "hash": "41fe2cf4",
    "target": "app"
   },
   {
@@ -1049,6 +789,16 @@
    "key": "site:aphrodisias",
    "folder": "site-aphrodisias",
    "lang": "en",
+   "chapter": "structure-3",
+   "text": "You are now in front of the Tetrapylon. The monumental gateway from the main street into the forecourt of the sanctuary of Aphrodite: four rows of four columns, and on both fronts a pediment rising in an arch over the middle. The most photographed building of a city famous for its sculptors.",
+   "speech": "You are now in front of the Tetrapylon. The monumental gateway from the main street into the forecourt of the sanctuary of Aphrodite: four rows of four columns, and on both fronts a pediment rising in an arch over the middle. The most photographed building of a city famous for its sculptors.",
+   "hash": "8fed6c9f",
+   "target": "app"
+  },
+  {
+   "key": "site:aphrodisias",
+   "folder": "site-aphrodisias",
+   "lang": "en",
    "chapter": "highlights",
    "text": "As you wander, don't miss the Temple of Aphrodite and the Tetrapylon, then the Sebasteion and the sculpture workshops where this city's fame was carved.",
    "speech": "As you wander, don't miss the Temple of Aphrodite and the Tetrapylon, then the Sebasteion and the sculpture workshops where this city's fame was carved.",
@@ -1074,126 +824,6 @@
    "speech": "This brings our journey through Aphrodisias to an end. Please leave the stones untouched, keep to the marked paths and carry water with you. This marble has outlived its sculptors by centuries; let it outlive us too. Enjoy your visit.",
    "hash": "9475e69e",
    "target": "app"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "de",
-   "chapter": "intro",
-   "text": "Willkommen beim Audioguide für Aphrodisias in der Provinz Aydın. Epoche: 2. Jahrhundert v. Chr. Eine römische Stadt neben ihren eigenen Marmorbrüchen, berühmt für ihre Bildhauerschule.",
-   "speech": "Willkommen beim Audioguide für Aphrodisias in der Provinz Aydın. Epoche: 2. Jahrhundert vor Christus Eine römische Stadt neben ihren eigenen Marmorbrüchen, berühmt für ihre Bildhauerschule.",
-   "hash": "608dd42a",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "de",
-   "chapter": "history",
-   "text": "Um den Kult der Aphrodite gewachsen, erhielt die Stadt für ihre Treue zu Rom Steuerfreiheit. Ihre Bildhauer, die den einheimischen Marmor bearbeiteten, lieferten Statuen in das ganze Reich.",
-   "speech": "Um den Kult der Aphrodite gewachsen, erhielt die Stadt für ihre Treue zu Rom Steuerfreiheit. Ihre Bildhauer, die den einheimischen Marmor bearbeiteten, lieferten Statuen in das ganze Reich.",
-   "hash": "cbaca03c",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "de",
-   "chapter": "structure-1",
-   "text": "Stadion. Das am besten erhaltene Stadion der antiken Welt: Beide Enden stehen noch, dreißig Sitzreihen laufen ringsum. Es liegt innerhalb der Stadtmauern, eng an ihren Nordrand geschmiegt.",
-   "speech": "Stadion. Das am besten erhaltene Stadion der antiken Welt: Beide Enden stehen noch, dreißig Sitzreihen laufen ringsum. Es liegt innerhalb der Stadtmauern, eng an ihren Nordrand geschmiegt.",
-   "hash": "d13148cd",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "de",
-   "chapter": "highlights",
-   "text": "Verpassen Sie beim Rundgang nicht: Tempel der Aphrodite, Tetrapylon, Sebasteion und Bildhauerwerkstätten.",
-   "speech": "Verpassen Sie beim Rundgang nicht: Tempel der Aphrodite, Tetrapylon, Sebasteion und Bildhauerwerkstätten.",
-   "hash": "c6f64cf3",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "de",
-   "chapter": "facts",
-   "text": "Wussten Sie schon? Sein Stadion mit 30.000 Plätzen ist das am besten erhaltene Stadion, das aus der Antike überdauert hat. Beide gerundeten Enden des Stadions stehen noch. Die Reliefs des Sebasteion zeigen römische Kaiser neben Göttern – das vollständigste erhaltene Programm kaiserlicher Propaganda in Stein. Der Marmorbruch lag zwei Kilometer entfernt. Signaturen von Bildhauern aus Aphrodisias tauchen von Rom bis Nordafrika auf.",
-   "speech": "Wussten Sie schon? Sein Stadion mit 30.000 Plätzen ist das am besten erhaltene Stadion, das aus der Antike überdauert hat. Beide gerundeten Enden des Stadions stehen noch. Die Reliefs des Sebasteion zeigen römische Kaiser neben Göttern, das vollständigste erhaltene Programm kaiserlicher Propaganda in Stein. Der Marmorbruch lag zwei Kilometer entfernt. Signaturen von Bildhauern aus Aphrodisias tauchen von Rom bis Nordafrika auf.",
-   "hash": "8307e66d",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "de",
-   "chapter": "outro",
-   "text": "Damit endet unser Rundgang durch Aphrodisias. Bitte berühren Sie die Steine nicht, bleiben Sie auf den markierten Wegen und nehmen Sie Wasser mit. Viel Freude beim Besuch.",
-   "speech": "Damit endet unser Rundgang durch Aphrodisias. Bitte berühren Sie die Steine nicht, bleiben Sie auf den markierten Wegen und nehmen Sie Wasser mit. Viel Freude beim Besuch.",
-   "hash": "1be6780a",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "ru",
-   "chapter": "intro",
-   "text": "Добро пожаловать в аудиогид: Афродисиас, провинция Айдын. Период: II век до н. э. Римский город рядом с собственными мраморными каменоломнями, знаменитый своей школой скульптуры.",
-   "speech": "Добро пожаловать в аудиогид: Афродисиас, провинция Айдын. Период: II век до нашей эры Римский город рядом с собственными мраморными каменоломнями, знаменитый своей школой скульптуры.",
-   "hash": "e1ff430b",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "ru",
-   "chapter": "history",
-   "text": "Выросший вокруг культа Афродиты, город получил освобождение от налогов за верность Риму. Его скульпторы, работавшие с местным мрамором, поставляли статуи по всей империи.",
-   "speech": "Выросший вокруг культа Афродиты, город получил освобождение от налогов за верность Риму. Его скульпторы, работавшие с местным мрамором, поставляли статуи по всей империи.",
-   "hash": "764bf26d",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "ru",
-   "chapter": "structure-1",
-   "text": "Стадион. Наиболее сохранившийся стадион античного мира: оба его торца всё ещё стоят, тридцать рядов сидений тянутся по всему кругу. Он расположен внутри городских стен, вплотную к их северному краю.",
-   "speech": "Стадион. Наиболее сохранившийся стадион античного мира: оба его торца всё ещё стоят, тридцать рядов сидений тянутся по всему кругу. Он расположен внутри городских стен, вплотную к их северному краю.",
-   "hash": "f0db6ffb",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "ru",
-   "chapter": "highlights",
-   "text": "Во время прогулки не пропустите: Храм Афродиты, Тетрапилон, Себастейон и Скульптурные мастерские.",
-   "speech": "Во время прогулки не пропустите: Храм Афродиты, Тетрапилон, Себастейон и Скульптурные мастерские.",
-   "hash": "cfa74961",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "ru",
-   "chapter": "facts",
-   "text": "А вы знали? Его стадион на 30 000 мест — наиболее сохранившийся из дошедших до нас стадионов античности. Оба закруглённых торца стадиона всё ещё стоят. Рельефы Себастейона изображают римских императоров рядом с богами — это наиболее полная из сохранившихся программ императорской пропаганды, высеченная в камне. Мраморная каменоломня находилась в двух километрах. Подписи скульпторов из Афродисиаса встречаются от Рима до Северной Африки.",
-   "speech": "А вы знали? Его стадион на 30 000 мест, наиболее сохранившийся из дошедших до нас стадионов античности. Оба закруглённых торца стадиона всё ещё стоят. Рельефы Себастейона изображают римских императоров рядом с богами, это наиболее полная из сохранившихся программ императорской пропаганды, высеченная в камне. Мраморная каменоломня находилась в двух километрах. Подписи скульпторов из Афродисиаса встречаются от Рима до Северной Африки.",
-   "hash": "4be690d6",
-   "target": "remote"
-  },
-  {
-   "key": "site:aphrodisias",
-   "folder": "site-aphrodisias",
-   "lang": "ru",
-   "chapter": "outro",
-   "text": "На этом наша экскурсия заканчивается. Пожалуйста, не трогайте камни, держитесь отмеченных троп и берите с собой воду. Приятной прогулки.",
-   "speech": "На этом наша экскурсия заканчивается. Пожалуйста, не трогайте камни, держитесь отмеченных троп и берите с собой воду. Приятной прогулки.",
-   "hash": "eb0042a1",
-   "target": "remote"
   },
   {
    "key": "site:hierapolis",
@@ -1719,6 +1349,16 @@
    "key": "site:priene",
    "folder": "site-priene",
    "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Şimdi Athena Tapınağı önündesiniz. İon düzeninin örnek tapınağı: Halikarnas Mozolesi'nin mimarı Pytheos'un altıya on bir sütunlu peripterosu. Büyük İskender MÖ 334'te tapınağı Athena'ya adadı; adak yazıtı bugün British Museum'dadır.",
+   "speech": "Şimdi Athena Tapınağı önündesiniz. İon düzeninin örnek tapınağı: Halikarnas Mozolesi'nin mimarı Pytheos'un altıya on bir sütunlu peripterosu. Büyük İskender milattan önce 334'te tapınağı Athena'ya adadı; adak yazıtı bugün British Museum'dadır.",
+   "hash": "698d36e0",
+   "target": "remote"
+  },
+  {
+   "key": "site:priene",
+   "folder": "site-priene",
+   "lang": "tr",
    "chapter": "highlights",
    "text": "Gezerken Athena Tapınağı'nı, Bouleuterion'u, tiyatroyu ve Ekklesiasterion'u mutlaka görün.",
    "speech": "Gezerken Athena Tapınağı'nı, Bouleuterion'u, tiyatroyu ve Ekklesiasterion'u mutlaka görün.",
@@ -1763,6 +1403,16 @@
    "text": "Priene was refounded in the Hellenistic period. Because it escaped major Roman rebuilding, what you see here is the purest surviving example of classical town planning.",
    "speech": "Priene was refounded in the Hellenistic period. Because it escaped major Roman rebuilding, what you see here is the purest surviving example of classical town planning.",
    "hash": "e34b41e5",
+   "target": "remote"
+  },
+  {
+   "key": "site:priene",
+   "folder": "site-priene",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "You are now in front of the Temple of Athena. The model Ionic temple: a peripteros of six by eleven columns by Pytheos, the architect of the Mausoleum. Alexander the Great dedicated it to Athena in 334 BC; his dedication is now in the British Museum.",
+   "speech": "You are now in front of the Temple of Athena. The model Ionic temple: a peripteros of six by eleven columns by Pytheos, the architect of the Mausoleum. Alexander the Great dedicated it to Athena in 334 BC; his dedication is now in the British Museum.",
+   "hash": "2a5de6c3",
    "target": "remote"
   },
   {
@@ -1819,6 +1469,16 @@
    "key": "site:sardes",
    "folder": "site-sardes",
    "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Şimdi Artemis Tapınağı önündesiniz. Efes ve Didyma'nınkilerle yarışmak için başlanan ama hiç bitirilemeyen dev bir İon tapınağı. Roma döneminde cellası ikiye bölündü; batı yarısı imparator kültüne verildi ve buraya Faustina'nın dev heykeli kondu.",
+   "speech": "Şimdi Artemis Tapınağı önündesiniz. Efes ve Didyma'nınkilerle yarışmak için başlanan ama hiç bitirilemeyen dev bir İon tapınağı. Roma döneminde cellası ikiye bölündü; batı yarısı imparator kültüne verildi ve buraya Faustina'nın dev heykeli kondu.",
+   "hash": "3d92a8c1",
+   "target": "remote"
+  },
+  {
+   "key": "site:sardes",
+   "folder": "site-sardes",
+   "lang": "tr",
    "chapter": "highlights",
    "text": "Gezerken Artemis Tapınağı'nı, gymnasium'u, sinagogu ve sikke atölyesini mutlaka görün. Bin Tepe tümülüslerini de unutmayın.",
    "speech": "Gezerken Artemis Tapınağı'nı, gymnasium'u, sinagogu ve sikke atölyesini mutlaka görün. Bin Tepe tümülüslerini de unutmayın.",
@@ -1863,6 +1523,16 @@
    "text": "Sardis was famed for the wealth of King Croesus. It was the western terminus of the Persian Royal Road, and it was later revived by Rome, with a huge synagogue and gymnasium.",
    "speech": "Sardis was famed for the wealth of King Croesus. It was the western terminus of the Persian Royal Road, and it was later revived by Rome, with a huge synagogue and gymnasium.",
    "hash": "9809fd72",
+   "target": "remote"
+  },
+  {
+   "key": "site:sardes",
+   "folder": "site-sardes",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "You are now in front of the Temple of Artemis. A colossal Ionic temple begun to rival those of Ephesus and Didyma and never finished. Under Rome its cella was split in two; the west half was given to the cult of the emperors, and Faustina's colossal statue set up in it.",
+   "speech": "You are now in front of the Temple of Artemis. A colossal Ionic temple begun to rival those of Ephesus and Didyma and never finished. Under Rome its cella was split in two; the west half was given to the cult of the emperors, and Faustina's colossal statue set up in it.",
+   "hash": "540c5098",
    "target": "remote"
   },
   {
@@ -2959,6 +2629,16 @@
    "key": "site:xanthos",
    "folder": "site-xanthos",
    "lang": "tr",
+   "chapter": "structure-2",
+   "text": "Şimdi Nereidler Anıtı önündesiniz. Likya hanedanı Arbinas'ın mezarı: yüksek bir podyumun üstünde dörde altı sütunlu küçük bir İon tapınağı, sütunlarının arasında denizin üstünden koşan Nereidler. Kalıntıları bugün British Museum'dadır.",
+   "speech": "Şimdi Nereidler Anıtı önündesiniz. Likya hanedanı Arbinas'ın mezarı: yüksek bir podyumun üstünde dörde altı sütunlu küçük bir İon tapınağı, sütunlarının arasında denizin üstünden koşan Nereidler. Kalıntıları bugün British Museum'dadır.",
+   "hash": "4fef9df5",
+   "target": "remote"
+  },
+  {
+   "key": "site:xanthos",
+   "folder": "site-xanthos",
+   "lang": "tr",
    "chapter": "highlights",
    "text": "Gezerken Harpy Anıtı'nın ve Nereidler Anıtı'nın önünde durun, Likya lahitlerinin arasında yürüyün. Tiyatroya ve Letoon kutsal alanına da mutlaka uğrayın.",
    "speech": "Gezerken Harpy Anıtı'nın ve Nereidler Anıtı'nın önünde durun, Likya lahitlerinin arasında yürüyün. Tiyatroya ve Letoon kutsal alanına da mutlaka uğrayın.",
@@ -3003,6 +2683,16 @@
    "text": "Xanthos has a proud and painful past: twice in its history, the city chose self-immolation over surrender. It also gave us the richest collection of Lycian inscriptions known.",
    "speech": "Xanthos has a proud and painful past: twice in its history, the city chose self-immolation over surrender. It also gave us the richest collection of Lycian inscriptions known.",
    "hash": "d8fa1aa1",
+   "target": "remote"
+  },
+  {
+   "key": "site:xanthos",
+   "folder": "site-xanthos",
+   "lang": "en",
+   "chapter": "structure-2",
+   "text": "You are now in front of the Nereid Monument. The tomb of the Lycian dynast Arbinas: a small Ionic temple of four by six columns on a tall podium, the Nereids running over the sea between its columns. Its remains are in the British Museum.",
+   "speech": "You are now in front of the Nereid Monument. The tomb of the Lycian dynast Arbinas: a small Ionic temple of four by six columns on a tall podium, the Nereids running over the sea between its columns. Its remains are in the British Museum.",
+   "hash": "9c03c408",
    "target": "remote"
   },
   {
@@ -3799,6 +3489,16 @@
    "key": "site:side",
    "folder": "site-side",
    "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Şimdi Apollon Tapınağı önündesiniz. Yarımadanın ucunda, denizin kıyısında Korint düzeninde bir tapınak; Antoninus Pius döneminde yapıldı. Ayağa kaldırılan beş sütunu gün batımında Side'nin simgesidir.",
+   "speech": "Şimdi Apollon Tapınağı önündesiniz. Yarımadanın ucunda, denizin kıyısında Korint düzeninde bir tapınak; Antoninus Pius döneminde yapıldı. Ayağa kaldırılan beş sütunu gün batımında Side'nin simgesidir.",
+   "hash": "e5411aab",
+   "target": "remote"
+  },
+  {
+   "key": "site:side",
+   "folder": "site-side",
+   "lang": "tr",
    "chapter": "structure-2",
    "text": "Şimdi Tiyatro'nun önündesiniz, Pamphylia'nın en büyük tiyatrosu. Dikkatinizi çeken bir şey var mı? Bu tiyatro bir yamaca yaslanmıyor; düz zemine kurulmuş nadir örneklerden biri. Oturma basamaklarının yer aldığı cavea, iki katlı tonozlu bir alt yapının üzerinde yükseliyor. Üç katlı sahne binası ise kentin sütunlu caddesine cephe veriyordu.",
    "speech": "Şimdi Tiyatro'nun önündesiniz, Pamphylia'nın en büyük tiyatrosu. Dikkatinizi çeken bir şey var mı? Bu tiyatro bir yamaca yaslanmıyor; düz zemine kurulmuş nadir örneklerden biri. Oturma basamaklarının yer aldığı cavea, iki katlı tonozlu bir alt yapının üzerinde yükseliyor. Üç katlı sahne binası ise kentin sütunlu caddesine cephe veriyordu.",
@@ -3873,6 +3573,16 @@
    "text": "Side was a port, and a busy one: a major centre of the slave trade, with a language all its own. It grew into one of the largest cities of Pamphylia, and its theatre could seat 15,000 people. Imagine the noise of the harbour and the crowds that filled those seats.",
    "speech": "Side was a port, and a busy one: a major centre of the slave trade, with a language all its own. It grew into one of the largest cities of Pamphylia, and its theatre could seat 15,000 people. Imagine the noise of the harbour and the crowds that filled those seats.",
    "hash": "05ab0c70",
+   "target": "remote"
+  },
+  {
+   "key": "site:side",
+   "folder": "site-side",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "You are now in front of the Temple of Apollo. A Corinthian temple at the tip of the peninsula, on the edge of the sea, built under Antoninus Pius. Its five re-erected columns at sunset are the emblem of Side.",
+   "speech": "You are now in front of the Temple of Apollo. A Corinthian temple at the tip of the peninsula, on the edge of the sea, built under Antoninus Pius. Its five re-erected columns at sunset are the emblem of Side.",
+   "hash": "7295badb",
    "target": "remote"
   },
   {
@@ -3959,6 +3669,16 @@
    "key": "site:termessos",
    "folder": "site-termessos",
    "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Şimdi Tiyatro önündesiniz. Toros'larda bin metre yükseklikte, Pamfilya ovasına bakan bir Hellenistik tiyatro; Roma döneminde sahne binası büyütülüp beş kapılı bir cephe kazandı. Arkasında Güllük Dağı, önünde uçurum.",
+   "speech": "Şimdi Tiyatro önündesiniz. Toros'larda bin metre yükseklikte, Pamfilya ovasına bakan bir Hellenistik tiyatro; Roma döneminde sahne binası büyütülüp beş kapılı bir cephe kazandı. Arkasında Güllük Dağı, önünde uçurum.",
+   "hash": "cf0ba665",
+   "target": "remote"
+  },
+  {
+   "key": "site:termessos",
+   "folder": "site-termessos",
+   "lang": "tr",
    "chapter": "highlights",
    "text": "Gezerken tiyatroda soluklanın, gymnasiumu ve sarnıçları görün. Nekropolde dolaşın ve Kral Yolu'nda yürümeyi unutmayın.",
    "speech": "Gezerken tiyatroda soluklanın, gymnasiumu ve sarnıçları görün. Nekropolde dolaşın ve Kral Yolu'nda yürümeyi unutmayın.",
@@ -4003,6 +3723,16 @@
    "text": "The Pisidians founded Termessos, and its natural defences kept invaders out. Yet what armies could not do, an earthquake did: it wrecked the city's water system, the city was abandoned, and the forest slowly swallowed it.",
    "speech": "The Pisidians founded Termessos, and its natural defences kept invaders out. Yet what armies could not do, an earthquake did: it wrecked the city's water system, the city was abandoned, and the forest slowly swallowed it.",
    "hash": "e6e6a56f",
+   "target": "remote"
+  },
+  {
+   "key": "site:termessos",
+   "folder": "site-termessos",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "You are now in front of the Theatre. A Hellenistic theatre a thousand metres up in the Taurus, looking out over the Pamphylian plain; under Rome its stage building grew and took a front of five doors. Mount Güllük behind it, the drop before it.",
+   "speech": "You are now in front of the Theatre. A Hellenistic theatre a thousand metres up in the Taurus, looking out over the Pamphylian plain; under Rome its stage building grew and took a front of five doors. Mount Güllük behind it, the drop before it.",
+   "hash": "98557e51",
    "target": "remote"
   },
   {
@@ -13019,6 +12749,16 @@
    "key": "site:kaunos",
    "folder": "site-kaunos",
    "lang": "tr",
+   "chapter": "structure-2",
+   "text": "Şimdi Kaya Mezarları önündesiniz. Dalyan çayının üstündeki kayalığa oyulmuş altı mezar: her birinin cephesi iki İon sütunlu, alınlıklı bir Hellenistik tapınak gibidir. Karia ile Likya'nın sınırındaki ırmaktan, kayıklardan seyredilirdi.",
+   "speech": "Şimdi Kaya Mezarları önündesiniz. Dalyan çayının üstündeki kayalığa oyulmuş altı mezar: her birinin cephesi iki İon sütunlu, alınlıklı bir Hellenistik tapınak gibidir. Karia ile Likya'nın sınırındaki ırmaktan, kayıklardan seyredilirdi.",
+   "hash": "216fef9d",
+   "target": "remote"
+  },
+  {
+   "key": "site:kaunos",
+   "folder": "site-kaunos",
+   "lang": "tr",
    "chapter": "highlights",
    "text": "Kentte dolaşırken şunları mutlaka görün: Tiyatro'nun basamaklarına çıkın, Kaya Mezarları'na bakın ve Agora'dan geçin. Roma Hamamı'nı ve Bizans Kilisesi'ni de kaçırmayın.",
    "speech": "Kentte dolaşırken şunları mutlaka görün: Tiyatro'nun basamaklarına çıkın, Kaya Mezarları'na bakın ve Agora'dan geçin. Roma Hamamı'nı ve Bizans Kilisesi'ni de kaçırmayın.",
@@ -13063,6 +12803,16 @@
    "text": "Kaunos was founded in the 10th century BC and grew into an important trading city with two harbours. The Persians, Rhodes and Rome ruled it in turn. But the Dalyan river silted up, filling its harbours and cutting it off from the sea. The final blow was a malaria epidemic, which led to its abandonment in the 15th century AD.",
    "speech": "Kaunos was founded in the 10th century BC and grew into an important trading city with two harbours. The Persians, Rhodes and Rome ruled it in turn. But the Dalyan river silted up, filling its harbours and cutting it off from the sea. The final blow was a malaria epidemic, which led to its abandonment in the 15th century AD.",
    "hash": "567e0eef",
+   "target": "remote"
+  },
+  {
+   "key": "site:kaunos",
+   "folder": "site-kaunos",
+   "lang": "en",
+   "chapter": "structure-2",
+   "text": "You are now in front of the Rock-cut Tombs. Six tombs cut into the cliff over the Dalyan river, each front carved as a Hellenistic temple with two Ionic columns and a pediment. They were seen from the river on the border of Caria and Lycia, and from the boats on it.",
+   "speech": "You are now in front of the Rock-cut Tombs. Six tombs cut into the cliff over the Dalyan river, each front carved as a Hellenistic temple with two Ionic columns and a pediment. They were seen from the river on the border of Caria and Lycia, and from the boats on it.",
+   "hash": "00b4078b",
    "target": "remote"
   },
   {
@@ -27519,6 +27269,16 @@
    "key": "site:antalya-kaleici",
    "folder": "site-antalya-kaleici",
    "lang": "tr",
+   "chapter": "structure-1",
+   "text": "Şimdi Hadrianus Kapısı önündesiniz. İmparator Hadrianus'un Attaleia'ya gelişi için yapılan üç kemerli şehir kapısı: dört payenin önünde granit gövdeli, kompozit başlıklı sütunlar, iki yanında kuleler. Üst katı kaybolmuştur.",
+   "speech": "Şimdi Hadrianus Kapısı önündesiniz. İmparator Hadrianus'un Attaleia'ya gelişi için yapılan üç kemerli şehir kapısı: dört payenin önünde granit gövdeli, kompozit başlıklı sütunlar, iki yanında kuleler. Üst katı kaybolmuştur.",
+   "hash": "a7aaa2a8",
+   "target": "remote"
+  },
+  {
+   "key": "site:antalya-kaleici",
+   "folder": "site-antalya-kaleici",
+   "lang": "tr",
    "chapter": "highlights",
    "text": "Gezerken Hadrianus Kapısı'nı, Yivli Minare'yi ve Kesik Minare'yi mutlaka görün; Roma limanına ve surlara uğramadan da ayrılmayın.",
    "speech": "Gezerken Hadrianus Kapısı'nı, Yivli Minare'yi ve Kesik Minare'yi mutlaka görün; Roma limanına ve surlara uğramadan da ayrılmayın.",
@@ -27563,6 +27323,16 @@
    "text": "Kaleiçi is the present name of the walled city that grew around the harbour of Roman Attaleia. The three-arched gate raised for the emperor Hadrian's visit in AD 130 is still one of its main entrances. Through the Seljuk and Ottoman centuries the city stayed within these walls, and the bow-fronted timber mansions lining its lanes date from the eighteenth and nineteenth centuries.",
    "speech": "Kaleiçi is the present name of the walled city that grew around the harbour of Roman Attaleia. The three-arched gate raised for the emperor Hadrian's visit in AD 130 is still one of its main entrances. Through the Seljuk and Ottoman centuries the city stayed within these walls, and the bow-fronted timber mansions lining its lanes date from the eighteenth and nineteenth centuries.",
    "hash": "392651f6",
+   "target": "remote"
+  },
+  {
+   "key": "site:antalya-kaleici",
+   "folder": "site-antalya-kaleici",
+   "lang": "en",
+   "chapter": "structure-1",
+   "text": "You are now at Hadrian's Gate. The three-arched city gate built for the emperor Hadrian's visit to Attaleia: columns of grey granite with composite capitals before its four piers, a tower either side. Its upper storey is lost.",
+   "speech": "You are now at Hadrian's Gate. The three-arched city gate built for the emperor Hadrian's visit to Attaleia: columns of grey granite with composite capitals before its four piers, a tower either side. Its upper storey is lost.",
+   "hash": "b26dd547",
    "target": "remote"
   },
   {
@@ -35870,9 +35640,9 @@
    "folder": "recon-celsus-kutuphanesi",
    "lang": "tr",
    "chapter": "uncertainty",
-   "text": "Son olarak, bu modelin neyi bilmediğini dürüstçe anlatalım. Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni, yani dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen ve yay alınlıklar, 1970-78'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır. İki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise ölçü değil, orantıdır. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir; ama bunlar Viyana'daki özgün heykellerin kopyası değildir, duruşları ve giysileri bir yorumdur. Merdivenin iki yanındaki kaidelerin bronz heykelleri ise kayıptır; yerlerinde iki gerçek Roma heykelinin taramaları durur: mantolu, sakallı bir Asklepios ve togalı, başı örtülü Tiberius. Başlıkların akant yaprakları ve volütleri modellenmiştir, ancak taştaki işçiliğin kopyası değildir; arşitravlardaki ve kaidelerdeki yazıtlar gerçek Yunanca ve Latince metinleriyle gösterilmiştir, ama satır bölünmeleri ve harf boyları modelindir; Ennoia kaidesi de öteki üçünün örneğine göre yazılmıştır; frizlerin bezemesi ise modelde yer almaz. Renkler de ölçü değil, yorumdur. Roma mermer cepheleri boyalıydı, fakat bugün Efes'te boya izi kalmamıştır. Modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar ve altın kafes pencereler kazıdan değil, yayımlanmış bir rekonstrüksiyon resminden alınmıştır. Son bir not: salonun tavanı da modelde yoktur, çünkü yapının iki katlı mı üç katlı mı olduğu hâlâ tartışmalıdır.",
-   "speech": "Son olarak, bu modelin neyi bilmediğini dürüstçe anlatalım. Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni, yani dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen ve yay alınlıklar, 1970 ile 1978'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır. İki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise ölçü değil, orantıdır. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir; ama bunlar Viyana'daki özgün heykellerin kopyası değildir, duruşları ve giysileri bir yorumdur. Merdivenin iki yanındaki kaidelerin bronz heykelleri ise kayıptır; yerlerinde iki gerçek Roma heykelinin taramaları durur: mantolu, sakallı bir Asklepios ve togalı, başı örtülü Tiberius. Başlıkların akant yaprakları ve volütleri modellenmiştir, ancak taştaki işçiliğin kopyası değildir; arşitravlardaki ve kaidelerdeki yazıtlar gerçek Yunanca ve Latince metinleriyle gösterilmiştir, ama satır bölünmeleri ve harf boyları modelindir; Ennoia kaidesi de öteki üçünün örneğine göre yazılmıştır; frizlerin bezemesi ise modelde yer almaz. Renkler de ölçü değil, yorumdur. Roma mermer cepheleri boyalıydı, fakat bugün Efes'te boya izi kalmamıştır. Modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar ve altın kafes pencereler kazıdan değil, yayımlanmış bir rekonstrüksiyon resminden alınmıştır. Son bir not: salonun tavanı da modelde yoktur, çünkü yapının iki katlı mı üç katlı mı olduğu hâlâ tartışmalıdır.",
-   "hash": "5800e23b",
+   "text": "Son olarak, bu modelin neyi bilmediğini dürüstçe anlatalım. Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni, yani dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen ve yay alınlıklar, 1970-78'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır. İki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise ölçü değil, orantıdır. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir; ama bunlar Viyana'daki özgün heykellerin kopyası değildir, duruşları ve giysileri bir yorumdur. Merdivenin iki yanındaki kaidelerin bronz heykelleri ise kayıptır; yerlerinde iki gerçek Roma heykelinin taramaları durur: mantolu, sakallı bir Asklepios ve togalı, başı örtülü Tiberius. Başlıkların akant yaprakları ve volütleri modellenmiştir, ancak taştaki işçiliğin kopyası değildir; arşitravlardaki ve kaidelerdeki yazıtlar gerçek Yunanca ve Latince metinleriyle gösterilmiştir, ama satır bölünmeleri ve harf boyları modelindir; Ennoia kaidesi de öteki üçünün örneğine göre yazılmıştır; frizlerin bezemesi ise modelde yer almaz. Renkler de ölçü değil, yorumdur. Roma mermer cepheleri boyalıydı, fakat bugün Efes'te boya izi kalmamıştır. Modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar ve altın kafes pencereler kazıdan değil, yayımlanmış bir rekonstrüksiyon resminden alınmıştır. Son bir not: salonun tavanı da modelde yoktur, çünkü yapının iki katlı mı üç katlı mı olduğu hâlâ tartışmalıdır. Kapıların bronz kaplaması, kapı çerçeveleri, sütun çiftlerinin altındaki kasetli tavanlar ve üst kat pencerelerinin altındaki damarlı mermer panolar da modelin yorumu. Salondaki galeri de öyle: üst sıra nişlere ancak duvar boyunca uzanan podyumdaki sütunlara oturan böyle bir galeriden ulaşılabilirdi; ama yüksekliğini, derinliğini, korkuluğunu ve ona çıkan merdivenleri bilmiyoruz. Bir de meydana bakın: modelde kütüphanenin önündeki döşeli meydan ve meydanın kuzey yanındaki Mazaeus ve Mithridates Kapısı da var. Kapı, MÖ 4/3 yılına ait. Üç kemerli açıklığı, ortadakinin 1,5 metre geride oluşu, kütüphane yanındaki tonozun siyah mermer kaplaması ve kemerlerin üstündeki üç yazıt kaynaklara dayanıyor: solda Augustus ile Livia'ya, sağda Agrippa ile Iulia'ya Latince, ortada Yunanca. Yazıtların yaldızlı bronz harfleri kayıp; bugün yalnızca yuvaları kalmış. Kapının ölçüleri, pilastrları ve attikası ise yayımlanmış bir rölöveden değil, orantıdan geliyor; frizindeki bitki bezemesi de modelde yok.",
+   "speech": "Son olarak, bu modelin neyi bilmediğini dürüstçe anlatalım. Cephenin genişliği ve yüksekliği ölçülmüştür. Aralıkların düzeni, yani dört sütun çifti, aralarındaki üç kapı, üst kattaki üç pencere ve onların üzerindeki üçgen ve yay alınlıklar, 1970 ile 1978'de yeniden dikilmiş cephenin fotoğraflarından çıkarılmıştır. İki katın 16 metreyi nasıl paylaştığı, sütun çapları ve heykellerin duruşu ise ölçü değil, orantıdır. Nişlerdeki dört erdem ve üst kattaki iki erkek figür kumaş kıvrımlarına kadar modellenmiştir; ama bunlar Viyana'daki özgün heykellerin kopyası değildir, duruşları ve giysileri bir yorumdur. Merdivenin iki yanındaki kaidelerin bronz heykelleri ise kayıptır; yerlerinde iki gerçek Roma heykelinin taramaları durur: mantolu, sakallı bir Asklepios ve togalı, başı örtülü Tiberius. Başlıkların akant yaprakları ve volütleri modellenmiştir, ancak taştaki işçiliğin kopyası değildir; arşitravlardaki ve kaidelerdeki yazıtlar gerçek Yunanca ve Latince metinleriyle gösterilmiştir, ama satır bölünmeleri ve harf boyları modelindir; Ennoia kaidesi de öteki üçünün örneğine göre yazılmıştır; frizlerin bezemesi ise modelde yer almaz. Renkler de ölçü değil, yorumdur. Roma mermer cepheleri boyalıydı, fakat bugün Efes'te boya izi kalmamıştır. Modeldeki kırmızı panolar, mavi-altın silmeler, ahşap kapılar ve altın kafes pencereler kazıdan değil, yayımlanmış bir rekonstrüksiyon resminden alınmıştır. Son bir not: salonun tavanı da modelde yoktur, çünkü yapının iki katlı mı üç katlı mı olduğu hâlâ tartışmalıdır. Kapıların bronz kaplaması, kapı çerçeveleri, sütun çiftlerinin altındaki kasetli tavanlar ve üst kat pencerelerinin altındaki damarlı mermer panolar da modelin yorumu. Salondaki galeri de öyle: üst sıra nişlere ancak duvar boyunca uzanan podyumdaki sütunlara oturan böyle bir galeriden ulaşılabilirdi; ama yüksekliğini, derinliğini, korkuluğunu ve ona çıkan merdivenleri bilmiyoruz. Bir de meydana bakın: modelde kütüphanenin önündeki döşeli meydan ve meydanın kuzey yanındaki Mazaeus ve Mithridates Kapısı da var. Kapı, milattan önce 4/3 yılına ait. Üç kemerli açıklığı, ortadakinin 1,5 metre geride oluşu, kütüphane yanındaki tonozun siyah mermer kaplaması ve kemerlerin üstündeki üç yazıt kaynaklara dayanıyor: solda Augustus ile Livia'ya, sağda Agrippa ile Iulia'ya Latince, ortada Yunanca. Yazıtların yaldızlı bronz harfleri kayıp; bugün yalnızca yuvaları kalmış. Kapının ölçüleri, pilastrları ve attikası ise yayımlanmış bir rölöveden değil, orantıdan geliyor; frizindeki bitki bezemesi de modelde yok.",
+   "hash": "4dc8e1f8",
    "target": "app"
   },
   {
@@ -35950,9 +35720,9 @@
    "folder": "recon-celsus-kutuphanesi",
    "lang": "en",
    "chapter": "uncertainty",
-   "text": "Finally, let us be honest about what this model does not know. The width and height of the façade are measured. The rhythm of the front, with four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those, is read from photographs of the front re-erected in 1970-78. How the two orders divide the 16 metres, the column diameters and the poses of the statues are a matter of proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, yet they are not copies of the originals in Vienna: their poses and clothing are interpretation. The bronze statues on the two bases by the stair are lost; in their place stand scans of two real Roman statues: a bearded Asklepios in his mantle and the veiled Tiberius in his toga. The acanthus and volutes of the capitals are modelled, but they do not copy the carving on the stone, the inscriptions on the architraves and bases carry their real Greek and Latin texts, though their line breaks and letter sizes are the model's, and the Ennoia base is lettered on the pattern of the other three. The ornament of the friezes is absent. Above all, the colour is interpretation, not measurement. Roman marble fronts were painted, but no pigment survives at Ephesus, so the red panels, the blue and gilded mouldings, the timber doors and the gilded window lattices are taken from a published reconstruction painting, not from the excavation. The ceiling of the hall is absent too, because whether the building had two storeys or three is still disputed.",
-   "speech": "Finally, let us be honest about what this model does not know. The width and height of the façade are measured. The rhythm of the front, with four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those, is read from photographs of the front re-erected in 1970 to 1978. How the two orders divide the 16 metres, the column diameters and the poses of the statues are a matter of proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, yet they are not copies of the originals in Vienna: their poses and clothing are interpretation. The bronze statues on the two bases by the stair are lost; in their place stand scans of two real Roman statues: a bearded Asklepios in his mantle and the veiled Tiberius in his toga. The acanthus and volutes of the capitals are modelled, but they do not copy the carving on the stone, the inscriptions on the architraves and bases carry their real Greek and Latin texts, though their line breaks and letter sizes are the model's, and the Ennoia base is lettered on the pattern of the other three. The ornament of the friezes is absent. Above all, the colour is interpretation, not measurement. Roman marble fronts were painted, but no pigment survives at Ephesus, so the red panels, the blue and gilded mouldings, the timber doors and the gilded window lattices are taken from a published reconstruction painting, not from the excavation. The ceiling of the hall is absent too, because whether the building had two storeys or three is still disputed.",
-   "hash": "5232639c",
+   "text": "Finally, let us be honest about what this model does not know. The width and height of the façade are measured. The rhythm of the front, with four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those, is read from photographs of the front re-erected in 1970-78. How the two orders divide the 16 metres, the column diameters and the poses of the statues are a matter of proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, yet they are not copies of the originals in Vienna: their poses and clothing are interpretation. The bronze statues on the two bases by the stair are lost; in their place stand scans of two real Roman statues: a bearded Asklepios in his mantle and the veiled Tiberius in his toga. The acanthus and volutes of the capitals are modelled, but they do not copy the carving on the stone, the inscriptions on the architraves and bases carry their real Greek and Latin texts, though their line breaks and letter sizes are the model's, and the Ennoia base is lettered on the pattern of the other three. The ornament of the friezes is absent. Above all, the colour is interpretation, not measurement. Roman marble fronts were painted, but no pigment survives at Ephesus, so the red panels, the blue and gilded mouldings, the timber doors and the gilded window lattices are taken from a published reconstruction painting, not from the excavation. The ceiling of the hall is absent too, because whether the building had two storeys or three is still disputed. The doors' bronze sheathing, the door frames, the coffered soffits between the column pairs and the veined marble panels under the upper windows are the model's own reading too. So is the gallery in the hall: the upper niches could only have been reached from a gallery like this, carried on columns standing on the podium that runs round the walls, but we do not know its height, its depth, its railing, or the stairs that led up to it. And look at the square, too: the model shows the paved square in front of the library and, on its north side, the Gate of Mazaeus and Mithridates, from 4/3 BC. Its three arched openings, the middle one set back 1.5 metres, the black marble lining of the vault on the library side and the three dedications over the arches follow the sources: Latin to Augustus and Livia on the left, Latin to Agrippa and Julia on the right, and Greek in the middle. The gilded bronze letters are lost; only their sockets survive. The gate's dimensions, its pilasters and its attic come from proportion, not from a published survey, and the floral ornament of its frieze is left out.",
+   "speech": "Finally, let us be honest about what this model does not know. The width and height of the façade are measured. The rhythm of the front, with four pairs of columns, three doorways between them, three windows above and the triangular and segmental pediments over those, is read from photographs of the front re-erected in 1970 to 1978. How the two orders divide the 16 metres, the column diameters and the poses of the statues are a matter of proportion rather than measurement. The four virtues in the niches and the two male figures above are modelled down to the folds of their dress, yet they are not copies of the originals in Vienna: their poses and clothing are interpretation. The bronze statues on the two bases by the stair are lost; in their place stand scans of two real Roman statues: a bearded Asklepios in his mantle and the veiled Tiberius in his toga. The acanthus and volutes of the capitals are modelled, but they do not copy the carving on the stone, the inscriptions on the architraves and bases carry their real Greek and Latin texts, though their line breaks and letter sizes are the model's, and the Ennoia base is lettered on the pattern of the other three. The ornament of the friezes is absent. Above all, the colour is interpretation, not measurement. Roman marble fronts were painted, but no pigment survives at Ephesus, so the red panels, the blue and gilded mouldings, the timber doors and the gilded window lattices are taken from a published reconstruction painting, not from the excavation. The ceiling of the hall is absent too, because whether the building had two storeys or three is still disputed. The doors' bronze sheathing, the door frames, the coffered soffits between the column pairs and the veined marble panels under the upper windows are the model's own reading too. So is the gallery in the hall: the upper niches could only have been reached from a gallery like this, carried on columns standing on the podium that runs round the walls, but we do not know its height, its depth, its railing, or the stairs that led up to it. And look at the square, too: the model shows the paved square in front of the library and, on its north side, the Gate of Mazaeus and Mithridates, from 4/3 BC. Its three arched openings, the middle one set back 1.5 metres, the black marble lining of the vault on the library side and the three dedications over the arches follow the sources: Latin to Augustus and Livia on the left, Latin to Agrippa and Julia on the right, and Greek in the middle. The gilded bronze letters are lost; only their sockets survive. The gate's dimensions, its pilasters and its attic come from proportion, not from a published survey, and the floral ornament of its frieze is left out.",
+   "hash": "51de5fbe",
    "target": "app"
   },
   {
@@ -36030,9 +35800,9 @@
    "folder": "recon-celsus-kutuphanesi",
    "lang": "de",
    "chapter": "uncertainty",
-   "text": "Zum Schluss: was dieses Modell nicht weiß. Breite und Höhe der Fassade sind gemessen. Der Rhythmus der Front – vier Säulenpaare, drei Türen dazwischen, drei Fenster darüber und die Dreiecks- und Segmentgiebel über diesen – ist an Fotografien der 1970–78 wiedererrichteten Front abgelesen; wie die beiden Ordnungen die 16 Meter unter sich aufteilen, die Säulendurchmesser und die Haltung der Statuen sind Proportion, nicht Messung. Die vier Tugenden in den Nischen und die beiden männlichen Figuren darüber sind bis in die Falten ihrer Gewänder modelliert, sind aber keine Kopien der Originale in Wien; Haltung und Kleidung sind Deutung. Die Bronzestatuen auf den beiden Sockeln an der Treppe sind verloren; an ihrer Stelle stehen Scans zweier echter römischer Statuen: ein bärtiger Asklepios im Mantel und der verhüllte Tiberius in der Toga. Akanthus und Voluten der Kapitelle sind modelliert, aber keine Kopie der Steinmetzarbeit; die Inschriften auf Architraven und Sockeln tragen ihre wirklichen griechischen und lateinischen Texte, doch Zeilenumbrüche und Buchstabengrößen sind die des Modells, und der Sockel der Ennoia ist nach dem Muster der anderen drei beschriftet; und der Schmuck der Friese fehlt. **Die Farbe ist Deutung, nicht Messung:** Römische Marmorfassaden waren bemalt, und in Ephesos sind keine Farbspuren erhalten – die roten Felder, die blauen und vergoldeten Profile, die hölzernen Türen und die vergoldeten Fenstergitter stammen aus einem veröffentlichten Rekonstruktionsgemälde, nicht aus der Grabung. Ebenso fehlt die Decke des Saals: Ob der Bau zwei oder drei Geschosse hatte, ist umstritten.",
-   "speech": "Zum Schluss: was dieses Modell nicht weiß. Breite und Höhe der Fassade sind gemessen. Der Rhythmus der Front, vier Säulenpaare, drei Türen dazwischen, drei Fenster darüber und die Dreiecks- und Segmentgiebel über diesen, ist an Fotografien der 1970 bis 1978 wiedererrichteten Front abgelesen; wie die beiden Ordnungen die 16 Meter unter sich aufteilen, die Säulendurchmesser und die Haltung der Statuen sind Proportion, nicht Messung. Die vier Tugenden in den Nischen und die beiden männlichen Figuren darüber sind bis in die Falten ihrer Gewänder modelliert, sind aber keine Kopien der Originale in Wien; Haltung und Kleidung sind Deutung. Die Bronzestatuen auf den beiden Sockeln an der Treppe sind verloren; an ihrer Stelle stehen Scans zweier echter römischer Statuen: ein bärtiger Asklepios im Mantel und der verhüllte Tiberius in der Toga. Akanthus und Voluten der Kapitelle sind modelliert, aber keine Kopie der Steinmetzarbeit; die Inschriften auf Architraven und Sockeln tragen ihre wirklichen griechischen und lateinischen Texte, doch Zeilenumbrüche und Buchstabengrößen sind die des Modells, und der Sockel der Ennoia ist nach dem Muster der anderen drei beschriftet; und der Schmuck der Friese fehlt. **Die Farbe ist Deutung, nicht Messung:** Römische Marmorfassaden waren bemalt, und in Ephesos sind keine Farbspuren erhalten, die roten Felder, die blauen und vergoldeten Profile, die hölzernen Türen und die vergoldeten Fenstergitter stammen aus einem veröffentlichten Rekonstruktionsgemälde, nicht aus der Grabung. Ebenso fehlt die Decke des Saals: Ob der Bau zwei oder drei Geschosse hatte, ist umstritten.",
-   "hash": "37334646",
+   "text": "Zum Schluss: was dieses Modell nicht weiß. Breite und Höhe der Fassade sind gemessen. Der Rhythmus der Front – vier Säulenpaare, drei Türen dazwischen, drei Fenster darüber und die Dreiecks- und Segmentgiebel über diesen – ist an Fotografien der 1970–78 wiedererrichteten Front abgelesen; wie die beiden Ordnungen die 16 Meter unter sich aufteilen, die Säulendurchmesser und die Haltung der Statuen sind Proportion, nicht Messung. Die vier Tugenden in den Nischen und die beiden männlichen Figuren darüber sind bis in die Falten ihrer Gewänder modelliert, sind aber keine Kopien der Originale in Wien; Haltung und Kleidung sind Deutung. Die Bronzestatuen auf den beiden Sockeln an der Treppe sind verloren; an ihrer Stelle stehen Scans zweier echter römischer Statuen: ein bärtiger Asklepios im Mantel und der verhüllte Tiberius in der Toga. Akanthus und Voluten der Kapitelle sind modelliert, aber keine Kopie der Steinmetzarbeit; die Inschriften auf Architraven und Sockeln tragen ihre wirklichen griechischen und lateinischen Texte, doch Zeilenumbrüche und Buchstabengrößen sind die des Modells, und der Sockel der Ennoia ist nach dem Muster der anderen drei beschriftet; und der Schmuck der Friese fehlt. **Die Farbe ist Deutung, nicht Messung:** Römische Marmorfassaden waren bemalt, und in Ephesos sind keine Farbspuren erhalten – die roten Felder, die blauen und vergoldeten Profile, die hölzernen Türen und die vergoldeten Fenstergitter stammen aus einem veröffentlichten Rekonstruktionsgemälde, nicht aus der Grabung; die Bronzeverkleidung der Türen, die Türrahmen, die Kassettendecken zwischen den Säulenpaaren und die geäderten Marmorplatten unter den oberen Fenstern sind dagegen die eigene Deutung des Modells. Ebenso die Galerie im Saal, getragen von Säulen auf dem Podium, das an den Wänden entlangläuft: Die oberen Nischen konnten nur von einer solchen Galerie aus erreicht werden, doch ihre Höhe, Tiefe und Brüstung sowie die Treppen zu ihr sind nicht bekannt. Ebenso fehlt die Decke des Saals: Ob der Bau zwei oder drei Geschosse hatte, ist umstritten. Gezeigt werden auch der gepflasterte Platz vor der Bibliothek und an seiner Nordseite das Tor des Mazaeus und Mithridates (4/3 v. Chr.): Die drei Bogenöffnungen, die um 1,5 m zurückversetzte mittlere, die Verkleidung des Gewölbes auf der Bibliotheksseite mit schwarzem Marmor und die drei Weihinschriften über den Bögen (links lateinisch an Augustus und Livia, rechts lateinisch an Agrippa und Julia, in der Mitte griechisch) folgen den Quellen; die vergoldeten Bronzebuchstaben sind verloren, erhalten sind nur ihre Einlassungen. Maße, Pilaster und Attika des Tors beruhen auf Proportion, nicht auf einer veröffentlichten Bauaufnahme, und der Pflanzenschmuck seines Frieses fehlt.",
+   "speech": "Zum Schluss: was dieses Modell nicht weiß. Breite und Höhe der Fassade sind gemessen. Der Rhythmus der Front, vier Säulenpaare, drei Türen dazwischen, drei Fenster darüber und die Dreiecks- und Segmentgiebel über diesen, ist an Fotografien der 1970 bis 1978 wiedererrichteten Front abgelesen; wie die beiden Ordnungen die 16 Meter unter sich aufteilen, die Säulendurchmesser und die Haltung der Statuen sind Proportion, nicht Messung. Die vier Tugenden in den Nischen und die beiden männlichen Figuren darüber sind bis in die Falten ihrer Gewänder modelliert, sind aber keine Kopien der Originale in Wien; Haltung und Kleidung sind Deutung. Die Bronzestatuen auf den beiden Sockeln an der Treppe sind verloren; an ihrer Stelle stehen Scans zweier echter römischer Statuen: ein bärtiger Asklepios im Mantel und der verhüllte Tiberius in der Toga. Akanthus und Voluten der Kapitelle sind modelliert, aber keine Kopie der Steinmetzarbeit; die Inschriften auf Architraven und Sockeln tragen ihre wirklichen griechischen und lateinischen Texte, doch Zeilenumbrüche und Buchstabengrößen sind die des Modells, und der Sockel der Ennoia ist nach dem Muster der anderen drei beschriftet; und der Schmuck der Friese fehlt. **Die Farbe ist Deutung, nicht Messung:** Römische Marmorfassaden waren bemalt, und in Ephesos sind keine Farbspuren erhalten, die roten Felder, die blauen und vergoldeten Profile, die hölzernen Türen und die vergoldeten Fenstergitter stammen aus einem veröffentlichten Rekonstruktionsgemälde, nicht aus der Grabung; die Bronzeverkleidung der Türen, die Türrahmen, die Kassettendecken zwischen den Säulenpaaren und die geäderten Marmorplatten unter den oberen Fenstern sind dagegen die eigene Deutung des Modells. Ebenso die Galerie im Saal, getragen von Säulen auf dem Podium, das an den Wänden entlangläuft: Die oberen Nischen konnten nur von einer solchen Galerie aus erreicht werden, doch ihre Höhe, Tiefe und Brüstung sowie die Treppen zu ihr sind nicht bekannt. Ebenso fehlt die Decke des Saals: Ob der Bau zwei oder drei Geschosse hatte, ist umstritten. Gezeigt werden auch der gepflasterte Platz vor der Bibliothek und an seiner Nordseite das Tor des Mazaeus und Mithridates (4/3 vor Christus): Die drei Bogenöffnungen, die um 1,5 Meter zurückversetzte mittlere, die Verkleidung des Gewölbes auf der Bibliotheksseite mit schwarzem Marmor und die drei Weihinschriften über den Bögen (links lateinisch an Augustus und Livia, rechts lateinisch an Agrippa und Julia, in der Mitte griechisch) folgen den Quellen; die vergoldeten Bronzebuchstaben sind verloren, erhalten sind nur ihre Einlassungen. Maße, Pilaster und Attika des Tors beruhen auf Proportion, nicht auf einer veröffentlichten Bauaufnahme, und der Pflanzenschmuck seines Frieses fehlt.",
+   "hash": "1cda38f7",
    "target": "remote"
   },
   {
@@ -36110,9 +35880,9 @@
    "folder": "recon-celsus-kutuphanesi",
    "lang": "ru",
    "chapter": "uncertainty",
-   "text": "И напоследок — чего эта модель не знает. Ширина и высота фасада измерены. Ритм фасада — четыре пары колонн, три дверных проёма между ними, три окна выше и треугольные и лучковые фронтоны над ними — считан с фотографий фасада, вновь возведённого в 1970–78 годах; то, как два ордера делят между собой 16 метров, диаметры колонн и позы статуй — это пропорция, а не измерение. Четыре добродетели в нишах и две мужские фигуры над ними смоделированы вплоть до складок одежды, но это не копии оригиналов, хранящихся в Вене; их позы и одеяния — интерпретация. Бронзовые статуи на двух постаментах у лестницы утрачены; на их месте стоят сканы двух подлинных римских статуй — бородатого Асклепия в плаще и Тиберия в тоге с покрытой головой. Аканты и волюты капителей смоделированы, но не копируют резьбу по камню; надписи на архитравах и постаментах воспроизводят свои подлинные греческие и латинские тексты, хотя разбивка строк и размер букв принадлежат модели, а постамент Эннойи подписан по образцу трёх других; а орнамента фризов в модели нет. **Цвет — интерпретация, а не измерение:** римские мраморные фасады были расписаны, а в Эфесе следов краски не сохранилось — красные панели, синие и позолоченные профили, деревянные двери и позолоченные оконные решётки взяты с опубликованной реконструкционной картины, а не из раскопок. Нет и потолка зала: было ли здание двух- или трёхэтажным, остаётся спорным.",
-   "speech": "И напоследок, чего эта модель не знает. Ширина и высота фасада измерены. Ритм фасада, четыре пары колонн, три дверных проёма между ними, три окна выше и треугольные и лучковые фронтоны над ними, считан с фотографий фасада, вновь возведённого в 1970-1978 годах; то, как два ордера делят между собой 16 метров, диаметры колонн и позы статуй, это пропорция, а не измерение. Четыре добродетели в нишах и две мужские фигуры над ними смоделированы вплоть до складок одежды, но это не копии оригиналов, хранящихся в Вене; их позы и одеяния, интерпретация. Бронзовые статуи на двух постаментах у лестницы утрачены; на их месте стоят сканы двух подлинных римских статуй, бородатого Асклепия в плаще и Тиберия в тоге с покрытой головой. Аканты и волюты капителей смоделированы, но не копируют резьбу по камню; надписи на архитравах и постаментах воспроизводят свои подлинные греческие и латинские тексты, хотя разбивка строк и размер букв принадлежат модели, а постамент Эннойи подписан по образцу трёх других; а орнамента фризов в модели нет. **Цвет, интерпретация, а не измерение:** римские мраморные фасады были расписаны, а в Эфесе следов краски не сохранилось, красные панели, синие и позолоченные профили, деревянные двери и позолоченные оконные решётки взяты с опубликованной реконструкционной картины, а не из раскопок. Нет и потолка зала: было ли здание двух- или трёхэтажным, остаётся спорным.",
-   "hash": "2c42d4a6",
+   "text": "И напоследок — чего эта модель не знает. Ширина и высота фасада измерены. Ритм фасада — четыре пары колонн, три дверных проёма между ними, три окна выше и треугольные и лучковые фронтоны над ними — считан с фотографий фасада, вновь возведённого в 1970–78 годах; то, как два ордера делят между собой 16 метров, диаметры колонн и позы статуй — это пропорция, а не измерение. Четыре добродетели в нишах и две мужские фигуры над ними смоделированы вплоть до складок одежды, но это не копии оригиналов, хранящихся в Вене; их позы и одеяния — интерпретация. Бронзовые статуи на двух постаментах у лестницы утрачены; на их месте стоят сканы двух подлинных римских статуй — бородатого Асклепия в плаще и Тиберия в тоге с покрытой головой. Аканты и волюты капителей смоделированы, но не копируют резьбу по камню; надписи на архитравах и постаментах воспроизводят свои подлинные греческие и латинские тексты, хотя разбивка строк и размер букв принадлежат модели, а постамент Эннойи подписан по образцу трёх других; а орнамента фризов в модели нет. **Цвет — интерпретация, а не измерение:** римские мраморные фасады были расписаны, а в Эфесе следов краски не сохранилось — красные панели, синие и позолоченные профили, деревянные двери и позолоченные оконные решётки взяты с опубликованной реконструкционной картины, а не из раскопок; бронзовая обшивка дверей, дверные обрамления, кессонные потолки между парами колонн и прожилковые мраморные плиты под верхними окнами — собственная интерпретация модели. Как и галерея в зале на колоннах, стоящих на подиуме вдоль стен: до верхних ниш можно было добраться только с такой галереи, но её высота, глубина, ограждение и ведущие к ней лестницы неизвестны. Нет и потолка зала: было ли здание двух- или трёхэтажным, остаётся спорным. Показаны также мощёная площадь перед библиотекой и на её северной стороне ворота Мазея и Митридата (4/3 г. до н. э.): три арочных проёма, средний из которых отступает на 1,5 м, облицовка свода чёрным мрамором со стороны библиотеки и три посвятительные надписи над арками (слева латинская — Августу и Ливии, справа латинская — Агриппе и Юлии, посередине греческая) следуют источникам; позолоченные бронзовые буквы утрачены, сохранились лишь гнёзда для них. Размеры, пилястры и аттик ворот основаны на пропорциях, а не на опубликованных обмерах, а растительного орнамента фриза в модели нет.",
+   "speech": "И напоследок, чего эта модель не знает. Ширина и высота фасада измерены. Ритм фасада, четыре пары колонн, три дверных проёма между ними, три окна выше и треугольные и лучковые фронтоны над ними, считан с фотографий фасада, вновь возведённого в 1970-1978 годах; то, как два ордера делят между собой 16 метров, диаметры колонн и позы статуй, это пропорция, а не измерение. Четыре добродетели в нишах и две мужские фигуры над ними смоделированы вплоть до складок одежды, но это не копии оригиналов, хранящихся в Вене; их позы и одеяния, интерпретация. Бронзовые статуи на двух постаментах у лестницы утрачены; на их месте стоят сканы двух подлинных римских статуй, бородатого Асклепия в плаще и Тиберия в тоге с покрытой головой. Аканты и волюты капителей смоделированы, но не копируют резьбу по камню; надписи на архитравах и постаментах воспроизводят свои подлинные греческие и латинские тексты, хотя разбивка строк и размер букв принадлежат модели, а постамент Эннойи подписан по образцу трёх других; а орнамента фризов в модели нет. **Цвет, интерпретация, а не измерение:** римские мраморные фасады были расписаны, а в Эфесе следов краски не сохранилось, красные панели, синие и позолоченные профили, деревянные двери и позолоченные оконные решётки взяты с опубликованной реконструкционной картины, а не из раскопок; бронзовая обшивка дверей, дверные обрамления, кессонные потолки между парами колонн и прожилковые мраморные плиты под верхними окнами, собственная интерпретация модели. Как и галерея в зале на колоннах, стоящих на подиуме вдоль стен: до верхних ниш можно было добраться только с такой галереи, но её высота, глубина, ограждение и ведущие к ней лестницы неизвестны. Нет и потолка зала: было ли здание двух- или трёхэтажным, остаётся спорным. Показаны также мощёная площадь перед библиотекой и на её северной стороне ворота Мазея и Митридата (4/3 год до нашей эры): три арочных проёма, средний из которых отступает на 1,5 метров, облицовка свода чёрным мрамором со стороны библиотеки и три посвятительные надписи над арками (слева латинская, Августу и Ливии, справа латинская, Агриппе и Юлии, посередине греческая) следуют источникам; позолоченные бронзовые буквы утрачены, сохранились лишь гнёзда для них. Размеры, пилястры и аттик ворот основаны на пропорциях, а не на опубликованных обмерах, а растительного орнамента фриза в модели нет.",
+   "hash": "27c6d0fc",
    "target": "remote"
   },
   {
@@ -43114,6 +42884,1086 @@
    "speech": "И напоследок, чего эта модель не знает. Ни один размер этой модели не выдаётся за измеренный: ширина и высота основания, толщина и высота башни и длина мола смоделированы по фотографиям постройки и известной форме римских маяков. Посвятительная надпись на обращённой к морю стороне основания была выложена бронзовыми буквами; буквы утрачены, остались лишь отверстия от штифтов. Поскольку текст не удалось прочитать здесь по проверенному источнику, он не нарисован, и поле оставлено пустым. Форма фонаря, склад, корабль и жизнь гавани, декорация.",
    "hash": "c6797de9",
    "target": "remote"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Priene Athena Polias Tapınağı. MÖ 350 - 330. İon düzeninin örnek tapınağı: Halikarnas Mozolesi'nin mimarı Pytheos'un altıya on bir sütunlu peripterosu. Büyük İskender MÖ 334'te tapınağı Athena'ya adadı; adak yazıtı bugün British Museum'dadır.",
+   "speech": "Priene Athena Polias Tapınağı. milattan önce 350 ile 330. İon düzeninin örnek tapınağı: Halikarnas Mozolesi'nin mimarı Pytheos'un altıya on bir sütunlu peripterosu. Büyük İskender milattan önce 334'te tapınağı Athena'ya adadı; adak yazıtı bugün British Museum'dadır.",
+   "hash": "fc2cf976",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Köşe sütunu. Altıya on bir sütun: Pytheos'un oranlarla kurduğu İon düzeni.",
+   "speech": "Köşe sütunu. Altıya on bir sütun: Pytheos'un oranlarla kurduğu İon düzeni.",
+   "hash": "369acd57",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Pronaos. İki sütunlu giriş sundurması; İskender'in adak yazıtı buradaki duvar bloğundaydı.",
+   "speech": "Pronaos. İki sütunlu giriş sundurması; İskender'in adak yazıtı buradaki duvar bloğundaydı.",
+   "hash": "a97aa5e6",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Cella. Athena Polias'ın 6,5 m'lik kült heykelinin durduğu oda.",
+   "speech": "Cella. Athena Polias'ın 6,5 metre'lik kült heykelinin durduğu oda.",
+   "hash": "d9ae2d21",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Sütun sayıları, sütun yüksekliği (11,5 m), pronaostaki iki sütun ve cella duvarlarının arasındaki 32 Attika ayağı (29,46 cm'lik ayakla 9,43 m) İngilizce Wikipedia'dan alınmıştır. Aynı kaynağın verdiği 100 ayaklık duvar uzunluğu pronaos ve opisthodomosu da kapsar; modelde yalnızca kapalı cella gösterilir, opisthodomos ve onun iki sütunu yoktur. Stylobatın ölçüleri (19,55 × 37,2 m), sütun çapı, saçaklık, çatı ve krepisin basamakları ölçülmüş değil, İon düzeninin oranlarından verilmiştir. İskender'in adak yazıtı duvar bloğundaydı; mimarideki yeri modelde gösterilmez. Kült heykeli (6,5 m) miğferli, kalkanlı ve mızraklı bir Athena olarak çizilmiştir.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Sütun sayıları, sütun yüksekliği (11,5 metre), pronaostaki iki sütun ve cella duvarlarının arasındaki 32 Attika ayağı (29,46 santimetre'lik ayakla 9,43 metre) İngilizce Wikipedia'dan alınmıştır. Aynı kaynağın verdiği 100 ayaklık duvar uzunluğu pronaos ve opisthodomosu da kapsar; modelde yalnızca kapalı cella gösterilir, opisthodomos ve onun iki sütunu yoktur. Stylobatın ölçüleri (19,55 × 37,2 metre), sütun çapı, saçaklık, çatı ve krepisin basamakları ölçülmüş değil, İon düzeninin oranlarından verilmiştir. İskender'in adak yazıtı duvar bloğundaydı; mimarideki yeri modelde gösterilmez. Kült heykeli (6,5 metre) miğferli, kalkanlı ve mızraklı bir Athena olarak çizilmiştir.",
+   "hash": "286c6f33",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Temple of Athena Polias at Priene. 350 - 330 BC. The model Ionic temple: a peripteros of six by eleven columns by Pytheos, the architect of the Mausoleum. Alexander the Great dedicated it to Athena in 334 BC; his dedication is now in the British Museum.",
+   "speech": "The Temple of Athena Polias at Priene. 350 to 330 BC. The model Ionic temple: a peripteros of six by eleven columns by Pytheos, the architect of the Mausoleum. Alexander the Great dedicated it to Athena in 334 BC; his dedication is now in the British Museum.",
+   "hash": "218bc023",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The corner column. Six by eleven columns: the Ionic order Pytheos built by proportion.",
+   "speech": "The corner column. Six by eleven columns: the Ionic order Pytheos built by proportion.",
+   "hash": "e9fa434c",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The pronaos. The porch with its two columns; Alexander's dedication was cut on a wall block here.",
+   "speech": "The pronaos. The porch with its two columns; Alexander's dedication was cut on a wall block here.",
+   "hash": "97043851",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The cella. The room of the 6.5 m cult statue of Athena Polias.",
+   "speech": "The cella. The room of the 6.5 metres cult statue of Athena Polias.",
+   "hash": "36de522f",
+   "target": "app"
+  },
+  {
+   "key": "recon:priene-athena-tapinagi",
+   "folder": "recon-priene-athena-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The column counts, the height of the columns (11.5 m), the two columns of the pronaos and the 32 Attic feet between the cella walls (9.43 m at 29.46 cm to the foot) come from the English Wikipedia. The 100-foot length of the walls the same source gives includes the pronaos and the opisthodomos; only the closed cella is shown, and the opisthodomos and its two columns are not modelled. The stylobate (19.55 × 37.2 m), the column diameter, the entablature, the roof and the steps of the crepis are proportioned from the Ionic order, not measured. Alexander's dedication was cut on a wall block; it is not shown. The cult statue (6.5 m) is drawn as a helmeted Athena with spear and shield.",
+   "speech": "Finally, what this model does not know. The column counts, the height of the columns (11.5 metres), the two columns of the pronaos and the 32 Attic feet between the cella walls (9.43 metres at 29.46 centimetres to the foot) come from the English Wikipedia. The 100-foot length of the walls the same source gives includes the pronaos and the opisthodomos; only the closed cella is shown, and the opisthodomos and its two columns are not modelled. The stylobate (19.55 × 37.2 metres), the column diameter, the entablature, the roof and the steps of the crepis are proportioned from the Ionic order, not measured. Alexander's dedication was cut on a wall block; it is not shown. The cult statue (6.5 metres) is drawn as a helmeted Athena with spear and shield.",
+   "hash": "81d47374",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Termessos Tiyatrosu. MÖ 2. yüzyıl - MS 2. yüzyıl. Toros'larda bin metre yükseklikte, Pamfilya ovasına bakan bir Hellenistik tiyatro; Roma döneminde sahne binası büyütülüp beş kapılı bir cephe kazandı. Arkasında Güllük Dağı, önünde uçurum.",
+   "speech": "Termessos Tiyatrosu. milattan önce 2. yüzyıl - milattan sonra 2. yüzyıl. Toros'larda bin metre yükseklikte, Pamfilya ovasına bakan bir Hellenistik tiyatro; Roma döneminde sahne binası büyütülüp beş kapılı bir cephe kazandı. Arkasında Güllük Dağı, önünde uçurum.",
+   "hash": "11641b4d",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Orkestra. Hellenistik tiyatronun yuvarlak dans alanı.",
+   "speech": "Orkestra. Hellenistik tiyatronun yuvarlak dans alanı.",
+   "hash": "3044cb4f",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Diazoma. Alttaki on altı sırayı üstteki sekiz sıradan ayıran geçit.",
+   "speech": "Diazoma. Alttaki on altı sırayı üstteki sekiz sıradan ayıran geçit.",
+   "hash": "0a62a91c",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Üst sıralar. En üstten Pamfilya ovası ve deniz görünür.",
+   "speech": "Üst sıralar. En üstten Pamfilya ovası ve deniz görünür.",
+   "hash": "4615af5e",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Sıra sayıları (16 + 8) ve seyirci sayısı İngilizce Wikipedia'dan alınmıştır. Cavea çapı (64 m), orkestra çapı, oturma basamaklarının ölçüleri, sahne binasının yüksekliği ve kat sayısı ölçülmüş değil, sıra sayısına ve fotoğraflara göre verilmiştir. Oturma yeri yarım daire olarak çizilmiştir (Hellenistik tiyatronun kanatları biraz daha sarmış olabilir); sahne binasının beş kapısı ve altındaki hayvan odaları ayrıca modellenmemiş, sahne cephesi bu sitenin öteki tiyatrolarının şemasıyla çizilmiştir. Kuzey parodosun açık, güney parodosun tonozlu olduğu modelde gösterilmez.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Sıra sayıları (16 + 8) ve seyirci sayısı İngilizce Wikipedia'dan alınmıştır. Cavea çapı (64 metre), orkestra çapı, oturma basamaklarının ölçüleri, sahne binasının yüksekliği ve kat sayısı ölçülmüş değil, sıra sayısına ve fotoğraflara göre verilmiştir. Oturma yeri yarım daire olarak çizilmiştir (Hellenistik tiyatronun kanatları biraz daha sarmış olabilir); sahne binasının beş kapısı ve altındaki hayvan odaları ayrıca modellenmemiş, sahne cephesi bu sitenin öteki tiyatrolarının şemasıyla çizilmiştir. Kuzey parodosun açık, güney parodosun tonozlu olduğu modelde gösterilmez.",
+   "hash": "259c2eec",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Theatre of Termessos. 2nd century BC - 2nd century AD. A Hellenistic theatre a thousand metres up in the Taurus, looking out over the Pamphylian plain; under Rome its stage building grew and took a front of five doors. Mount Güllük behind it, the drop before it.",
+   "speech": "The Theatre of Termessos. 2nd century BC - 2nd century AD. A Hellenistic theatre a thousand metres up in the Taurus, looking out over the Pamphylian plain; under Rome its stage building grew and took a front of five doors. Mount Güllük behind it, the drop before it.",
+   "hash": "7a01effc",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The orchestra. The round dancing floor of the Hellenistic theatre.",
+   "speech": "The orchestra. The round dancing floor of the Hellenistic theatre.",
+   "hash": "436e6d4f",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The diazoma. The walkway between the sixteen rows below and the eight above.",
+   "speech": "The diazoma. The walkway between the sixteen rows below and the eight above.",
+   "hash": "94675741",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The upper rows. From the top rows the Pamphylian plain and the sea are in view.",
+   "speech": "The upper rows. From the top rows the Pamphylian plain and the sea are in view.",
+   "hash": "8c01d963",
+   "target": "app"
+  },
+  {
+   "key": "recon:termessos-tiyatrosu",
+   "folder": "recon-termessos-tiyatrosu",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The row counts (16 + 8) and the audience come from the English Wikipedia. The diameter of the cavea (64 m), of the orchestra, the seat steps, the height of the stage building and its storeys are not measured but set from the row count and photographs. The seating is drawn as a semicircle (the Hellenistic wings may have wrapped a little further); the five doors of the stage building and the animal rooms under it are not modelled separately, and the stage front follows the scheme the site's other theatres use. That the north parodos was open and the south one vaulted is not shown.",
+   "speech": "Finally, what this model does not know. The row counts (16 + 8) and the audience come from the English Wikipedia. The diameter of the cavea (64 metres), of the orchestra, the seat steps, the height of the stage building and its storeys are not measured but set from the row count and photographs. The seating is drawn as a semicircle (the Hellenistic wings may have wrapped a little further); the five doors of the stage building and the animal rooms under it are not modelled separately, and the stage front follows the scheme the site's other theatres use. That the north parodos was open and the south one vaulted is not shown.",
+   "hash": "42ca8ab3",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Antalya Hadrianus Kapısı. MS 121 - 130. İmparator Hadrianus'un Attaleia'ya gelişi için yapılan üç kemerli şehir kapısı: dört payenin önünde granit gövdeli, kompozit başlıklı sütunlar, iki yanında kuleler. Üst katı kaybolmuştur.",
+   "speech": "Antalya Hadrianus Kapısı. milattan sonra 121 ile 130. İmparator Hadrianus'un Attaleia'ya gelişi için yapılan üç kemerli şehir kapısı: dört payenin önünde granit gövdeli, kompozit başlıklı sütunlar, iki yanında kuleler. Üst katı kaybolmuştur.",
+   "hash": "570d84ee",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Orta kemer. Üç kemerin açıklığı da aynıdır: 4,15 m.",
+   "speech": "Orta kemer. Üç kemerin açıklığı da aynıdır: 4,15 metre.",
+   "hash": "6eacf4fe",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Granit sütun. Yüksek bir kaide üstünde gri granit gövde ve kompozit başlık.",
+   "speech": "Granit sütun. Yüksek bir kaide üstünde gri granit gövde ve kompozit başlık.",
+   "hash": "c48dfb73",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Kayıp üst kat. Paye kaideleri 2,36 m aralıklıdır; katın biçimi tahmindir.",
+   "speech": "Kayıp üst kat. Paye kaideleri 2,36 metre aralıklıdır; katın biçimi tahmindir.",
+   "hash": "eee714d4",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Kule. Güneydeki kule Hadrianus'un kız kardeşi Julia Sancta'ya adanmıştı.",
+   "speech": "Kule. Güneydeki kule Hadrianus'un kız kardeşi Julia Sancta'ya adanmıştı.",
+   "hash": "3dc4a253",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Bütün ölçüler Almanca Wikipedia'dan alınmıştır: saçaklığın üstüne kadar 8,03 m, saçaklık 1,28 m, kemer tepesi antik döşemeden 6,18 m, üç kemerin açıklığı 4,15 m, sütunlar 4,94 m ve alt çapları 0,51 m, üst katın paye aralığı 2,36 m. Sütunların kaidelerinin yüksekliği bunlardan çıkar. Payelerin genişliği (1,9 m), kapının derinliği, kaybolmuş üst katın yüksekliği ve biçimi, tonozların kaset düzeni, kulelerin ölçüleri (7 × 7 × 14 m) ve sur duvarı modelin oranıdır. Güney kule (Julia Sancta) Roma dönemindendir; kuzeydeki bugünkü kule 13. yüzyılda yapılmıştır, modelde ikisi de aynı biçimde gösterilir. Orta kemerin iki yanındaki sütun aralığının 22 cm geniş olması gösterilmez.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Bütün ölçüler Almanca Wikipedia'dan alınmıştır: saçaklığın üstüne kadar 8,03 metre, saçaklık 1,28 metre, kemer tepesi antik döşemeden 6,18 metre, üç kemerin açıklığı 4,15 metre, sütunlar 4,94 metre ve alt çapları 0,51 metre, üst katın paye aralığı 2,36 metre. Sütunların kaidelerinin yüksekliği bunlardan çıkar. Payelerin genişliği (1,9 metre), kapının derinliği, kaybolmuş üst katın yüksekliği ve biçimi, tonozların kaset düzeni, kulelerin ölçüleri (7 × 7 × 14 metre) ve sur duvarı modelin oranıdır. Güney kule (Julia Sancta) Roma dönemindendir; kuzeydeki bugünkü kule 13. yüzyılda yapılmıştır, modelde ikisi de aynı biçimde gösterilir. Orta kemerin iki yanındaki sütun aralığının 22 santimetre geniş olması gösterilmez.",
+   "hash": "8a5af1e6",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "Hadrian's Gate at Antalya. AD 121 - 130. The three-arched city gate built for the emperor Hadrian's visit to Attaleia: columns of grey granite with composite capitals before its four piers, a tower either side. Its upper storey is lost.",
+   "speech": "Hadrian's Gate at Antalya. AD 121 to 130. The three-arched city gate built for the emperor Hadrian's visit to Attaleia: columns of grey granite with composite capitals before its four piers, a tower either side. Its upper storey is lost.",
+   "hash": "9f6a0e5a",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The middle arch. All three arches span the same 4.15 m.",
+   "speech": "The middle arch. All three arches span the same 4.15 metres.",
+   "hash": "b143f51c",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "A granite column. A grey granite shaft with a composite capital, on a tall pedestal.",
+   "speech": "A granite column. A grey granite shaft with a composite capital, on a tall pedestal.",
+   "hash": "bf34518b",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The lost upper storey. Its pier bases stand 2.36 m apart; the storey's form is conjecture.",
+   "speech": "The lost upper storey. Its pier bases stand 2.36 metres apart; the storey's form is conjecture.",
+   "hash": "a8d26678",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The tower. The south tower was dedicated to Julia Sancta, Hadrian's sister.",
+   "speech": "The tower. The south tower was dedicated to Julia Sancta, Hadrian's sister.",
+   "hash": "7d262d21",
+   "target": "app"
+  },
+  {
+   "key": "recon:antalya-hadrianus-kapisi",
+   "folder": "recon-antalya-hadrianus-kapisi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. All the measurements come from the German Wikipedia: 8.03 m to the top of the entablature, the entablature 1.28 m, the crown of the arches 6.18 m above the ancient paving, each of the three arches 4.15 m across, the columns 4.94 m with a lower diameter of 0.51 m, and a bay of 2.36 m between the pier bases of the upper storey. The height of the column pedestals follows from them. The width of the piers (1.9 m), the depth of the gate, the height and form of the lost upper storey, the coffering of the vaults, the towers (7 × 7 × 14 m) and the city wall are the model's proportion. The south tower (Julia Sancta) is Roman; the present north tower was built in the 13th century, and both are drawn alike. The 22 cm by which the intercolumniations beside the middle arch are wider is not shown.",
+   "speech": "Finally, what this model does not know. All the measurements come from the German Wikipedia: 8.03 metres to the top of the entablature, the entablature 1.28 metres, the crown of the arches 6.18 metres above the ancient paving, each of the three arches 4.15 metres across, the columns 4.94 metres with a lower diameter of 0.51 metres, and a bay of 2.36 metres between the pier bases of the upper storey. The height of the column pedestals follows from them. The width of the piers (1.9 metres), the depth of the gate, the height and form of the lost upper storey, the coffering of the vaults, the towers (7 × 7 × 14 metres) and the city wall are the model's proportion. The south tower (Julia Sancta) is Roman; the present north tower was built in the 13th century, and both are drawn alike. The 22 centimetres by which the intercolumniations beside the middle arch are wider is not shown.",
+   "hash": "ba5f9f17",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Aphrodisias Tetrapylonu. MS 200 civarı. Ana caddeden Aphrodite kutsal alanının ön avlusuna açılan anıtsal kapı: dörde dört sütun, iki cephede ortası kemerle yükselen alınlıklar. Heykeltıraşlarıyla ünlü kentin en çok fotoğraflanan yapısı.",
+   "speech": "Aphrodisias Tetrapylonu. milattan sonra 200 civarı. Ana caddeden Aphrodite kutsal alanının ön avlusuna açılan anıtsal kapı: dörde dört sütun, iki cephede ortası kemerle yükselen alınlıklar. Heykeltıraşlarıyla ünlü kentin en çok fotoğraflanan yapısı.",
+   "hash": "49419889",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Kemerli alınlık. Alınlığın ortası orta geçidin üstünde kemer olup yükselir.",
+   "speech": "Kemerli alınlık. Alınlığın ortası orta geçidin üstünde kemer olup yükselir.",
+   "hash": "54a5d47b",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Cephe sütunları. Cadde cephesindeki sütunların yivleri spiral biçimindeydi.",
+   "speech": "Cephe sütunları. Cadde cephesindeki sütunların yivleri spiral biçimindeydi.",
+   "hash": "672e6304",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Geçit. Kutsal alana giden hacılar bu üç geçitten girerdi.",
+   "speech": "Geçit. Kutsal alana giden hacılar bu üç geçitten girerdi.",
+   "hash": "8812820e",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Açılabilen kaynaklarda (İngilizce ve Almanca Wikipedia'nın Aphrodisias maddeleri) kapının yalnızca tarihi (MS 200 civarı) ve yeri — ana caddeden kutsal alanın ön avlusuna giden yolun sonu — verilir; ölçüsü yoktur. Bu yüzden modelde ölçü gösterilmez: dört sıra dört sütunluk plan, orta geçidin genişliği (4,6 m), sütun yüksekliği (6,2 m), kaideler, kasetli tavanlar, ortası kemerle yükselen 'Suriye alınlığı' ve alınlıklardaki Eros figürleri yayımlanmış rekonstrüksiyon çizimlerine ve fotoğraflara göre verilmiş, ölçülmemiştir. Cadde cephesindeki sütunların spiral yivleri düz yiv olarak çizilmiştir.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Açılabilen kaynaklarda (İngilizce ve Almanca Wikipedia'nın Aphrodisias maddeleri) kapının yalnızca tarihi (milattan sonra 200 civarı) ve yeri, ana caddeden kutsal alanın ön avlusuna giden yolun sonu, verilir; ölçüsü yoktur. Bu yüzden modelde ölçü gösterilmez: dört sıra dört sütunluk plan, orta geçidin genişliği (4,6 metre), sütun yüksekliği (6,2 metre), kaideler, kasetli tavanlar, ortası kemerle yükselen 'Suriye alınlığı' ve alınlıklardaki Eros figürleri yayımlanmış rekonstrüksiyon çizimlerine ve fotoğraflara göre verilmiş, ölçülmemiştir. Cadde cephesindeki sütunların spiral yivleri düz yiv olarak çizilmiştir.",
+   "hash": "55c40942",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Tetrapylon of Aphrodisias. c. AD 200. The monumental gateway from the main street into the forecourt of the sanctuary of Aphrodite: four rows of four columns, and on both fronts a pediment rising in an arch over the middle. The most photographed building of a city famous for its sculptors.",
+   "speech": "The Tetrapylon of Aphrodisias. c. AD 200. The monumental gateway from the main street into the forecourt of the sanctuary of Aphrodite: four rows of four columns, and on both fronts a pediment rising in an arch over the middle. The most photographed building of a city famous for its sculptors.",
+   "hash": "f8284457",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The arched pediment. The middle of the pediment rises as an arch over the middle passage.",
+   "speech": "The arched pediment. The middle of the pediment rises as an arch over the middle passage.",
+   "hash": "f30c274a",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The front columns. The columns of the street front were fluted in a spiral.",
+   "speech": "The front columns. The columns of the street front were fluted in a spiral.",
+   "hash": "99d4284a",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The passage. Pilgrims to the sanctuary came in through these three passages.",
+   "speech": "The passage. Pilgrims to the sanctuary came in through these three passages.",
+   "hash": "2833e94d",
+   "target": "app"
+  },
+  {
+   "key": "recon:aphrodisias-tetrapylon",
+   "folder": "recon-aphrodisias-tetrapylon",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The sources that could be opened (the English and German Wikipedia articles on Aphrodisias) give only the gateway's date (c. AD 200) and its place — the end of the road from the main street into the sanctuary's forecourt — and no dimensions. So the model shows none: the plan of four rows of four columns, the width of the middle passage (4.6 m), the height of the columns (6.2 m), the pedestals, the coffered ceilings, the 'Syrian' pediment rising in an arch over the middle and the Erotes in its fields are set from published reconstruction drawings and photographs, not measured. The spiral fluting of the columns on the street side is drawn as straight fluting.",
+   "speech": "Finally, what this model does not know. The sources that could be opened (the English and German Wikipedia articles on Aphrodisias) give only the gateway's date (c. AD 200) and its place, the end of the road from the main street into the sanctuary's forecourt, and no dimensions. So the model shows none: the plan of four rows of four columns, the width of the middle passage (4.6 metres), the height of the columns (6.2 metres), the pedestals, the coffered ceilings, the 'Syrian' pediment rising in an arch over the middle and the Erotes in its fields are set from published reconstruction drawings and photographs, not measured. The spiral fluting of the columns on the street side is drawn as straight fluting.",
+   "hash": "20cca0a9",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Efes Hadrianus Tapınağı. MS 117 - 118. Kuretler Caddesi'nde küçük bir tapınak: iki sütun ile iki payenin üstünde ortası Suriye kemeriyle yükselen bir cephe, kilit taşında Tykhe büstü; içeride Efes'in kuruluş efsanesini anlatan friz. P. Quintilius Valens Varius, Artemis'e, Hadrianus'a ve Efes halkına adadı.",
+   "speech": "Efes Hadrianus Tapınağı. milattan sonra 117 ile 118. Kuretler Caddesi'nde küçük bir tapınak: iki sütun ile iki payenin üstünde ortası Suriye kemeriyle yükselen bir cephe, kilit taşında Tykhe büstü; içeride Efes'in kuruluş efsanesini anlatan friz. P. Quintilius Valens Varius, Artemis'e, Hadrianus'a ve Efes halkına adadı.",
+   "hash": "9a1ad145",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Suriye kemeri. Saçaklık iki orta sütunun üstünde kemer olup yükselir; kilit taşında Tykhe büstü.",
+   "speech": "Suriye kemeri. Saçaklık iki orta sütunun üstünde kemer olup yükselir; kilit taşında Tykhe büstü.",
+   "hash": "d1290051",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Kapı lüneti. Kapının üstünde akantüsten yükselen bir kadın figürü.",
+   "speech": "Kapı lüneti. Kapının üstünde akantüsten yükselen bir kadın figürü.",
+   "hash": "8c8b5258",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Kuruluş frizi. Androklos ve Efes'in kuruluşu; aslı Selçuk Müzesi'ndedir.",
+   "speech": "Kuruluş frizi. Androklos ve Efes'in kuruluşu; aslı Selçuk Müzesi'ndedir.",
+   "hash": "49650f59",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Heykel kaideleri. Dört kaide sonradan Tetrarkların heykellerini taşıdı.",
+   "speech": "Heykel kaideleri. Dört kaide sonradan Tetrarkların heykellerini taşıdı.",
+   "hash": "b423874d",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Cephenin iki sütun ile iki payeden oluştuğu, Suriye kemeri, kilit taşındaki Tykhe büstü, kapı lünetindeki akantüslü kadın figürü, kuruluş frizi, enine dikdörtgen küçük cella ve önündeki dört heykel kaidesi Almanca Wikipedia'dan alınmıştır. Kaynak ölçü vermez: cephe genişliği (8,6 m), sütun yüksekliği (6,1 m), podyum, sundurma ve cella derinliği, saçaklık ve alınlık modelin oranıdır. Friz ve lünetteki figürler tek tek modellenmemiş, figür dizileri olarak çizilmiştir. Kaidelerdeki dört heykel, kaidelere sonradan dikilen Tetrark heykellerini temsil eder; modelin geri kalanıyla aynı dönemden değildir. Cadde, karşıdaki sütunlu galeri ve komşu yapılar yalnızca çevreyi gösterir.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Cephenin iki sütun ile iki payeden oluştuğu, Suriye kemeri, kilit taşındaki Tykhe büstü, kapı lünetindeki akantüslü kadın figürü, kuruluş frizi, enine dikdörtgen küçük cella ve önündeki dört heykel kaidesi Almanca Wikipedia'dan alınmıştır. Kaynak ölçü vermez: cephe genişliği (8,6 metre), sütun yüksekliği (6,1 metre), podyum, sundurma ve cella derinliği, saçaklık ve alınlık modelin oranıdır. Friz ve lünetteki figürler tek tek modellenmemiş, figür dizileri olarak çizilmiştir. Kaidelerdeki dört heykel, kaidelere sonradan dikilen Tetrark heykellerini temsil eder; modelin geri kalanıyla aynı dönemden değildir. Cadde, karşıdaki sütunlu galeri ve komşu yapılar yalnızca çevreyi gösterir.",
+   "hash": "c05a5bae",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Temple of Hadrian at Ephesus. AD 117 - 118. A small temple on Curetes Street: a front of two columns between two pillars rising in a Syrian arch, a bust of Tyche on its keystone; inside, a frieze of the founding of Ephesus. P. Quintilius Valens Varius dedicated it to Artemis, to Hadrian and to the people of Ephesus.",
+   "speech": "The Temple of Hadrian at Ephesus. AD 117 to 118. A small temple on Curetes Street: a front of two columns between two pillars rising in a Syrian arch, a bust of Tyche on its keystone; inside, a frieze of the founding of Ephesus. P. Quintilius Valens Varius dedicated it to Artemis, to Hadrian and to the people of Ephesus.",
+   "hash": "26eee956",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The Syrian arch. The entablature rises as an arch over the middle columns; Tyche's bust on the keystone.",
+   "speech": "The Syrian arch. The entablature rises as an arch over the middle columns; Tyche's bust on the keystone.",
+   "hash": "f141cb40",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The door lunette. Over the door, a woman rising out of acanthus.",
+   "speech": "The door lunette. Over the door, a woman rising out of acanthus.",
+   "hash": "5d4be2a7",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The founding frieze. Androklos and the founding of Ephesus; the original is in the Selçuk museum.",
+   "speech": "The founding frieze. Androklos and the founding of Ephesus; the original is in the Selçuk museum.",
+   "hash": "55f59ff4",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The statue bases. Four bases that later carried statues of the Tetrarchs.",
+   "speech": "The statue bases. Four bases that later carried statues of the Tetrarchs.",
+   "hash": "8cfd2e34",
+   "target": "app"
+  },
+  {
+   "key": "recon:efes-hadrianus-tapinagi",
+   "folder": "recon-efes-hadrianus-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. That the front is two columns between two pillars, the Syrian arch, the bust of Tyche on its keystone, the woman rising from acanthus in the lunette over the door, the founding frieze, the small cella wider than deep and the four statue bases before it come from the German Wikipedia. It gives no dimensions: the width of the front (8.6 m), the columns (6.1 m), the podium, the depth of the porch and cella, the entablature and the pediment are the model's proportion. The figures of the frieze and lunette are drawn as rows of figures, not carved one by one. The four statues on the bases stand for the Tetrarchs set up on them later, not at the time of the rest of the model. The street, the colonnade opposite and the neighbouring buildings only show the setting.",
+   "speech": "Finally, what this model does not know. That the front is two columns between two pillars, the Syrian arch, the bust of Tyche on its keystone, the woman rising from acanthus in the lunette over the door, the founding frieze, the small cella wider than deep and the four statue bases before it come from the German Wikipedia. It gives no dimensions: the width of the front (8.6 metres), the columns (6.1 metres), the podium, the depth of the porch and cella, the entablature and the pediment are the model's proportion. The figures of the frieze and lunette are drawn as rows of figures, not carved one by one. The four statues on the bases stand for the Tetrarchs set up on them later, not at the time of the rest of the model. The street, the colonnade opposite and the neighbouring buildings only show the setting.",
+   "hash": "56697433",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Pergamon Trajan Tapınağı. MS 114 - 129. Akropolün en yüksek noktasında, tonozlu bir terasın üstünde yüksek bir podyumda duran Korint düzeninde tapınak: Zeus Philios ile İmparator Trajan'ın ortak tapınağı. Beyaz mermer sütunları ovadan görünür.",
+   "speech": "Pergamon Trajan Tapınağı. milattan sonra 114 ile 129. Akropolün en yüksek noktasında, tonozlu bir terasın üstünde yüksek bir podyumda duran Korint düzeninde tapınak: Zeus Philios ile İmparator Trajan'ın ortak tapınağı. Beyaz mermer sütunları ovadan görünür.",
+   "hash": "1b9a1259",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Podyum merdiveni. 2,9 m'lik podyuma yalnızca ön cepheden çıkılırdı.",
+   "speech": "Podyum merdiveni. 2,9 metre'lik podyuma yalnızca ön cepheden çıkılırdı.",
+   "hash": "3d32ae13",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Korint sütunu. Altıya dokuz sütun; başlıklar akantüs yapraklı.",
+   "speech": "Korint sütunu. Altıya dokuz sütun; başlıklar akantüs yapraklı.",
+   "hash": "5eff1d33",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Cella. Zeus Philios ile Trajan'ın heykelleri birlikte dururdu; ikisinin de parçaları bulunmuştur.",
+   "speech": "Cella. Zeus Philios ile Trajan'ın heykelleri birlikte dururdu; ikisinin de parçaları bulunmuştur.",
+   "hash": "d41dd917",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Sütun sayıları, yaklaşık 18 m'lik genişlik (modelde stylobatın genişliği alınmıştır), 2,9 m'lik podyum ve antae arasındaki iki sıra sütun İngilizce Wikipedia'nın Pergamon maddesinden alınmıştır. Uzunluk (27 m), sütun yüksekliği (9,6 m) ve çapı, saçaklık ve cella ölçüleri verilmez; Korint düzeninin oranlarıyla çizilmiştir. Korint başlıkları kompozit başlığın akantüs çanağıyla gösterilir. Tonozlu teras ve kutsal alanı üç yandan çeviren stoalar modelde yoktur; yalnızca podyum ve önündeki merdiven gösterilir. Mimari yazıt bilinmediğinden saçaklığa yazı konmamıştır.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Sütun sayıları, yaklaşık 18 metre'lik genişlik (modelde stylobatın genişliği alınmıştır), 2,9 metre'lik podyum ve antae arasındaki iki sıra sütun İngilizce Wikipedia'nın Pergamon maddesinden alınmıştır. Uzunluk (27 metre), sütun yüksekliği (9,6 metre) ve çapı, saçaklık ve cella ölçüleri verilmez; Korint düzeninin oranlarıyla çizilmiştir. Korint başlıkları kompozit başlığın akantüs çanağıyla gösterilir. Tonozlu teras ve kutsal alanı üç yandan çeviren stoalar modelde yoktur; yalnızca podyum ve önündeki merdiven gösterilir. Mimari yazıt bilinmediğinden saçaklığa yazı konmamıştır.",
+   "hash": "4ad05075",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Trajaneum at Pergamon. AD 114 - 129. A Corinthian temple on a tall podium over a vaulted terrace at the highest point of the acropolis: the shared temple of Zeus Philios and the emperor Trajan. Its white marble columns are seen from the plain.",
+   "speech": "The Trajaneum at Pergamon. AD 114 to 129. A Corinthian temple on a tall podium over a vaulted terrace at the highest point of the acropolis: the shared temple of Zeus Philios and the emperor Trajan. Its white marble columns are seen from the plain.",
+   "hash": "c3601469",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The podium stair. The 2.9 m podium was climbed only from the front.",
+   "speech": "The podium stair. The 2.9 metres podium was climbed only from the front.",
+   "hash": "771b4691",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "A Corinthian column. Six by nine columns, the capitals in acanthus.",
+   "speech": "A Corinthian column. Six by nine columns, the capitals in acanthus.",
+   "hash": "7940baf7",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The cella. Statues of Zeus Philios and Trajan stood together; pieces of both were found.",
+   "speech": "The cella. Statues of Zeus Philios and Trajan stood together; pieces of both were found.",
+   "hash": "eb5a51ab",
+   "target": "app"
+  },
+  {
+   "key": "recon:pergamon-trajan-tapinagi",
+   "folder": "recon-pergamon-trajan-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The column counts, the width of about 18 m (taken as the width of the stylobate), the 2.9 m podium and the two rows of columns in antis come from the English Wikipedia's article on Pergamon. The length (27 m), the height (9.6 m) and diameter of the columns, the entablature and the cella are not given and are drawn from the proportions of the Corinthian order. The Corinthian capitals are drawn with the acanthus bell of the composite. The vaulted terrace and the stoas round three sides of the precinct are not modelled; only the podium and its front stair are. No architrave text is known, so none is cut.",
+   "speech": "Finally, what this model does not know. The column counts, the width of about 18 metres (taken as the width of the stylobate), the 2.9 metres podium and the two rows of columns in antis come from the English Wikipedia's article on Pergamon. The length (27 metres), the height (9.6 metres) and diameter of the columns, the entablature and the cella are not given and are drawn from the proportions of the Corinthian order. The Corinthian capitals are drawn with the acanthus bell of the composite. The vaulted terrace and the stoas round three sides of the precinct are not modelled; only the podium and its front stair are. No architrave text is known, so none is cut.",
+   "hash": "294cb772",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Side Apollon Tapınağı. MS 150 civarı. Yarımadanın ucunda, denizin kıyısında Korint düzeninde bir tapınak; Antoninus Pius döneminde yapıldı. Ayağa kaldırılan beş sütunu gün batımında Side'nin simgesidir.",
+   "speech": "Side Apollon Tapınağı. milattan sonra 150 civarı. Yarımadanın ucunda, denizin kıyısında Korint düzeninde bir tapınak; Antoninus Pius döneminde yapıldı. Ayağa kaldırılan beş sütunu gün batımında Side'nin simgesidir.",
+   "hash": "c94588ab",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Korint sütunları. Bugün ayakta duran beş sütun ön cephenin köşesindendir.",
+   "speech": "Korint sütunları. Bugün ayakta duran beş sütun ön cephenin köşesindendir.",
+   "hash": "3766b072",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Friz. Saçaklık frizinde Medusa başları sıralanırdı.",
+   "speech": "Friz. Saçaklık frizinde Medusa başları sıralanırdı.",
+   "hash": "de58af67",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Cella. Apollon'un kült heykelinin durduğu oda.",
+   "speech": "Cella. Apollon'un kült heykelinin durduğu oda.",
+   "hash": "a5d48852",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Açılabilen kaynak (İngilizce Wikipedia'nın Side Apollon Tapınağı maddesi) tapınağın Korint düzeninde olduğunu, MS 150 civarında Antoninus Pius döneminde yapıldığını ve ayakta kalan beş sütunun 1984-1990 arasında onarıldığını söyler; ölçü vermez. Bu yüzden modelde ölçü gösterilmez: altıya on bir sütunlu peripteros planı, stylobat (16,4 × 29,2 m), sütun yüksekliği (8,9 m), krepis, cella ve saçaklık yayımlanmış planlara ve fotoğraflara göre verilmiştir. Saçaklık frizindeki Medusa başları tek tek modellenmemiştir. Yanındaki Athena tapınağı ve deniz kıyısı gösterilmez.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Açılabilen kaynak (İngilizce Wikipedia'nın Side Apollon Tapınağı maddesi) tapınağın Korint düzeninde olduğunu, milattan sonra 150 civarında Antoninus Pius döneminde yapıldığını ve ayakta kalan beş sütunun 1984 ile 1990 arasında onarıldığını söyler; ölçü vermez. Bu yüzden modelde ölçü gösterilmez: altıya on bir sütunlu peripteros planı, stylobat (16,4 × 29,2 metre), sütun yüksekliği (8,9 metre), krepis, cella ve saçaklık yayımlanmış planlara ve fotoğraflara göre verilmiştir. Saçaklık frizindeki Medusa başları tek tek modellenmemiştir. Yanındaki Athena tapınağı ve deniz kıyısı gösterilmez.",
+   "hash": "2c6154aa",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Temple of Apollo at Side. c. AD 150. A Corinthian temple at the tip of the peninsula, on the edge of the sea, built under Antoninus Pius. Its five re-erected columns at sunset are the emblem of Side.",
+   "speech": "The Temple of Apollo at Side. c. AD 150. A Corinthian temple at the tip of the peninsula, on the edge of the sea, built under Antoninus Pius. Its five re-erected columns at sunset are the emblem of Side.",
+   "hash": "3a43c843",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The Corinthian columns. The five columns standing today are from the corner of the front.",
+   "speech": "The Corinthian columns. The five columns standing today are from the corner of the front.",
+   "hash": "fa66c1bc",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The frieze. Medusa heads ran along the frieze of the entablature.",
+   "speech": "The frieze. Medusa heads ran along the frieze of the entablature.",
+   "hash": "3d71b2ba",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The cella. The room of Apollo's cult statue.",
+   "speech": "The cella. The room of Apollo's cult statue.",
+   "hash": "86aca005",
+   "target": "app"
+  },
+  {
+   "key": "recon:side-apollon-tapinagi",
+   "folder": "recon-side-apollon-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The source that could be opened (the English Wikipedia's article on the Temple of Apollo at Side) says it is Corinthian, built around AD 150 under Antoninus Pius, and that its five standing columns were restored in 1984-1990; it gives no dimensions. So the model shows none: the plan of a peripteros of six by eleven columns, the stylobate (16.4 × 29.2 m), the height of the columns (8.9 m), the crepis, the cella and the entablature follow published plans and photographs. The Medusa heads of the frieze are not modelled one by one. The neighbouring temple of Athena and the shore are not shown.",
+   "speech": "Finally, what this model does not know. The source that could be opened (the English Wikipedia's article on the Temple of Apollo at Side) says it is Corinthian, built around AD 150 under Antoninus Pius, and that its five standing columns were restored in 1984 to 1990; it gives no dimensions. So the model shows none: the plan of a peripteros of six by eleven columns, the stylobate (16.4 × 29.2 metres), the height of the columns (8.9 metres), the crepis, the cella and the entablature follow published plans and photographs. The Medusa heads of the frieze are not modelled one by one. The neighbouring temple of Athena and the shore are not shown.",
+   "hash": "898aa656",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Ksanthos Nereidler Anıtı. MÖ 390 - 380. Likya hanedanı Arbinas'ın mezarı: yüksek bir podyumun üstünde dörde altı sütunlu küçük bir İon tapınağı, sütunlarının arasında denizin üstünden koşan Nereidler. Kalıntıları bugün British Museum'dadır.",
+   "speech": "Ksanthos Nereidler Anıtı. milattan önce 390 ile 380. Likya hanedanı Arbinas'ın mezarı: yüksek bir podyumun üstünde dörde altı sütunlu küçük bir İon tapınağı, sütunlarının arasında denizin üstünden koşan Nereidler. Kalıntıları bugün British Museum'dadır.",
+   "hash": "675c229e",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Savaş frizi. Podyumun alt frizinde kahramanca savaş sahneleri.",
+   "speech": "Savaş frizi. Podyumun alt frizinde kahramanca savaş sahneleri.",
+   "hash": "6d0bad5c",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Kuşatma frizi. Üst frizin her yüzünde bir kentin kuşatılması.",
+   "speech": "Kuşatma frizi. Üst frizin her yüzünde bir kentin kuşatılması.",
+   "hash": "83f59e36",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Nereidler. Sütunların arasında denizin üstünden koşan deniz perileri.",
+   "speech": "Nereidler. Sütunların arasında denizin üstünden koşan deniz perileri.",
+   "hash": "e332c0ad",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Alınlık. Ön alınlıkta hanedan ile eşi, arkada bir savaş.",
+   "speech": "Alınlık. Ön alınlıkta hanedan ile eşi, arkada bir savaş.",
+   "hash": "f218b017",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Sütun sayıları, podyumdaki iki frizin yirmi ikişer bloğu, günümüze kalan on bir Nereid, tarih ve mezar sahibi İngilizce Wikipedia'dan alınmıştır. Kaynak ölçü vermez: podyumun ölçüleri (6,8 × 10,2 × 5,1 m), sütun yüksekliği (3,3 m), saçaklık ve çatı British Museum'daki rekonstrüksiyonun oranlarına göre verilmiştir. Nereidlerden yalnızca günümüze kalan on biri gösterilmiş, aralıklardan beşi boş bırakılmıştır. Friz ve alınlıklardaki sahneler tek tek oyulmamış, figür dizileri olarak çizilmiştir.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Sütun sayıları, podyumdaki iki frizin yirmi ikişer bloğu, günümüze kalan on bir Nereid, tarih ve mezar sahibi İngilizce Wikipedia'dan alınmıştır. Kaynak ölçü vermez: podyumun ölçüleri (6,8 × 10,2 × 5,1 metre), sütun yüksekliği (3,3 metre), saçaklık ve çatı British Museum'daki rekonstrüksiyonun oranlarına göre verilmiştir. Nereidlerden yalnızca günümüze kalan on biri gösterilmiş, aralıklardan beşi boş bırakılmıştır. Friz ve alınlıklardaki sahneler tek tek oyulmamış, figür dizileri olarak çizilmiştir.",
+   "hash": "8c5033be",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Nereid Monument of Xanthos. 390 - 380 BC. The tomb of the Lycian dynast Arbinas: a small Ionic temple of four by six columns on a tall podium, the Nereids running over the sea between its columns. Its remains are in the British Museum.",
+   "speech": "The Nereid Monument of Xanthos. 390 to 380 BC. The tomb of the Lycian dynast Arbinas: a small Ionic temple of four by six columns on a tall podium, the Nereids running over the sea between its columns. Its remains are in the British Museum.",
+   "hash": "967e1435",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The battle frieze. Heroic battles on the lower frieze of the podium.",
+   "speech": "The battle frieze. Heroic battles on the lower frieze of the podium.",
+   "hash": "322f2d66",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The siege frieze. On each side of the upper frieze, a city under siege.",
+   "speech": "The siege frieze. On each side of the upper frieze, a city under siege.",
+   "hash": "837a743f",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "The Nereids. Sea nymphs running over the waves between the columns.",
+   "speech": "The Nereids. Sea nymphs running over the waves between the columns.",
+   "hash": "59238b4c",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The pediment. The dynast and his wife in the front pediment, a battle at the back.",
+   "speech": "The pediment. The dynast and his wife in the front pediment, a battle at the back.",
+   "hash": "ea5c62df",
+   "target": "app"
+  },
+  {
+   "key": "recon:ksanthos-nereidler-aniti",
+   "folder": "recon-ksanthos-nereidler-aniti",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The column counts, the twenty-two blocks of each of the two podium friezes, the eleven surviving Nereids, the date and the owner of the tomb come from the English Wikipedia. It gives no dimensions: the podium (6.8 × 10.2 × 5.1 m), the columns (3.3 m), the entablature and the roof follow the proportions of the reconstruction in the British Museum. Only the eleven surviving Nereids are shown, and five intercolumniations are left empty. The scenes of the friezes and pediments are drawn as rows of figures, not carved one by one.",
+   "speech": "Finally, what this model does not know. The column counts, the twenty-two blocks of each of the two podium friezes, the eleven surviving Nereids, the date and the owner of the tomb come from the English Wikipedia. It gives no dimensions: the podium (6.8 × 10.2 × 5.1 metres), the columns (3.3 metres), the entablature and the roof follow the proportions of the reconstruction in the British Museum. Only the eleven surviving Nereids are shown, and five intercolumniations are left empty. The scenes of the friezes and pediments are drawn as rows of figures, not carved one by one.",
+   "hash": "368b2a30",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Kaunos Kral Mezarları. MÖ 4. - 2. yüzyıl. Dalyan çayının üstündeki kayalığa oyulmuş altı mezar: her birinin cephesi iki İon sütunlu, alınlıklı bir Hellenistik tapınak gibidir. Karia ile Likya'nın sınırındaki ırmaktan, kayıklardan seyredilirdi.",
+   "speech": "Kaunos Kral Mezarları. milattan önce 4. - 2. yüzyıl. Dalyan çayının üstündeki kayalığa oyulmuş altı mezar: her birinin cephesi iki İon sütunlu, alınlıklı bir Hellenistik tapınak gibidir. Karia ile Likya'nın sınırındaki ırmaktan, kayıklardan seyredilirdi.",
+   "hash": "458f9a36",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Büyük mezar. Cephesi iki İon sütunlu ve alınlıklı bir tapınak gibi oyulmuştur.",
+   "speech": "Büyük mezar. Cephesi iki İon sütunlu ve alınlıklı bir tapınak gibi oyulmuştur.",
+   "hash": "11388b21",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Mezar odasının kapısı. Sütunların arkasında, kayanın içindeki mezar odasına açılan kapı.",
+   "speech": "Mezar odasının kapısı. Sütunların arkasında, kayanın içindeki mezar odasına açılan kapı.",
+   "hash": "2ab5f2c8",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Küçük mezar. Altı mezar kayalığın farklı yüksekliklerine oyulmuştur.",
+   "speech": "Küçük mezar. Altı mezar kayalığın farklı yüksekliklerine oyulmuştur.",
+   "hash": "2e067899",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Mezar sayısı, cephelerin iki İon sütunlu, alınlıklı ve dişli frizli tapınak cepheleri olması, palmet biçimli akroterler ve tarih İngilizce Wikipedia'dan alınmıştır. Kaynak yükseklik ya da genişlik vermez: en büyük cephe 8,5 × 11 m alınmış, ötekiler daha küçük ve kayalıkta farklı yüksekliklerde çizilmiştir; yerleri gerçek dizilişi değil, genel görünümü yansıtır. Kayalığın yüksekliği (42 m), ırmağın genişliği ve kıyı modelin oranıdır.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Mezar sayısı, cephelerin iki İon sütunlu, alınlıklı ve dişli frizli tapınak cepheleri olması, palmet biçimli akroterler ve tarih İngilizce Wikipedia'dan alınmıştır. Kaynak yükseklik ya da genişlik vermez: en büyük cephe 8,5 × 11 metre alınmış, ötekiler daha küçük ve kayalıkta farklı yüksekliklerde çizilmiştir; yerleri gerçek dizilişi değil, genel görünümü yansıtır. Kayalığın yüksekliği (42 metre), ırmağın genişliği ve kıyı modelin oranıdır.",
+   "hash": "e2bb92f8",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Royal Tombs of Kaunos. 4th - 2nd century BC. Six tombs cut into the cliff over the Dalyan river, each front carved as a Hellenistic temple with two Ionic columns and a pediment. They were seen from the river on the border of Caria and Lycia, and from the boats on it.",
+   "speech": "The Royal Tombs of Kaunos. 4th - 2nd century BC. Six tombs cut into the cliff over the Dalyan river, each front carved as a Hellenistic temple with two Ionic columns and a pediment. They were seen from the river on the border of Caria and Lycia, and from the boats on it.",
+   "hash": "2637177a",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The great tomb. Its front is cut as a temple with two Ionic columns and a pediment.",
+   "speech": "The great tomb. Its front is cut as a temple with two Ionic columns and a pediment.",
+   "hash": "bd1e345b",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The door of the chamber. Behind the columns, the door into the burial chamber in the rock.",
+   "speech": "The door of the chamber. Behind the columns, the door into the burial chamber in the rock.",
+   "hash": "072c0838",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "A smaller tomb. The six tombs were cut at different heights on the cliff.",
+   "speech": "A smaller tomb. The six tombs were cut at different heights on the cliff.",
+   "hash": "f6f6b081",
+   "target": "app"
+  },
+  {
+   "key": "recon:kaunos-kaya-mezarlari",
+   "folder": "recon-kaunos-kaya-mezarlari",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The number of tombs, their fronts as temple fronts with two Ionic columns, a pediment and a dentil frieze, the palmette acroteria and the date come from the English Wikipedia. It gives no heights or widths: the largest front is taken as 8.5 × 11 m, the others drawn smaller and at different heights on the cliff; their places show the general look, not the real arrangement. The height of the cliff (42 m), the width of the river and the bank are the model's proportion.",
+   "speech": "Finally, what this model does not know. The number of tombs, their fronts as temple fronts with two Ionic columns, a pediment and a dentil frieze, the palmette acroteria and the date come from the English Wikipedia. It gives no heights or widths: the largest front is taken as 8.5 × 11 metres, the others drawn smaller and at different heights on the cliff; their places show the general look, not the real arrangement. The height of the cliff (42 metres), the width of the river and the bank are the model's proportion.",
+   "hash": "b56860c3",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "intro",
+   "text": "Sardes Artemis Tapınağı. MÖ 4. yüzyıl - MS 2. yüzyıl. Efes ve Didyma'nınkilerle yarışmak için başlanan ama hiç bitirilemeyen dev bir İon tapınağı. Roma döneminde cellası ikiye bölündü; batı yarısı imparator kültüne verildi ve buraya Faustina'nın dev heykeli kondu.",
+   "speech": "Sardes Artemis Tapınağı. milattan önce 4. yüzyıl - milattan sonra 2. yüzyıl. Efes ve Didyma'nınkilerle yarışmak için başlanan ama hiç bitirilemeyen dev bir İon tapınağı. Roma döneminde cellası ikiye bölündü; batı yarısı imparator kültüne verildi ve buraya Faustina'nın dev heykeli kondu.",
+   "hash": "24aa402e",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-1",
+   "text": "Köşe sütunu. Ayakta kalan iki sütun tapınağın doğu ucundandır.",
+   "speech": "Köşe sütunu. Ayakta kalan iki sütun tapınağın doğu ucundandır.",
+   "hash": "36969fdb",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-2",
+   "text": "Pronaos. Derin giriş sundurması: iki sıra halinde altı sütun.",
+   "speech": "Pronaos. Derin giriş sundurması: iki sıra halinde altı sütun.",
+   "hash": "0e729bb5",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-3",
+   "text": "Faustina. Cellanın batı yarısında imparatoriçenin dev heykeli; başı British Museum'dadır.",
+   "speech": "Faustina. Cellanın batı yarısında imparatoriçenin dev heykeli; başı British Museum'dadır.",
+   "hash": "d3c08b15",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "spot-4",
+   "text": "Yivsiz sütunlar. Tapınak bitirilmedi: sütunların çoğu yivlenmeden kaldı.",
+   "speech": "Yivsiz sütunlar. Tapınak bitirilmedi: sütunların çoğu yivlenmeden kaldı.",
+   "hash": "2ce18465",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "tr",
+   "chapter": "uncertainty",
+   "text": "Son olarak, bu modelin bilmediği şeyler. Açılabilen kaynak (İngilizce Wikipedia'nın Sardes maddesi) tapınağın Hellenistik dönemde başladığını, bitirilmediğini ve kutsal alanda bulunan 1,76 m'lik Faustina başının imparator çiftinin dev heykellerinden birine ait olduğunu söyler; tapınağın ölçüsünü vermez. Bu yüzden yalnızca bu baş gösterilir: Faustina'nın heykeli ondan sekiz baş boyunda çizilmiştir. Sekize yirmi sütunlu pseudodipteros plan, stylobat (44,5 × 97,5 m), sütun yüksekliği (17,8 m), pronaosun altı sütunu ve cella yayımlanmış planlara göre verilmiş, ölçülmemiştir. Bitmemişliği, doğu sundurmasının arkasındaki sütunların yivsiz bırakılmasıyla gösterilir; gerçekte birçok sütun hiç dikilmemişti.",
+   "speech": "Son olarak, bu modelin bilmediği şeyler. Açılabilen kaynak (İngilizce Wikipedia'nın Sardes maddesi) tapınağın Hellenistik dönemde başladığını, bitirilmediğini ve kutsal alanda bulunan 1,76 metre'lik Faustina başının imparator çiftinin dev heykellerinden birine ait olduğunu söyler; tapınağın ölçüsünü vermez. Bu yüzden yalnızca bu baş gösterilir: Faustina'nın heykeli ondan sekiz baş boyunda çizilmiştir. Sekize yirmi sütunlu pseudodipteros plan, stylobat (44,5 × 97,5 metre), sütun yüksekliği (17,8 metre), pronaosun altı sütunu ve cella yayımlanmış planlara göre verilmiş, ölçülmemiştir. Bitmemişliği, doğu sundurmasının arkasındaki sütunların yivsiz bırakılmasıyla gösterilir; gerçekte birçok sütun hiç dikilmemişti.",
+   "hash": "081a23e8",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "intro",
+   "text": "The Temple of Artemis at Sardis. 4th century BC - 2nd century AD. A colossal Ionic temple begun to rival those of Ephesus and Didyma and never finished. Under Rome its cella was split in two; the west half was given to the cult of the emperors, and Faustina's colossal statue set up in it.",
+   "speech": "The Temple of Artemis at Sardis. 4th century BC - 2nd century AD. A colossal Ionic temple begun to rival those of Ephesus and Didyma and never finished. Under Rome its cella was split in two; the west half was given to the cult of the emperors, and Faustina's colossal statue set up in it.",
+   "hash": "4e24ff56",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-1",
+   "text": "The corner column. The two columns still standing are from the east end.",
+   "speech": "The corner column. The two columns still standing are from the east end.",
+   "hash": "ff062a02",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-2",
+   "text": "The pronaos. The deep porch: six columns in two rows.",
+   "speech": "The pronaos. The deep porch: six columns in two rows.",
+   "hash": "390ec71c",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-3",
+   "text": "Faustina. The empress's colossal statue in the west half of the cella; her head is in the British Museum.",
+   "speech": "Faustina. The empress's colossal statue in the west half of the cella; her head is in the British Museum.",
+   "hash": "09f3ce84",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "spot-4",
+   "text": "The unfluted columns. The temple was never finished: most of its shafts were never fluted.",
+   "speech": "The unfluted columns. The temple was never finished: most of its shafts were never fluted.",
+   "hash": "c4c73d8d",
+   "target": "app"
+  },
+  {
+   "key": "recon:sardes-artemis-tapinagi",
+   "folder": "recon-sardes-artemis-tapinagi",
+   "lang": "en",
+   "chapter": "uncertainty",
+   "text": "Finally, what this model does not know. The source that could be opened (the English Wikipedia's article on Sardis) says the temple was begun in the Hellenistic period and never finished, and that the 1.76 m head of Faustina found in the precinct belonged to one of the colossal statues of the imperial couple; it gives no dimensions of the temple. So only that head is shown: Faustina's statue is drawn eight heads tall from it. The pseudodipteral plan of eight by twenty columns, the stylobate (44.5 × 97.5 m), the height of the columns (17.8 m), the six columns of the pronaos and the cella follow published plans and are not measured. That it was unfinished is shown by leaving the shafts behind the east porch unfluted; in fact many columns were never raised at all.",
+   "speech": "Finally, what this model does not know. The source that could be opened (the English Wikipedia's article on Sardis) says the temple was begun in the Hellenistic period and never finished, and that the 1.76 metres head of Faustina found in the precinct belonged to one of the colossal statues of the imperial couple; it gives no dimensions of the temple. So only that head is shown: Faustina's statue is drawn eight heads tall from it. The pseudodipteral plan of eight by twenty columns, the stylobate (44.5 × 97.5 metres), the height of the columns (17.8 metres), the six columns of the pronaos and the cella follow published plans and are not measured. That it was unfinished is shown by leaving the shafts behind the east porch unfluted; in fact many columns were never raised at all.",
+   "hash": "6fa5bcf5",
+   "target": "app"
   }
  ]
 }

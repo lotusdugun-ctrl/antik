@@ -47,6 +47,11 @@ export type RockFace = {
   leanBetween?: readonly [number, number];
   /** The face turns back to the block's front at its foot too: a block hanging free. */
   hung?: boolean;
+  /**
+   * How much fallen rock is banked against its foot, as a share of the usual
+   * (see `screesOf`): a cliff over a river, its foot washed clean, has little.
+   */
+  scree?: number;
 };
 
 function hash(seed: number, x: number, y: number) {

@@ -819,6 +819,10 @@ const HYMNS: Record<string, readonly Voice[]> = {
   "didyma-apollon-tapinagi": ["hymn-apollo"],
   "aizanoi-zeus-tapinagi": ["hymn-zeus", "hymn-cleanthes"],
   "pergamon-zeus-sunagi": ["hymn-cleanthes", "hymn-zeus"],
+  "pergamon-trajan-tapinagi": ["hymn-zeus", "hymn-cleanthes"],
+  "side-apollon-tapinagi": ["hymn-apollo"],
+  "sardes-artemis-tapinagi": ["hymn-artemis"],
+  "priene-athena-tapinagi": ["hymn-cleanthes"],
 };
 
 /**
@@ -1372,6 +1376,80 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     ],
     density: 0.9,
   },
+  "priene-athena-tapinagi": {
+    add: [
+      SONGBIRDS(0.9, ["blackbird", "finch"]),
+      RAPTORS(0.8, ["partridge"]),
+      GOATS(0.6),
+      CRICKETS(0.7),
+    ],
+    density: 0.85,
+  },
+  "termessos-tiyatrosu": {
+    add: [GUSTS(1.2), RAPTORS(1, ["hoopoe"]), GOATS(0.8), SONGBIRDS(0.6, ["woodpecker", "finch"])],
+    density: 0.8,
+  },
+  "antalya-hadrianus-kapisi": {
+    add: [
+      PEOPLE(1.2, ["chatter", "shout"]),
+      DONKEY(1),
+      STEPS(["steps-stone"], 1),
+      SWIFTS(1.1),
+      WORK(["hammer"], 0.5),
+    ],
+    density: 1.2,
+  },
+  "aphrodisias-tetrapylon": {
+    add: [
+      WORK(["chisel", "hammer"], 0.9),
+      PEOPLE(0.9, ["chatter", "laugh"]),
+      SONGBIRDS(0.8, ["dove", "sparrow"]),
+      CRICKETS(0.6),
+    ],
+    density: 1,
+  },
+  "efes-hadrianus-tapinagi": {
+    add: [
+      PEOPLE(1.1),
+      STEPS(["steps-stone", "steps-gravel"], 0.9),
+      SWIFTS(0.9),
+      WORK(["grind"], 0.5),
+    ],
+    density: 1.15,
+  },
+  "pergamon-trajan-tapinagi": {
+    add: [GUSTS(1.1), RAPTORS(0.9, ["partridge", "hoopoe"]), SWIFTS(0.8)],
+    density: 0.8,
+  },
+  "side-apollon-tapinagi": {
+    add: [...HARBOUR(0.9), SONGBIRDS(0.5, ["gull"]), CRICKETS(0.8)],
+    density: 0.9,
+  },
+  "ksanthos-nereidler-aniti": {
+    add: [
+      GOATS(0.9),
+      DONKEY(0.6),
+      SONGBIRDS(0.8, ["blackbird", "hoopoe"]),
+      PEOPLE(0.6, ["chatter"]),
+      STEPS(["steps-gravel"], 0.6),
+      WORK(["hammer"], 0.4),
+      CRICKETS(0.7),
+    ],
+    density: 0.9,
+  },
+  "kaunos-kaya-mezarlari": {
+    add: [
+      FROGS(1),
+      SONGBIRDS(0.9, ["beeeater", "finch"]),
+      WORK(["chisel"], 0.6),
+      STEPS(["steps-wood"], 0.6),
+    ],
+    density: 0.85,
+  },
+  "sardes-artemis-tapinagi": {
+    add: [SONGBIRDS(0.8, ["lark", "dove"]), WORK(["chisel"], 0.5), GOATS(0.5), CRICKETS(0.8)],
+    density: 0.8,
+  },
   "patara-deniz-feneri": {
     add: [
       ...HARBOUR(1.1),
@@ -1406,7 +1484,7 @@ function kindScape(item: Pick<Reconstruction, "id"> & { model: { kind: string } 
     case "ionic-dipteros":
     case "great-altar":
       return sanctuary(HYMNS[id] ?? ["hymn-zeus"], {
-        exposed: id === "aizanoi-zeus-tapinagi",
+        exposed: id === "aizanoi-zeus-tapinagi" || id === "pergamon-trajan-tapinagi",
         masons: id === "didyma-apollon-tapinagi",
       });
     case "roman-facade":
@@ -1435,6 +1513,13 @@ function kindScape(item: Pick<Reconstruction, "id"> & { model: { kind: string } 
       return monastery();
     case "lighthouse":
       return lighthouse();
+    case "roman-gate":
+    case "prostyle-temple":
+      return agora();
+    case "lycian-heroon":
+      return mountain();
+    case "rock-tombs":
+      return harbour();
     default:
       // A kind added later still gets birds, wind and the night.
       return {
