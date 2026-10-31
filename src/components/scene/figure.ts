@@ -373,7 +373,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
   const headPieces = (look: Look) => {
     const out: Geo[] = [];
     const masked = look.headwear === "mask";
-    const head = new THREE.SphereGeometry(1, 16, 12);
+    const head = new THREE.SphereGeometry(1, 24, 18);
     // Put the seam at the back, so a column of vertices runs down the face.
     head.rotateY(-Math.PI / 2);
     const p = head.attributes["position"]!;
@@ -407,7 +407,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     if (!masked) {
       // Eyes: dark, set a little into their sockets.
       for (const side of [-1, 1])
-        out.push(ball(0.0085, [side * 0.0212, 0.926, 0.0575], [1, 0.72, 0.45], 0x1d1510, 6, 4));
+        out.push(ball(0.0085, [side * 0.0212, 0.926, 0.0575], [1, 0.72, 0.45], 0x1d1510, 8, 6));
     }
     // Ears.
     for (const side of [-1, 1])
@@ -437,7 +437,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         out.push(kit.paint(fringe, look.hair));
       } else {
         // Hair: a cap from a hairline over the brow to the nape.
-        const cap = new THREE.SphereGeometry(0.069, 16, 6, 0, TAU, 0, Math.PI / 2);
+        const cap = new THREE.SphereGeometry(0.069, 24, 8, 0, TAU, 0, Math.PI / 2);
         cap.scale(0.93, look.female ? 1.0 : 0.94, 1);
         cap.rotateX(-0.42);
         cap.translate(0, 0.929, -0.004);
@@ -1242,7 +1242,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
           { y: -0.11, rx: 0.03, rz: 0.029 },
           { y: -UPPER, rx: 0.027, rz: 0.027 },
         ],
-        8,
+        14,
         (k) => (k < rows ? cloth : look.skin),
         { top: true, bottom: true },
       ),
@@ -1303,7 +1303,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
           { y: -0.205, rx: 0.009, rz: 0.016, z: 0.009 },
           { y: -0.217, rx: 0.004, rz: 0.007, z: 0.011 },
         ],
-        8,
+        14,
         (k) => (k < sleeve ? look.main : k === sleeve && g === "persian" ? look.trim : look.skin),
         { top: true, bottom: true },
       ),
@@ -1351,7 +1351,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
               { y: -0.16, rx: 0.045, rz: 0.047 },
               { y: -THIGH, rx: 0.037, rz: 0.039 },
             ],
-            8,
+            14,
             legCloth,
             { bottom: true },
           ),
@@ -1367,7 +1367,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
             { y: -0.2, rx: 0.021, rz: 0.022 },
             { y: -SHIN - 0.002, rx: 0.02, rz: 0.021 },
           ],
-          8,
+          14,
           (k) => {
             if (greaves && k < 3) return BRONZE;
             if (shoe === "boot" && k >= 2) return 0x4a3426;
@@ -1390,7 +1390,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         { y: 0.095, z: 0.023, rx: 0.022, rz: 0.005 },
         { y: 0.106, z: 0.024, rx: 0.007, rz: 0.003 },
       ],
-      8,
+      14,
       (k, j) => {
         if (shoe === "boot") return 0x4a3426;
         if (shoe === "shoe") return shoeHex;

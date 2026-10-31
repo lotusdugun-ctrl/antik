@@ -84,13 +84,67 @@ for im in j.get("images", []):
 EARTH = np.array([0.397, 0.309, 0.195])
 
 
-def is_ridge(p, attrs):
+def earth(p):
     mat = j["materials"][p["material"]] if "material" in p else {}
     c = mat.get("pbrMetallicRoughness", {}).get("baseColorFactor")
-    if not c or np.abs(np.array(c[:3]) - EARTH).max() > 0.02:
+    return bool(c) and np.abs(np.array(c[:3]) - EARTH).max() <= 0.02
+
+
+def is_ridge(p, attrs):
+    if not earth(p):
         return False
     pos = attrs["POSITION"]
     return bool(np.hypot(pos[:, 0], pos[:, 2]).min() > 60)
+
+
+def drop_drums(p, attrs, idx):
+    """An earth primitive can hold the drums together with earth that belongs (a theatre's
+    bank): split it into its connected pieces and leave out the drums, the pieces that lie
+    away from the middle and sink below the ground (they are set 6 m deep)."""
+    if not earth(p):
+        return idx, 0
+    tri = idx.reshape(-1, 3)
+    n = attrs["POSITION"].shape[0]
+    parent = np.arange(n)
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    # weld by position first (pieces may not share indices at seams)
+    pos = attrs["POSITION"]
+    key = np.round(pos * 100).astype(np.int64)
+    _, first = np.unique(key, axis=0, return_inverse=True)
+    first = first.reshape(-1)
+    rep = {}
+    for v, k in enumerate(first):
+        if k in rep:
+            ra, rb = find(v), find(rep[k])
+            if ra != rb:
+                parent[ra] = rb
+        else:
+            rep[k] = v
+    for a, b, c in tri:
+        ra, rb, rc = find(a), find(b), find(c)
+        if ra != rb:
+            parent[ra] = rb
+        rc = find(c)
+        rb = find(b)
+        if rc != rb:
+            parent[rc] = rb
+    roots = np.array([find(v) for v in range(n)])
+    comp = roots[tri[:, 0]]
+    keep = np.ones(len(tri), bool)
+    dropped = 0
+    for c in np.unique(comp):
+        sel = comp == c
+        vs = np.unique(tri[sel])
+        P = pos[vs]
+        if np.hypot(P[:, 0], P[:, 2]).min() > 20 and P[:, 1].min() < -1.0:
+            keep[sel] = False
+            dropped += 1
+    return tri[keep].reshape(-1), dropped
 
 
 dropped_ridges = 0
@@ -116,6 +170,10 @@ for ni, node in enumerate(j["nodes"]):
         idx = read(p["indices"]).reshape(-1) if "indices" in p else np.arange(attrs["POSITION"].shape[0])
         if is_ridge(p, attrs):
             dropped_ridges += 1
+            continue
+        idx, nd = drop_drums(p, attrs, idx.astype(np.int64))
+        dropped_ridges += nd
+        if idx.size == 0:
             continue
         prims.append((p, attrs, idx.astype(np.int64)))
     if not prims:
@@ -150,7 +208,22 @@ for ni, node in enumerate(j["nodes"]):
         for k in np.unique(key):
             tiles.setdefault(int(k), []).append((pi, np.nonzero(key == k)[0]))
     children = []
-    for t, (k, members) in enumerate(sorted(tiles.items())):
+    # the trees' wood goes into a mesh of its own in each tile, so Unity can leave it
+    # out when the tile is small on screen (the leaves hide it from afar: AntikSetup LOD)
+    def is_bark(pi):
+        p = prims[pi][0]
+        return name.endswith("-flora") and "material" in p and j["materials"][p["material"]].get("name", "").startswith("antik-bark")
+    split = []
+    for k, members in sorted(tiles.items()):
+        bark = [m for m in members if is_bark(m[0])]
+        rest = [m for m in members if not is_bark(m[0])]
+        if bark and rest:
+            split += [(k, rest), (k, bark)]
+        else:
+            split.append((k, members))
+    tile_no = {}
+    for k, members in split:
+        t = tile_no.setdefault(k, len(tile_no))
         newp = []
         for pi, tris in members:
             p, attrs, idx = prims[pi]

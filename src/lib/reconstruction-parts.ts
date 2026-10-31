@@ -6765,32 +6765,23 @@ export function stadiumParts(spec: StadiumSpec): Part[] {
      * scrub climbing away from the long side.
      */
     const ridge = seeded(4417);
+    /*
+     * The rise itself is the terrain's (landscape-plan.ts rolls the ground up
+     * away from the site): a row of earth cones stood in for it once and read
+     * as a row of heaps. What stays is the rock breaking through the slope,
+     * half buried in it.
+     */
     for (let i = 0; i < 16; i += 1) {
       const z = -endCentre * 1.6 + (endCentre * 3.2 * i) / 15;
       const back = 44 + ridge() * 14;
-      parts.push(
-        scenery(
-          worn(
-            cyl(
-              "grass",
-              [-(outerRadius + back), -2, z],
-              30 + ridge() * 14,
-              8 + ridge() * 6,
-              16 + ridge() * 12,
-              18,
-            ),
-            3,
-          ),
-        ),
-      );
-      // Rock breaking through the slope.
+      ridge(); ridge(); ridge(); // (the cones' draws, so the rocks keep their places)
       parts.push(
         scenery(
           worn(
             box(
               "limestone",
-              [-(outerRadius + back - 12 + ridge() * 6), 4 + ridge() * 6, z + ridge() * 8],
-              [6 + ridge() * 5, 3, 4 + ridge() * 4],
+              [-(outerRadius + back - 12 + ridge() * 6), -0.6 + ridge() * 0.6, z + ridge() * 8],
+              [6 + ridge() * 5, 1.6, 4 + ridge() * 4],
               ridge() * 3,
             ),
             0.6,

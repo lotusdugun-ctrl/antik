@@ -480,7 +480,11 @@ sun_data.energy = P["sun_w"]
 sun_data.angle = math.radians(1.2)
 sun = bpy.data.objects.new("sun", sun_data)
 scene.collection.objects.link(sun)
-elev, azim = math.radians(P["elev"]), math.radians(P["azim"])
+# a site whose front faces away from the preset's sun gets its own azimuth (ANTIK_AZIM,
+# degrees), so the side the app opens on is the lit one (Unity: AntikSetup.Views sunYaw = 180 - azim)
+azim_deg = float(os.environ.get("ANTIK_AZIM", P["azim"]))
+meta["azim"] = azim_deg
+elev, azim = math.radians(P["elev"]), math.radians(azim_deg)
 sun.rotation_euler = (math.pi / 2 - elev, 0.0, azim)
 
 world = bpy.data.worlds.new("sky")

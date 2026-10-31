@@ -395,11 +395,16 @@ const MATERIALS: Record<Material, Palette> = {
  * One lighting opinion per time of day. None of this is measured — the model
  * is the measured thing — but the light has to be something the building
  * plausibly stood in: high white sun, low warm sun, or moon. The dark theme
- * keeps the same moods, tuned down and towards blue, so a night model in dark
- * mode still reads at night.
+ * darkens only the night, towards blue, so a night model in dark mode still
+ * reads at night.
  */
 const paletteFor = (theme: "light" | "dark", atmos: AtmosMode): AtmosPalette => {
-  const dark = theme === "dark";
+  /*
+   * Daylight is daylight whatever the page around it: tuned down for the dark
+   * theme, a noon sky came out the slate of dusk and the model read as night.
+   * Only the night keeps its darker variant.
+   */
+  const dark = theme === "dark" && atmos === "night";
   switch (atmos) {
     case "golden": {
       /*

@@ -554,6 +554,7 @@ export function planLandscape(options: LandscapeOptions) {
   const look = BIOMES[biome];
   const random = seededRandom(Math.round(span * 1000));
   const hills = noise2(7);
+  const wiggle = noise2(31);
   const tint = noise2(19);
   const parts = options.parts ?? [];
   const water = waterOf(parts);
@@ -597,10 +598,18 @@ export function planLandscape(options: LandscapeOptions) {
     for (const w of water) {
       // Basins and fountains in the building are the building's business.
       if (w.hx * w.hz < 40) continue;
-      const d = distanceTo(w, x, z);
+      // The water is a box; its shore should not be a ruler line. Along the
+      // box's edge a band of uneven width stays land (raised to just over the
+      // surface where it is low), so the water ends where the ground does.
+      const shore = Math.min(w.hx, w.hz) > 30 ? 3 + 26 * Math.min(1, Math.max(0, wiggle(x / 70, z / 70) - 0.25)) : 0;
+      const d = distanceTo(w, x, z) + shore;
       if (d < 0) {
         const bed = w.top + Math.max(-BED_DEPTH, SHORE_SLOPE * d) - 0.05;
         h = Math.min(h, bed);
+      } else if (shore > 0 && d - shore < 0) {
+        // inside the box but on the shore band: ground just over the water
+        const bank = w.top + Math.min(SHORE_SLOPE * d, 1.2) + 0.08;
+        if (bank > h) h = bank;
       } else if (d < 45) {
         // Next to the site only where the ground there would be under water:
         // the beach behind Patara's mole, not the river path below Zeugma.

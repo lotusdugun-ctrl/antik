@@ -69,7 +69,9 @@ describe("the country round each model", () => {
             const s = Math.sin(w.rot);
             const x = w.x + u * c + v * s;
             const z = w.z - u * s + v * c;
-            if (distanceTo(w, x, z) > -1) continue;
+            // (a band up to 29 m inside a large water's edge is shore: landscape-plan.ts)
+            const band = Math.min(w.hx, w.hz) > 30 ? 30 : 1;
+            if (distanceTo(w, x, z) > -band) continue;
             expect(`${item.id}: ${plan.heightAt(x, z) < w.top}`).toBe(`${item.id}: true`);
           }
       }
