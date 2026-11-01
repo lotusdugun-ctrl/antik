@@ -52,7 +52,12 @@ export type ScanId =
   | "asklepios-lod"
   | "tiberius-velatus-lod"
   | "ephesus-portrait-lod"
-  | "caryatid-lod";
+  | "caryatid-lod"
+  | "herakles-lansdowne"
+  | "apollo-lykeios"
+  | "demeter-knidos"
+  | "venus-milo"
+  | "alexander-rondanini";
 
 export type Scan = {
   url: string;
@@ -68,7 +73,7 @@ export type Scan = {
    * published commercially on Google Play. A NonCommercial (NC) scan cannot be
    * added: the type refuses it, and a test checks the licence URLs as well.
    */
-  license: "CC BY 4.0" | "Free archive";
+  license: "CC BY 4.0" | "Free archive" | "Public Domain Mark 1.0";
   licenseUrl: string;
   /** Turn about y that makes the carved face look along +z. */
   facing?: number;
@@ -77,6 +82,9 @@ export type Scan = {
 };
 
 const BY = "https://creativecommons.org/licenses/by/4.0/";
+const PDM = "https://creativecommons.org/publicdomain/mark/1.0/";
+/** SMK's public-domain casts: the page each scan is published on. */
+const smk = (objectNumber: string) => `https://open.smk.dk/artwork/image/${objectNumber}`;
 const TDS = "https://threedscans.com/info/";
 const l = (tr: string, en: string): Localized => ({ tr, en });
 
@@ -86,6 +94,73 @@ type FullScanId = Exclude<
 >;
 
 const SCANS_FULL: Record<FullScanId, Scan> = {
+  /*
+   * The Royal Cast Collection of the SMK (Statens Museum for Kunst,
+   * Copenhagen) publishes its scans of its plaster casts in the public domain.
+   * Only casts whose originals stand in museums outside Italy, the Vatican,
+   * Greece and Turkey are used: those states license commercial reproduction
+   * of the works in their collections.
+   */
+  "herakles-lansdowne": {
+    url: "/scans/herakles-lansdowne.glb",
+    title: l("Lansdowne Herakles'i", "The Lansdowne Herakles"),
+    author: "SMK – Statens Museum for Kunst (Den Kongelige Afstøbningssamling)",
+    source: smk("KAS224"),
+    license: "Public Domain Mark 1.0",
+    licenseUrl: PDM,
+    note: l(
+      "Hadrianus'un Tivoli'deki villasında bulunan heykelin alçı kopyasının taraması; özgün heykel Malibu'daki Getty Villa'da.",
+      "A scan of the plaster cast of the statue found in Hadrian's Villa at Tivoli; the original is in the Getty Villa, Malibu.",
+    ),
+  },
+  "apollo-lykeios": {
+    url: "/scans/apollo-lykeios.glb",
+    title: l("Apollon Lykeios", "Apollo Lykeios"),
+    author: "SMK – Statens Museum for Kunst (Den Kongelige Afstøbningssamling)",
+    source: smk("KAS1026"),
+    license: "Public Domain Mark 1.0",
+    licenseUrl: PDM,
+    note: l(
+      "MÖ 4. yüzyıl tipinin Roma kopyasından alınmış alçı kopyanın taraması; özgün heykel Louvre'da.",
+      "A scan of a plaster cast of a Roman copy of the 4th-century BC type; the original is in the Louvre.",
+    ),
+  },
+  "demeter-knidos": {
+    url: "/scans/demeter-knidos.glb",
+    title: l("Knidos Demeter'i", "The Demeter of Knidos"),
+    author: "SMK – Statens Museum for Kunst (Den Kongelige Afstøbningssamling)",
+    source: smk("KAS128"),
+    license: "Public Domain Mark 1.0",
+    licenseUrl: PDM,
+    note: l(
+      "Knidos'taki Demeter kutsal alanında bulunan oturan tanrıçanın alçı kopyasının taraması; özgün heykel British Museum'da.",
+      "A scan of the plaster cast of the seated goddess from the sanctuary of Demeter at Knidos; the original is in the British Museum.",
+    ),
+  },
+  "venus-milo": {
+    url: "/scans/venus-milo.glb",
+    title: l("Milo Afroditi", "The Aphrodite of Melos"),
+    author: "SMK – Statens Museum for Kunst (Den Kongelige Afstøbningssamling)",
+    source: smk("KAS434"),
+    license: "Public Domain Mark 1.0",
+    licenseUrl: PDM,
+    note: l(
+      "Milos Afroditi'nin (Venus de Milo) alçı kopyasının taraması; özgün heykel Louvre'da.",
+      "A scan of the plaster cast of the Aphrodite of Melos (Venus de Milo); the original is in the Louvre.",
+    ),
+  },
+  "alexander-rondanini": {
+    url: "/scans/alexander-rondanini.glb",
+    title: l("Rondanini İskender'i", "The Rondanini Alexander"),
+    author: "SMK – Statens Museum for Kunst (Den Kongelige Afstøbningssamling)",
+    source: smk("KAS538"),
+    license: "Public Domain Mark 1.0",
+    licenseUrl: PDM,
+    note: l(
+      "Genç İskender'i gösteren heykelin alçı kopyasının taraması; özgün heykel Münih Glyptothek'te.",
+      "A scan of the plaster cast of the statue of the young Alexander; the original is in the Glyptothek, Munich.",
+    ),
+  },
   "celsus-sophia": {
     url: "/scans/celsus-sophia.glb",
     title: l("Sophia (Bilgelik) heykeli", "Sophia (Wisdom)"),
@@ -552,6 +627,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "caryatid",
     "hadrian-troy",
+    "ephesus-portrait",
+    "herakles-lansdowne",
   ],
   "didyma-apollon-tapinagi": ["didyma-medusa", "tiberius-velatus", "asklepios"],
   "artemis-tapinagi": [
@@ -569,6 +646,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "hadrian-troy",
     "caryatid",
     "asklepios",
+    "herakles-lansdowne",
+    "alexander-rondanini",
   ],
   "pergamon-zeus-sunagi": [
     "magdalensberg-youth",
@@ -584,6 +663,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "ephesus-portrait",
     "hadrian-troy",
     "tiberius-velatus",
+    "alexander-rondanini",
+    "herakles-lansdowne",
   ],
   "hierapolis-tiyatrosu": [
     "muse-polyhymnia",
@@ -602,6 +683,7 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "caryatid",
     "hadrian-troy",
+    "herakles-lansdowne",
   ],
   "laodikeia-bati-tiyatrosu": [
     "muse-polyhymnia",
@@ -621,6 +703,7 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "caryatid",
     "hadrian-troy",
     "ephesus-portrait",
+    "apollo-lykeios",
   ],
   "milet-buyuk-tiyatro": [
     "hadrian-troy",
@@ -634,6 +717,7 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "magdalensberg-youth",
     "tiberius-velatus",
     "caryatid",
+    "venus-milo",
   ],
   "efes-yamac-evler": ["glykon", "magdalensberg-youth", "antinous", "tiberius-velatus", "pan"],
   "efes-buyuk-tiyatro": [
@@ -654,6 +738,10 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "ephesus-portrait",
     "antinous",
     "cybele",
+    "apollo-lykeios",
+    "alexander-rondanini",
+    "herakles-lansdowne",
+    "venus-milo",
   ],
   "side-tiyatrosu": [
     "neptune",
@@ -673,6 +761,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "ephesus-portrait",
     "caryatid",
+    "herakles-lansdowne",
+    "alexander-rondanini",
   ],
   "aizanoi-zeus-tapinagi": [
     "neptune",
@@ -688,6 +778,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "magdalensberg-youth",
     "asklepios",
+    "herakles-lansdowne",
+    "alexander-rondanini",
   ],
   "halikarnas-mozolesi": [
     "mausoleum-amazon-1",
@@ -763,6 +855,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "caryatid",
     "asklepios",
+    "venus-milo",
+    "alexander-rondanini",
   ],
   "side-apollon-tapinagi": [
     "apollo-kitharoidos",
@@ -777,6 +871,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "hadrian-troy",
     "tiberius-velatus",
     "asklepios",
+    "herakles-lansdowne",
+    "ephesus-portrait",
   ],
   "ksanthos-nereidler-aniti": ["caryatid-lod", "asklepios-lod", "nike", "tiberius-velatus-lod"],
   "sardes-artemis-tapinagi": [
@@ -794,6 +890,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "penelope",
     "hadrian-troy",
     "asklepios",
+    "herakles-lansdowne",
+    "alexander-rondanini",
   ],
   "yerebatan-sarnici": ["didyma-medusa"],
   "magnesia-artemis-tapinagi": [
@@ -808,6 +906,8 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "amazon-wounded",
     "hermes-sandal",
     "caryatid",
+    "herakles-lansdowne",
+    "alexander-rondanini",
   ],
   "assos-athena-tapinagi": [
     "celsus-sophia",
@@ -822,6 +922,9 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "hadrian-troy",
     "caryatid",
     "asklepios",
+    "herakles-lansdowne",
+    "venus-milo",
+    "alexander-rondanini",
   ],
   "letoon-leto-tapinagi": [
     "cybele",

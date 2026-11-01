@@ -31,9 +31,9 @@ import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STORIES = ROOT / "src" / "lib" / "narration-stories"
-OUT = ROOT / "scripts" / "rewrite-out"
+OUT = ROOT / "scripts" / "rewrite-out2"
 KEY_FILE = ROOT / "scripts" / ".gemini-key"
-MODELS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.5-pro"]
+MODELS = ["gemini-3.8-flash", "gemini-flash-latest", "gemini-2.5-flash"]
 
 RULES = {
     "tr": """Sen, bir sesli rehber için metin yazan usta bir anlatıcısın. Aşağıdaki JSON, bir antik
@@ -42,8 +42,12 @@ sıcak, samimi ve canlı bir rehber ağzından yeniden yaz. Kurallar:
 - Bilgileri KORU: her sayı aynı rakamlarla kalmalı; yeni sayı, yeni tarih, yeni özel isim EKLEME.
   Metinde olmayan bir bilgiyi uydurma. Var olan özel isimleri değiştirme.
 - Uzunluk, orijinalin 0,9 ile 1,4 katı arasında olsun.
-- Dinleyiciye doğrudan seslen ("bakın", "hayal edin", "başınızı kaldırın"), arada bir soru sorup
-  cevapla, kısa nefes araları için üç nokta (…) kullan. Her cümlede tek fikir; sayıyı cümle sonuna koy.
+- Dilbilgisi kusursuz, doğal, akıcı İstanbul Türkçesi yaz; bir Türk rehberin gerçekten söyleyeceği
+  cümleler kur. Devrik ya da çeviri kokan cümle kurma ("Takvimler işaret ediyor MS 4. yüzyılı",
+  "kat sayısı tam iki" gibi zorlama yapılardan kaçın). Sayıları cümlenin doğal yerinde söyle.
+- Dinleyiciye ara sıra doğrudan seslen ("bakın", "hayal edin"), ama abartma. Her bölümde EN FAZLA bir
+  soru sor; "… mı dersiniz?", "… mı yapıldı?" gibi soru-cevap kalıbını her bölümde tekrarlama.
+  Kısa nefes araları için üç nokta (…) kullanabilirsin, ama bölüm başına en fazla iki kez.
 - Kalıp açılışlardan KAÇIN: "Biliyor muydunuz?", "Gezinirken", "Bu gezimizin sonuna geldik",
   "Şimdi … önündesiniz" gibi her dosyada tekrar eden açılışları kullanma; her bölümü farklı başlat.
 - "uncertainty" bölümünü içten bir itiraf gibi, sakin ve anlaşılır yaz; hesapları sade cümlelere dök.
@@ -56,8 +60,10 @@ lively guide talking to a small group. Rules:
 - KEEP the facts: every number stays, in digits; add NO new number, date or proper name; invent
   nothing that is not in the text; do not change existing names.
 - Length between 0.9x and 1.4x the original.
-- Address the listener directly ("look up", "imagine", "listen"), now and then ask a question and
-  answer it, use an ellipsis (…) for a short breath. One idea per sentence; put numbers at the end.
+- Write natural, idiomatic English a real guide would say; say numbers where they fall naturally.
+- Address the listener now and then ("look up", "imagine"), but don't overdo it. At most ONE question
+  per chapter; don't repeat a question-and-answer pattern in every chapter. An ellipsis (…) for a
+  short breath at most twice per chapter.
 - AVOID stock openers: "Did you know?", "As you wander", "This brings our tour", "Next stop: the …"
   — start every chapter differently.
 - Write "uncertainty" as a candid, calm confession; turn arithmetic into plain sentences.
@@ -109,18 +115,27 @@ def ask(key: str, model: str, prompt: str) -> dict:
             headers={"Content-Type": "application/json", "x-goog-api-key": key},
         )
         try:
-            with urllib.request.urlopen(request, timeout=300) as response:
+            with urllib.request.urlopen(request, timeout=600) as response:
                 data = json.loads(response.read().decode("utf-8"))
             text = "".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"])
-            return json.loads(text)
+            # Some answers come wrapped in a code fence, or with words round the JSON.
+            start, end = text.find("{"), text.rfind("}")
+            return json.loads(text[start : end + 1] if start >= 0 else text)
         except urllib.error.HTTPError as error:
+            detail = error.read().decode("utf-8", "replace")
+            if error.code == 429 and ("PerDay" in detail or "per day" in detail.lower()):
+                print("\nGUNLUK UCRETSIZ KOTA DOLDU. Yarin (Turkiye saatiyle ogleden sonra) yeniden "
+                      "calistirin; kaldigi yerden devam eder.", flush=True)
+                os._exit(3)
             if error.code in (429, 500, 502, 503, 504):
                 time.sleep(min(90, 4 * 2**attempt) + random.random() * 3)
                 continue
-            raise RuntimeError(f"HTTP {error.code}: {error.read().decode('utf-8', 'replace')[:300]}")
-        except (KeyError, IndexError, json.JSONDecodeError) as error:
-            last = error
-            time.sleep(2)
+            raise RuntimeError(f"HTTP {error.code}: {detail[:300]}")
+        except (TimeoutError, OSError, urllib.error.URLError):
+            # A slow answer or a dropped connection: wait, and ask again.
+            time.sleep(min(60, 5 * 2**attempt))
+        except (KeyError, IndexError, ValueError):
+            time.sleep(3)
     raise RuntimeError("no usable answer")
 
 
@@ -138,6 +153,8 @@ def rewrite(key: str, model: str, lang: str, path: pathlib.Path) -> tuple[str, i
     story = json.loads(path.read_text(encoding="utf-8"))
     out_path = OUT / lang / path.name
     done = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
+    # A chapter still as it was (an earlier run could not rewrite it) is tried again.
+    done = {k: v for k, v in done.items() if k in story and v != story[k]}
     todo = {k: v for k, v in story.items() if k not in done}
     kept = 0
     for _ in range(3):
@@ -169,7 +186,7 @@ def main() -> None:
     parser.add_argument("--only")
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--model")
-    parser.add_argument("--jobs", type=int, default=6)
+    parser.add_argument("--jobs", type=int, default=3)
     args = parser.parse_args()
     key = api_key()
     model = pick_model(key, args.model)

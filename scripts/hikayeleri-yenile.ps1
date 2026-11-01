@@ -1,5 +1,5 @@
 # Rewrites the audio guide's chapters (tr, en) for the ear with Gemini, ON THIS
-# COMPUTER, and pushes the result to the branch "hikaye-yeniden" for checking.
+# COMPUTER. The result stays in scripts\rewrite-out2 (not committed) until Claude has checked it.
 # Nothing reaches the site from here: Claude checks every chapter first.
 # Keep this file ASCII: Windows PowerShell 5.1 reads BOM-less scripts as ANSI.
 $ErrorActionPreference = "Continue"
@@ -37,14 +37,12 @@ git pull --no-edit origin main
 $gen = Join-Path $PSScriptRoot "rewrite_stories_gemini.py"
 foreach ($lang in @("tr", "en")) {
   Step "Metinler yeniden yaziliyor: $lang (yarida kalirsa yeniden calistirin, kaldigi yerden devam eder)"
-  & $pyExe @pyArgs $gen --lang $lang | Out-Host
+  & $pyExe @pyArgs $gen --lang $lang 2>&1 | Tee-Object -FilePath (Join-Path $PSScriptRoot "rewrite-log.txt") -Append | Out-Host
 }
 
-Step "Kontrol icin GitHub'a gonderiliyor (hikaye-yeniden dali)"
-git checkout -B hikaye-yeniden
-git add -f scripts/rewrite-out
-git commit -m "Sesli rehber metinleri: Gemini ile yeniden yazildi (kontrol bekliyor)" 2>$null
-git push -f origin hikaye-yeniden
-git checkout main
+if (-not (Test-Path (Join-Path $PSScriptRoot "rewrite-out2"))) {
+  Write-Host "Hic metin yazilamadi (kota ya da baglanti). Yarin yeniden calistirin." -ForegroundColor Yellow
+  exit 1
+}
 Write-Host ""
-Write-Host "Tamam! Claude'a 'hikayeler gonderildi' yazin; kontrol edip siteye o koyacak." -ForegroundColor Green
+Write-Host "Tamam! Claude'a 'hikayeler gonderildi' yazin; dosyalari bilgisayarinizdan okuyup kontrol edecek ve siteye o koyacak." -ForegroundColor Green

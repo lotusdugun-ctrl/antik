@@ -14,11 +14,20 @@ describe("scans", () => {
       expect(existsSync(join(root, "public", scan.url))).toBe(true);
       expect(scan.author.length).toBeGreaterThan(0);
       const free = scan.license === "Free archive";
+      const pd = scan.license === "Public Domain Mark 1.0";
       expect(scan.source).toStartWith(
-        free ? "https://threedscans.com/" : "https://sketchfab.com/3d-models/",
+        free
+          ? "https://threedscans.com/"
+          : pd
+            ? "https://open.smk.dk/"
+            : "https://sketchfab.com/3d-models/",
       );
       expect(scan.licenseUrl).toStartWith(
-        free ? "https://threedscans.com/" : "https://creativecommons.org/licenses/",
+        free
+          ? "https://threedscans.com/"
+          : pd
+            ? "https://creativecommons.org/publicdomain/"
+            : "https://creativecommons.org/licenses/",
       );
       expect(scan.title.tr && scan.title.en && scan.note.tr && scan.note.en).toBeTruthy();
       expect(scan.url).toBe(`/scans/${id}.glb`);
@@ -28,7 +37,9 @@ describe("scans", () => {
   test("no scan carries a NonCommercial, NoDerivatives or unknown licence", () => {
     // The app is published commercially (Google Play); NC scans are not allowed.
     for (const [id, scan] of Object.entries(SCANS)) {
-      expect(`${id}:${scan.license}`).toMatch(/:(CC BY 4\.0|Free archive)$/);
+      expect(`${id}:${scan.license}`).toMatch(
+        /:(CC BY 4\.0|Free archive|Public Domain Mark 1\.0)$/,
+      );
       expect(`${id}:${scan.licenseUrl}`).not.toMatch(/-nc|-nd|noncommercial/i);
       if (scan.license === "CC BY 4.0")
         expect(`${id}:${scan.licenseUrl}`).toBe(

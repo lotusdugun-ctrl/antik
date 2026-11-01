@@ -1253,21 +1253,19 @@ class Cast {
  */
 const SCAN_OF: Partial<Record<string, ScanId[]>> = {
   /** A goddess draped and standing: no scan of an Aphrodite of the kind survives here. */
-  Aphrodite: ["ephesus-portrait", "caryatid"],
+  Aphrodite: ["venus-milo", "ephesus-portrait", "caryatid"],
   /** Athena in her peplos: a maiden of her own temple on the Acropolis. */
   Athena: ["caryatid"],
   Zeus: ["neptune"],
   Emperor: ["tiberius-velatus", "hadrian-troy"],
-  Apollon: ["apollo-kitharoidos"],
+  Apollon: ["apollo-lykeios", "apollo-kitharoidos"],
   Dionysos: ["magdalensberg-youth", "antinous"],
-  Hermes: ["hermes-sandal"],
+  Hermes: ["hermes-sandal", "alexander-rondanini"],
   /**
-   * Herakles as the young athlete-hero, the type of the Lansdowne Herakles: a
-   * nude youth of the same Polykleitan-Lysippan build stands in for him. (The
-   * cast of the Lansdowne Herakles once used here was licensed for
-   * non-commercial use only.)
+   * Herakles: the Lansdowne Herakles itself, a public-domain scan of the SMK
+   * cast, and a nude youth of the same Polykleitan-Lysippan build.
    */
-  Herakles: ["magdalensberg-youth", "hermes-sandal", "antinous"],
+  Herakles: ["herakles-lansdowne", "magdalensberg-youth"],
   Pan: ["pan"],
   Asklepios: ["asklepios"],
   Nike: ["nike"],
@@ -1276,6 +1274,8 @@ const SCAN_OF: Partial<Record<string, ScanId[]>> = {
   Amazon: ["amazon-wounded"],
   /** The Muse who sits with her hand to her chin, as the "Penelope" does. */
   "Muse (thinking)": ["penelope", "muse-clio"],
+  /** A goddess enthroned: the Demeter of Knidos, from a Carian sanctuary. */
+  "Muse (seated)": ["demeter-knidos"],
   "Muse (with tablet)": ["muse-polyhymnia"],
   "Muse (veiled)": ["muse-thalia"],
 };

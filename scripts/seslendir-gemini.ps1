@@ -48,7 +48,7 @@ if ($Samples) {
   Step "Ses ornekleri kaydediliyor (birkac kurus)"
   & $pyExe @pyArgs $gen --samples | Out-Host
   $dir = Join-Path $PSScriptRoot "ses-ornekleri"
-  if (Test-Path $dir) { Start-Process explorer.exe $dir }
+  if (Test-Path $dir) { Invoke-Item $dir; Write-Host "Ornekler: $dir" }
   Write-Host ""
   Write-Host "Orneklerden begendiginiz sesin adini Claude'a yazin (or. Sulafat)." -ForegroundColor Green
   exit 0

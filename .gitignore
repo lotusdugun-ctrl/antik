@@ -49,3 +49,7 @@ scripts/ses-ornekleri/
 scripts/__pycache__/
 scripts/.gemini-key
 scripts/rewrite-out/
+scans-raw/
+scripts/.sketchfab-token
+scripts/rewrite-out2/
+scripts/rewrite-log.txt
