@@ -4556,6 +4556,10 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         dispose: () => void;
       } | null = null;
       let qualityOn = false;
+      // When the camera last moved: the occlusion waits for it to settle.
+      const lastCameraPos = new THREE.Vector3();
+      const lastTarget = new THREE.Vector3();
+      let lastMove = 0;
       /*
        * Dynamic resolution (see `render-budget.ts`): when frames take longer
        * than a sixtieth of a second, the pixel ratio steps down until they do
@@ -4795,6 +4799,13 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         const made = new EffectComposer(renderer);
         made.addPass(new RenderPass(scene, camera));
         const ao = new GTAOPass(scene, camera, clientWidth, clientHeight);
+        /*
+         * At half the resolution: the occlusion is soft shading in corners,
+         * and computing it for every pixel of a large screen made the
+         * quality mode stutter.
+         */
+        const aoSetSize = ao.setSize.bind(ao);
+        ao.setSize = (w: number, h: number) => aoSetSize(Math.ceil(w / 2), Math.ceil(h / 2));
         ao.updateGtaoMaterial({
           radius: Math.max(0.6, span * 0.012),
           distanceFallOff: 1,
@@ -6039,7 +6050,20 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           camera.near = nearWanted;
           camera.updateProjectionMatrix();
         }
-        if (composer && qualityOn) composer.render();
+        /*
+         * The ambient occlusion is the costliest thing on screen, and a moving
+         * camera makes it shimmer. It is drawn once the view settles: while
+         * the camera moves the frame is the plain render, smooth; a quarter of
+         * a second after it stops, the shading of the corners fades in.
+         */
+        const moved =
+          !camera.position.equals(lastCameraPos) || !controls.target.equals(lastTarget);
+        if (moved) {
+          lastCameraPos.copy(camera.position);
+          lastTarget.copy(controls.target);
+          lastMove = now;
+        }
+        if (composer && qualityOn && now - lastMove > 0.25) composer.render();
         else renderer.render(scene, camera);
         placePins();
         listen(now);

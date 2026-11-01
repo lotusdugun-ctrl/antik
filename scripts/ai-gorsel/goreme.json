@@ -1,0 +1,61 @@
+{
+  "site": "Göreme rock churches, Cappadocia",
+  "images": [
+    {
+      "name": "dis-genel",
+      "aspect": "16:9",
+      "prompt": "Photorealistic historical reconstruction, eye level from the valley floor, of a Göreme valley in Cappadocia around the year 1050 AD. Tall cones of soft cream and pale pink volcanic tuff (fairy chimneys), several capped with dark grey basalt caps, eroded with fine vertical rain runnels. Three of the cones are monastic rock-cut churches: their fronts carved directly into the rock with horseshoe-arched doorways, small arched windows and shallow blind arcades with pilasters, the carved edges slightly worn. Small rock-cut dovecote holes with thin white painted trim high on the cones. Narrow footpaths, rock-cut steps, a few Byzantine monks in dark wool habits, terraced vineyards and apricot trees on the valley floor, dry summer grass. Clear late-afternoon light, long soft shadows, real scale, no fantasy elements, no modern objects. Shot like an architectural photograph, 35mm lens."
+    },
+    {
+      "name": "dis-cephe",
+      "aspect": "4:3",
+      "prompt": "Photorealistic close view of the carved front of a Byzantine rock-cut church in Göreme, Cappadocia, 11th century, as it looked when new. The facade is carved into a cream volcanic tuff cliff: a two-storey composition with a horseshoe-arched doorway, a row of five blind horseshoe arches on flat pilasters above it, a simple cornice, a small cross carved in relief, and red ochre painted lines outlining the arches. Chisel marks visible on the rock. A worn rock-cut threshold and three steps. Morning light, real proportions (the door is 2 m high), no fantasy, no people."
+    },
+    {
+      "name": "ic-nef",
+      "aspect": "16:9",
+      "prompt": "Photorealistic interior of the Dark Church (Karanlık Kilise) in Göreme, Cappadocia, mid-11th century, freshly painted. A small cross-in-square church carved entirely out of the rock: four rock-cut columns, barrel-vaulted arms, a small central dome, three apses. Every surface is covered in Byzantine frescoes with deep lapis-blue backgrounds: Christ Pantocrator in the dome, scenes of the life of Christ in the vaults, standing saints on the columns, ornamental red and ochre borders. Light comes only from one small window and a few oil lamps, warm glow, deep shadows. Real scale (the dome is about 6 m above the floor), no modern objects, no people."
+    },
+    {
+      "name": "ic-apsis",
+      "aspect": "4:3",
+      "prompt": "Photorealistic view into the main apse of a Byzantine rock-cut church in Göreme, Cappadocia, 11th century. The apse is carved from cream tuff; a rock-cut altar block and a low rock-cut bench along the wall. The apse conch is painted with a fresco of an enthroned Christ with two angels on a deep lapis-blue ground, below it a row of standing bishops in white robes with black crosses. Painted red and white geometric border bands. Soft light from a small window, an oil lamp on the altar. No people, no modern objects."
+    },
+    {
+      "name": "doku-tuf",
+      "aspect": "1:1",
+      "texture": true,
+      "prompt": "Seamless tileable texture, orthographic straight-on view, flat even overcast lighting, no shadows, no perspective: cut surface of soft cream and pale pink volcanic tuff rock from Cappadocia, with fine parallel chisel marks from hand tools, small pores and tiny darker inclusions. Photographic, high detail, 1 square metre of wall."
+    },
+    {
+      "name": "doku-tuf-asinmis",
+      "aspect": "1:1",
+      "texture": true,
+      "prompt": "Seamless tileable texture, orthographic straight-on view, flat even overcast lighting, no shadows: naturally weathered surface of a Cappadocian fairy chimney, cream to pinkish-beige volcanic tuff with vertical rain runnels and shallow gullies, fine grainy erosion, faint lichen spots. Photographic, high detail, about 2 m of surface."
+    },
+    {
+      "name": "doku-bazalt-sapka",
+      "aspect": "1:1",
+      "texture": true,
+      "prompt": "Seamless tileable texture, orthographic straight-on view, flat even lighting, no shadows: dark grey weathered basalt / ignimbrite cap rock, rough, cracked into blocky joints, with patches of orange and pale green lichen. Photographic, high detail."
+    },
+    {
+      "name": "doku-fresk",
+      "aspect": "1:1",
+      "texture": true,
+      "prompt": "Seamless tileable texture, orthographic, flat even lighting: a Byzantine fresco wall surface from an 11th-century Cappadocian church, a field of deep lapis-blue painted plaster with a repeating border of red and ochre zigzags and white pearl dots, small cracks and slight paint loss showing the cream plaster beneath. No figures, no faces, no text. Photographic, high detail."
+    },
+    {
+      "name": "doku-asi-boyama",
+      "aspect": "1:1",
+      "texture": true,
+      "prompt": "Seamless tileable texture, orthographic, flat even lighting: early Byzantine (8th-9th century) red ochre painting applied directly on cream tuff rock, in Cappadocian rock churches: simple crosses in circles, zigzag bands, diamond and checker patterns, slightly faded and uneven, brush strokes visible. No figures, no text. Photographic."
+    },
+    {
+      "name": "doku-zemin",
+      "aspect": "1:1",
+      "texture": true,
+      "prompt": "Seamless tileable texture, top-down orthographic, flat even lighting: worn rock-cut floor of a Cappadocian rock church, cream tuff polished smooth by centuries of feet, shallow dips, fine dust in the low spots, a few chisel marks at the edges. Photographic, high detail."
+    }
+  ]
+}
