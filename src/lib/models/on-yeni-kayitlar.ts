@@ -195,8 +195,8 @@ export const ON_YENI: Reconstruction[] = [
       },
     ],
     uncertainty: l(
-      "Sıra sayıları (16 + 8) ve seyirci sayısı İngilizce Wikipedia'dan alınmıştır. Cavea çapı (64 m), orkestra çapı, oturma basamaklarının ölçüleri, sahne binasının yüksekliği ve kat sayısı ölçülmüş değil, sıra sayısına ve fotoğraflara göre verilmiştir. Oturma yeri yarım daire olarak çizilmiştir (Hellenistik tiyatronun kanatları biraz daha sarmış olabilir); sahne binasının beş kapısı ve altındaki hayvan odaları ayrıca modellenmemiş, sahne cephesi bu sitenin öteki tiyatrolarının şemasıyla çizilmiştir. Kuzey parodosun açık, güney parodosun tonozlu olduğu modelde gösterilmez.",
-      "The row counts (16 + 8) and the audience come from the English Wikipedia. The diameter of the cavea (64 m), of the orchestra, the seat steps, the height of the stage building and its storeys are not measured but set from the row count and photographs. The seating is drawn as a semicircle (the Hellenistic wings may have wrapped a little further); the five doors of the stage building and the animal rooms under it are not modelled separately, and the stage front follows the scheme the site's other theatres use. That the north parodos was open and the south one vaulted is not shown.",
+      "Sıra sayıları (16 + 8) ve seyirci sayısı İngilizce Wikipedia'dan alınmıştır. Cavea çapı (64 m), orkestra çapı, oturma basamaklarının ölçüleri, sahne binasının yüksekliği ve kat sayısı ölçülmüş değil, sıra sayısına ve fotoğraflara göre verilmiştir. Tiyatro, Güllük Dağı'nın sırtında bir kaya sekisine oturur; sahne binasının arkasında dağ uçurumla vadiye iner. Uçurumun yüksekliği (140 m) ölçülmüş değil, manzarayı göstermek için verilmiştir. Oturma yeri yarım daire olarak çizilmiştir (Hellenistik kanatlar biraz daha sarmış olabilir); dış cephe duvarı yoktur. Sahne binası tek katlı, alçak ve yerel kireçtaşındandır; cephesi sade çizilmiştir, altındaki hayvan odaları ayrıca modellenmemiştir. Kuzey parodosun açık, güney parodosun tonozlu olduğu modelde gösterilmez.",
+      "The row counts (16 + 8) and the audience come from the English Wikipedia. The diameter of the cavea (64 m), of the orchestra, the seat steps, the height of the stage building and its storeys are not measured but set from the row count and photographs. The theatre sits on a shelf of rock on the ridge of Güllük Dağı; behind the stage building the mountain drops away in a cliff to the valley. The height of the cliff (140 m) is not measured but given to show the view. The seating is drawn as a semicircle (the Hellenistic wings may have wrapped a little further), with no outer facade wall. The stage building is a single low storey of local limestone with a plain front; the animal rooms under it are not modelled separately. That the north parodos was open and the south one vaulted is not shown.",
     ),
     hotspots: [
       spot(
@@ -228,7 +228,7 @@ export const ON_YENI: Reconstruction[] = [
       kind: "roman-theatre",
       caveaDiameter: 64,
       orchestraDiameter: 18,
-      scaenaeHeight: 9,
+      scaenaeHeight: 6,
       seatTread: 0.72,
       seatRise: 0.4,
       podiumHeight: 1.2,
@@ -238,10 +238,13 @@ export const ON_YENI: Reconstruction[] = [
       upperRows: 8,
       character: {
         stone: "limestone",
-        ground: "hillside",
+        ground: "summit",
+        drop: 140,
         facade: "none",
-        screen: "miletus",
-        storeys: 2,
+        screen: "plain",
+        storeys: 1,
+        stageHeight: 2.4,
+        bays: 14,
         topGallery: false,
       },
     },
@@ -561,8 +564,8 @@ export const ON_YENI: Reconstruction[] = [
       },
     ],
     uncertainty: l(
-      "Sütun sayıları, yaklaşık 18 m'lik genişlik (modelde stylobatın genişliği alınmıştır), 2,9 m'lik podyum ve antae arasındaki iki sıra sütun İngilizce Wikipedia'nın Pergamon maddesinden alınmıştır. Uzunluk (27 m), sütun yüksekliği (9,6 m) ve çapı, saçaklık ve cella ölçüleri verilmez; Korint düzeninin oranlarıyla çizilmiştir. Korint başlıkları kompozit başlığın akantüs çanağıyla gösterilir. Tonozlu teras ve kutsal alanı üç yandan çeviren stoalar modelde yoktur; yalnızca podyum ve önündeki merdiven gösterilir. Mimari yazıt bilinmediğinden saçaklığa yazı konmamıştır.",
-      "The column counts, the width of about 18 m (taken as the width of the stylobate), the 2.9 m podium and the two rows of columns in antis come from the English Wikipedia's article on Pergamon. The length (27 m), the height (9.6 m) and diameter of the columns, the entablature and the cella are not given and are drawn from the proportions of the Corinthian order. The Corinthian capitals are drawn with the acanthus bell of the composite. The vaulted terrace and the stoas round three sides of the precinct are not modelled; only the podium and its front stair are. No architrave text is known, so none is cut.",
+      "Sütun sayıları, yaklaşık 18 m'lik genişlik (modelde stylobatın genişliği alınmıştır), 2,9 m'lik podyum ve antae arasındaki iki sıra sütun İngilizce Wikipedia'nın Pergamon maddesinden alınmıştır. Uzunluk (27 m), sütun yüksekliği (9,6 m) ve çapı, saçaklık ve cella ölçüleri verilmez; Korint düzeninin oranlarıyla çizilmiştir. Korint başlıkları kompozit başlığın akantüs çanağıyla gösterilir. Tonozlu teras ve kutsal alanı üç yandan çeviren stoalar modelde yoktur; yalnızca podyum ve önündeki merdiven gösterilir. Mimari yazıt bilinmediğinden saçaklığa yazı konmamıştır. Tapınak akropolün tepesinde, ova çok aşağıda gösterilmiştir; arazinin biçimi temsilîdir.",
+      "The column counts, the width of about 18 m (taken as the width of the stylobate), the 2.9 m podium and the two rows of columns in antis come from the English Wikipedia's article on Pergamon. The length (27 m), the height (9.6 m) and diameter of the columns, the entablature and the cella are not given and are drawn from the proportions of the Corinthian order. The Corinthian capitals are drawn with the acanthus bell of the composite. The vaulted terrace and the stoas round three sides of the precinct are not modelled; only the podium and its front stair are. No architrave text is known, so none is cut. The temple is shown on the summit of the acropolis, the plain far below; the form of the ground is representative.",
     ),
     hotspots: [
       spot(
@@ -592,6 +595,7 @@ export const ON_YENI: Reconstruction[] = [
     ],
     model: {
       kind: "ionic-dipteros",
+      hill: { drop: 140, edge: 70, run: 220 },
       stylobateWidth: 18,
       stylobateLength: 27,
       crepidomaWidth: 20,

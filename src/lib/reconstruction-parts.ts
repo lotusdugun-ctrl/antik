@@ -41,6 +41,27 @@ import { gateParts, gateWalkStart } from "@/lib/models/roma-kapilari";
 import { prostyleParts, prostyleWalkStart } from "@/lib/models/hadrian-tapinagi";
 import { heroonParts, heroonWalkStart } from "@/lib/models/nereid-aniti";
 import { rockTombParts, rockTombWalkStart } from "@/lib/models/kaunos-kaya-mezarlari";
+import { domedParts, domedWalkStart } from "@/lib/models/kubbeli";
+import {
+  cisternParts,
+  cisternWalkStart,
+  towerParts,
+  towerWalkStart,
+} from "@/lib/models/galata-yerebatan";
+import {
+  aqueductParts,
+  aqueductWalkStart,
+  mudbrickParts,
+  mudbrickWalkStart,
+  rockChurchParts,
+  rockChurchWalkStart,
+  seljukParts,
+  seljukWalkStart,
+  sphinxGateParts,
+  sphinxGateWalkStart,
+  undergroundParts,
+  undergroundWalkStart,
+} from "@/lib/models/anadolu-yeni";
 import {
   lightColumn,
   mazaeusGateParts,
@@ -123,6 +144,8 @@ export type Material =
   | "marbleBlack"
   /** The warm, pebbly conglomerate Aspendos is built of. */
   | "conglomerate"
+  /** The dark grey volcanic stone of Assos. */
+  | "andesite"
   /** Open water: a harbour basin. */
   | "water"
   /** The raked sand of a race track: matt, with no shine at a low sun. */
@@ -3514,7 +3537,8 @@ export function theatreLayout(spec: RomanTheatreSpec) {
     rowAt(index).inner > stageWidth / 2 + 2 ? [-sweep, Math.PI + 2 * sweep] : [0, Math.PI];
   const wallZ = -spec.stageDepth;
   const stageTop = character.stageHeight ?? 1.5;
-  const fractions = character.storeys === 3 ? [0.4, 0.32, 0.28] : [0.55, 0.45];
+  const fractions =
+    character.storeys === 3 ? [0.4, 0.32, 0.28] : character.storeys === 1 ? [1] : [0.55, 0.45];
   const storeys = fractions.map((f, i) => ({
     base: stageTop + fractions.slice(0, i).reduce((a, c) => a + c, 0) * spec.scaenaeHeight,
     height: f * spec.scaenaeHeight,
@@ -3870,9 +3894,33 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
       ),
     );
   }
-  if (ch.ground === "hillside") {
-    // The hill the seating is laid into, falling away from the rim.
-    parts.push(...slope(outerRadius, galleryTop + 0.3, 48, fullStart - 0.3, fullLength + 0.6));
+  if (ch.ground === "summit") {
+    /*
+     * A theatre on the edge of a mountain (Termessos): the seating laid into
+     * a shelf of rock, and behind the stage building the ground stops — a
+     * sheer face falls away to the gorge, the far side of the valley seen
+     * over the stage. The ledge the stage stands on is the top of the rock;
+     * the landscape falls with it (see `fallFor`).
+     */
+    const drop = ch.drop ?? 120;
+    const edge = wallZ - 9;
+    const width = 900;
+    const face: RockFace = {
+      relief: 1.6,
+      seed: 4404,
+      ledges: [drop * 0.35, drop * 0.7],
+      strata: 0.9,
+      scree: 0,
+    };
+    parts.push(
+      scenery({ ...box("rock", [0, -drop, edge - 6], [width, drop - 0.4, 12]), rock: face }),
+    );
+    // The rock the cavea is cut into; the mountain climbs on behind it.
+    parts.push(...slope(outerRadius, galleryTop + 0.3, 10, fullStart + 0.2, fullLength - 0.4));
+  } else if (ch.ground === "hillside") {
+    // The hill the seating is laid into: the landscape climbs on behind it
+    // (`fallFor`); here only the rock cut back round the rim.
+    parts.push(...slope(outerRadius, galleryTop + 0.3, 10, fullStart - 0.3, fullLength + 0.6));
   } else if (ch.facade === "wall") {
     // At Aspendos only the back of the bank leans on the citadel hill.
     parts.push(
@@ -3888,6 +3936,35 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     const margin = 0.6 / r;
     for (let i = 0; i <= arcadeColumns; i += 1) {
       const theta = fullStart + margin + ((fullLength - margin * 2) * i) / arcadeColumns;
+      if (ch.topGallery === "arcade") {
+        // Aspendos: a row of arches on square piers, not columns.
+        parts.push(
+          box(
+            wallStone,
+            [Math.cos(theta) * r, galleryTop + 0.3, Math.sin(theta) * r],
+            [0.95, 2.7, 1.0],
+            Math.PI / 2 - theta,
+          ),
+        );
+        // The haunches of the arches either side, closing each bay to a round head.
+        for (const [dy, w, off] of [
+          [2.7, 0.7, 0.82],
+          [3.25, 0.6, 1.47],
+        ] as const)
+          for (const side of [-1, 1]) {
+            if ((i === 0 && side < 0) || (i === arcadeColumns && side > 0)) continue;
+            const t = theta + (side * off) / r;
+            parts.push(
+              box(
+                wallStone,
+                [Math.cos(t) * r, galleryTop + 0.3 + dy, Math.sin(t) * r],
+                [w, 3.6 - dy, 0.9],
+                Math.PI / 2 - t,
+              ),
+            );
+          }
+        continue;
+      }
       parts.push(
         ...column(
           screenStone,
@@ -4169,7 +4246,9 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
           ? [["granite", "gialloAntico"], ["marble"]]
           : ch.screen === "miletus"
             ? [["pavonazzetto"], ["marble"]]
-            : [["granite", "pavonazzetto"], ["gialloAntico"]];
+            : ch.screen === "plain"
+              ? [["limestone"], ["limestone"], ["limestone"]]
+              : [["granite", "pavonazzetto"], ["gialloAntico"]];
   storeys.forEach((storey, s) => {
     const project = 1.2 + s * 0.3;
     for (let i = 0; i <= bays; i += 1) {
@@ -4371,6 +4450,7 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
       ephesus: [TEXTS.ephesusStage],
       side: [TEXTS.sideStage],
       miletus: [],
+      plain: [],
     };
     const texts = dedications[ch.screen];
     // One line along the lowest course of the cornice, below its projection.
@@ -4605,6 +4685,11 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     parts.push(scenery(box("stone", [0, 0, behind - 13], [spec.caveaDiameter * 1.8, 1.0, 4])));
   }
 
+  if (ch.sea) {
+    // Side stands on the neck of its peninsula: the sea on either hand.
+    for (const s of [-1, 1])
+      parts.push(scenery(box("water", [s * (ch.sea + 900), -1.6, 0], [1800, 1.2, 3600])));
+  }
   /*
    * The country round it: a hillside rising behind Ephesus and Hierapolis,
    * the flat town round Side, the coastal plain under Aspendos and Miletus.
@@ -4613,7 +4698,7 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     ...setting(outerRadius, 8803 + Math.round(spec.caveaDiameter), {
       stone: ch.ground === "plain" ? 0.4 : 0.7,
       grass: ch.ground === "plain" ? 0.5 : 0.8,
-      hills: ch.ground === "hillside" ? 0.9 : 0.55,
+      hills: ch.ground === "hillside" ? 0.9 : ch.ground === "summit" ? 0.3 : 0.55,
     }),
   );
   return parts;
@@ -5130,8 +5215,8 @@ export function ionicDipterosParts(spec: IonicDipterosSpec): Part[] {
         [x, y0, z],
         spec.columnDiameter,
         spec.columnHeight,
-        spec.order === "corinthian" ? "composite" : "ionic",
-        undefined,
+        spec.order === "corinthian" ? "composite" : spec.order === "doric" ? "plain" : "ionic",
+        spec.order === "doric" ? 20 : undefined,
         !rough,
       ),
     );
@@ -5894,7 +5979,11 @@ export function neolithicEnclosureParts(spec: NeolithicEnclosureSpec): Part[] {
       Math.sin(theta) * faceRadius,
     ];
     const inward: [number, number] = [-Math.cos(theta), -Math.sin(theta)];
-    const plan = programme[i % programme.length]!;
+    // A plain ring (Karahan Tepe's pillars are mostly undecorated): a snake
+    // on every third stone, the rest bare.
+    const plan: (typeof programme)[number] = spec.plain
+      ? { animals: i % 3 === 0 ? ["snake"] : [] }
+      : programme[i % programme.length]!;
     // How long an animal can be on this stone, and where the next one goes.
     const size = Math.min(1.0, width * 0.78);
     let y = 0.32;
@@ -7944,8 +8033,15 @@ function buildParts(spec: ModelSpec): Part[] {
       return romanFacadeParts(spec);
     case "roman-theatre":
       return romanTheatreParts(spec);
-    case "ionic-dipteros":
-      return ionicDipterosParts(spec);
+    case "ionic-dipteros": {
+      const parts = ionicDipterosParts(spec);
+      if (spec.stone !== "andesite") return parts;
+      // Assos: the temple of the dark volcanic stone of its own hill.
+      const ANDESITE = new Set<Material>(["marble", "marbleWorn", "limestone", "stone"]);
+      return parts.map((p) =>
+        ANDESITE.has(p.material) && !p.decor ? { ...p, material: "andesite" } : p,
+      );
+    }
     case "neolithic-enclosure":
       return neolithicEnclosureParts(spec);
     case "great-altar":
@@ -7982,6 +8078,24 @@ function buildParts(spec: ModelSpec): Part[] {
       return heroonParts(spec);
     case "rock-tombs":
       return rockTombParts(spec);
+    case "domed-sanctuary":
+      return domedParts(spec);
+    case "round-tower":
+      return towerParts(spec);
+    case "cistern":
+      return cisternParts(spec);
+    case "aqueduct":
+      return aqueductParts(spec);
+    case "underground-city":
+      return undergroundParts(spec);
+    case "rock-churches":
+      return rockChurchParts(spec);
+    case "seljuk-complex":
+      return seljukParts(spec);
+    case "mudbrick-complex":
+      return mudbrickParts(spec);
+    case "sphinx-gate":
+      return sphinxGateParts(spec);
   }
 }
 
@@ -8019,12 +8133,15 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
     }
     case "ionic-dipteros":
       return {
-        // Six metres before the front, or nearer where the altar stands close.
+        // Six metres before the front, or nearer where the altar stands close;
+        // where it stands very close, beyond it, looking past it.
         at: [
           0,
           -spec.crepidomaLength / 2 -
             podiumStairRun(spec) -
-            Math.min(6, Math.min(17, spec.crepidomaWidth * 0.3) - 2.5),
+            (Math.min(17, spec.crepidomaWidth * 0.3) - 2.5 >= 3.2
+              ? Math.min(6, Math.min(17, spec.crepidomaWidth * 0.3) - 2.5)
+              : Math.min(17, spec.crepidomaWidth * 0.3) + 4),
         ],
         floor: 0,
         look: [0, spec.columnHeight * 0.45, -spec.crepidomaLength / 2 + 2],
@@ -8092,6 +8209,24 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return heroonWalkStart(spec);
     case "rock-tombs":
       return rockTombWalkStart(spec);
+    case "domed-sanctuary":
+      return domedWalkStart(spec);
+    case "round-tower":
+      return towerWalkStart(spec);
+    case "cistern":
+      return cisternWalkStart(spec);
+    case "aqueduct":
+      return aqueductWalkStart(spec);
+    case "underground-city":
+      return undergroundWalkStart(spec);
+    case "rock-churches":
+      return rockChurchWalkStart(spec);
+    case "seljuk-complex":
+      return seljukWalkStart(spec);
+    case "mudbrick-complex":
+      return mudbrickWalkStart(spec);
+    case "sphinx-gate":
+      return sphinxGateWalkStart(spec);
   }
 }
 
@@ -8105,6 +8240,86 @@ export function groundOf(spec: ModelSpec): number {
 }
 
 /** The axis-aligned box every part of a model fits inside, in metres. */
+/**
+ * Where the country round a model falls away below it: a theatre on the edge
+ * of a mountain has the gorge behind its stage. `dir` is the plan direction
+ * the ground falls toward, `edge` how far from the centre (along it) the drop
+ * begins, `drop` how far down it goes.
+ */
+export type Fall = {
+  dir: [number, number];
+  edge: number;
+  drop: number;
+  /** The mountain climbing on behind the building: from how far back, and how high. */
+  behind?: { from: number; height: number };
+  /** All round, not one way: a mound or a summit, `edge` its radius. */
+  radial?: boolean;
+  /** How far, horizontally, the drop takes: a cliff is short, a mound's flank long. */
+  run?: number;
+  /** A valley along x: the land rising either side beyond `half` metres of z. */
+  valley?: { half: number; height: number };
+};
+export function fallFor(spec: ModelSpec): Fall | undefined {
+  if (spec.kind === "roman-theatre" && spec.character?.ground === "summit") {
+    const L = theatreLayout(spec);
+    return {
+      dir: [0, -1],
+      edge: spec.stageDepth + 9,
+      drop: spec.character.drop ?? 120,
+      behind: { from: L.outerRadius - 3, height: L.rowAt(L.rows - 1).y + 3 },
+    };
+  }
+  if (spec.kind === "ionic-dipteros" && spec.hill)
+    // Assos, Pergamon: the temple crowns the acropolis, the land falling away.
+    return {
+      dir: [0, -1],
+      edge: spec.hill.edge,
+      drop: spec.hill.drop,
+      radial: true,
+      run: spec.hill.run ?? spec.hill.drop * 1.6,
+    };
+  if (spec.kind === "tumulus-sanctuary")
+    // Nemrut: the tumulus is the summit of the mountain, 2,134 m up.
+    return {
+      dir: [0, -1],
+      edge: spec.tumulusDiameter * 0.5 + spec.courtDepth + 25,
+      drop: 220,
+      radial: true,
+      run: 420,
+    };
+  if (spec.kind === "sphinx-gate")
+    // The gate stands on top of the mound, the plain below on every side.
+    return { dir: [0, -1], edge: 30, drop: spec.mound, radial: true, run: spec.mound * 4 };
+  if (spec.kind === "mudbrick-complex")
+    // The temples crown the 30 m mound of Arslantepe.
+    return { dir: [0, -1], edge: 34, drop: 28, radial: true, run: 90 };
+  if (spec.kind === "rock-churches")
+    // Göreme: the chimneys stand in a valley, the tuff rising either side.
+    return {
+      dir: [0, -1],
+      edge: 1e6,
+      drop: 0,
+      valley: { half: spec.valleyWidth / 2 + spec.height * 0.6, height: spec.height * 1.4 },
+    };
+  if (spec.kind === "underground-city") {
+    // The city is shown as a cut through the hill: the plain at the foot of
+    // the cut face, the hill (and the village) at the level of its top.
+    const face = spec.thickness / 2;
+    return { dir: [0, -1], edge: face - 2, drop: 0, behind: { from: 0, height: spec.depth } };
+  }
+  if (spec.kind === "roman-theatre" && spec.character?.ground === "hillside") {
+    // No drop: only the hill the seating is laid into, climbing on behind it.
+    const L = theatreLayout(spec);
+    return {
+      dir: [0, -1],
+      edge: 1e6,
+      drop: 0,
+      behind: { from: L.outerRadius - 3, height: L.rowAt(L.rows - 1).y + 3 },
+    };
+  }
+  return undefined;
+}
+
 export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
   const min: Vec3 = [Infinity, Infinity, Infinity];
   const max: Vec3 = [-Infinity, -Infinity, -Infinity];

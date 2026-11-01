@@ -11,7 +11,7 @@ import {
   type Vec3,
   type WalkStart,
 } from "@/lib/reconstruction-parts";
-import { gateLion } from "@/lib/beasts";
+import { gateLion, gateSphinx } from "@/lib/beasts";
 import { bands, pitchedFace, polygonalFace, slopedSlab, steppedRamp } from "./masonry";
 
 /**
@@ -49,6 +49,8 @@ export type HittiteGateSpec = {
   towerHeight: number;
   lionHeight: number;
   wallLength: number;
+  /** What stands out of the jambs: lions (Hattusa) or sphinxes (Alacahöyük). */
+  guardians?: "lions" | "sphinxes";
 };
 
 /** The width of each jamb monolith at its foot. */
@@ -88,18 +90,24 @@ export function hittiteGateLayout(spec: HittiteGateSpec) {
  * face of the jamb, `+z` straight out of the stone; `size` is its height to
  * the top of the mane.
  */
-export function hittiteLion(material: Material, at: Vec3, rotY: number, size: number): Part[] {
+export function hittiteLion(
+  material: Material,
+  at: Vec3,
+  rotY: number,
+  size: number,
+  sphinx = false,
+): Part[] {
   return [
     {
       kind: "sculpt",
       material,
       at,
       rotY,
-      masses: gateLion(size),
+      masses: sphinx ? gateSphinx(size) : gateLion(size),
       cell: size * 0.013,
       // Its back is the face of the jamb, and is not drawn.
       back: size * 0.01,
-      statue: "Lion",
+      statue: sphinx ? "Sphinx" : "Lion",
     },
   ];
 }
@@ -510,7 +518,9 @@ export function hittiteGateParts(spec: HittiteGateSpec): Part[] {
   // The lions, standing out of the outer jambs.
   for (const side of [-1, 1]) {
     const x = side * (spec.gateWidth / 2 + JAMB / 2 + 0.05);
-    parts.push(...hittiteLion("stone", [x, R, zo], Math.PI, spec.lionHeight));
+    parts.push(
+      ...hittiteLion("stone", [x, R, zo], Math.PI, spec.lionHeight, spec.guardians === "sphinxes"),
+    );
   }
 
   // The city wall either side: a casemate socle of two stone shells with

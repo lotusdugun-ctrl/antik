@@ -39,7 +39,7 @@ import {
 import { toast } from "sonner";
 import { track } from "@/lib/analytics";
 import type { Ambience } from "@/lib/ambience";
-import { partsFor } from "@/lib/reconstruction-parts";
+import { fallFor, partsFor } from "@/lib/reconstruction-parts";
 import type { Material } from "@/lib/reconstruction-parts";
 import type { SceneLife } from "@/lib/scene-life";
 import type { Places } from "@/lib/soundscapes";
@@ -524,6 +524,7 @@ export function Reconstruction3D({
   const onCaptured = useCallback((url: string) => setStill(url), []);
   // Rebuilding the geometry on every render would rebuild the whole scene.
   const parts = useMemo(() => partsFor(item.model), [item.model]);
+  const fall = useMemo(() => fallFor(item.model), [item.model]);
   // The people, fires and furniture of the place, and whether they are shown.
   const [lifeKit, setLifeKit] = useState<LifeKit | null>(null);
   const [lifeRetry, setLifeRetry] = useState(0);
@@ -1076,6 +1077,7 @@ export function Reconstruction3D({
               onReady={setSceneReady}
               exportWithoutGround
               biome={biomeFor(item.id)}
+              fall={fall}
               quality={quality && !lite}
               captureToken={captureToken}
               onCaptured={onCaptured}

@@ -31,6 +31,15 @@ import { lighthouseLife } from "@/lib/models/patara-deniz-feneri-life";
 import { gateLayout } from "@/lib/models/roma-kapilari";
 import { prostyleLayout } from "@/lib/models/hadrian-tapinagi";
 import { gateLife, heroonLife, prostyleLife, rockTombLife } from "@/lib/models/on-yeni-life";
+import { cisternLife, domedLife, towerLife } from "@/lib/models/istanbul-life";
+import {
+  aqueductLife,
+  mudbrickLife,
+  rockChurchLife,
+  seljukLife,
+  sphinxGateLife,
+  undergroundLife,
+} from "@/lib/models/anadolu-yeni-life";
 import * as trades from "@/lib/scene-trades";
 import type {
   GreatAltarSpec,
@@ -76,7 +85,9 @@ export type Era =
   /** Medieval Armenia, under the Bagratid kings. */
   | "medieval"
   /** An Orthodox monastery of the Pontic mountains: monks, lay brothers, pilgrims. */
-  | "byzantine";
+  | "byzantine"
+  /** Ottoman Istanbul and Edirne in the 16th century: kaftans and turbans. */
+  | "ottoman";
 
 /**
  * The garment, as the renderer builds it.
@@ -594,6 +605,7 @@ const MEN_HAIR: Record<Era, HairStyle[]> = {
   "bronze-age": ["long", "curls", "short"],
   medieval: ["short", "long", "curls"],
   byzantine: ["short", "curls", "long"],
+  ottoman: ["short", "short", "long"],
 };
 
 /** Beards by period: the Antonine full beard, the philosopher's long one, the pointed Persian. */
@@ -608,6 +620,7 @@ const BEARDS: Record<Era, BeardStyle[]> = {
   "bronze-age": ["short", "pointed", "long"],
   medieval: ["pointed", "short", "long"],
   byzantine: ["long", "long", "short"],
+  ottoman: ["long", "short", "pointed"],
 };
 
 const LEATHERS = [0x6b4a30, 0x7a5a3c, 0x5e4430, 0x8a6a48];
@@ -756,7 +769,8 @@ function baseDress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
       ? true
       : role === "soldier" || role === "athlete" || role === "actor"
         ? false
-        : rand() < 0.42);
+        : // Round a great mosque, few women are out among the men.
+          rand() < (era === "ottoman" ? 0.1 : 0.42));
   const skin = pick(rand, SKIN);
   const hair = rand() < 0.12 && role !== "child" ? HAIR[5]! : pick(rand, HAIR.slice(0, 5));
   const base = { skin, hair, female: isFemale, beard: false } as const;
@@ -892,6 +906,31 @@ function baseDress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
       main: pick(rand, [DYE.brown, DYE.grey, DYE.wool, DYE.black]),
       trim: pick(rand, WORK_CLOTH),
       beard: role !== "child" && rand() < 0.8,
+    };
+  }
+
+  if (era === "ottoman") {
+    // Men in the long kaftan over a robe and a wound turban, white for the
+    // learned, coloured for the rest; women out of doors veiled and cloaked.
+    if (isFemale)
+      return {
+        ...base,
+        garment: "robe",
+        main: pick(rand, [DYE.black, DYE.brown, DYE.woad, DYE.white, DYE.grey]),
+        trim: pick(rand, [DYE.white, DYE.linen]),
+        headwear: "veil",
+      };
+    const learned = role === "priest" || role === "official";
+    return {
+      ...base,
+      female: false,
+      garment: role === "worker" ? "tunic" : rand() < 0.6 ? "persian" : "robe",
+      main: learned
+        ? pick(rand, [DYE.green, DYE.woad, DYE.black, DYE.brown])
+        : pick(rand, [DYE.madder, DYE.woad, DYE.green, DYE.brown, DYE.ochre, DYE.wool]),
+      trim: pick(rand, [DYE.white, DYE.linen, DYE.weld]),
+      beard: role !== "child" && rand() < (learned ? 0.95 : 0.75),
+      ...(role === "child" ? {} : { headwear: "turban" as const }),
     };
   }
 
@@ -4260,6 +4299,23 @@ const ERA: Record<string, Era> = {
   "ksanthos-nereidler-aniti": "hellenistic",
   "kaunos-kaya-mezarlari": "hellenistic",
   "sardes-artemis-tapinagi": "roman",
+  "galata-kulesi": "medieval",
+  "yerebatan-sarnici": "byzantine",
+  "ayasofya-ana-kubbe": "byzantine",
+  "suleymaniye-camii": "ottoman",
+  "selimiye-camii": "ottoman",
+  "magnesia-artemis-tapinagi": "hellenistic",
+  "assos-athena-tapinagi": "hellenistic",
+  "letoon-leto-tapinagi": "hellenistic",
+  "myra-kaya-mezarlari": "hellenistic",
+  "karahan-tepe-yapisi": "neolithic",
+  "alacahoyuk-sfenksli-kapi": "hittite",
+  "aspendos-sifon-koprusu": "roman",
+  "derinkuyu-yeralti-sehri": "byzantine",
+  "goreme-kaya-kiliseleri": "byzantine",
+  "divrigi-ulu-camii": "ottoman",
+  "arslantepe-saray": "bronze-age",
+  "laodikeia-bati-tiyatrosu": "roman",
 };
 
 /** The scene for one reconstruction. */
@@ -4314,6 +4370,24 @@ function sceneFor(item: Reconstruction): SceneLife {
       return heroonLife(spec, era);
     case "rock-tombs":
       return rockTombLife(spec, era);
+    case "domed-sanctuary":
+      return domedLife(spec, era);
+    case "round-tower":
+      return towerLife(spec, era);
+    case "cistern":
+      return cisternLife(spec, era);
+    case "aqueduct":
+      return aqueductLife(spec, era);
+    case "underground-city":
+      return undergroundLife(spec, era);
+    case "rock-churches":
+      return rockChurchLife(spec, era);
+    case "seljuk-complex":
+      return seljukLife(spec, era);
+    case "mudbrick-complex":
+      return mudbrickLife(spec, era);
+    case "sphinx-gate":
+      return sphinxGateLife(spec, era);
   }
 }
 
@@ -4525,6 +4599,15 @@ function marketFor(item: Reconstruction): Piece[] {
         p("honorific", 9.5, -D / 2 - 0.5, -E),
         p("fountain", -8, D / 2 + 9, E),
         p("bench", 8, D / 2 + 9, -E),
+      ];
+    }
+    case "round-tower": {
+      // Stalls round the little square at the foot of the tower.
+      const R = spec.outerDiameter / 2;
+      return [
+        p("stall", -R - 4, 2, E, "fruit"),
+        p("stall", R + 4, -3, -E, "cloth"),
+        p("fountain", -6, R + 5.5, Math.PI),
       ];
     }
     case "prostyle-temple": {

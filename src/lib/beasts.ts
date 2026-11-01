@@ -451,3 +451,47 @@ export function lionMask(size: number, plain = false): Mass[] {
   cutEgg([0, 0, -2.0], [3, 3, 2.0]);
   return out;
 }
+
+/**
+ * A gate sphinx, as at Alacahöyük: the forepart of a lion standing out of
+ * its jamb block — the same planted forelegs and chest as the gate lion —
+ * under a human head: a broad calm face, and the heavy curled locks of the
+ * Hathor wig falling either side of it onto the chest, a low cap on top.
+ * The frame is the gate lion's.
+ */
+export function gateSphinx(size: number): Mass[] {
+  const { out, rod, egg, cutEgg } = kit(1, size);
+  for (const side of [-1, 1]) {
+    const m = (p: Vec3) => mirror(p, side);
+    egg(m([0.17, 0.5, 0.04]), [0.12, 0.16, 0.15], [0, -0.5, 0.85], 0.06);
+    rod(m([0.17, 0.44, 0.12]), m([0.165, 0.2, 0.2]), 0.1, 0.07, 0.05);
+    rod(m([0.165, 0.2, 0.2]), m([0.165, 0.08, 0.22]), 0.07, 0.068, 0.03);
+    egg(m([0.165, 0.05, 0.27]), [0.09, 0.05, 0.11], undefined, 0.04);
+    for (let toe = 0; toe < 4; toe += 1) {
+      const x = 0.165 + (toe - 1.5) * 0.043;
+      egg(m([x, 0.038, 0.35 - Math.abs(toe - 1.5) * 0.018]), [0.025, 0.035, 0.04], undefined, 0.01);
+    }
+  }
+  egg([0, 0.47, 0.02], [0.22, 0.2, 0.17], undefined, 0.1);
+  egg([0, 0.55, -0.3], [0.28, 0.33, 0.4], undefined, 0.1);
+  // The neck, and the face: brow, cheeks, nose and full lips.
+  egg([0, 0.74, 0.08], [0.15, 0.14, 0.14], undefined, 0.06);
+  egg([0, 0.93, 0.16], [0.13, 0.17, 0.13], undefined, 0.05);
+  rod([0, 0.98, 0.27], [0, 0.89, 0.31], 0.03, 0.035, 0.03);
+  egg([0, 0.84, 0.27], [0.05, 0.02, 0.03], undefined, 0.015);
+  for (const side of [-1, 1]) {
+    const m = (p: Vec3) => mirror(p, side);
+    cutEgg(m([0.05, 0.97, 0.26]), [0.03, 0.015, 0.02], [0.3, 0, 1], 0.008);
+    egg(m([0.08, 0.9, 0.21]), [0.06, 0.07, 0.06], undefined, 0.03);
+    // The ears, and the wig's heavy lock falling to the chest, curled at its end.
+    egg(m([0.135, 0.95, 0.12]), [0.03, 0.05, 0.03], undefined, 0.02);
+    rod(m([0.13, 1.0, 0.1]), m([0.15, 0.66, 0.18]), 0.065, 0.06, 0.04);
+    egg(m([0.15, 0.62, 0.21]), [0.075, 0.075, 0.06], undefined, 0.03);
+    cutEgg(m([0.15, 0.62, 0.265]), [0.035, 0.035, 0.02], undefined, 0.01);
+  }
+  // The wig over the crown, and the low cap.
+  egg([0, 1.04, 0.1], [0.16, 0.1, 0.15], undefined, 0.05);
+  rod([0, 1.08, 0.1], [0, 1.2, 0.08], 0.13, 0.11, 0.03);
+  cutEgg([0, 0.5, -2.0], [3, 3, 2.0]);
+  return out;
+}

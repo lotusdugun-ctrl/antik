@@ -28,6 +28,7 @@ import type { SceneLife } from "@/lib/scene-life";
 import type * as THREE_NS from "three";
 import {
   boundsOf,
+  type Fall,
   type Dress,
   type FaceShape,
   type Gesture,
@@ -196,6 +197,8 @@ type Props = {
   onReady?: ((ready: boolean) => void) | undefined;
   /** What grows round the building; see `landscape.ts`. */
   biome?: Biome | undefined;
+  /** Where the ground falls away below the site (`fallFor`). */
+  fall?: Fall | undefined;
   /** Ambient occlusion on top of the shadows, for devices that can afford it. */
   quality?: boolean | undefined;
   /** Bumped by the caller to get a still of the current view. */
@@ -350,6 +353,7 @@ const MATERIALS: Record<Material, Palette> = {
     clearcoatRoughness: 0.3,
   },
   conglomerate: { color: 0xcfa57c, roughness: 0.92, metalness: 0 },
+  andesite: { color: 0x7d776e, roughness: 0.93, metalness: 0 },
   water: { color: 0x3f7088, roughness: 0.18, metalness: 0.05, clearcoat: 0.6 },
   sand: { color: 0xd2bf98, roughness: 1, metalness: 0 },
   // The Pontic cliff: grey limestone, darkened by rain and lichen.
@@ -568,6 +572,7 @@ export default function Reconstruction3DInner({
   exportToken,
   onExported,
   biome = "mediterranean",
+  fall,
   quality = false,
   captureToken = 0,
   onCaptured,
@@ -3629,6 +3634,17 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           shader.uniforms["uApron"] = {
             value: new THREE.Vector4(centre.x, centre.z, fadeFrom, fadeTo),
           };
+          // Over a cliff edge there is nothing to pave.
+          shader.uniforms["uFall"] = {
+            value: fall
+              ? new THREE.Vector4(
+                  fall.dir[0],
+                  fall.dir[1],
+                  fall.edge + (fall.radial ? 8 : 0),
+                  fall.drop > 0 ? (fall.radial ? 2 : 1) : 0,
+                )
+              : new THREE.Vector4(0, 0, 0, 0),
+          };
           shader.vertexShader = shader.vertexShader
             .replace("#include <common>", "#include <common>\nvarying vec2 vApronWorld;")
             .replace(
@@ -3638,7 +3654,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           shader.fragmentShader = shader.fragmentShader
             .replace(
               "#include <common>",
-              "#include <common>\nvarying vec2 vApronWorld;\nuniform vec4 uApron;",
+              "#include <common>\nvarying vec2 vApronWorld;\nuniform vec4 uApron;\nuniform vec4 uFall;",
             )
             .replace(
               "#include <alphamap_fragment>",
@@ -3648,6 +3664,8 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
   float a = atan(q.y, q.x);
   float wobble = 1.0 + 0.05 * sin(a * 3.0 + 0.7) + 0.04 * sin(a * 7.0 + 2.1) + 0.02 * sin(a * 17.0) - 0.08;
   diffuseColor.a *= 1.0 - smoothstep(uApron.z * wobble, uApron.w * wobble, length(q));
+  if (uFall.w > 1.5) diffuseColor.a *= 1.0 - smoothstep(uFall.z - 6.0, uFall.z, length(vApronWorld));
+  else if (uFall.w > 0.5) diffuseColor.a *= 1.0 - smoothstep(uFall.z - 3.0, uFall.z, dot(vApronWorld, uFall.xy));
 }`,
             );
         };
@@ -3666,6 +3684,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           (bounds.max[2] - bounds.min[2]) / 2,
         ),
         biome,
+        fall,
         // Nothing grows in the river, in a wall or on a road.
         parts: life ? [...parts, ...life.props] : parts,
       });
@@ -3792,6 +3811,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
             "gialloAntico",
             "pavonazzetto",
             "conglomerate",
+            "andesite",
             "terrazzo",
           ];
           /*
@@ -6514,7 +6534,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
     // `biome` is fixed per model, so it rebuilding the scene costs nothing.
     // Theme, light, labels and turntable are deliberately absent: they are
     // read through `latestRef` and applied by the setter effects below.
-  }, [parts, kind, biome, life]);
+  }, [parts, kind, biome, life, fall]);
 
   useEffect(() => {
     onReady?.(ready);

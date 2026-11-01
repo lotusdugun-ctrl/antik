@@ -354,6 +354,23 @@ describe("the cost of the new detail", () => {
     "ksanthos-nereidler-aniti": 63756,
     "kaunos-kaya-mezarlari": 55872,
     "sardes-artemis-tapinagi": 189956,
+    "galata-kulesi": 8876,
+    "yerebatan-sarnici": 225252,
+    "ayasofya-ana-kubbe": 82436,
+    "suleymaniye-camii": 155344,
+    "selimiye-camii": 119728,
+    "magnesia-artemis-tapinagi": 160160,
+    "assos-athena-tapinagi": 72240,
+    "letoon-leto-tapinagi": 106044,
+    "myra-kaya-mezarlari": 41672,
+    "karahan-tepe-yapisi": 20640,
+    "aspendos-sifon-koprusu": 51180,
+    "derinkuyu-yeralti-sehri": 9768,
+    "goreme-kaya-kiliseleri": 15036,
+    "divrigi-ulu-camii": 79648,
+    "arslantepe-saray": 15252,
+    "laodikeia-bati-tiyatrosu": 68674,
+    "alacahoyuk-sfenksli-kapi": 23880,
   };
   /*
    * Allowed more, with the reason. Hattusa's glacis is now faced with its

@@ -232,8 +232,8 @@ const DOGS: Happening = {
 /** A scops owl in the dark, the Mediterranean night's one-note clock. */
 const OWL: Happening = {
   sounds: ["owl"],
-  every: [25, 60],
-  level: { night: 0.28 },
+  every: [70, 160],
+  level: { night: 0.14 },
   spread: 1,
   muffle: 5000,
   wet: 0.45,
@@ -241,8 +241,8 @@ const OWL: Happening = {
 
 const DOVES: Happening = {
   sounds: ["dove"],
-  every: [30, 75],
-  level: { day: 0.2, golden: 0.22 },
+  every: [100, 220],
+  level: { day: 0.1, golden: 0.11 },
   spread: 0.9,
   muffle: 3500,
   wet: 0.35,
@@ -820,6 +820,9 @@ const HYMNS: Record<string, readonly Voice[]> = {
   "aizanoi-zeus-tapinagi": ["hymn-zeus", "hymn-cleanthes"],
   "pergamon-zeus-sunagi": ["hymn-cleanthes", "hymn-zeus"],
   "pergamon-trajan-tapinagi": ["hymn-zeus", "hymn-cleanthes"],
+  "magnesia-artemis-tapinagi": ["hymn-artemis", "hymn-apollo"],
+  "assos-athena-tapinagi": ["hymn-cleanthes", "hymn-apollo"],
+  "letoon-leto-tapinagi": ["hymn-apollo", "hymn-artemis"],
   "side-apollon-tapinagi": ["hymn-apollo"],
   "sardes-artemis-tapinagi": ["hymn-artemis"],
   "priene-athena-tapinagi": ["hymn-cleanthes"],
@@ -971,15 +974,42 @@ const DAYTIME = { day: 1, golden: 0.7 };
 const lvl = (k: number, shape: Partial<Record<TimeOfDay, number>> = DAYTIME): Levels =>
   Object.fromEntries(Object.entries(shape).map(([t, v]) => [t, +(v * k).toFixed(3)]));
 
+/**
+ * Long, tonal calls (the dove's coo, the hoopoe's "hup-hup-hup", the
+ * partridge, the cuckoo...) heard every few seconds become the loudest, most
+ * tiresome thing in a scene: they come rarely, quietly and from far off.
+ */
+const LONG_CALLS: readonly Call[] = [
+  "dove",
+  "hoopoe",
+  "partridge",
+  "cuckoo",
+  "gull",
+  "lark",
+  "beeeater",
+  "swift",
+];
 /** Songbirds in the trees and the bushes, each kind its own call. */
 const SONGBIRDS = (k = 1, kinds: Call[] = ["blackbird", "sparrow", "finch"]) =>
-  ev({ sounds: kinds, every: [9, 30], level: lvl(0.5 * k, { day: 1, golden: 0.8 }), muffle: 9000 });
+  kinds.some((c) => LONG_CALLS.includes(c))
+    ? ev({
+        sounds: kinds,
+        every: [60, 160],
+        level: lvl(0.2 * k, { day: 1, golden: 0.8 }),
+        muffle: 3500,
+      })
+    : ev({
+        sounds: kinds,
+        every: [12, 36],
+        level: lvl(0.4 * k, { day: 1, golden: 0.8 }),
+        muffle: 9000,
+      });
 /** Swifts screaming over the roofs of a town. */
 const SWIFTS = (k = 1) =>
   ev({
     sounds: ["swift"],
-    every: [25, 70],
-    level: lvl(0.5 * k, { day: 1, golden: 1.2 }),
+    every: [50, 130],
+    level: lvl(0.3 * k, { day: 1, golden: 1.2 }),
     spread: 1,
   });
 /** Crickets chirping in rhythms of their own, the night's other clock. */
@@ -1001,8 +1031,8 @@ const FROGS = (k = 1) =>
 const GUSTS = (k = 1) =>
   ev({
     sounds: ["gust"],
-    every: [10, 30],
-    level: lvl(0.6 * k, { day: 1, golden: 1, night: 0.8 }),
+    every: [14, 36],
+    level: lvl(0.4 * k, { day: 1, golden: 1, night: 0.8 }),
     spread: 0.8,
     wet: 0.1,
   });
@@ -1018,8 +1048,8 @@ const STEPS = (surface: Call[], k = 1) =>
 const PEOPLE = (k = 1, sounds: Call[] = ["chatter", "laugh", "shout"]) =>
   ev({
     sounds,
-    every: [10, 32],
-    level: lvl(0.5 * k, { day: 1, golden: 0.9, night: 0.15 }),
+    every: [18, 50],
+    level: lvl(0.3 * k, { day: 1, golden: 0.9, night: 0.15 }),
     spread: 0.9,
     muffle: 4200,
     wet: 0.4,
@@ -1060,7 +1090,7 @@ const HARBOUR = (k = 1) => [
   }),
 ];
 const RAPTORS = (k = 1, kinds: Call[] = ["hoopoe", "partridge"]) =>
-  ev({ sounds: kinds, every: [30, 80], level: lvl(0.4 * k), muffle: 7000, wet: 0.3 });
+  ev({ sounds: kinds, every: [120, 300], level: lvl(0.15 * k), muffle: 3500, wet: 0.3 });
 
 /**
  * Each model's own additions: the river under Zeugma, the masons at
@@ -1386,7 +1416,12 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 0.85,
   },
   "termessos-tiyatrosu": {
-    add: [GUSTS(1.2), RAPTORS(1, ["hoopoe"]), GOATS(0.8), SONGBIRDS(0.6, ["woodpecker", "finch"])],
+    add: [
+      GUSTS(1.2),
+      RAPTORS(1, ["partridge"]),
+      GOATS(0.8),
+      SONGBIRDS(0.6, ["woodpecker", "finch"]),
+    ],
     density: 0.8,
   },
   "antalya-hadrianus-kapisi": {
@@ -1449,6 +1484,139 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
   "sardes-artemis-tapinagi": {
     add: [SONGBIRDS(0.8, ["lark", "dove"]), WORK(["chisel"], 0.5), GOATS(0.5), CRICKETS(0.8)],
     density: 0.8,
+  },
+  "galata-kulesi": {
+    add: [
+      SONGBIRDS(0.6, ["gull", "sparrow"]),
+      SWIFTS(1.2),
+      PEOPLE(1.1),
+      STEPS(["steps-stone"], 0.9),
+      DONKEY(0.5),
+    ],
+    density: 1.1,
+  },
+  "yerebatan-sarnici": {
+    add: [STEPS(["steps-wood"], 1), PEOPLE(0.6, ["chatter"]), FROGS(0.4)],
+    density: 0.7,
+  },
+  "ayasofya-ana-kubbe": {
+    add: [
+      SONGBIRDS(0.7, ["dove", "sparrow"]),
+      PEOPLE(0.9, ["chatter"]),
+      STEPS(["steps-stone"], 1),
+      SWIFTS(0.8),
+    ],
+    density: 0.9,
+  },
+  "suleymaniye-camii": {
+    add: [
+      SONGBIRDS(0.8, ["dove", "gull"]),
+      SWIFTS(1),
+      PEOPLE(0.8, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.8),
+      WORK(["hammer"], 0.3),
+    ],
+    density: 0.95,
+  },
+  "selimiye-camii": {
+    add: [
+      SONGBIRDS(0.9, ["dove", "blackbird"]),
+      SWIFTS(1.1),
+      PEOPLE(0.7, ["chatter"]),
+      CRICKETS(0.7),
+      DONKEY(0.4),
+    ],
+    density: 0.85,
+  },
+  "magnesia-artemis-tapinagi": {
+    add: [SONGBIRDS(0.8, ["lark", "finch"]), FROGS(0.5), GOATS(0.5), CRICKETS(0.6)],
+    density: 0.85,
+  },
+  "assos-athena-tapinagi": {
+    add: [GUSTS(1.2), SONGBIRDS(0.5, ["gull"]), RAPTORS(0.7, ["partridge"])],
+    density: 0.75,
+  },
+  "letoon-leto-tapinagi": {
+    add: [FROGS(1.1), SONGBIRDS(0.9, ["beeeater", "blackbird"]), GOATS(0.4), CRICKETS(0.9)],
+    density: 0.85,
+  },
+  "myra-kaya-mezarlari": {
+    add: [
+      SONGBIRDS(0.8, ["swift", "sparrow"]),
+      FROGS(0.6),
+      WORK(["chisel"], 0.5),
+      GOATS(0.6),
+      DONKEY(0.5),
+    ],
+    density: 0.9,
+  },
+  "karahan-tepe-yapisi": {
+    add: [GUSTS(1.3), RAPTORS(0.8, ["partridge", "hoopoe"]), WORK(["chisel"], 0.7)],
+    density: 0.8,
+  },
+  "alacahoyuk-sfenksli-kapi": {
+    add: [
+      SONGBIRDS(0.6, ["lark"]),
+      GOATS(0.8),
+      DONKEY(0.7),
+      GUSTS(0.9),
+      PEOPLE(0.6, ["chatter", "shout"]),
+    ],
+    density: 0.9,
+  },
+  "aspendos-sifon-koprusu": {
+    add: [
+      SONGBIRDS(0.9, ["lark", "beeeater"]),
+      CRICKETS(1.0),
+      GOATS(0.6),
+      DONKEY(0.6),
+      WORK(["chisel"], 0.4),
+    ],
+    density: 0.9,
+  },
+  "derinkuyu-yeralti-sehri": {
+    add: [
+      GUSTS(1.0),
+      SONGBIRDS(0.6, ["sparrow", "dove"]),
+      DONKEY(0.8),
+      PEOPLE(0.6, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.6),
+    ],
+    density: 0.85,
+  },
+  "goreme-kaya-kiliseleri": {
+    add: [
+      SONGBIRDS(0.8, ["blackbird", "sparrow", "dove"]),
+      SWIFTS(0.8),
+      GOATS(0.7),
+      GUSTS(0.7),
+      WORK(["chisel"], 0.3),
+    ],
+    density: 0.85,
+  },
+  "divrigi-ulu-camii": {
+    add: [
+      SONGBIRDS(0.8, ["dove", "sparrow"]),
+      SWIFTS(1.0),
+      PEOPLE(0.7, ["chatter"]),
+      WORK(["chisel"], 0.5),
+      DONKEY(0.4),
+    ],
+    density: 0.85,
+  },
+  "arslantepe-saray": {
+    add: [
+      SONGBIRDS(0.6, ["lark", "partridge"]),
+      GOATS(0.7),
+      GUSTS(0.8),
+      PEOPLE(0.5, ["chatter"]),
+      WORK(["hammer"], 0.4),
+    ],
+    density: 0.85,
+  },
+  "laodikeia-bati-tiyatrosu": {
+    add: [SONGBIRDS(0.7, ["blackbird", "finch"]), CRICKETS(0.8), GOATS(0.5), GUSTS(0.6)],
+    density: 0.85,
   },
   "patara-deniz-feneri": {
     add: [
@@ -1520,6 +1688,22 @@ function kindScape(item: Pick<Reconstruction, "id"> & { model: { kind: string } 
       return mountain();
     case "rock-tombs":
       return harbour();
+    case "domed-sanctuary":
+      return church();
+    case "round-tower":
+      return agora();
+    case "cistern":
+      return church();
+    case "aqueduct":
+      return mountain();
+    case "underground-city":
+    case "rock-churches":
+      return church();
+    case "seljuk-complex":
+      return church();
+    case "mudbrick-complex":
+    case "sphinx-gate":
+      return citadel(false);
     default:
       // A kind added later still gets birds, wind and the night.
       return {
@@ -1610,7 +1794,7 @@ export function spotsOf(scape: Soundscape): Spot[] {
 /** The quietest a placed sound gets, however far off: the place still carries. */
 export const FAR_GAIN = 0.15;
 /** The loudest, right beside it. */
-export const NEAR_GAIN = 1.8;
+export const NEAR_GAIN = 1.25;
 
 /** The point of a place nearest to `p`. */
 export function nearestOn(place: Place, p: Point): Point {

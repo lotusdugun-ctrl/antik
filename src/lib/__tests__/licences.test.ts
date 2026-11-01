@@ -59,8 +59,13 @@ describe("photographs", () => {
 });
 
 describe("recorded voices", () => {
-  test("only Piper recordings whose voice passed the licence gate are ever played", () => {
+  test("only recordings whose voice passed the licence gate are ever played", () => {
     for (const [lang, credit] of Object.entries(voiceCreditsByLang)) {
+      if (credit!.engine === "gemini") {
+        // Gemini's generated speech, published under the Gemini API terms.
+        expect(credit!.licenseUrl).toStartWith("https://ai.google.dev/gemini-api/terms");
+        continue;
+      }
       expect(`${lang}:${credit!.license}`).toMatch(
         /:(Public domain \(CC0\)|CC BY 4\.0|CC BY 3\.0|MIT|Apache-2\.0)$/,
       );
@@ -69,8 +74,9 @@ describe("recorded voices", () => {
     for (const byLang of Object.values(recordedAudio))
       for (const [lang, chapters] of Object.entries(byLang))
         for (const entry of Object.values(chapters ?? {})) {
-          expect(entry.engine).toBe("piper");
-          expect(entry.voice).toBe(voiceCreditsByLang[lang as "tr"]?.voice);
+          const credit = voiceCreditsByLang[lang as "tr"];
+          expect(entry.engine).toBe(credit?.engine ?? "piper");
+          expect(entry.voice).toBe(credit?.voice);
         }
   });
 

@@ -66,8 +66,11 @@ describe("roof tiles", () => {
     expect(roofed.map((item) => item.id).sort()).toEqual([
       "aizanoi-zeus-tapinagi",
       "artemis-tapinagi",
+      "assos-athena-tapinagi",
       "efes-buyuk-tiyatro",
       "efes-yamac-evler",
+      "letoon-leto-tapinagi",
+      "magnesia-artemis-tapinagi",
       "pergamon-trajan-tapinagi",
       "priene-athena-tapinagi",
       "sardes-artemis-tapinagi",
@@ -399,7 +402,7 @@ describe("street furniture", () => {
       }
     }
     expect(wrong).toEqual([]);
-  });
+  }, 30_000);
 
   /*
    * What stands on the ground stands on open ground: not inside the

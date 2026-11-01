@@ -377,9 +377,9 @@ export function createSynth(ctx: BaseAudioContext, deps: Deps) {
         const f = r(1120, 1260);
         const notes: Note[] = [];
         const gap = r(2.3, 2.8);
-        for (let i = 0, n = int(3, 7); i < n; i += 1)
+        for (let i = 0, n = int(2, 4); i < n; i += 1)
           notes.push([i * gap * r(0.97, 1.03), r(0.16, 0.2), f * 0.95, f * 1.02, f * 0.97, 1]);
-        return sing(notes, at, level * 0.5, wave("owl", [1, 0.08, 0.03]), {
+        return sing(notes, at, level * 0.3, wave("owl", [1, 0.08, 0.03]), {
           ...o,
           attack: 0.04,
           release: 0.09,
@@ -389,13 +389,13 @@ export function createSynth(ctx: BaseAudioContext, deps: Deps) {
         // Streptopelia: "coo-COOO-coo", breathy and low, twice or thrice.
         const f = r(470, 540);
         const notes: Note[] = [];
-        for (let i = 0, n = int(2, 4); i < n; i += 1) {
+        for (let i = 0, n = int(1, 2); i < n; i += 1) {
           const t = i * r(1.7, 2);
           notes.push([t, 0.26, f, f * 1.02, f * 0.94, 0.7]);
           notes.push([t + 0.4, 0.55, f * 1.06, f * 1.1, f * 0.98, 1]);
           notes.push([t + 1.08, 0.34, f * 0.94, f * 0.96, f * 0.86, 0.75]);
         }
-        return sing(notes, at, level * 0.55, wave("dove", [1, 0.22, 0.07, 0.02]), {
+        return sing(notes, at, level * 0.3, wave("dove", [1, 0.22, 0.07, 0.02]), {
           ...o,
           attack: 0.06,
           release: 0.12,
@@ -514,16 +514,16 @@ export function createSynth(ctx: BaseAudioContext, deps: Deps) {
       case "hoopoe": {
         const f = r(370, 430);
         const notes: Note[] = [];
-        const group = int(2, 3);
+        const group = 3;
         let t = 0;
-        for (let i = 0, n = int(2, 5); i < n; i += 1) {
+        for (let i = 0, n = int(1, 2); i < n; i += 1) {
           for (let k = 0; k < group; k += 1) notes.push([t + k * 0.22, 0.12, f, f, f * 0.96, 1]);
           t += r(1.3, 2.1);
         }
-        return sing(notes, at, level * 0.4, wave("owl", [1, 0.08, 0.03]), {
+        return sing(notes, at, level * 0.22, wave("owl", [1, 0.08, 0.03]), {
           ...o,
-          attack: 0.02,
-          release: 0.05,
+          attack: 0.04,
+          release: 0.08,
         });
       }
       case "partridge": {

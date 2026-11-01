@@ -30,6 +30,11 @@ const BIOME_OF: Partial<Record<string, Biome>> = {
   "sagalassos-antoninler-cesmesi": "alpine",
   // Termessos stands at about 1,000 m in the Taurus, in pine forest.
   "termessos-tiyatrosu": "alpine",
+  // The Cappadocian plateau, the upper Euphrates and the Malatya plain: bare steppe.
+  "derinkuyu-yeralti-sehri": "steppe",
+  "goreme-kaya-kiliseleri": "steppe",
+  "divrigi-ulu-camii": "steppe",
+  "arslantepe-saray": "steppe",
 };
 
 export const biomeFor = (id: string): Biome => BIOME_OF[id] ?? "mediterranean";
@@ -468,6 +473,18 @@ export type LandscapeOptions = {
   biome: Biome;
   /** Everything in the model, its scenery and its life: what to keep clear of. */
   parts?: readonly Part[];
+  /** Where the ground falls away below the site: a cliff, a gorge (`fallFor`). */
+  fall?:
+    | {
+        dir: readonly [number, number];
+        edge: number;
+        drop: number;
+        behind?: { from: number; height: number } | undefined;
+        radial?: boolean | undefined;
+        run?: number | undefined;
+        valley?: { half: number; height: number } | undefined;
+      }
+    | undefined;
 };
 
 /** How far below a water surface the bed under it lies at the shore, and at most. */
@@ -581,8 +598,39 @@ export function planLandscape(options: LandscapeOptions) {
     const rise = smooth(clear, clear + span * 1.1, d);
     const far = smooth(span * 2.2, span * 5, d);
     const n = hills(dx / (span * 1.3), dz / (span * 1.3));
-    const h = groundY - 0.12 + rise * (n * span * look.relief * 0.55 + far * span * look.relief);
-    return screes.length ? Math.max(h, groundY - 0.12 + screeAt(screes, x, z)) : h;
+    let h = groundY - 0.12 + rise * (n * span * look.relief * 0.55 + far * span * look.relief);
+    const fall = options.fall;
+    if (fall) {
+      // Over the edge the land drops to the floor of the gorge, and the far
+      // side of it climbs again out in the distance.
+      // In the model's own frame, as `fallFor` gives the edge.
+      const along = fall.radial ? Math.hypot(x, z) : x * fall.dir[0] + z * fall.dir[1];
+      const down = smooth(fall.edge + 5, fall.edge + 5 + (fall.run ?? 8), along);
+      const back = smooth(fall.edge + span * 2.5, fall.edge + span * 6, along);
+      h =
+        h * (1 - down) +
+        down * (groundY - fall.drop + n * span * look.relief * 0.4) +
+        back * fall.drop * 0.9;
+      if (fall.valley) {
+        // Both sides of a valley climb, steeply at first, to a plateau.
+        const across = Math.abs(z);
+        const v = fall.valley;
+        h += smooth(v.half, v.half + v.height * 2.2, across) * v.height * (1 + n * 0.25);
+      }
+      if (fall.behind) {
+        // Behind the building the mountain goes on up, out of the rock the
+        // seating is cut into.
+        // Round the back and the sides of the seating, not over the edge.
+        const r = Math.hypot(x, z);
+        const keep = 1 - smooth(fall.edge - 14, fall.edge - 4, along);
+        const up = smooth(fall.behind.from, fall.behind.from + 9, r) * keep;
+        const on = smooth(fall.behind.from + 25, fall.behind.from + span * 3, -along);
+        h += up * fall.behind.height + on * span * 0.8;
+      }
+    }
+    if (!screes.length) return h;
+    const scree = screeAt(screes, x, z);
+    return scree > 0 ? Math.max(h, groundY - 0.12 + scree) : h;
   };
 
   /*

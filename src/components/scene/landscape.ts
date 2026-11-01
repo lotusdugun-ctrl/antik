@@ -1,6 +1,6 @@
 import type * as THREE_NS from "three";
 import { noise2, planLandscape, smooth, type Biome, type BiomeLook } from "@/lib/landscape-plan";
-import type { Part } from "@/lib/reconstruction-parts";
+import type { Fall, Part } from "@/lib/reconstruction-parts";
 
 /**
  * The country round a building: the ground rising into hills past the edge of
@@ -29,6 +29,8 @@ type Options = {
   biome: Biome;
   /** The model's parts, its scenery and its life's furniture: kept clear of. */
   parts?: readonly Part[];
+  /** Where the ground falls away below the site (`fallFor`). */
+  fall?: Fall | undefined;
 };
 
 export function buildLandscape(THREE: typeof THREE_NS, options: Options) {
@@ -40,6 +42,7 @@ export function buildLandscape(THREE: typeof THREE_NS, options: Options) {
     footprint,
     biome,
     parts: options.parts ?? [],
+    fall: options.fall,
   });
   const { look, heightAt, tint } = plan;
   const group = new THREE.Group();

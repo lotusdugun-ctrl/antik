@@ -37,6 +37,14 @@ export type RockTombsSpec = {
   /** How far in front of the cliff the river's near bank is. */
   bankDistance: number;
   riverWidth: number;
+  /** False where no river runs before the cliff (Myra's sea necropolis). */
+  river?: boolean;
+  /**
+   * `temple` fronts throughout (Kaunos), or the Lycian kind among them
+   * (Myra): the front of a timber house cut in the rock, its beams and the
+   * round ends of its roof logs standing out.
+   */
+  style?: "temple" | "lycian";
 };
 
 /** The cliff face's plane, and the river's two banks. */
@@ -109,23 +117,32 @@ export function rockTombParts(spec: RockTombsSpec): Part[] {
   }
 
   /* ---- the tombs ---- */
-  for (const t of L.tombs) parts.push(...tomb(spec, t.x, t.y, t.scale));
+  L.tombs.forEach((t, i) =>
+    parts.push(
+      ...(spec.style === "lycian" && i % 3 !== 1
+        ? houseTomb(spec, t.x, t.y, t.scale)
+        : tomb(spec, t.x, t.y, t.scale)),
+    ),
+  );
   // The path along the foot of the cliff (the tombs were reached by paths cut up the rock).
   parts.push(scenery(box("limestone", [0, -0.1, L.face - 2.5], [span, 0.12, 5])));
   /* ---- the river, its reeds, and the far bank ---- */
   const riverZ = (L.bank + L.far) / 2;
-  parts.push(scenery(box("water", [0, -1.4, riverZ], [span * 3, 1.0, spec.riverWidth])));
+  // Myra's sea necropolis has no river before it: the plain runs on.
+  const river = spec.river !== false;
+  if (river) parts.push(scenery(box("water", [0, -1.4, riverZ], [span * 3, 1.0, spec.riverWidth])));
   // The near bank between the path and the water: a strip of meadow.
   parts.push(
     scenery(box("ground", [0, -0.3, (L.bank + L.face - 5) / 2], [span, 0.3, L.face - 5 - L.bank])),
   );
   const rand = seeded(733);
-  for (let i = 0; i < 140; i += 1) {
+  for (let i = 0; i < (river ? 140 : 0); i += 1) {
     const x = (rand() - 0.5) * span * 1.6;
     const z = rand() < 0.5 ? L.bank - rand() * 2.4 : L.far + rand() * 2.4;
     const h = 1.4 + rand() * 1.4;
     parts.push(scenery(cyl("grass", [x, -0.6, z], 0.03, 0.01, h, 4)));
   }
+  if (!river) return parts;
   // A jetty on the near bank where the boats come in.
   parts.push(scenery(box("timber", [8, -0.15, L.bank - 3.5], [2.2, 0.15, 7])));
   for (const dz of [-6.6, -3.5, -0.6])
@@ -213,6 +230,44 @@ function tomb(spec: RockTombsSpec, x: number, y: number, s: number): Part[] {
       box("limestone", [x + ax, py + ay - 0.05, z + 0.1], [0.5 * s + 0.15, 0.9 * s + 0.2, 0.2]),
     );
   }
+  return parts;
+}
+
+/**
+ * A Lycian house tomb: the front of a timber house cut in the rock — posts
+ * and cross-beams framing two panels, one a door into the chamber, and over
+ * them the flat roof on round logs whose ends stand out in a row.
+ */
+function houseTomb(spec: RockTombsSpec, x: number, y: number, s: number): Part[] {
+  const parts: Part[] = [];
+  const W = spec.facadeWidth * s * 0.8;
+  const H = spec.facadeHeight * s * 0.7;
+  const z = -0.1;
+  const d = 0.35 * s + 0.1;
+  // The recess round it, cut back into the cliff.
+  for (const e of [-1, 1])
+    parts.push(box("limestone", [x + e * (W / 2 + 0.5), y - 0.3, z + 1.0], [1.0, H + 1.4, 3.4]));
+  parts.push(box("limestone", [x, y + H + d * 1.9 + 0.05, z + 1.0], [W + 2, 0.8, 3.4]));
+  parts.push(box("limestone", [x, y - 0.5, z + 0.4], [W + 2, 0.5, 2]));
+  // The back of it, the panels and the door.
+  parts.push(box("limestone", [x, y, z + 0.65], [W, H, 1.2]));
+  parts.push(box("shadow", [x - W * 0.22, y + 0.3, z + 0.04], [W * 0.3, H * 0.45, 0.02]));
+  // The posts and beams of the frame, standing out like squared timbers.
+  for (const u of [-W / 2 + d / 2, 0, W / 2 - d / 2])
+    parts.push(box("limestone", [x + u, y, z - d / 2 + 0.1], [d, H, d + 0.2]));
+  for (const v of [0, H * 0.55, H - d])
+    parts.push(box("limestone", [x, y + v, z - d * 0.4 + 0.1], [W + d, d, d * 0.8 + 0.2]));
+  // The roof: a slab on a row of round log ends.
+  const logs = Math.max(5, Math.round(W / (d * 1.6)));
+  for (let i = 0; i < logs; i += 1) {
+    const u = -W / 2 + (W * (i + 0.5)) / logs;
+    parts.push(
+      cyl("limestone", [x + u, y + H + d * 0.5, z - d * 0.6], d * 0.45, d * 0.45, d * 1.4, 10, {
+        rotX: Math.PI / 2,
+      }),
+    );
+  }
+  parts.push(box("limestone", [x, y + H + d, z + 0.1], [W + d * 2, d * 0.9, 1.6 + d]));
   return parts;
 }
 

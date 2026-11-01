@@ -11,8 +11,21 @@ import type { RomanGateSpec } from "@/lib/models/roma-kapilari";
 import type { ProstyleTempleSpec } from "@/lib/models/hadrian-tapinagi";
 import type { LycianHeroonSpec } from "@/lib/models/nereid-aniti";
 import type { RockTombsSpec } from "@/lib/models/kaunos-kaya-mezarlari";
+import type { DomedSpec } from "@/lib/models/kubbeli";
+import type { CisternSpec, TowerSpec } from "@/lib/models/galata-yerebatan";
+import type {
+  AqueductSpec,
+  MudbrickSpec,
+  RockChurchSpec,
+  SeljukSpec,
+  SphinxGateSpec,
+  UndergroundSpec,
+} from "@/lib/models/anadolu-yeni";
 import { SAGALASSOS_ZEUGMA_SUMELA_PATARA } from "@/lib/models/sagalassos-zeugma-sumela-patara";
 import { ON_YENI } from "@/lib/models/on-yeni-kayitlar";
+import { ISTANBUL } from "@/lib/models/istanbul-kayitlar";
+import { EGE_ANADOLU } from "@/lib/models/ege-anadolu-kayitlar";
+import { ANADOLU_YENI } from "@/lib/models/anadolu-yeni-kayitlar";
 
 /**
  * Measured reconstructions — the structures the app can show in three
@@ -118,17 +131,22 @@ export type TheatreCharacter = {
   /** Degrees the seating wraps past a semicircle at each end: a Greek horseshoe. */
   sweep?: number;
   /** Laid into a hillside, standing on a plain, or heaped on an artificial mound. */
-  ground: "hillside" | "plain" | "mound";
+  ground: "hillside" | "plain" | "mound" | "summit";
+  /** On a summit: how far the mountain falls away behind the stage building, in metres. */
+  drop?: number;
+  /** On a peninsula (Side): how far off the sea is, on either side. */
+  sea?: number;
   /** The outer face: arcades, a tall pierced wall, or none (the hill runs on). */
   facade: "arcade" | "wall" | "none";
   /** Whose stage front this is. */
-  screen: "aspendos" | "hierapolis" | "ephesus" | "side" | "miletus";
-  storeys: 2 | 3;
+  screen: "aspendos" | "hierapolis" | "ephesus" | "side" | "miletus" | "plain";
+  storeys: 1 | 2 | 3;
   bays?: number;
   /** Height of the stage platform, where it is known. */
   stageHeight?: number;
   /** A colonnaded gallery round the top of the seating. */
-  topGallery: boolean;
+  /** A gallery round the top of the seating: columns, or (Aspendos) arches on piers. */
+  topGallery: boolean | "arcade";
   box?: "tribunalia" | "exedra" | "canopy";
   /** A parapet round the orchestra, for the beast fights of later centuries. */
   arenaWall?: boolean;
@@ -174,7 +192,11 @@ export type IonicDipterosSpec = {
    * The order of the capitals: Ionic, or Corinthian for the Roman temples
    * (their acanthus bell drawn as the composite's, which carries it).
    */
-  order?: "ionic" | "corinthian";
+  order?: "ionic" | "corinthian" | "doric";
+  /** What it is built of, where it is not marble: the dark andesite of Assos. */
+  stone?: "andesite";
+  /** On a summit: how far the land falls away round it, from how far out, over what run. */
+  hill?: { drop: number; edge: number; run?: number };
   /** Which text runs along the front architrave (a key of `TEXTS`), where not the god's formula; `"none"` for none. */
   dedication?: string;
   /**
@@ -294,6 +316,8 @@ export type NeolithicEnclosureSpec = {
   benchHeight: number;
   pillarWidth: number;
   pillarThickness: number;
+  /** Pillars left mostly bare, a snake on some (Karahan Tepe), not Göbeklitepe's beasts. */
+  plain?: boolean;
 };
 
 /**
@@ -363,7 +387,16 @@ export type ModelSpec =
   | RomanGateSpec
   | ProstyleTempleSpec
   | LycianHeroonSpec
-  | RockTombsSpec;
+  | RockTombsSpec
+  | DomedSpec
+  | TowerSpec
+  | CisternSpec
+  | AqueductSpec
+  | UndergroundSpec
+  | RockChurchSpec
+  | SeljukSpec
+  | MudbrickSpec
+  | SphinxGateSpec;
 
 /**
  * A named part of the building, pinned to the point in the model where it is.
@@ -679,7 +712,7 @@ export const reconstructions: Reconstruction[] = [
         facade: "wall",
         screen: "aspendos",
         storeys: 2,
-        topGallery: true,
+        topGallery: "arcade",
         box: "tribunalia",
       },
     },
@@ -1761,6 +1794,7 @@ export const reconstructions: Reconstruction[] = [
         topGallery: false,
         arenaWall: true,
         annex: "agora",
+        sea: 230,
       },
     },
   },
@@ -2611,6 +2645,9 @@ export const reconstructions: Reconstruction[] = [
   },
   ...SAGALASSOS_ZEUGMA_SUMELA_PATARA,
   ...ON_YENI,
+  ...ISTANBUL,
+  ...EGE_ANADOLU,
+  ...ANADOLU_YENI,
 ];
 
 export function getReconstruction(id: string): Reconstruction | undefined {

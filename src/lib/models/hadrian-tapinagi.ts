@@ -100,7 +100,8 @@ export function prostyleParts(spec: ProstyleTempleSpec): Part[] {
         ],
       }),
     );
-    for (const u of [-4.2, 0, 4.2]) parts.push(box("shadow", [x + u, 0, hz0 - 0.005], [1.6, 2.6, 0.02]));
+    for (const u of [-4.2, 0, 4.2])
+      parts.push(box("shadow", [x + u, 0, hz0 - 0.005], [1.6, 2.6, 0.02]));
     parts.push(prism("terracotta", [x, hh, hz0 + hd / 2], [14.3, 1.2, hd + 0.4], 0));
   }
 

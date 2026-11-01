@@ -21,7 +21,8 @@ describe("faces that would fight in the depth buffer", () => {
   for (const item of reconstructions) {
     test(`${item.id}: the building has none`, () => {
       expect(faceFights(partsFor(item.model), { area: AREA }).map(describeFight)).toEqual([]);
-    });
+      // The cistern's hall of 336 columns takes a while to check.
+    }, 30_000);
     test(`${item.id}: its life has none`, () => {
       const props = lifeFor(item).props;
       expect(faceFights(props, { area: AREA, scatter: false }).map(describeFight)).toEqual([]);

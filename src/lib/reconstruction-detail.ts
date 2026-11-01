@@ -282,6 +282,7 @@ const JOINTS: Partial<Record<Material, Material>> = {
   stone: "stoneDark",
   limestone: "stone",
   conglomerate: "stoneDark",
+  andesite: "stoneDark",
 };
 
 /* ------------------------------------------------------------------ *

@@ -186,7 +186,8 @@ function CreditsPage() {
               voice ? (
                 <li key={lang}>
                   <span className="font-medium text-foreground">
-                    {lang.toUpperCase()} — Piper: {voice.voice}
+                    {lang.toUpperCase()} — {voice.engine === "gemini" ? "Gemini" : "Piper"}:{" "}
+                    {voice.voice}
                   </span>{" "}
                   — {voice.dataset} ·{" "}
                   {voice.licenseUrl ? (

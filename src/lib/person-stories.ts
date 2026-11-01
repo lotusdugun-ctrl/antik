@@ -119,6 +119,288 @@ const ACTION_VOICE: Record<Action, StoryRole | null> = {
   strike: "priest",
 };
 
+/** Ottoman Istanbul and Edirne in the 16th century, round the great mosques. */
+const OTTOMAN: Pool = {
+  citizen: [
+    [
+      "Bedestende kumaş, Haliç'te balık, her şey bu şehirde bulunur.",
+      "Cloth at the covered market, fish at the Golden Horn: everything is found in this city.",
+      "Stoffe im Bedesten, Fisch am Goldenen Horn: in dieser Stadt findet man alles.",
+      "Ткани на крытом рынке, рыба на Золотом Роге — в этом городе есть всё.",
+    ],
+    [
+      "Ezan okununca dükkânlar kapanır, herkes camiye yürür.",
+      "When the call to prayer sounds, the shops close and everyone walks to the mosque.",
+      "Wenn der Gebetsruf ertönt, schließen die Läden und alle gehen zur Moschee.",
+      "Когда звучит призыв к молитве, лавки закрываются, и все идут в мечеть.",
+    ],
+    [
+      "Akşam kahvehanede oturur, meddahı dinleriz.",
+      "In the evening we sit in the coffee house and listen to the storyteller.",
+      "Abends sitzen wir im Kaffeehaus und hören dem Erzähler zu.",
+      "Вечером мы сидим в кофейне и слушаем сказителя.",
+    ],
+    [
+      "Cuma namazına bütün mahalle gelir; avlu dolar taşar.",
+      "The whole quarter comes to the Friday prayer; the courtyard overflows.",
+      "Zum Freitagsgebet kommt das ganze Viertel; der Hof quillt über.",
+      "На пятничную молитву приходит весь квартал — двор полон до краёв.",
+    ],
+    [
+      "Külliyenin imaretinde fakirlere her gün çorba dağıtılır.",
+      "At the mosque's soup kitchen, soup is handed out to the poor every day.",
+      "In der Armenküche der Stiftung wird jeden Tag Suppe an die Armen ausgeteilt.",
+      "В богадельне при мечети беднякам каждый день раздают похлёбку.",
+    ],
+    [
+      "Mimar Sinan'ın kubbesi, uzaktan bakınca şehrin üstünde yüzüyor gibi.",
+      "From a distance, Sinan's dome seems to float above the city.",
+      "Von weitem scheint Sinans Kuppel über der Stadt zu schweben.",
+      "Издали купол Синана словно парит над городом.",
+    ],
+  ],
+  worshipper: [
+    [
+      "Namazdan sonra avluda biraz oturur, güvercinleri seyrederim.",
+      "After the prayer I sit a while in the courtyard and watch the pigeons.",
+      "Nach dem Gebet sitze ich ein wenig im Hof und sehe den Tauben zu.",
+      "После молитвы я немного сижу во дворе и смотрю на голубей.",
+    ],
+    [
+      "Cuma günü saflar avluya kadar taşar.",
+      "On Fridays the rows spill out into the courtyard.",
+      "Am Freitag reichen die Reihen bis in den Hof.",
+      "По пятницам ряды молящихся доходят до самого двора.",
+    ],
+    [
+      "Halılar vakfın; her yıl yenileri serilir.",
+      "The carpets belong to the foundation; new ones are laid every year.",
+      "Die Teppiche gehören der Stiftung; jedes Jahr werden neue ausgelegt.",
+      "Ковры принадлежат вакфу — каждый год стелют новые.",
+    ],
+    [
+      "Şadırvanın suyu taş yollarla ta uzaktaki kemerlerden gelir.",
+      "The fountain's water comes in stone channels from the aqueducts far away.",
+      "Das Wasser des Brunnens kommt in Steinrinnen von den fernen Aquädukten.",
+      "Вода фонтана идёт по каменным каналам от далёких акведуков.",
+    ],
+    [
+      "Şadırvanda abdest alıp öyle girerim camiye.",
+      "I wash at the fountain before I go into the mosque.",
+      "Ich wasche mich am Brunnen, bevor ich die Moschee betrete.",
+      "Перед тем как войти в мечеть, я совершаю омовение у фонтана.",
+    ],
+    [
+      "İçeride kubbenin altında ses yankılanır; müezzin mahfilinden okunan ezan her yere ulaşır.",
+      "Inside, sound rings under the dome; the call read from the muezzins' platform reaches every corner.",
+      "Drinnen hallt der Klang unter der Kuppel; der Ruf von der Muezzin-Tribüne erreicht jeden Winkel.",
+      "Внутри звук гудит под куполом — призыв с площадки муэдзинов слышен в каждом углу.",
+    ],
+  ],
+  priest: [
+    [
+      "Sabah namazından önce minareye çıkıp ezanı okurum.",
+      "Before the dawn prayer I climb the minaret and give the call.",
+      "Vor dem Morgengebet steige ich auf das Minarett und rufe zum Gebet.",
+      "Перед утренней молитвой я поднимаюсь на минарет и призываю к молитве.",
+    ],
+    [
+      "Hutbeyi Arapça okurum, sonra Türkçe anlatırım.",
+      "I read the sermon in Arabic, then explain it in Turkish.",
+      "Ich lese die Predigt auf Arabisch und erkläre sie dann auf Türkisch.",
+      "Я читаю проповедь по-арабски, а потом объясняю её по-турецки.",
+    ],
+    [
+      "Medresede on yıl okudum; şimdi bu caminin imamıyım.",
+      "I studied ten years at the college; now I am the imam of this mosque.",
+      "Zehn Jahre habe ich an der Medrese studiert; jetzt bin ich der Imam dieser Moschee.",
+      "Десять лет я учился в медресе, а теперь я имам этой мечети.",
+    ],
+  ],
+  mason: [
+    [
+      "Kubbenin kurşunlarını her bahar yoklarız; bir sızıntı bütün işi bozar.",
+      "Every spring we check the lead on the dome; one leak spoils the whole work.",
+      "Jedes Frühjahr prüfen wir das Blei der Kuppel; ein Leck verdirbt die ganze Arbeit.",
+      "Каждую весну мы проверяем свинец на куполе — одна течь губит всю работу.",
+    ],
+    [
+      "Bu düğümü üç gündür oyuyorum; taşta bir yaprak bile yanlış olmaz.",
+      "Three days I have been carving this knot; in stone not one leaf may be wrong.",
+      "Seit drei Tagen meißle ich diesen Knoten; im Stein darf kein Blatt falsch sein.",
+      "Три дня я вырезаю этот узел — в камне ни один лист не может быть неверным.",
+    ],
+    [
+      "Usta çizer, kalfa oyar, çırak tozu süpürür; her taş böyle biter.",
+      "The master draws, the journeyman carves, the apprentice sweeps the dust: so every stone is finished.",
+      "Der Meister zeichnet, der Geselle meißelt, der Lehrling fegt den Staub: so wird jeder Stein fertig.",
+      "Мастер рисует, подмастерье режет, ученик сметает пыль — так заканчивают каждый камень.",
+    ],
+  ],
+  soldier: [
+    [
+      "Yeniçeri ortası bu akşam kışlaya döner.",
+      "The Janissary company goes back to barracks this evening.",
+      "Die Janitscharenkompanie kehrt heute Abend in die Kaserne zurück.",
+      "Отряд янычар сегодня вечером возвращается в казармы.",
+    ],
+  ],
+  elder: [
+    [
+      "Bu avluda kırk yıldır namaz kılarım.",
+      "I have prayed in this courtyard for forty years.",
+      "Seit vierzig Jahren bete ich in diesem Hof.",
+      "Сорок лет я молюсь в этом дворе.",
+    ],
+    [
+      "Eskiden burada bağlar vardı; şimdi şehir tepeye kadar çıktı.",
+      "There were vineyards here once; now the city has climbed to the top of the hill.",
+      "Früher waren hier Weinberge; jetzt reicht die Stadt bis auf den Hügel.",
+      "Когда-то здесь были виноградники, а теперь город поднялся до самой вершины.",
+    ],
+    [
+      "Torunlarım medresede okuyor; ben okuyamadım.",
+      "My grandsons study at the college; I never could.",
+      "Meine Enkel studieren an der Medrese; ich konnte es nie.",
+      "Мои внуки учатся в медресе — мне это не довелось.",
+    ],
+    [
+      "Ben bu caminin temeli atılırken çocuktum.",
+      "I was a boy when the foundations of this mosque were laid.",
+      "Ich war ein Junge, als der Grundstein dieser Moschee gelegt wurde.",
+      "Я был мальчишкой, когда закладывали эту мечеть.",
+    ],
+    [
+      "Sinan Ağa'yı bir kere gördüm; iskelenin üstünde ustalara bağırıyordu.",
+      "I saw Sinan once, up on the scaffold, shouting at the masons.",
+      "Ich habe Sinan einmal gesehen, oben auf dem Gerüst, wie er die Maurer anrief.",
+      "Я однажды видел Синана — он стоял на лесах и кричал каменщикам.",
+    ],
+    [
+      "Gençler acele eder; biz avluda oturur, sohbet ederiz.",
+      "The young hurry; we sit in the courtyard and talk.",
+      "Die Jungen eilen; wir sitzen im Hof und plaudern.",
+      "Молодые спешат, а мы сидим во дворе и беседуем.",
+    ],
+  ],
+  beggar: [
+    [
+      "Hayır için bir akçe, Allah razı olsun.",
+      "An akçe for charity, may God be pleased with you.",
+      "Ein Akçe als Almosen, Gott segne dich.",
+      "Акче на милостыню — да благословит вас Бог.",
+    ],
+    [
+      "İmarette çorba var ama ekmeğe para lazım.",
+      "There is soup at the kitchen, but bread costs money.",
+      "In der Armenküche gibt es Suppe, aber Brot kostet Geld.",
+      "В богадельне есть похлёбка, а хлеб стоит денег.",
+    ],
+    [
+      "Cuma günleri kapıda bekleriz; insanlar cömert olur.",
+      "On Fridays we wait at the gate; people are generous.",
+      "Freitags warten wir am Tor; die Leute sind großzügig.",
+      "По пятницам мы ждём у ворот — люди тогда щедрее.",
+    ],
+  ],
+  child: [
+    [
+      "Babam bana Eyüp'te ilk tahta kılıcımı aldı.",
+      "My father bought me my first wooden sword at Eyüp.",
+      "Mein Vater hat mir in Eyüp mein erstes Holzschwert gekauft.",
+      "Отец купил мне в Эюпе мой первый деревянный меч.",
+    ],
+    [
+      "Güvercinlere ekmek kırıntısı atıyorum.",
+      "I am throwing breadcrumbs to the pigeons.",
+      "Ich werfe den Tauben Brotkrumen zu.",
+      "Я кидаю голубям хлебные крошки.",
+    ],
+    [
+      "Ramazanda iftar topunu beklerim.",
+      "In Ramadan I wait for the cannon that ends the fast.",
+      "Im Ramadan warte ich auf den Kanonenschuss zum Fastenbrechen.",
+      "В Рамадан я жду пушечного выстрела, возвещающего разговение.",
+    ],
+    [
+      "Mahalle mektebinde elifbayı öğreniyorum.",
+      "I am learning my letters at the quarter's school.",
+      "Ich lerne in der Viertelschule das Alphabet.",
+      "Я учу азбуку в квартальной школе.",
+    ],
+    [
+      "Avluda top oynarız ama imam görmesin.",
+      "We play ball in the courtyard, as long as the imam doesn't see.",
+      "Wir spielen im Hof Ball, solange der Imam es nicht sieht.",
+      "Мы играем в мяч во дворе, лишь бы имам не увидел.",
+    ],
+    [
+      "Bayramda yeni şalvar giyeceğim.",
+      "At the feast I will wear new trousers.",
+      "Zum Fest bekomme ich eine neue Hose.",
+      "На праздник я надену новые шаровары.",
+    ],
+  ],
+  merchant: [
+    [
+      "Simit, taze simit! Fırından yeni çıktı.",
+      "Simit, fresh simit! Just out of the oven.",
+      "Simit, frische Simit! Gerade aus dem Ofen.",
+      "Симит, свежий симит! Только из печи.",
+    ],
+    [
+      "Mısır'dan gelen şeker, Hindistan'dan gelen biber; hepsi bende.",
+      "Sugar from Egypt, pepper from India: I have them all.",
+      "Zucker aus Ägypten, Pfeffer aus Indien: ich habe alles.",
+      "Сахар из Египта, перец из Индии — у меня есть всё.",
+    ],
+    [
+      "Fiyatları muhtesip denetler; hile yapan cezasını bulur.",
+      "The market inspector checks the prices; a cheat is punished.",
+      "Der Marktaufseher prüft die Preise; Betrüger werden bestraft.",
+      "Цены проверяет мухтасиб — обманщика накажут.",
+    ],
+    [
+      "Soğuk su, buz gibi su! Bir bakır kap, bir dua yeter.",
+      "Cold water, ice-cold water! One copper cup, one prayer is the price.",
+      "Kaltes Wasser, eiskaltes Wasser! Ein Kupferbecher, ein Gebet ist der Preis.",
+      "Холодная вода, ледяная вода! Медная чашка — и одна молитва в уплату.",
+    ],
+    [
+      "Kervan dün akşam geldi; Tebriz ipeği bu sabah tezgâhta.",
+      "The caravan came in last night; the silk of Tabriz is on the stall this morning.",
+      "Die Karawane kam gestern Abend; die Seide aus Täbris liegt heute früh am Stand.",
+      "Караван пришёл вчера вечером — тебризский шёлк с утра на прилавке.",
+    ],
+    [
+      "Cuma namazından çıkan herkes bir şey alır; bugün bereketli gün.",
+      "Everyone coming out of Friday prayer buys something; today is a good day.",
+      "Wer vom Freitagsgebet kommt, kauft etwas; heute ist ein guter Tag.",
+      "Каждый, кто выходит с пятничной молитвы, что-нибудь покупает — день удачный.",
+    ],
+  ],
+  reader: [
+    [
+      "Medresede Sahn-ı Seman'a girmek için çalışıyorum.",
+      "I am studying to get into the great college.",
+      "Ich lerne, um in die große Medrese aufgenommen zu werden.",
+      "Я учусь, чтобы поступить в большое медресе.",
+    ],
+    [
+      "Bu kitabı Süleymaniye'nin kütüphanesinden aldım.",
+      "I borrowed this book from the mosque's library.",
+      "Dieses Buch habe ich aus der Bibliothek der Moschee geliehen.",
+      "Эту книгу я взял в библиотеке мечети.",
+    ],
+    [
+      "Hattat bu levhayı üç ayda yazdı.",
+      "The calligrapher took three months to write this panel.",
+      "Der Kalligraf hat drei Monate an dieser Tafel geschrieben.",
+      "Каллиграф писал эту доску три месяца.",
+    ],
+  ],
+};
+
 /** The part someone plays, read off how the scene dressed and equipped them. */
 export function storyRole(person: Person): StoryRole {
   const { look, action, carry, carryLeft } = person;
@@ -1790,6 +2072,24 @@ const NEOLITHIC: Pool = {
   ],
   child: [
     [
+      "Taşları ben de taşıyabilirim; bak, şu küçüğü kaldırdım!",
+      "I can carry stones too; look, I lifted that small one!",
+      "Ich kann auch Steine tragen; schau, den kleinen habe ich hochgehoben!",
+      "Я тоже могу носить камни — смотри, я поднял вот этот маленький!",
+    ],
+    [
+      "Dedem tilkiyi taşa oyarken izledim.",
+      "I watched my grandfather carve the fox into the stone.",
+      "Ich habe zugesehen, wie mein Großvater den Fuchs in den Stein gehauen hat.",
+      "Я смотрел, как дед вырезал на камне лису.",
+    ],
+    [
+      "Gece ateşin başında masalları dinleriz.",
+      "At night we listen to the tales by the fire.",
+      "Nachts hören wir am Feuer die Geschichten.",
+      "Ночью мы слушаем у огня сказания.",
+    ],
+    [
       "Taşları dizip ev yapma oyunu oynuyorum.",
       "I'm playing at building houses with stones.",
       "Ich spiele Häuserbauen mit Steinen.",
@@ -1815,6 +2115,42 @@ const NEOLITHIC: Pool = {
     ],
   ],
   worshipper: [
+    [
+      "Taşların arasında bütün gece ateş yanar; atalarımız bizi dinler.",
+      "A fire burns all night among the stones; our ancestors listen to us.",
+      "Zwischen den Steinen brennt die ganze Nacht ein Feuer; unsere Ahnen hören uns zu.",
+      "Среди камней всю ночь горит огонь — предки слушают нас.",
+    ],
+    [
+      "Avdan dönünce ilk payı buraya getiririz.",
+      "When we come back from the hunt, we bring the first share here.",
+      "Wenn wir von der Jagd zurückkehren, bringen wir den ersten Anteil hierher.",
+      "Вернувшись с охоты, первую долю мы приносим сюда.",
+    ],
+    [
+      "Büyük taşın önünde susarız; o bizden yaşlıdır.",
+      "We fall silent before the great stone; it is older than we are.",
+      "Vor dem großen Stein schweigen wir; er ist älter als wir.",
+      "Перед большим камнем мы умолкаем — он старше нас.",
+    ],
+    [
+      "Yaşlılar şarkı söyler, biz tempo tutarız.",
+      "The old ones sing, and we keep the beat.",
+      "Die Alten singen, und wir halten den Takt.",
+      "Старики поют, а мы отбиваем ритм.",
+    ],
+    [
+      "Taşa oyulmuş yılan, yağmurun yolunu gösterir.",
+      "The snake cut in the stone shows the way of the rain.",
+      "Die in den Stein gehauene Schlange zeigt den Weg des Regens.",
+      "Змея, высеченная в камне, указывает путь дождя.",
+    ],
+    [
+      "Dolunayda bütün obalar burada toplanır.",
+      "At the full moon all the bands gather here.",
+      "Bei Vollmond versammeln sich hier alle Sippen.",
+      "В полнолуние здесь собираются все роды.",
+    ],
     [
       "Burada atalarımızı ve hayvanların ruhlarını anarız.",
       "Here we remember our ancestors and the spirits of the animals.",
@@ -2850,6 +3186,42 @@ const BYZANTINE: Pool = {
   ],
   worshipper: [
     [
+      "Kapının önünde diz çöküp haç çıkarırım, sonra içeri girerim.",
+      "I kneel and cross myself before the door, then go in.",
+      "Ich knie vor der Tür nieder, bekreuzige mich und gehe dann hinein.",
+      "Я преклоняю колени у дверей, крещусь и только потом вхожу.",
+    ],
+    [
+      "Bir mum yaktım; annemin ruhu için.",
+      "I lit a candle, for my mother's soul.",
+      "Ich habe eine Kerze angezündet, für die Seele meiner Mutter.",
+      "Я поставил свечу за упокой души матери.",
+    ],
+    [
+      "İkonaya dokunup öperim; dileklerim onun aracılığıyla Tanrı'ya ulaşır.",
+      "I touch the icon and kiss it; my prayers reach God through it.",
+      "Ich berühre die Ikone und küsse sie; durch sie erreichen meine Gebete Gott.",
+      "Я касаюсь иконы и целую её — через неё мои молитвы доходят до Бога.",
+    ],
+    [
+      "Uzak bir köyden geldim; bu kiliseyi görmeden ölmek istemedim.",
+      "I have come from a far village; I did not want to die without seeing this church.",
+      "Ich komme aus einem fernen Dorf; ich wollte nicht sterben, ohne diese Kirche gesehen zu haben.",
+      "Я пришёл из дальней деревни — не хотел умереть, не увидев этот храм.",
+    ],
+    [
+      "İlahiler kubbenin altında yankılanınca insan göğe yükseliyor sanır.",
+      "When the hymns ring under the dome, you think you are rising to heaven.",
+      "Wenn die Hymnen unter der Kuppel widerhallen, meint man, in den Himmel zu steigen.",
+      "Когда гимны звучат под куполом, кажется, будто поднимаешься на небо.",
+    ],
+    [
+      "Bayram sabahı kilise o kadar dolu ki kapıda bekliyoruz.",
+      "On a feast morning the church is so full that we wait at the door.",
+      "Am Festmorgen ist die Kirche so voll, dass wir an der Tür warten.",
+      "В праздничное утро храм так полон, что мы ждём у дверей.",
+    ],
+    [
       "İkonanın önünde mum yakıp dua ediyorum.",
       "I light a candle before the icon and pray.",
       "Ich zünde vor der Ikone eine Kerze an und bete.",
@@ -3346,6 +3718,7 @@ const BY_ERA = {
   "bronze-age": TROY,
   bronze: TROY,
   byzantine: BYZANTINE,
+  ottoman: OTTOMAN,
   armenian: ARMENIAN,
   medieval: ARMENIAN,
 } satisfies Record<string, Pool>;

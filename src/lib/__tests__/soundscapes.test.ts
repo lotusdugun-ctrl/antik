@@ -53,11 +53,20 @@ const EXPECTED: Record<string, { character: Soundscape["character"]; must: strin
   "prostyle-temple": { character: "agora", must: ["market", "footsteps", "dog1"] },
   "lycian-heroon": { character: "mountain", must: ["fire", "crow"] },
   "rock-tombs": { character: "harbour", must: ["sea", "market"] },
+  "domed-sanctuary": { character: "church", must: ["murmur", "footsteps"] },
+  "round-tower": { character: "agora", must: ["market", "footsteps", "dog1"] },
+  cistern: { character: "church", must: ["murmur", "footsteps"] },
+  aqueduct: { character: "mountain", must: ["fire", "crow"] },
+  "underground-city": { character: "church", must: ["murmur", "footsteps"] },
+  "rock-churches": { character: "church", must: ["murmur", "footsteps"] },
+  "seljuk-complex": { character: "church", must: ["murmur", "footsteps"] },
+  "mudbrick-complex": { character: "citadel", must: ["fire", "footsteps", "moo1", "sheep"] },
+  "sphinx-gate": { character: "citadel", must: ["fire", "footsteps", "moo1", "sheep"] },
 };
 
 describe("soundscapes", () => {
-  test("all thirty-four models have one", () => {
-    expect(reconstructions.length).toBe(34);
+  test("all fifty-one models have one", () => {
+    expect(reconstructions.length).toBe(51);
   });
 
   for (const item of reconstructions) {

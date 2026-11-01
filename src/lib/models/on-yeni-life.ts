@@ -311,14 +311,14 @@ export function rockTombLife(spec: RockTombsSpec, era: Era): SceneLife {
   const py = main.y + 0.5;
   fire(b, brazier([main.x, py, 0.6], 0.6), 0.25, true, true);
   cast.add({
-    at: [main.x - 0.9, py, 0.3],
+    at: [main.x - 0.5, py, 0.9],
     rotY: 0,
     action: "pour",
     role: "priest",
     carry: "phiale",
   });
   cast.add({
-    at: [main.x + 1.0, py, 0.2],
+    at: [main.x + 0.6, py, 0.9],
     rotY: -0.3,
     action: "pray",
     role: "mourner",

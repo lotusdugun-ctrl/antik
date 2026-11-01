@@ -1291,6 +1291,26 @@ export function createAmbience(options: { offline?: AudioContext; seed?: number 
     reverbOut.gain.setTargetAtTime(scape.space.wet * 2.2, now, seconds);
   };
 
+  // A calm scene: never more than two things starting within a few seconds of
+  // each other, and the long bird calls (the dove, the hoopoe...) kept apart.
+  let starts: number[] = [];
+  let lastCall = -Infinity;
+  const LONG = new Set([
+    "dove",
+    "hoopoe",
+    "partridge",
+    "cuckoo",
+    "owl",
+    "gull",
+    "lark",
+    "beeeater",
+  ]);
+  const crowded = (player: HappeningPlayer, now: number) => {
+    starts = starts.filter((t) => now - t < 4);
+    if (starts.length >= 2 || (starts.length && now - starts[starts.length - 1]! < 2)) return true;
+    const long = player.h.sounds.some((x) => LONG.has(x as string));
+    return long && now - lastCall < 25;
+  };
   const tick = () => {
     if (!running || !scene || (!manual && ctx.state !== "running")) return;
     const now = ctx.currentTime;
@@ -1302,10 +1322,12 @@ export function createAmbience(options: { offline?: AudioContext; seed?: number 
       const level = levelAt(player.h.level, scene.time);
       if (level > 0) {
         // Too much at once already: wait a moment rather than pile on.
-        if (live.size >= MAX_VOICES) {
-          player.next = now + rand(1, 3);
+        if (live.size >= MAX_VOICES || crowded(player, now)) {
+          player.next = now + rand(2, 6);
           continue;
         }
+        starts.push(now);
+        if (player.h.sounds.some((x) => LONG.has(x as string))) lastCall = now;
         fire(player, level);
         if (player.h.answer && rng() < player.h.answer)
           answers.push({ at: now + rand(1.2, 5), player, pan: rand(-1, 1) });
@@ -1373,7 +1395,7 @@ export function createAmbience(options: { offline?: AudioContext; seed?: number 
     phase = { name: "idle", until: now + 2 };
   };
 
-  const level = () => (ducked ? 0.3 : 0.9);
+  const level = () => (ducked ? 0.1 : 0.6);
   const onVisibility = () => {
     if (!running || manual) return;
     if (document.hidden) void ctx.suspend();

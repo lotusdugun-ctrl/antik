@@ -26,7 +26,13 @@ export type Recording = { url: string; hash: string; v?: number; engine?: string
 
 /** A recorded voice and the licence that allows us to publish its output. */
 export type VoiceCredit = {
-  /** Piper voice id, e.g. "de_DE-thorsten-medium". */
+  /**
+   * What recorded it: an open-source Piper voice, or Google's Gemini speech
+   * model (an expressive, paid voice, used under the Gemini API terms, whose
+   * output may be published). Absent means Piper.
+   */
+  engine?: "piper" | "gemini";
+  /** Piper voice id, e.g. "de_DE-thorsten-medium"; for Gemini "<model>/<voice name>". */
   voice: string;
   /** The dataset the voice was trained on, as its model card names it. */
   dataset: string;
@@ -40,9 +46,11 @@ export type VoiceCredit = {
 export const voiceCreditsByLang = voiceCredits as Partial<Record<Lang | "el", VoiceCredit>>;
 
 function playable(entry: Recording | undefined, lang: Lang): entry is Recording {
-  if (!entry || entry.engine !== "piper") return false;
+  if (!entry || !entry.engine) return false;
   const credit = voiceCreditsByLang[lang];
-  return Boolean(credit && entry.voice === credit.voice);
+  return Boolean(
+    credit && entry.engine === (credit.engine ?? "piper") && entry.voice === credit.voice,
+  );
 }
 export type RecordedAudio = Record<string, Partial<Record<Lang, Record<string, Recording>>>>;
 
