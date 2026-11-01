@@ -118,6 +118,12 @@ def main() -> None:
         )
 
     langs = [args.lang] if args.lang else LANGS
+    # Languages recorded with Gemini (generate_audio_gemini.py) are not Piper's:
+    # their voice, credit and recordings are left exactly as they are.
+    credits_path = ROOT / "src" / "lib" / "voice-credits.json"
+    credits = json.loads(credits_path.read_text(encoding="utf-8")) if credits_path.exists() else {}
+    gemini_langs = {lang for lang, c in credits.items() if c.get("engine") == "gemini"}
+    langs = [lang for lang in langs if lang not in gemini_langs]
     forced = {lang: getattr(args, f"voice_{lang}") for lang in langs if getattr(args, f"voice_{lang}")}
     chosen = piper_voices.choose(langs, forced)
     piper_voices.write_credits(chosen, langs)
@@ -133,6 +139,8 @@ def main() -> None:
         for lang in list(manifest[key]):
             for chapter in list(manifest[key][lang]):
                 entry = manifest[key][lang][chapter]
+                if lang in gemini_langs:
+                    continue
                 voice = chosen.get(lang, {}).get("id")
                 if lang not in langs:
                     if entry.get("engine") == "piper":

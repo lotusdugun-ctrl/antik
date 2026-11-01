@@ -47,3 +47,5 @@ scripts/.piper-voices/
 *.part
 scripts/ses-ornekleri/
 scripts/__pycache__/
+scripts/.gemini-key
+scripts/rewrite-out/
