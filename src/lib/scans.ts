@@ -57,7 +57,11 @@ export type ScanId =
   | "apollo-lykeios"
   | "demeter-knidos"
   | "venus-milo"
-  | "alexander-rondanini";
+  | "alexander-rondanini"
+  | "athena-dresden"
+  | "athena-fitzwilliam"
+  | "nereid-xanthos"
+  | "lion-knidos";
 
 export type Scan = {
   url: string;
@@ -101,6 +105,54 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
    * Greece and Turkey are used: those states license commercial reproduction
    * of the works in their collections.
    */
+  "athena-dresden": {
+    url: "/scans/athena-dresden.glb",
+    title: l("Dresden Athena'sı", "The Dresden Athena"),
+    author: "SMK – Statens Museum for Kunst (Den Kongelige Afstøbningssamling)",
+    source: smk("KAS518"),
+    license: "Public Domain Mark 1.0",
+    licenseUrl: PDM,
+    note: l(
+      "Eteğinde Devlerle savaş kabartması olan Athena Promakhos heykelinin alçı kopyasının taraması; özgün heykel Dresden'deki Albertinum'da.",
+      "A scan of the plaster cast of the Athena Promachos with the battle of the Giants carved down her skirt; the original is in the Albertinum, Dresden.",
+    ),
+  },
+  "athena-fitzwilliam": {
+    url: "/scans/athena-fitzwilliam.glb",
+    title: l("Newton Hall Athena'sı", "The Newton Hall Athena"),
+    author: "Fitzwilliam Museum",
+    source: "https://sketchfab.com/3d-models/95a8422dc20348539503dc7b68d72aa7",
+    license: "CC BY 4.0",
+    licenseUrl: BY,
+    note: l(
+      "MS 2. yüzyıldan özgün bir mermer heykelin taraması; Cambridge'deki Fitzwilliam Müzesi'nde.",
+      "A scan of an original marble statue of the 2nd century AD, in the Fitzwilliam Museum, Cambridge.",
+    ),
+  },
+  "nereid-xanthos": {
+    url: "/scans/nereid-xanthos.glb",
+    title: l("Ksanthos'tan bir Nereid", "A Nereid from Xanthos"),
+    author: "Daniel Pett",
+    source: "https://sketchfab.com/3d-models/60b6a535d320404b8e9e68916592cfa0",
+    license: "CC BY 4.0",
+    licenseUrl: BY,
+    note: l(
+      "Nereidler Anıtı'nın sütunları arasında duran özgün heykellerden birinin taraması; British Museum'da.",
+      "A scan of one of the original statues that stood between the columns of the Nereid Monument; in the British Museum.",
+    ),
+  },
+  "lion-knidos": {
+    url: "/scans/lion-knidos.glb",
+    title: l("Knidos Aslanı", "The Lion of Knidos"),
+    author: "Thomas Flynn",
+    source: "https://sketchfab.com/3d-models/6519f5e1d79047c48c7447ef06276e0d",
+    license: "CC BY 4.0",
+    licenseUrl: BY,
+    note: l(
+      "Knidos yakınındaki bir anıt mezarın üstündeki dev mermer aslanın taraması; Mausoleion'un aslanlarıyla aynı Karia geleneğinden. Özgün heykel British Museum'da.",
+      "A scan of the colossal marble lion from the top of a tomb near Knidos, of the same Carian tradition as the lions of the Mausoleum. The original is in the British Museum.",
+    ),
+  },
   "herakles-lansdowne": {
     url: "/scans/herakles-lansdowne.glb",
     title: l("Lansdowne Herakles'i", "The Lansdowne Herakles"),
@@ -610,6 +662,7 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus-lod",
     "caryatid-lod",
     "asklepios-lod",
+    "athena-fitzwilliam",
   ],
   "aspendos-tiyatrosu": [
     "asklepios",
@@ -665,6 +718,7 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "tiberius-velatus",
     "alexander-rondanini",
     "herakles-lansdowne",
+    "athena-dresden",
   ],
   "hierapolis-tiyatrosu": [
     "muse-polyhymnia",
@@ -791,6 +845,7 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "caryatid-lod",
     "tiberius-velatus",
     "asklepios",
+    "lion-knidos",
   ],
   "aphrodisias-stadyumu": ["caryatid", "ephesus-portrait"],
   "perge-stadyumu": ["tiberius-velatus", "asklepios"],
@@ -874,7 +929,13 @@ export const SCANS_BY_RECONSTRUCTION: Partial<Record<string, ScanId[]>> = {
     "herakles-lansdowne",
     "ephesus-portrait",
   ],
-  "ksanthos-nereidler-aniti": ["caryatid-lod", "asklepios-lod", "nike", "tiberius-velatus-lod"],
+  "ksanthos-nereidler-aniti": [
+    "caryatid-lod",
+    "asklepios-lod",
+    "nike",
+    "tiberius-velatus-lod",
+    "nereid-xanthos",
+  ],
   "sardes-artemis-tapinagi": [
     "celsus-arete",
     "cybele",

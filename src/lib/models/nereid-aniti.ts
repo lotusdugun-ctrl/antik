@@ -170,7 +170,8 @@ export function heroonParts(spec: LycianHeroonSpec): Part[] {
         "marble",
         NEREID,
       ),
-      scan: { id: "nike" },
+      // One of the monument's own Nereids, and the flying Nike of the same pose.
+      scan: { id: placed % 2 ? "nike" : "nereid-xanthos" },
     });
     placed += 1;
   }

@@ -537,7 +537,11 @@ describe("the six models added in September 2026", () => {
     const horses = partsOf(tomb).filter((part) => part.kind === "sculpt");
     expect(horses.length).toBe(4);
     expect(horses.every((part) => part.statue === "Horse")).toBe(true);
-    expect(partsOf(tomb).filter((part) => part.scan?.id === "lion-met").length).toBe(spec.lions);
+    expect(
+      partsOf(tomb).filter(
+        (part) => part.scan?.id === "lion-met" || part.scan?.id === "lion-knidos",
+      ).length,
+    ).toBe(spec.lions);
     expect(spec.columnsShort * 2 + spec.columnsLong * 2 - 4).toBe(spec.columns);
   });
 

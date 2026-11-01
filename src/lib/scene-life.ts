@@ -1255,7 +1255,7 @@ const SCAN_OF: Partial<Record<string, ScanId[]>> = {
   /** A goddess draped and standing: no scan of an Aphrodite of the kind survives here. */
   Aphrodite: ["venus-milo", "ephesus-portrait", "caryatid"],
   /** Athena in her peplos: a maiden of her own temple on the Acropolis. */
-  Athena: ["caryatid"],
+  Athena: ["athena-dresden", "athena-fitzwilliam", "caryatid"],
   Zeus: ["neptune"],
   Emperor: ["tiberius-velatus", "hadrian-troy"],
   Apollon: ["apollo-lykeios", "apollo-kitharoidos"],

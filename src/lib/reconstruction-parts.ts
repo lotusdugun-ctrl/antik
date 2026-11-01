@@ -7559,7 +7559,8 @@ export function mausoleumParts(spec: MausoleumSpec): Part[] {
       at,
       height: 1.15,
       rotY: rotY + Math.PI,
-      scan: { id: "lion-met" },
+      // Two traditions of Greek tomb lion: the Met's Attic lion and Knidos'.
+      scan: { id: i % 2 ? "lion-knidos" : "lion-met" },
     });
   }
 
