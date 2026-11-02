@@ -164,6 +164,8 @@ function trianglesOf(gltf: Gltf): number {
 
 /** Pieces seen close up, once in their model, may keep more of their surface. */
 const HERO_BUDGET: Partial<Record<ScanId, number>> = {
+  // A whole building front, shown once, in place of the modelled one (preview).
+  "celsus-cephe": 230_000,
   "didyma-medusa": 60_000,
   "nemrut-head": 55_000,
   caryatid: 45_000,
