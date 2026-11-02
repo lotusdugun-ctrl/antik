@@ -1501,6 +1501,14 @@ const dict = {
     en: "Couldn't get your location. Check the browser permissions.",
   },
 
+  // ————— HD 360° views —————
+  hd_title: { tr: "HD 360° canlandırma", en: "HD 360° views" },
+  hd_intro: {
+    tr: "Yerin en ayrıntılı canlandırması: Blender'da ışığın gerçek davranışıyla hesaplanmış, her yöne bakabileceğiniz görüntüler. Canlandırma temsilîdir; dayandığı kaynaklar aşağıda.",
+    en: "The most detailed reconstruction of the place: views computed in Blender with light behaving as it really does, to look round in every direction. The reconstruction is representative; its sources are below.",
+  },
+  hd_drag: { tr: "Sürükleyerek etrafa bakın", en: "Drag to look around" },
+
   // ————— Real scans —————
   scans_title: { tr: "Gerçek eserin 3B taraması", en: "3D scans of the real pieces" },
   scans_intro: {

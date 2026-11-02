@@ -3371,6 +3371,8 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
             : {}),
         });
         if (maps) weather_(material, name === "bronze");
+        // The name carries into exported GLBs, where the Blender pass picks textures by it.
+        material.name = name;
         return material;
       };
 
@@ -6056,8 +6058,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
          * the camera moves the frame is the plain render, smooth; a quarter of
          * a second after it stops, the shading of the corners fades in.
          */
-        const moved =
-          !camera.position.equals(lastCameraPos) || !controls.target.equals(lastTarget);
+        const moved = !camera.position.equals(lastCameraPos) || !controls.target.equals(lastTarget);
         if (moved) {
           lastCameraPos.copy(camera.position);
           lastTarget.copy(controls.target);

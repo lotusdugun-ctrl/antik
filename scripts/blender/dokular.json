@@ -1,0 +1,18 @@
+{
+ "_aciklama": "Poly Haven CC0 dokular (atıf gerekmez; yine de anılır). size_m: bir karonun gerçek boyutu. DOKU-INDIR adımı (her *-HD.bat) bunları gorseller-ai\\dokular\\<id>\\ altına indirir.",
+ "dokular": {
+  "rock_face": {"size_m": 2.38, "authors": "Greg Zaal, Dario Barresi"},
+  "sandstone_cracks": {"size_m": 2.0, "authors": "Rob Tuytel"},
+  "white_plaster_rough_01": {"size_m": 1.0, "authors": "Rob Tuytel"},
+  "marble_01": {"size_m": 1.5, "authors": "Rob Tuytel"},
+  "marble_tiles": {"size_m": 2.0, "authors": "Charlotte Baglioni"},
+  "large_sandstone_blocks": {"size_m": 3.0, "authors": "Rob Tuytel"},
+  "white_sandstone_blocks_02": {"size_m": 2.0, "authors": "Rob Tuytel"},
+  "dry_ground_rocks": {"size_m": 4.0, "authors": "Rob Tuytel"}
+ },
+ "eslesme": {
+  "karanlik": {"kaya": ["rock_face", 0.55], "yontu": ["sandstone_cracks", 0.5], "revak": ["sandstone_cracks", 0.35], "fresk": ["white_plaster_rough_01", 0.0], "toprak": ["dry_ground_rocks", 0.8]},
+  "celsus": {"mermer": ["marble_01", 0.45], "mermer_koyu": ["marble_01", 0.45], "doseme": ["marble_tiles", 0.6], "kabartma": ["marble_01", 0.3], "toprak": ["dry_ground_rocks", 0.8]},
+  "aspendos": {"kirectasi": ["white_sandstone_blocks_02", 0.5], "konglomera": ["large_sandstone_blocks", 0.7], "mermer": ["marble_01", 0.45], "toprak": ["dry_ground_rocks", 0.8]}
+ }
+}

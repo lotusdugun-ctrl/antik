@@ -5310,6 +5310,21 @@ export const photoCredits: Record<string, PhotoCredit> = {
     license: "CC BY 2.5",
     licenseUrl: "https://creativecommons.org/licenses/by/2.5",
   },
+  // "Today" photographs for the compare slider (src/lib/compare-views.ts).
+  "Karanlık_Kilise.JPG": {
+    author: "Cobija",
+    license: "CC0",
+  },
+  "Library_of_Celsus_(20017181915).jpg": {
+    author: "lensnmatter",
+    license: "CC BY 2.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/2.0",
+  },
+  "Aspendos_teatro_romano_-_panoramio.jpg": {
+    author: "Nicola Feola",
+    license: "CC BY 3.0",
+    licenseUrl: "https://creativecommons.org/licenses/by/3.0",
+  },
 };
 
 /**

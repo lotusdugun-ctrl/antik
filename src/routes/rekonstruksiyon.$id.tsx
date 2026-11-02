@@ -1,6 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Box, ExternalLink, MapPin, Ruler, TriangleAlert } from "lucide-react";
 import { PhotoCredits } from "@/components/PhotoCredits";
+import { CompareSlider } from "@/components/CompareSlider";
+import { EvidencePanel } from "@/components/EvidencePanel";
+import { HdPanoramas } from "@/components/HdPanoramas";
 import { ScanGallery } from "@/components/ScanGallery";
 import { Reconstruction3D } from "@/components/Reconstruction3D";
 import { parseLang, translate, useI18n, pick, type Lang } from "@/lib/i18n";
@@ -141,6 +144,10 @@ function ReconstructionPage() {
         )}
         className="mt-6"
       />
+
+      <CompareSlider id={item.id} />
+      <HdPanoramas id={item.id} />
+      <EvidencePanel id={item.id} />
 
       <ScanGallery ids={scansFor(item.id)} />
 
