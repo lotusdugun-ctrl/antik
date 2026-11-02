@@ -16,7 +16,6 @@ import type { Localized } from "@/lib/i18n";
  * requires attribution, which the reconstruction page prints in full.
  */
 export type ScanId =
-  | "celsus-cephe"
   | "celsus-sophia"
   | "celsus-arete"
   | "didyma-medusa"
@@ -212,18 +211,6 @@ const SCANS_FULL: Record<FullScanId, Scan> = {
     note: l(
       "Genç İskender'i gösteren heykelin alçı kopyasının taraması; özgün heykel Münih Glyptothek'te.",
       "A scan of the plaster cast of the statue of the young Alexander; the original is in the Glyptothek, Munich.",
-    ),
-  },
-  "celsus-cephe": {
-    url: "/scans/celsus-cephe.glb",
-    title: l("Celsus Kütüphanesi cephesi", "The front of the Library of Celsus"),
-    author: "Miguel Bandera",
-    source: "https://sketchfab.com/3d-models/1cc6ad6af508422398f60f902cb70e88",
-    license: "CC BY 4.0",
-    licenseUrl: BY,
-    note: l(
-      "Cephenin 200 kamuya açık fotoğraftan yapılmış taramasının web için sadeleştirilmiş hâli; pencere ve kapı boşluklarına sinmiş gökyüzü temizlendi. Bugünkü (1970–78'de yeniden dikilmiş) cepheyi gösterir.",
-      "A web-reduced copy of a crowdsourced photogrammetry scan of the front, made from 200 public photographs, with the sky that had seeped into the doors and windows cleaned out. It shows the front as it stands today, re-erected in 1970–78.",
     ),
   },
   "celsus-sophia": {
