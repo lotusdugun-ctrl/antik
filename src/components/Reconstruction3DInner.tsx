@@ -6113,7 +6113,12 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           lastTarget.copy(controls.target);
           lastMove = now;
         }
-        if (composer && qualityOn && now - lastMove > 0.25) composer.render();
+        /*
+         * Not over a baked model: its light, shadows and corner shading are already
+         * in its textures, and the composer's tone mapping (OutputPass) would darken
+         * them a second time, so the view went dark whenever the camera stopped.
+         */
+        if (composer && qualityOn && !bakedHandle && now - lastMove > 0.25) composer.render();
         else renderer.render(scene, camera);
         placePins();
         listen(now);
@@ -6375,7 +6380,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         },
         /** A still of exactly what is on screen, rendered now so the buffer is fresh. */
         capture: () => {
-          if (composer && qualityOn) composer.render();
+          if (composer && qualityOn && !bakedHandle) composer.render();
           else renderer.render(scene, camera);
           return renderer.domElement.toDataURL("image/jpeg", 0.9);
         },
