@@ -1,17 +1,17 @@
 {
  "model": "ayasofya-ana-kubbe",
- "preset": "golden",
- "scale": 2.0,
+ "preset": "clear",
+ "scale": 2,
  "maps": {
-  "ayasofya-ana-kubbe-near": "ayasofya-ana-kubbe-near-golden.jpg",
-  "ayasofya-ana-kubbe-ground": "ayasofya-ana-kubbe-ground-golden.jpg",
-  "ayasofya-ana-kubbe-terrain": "ayasofya-ana-kubbe-terrain-golden.jpg",
+  "ayasofya-ana-kubbe-near": "ayasofya-ana-kubbe-near-clear.jpg",
+  "ayasofya-ana-kubbe-ground": "ayasofya-ana-kubbe-ground-clear.jpg",
+  "ayasofya-ana-kubbe-terrain": "ayasofya-ana-kubbe-terrain-clear.jpg",
   "ayasofya-ana-kubbe-detail": null,
   "ayasofya-ana-kubbe-flora": null
  },
  "terrain": "ayasofya-ana-kubbe-terrain",
  "plants": 360,
- "azim": -140.0,
+ "azim": 179.1623470457217,
  "files": [
   "ayasofya-ana-kubbe-baked.glb"
  ]

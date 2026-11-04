@@ -537,6 +537,8 @@ cy.glossy_bounces = 0
 cy.transmission_bounces = 0
 cy.use_denoising = False
 try:
+    if os.environ.get("ANTIK_CPU") == "1":  # PISIR-WEB retries on the CPU when the GPU run dies
+        raise RuntimeError("ANTIK_CPU=1")
     prefs = bpy.context.preferences.addons["cycles"].preferences
     for kind in ("OPTIX", "CUDA", "HIP", "ONEAPI", "METAL"):
         try:

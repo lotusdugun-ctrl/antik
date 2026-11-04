@@ -1,17 +1,17 @@
 {
  "model": "side-tiyatrosu",
- "preset": "golden",
- "scale": 2.0,
+ "preset": "clear",
+ "scale": 2,
  "maps": {
-  "side-tiyatrosu-near": "side-tiyatrosu-near-golden.jpg",
-  "side-tiyatrosu-ground": "side-tiyatrosu-ground-golden.jpg",
-  "side-tiyatrosu-terrain": "side-tiyatrosu-terrain-golden.jpg",
+  "side-tiyatrosu-near": "side-tiyatrosu-near-clear.jpg",
+  "side-tiyatrosu-ground": "side-tiyatrosu-ground-clear.jpg",
+  "side-tiyatrosu-terrain": "side-tiyatrosu-terrain-clear.jpg",
   "side-tiyatrosu-detail": null,
   "side-tiyatrosu-flora": null
  },
  "terrain": "side-tiyatrosu-terrain",
- "plants": 384,
- "azim": -32.0,
+ "plants": 366,
+ "azim": 48.49573328079582,
  "files": [
   "side-tiyatrosu-baked.glb"
  ]

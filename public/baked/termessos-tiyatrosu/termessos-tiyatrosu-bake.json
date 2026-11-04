@@ -1,17 +1,17 @@
 {
  "model": "termessos-tiyatrosu",
- "preset": "golden",
- "scale": 2.0,
+ "preset": "clear",
+ "scale": 2,
  "maps": {
-  "termessos-tiyatrosu-near": "termessos-tiyatrosu-near-golden.jpg",
-  "termessos-tiyatrosu-ground": "termessos-tiyatrosu-ground-golden.jpg",
-  "termessos-tiyatrosu-terrain": "termessos-tiyatrosu-terrain-golden.jpg",
+  "termessos-tiyatrosu-near": "termessos-tiyatrosu-near-clear.jpg",
+  "termessos-tiyatrosu-ground": "termessos-tiyatrosu-ground-clear.jpg",
+  "termessos-tiyatrosu-terrain": "termessos-tiyatrosu-terrain-clear.jpg",
   "termessos-tiyatrosu-detail": null,
   "termessos-tiyatrosu-flora": null
  },
  "terrain": "termessos-tiyatrosu-terrain",
  "plants": 187,
- "azim": -32.0,
+ "azim": 48.49573328079581,
  "files": [
   "termessos-tiyatrosu-baked.glb"
  ]

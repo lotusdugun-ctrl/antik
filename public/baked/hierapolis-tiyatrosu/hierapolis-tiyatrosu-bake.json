@@ -1,17 +1,17 @@
 {
  "model": "hierapolis-tiyatrosu",
- "preset": "golden",
- "scale": 2.0,
+ "preset": "clear",
+ "scale": 2,
  "maps": {
-  "hierapolis-tiyatrosu-near": "hierapolis-tiyatrosu-near-golden.jpg",
-  "hierapolis-tiyatrosu-ground": "hierapolis-tiyatrosu-ground-golden.jpg",
-  "hierapolis-tiyatrosu-terrain": "hierapolis-tiyatrosu-terrain-golden.jpg",
+  "hierapolis-tiyatrosu-near": "hierapolis-tiyatrosu-near-clear.jpg",
+  "hierapolis-tiyatrosu-ground": "hierapolis-tiyatrosu-ground-clear.jpg",
+  "hierapolis-tiyatrosu-terrain": "hierapolis-tiyatrosu-terrain-clear.jpg",
   "hierapolis-tiyatrosu-detail": null,
   "hierapolis-tiyatrosu-flora": null
  },
  "terrain": "hierapolis-tiyatrosu-terrain",
- "plants": 252,
- "azim": -32.0,
+ "plants": 258,
+ "azim": 48.49573328079581,
  "files": [
   "hierapolis-tiyatrosu-baked.glb"
  ]

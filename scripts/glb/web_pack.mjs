@@ -15,18 +15,20 @@ const [src, id] = process.argv.slice(2);
 const dst = path.join(app, "public", "baked", id);
 fs.mkdirSync(dst, { recursive: true });
 const tmp = fs.mkdtempSync(path.join(src, ".pack-"));
-const bin = (name) =>
-  path.join(
+// The tools' own entry scripts, run with this node (bun on Windows makes no .cmd shims in .bin).
+const CLI = {
+  "gltf-transform": path.join(
     here,
     "node_modules",
-    ".bin",
-    process.platform === "win32" ? `${name}.cmd` : name,
-  );
+    "@gltf-transform",
+    "cli",
+    "bin",
+    "cli.js",
+  ),
+  gltfpack: path.join(here, "node_modules", "gltfpack", "cli.js"),
+};
 const run = (name, args) =>
-  execFileSync(bin(name), args, {
-    stdio: "inherit",
-    shell: process.platform === "win32",
-  });
+  execFileSync(process.execPath, [CLI[name], ...args], { stdio: "inherit" });
 
 const baked = path.join(src, `${id}-baked.glb`);
 run("gltf-transform", ["dedup", baked, path.join(tmp, "d.glb")]);

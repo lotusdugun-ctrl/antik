@@ -44,15 +44,16 @@ if ($LASTEXITCODE) {
   git apply scripts\glb\recon-dev-patch.diff
   if ($LASTEXITCODE) { Write-Host "recon-dev-patch uygulanamadi" -ForegroundColor Red; exit 1 }
 }
-$vite = Start-Process -FilePath "bunx" -ArgumentList "vite","dev","--port","5180","--strictPort","--host","127.0.0.1" -PassThru -RedirectStandardOutput "$work\vite.log" -RedirectStandardError "$work\vite-err.log"
-$ok = $false
-for ($i = 0; $i -lt 90; $i++) {
-  Start-Sleep -Seconds 2
-  try { Invoke-WebRequest "http://127.0.0.1:5180/" -UseBasicParsing -TimeoutSec 5 | Out-Null; $ok = $true; break } catch {}
+function Server-Up { try { Invoke-WebRequest "http://127.0.0.1:5180/" -UseBasicParsing -TimeoutSec 10 | Out-Null; return $true } catch { return $false } }
+function Start-Server {
+  $p = Start-Process -FilePath "bunx" -ArgumentList "vite","dev","--port","5180","--strictPort","--host","127.0.0.1" -PassThru -RedirectStandardOutput "$work\vite.log" -RedirectStandardError "$work\vite-err.log"
+  for ($i = 0; $i -lt 90; $i++) { Start-Sleep -Seconds 2; if (Server-Up) { break } }
+  return $p
 }
+$vite = Start-Server
 $done = @(); $failed = @()
 try {
-  if (-not $ok) { throw "sunucu acilmadi (hd-out\pisir\vite-err.log)" }
+  if (-not (Server-Up)) { throw "sunucu acilmadi (hd-out\pisir\vite-err.log)" }
   foreach ($id in $Ids) {
     $dst = "public\baked\$id\$id-bake.json"
     if ((Test-Path $dst) -and ((Get-Content -Raw $dst) -match '"preset": "clear"')) { Write-Host "$id zaten pismis, atlaniyor"; $done += $id; continue }
@@ -61,13 +62,28 @@ try {
     $log = Join-Path $work "$id.log"
     New-Item -ItemType Directory -Force $out | Out-Null
     try {
+      if (-not (Server-Up)) {
+        Write-Host "  sunucu yeniden aciliyor..."
+        if ($vite -and -not $vite.HasExited) { taskkill /PID $vite.Id /T /F | Out-Null }
+        $vite = Start-Server
+      }
       Write-Host "  disa aktariliyor..."
       node scripts\glb\export-glb.mjs $id $out *> $log
       if ($LASTEXITCODE -or -not (Test-Path "$out\$id-building.glb")) { throw "disa aktarma" }
-      Write-Host "  pisiriliyor (ekran karti)..."
       $env:ANTIK_VIEW = "$out\$id-view.json"
-      & $bl -b --factory-startup --python scripts\glb\antik_bake.py -- "$out\$id-building.glb" "$out\$id-landscape.glb" $out clear 2048 160 *>> $log
-      Remove-Item Env:\ANTIK_VIEW
+      # 1) ekran karti; 2) cokerse daha az bitkiyle; 3) yine cokerse islemciyle (yavas ama saglam)
+      $tries = @(@{ cpu = "0"; plants = "650"; note = "ekran karti" }, @{ cpu = "0"; plants = "150"; note = "ekran karti, az bitki" }, @{ cpu = "1"; plants = "150"; note = "islemci" })
+      foreach ($t in $tries) {
+        if (Test-Path "$out\$id-baked.glb") { break }
+        $env:ANTIK_CPU = $t.cpu; $env:ANTIK_MAX_PLANTS = $t.plants
+        Write-Host "  pisiriliyor ($($t.note))..."
+        Remove-Item "$env:TEMP\blender.crash.txt" -ErrorAction SilentlyContinue
+        "=== blender: $($t.note) ===" | Out-File -Append -Encoding utf8 $log
+        & $bl -b --factory-startup --python scripts\glb\antik_bake.py -- "$out\$id-building.glb" "$out\$id-landscape.glb" $out clear 2048 160 *>> $log
+        "=== blender cikis kodu: $LASTEXITCODE ===" | Out-File -Append -Encoding utf8 $log
+        if (Test-Path "$env:TEMP\blender.crash.txt") { Get-Content "$env:TEMP\blender.crash.txt" | Out-File -Append -Encoding utf8 $log }
+      }
+      Remove-Item Env:\ANTIK_VIEW, Env:\ANTIK_CPU, Env:\ANTIK_MAX_PLANTS -ErrorAction SilentlyContinue
       if (-not (Test-Path "$out\$id-baked.glb")) { throw "pisirme" }
       Write-Host "  sikistiriliyor..."
       node scripts\glb\web_pack.mjs $out $id *>> $log
