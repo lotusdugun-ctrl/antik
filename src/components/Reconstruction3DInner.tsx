@@ -4505,11 +4505,19 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         if (bakedHandle) {
           // relative to the light the model was baked in, as the country is to the day's
           const ref = new THREE.Color(paletteFor("light", bakedHandle.preset as AtmosMode).ground);
-          const tint = new THREE.Color(
+          const ratio = new THREE.Color(
             liveAtmos.ground.r / ref.r,
             liveAtmos.ground.g / ref.g,
             liveAtmos.ground.b / ref.b,
           );
+          /*
+           * Mostly a change of brightness, a little of colour: the full colour ratio
+           * turned the warm evening bake blue-white in daylight (too bright), while
+           * night keeps enough of its blue. Never more than 15% brighter than baked.
+           */
+          const k = (ratio.r + ratio.g + ratio.b) / 3;
+          const tint = new THREE.Color(k, k, k).lerp(ratio, 0.35);
+          tint.setRGB(Math.min(tint.r, 1.15), Math.min(tint.g, 1.15), Math.min(tint.b, 1.15));
           bakedHandle.setLight(tint, cloudMaterial.color, cloudMaterial.opacity);
         }
       };

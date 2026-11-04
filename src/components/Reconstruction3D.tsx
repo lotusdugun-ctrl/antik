@@ -207,9 +207,6 @@ export function Reconstruction3D({
   // A baked model carries the light it was baked in (Unity bakes: late afternoon), so
   // the scene opens in that light; the other times of day tint it.
   const [atmos, setAtmos] = useState<AtmosMode>("day");
-  useEffect(() => {
-    if (bakedFolderFor(item.id)) setAtmos("golden");
-  }, [item.id]);
   const [view, setView] = useState<{ name: "front" | "above" | "corner"; token: number } | null>(
     null,
   );
