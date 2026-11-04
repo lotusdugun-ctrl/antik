@@ -3,9 +3,9 @@
  "preset": "golden",
  "scale": 2.0,
  "maps": {
-  "celsus-kutuphanesi-near": "celsus-kutuphanesi-near-golden.png",
-  "celsus-kutuphanesi-ground": "celsus-kutuphanesi-ground-golden.png",
-  "celsus-kutuphanesi-terrain": "celsus-kutuphanesi-terrain-golden.png",
+  "celsus-kutuphanesi-near": "celsus-kutuphanesi-near-golden.jpg",
+  "celsus-kutuphanesi-ground": "celsus-kutuphanesi-ground-golden.jpg",
+  "celsus-kutuphanesi-terrain": "celsus-kutuphanesi-terrain-golden.jpg",
   "celsus-kutuphanesi-detail": null,
   "celsus-kutuphanesi-flora": null
  },

@@ -1,0 +1,18 @@
+{
+ "model": "nemrut-dogu-terasi",
+ "preset": "golden",
+ "scale": 2.0,
+ "maps": {
+  "nemrut-dogu-terasi-near": "nemrut-dogu-terasi-near-golden.jpg",
+  "nemrut-dogu-terasi-ground": "nemrut-dogu-terasi-ground-golden.jpg",
+  "nemrut-dogu-terasi-terrain": "nemrut-dogu-terasi-terrain-golden.jpg",
+  "nemrut-dogu-terasi-detail": null,
+  "nemrut-dogu-terasi-flora": null
+ },
+ "terrain": "nemrut-dogu-terasi-terrain",
+ "plants": 1,
+ "azim": 16.0,
+ "files": [
+  "nemrut-dogu-terasi-baked.glb"
+ ]
+}

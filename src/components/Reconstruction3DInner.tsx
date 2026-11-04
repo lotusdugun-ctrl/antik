@@ -4131,20 +4131,6 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         };
       }
 
-      // Pilot: the Blender-baked model in place of the built one (`?pilot=1`).
-      if (baked) {
-        void import("@/lib/baked-scene")
-          .then(({ applyBaked }) =>
-            applyBaked(THREE, scene, baked, lifeHandle?.group ?? null, anisotropy),
-          )
-          .then((handle) => {
-            if (disposed) handle.dispose();
-            else bakedHandle = handle;
-          })
-          .catch(() => {
-            /* the built model stays */
-          });
-      }
 
       /**
        * The sky, as a gradient rather than a flat fill: pale at the horizon and
@@ -4516,7 +4502,42 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         cloudMaterial.color.set(liveAtmos.cloudColor);
         cloudMaterial.opacity = liveAtmos.cloudOpacity;
         birdMaterial.opacity = liveAtmos.birdOpacity;
+        if (bakedHandle) {
+          // relative to the light the model was baked in, as the country is to the day's
+          const ref = new THREE.Color(paletteFor("light", bakedHandle.preset as AtmosMode).ground);
+          const tint = new THREE.Color(
+            liveAtmos.ground.r / ref.r,
+            liveAtmos.ground.g / ref.g,
+            liveAtmos.ground.b / ref.b,
+          );
+          bakedHandle.setLight(tint, cloudMaterial.color, cloudMaterial.opacity);
+        }
       };
+
+      // Pilot: the Blender-baked model in place of the built one (`?pilot=1`).
+      if (baked) {
+        void import("@/lib/baked-scene")
+          .then(({ applyBaked }) =>
+            applyBaked(
+              THREE,
+              scene,
+              baked,
+              lifeHandle?.group ?? null,
+              anisotropy,
+              cloudMaterial,
+            ),
+          )
+          .then((handle) => {
+            if (disposed) handle.dispose();
+            else {
+              bakedHandle = handle;
+              applyLive();
+            }
+          })
+          .catch(() => {
+            /* the built model stays */
+          });
+      }
 
       /*
        * The dome follows every step of a change of light. The reflected sky

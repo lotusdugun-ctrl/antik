@@ -1,0 +1,18 @@
+{
+ "model": "termessos-tiyatrosu",
+ "preset": "golden",
+ "scale": 2.0,
+ "maps": {
+  "termessos-tiyatrosu-near": "termessos-tiyatrosu-near-golden.jpg",
+  "termessos-tiyatrosu-ground": "termessos-tiyatrosu-ground-golden.jpg",
+  "termessos-tiyatrosu-terrain": "termessos-tiyatrosu-terrain-golden.jpg",
+  "termessos-tiyatrosu-detail": null,
+  "termessos-tiyatrosu-flora": null
+ },
+ "terrain": "termessos-tiyatrosu-terrain",
+ "plants": 187,
+ "azim": -32.0,
+ "files": [
+  "termessos-tiyatrosu-baked.glb"
+ ]
+}

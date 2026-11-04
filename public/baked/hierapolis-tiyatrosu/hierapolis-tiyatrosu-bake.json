@@ -1,0 +1,18 @@
+{
+ "model": "hierapolis-tiyatrosu",
+ "preset": "golden",
+ "scale": 2.0,
+ "maps": {
+  "hierapolis-tiyatrosu-near": "hierapolis-tiyatrosu-near-golden.jpg",
+  "hierapolis-tiyatrosu-ground": "hierapolis-tiyatrosu-ground-golden.jpg",
+  "hierapolis-tiyatrosu-terrain": "hierapolis-tiyatrosu-terrain-golden.jpg",
+  "hierapolis-tiyatrosu-detail": null,
+  "hierapolis-tiyatrosu-flora": null
+ },
+ "terrain": "hierapolis-tiyatrosu-terrain",
+ "plants": 252,
+ "azim": -32.0,
+ "files": [
+  "hierapolis-tiyatrosu-baked.glb"
+ ]
+}

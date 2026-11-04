@@ -1,0 +1,18 @@
+{
+ "model": "side-tiyatrosu",
+ "preset": "golden",
+ "scale": 2.0,
+ "maps": {
+  "side-tiyatrosu-near": "side-tiyatrosu-near-golden.jpg",
+  "side-tiyatrosu-ground": "side-tiyatrosu-ground-golden.jpg",
+  "side-tiyatrosu-terrain": "side-tiyatrosu-terrain-golden.jpg",
+  "side-tiyatrosu-detail": null,
+  "side-tiyatrosu-flora": null
+ },
+ "terrain": "side-tiyatrosu-terrain",
+ "plants": 384,
+ "azim": -32.0,
+ "files": [
+  "side-tiyatrosu-baked.glb"
+ ]
+}

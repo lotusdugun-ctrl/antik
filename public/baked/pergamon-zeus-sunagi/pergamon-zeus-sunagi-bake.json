@@ -1,0 +1,17 @@
+{
+ "model": "pergamon-zeus-sunagi",
+ "preset": "golden",
+ "scale": 2.0,
+ "maps": {
+  "pergamon-zeus-sunagi-near": "pergamon-zeus-sunagi-near-golden.jpg",
+  "pergamon-zeus-sunagi-ground": "pergamon-zeus-sunagi-ground-golden.jpg",
+  "pergamon-zeus-sunagi-terrain": "pergamon-zeus-sunagi-terrain-golden.jpg",
+  "pergamon-zeus-sunagi-detail": null,
+  "pergamon-zeus-sunagi-flora": null
+ },
+ "terrain": "pergamon-zeus-sunagi-terrain",
+ "plants": 45,
+ "files": [
+  "pergamon-zeus-sunagi-baked.glb"
+ ]
+}

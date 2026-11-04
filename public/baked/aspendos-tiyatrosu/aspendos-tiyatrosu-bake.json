@@ -1,0 +1,18 @@
+{
+ "model": "aspendos-tiyatrosu",
+ "preset": "golden",
+ "scale": 2.0,
+ "maps": {
+  "aspendos-tiyatrosu-near": "aspendos-tiyatrosu-near-golden.jpg",
+  "aspendos-tiyatrosu-ground": "aspendos-tiyatrosu-ground-golden.jpg",
+  "aspendos-tiyatrosu-terrain": "aspendos-tiyatrosu-terrain-golden.jpg",
+  "aspendos-tiyatrosu-detail": null,
+  "aspendos-tiyatrosu-flora": null
+ },
+ "terrain": "aspendos-tiyatrosu-terrain",
+ "plants": 253,
+ "azim": -32.0,
+ "files": [
+  "aspendos-tiyatrosu-baked.glb"
+ ]
+}

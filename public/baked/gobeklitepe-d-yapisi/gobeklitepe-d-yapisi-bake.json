@@ -1,0 +1,18 @@
+{
+ "model": "gobeklitepe-d-yapisi",
+ "preset": "golden",
+ "scale": 2.0,
+ "maps": {
+  "gobeklitepe-d-yapisi-near": "gobeklitepe-d-yapisi-near-golden.jpg",
+  "gobeklitepe-d-yapisi-ground": "gobeklitepe-d-yapisi-ground-golden.jpg",
+  "gobeklitepe-d-yapisi-terrain": "gobeklitepe-d-yapisi-terrain-golden.jpg",
+  "gobeklitepe-d-yapisi-detail": null,
+  "gobeklitepe-d-yapisi-flora": null
+ },
+ "terrain": "gobeklitepe-d-yapisi-terrain",
+ "plants": 9,
+ "azim": -4.0,
+ "files": [
+  "gobeklitepe-d-yapisi-baked.glb"
+ ]
+}
