@@ -4504,7 +4504,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         birdMaterial.opacity = liveAtmos.birdOpacity;
         if (bakedHandle) {
           // relative to the light the model was baked in, as the country is to the day's
-          const ref = new THREE.Color(paletteFor("light", bakedHandle.preset as AtmosMode).ground);
+          const ref = new THREE.Color(paletteFor("light", bakedHandle.preset === "golden" ? "golden" : "day").ground);
           const ratio = new THREE.Color(
             liveAtmos.ground.r / ref.r,
             liveAtmos.ground.g / ref.g,

@@ -206,7 +206,7 @@ export function Reconstruction3D({
   const [active, setActive] = useState<number | null>(null);
   // A baked model carries the light it was baked in (Unity bakes: late afternoon), so
   // the scene opens in that light; the other times of day tint it.
-  const [atmos, setAtmos] = useState<AtmosMode>("day");
+  const [atmos] = useState<AtmosMode>("day");
   const [view, setView] = useState<{ name: "front" | "above" | "corner"; token: number } | null>(
     null,
   );
@@ -767,7 +767,7 @@ export function Reconstruction3D({
   }, [extras, gyroOn, walking]);
 
   /* ---- Time passing, weather, scale ---- */
-  const [timeFlow, setTimeFlow] = useState(false);
+  const [timeFlow] = useState(false);
   const [weatherOn, setWeatherOn] = useState(false);
   const weatherKind = useMemo(
     () =>
@@ -1454,33 +1454,8 @@ export function Reconstruction3D({
           ref={barRef}
           className={`absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.5rem,env(safe-area-inset-right))] z-10 flex items-end gap-1.5 ${hideUi ? "hidden" : ""}`}
         >
-          <div
-            role="radiogroup"
-            aria-label={t("recon_light")}
-            className={`flex gap-0.5 rounded-2xl p-1 ${glass}`}
-          >
-            {LIGHTS.map(([mode, Icon, key]) => {
-              const on = atmos === mode;
-              return (
-                <button
-                  key={mode}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  aria-label={t(key)}
-                  title={t(key)}
-                  onClick={() => {
-                    setTimeFlow(false);
-                    setAtmos(mode);
-                  }}
-                  className={tool}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className={on ? "pr-0.5" : "hidden pr-0.5 @3xl:inline"}>{t(key)}</span>
-                </button>
-              );
-            })}
-          </div>
+          {/* Always daylight: the baked models carry one light, and day, evening and night
+              read as three different models (the user asked for one clean daylight view). */}
           <div className={`${roomy} gap-0.5 rounded-2xl p-1 ${glass}`}>{toggles(false)}</div>
           <div className="relative">
             <button
@@ -1522,14 +1497,6 @@ export function Reconstruction3D({
                     Gauge,
                     L(RS.lite),
                     L(RS.liteHint),
-                  )}
-                  {switchRow(
-                    "time",
-                    timeFlow,
-                    () => setTimeFlow((on) => !on),
-                    Clock,
-                    L(RS.timeFlow),
-                    L(RS.timeFlowHint),
                   )}
                   {switchRow(
                     "weather",
@@ -1644,24 +1611,6 @@ export function Reconstruction3D({
                 <Aperture className="h-4 w-4" />
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => {
-                setTimeFlow(false);
-                setAtmos((now) => (now === "day" ? "golden" : now === "golden" ? "night" : "day"));
-              }}
-              aria-label={`${L(RS.photoLight)}: ${t(LIGHTS.find(([mode]) => mode === atmos)![2])}`}
-              title={L(RS.photoLight)}
-              className={tool}
-            >
-              {atmos === "day" ? (
-                <Sun className="h-4 w-4" />
-              ) : atmos === "golden" ? (
-                <Sunset className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </button>
             <button
               type="button"
               onClick={() => void shoot()}

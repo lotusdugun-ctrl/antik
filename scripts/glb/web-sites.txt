@@ -1,0 +1,10 @@
+# PISIR-WEB.bat'in pisirdigi yerler (sirayla). Once vitrin yerleri; digerleri altta.
+celsus-kutuphanesi
+aspendos-tiyatrosu
+gobeklitepe-d-yapisi
+ayasofya-ana-kubbe
+termessos-tiyatrosu
+hierapolis-tiyatrosu
+nemrut-dogu-terasi
+pergamon-zeus-sunagi
+side-tiyatrosu

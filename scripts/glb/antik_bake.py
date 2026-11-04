@@ -41,6 +41,9 @@ os.makedirs(out_dir, exist_ok=True)
 PRESETS = {
     # sun elevation and azimuth in degrees, sun colour and strength, sky colour and strength
     "day": dict(elev=55, azim=-140, sun=(1.0, 0.96, 0.9), sun_w=4.5, sky=(0.55, 0.68, 0.9), sky_w=1.0),
+    # Clear midday-ish light for the web (Mozaik3D look): high enough to light every front,
+    # low enough to model it; the azimuth comes from the app's opening view (ANTIK_VIEW).
+    "clear": dict(elev=42, azim=-140, sun=(1.0, 0.95, 0.88), sun_w=4.6, sky=(0.55, 0.68, 0.92), sky_w=1.25),
     "golden": dict(elev=16, azim=-140, sun=(1.0, 0.72, 0.45), sun_w=4.0, sky=(0.45, 0.55, 0.75), sky_w=1.0),
 }
 P = PRESETS[preset]
@@ -483,6 +486,17 @@ scene.collection.objects.link(sun)
 # a site whose front faces away from the preset's sun gets its own azimuth (ANTIK_AZIM,
 # degrees), so the side the app opens on is the lit one (Unity: AntikSetup.Views sunYaw = 180 - azim)
 azim_deg = float(os.environ.get("ANTIK_AZIM", P["azim"]))
+# The app's opening view (<id>-view.json from export-glb.mjs: camera "c" and target "t", three.js
+# coordinates): the sun comes from over the viewer's shoulder, 35 degrees to the side, so the face
+# the app opens on is lit and still modelled. Blender (x, y) = three (x, -z).
+view_path = os.environ.get("ANTIK_VIEW", "")
+if "ANTIK_AZIM" not in os.environ and view_path and os.path.exists(view_path):
+    with open(view_path) as f:
+        v = json.load(f)
+    dx = v["t"][0] - v["c"][0]
+    dy = -(v["t"][2] - v["c"][2])
+    azim_deg = math.degrees(math.atan2(-dx, dy)) + 35.0
+    print(f"[antik] sun azimuth from the opening view: {azim_deg:.0f}", flush=True)
 meta["azim"] = azim_deg
 elev, azim = math.radians(P["elev"]), math.radians(azim_deg)
 sun.rotation_euler = (math.pi / 2 - elev, 0.0, azim)

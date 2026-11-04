@@ -1,15 +1,19 @@
 {
  "model": "celsus-kutuphanesi",
- "preset": "golden",
- "scale": 2.0,
+ "preset": "clear",
+ "scale": 2,
  "maps": {
-  "celsus-kutuphanesi-near": "celsus-kutuphanesi-near-golden.jpg",
-  "celsus-kutuphanesi-ground": "celsus-kutuphanesi-ground-golden.jpg",
-  "celsus-kutuphanesi-terrain": "celsus-kutuphanesi-terrain-golden.jpg",
+  "celsus-kutuphanesi-near": "celsus-kutuphanesi-near-clear.jpg",
+  "celsus-kutuphanesi-ground": "celsus-kutuphanesi-ground-clear.jpg",
+  "celsus-kutuphanesi-terrain": "celsus-kutuphanesi-terrain-clear.jpg",
   "celsus-kutuphanesi-detail": null,
   "celsus-kutuphanesi-flora": null
  },
  "terrain": "celsus-kutuphanesi-terrain",
  "plants": 19,
- "fill": true
+ "azim": 197.25532837494308,
+ "fill": true,
+ "files": [
+  "celsus-kutuphanesi-baked.glb"
+ ]
 }

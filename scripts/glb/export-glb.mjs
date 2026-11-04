@@ -1,4 +1,5 @@
-import { chromium } from "/opt/npm-tools/node_modules/playwright/index.mjs";
+// Playwright: scripts/glb/node_modules (PISIR-WEB.bat kurar) ya da ANTIK_PW (bulut: /opt/npm-tools/...).
+const { chromium } = await import(process.env.ANTIK_PW || "playwright");
 import fs from "node:fs";
 const [id, outDir] = [process.argv[2], process.argv[3]];
 fs.mkdirSync(outDir, { recursive: true });
@@ -13,6 +14,10 @@ await page.waitForFunction(() => window.__recon && window.__recon.renderer.info.
 // (the scene's own "scans" group; the batch inside "life" has the same name)
 await page.waitForFunction(() => { const s = window.__recon.scene.children.find((c) => c.name === "scans"); return !s || s.children.length > 0; }, null, { timeout: 120000 }).catch(() => console.log("no scans"));
 await page.waitForTimeout(4000);
+// The opening view, for the bake's sun (antik_bake.py ANTIK_VIEW): camera and target, three.js coordinates.
+fs.writeFileSync(`${outDir}/${id}-view.json`, JSON.stringify(await page.evaluate(() => ({
+  c: window.__recon.camera.position.toArray(), t: window.__recon.controls.target.toArray(),
+}))));
 const parts = await page.evaluate(async () => {
   const { GLTFExporter } = await import("/node_modules/three/examples/jsm/exporters/GLTFExporter.js");
   const { scene } = window.__recon; const o_Mesh = scene.children.find((x) => x.isMesh).constructor;
