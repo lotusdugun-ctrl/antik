@@ -16,6 +16,7 @@ import { buildFrescoes, isFresco } from "./scene/fresco";
 import { ORBIT_FOV, walkFov } from "@/lib/walk-view";
 import { waterOf } from "@/lib/landscape-plan";
 import { buildLettering, isPlate } from "./scene/lettering";
+import type { BakedHandle } from "@/lib/baked-scene";
 import type { LifeHandle } from "./scene/life";
 import { HIDDEN_LAYER, batchMeshes, type MeshBatch } from "./scene/batch";
 import {
@@ -249,6 +250,8 @@ type Props = {
   lite?: boolean | undefined;
   /** Told when looking with the phone was turned on but no reading has come. */
   onGyroSilent?: (() => void) | undefined;
+  /** Pilot: folder of the Blender-baked model (`src/lib/baked-scene.ts`), shown instead of the built one. */
+  baked?: string | undefined;
 };
 
 type Palette = {
@@ -592,6 +595,7 @@ export default function Reconstruction3DInner({
   onProgress,
   lite = false,
   onGyroSilent,
+  baked,
 }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   // Read through refs, like the other callbacks, so none of them rebuilds the scene.
@@ -665,6 +669,7 @@ export default function Reconstruction3DInner({
     const host = hostRef.current;
     if (!host) return;
     let disposed = false;
+    let bakedHandle: BakedHandle | null = null;
     let cleanup = () => {};
 
     progressRef.current?.(0.05);
@@ -4126,6 +4131,21 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         };
       }
 
+      // Pilot: the Blender-baked model in place of the built one (`?pilot=1`).
+      if (baked) {
+        void import("@/lib/baked-scene")
+          .then(({ applyBaked }) =>
+            applyBaked(THREE, scene, baked, lifeHandle?.group ?? null, anisotropy),
+          )
+          .then((handle) => {
+            if (disposed) handle.dispose();
+            else bakedHandle = handle;
+          })
+          .catch(() => {
+            /* the built model stays */
+          });
+      }
+
       /**
        * The sky, as a gradient rather than a flat fill: pale at the horizon and
        * deeper overhead, which is what makes a model read as standing outdoors
@@ -6552,6 +6572,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
 
     return () => {
       disposed = true;
+      bakedHandle?.dispose();
       cleanup();
       // So the setter effects replay against the next scene when it is ready.
       setReady(false);
@@ -6559,7 +6580,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
     // `biome` is fixed per model, so it rebuilding the scene costs nothing.
     // Theme, light, labels and turntable are deliberately absent: they are
     // read through `latestRef` and applied by the setter effects below.
-  }, [parts, kind, biome, life, fall]);
+  }, [parts, kind, biome, life, fall, baked]);
 
   useEffect(() => {
     onReady?.(ready);

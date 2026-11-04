@@ -70,6 +70,7 @@ import { useGuidedTour } from "@/hooks/use-guided-tour";
 import type { Localized } from "@/lib/i18n";
 import { AudioGuide } from "./AudioGuide";
 import { CompareSlider } from "./CompareSlider";
+import { bakedFolderFor } from "@/lib/baked-scene";
 import { WalkJoystick } from "./WalkJoystick";
 import { arSupport, openQuickLook, startWebXR, type ARMode } from "./ar/launch-ar";
 import type { AtmosMode, PersonHit, SceneExtras, SceneInfo } from "./Reconstruction3DInner";
@@ -1059,6 +1060,7 @@ export function Reconstruction3D({
             fallback={<Skeleton height={full ? "100%" : height} label={t("recon_loading")} />}
           >
             <Inner
+              baked={bakedFolderFor(item.id)}
               parts={parts}
               kind={item.model.kind}
               theme={theme}
