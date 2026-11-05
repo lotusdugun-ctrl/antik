@@ -9,7 +9,7 @@ import {
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { SCANS } from "@/lib/scans";
 import { sculptMeshCached } from "@/lib/sculpt";
-import { buildLandscape, type Biome } from "./scene/landscape";
+import { buildLandscape, groundDetail, type Biome } from "./scene/landscape";
 import { animateWater, cutWater } from "./scene/water";
 import { rockGeometry } from "./scene/rock";
 import { buildFrescoes, isFresco } from "./scene/fresco";
@@ -808,7 +808,7 @@ export default function Reconstruction3DInner({
        * of the arc. Points are laid out the way a ring's are, (r cos θ, r sin θ).
        */
       const bankGeometry = (part: Extract<Part, { kind: "bank" }>) => {
-        const radial = 14;
+        const radial = 24;
         const around = Math.min(
           96,
           Math.max(6, Math.ceil((part.thetaLength / (Math.PI * 2)) * 128)),
@@ -816,6 +816,27 @@ export default function Reconstruction3DInner({
         const positions: number[] = [];
         const uvs: number[] = [];
         const indices: number[] = [];
+        const n1 = valueNoise(hashString(`${JSON.stringify(part.at)}|bank`));
+        const n2 = valueNoise(hashString(`${JSON.stringify(part.at)}|bank|2`));
+        const slopeY = (r: number, theta: number, i: number) => {
+          const base = bankHeight(part, r, theta);
+          if (i <= 0 || i >= radial || base <= 1e-4) return base;
+          const x = Math.cos(theta) * r;
+          const z = Math.sin(theta) * r;
+          const mid = Math.sin((i / radial) * Math.PI);
+          const edge =
+            part.thetaLength < Math.PI * 2 - 1e-6
+              ? Math.min(
+                  1,
+                  Math.min(theta - part.thetaStart, part.thetaStart + part.thetaLength - theta) /
+                    (part.thetaLength * 0.12),
+                )
+              : 1;
+          const ripple =
+            (n1(x * 0.08, z * 0.08, theta * 2) - 0.5) * 0.55 +
+            (n2(x * 0.22, z * 0.22, r * 0.15) - 0.5) * 0.25;
+          return Math.max(0, base + ripple * mid * Math.max(0, edge));
+        };
         const vertex = (r: number, theta: number, y: number) => {
           const x = Math.cos(theta) * r;
           const z = Math.sin(theta) * r;
@@ -829,7 +850,7 @@ export default function Reconstruction3DInner({
           const theta = part.thetaStart + (part.thetaLength * j) / around;
           for (let i = 0; i <= radial; i += 1) {
             const r = radiusAt(i);
-            vertex(r, theta, bankHeight(part, r, theta));
+            vertex(r, theta, slopeY(r, theta, i));
           }
         }
         const row = radial + 1;
@@ -850,7 +871,7 @@ export default function Reconstruction3DInner({
           const foot: number[] = [];
           for (let i = 0; i <= radial; i += 1) {
             const r = radiusAt(i);
-            top.push(vertex(r, theta, bankHeight(part, r, theta)));
+            top.push(vertex(r, theta, slopeY(r, theta, i)));
             foot.push(vertex(r, theta, 0));
           }
           for (let i = 0; i < radial; i += 1) {
@@ -2660,17 +2681,38 @@ export default function Reconstruction3DInner({
               part.height,
               part.segments,
               // A weathered cone is a hill, and a hill needs rings to bend.
-              part.weather ? 8 : 1,
+              part.weather ? (part.height > 15 ? 16 : 8) : 1,
               false,
               part.thetaStart ?? 0,
               part.thetaLength ?? Math.PI * 2,
             );
-            if (part.weather)
-              damage(
-                geometry,
-                part.weather,
-                hashString(`${JSON.stringify(part.at)}|${part.material}|cyl`),
-              );
+            if (part.weather) {
+              const cylSeed = hashString(`${JSON.stringify(part.at)}|${part.material}|cyl`);
+              damage(geometry, part.weather, cylSeed);
+              if (part.material === "rock") {
+                const pos = geometry.attributes["position"]!;
+                const n1 = valueNoise(cylSeed ^ 0x27d4eb2d);
+                const n2 = valueNoise(cylSeed ^ 0x85ebca6b);
+                const cols = new Float32Array(pos.count * 3);
+                for (let i = 0; i < pos.count; i += 1) {
+                  const x = pos.getX(i);
+                  const y = pos.getY(i);
+                  const z = pos.getZ(i);
+                  const angle = Math.atan2(z, x);
+                  const gully =
+                    0.5 +
+                    0.25 * Math.sin(angle * 7 + n1(x * 0.04, z * 0.04, 1) * 4) +
+                    0.25 * Math.cos(angle * 13 - y * 0.06 + n2(x * 0.08, z * 0.08, 2) * 3);
+                  const patch = n1(x * 0.05, y * 0.07, z * 0.05);
+                  const shade = 0.84 + gully * 0.11 + (patch - 0.5) * 0.1;
+                  const warm = (n2(x * 0.09, y * 0.09, z * 0.09) - 0.5) * 0.04;
+                  cols[i * 3] = Math.min(1, Math.max(0.72, shade + warm));
+                  cols[i * 3 + 1] = Math.min(1, Math.max(0.72, shade));
+                  cols[i * 3 + 2] = Math.min(1, Math.max(0.72, shade - warm));
+                }
+                geometry.setAttribute("color", new THREE.BufferAttribute(cols, 3));
+              }
+            }
             if (part.flutes) {
               // Push every vertex in towards the axis by a cosine of its angle:
               // the troughs of that wave are the grooves down the shaft.
@@ -2864,7 +2906,11 @@ export default function Reconstruction3DInner({
        * between "textured" and "made of stone".
        */
       const TEXTURE_METRES = 1.6;
-      const worldUVs = (geometry: THREE_NS.BufferGeometry, channel: "uv" | "uv1" = "uv") => {
+      const worldUVs = (
+        geometry: THREE_NS.BufferGeometry,
+        channel: "uv" | "uv1" = "uv",
+        metres = TEXTURE_METRES,
+      ) => {
         const position = geometry.attributes["position"];
         const normal = geometry.attributes["normal"];
         if (!position || !normal) return geometry;
@@ -2888,8 +2934,8 @@ export default function Reconstruction3DInner({
             u = x;
             v = y;
           }
-          uv[i * 2] = u / TEXTURE_METRES;
-          uv[i * 2 + 1] = v / TEXTURE_METRES;
+          uv[i * 2] = u / metres;
+          uv[i * 2 + 1] = v / metres;
         }
         geometry.setAttribute(channel, new THREE.BufferAttribute(uv, 2));
         return geometry;
@@ -3064,6 +3110,10 @@ export default function Reconstruction3DInner({
       const stoneSet = buildStone(20260907, { coarse: 8, medium: 24, vein: 0.06 });
       // Limestone and block stone: coarser, yellower patchiness, no veins.
       const blockSet = buildStone(48712347, { coarse: 12, medium: 30, vein: 0 });
+      // Earth banks and hillside ground: the same turf, pebble and dry-stalk grain as the terrain.
+      const earthMap = groundDetail(THREE, biome);
+      earthMap.anisotropy = anisotropy;
+      const groundSet: StoneSet = { map: earthMap, normal: blockSet.normal, ao: blockSet.ao };
       if (!(await breathe(0.25))) return;
       // The name the rest of this file still talks in: the marble surface.
       const stoneTexture = stoneSet.map;
@@ -3086,6 +3136,7 @@ export default function Reconstruction3DInner({
         blockSet.map,
         blockSet.normal,
         blockSet.ao,
+        earthMap,
       ];
       // A part with a scan is drawn from the scan, further down, not from its
       // own primitive — though its bounds above still frame the camera.
@@ -3182,16 +3233,18 @@ export default function Reconstruction3DInner({
         "hide",
         "water",
       ];
-      /** Marbles take the veined set; limestone and the rest the coarser block. */
+      /** Marbles take the veined set; earth takes the terrain grain; limestone and the rest the coarser block. */
       const stoneSetFor = (name: Material) =>
-        name === "marble" ||
-        name === "marbleWorn" ||
-        name === "pavonazzetto" ||
-        name === "marbleBlack" ||
-        name === "gialloAntico" ||
-        name === "granite"
-          ? stoneSet
-          : blockSet;
+        name === "ground" || name === "grass"
+          ? groundSet
+          : name === "marble" ||
+              name === "marbleWorn" ||
+              name === "pavonazzetto" ||
+              name === "marbleBlack" ||
+              name === "gialloAntico" ||
+              name === "granite"
+            ? stoneSet
+            : blockSet;
       /**
        * Weathering, worked out in the shader from where each point is, at the
        * cost of two more looks at the grain texture:
@@ -3434,11 +3487,47 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           const painted = masonry || list.some((geometry) => geometry.getAttribute("color"));
           if (painted) {
             let n = 0;
+            const groundN1 = name === "ground" ? valueNoise(hashString(`${biome}|ground|1`)) : null;
+            const groundN2 = name === "ground" ? valueNoise(hashString(`${biome}|ground|2`)) : null;
             for (const geometry of list) {
               n += 1;
               if (geometry.getAttribute("color")) continue;
-              const count = geometry.attributes["position"]!.count;
+              const position = geometry.attributes["position"]!;
+              const normal = geometry.attributes["normal"];
+              const count = position.count;
               const colours = new Float32Array(count * 3);
+              if (name === "ground" && groundN1 && groundN2) {
+                /*
+                 * Earth embankments and hills are part of the countryside, not
+                 * dressed stone: patch them with olive turf, warm ochre soil
+                 * and dry limestone scree across metres so a theatre's bank
+                 * blends into the terrain around it instead of sitting as a
+                 * uniform grey cone.
+                 */
+                const greenBias =
+                  biome === "pontic" ? 0.14 : biome === "mediterranean" ? 0.09 : 0.03;
+                for (let i = 0; i < count; i += 1) {
+                  const x = position.getX(i);
+                  const y = position.getY(i);
+                  const z = position.getZ(i);
+                  const ny = normal ? Math.abs(normal.getY(i)) : 1;
+                  const macro = groundN1(x * 0.028, z * 0.028, y * 0.04);
+                  const mid = groundN2(x * 0.095, z * 0.095, y * 0.08);
+                  const fine = groundN1(x * 0.27 + 13, z * 0.27 + 7, y * 0.15);
+                  // Turf in the hollows and gentler slopes; warm dry earth and rock on the steeper brow.
+                  const turf = Math.max(0, Math.min(1, (macro - 0.28) * 1.45)) * ny;
+                  const dry = Math.max(0, Math.min(1, (mid - 0.35) * 1.35));
+                  const shade = 0.76 + (macro - 0.5) * 0.22 + (mid - 0.5) * 0.16 + (fine - 0.5) * 0.1;
+                  const r = Math.min(1, Math.max(0.52, shade * (0.94 - turf * greenBias + dry * 0.08)));
+                  const gr = Math.min(1, Math.max(0.52, shade * (0.95 + turf * greenBias * 0.9 + dry * 0.02)));
+                  const bl = Math.min(1, Math.max(0.46, shade * (0.86 - turf * greenBias * 1.35 - dry * 0.06)));
+                  colours[i * 3] = r;
+                  colours[i * 3 + 1] = gr;
+                  colours[i * 3 + 2] = bl;
+                }
+                geometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+                continue;
+              }
               let r = 1;
               let gr = 1;
               let bl = 1;
@@ -3469,7 +3558,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           const merged = list.length === 1 ? list[0]! : mergeGeometries(list, false);
           if (!merged) continue;
           if (list.length > 1) list.forEach((geometry) => geometry.dispose());
-          worldUVs(merged);
+          worldUVs(merged, "uv", name === "ground" || name === "grass" ? 5 : TEXTURE_METRES);
           // The ambient occlusion map reads the same world-projected
           // coordinates as the grain (channel 0), so no second set is kept.
           const welded = weldGeometry(merged);

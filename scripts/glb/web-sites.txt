@@ -1,4 +1,5 @@
-# PISIR-WEB.bat'in pisirdigi yerler (sirayla). Once vitrin yerleri; digerleri altta.
+# PISIR-WEB.bat'in pisirdigi yerler (sirayla).
+# Once vitrin yerleri (9 vitrin yeri pismis durumda):
 celsus-kutuphanesi
 aspendos-tiyatrosu
 gobeklitepe-d-yapisi
@@ -8,3 +9,50 @@ hierapolis-tiyatrosu
 nemrut-dogu-terasi
 pergamon-zeus-sunagi
 side-tiyatrosu
+
+# Kalan yerler (sumela-manastiri cok buyuk oldugu icin haric tutuldu):
+# 1. Grup - Buyuk Klasik Siteler:
+didyma-apollon-tapinagi
+artemis-tapinagi
+aphrodisias-stadyumu
+milet-buyuk-tiyatro
+efes-buyuk-tiyatro
+halikarnas-mozolesi
+
+# 2. Grup - Hellenistik ve Roma Anitlari:
+patara-deniz-feneri
+perge-stadyumu
+sagalassos-antoninler-cesmesi
+priene-athena-tapinagi
+assos-athena-tapinagi
+pergamon-trajan-tapinagi
+aizanoi-zeus-tapinagi
+sardes-artemis-tapinagi
+magnesia-artemis-tapinagi
+
+# 3. Grup - Likya, Karya ve Anadolu Yapilari:
+ksanthos-nereidler-aniti
+kaunos-kaya-mezarlari
+myra-kaya-mezarlari
+antalya-hadrianus-kapisi
+side-apollon-tapinagi
+letoon-leto-tapinagi
+laodikeia-bati-tiyatrosu
+aphrodisias-tetrapylon
+efes-hadrianus-tapinagi
+efes-yamac-evler
+zeugma-villa
+
+# 4. Grup - Tunc Cagi ve Neolitik:
+hattusa-aslanli-kapi
+alacahoyuk-sfenksli-kapi
+troya-vi-surlari
+catalhoyuk-dogu-hoyugu
+karahan-tepe-yapisi
+
+# 5. Grup - Bizans ve Osmanli Mimarisi:
+ani-katedrali
+yerebatan-sarnici
+galata-kulesi
+suleymaniye-camii
+selimiye-camii

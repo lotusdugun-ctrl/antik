@@ -1,0 +1,18 @@
+{
+ "model": "artemis-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "artemis-tapinagi-near": "artemis-tapinagi-near-clear.jpg",
+  "artemis-tapinagi-ground": "artemis-tapinagi-ground-clear.jpg",
+  "artemis-tapinagi-terrain": "artemis-tapinagi-terrain-clear.jpg",
+  "artemis-tapinagi-detail": null,
+  "artemis-tapinagi-flora": null
+ },
+ "terrain": "artemis-tapinagi-terrain",
+ "plants": 438,
+ "azim": 174.73343833057547,
+ "files": [
+  "artemis-tapinagi-baked.glb"
+ ]
+}

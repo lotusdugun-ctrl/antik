@@ -1,0 +1,18 @@
+{
+ "model": "antalya-hadrianus-kapisi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "antalya-hadrianus-kapisi-near": "antalya-hadrianus-kapisi-near-clear.jpg",
+  "antalya-hadrianus-kapisi-ground": "antalya-hadrianus-kapisi-ground-clear.jpg",
+  "antalya-hadrianus-kapisi-terrain": "antalya-hadrianus-kapisi-terrain-clear.jpg",
+  "antalya-hadrianus-kapisi-detail": null,
+  "antalya-hadrianus-kapisi-flora": null
+ },
+ "terrain": "antalya-hadrianus-kapisi-terrain",
+ "plants": 180,
+ "azim": 179.1623470457217,
+ "files": [
+  "antalya-hadrianus-kapisi-baked.glb"
+ ]
+}

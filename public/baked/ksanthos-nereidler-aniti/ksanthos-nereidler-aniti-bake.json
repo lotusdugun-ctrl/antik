@@ -1,0 +1,18 @@
+{
+ "model": "ksanthos-nereidler-aniti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "ksanthos-nereidler-aniti-near": "ksanthos-nereidler-aniti-near-clear.jpg",
+  "ksanthos-nereidler-aniti-ground": "ksanthos-nereidler-aniti-ground-clear.jpg",
+  "ksanthos-nereidler-aniti-terrain": "ksanthos-nereidler-aniti-terrain-clear.jpg",
+  "ksanthos-nereidler-aniti-detail": null,
+  "ksanthos-nereidler-aniti-flora": null
+ },
+ "terrain": "ksanthos-nereidler-aniti-terrain",
+ "plants": 8,
+ "azim": 179.1623470457217,
+ "files": [
+  "ksanthos-nereidler-aniti-baked.glb"
+ ]
+}

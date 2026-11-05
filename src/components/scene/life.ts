@@ -105,8 +105,8 @@ type Lod = {
  * Within this distance (in metres, with a margin so nobody flickers at the
  * edge) somebody is drawn in full; beyond it, as the plain figure.
  */
-const NEAR_IN = 24;
-const NEAR_OUT = 28;
+const NEAR_IN = 80;
+const NEAR_OUT = 92;
 
 type Fire = {
   flame: Flame;
@@ -194,25 +194,94 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
 
   const cloth = new THREE.MeshStandardMaterial({
     vertexColors: true,
-    roughness: 0.82,
-    metalness: 0,
+    roughness: 0.78,
+    metalness: 0.02,
   });
+  cloth.customProgramCacheKey = () => "antik-life-cloth-v2";
+  cloth.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nvarying vec3 vFigPos;\nvarying vec3 vFigObjNorm;",
+      )
+      .replace(
+        "#include <begin_vertex>",
+        "#include <begin_vertex>\nvFigPos = transformed;\nvFigObjNorm = objectNormal;",
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        "#include <common>\nvarying vec3 vFigPos;\nvarying vec3 vFigObjNorm;",
+      )
+      .replace(
+        "#include <color_fragment>",
+        `#include <color_fragment>
+        {
+          // Fine woven linen/wool cross-grain pinned to the figure's local surface.
+          vec3 fp = vFigPos * 165.0;
+          float warp = sin(fp.x + fp.z * 0.7) * cos(fp.y * 1.35);
+          float weft = sin(fp.y * 1.8 - fp.x * 0.5) * cos(fp.z * 1.15);
+          float weave = (warp + weft) * 0.018;
+          // Soft grazing-angle cloth sheen & warm hemisphere contour.
+          vec3 vN = normalize(vNormal);
+          vec3 vV = normalize(vViewPosition);
+          float rim = pow(clamp(1.0 - abs(dot(vN, vV)), 0.0, 1.0), 2.6);
+          float hemi = clamp(vFigObjNorm.y * 0.5 + 0.5, 0.0, 1.0);
+          diffuseColor.rgb *= (0.96 + 0.07 * hemi + weave);
+          diffuseColor.rgb += diffuseColor.rgb * (rim * 0.14);
+        }`,
+      );
+  };
   materials.push(cloth);
 
   const tmp = new THREE.Color();
-  /** Paint every vertex of a geometry one colour, and flatten it for merging. */
+  /** Paint every vertex of a geometry with natural sculptural relief shading, and flatten it for merging. */
   const paint = (geometry: THREE_NS.BufferGeometry, hex: number) => {
+    if (!geometry.attributes["normal"]) geometry.computeVertexNormals();
     const flat = geometry.index ? geometry.toNonIndexed() : geometry;
     if (flat !== geometry) geometry.dispose();
     flat.deleteAttribute("uv");
     // `set` reads the hex as sRGB and stores it linear, which vertex colours want.
     tmp.set(hex);
     const count = flat.attributes["position"]!.count;
+    const norm = flat.attributes["normal"]?.array as Float32Array | undefined;
     const colours = new Float32Array(count * 3);
     for (let i = 0; i < count; i += 1) {
-      colours[i * 3] = tmp.r;
-      colours[i * 3 + 1] = tmp.g;
-      colours[i * 3 + 2] = tmp.b;
+      const ny = norm ? norm[i * 3 + 1]! : 0;
+      const nz = norm ? norm[i * 3 + 2]! : 0;
+      const s = Math.max(0.84, Math.min(1.08, 0.96 + ny * 0.07 + nz * 0.03));
+      colours[i * 3] = Math.min(1, tmp.r * s);
+      colours[i * 3 + 1] = Math.min(1, tmp.g * s);
+      colours[i * 3 + 2] = Math.min(1, tmp.b * s);
+    }
+    flat.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+    return flat;
+  };
+
+  /** Paint hair and beard geometries with multi-strand highlights and root depth. */
+  const paintHair = (geometry: THREE_NS.BufferGeometry, hex: number) => {
+    if (!geometry.attributes["normal"]) geometry.computeVertexNormals();
+    const flat = geometry.index ? geometry.toNonIndexed() : geometry;
+    if (flat !== geometry) geometry.dispose();
+    flat.deleteAttribute("uv");
+    tmp.set(hex);
+    const pos = flat.attributes["position"]!.array as Float32Array;
+    const norm = flat.attributes["normal"]!.array as Float32Array;
+    const count = flat.attributes["position"]!.count;
+    const colours = new Float32Array(count * 3);
+    for (let i = 0; i < count; i += 1) {
+      const x = pos[i * 3]!;
+      const y = pos[i * 3 + 1]!;
+      const z = pos[i * 3 + 2]!;
+      const ny = norm[i * 3 + 1]!;
+      const a = Math.atan2(x, z);
+      const strand = Math.sin(a * 22 + y * 58) * 0.5 + Math.cos(a * 11 - y * 34) * 0.5;
+      const sheen = Math.max(0, ny) * 0.11 + Math.max(0, (y - 0.88) * 0.85);
+      const root = Math.max(0, -ny) * 0.16;
+      const s = Math.max(0.72, Math.min(1.16, 0.94 + strand * 0.1 + sheen - root));
+      colours[i * 3] = Math.min(1, tmp.r * s);
+      colours[i * 3 + 1] = Math.min(1, tmp.g * s);
+      colours[i * 3 + 2] = Math.min(1, tmp.b * s);
     }
     flat.setAttribute("color", new THREE.BufferAttribute(colours, 3));
     return flat;
@@ -1026,7 +1095,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           const a = -Math.PI / 2 + (i / (near ? 10 : 6)) * Math.PI * 2;
           const y = i % 2 ? 0.975 : 0.955;
           out.push(
-            paint(
+            paintHair(
               sphere(
                 near ? 0.018 : 0.022,
                 [Math.cos(a) * 0.052, y, Math.sin(a) * 0.052 - 0.006],
@@ -1038,11 +1107,13 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
             ),
           );
         }
-        out.push(paint(sphere(0.03, [0, 0.99, -0.01], [1.3, 0.7, 1.3], seg + 2, seg), look.hair));
+        out.push(
+          paintHair(sphere(0.03, [0, 0.99, -0.01], [1.3, 0.7, 1.3], seg + 2, seg), look.hair),
+        );
         break;
       case "long":
         out.push(
-          paint(
+          paintHair(
             stack(
               [
                 { y: 0.82, z: -0.045, rx: 0.06, rz: 0.022 },
@@ -1056,7 +1127,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         );
         break;
       case "tied":
-        out.push(paint(sphere(0.026, [0, 0.95, -0.07], [1, 0.9, 1], seg + 1, seg), look.hair));
+        out.push(paintHair(sphere(0.026, [0, 0.95, -0.07], [1, 0.9, 1], seg + 1, seg), look.hair));
         break;
       default:
         break;
@@ -1071,15 +1142,15 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
     switch (look.beardStyle) {
       case "stubble":
         return [
-          paint(
+          paintHair(
             sphere(0.047, [0, 0.897, 0.018], [1.12, 0.78, 0.86], w, h),
             new THREE.Color(look.skin).lerp(new THREE.Color(look.hair), 0.42).getHex(),
           ),
         ];
       case "long":
         return [
-          paint(sphere(0.044, [0, 0.885, 0.026], [1.08, 0.95, 0.86], w, h), look.hair),
-          paint(
+          paintHair(sphere(0.044, [0, 0.885, 0.026], [1.08, 0.95, 0.86], w, h), look.hair),
+          paintHair(
             stack(
               [
                 { y: 0.79, z: 0.05, rx: 0.012, rz: 0.01 },
@@ -1093,8 +1164,8 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         ];
       case "pointed":
         return [
-          paint(sphere(0.043, [0, 0.888, 0.026], [1.05, 0.88, 0.85], w, h), look.hair),
-          paint(
+          paintHair(sphere(0.043, [0, 0.888, 0.026], [1.05, 0.88, 0.85], w, h), look.hair),
+          paintHair(
             new THREE.ConeGeometry(0.026, 0.06, w)
               .rotateX(Math.PI)
               .rotateX(-0.35)
@@ -1103,7 +1174,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           ),
         ];
       default:
-        return [paint(sphere(0.045, [0, 0.885, 0.03], [1.05, 0.9, 0.85], w, h), look.hair)];
+        return [paintHair(sphere(0.045, [0, 0.885, 0.03], [1.05, 0.9, 0.85], w, h), look.hair)];
     }
   };
 
@@ -1190,7 +1261,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       case "crown":
         // A braid wound round the head above the brow.
         out.push(
-          paint(
+          paintHair(
             new THREE.TorusGeometry(0.058, 0.014, 6, 20)
               .rotateX(Math.PI / 2 - 0.18)
               .translate(0, 0.962, -0.008),
@@ -1200,8 +1271,8 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         break;
       case "nodus":
         // The roll of hair over the forehead, and the knot behind.
-        out.push(paint(sphere(0.022, [0, 0.99, 0.045], [1.2, 0.9, 0.9], 8, 6), look.hair));
-        out.push(paint(sphere(0.028, [0, 0.965, -0.066], [1, 0.9, 1], 8, 7), look.hair));
+        out.push(paintHair(sphere(0.022, [0, 0.99, 0.045], [1.2, 0.9, 0.9], 8, 6), look.hair));
+        out.push(paintHair(sphere(0.028, [0, 0.965, -0.066], [1, 0.9, 1], 8, 7), look.hair));
         break;
       case "orbis": {
         // The crescent of curls over the brow, two tiers of them on a frame...
@@ -1212,7 +1283,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
           for (let i = 0; i < ring; i += 1) {
             const a = -1.05 + (2.1 * i) / (ring - 1);
             out.push(
-              paint(
+              paintHair(
                 sphere(r, [Math.sin(a) * 0.058, y, 0.012 + Math.cos(a) * 0.05], [1, 1, 1], 6, 5),
                 look.hair,
               ),
@@ -1221,7 +1292,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         }
         // ...and the braids coiled into a nest at the crown behind.
         out.push(
-          paint(
+          paintHair(
             new THREE.TorusGeometry(0.026, 0.011, 6, 14)
               .rotateX(Math.PI / 2 - 0.5)
               .translate(0, 0.985, -0.05),
@@ -1233,7 +1304,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
       case "fall":
         // Tied at the nape and falling down the back.
         out.push(
-          paint(
+          paintHair(
             stack(
               [
                 { y: 0.79, z: -0.05, rx: 0.03, rz: 0.015 },
@@ -1247,7 +1318,7 @@ export function buildLife(THREE: ThreeModule, life: SceneLife): LifeHandle {
         );
         break;
       default:
-        out.push(paint(sphere(0.032, [0, 0.95, -0.065], [1, 1, 1], 8, 7), look.hair));
+        out.push(paintHair(sphere(0.032, [0, 0.95, -0.065], [1, 1, 1], 8, 7), look.hair));
     }
     return out;
   };

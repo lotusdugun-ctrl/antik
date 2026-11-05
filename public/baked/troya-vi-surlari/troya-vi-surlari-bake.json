@@ -1,0 +1,18 @@
+{
+ "model": "troya-vi-surlari",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "troya-vi-surlari-near": "troya-vi-surlari-near-clear.jpg",
+  "troya-vi-surlari-ground": "troya-vi-surlari-ground-clear.jpg",
+  "troya-vi-surlari-terrain": "troya-vi-surlari-terrain-clear.jpg",
+  "troya-vi-surlari-detail": null,
+  "troya-vi-surlari-flora": null
+ },
+ "terrain": "troya-vi-surlari-terrain",
+ "plants": 212,
+ "azim": 168.26429541107163,
+ "files": [
+  "troya-vi-surlari-baked.glb"
+ ]
+}

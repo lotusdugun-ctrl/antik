@@ -1,0 +1,18 @@
+{
+ "model": "milet-buyuk-tiyatro",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "milet-buyuk-tiyatro-near": "milet-buyuk-tiyatro-near-clear.jpg",
+  "milet-buyuk-tiyatro-ground": "milet-buyuk-tiyatro-ground-clear.jpg",
+  "milet-buyuk-tiyatro-terrain": "milet-buyuk-tiyatro-terrain-clear.jpg",
+  "milet-buyuk-tiyatro-detail": null,
+  "milet-buyuk-tiyatro-flora": null
+ },
+ "terrain": "milet-buyuk-tiyatro-terrain",
+ "plants": 449,
+ "azim": 48.49573328079581,
+ "files": [
+  "milet-buyuk-tiyatro-baked.glb"
+ ]
+}

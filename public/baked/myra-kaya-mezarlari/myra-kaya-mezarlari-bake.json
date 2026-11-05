@@ -1,0 +1,18 @@
+{
+ "model": "myra-kaya-mezarlari",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "myra-kaya-mezarlari-near": "myra-kaya-mezarlari-near-clear.jpg",
+  "myra-kaya-mezarlari-ground": "myra-kaya-mezarlari-ground-clear.jpg",
+  "myra-kaya-mezarlari-terrain": "myra-kaya-mezarlari-terrain-clear.jpg",
+  "myra-kaya-mezarlari-detail": null,
+  "myra-kaya-mezarlari-flora": null
+ },
+ "terrain": "myra-kaya-mezarlari-terrain",
+ "plants": 23,
+ "azim": 179.16234704572173,
+ "files": [
+  "myra-kaya-mezarlari-baked.glb"
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "model": "karahan-tepe-yapisi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "karahan-tepe-yapisi-near": "karahan-tepe-yapisi-near-clear.jpg",
+  "karahan-tepe-yapisi-ground": "karahan-tepe-yapisi-ground-clear.jpg",
+  "karahan-tepe-yapisi-terrain": "karahan-tepe-yapisi-terrain-clear.jpg",
+  "karahan-tepe-yapisi-detail": null,
+  "karahan-tepe-yapisi-flora": null
+ },
+ "terrain": "karahan-tepe-yapisi-terrain",
+ "plants": 23,
+ "azim": 75.60129464500446,
+ "files": [
+  "karahan-tepe-yapisi-baked.glb"
+ ]
+}

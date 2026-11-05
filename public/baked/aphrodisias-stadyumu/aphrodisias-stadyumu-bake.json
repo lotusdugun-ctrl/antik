@@ -1,0 +1,18 @@
+{
+ "model": "aphrodisias-stadyumu",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "aphrodisias-stadyumu-near": "aphrodisias-stadyumu-near-clear.jpg",
+  "aphrodisias-stadyumu-ground": "aphrodisias-stadyumu-ground-clear.jpg",
+  "aphrodisias-stadyumu-terrain": "aphrodisias-stadyumu-terrain-clear.jpg",
+  "aphrodisias-stadyumu-detail": null,
+  "aphrodisias-stadyumu-flora": null
+ },
+ "terrain": "aphrodisias-stadyumu-terrain",
+ "plants": 481,
+ "azim": 96.18920625702694,
+ "files": [
+  "aphrodisias-stadyumu-baked.glb"
+ ]
+}

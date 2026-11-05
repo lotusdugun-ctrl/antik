@@ -1,0 +1,18 @@
+{
+ "model": "kaunos-kaya-mezarlari",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "kaunos-kaya-mezarlari-near": "kaunos-kaya-mezarlari-near-clear.jpg",
+  "kaunos-kaya-mezarlari-ground": "kaunos-kaya-mezarlari-ground-clear.jpg",
+  "kaunos-kaya-mezarlari-terrain": "kaunos-kaya-mezarlari-terrain-clear.jpg",
+  "kaunos-kaya-mezarlari-detail": null,
+  "kaunos-kaya-mezarlari-flora": null
+ },
+ "terrain": "kaunos-kaya-mezarlari-terrain",
+ "plants": 38,
+ "azim": 179.1623470457217,
+ "files": [
+  "kaunos-kaya-mezarlari-baked.glb"
+ ]
+}

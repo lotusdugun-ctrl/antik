@@ -1,0 +1,18 @@
+{
+ "model": "yerebatan-sarnici",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "yerebatan-sarnici-near": "yerebatan-sarnici-near-clear.jpg",
+  "yerebatan-sarnici-ground": "yerebatan-sarnici-ground-clear.jpg",
+  "yerebatan-sarnici-terrain": "yerebatan-sarnici-terrain-clear.jpg",
+  "yerebatan-sarnici-detail": null,
+  "yerebatan-sarnici-flora": null
+ },
+ "terrain": "yerebatan-sarnici-terrain",
+ "plants": 427,
+ "azim": 179.1623470457217,
+ "files": [
+  "yerebatan-sarnici-baked.glb"
+ ]
+}

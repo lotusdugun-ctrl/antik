@@ -1,0 +1,18 @@
+{
+ "model": "sagalassos-antoninler-cesmesi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "sagalassos-antoninler-cesmesi-near": "sagalassos-antoninler-cesmesi-near-clear.jpg",
+  "sagalassos-antoninler-cesmesi-ground": "sagalassos-antoninler-cesmesi-ground-clear.jpg",
+  "sagalassos-antoninler-cesmesi-terrain": "sagalassos-antoninler-cesmesi-terrain-clear.jpg",
+  "sagalassos-antoninler-cesmesi-detail": null,
+  "sagalassos-antoninler-cesmesi-flora": null
+ },
+ "terrain": "sagalassos-antoninler-cesmesi-terrain",
+ "plants": 5,
+ "azim": 198.3007557660064,
+ "files": [
+  "sagalassos-antoninler-cesmesi-baked.glb"
+ ]
+}

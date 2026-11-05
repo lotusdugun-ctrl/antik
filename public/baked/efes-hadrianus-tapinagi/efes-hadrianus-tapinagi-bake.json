@@ -1,0 +1,18 @@
+{
+ "model": "efes-hadrianus-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "efes-hadrianus-tapinagi-near": "efes-hadrianus-tapinagi-near-clear.jpg",
+  "efes-hadrianus-tapinagi-ground": "efes-hadrianus-tapinagi-ground-clear.jpg",
+  "efes-hadrianus-tapinagi-terrain": "efes-hadrianus-tapinagi-terrain-clear.jpg",
+  "efes-hadrianus-tapinagi-detail": null,
+  "efes-hadrianus-tapinagi-flora": null
+ },
+ "terrain": "efes-hadrianus-tapinagi-terrain",
+ "plants": 78,
+ "azim": 179.16234704572173,
+ "files": [
+  "efes-hadrianus-tapinagi-baked.glb"
+ ]
+}

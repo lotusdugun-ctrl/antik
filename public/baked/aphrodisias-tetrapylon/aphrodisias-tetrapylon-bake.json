@@ -1,0 +1,18 @@
+{
+ "model": "aphrodisias-tetrapylon",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "aphrodisias-tetrapylon-near": "aphrodisias-tetrapylon-near-clear.jpg",
+  "aphrodisias-tetrapylon-ground": "aphrodisias-tetrapylon-ground-clear.jpg",
+  "aphrodisias-tetrapylon-terrain": "aphrodisias-tetrapylon-terrain-clear.jpg",
+  "aphrodisias-tetrapylon-detail": null,
+  "aphrodisias-tetrapylon-flora": null
+ },
+ "terrain": "aphrodisias-tetrapylon-terrain",
+ "plants": 49,
+ "azim": 179.1623470457217,
+ "files": [
+  "aphrodisias-tetrapylon-baked.glb"
+ ]
+}

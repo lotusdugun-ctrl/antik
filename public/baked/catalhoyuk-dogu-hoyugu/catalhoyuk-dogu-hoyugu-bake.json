@@ -1,0 +1,18 @@
+{
+ "model": "catalhoyuk-dogu-hoyugu",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "catalhoyuk-dogu-hoyugu-near": "catalhoyuk-dogu-hoyugu-near-clear.jpg",
+  "catalhoyuk-dogu-hoyugu-ground": "catalhoyuk-dogu-hoyugu-ground-clear.jpg",
+  "catalhoyuk-dogu-hoyugu-terrain": "catalhoyuk-dogu-hoyugu-terrain-clear.jpg",
+  "catalhoyuk-dogu-hoyugu-detail": null,
+  "catalhoyuk-dogu-hoyugu-flora": null
+ },
+ "terrain": "catalhoyuk-dogu-hoyugu-terrain",
+ "plants": 11,
+ "azim": 78.02506598911802,
+ "files": [
+  "catalhoyuk-dogu-hoyugu-baked.glb"
+ ]
+}

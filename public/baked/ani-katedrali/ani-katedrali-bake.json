@@ -1,0 +1,18 @@
+{
+ "model": "ani-katedrali",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "ani-katedrali-near": "ani-katedrali-near-clear.jpg",
+  "ani-katedrali-ground": "ani-katedrali-ground-clear.jpg",
+  "ani-katedrali-terrain": "ani-katedrali-terrain-clear.jpg",
+  "ani-katedrali-detail": null,
+  "ani-katedrali-flora": null
+ },
+ "terrain": "ani-katedrali-terrain",
+ "plants": 41,
+ "azim": 175.19442890773482,
+ "files": [
+  "ani-katedrali-baked.glb"
+ ]
+}

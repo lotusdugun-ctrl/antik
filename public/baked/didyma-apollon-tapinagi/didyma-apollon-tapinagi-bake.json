@@ -1,0 +1,18 @@
+{
+ "model": "didyma-apollon-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "didyma-apollon-tapinagi-near": "didyma-apollon-tapinagi-near-clear.jpg",
+  "didyma-apollon-tapinagi-ground": "didyma-apollon-tapinagi-ground-clear.jpg",
+  "didyma-apollon-tapinagi-terrain": "didyma-apollon-tapinagi-terrain-clear.jpg",
+  "didyma-apollon-tapinagi-detail": null,
+  "didyma-apollon-tapinagi-flora": null
+ },
+ "terrain": "didyma-apollon-tapinagi-terrain",
+ "plants": 364,
+ "azim": 174.73343833057547,
+ "files": [
+  "didyma-apollon-tapinagi-baked.glb"
+ ]
+}

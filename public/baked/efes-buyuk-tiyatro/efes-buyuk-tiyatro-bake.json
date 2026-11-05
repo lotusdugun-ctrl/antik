@@ -1,0 +1,18 @@
+{
+ "model": "efes-buyuk-tiyatro",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "efes-buyuk-tiyatro-near": "efes-buyuk-tiyatro-near-clear.jpg",
+  "efes-buyuk-tiyatro-ground": "efes-buyuk-tiyatro-ground-clear.jpg",
+  "efes-buyuk-tiyatro-terrain": "efes-buyuk-tiyatro-terrain-clear.jpg",
+  "efes-buyuk-tiyatro-detail": null,
+  "efes-buyuk-tiyatro-flora": null
+ },
+ "terrain": "efes-buyuk-tiyatro-terrain",
+ "plants": 438,
+ "azim": 48.49573328079582,
+ "files": [
+  "efes-buyuk-tiyatro-baked.glb"
+ ]
+}

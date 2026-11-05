@@ -189,14 +189,85 @@ export async function applyBaked(
     }
     return "";
   };
+  const nearColor = (c: THREE_NS.Color | undefined, r: number, g: number, b: number) =>
+    Boolean(
+      c &&
+        Math.abs(c.r - r) < 0.025 &&
+        Math.abs(c.g - g) < 0.025 &&
+        Math.abs(c.b - b) < 0.025,
+    );
+  // Unity AntikSetup.Surface ile aynı: 1 = toprak/çimen ("ground" #a9977a, "grass" #a8965f), 2 = kaya ("rock" #8b877d)
+  const surfaceKind = (src: THREE_NS.MeshStandardMaterial) => {
+    const n = src.name || "";
+    if (n === "ground" || n === "grass" || nearColor(src.color, 0.397, 0.309, 0.195) || nearColor(src.color, 0.392, 0.3, 0.114))
+      return 1;
+    if (n === "rock" || nearColor(src.color, 0.258, 0.242, 0.212)) return 2;
+    return 0;
+  };
+  const applyGroundDetail = (
+    m: THREE_NS.MeshBasicMaterial,
+    rock: number,
+    patches: number,
+  ) => {
+    m.onBeforeCompile = (shader) => {
+      shader.uniforms["uBakedRock"] = { value: rock };
+      shader.uniforms["uBakedPatches"] = { value: patches };
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vBakedWorld;")
+        .replace(
+          "#include <worldpos_vertex>",
+          "#include <worldpos_vertex>\nvBakedWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;",
+        );
+      shader.fragmentShader = shader.fragmentShader
+        .replace(
+          "#include <common>",
+          `#include <common>
+varying vec3 vBakedWorld;
+uniform float uBakedRock;
+uniform float uBakedPatches;
+float bakedHash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float bakedNoise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(bakedHash(i), bakedHash(i + vec2(1.0, 0.0)), u.x),
+             mix(bakedHash(i + vec2(0.0, 1.0)), bakedHash(i + vec2(1.0, 1.0)), u.x), u.y);
+}`,
+        )
+        .replace(
+          "#include <color_fragment>",
+          `#include <color_fragment>
+{
+  vec3 p = vBakedWorld;
+  vec3 nWS = normalize(cross(dFdx(p), dFdy(p)));
+  float level = smoothstep(0.48, 0.84, abs(nWS.y));
+  float grit = bakedNoise(p.xz * 1.35) * 0.55 + bakedNoise(p.xz * 0.31 + 0.37) * 0.45;
+  float blot = bakedNoise(p.xz * 0.028) * 0.65 + bakedNoise(p.xz * 0.095 + 0.5) * 0.35;
+  vec3 earthTint = mix(vec3(0.82, 0.90, 0.72), vec3(1.09, 1.03, 0.86), smoothstep(0.28, 0.72, blot));
+  vec3 levelC = diffuseColor.rgb * mix(0.84, 1.16, grit) * mix(vec3(1.0), earthTint, uBakedPatches * (1.0 - uBakedRock * 0.75));
+  float side = abs(nWS.z) / (abs(nWS.x) + abs(nWS.z) + 1e-3);
+  float strata = mix(bakedNoise(vec2(p.z * 0.11, p.y * 0.28)), bakedNoise(vec2(p.x * 0.11, p.y * 0.28)), side);
+  float fine = mix(bakedNoise(vec2(p.z, p.y) * 0.65), bakedNoise(vec2(p.x, p.y) * 0.65), side);
+  float k = mix(0.38, 0.65, uBakedRock);
+  vec3 steepC = diffuseColor.rgb * mix(1.0, 0.76 + (strata * 0.55 + fine * 0.45) * 0.48, k) * mix(vec3(1.0), earthTint, uBakedPatches * 0.45);
+  levelC *= mix(1.0, 0.86 + strata * 0.28, 0.3 * uBakedRock);
+  diffuseColor.rgb = mix(steepC, levelC, level);
+}`,
+        );
+    };
+    m.customProgramCacheKey = () => `baked-detail-${rock}-${patches}`;
+  };
   const convert = (root: THREE_NS.Object3D, scale: number) =>
     root.traverse((o) => {
       const mesh = o as THREE_NS.Mesh;
       if (!mesh.isMesh) return;
-      const lightMap = maps.get(partOf(mesh));
+      const partName = partOf(mesh);
+      const lightMap = maps.get(partName);
       const vertexColors = Boolean(mesh.geometry.getAttribute("color"));
       const swap = (old: THREE_NS.Material) => {
         const src = old as THREE_NS.MeshStandardMaterial;
+        const kind = surfaceKind(src);
+        const isGroundPart =
+          partName.endsWith("-terrain") || partName.endsWith("-ground");
         const m = new THREE.MeshBasicMaterial({
           map: src.map ?? null,
           color: src.color ? src.color.clone() : new THREE.Color(1, 1, 1),
@@ -213,6 +284,13 @@ export async function applyBaked(
           m.lightMapIntensity = scale * Math.PI;
         } else {
           m.color.multiplyScalar(scale);
+        }
+        if (kind !== 0 || isGroundPart) {
+          applyGroundDetail(
+            m,
+            kind === 2 ? 1 : 0,
+            kind === 1 || isGroundPart ? 0.65 : 0.35,
+          );
         }
         owned.push(m);
         if (src.map) owned.push(src.map);

@@ -1,0 +1,18 @@
+{
+ "model": "patara-deniz-feneri",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "patara-deniz-feneri-near": "patara-deniz-feneri-near-clear.jpg",
+  "patara-deniz-feneri-ground": "patara-deniz-feneri-ground-clear.jpg",
+  "patara-deniz-feneri-terrain": "patara-deniz-feneri-terrain-clear.jpg",
+  "patara-deniz-feneri-detail": null,
+  "patara-deniz-feneri-flora": null
+ },
+ "terrain": "patara-deniz-feneri-terrain",
+ "plants": 40,
+ "azim": 171.84761026599463,
+ "files": [
+  "patara-deniz-feneri-baked.glb"
+ ]
+}

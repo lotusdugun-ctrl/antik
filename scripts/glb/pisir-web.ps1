@@ -6,7 +6,7 @@
 # (web_pack.mjs) -> public\baked\<id>\. Sonunda src\lib\baked-sites.ts yeniden yazilir.
 # Gunluk: hd-out\pisir\<id>.log. Biten yerler atlanir (yeniden icin klasoru silin).
 # Keep this file ASCII: Windows PowerShell 5.1 reads BOM-less scripts as ANSI.
-param([string[]]$Ids)
+param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Ids)
 # Continue: in PowerShell 5.1 a native tool writing to stderr would otherwise abort the run;
 # every step is checked by its exit code and its output file instead.
 $ErrorActionPreference = "Continue"

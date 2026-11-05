@@ -1,0 +1,18 @@
+{
+ "model": "aizanoi-zeus-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "aizanoi-zeus-tapinagi-near": "aizanoi-zeus-tapinagi-near-clear.jpg",
+  "aizanoi-zeus-tapinagi-ground": "aizanoi-zeus-tapinagi-ground-clear.jpg",
+  "aizanoi-zeus-tapinagi-terrain": "aizanoi-zeus-tapinagi-terrain-clear.jpg",
+  "aizanoi-zeus-tapinagi-detail": null,
+  "aizanoi-zeus-tapinagi-flora": null
+ },
+ "terrain": "aizanoi-zeus-tapinagi-terrain",
+ "plants": 23,
+ "azim": 174.73343833057547,
+ "files": [
+  "aizanoi-zeus-tapinagi-baked.glb"
+ ]
+}

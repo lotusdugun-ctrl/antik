@@ -1,0 +1,18 @@
+{
+ "model": "halikarnas-mozolesi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "halikarnas-mozolesi-near": "halikarnas-mozolesi-near-clear.jpg",
+  "halikarnas-mozolesi-ground": "halikarnas-mozolesi-ground-clear.jpg",
+  "halikarnas-mozolesi-terrain": "halikarnas-mozolesi-terrain-clear.jpg",
+  "halikarnas-mozolesi-detail": null,
+  "halikarnas-mozolesi-flora": null
+ },
+ "terrain": "halikarnas-mozolesi-terrain",
+ "plants": 59,
+ "azim": 171.8476102659946,
+ "files": [
+  "halikarnas-mozolesi-baked.glb"
+ ]
+}

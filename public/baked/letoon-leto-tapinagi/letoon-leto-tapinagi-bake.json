@@ -1,0 +1,18 @@
+{
+ "model": "letoon-leto-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "letoon-leto-tapinagi-near": "letoon-leto-tapinagi-near-clear.jpg",
+  "letoon-leto-tapinagi-ground": "letoon-leto-tapinagi-ground-clear.jpg",
+  "letoon-leto-tapinagi-terrain": "letoon-leto-tapinagi-terrain-clear.jpg",
+  "letoon-leto-tapinagi-detail": null,
+  "letoon-leto-tapinagi-flora": null
+ },
+ "terrain": "letoon-leto-tapinagi-terrain",
+ "plants": 31,
+ "azim": 174.73343833057547,
+ "files": [
+  "letoon-leto-tapinagi-baked.glb"
+ ]
+}

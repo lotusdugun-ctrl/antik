@@ -1,0 +1,18 @@
+{
+ "model": "zeugma-villa",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "zeugma-villa-near": "zeugma-villa-near-clear.jpg",
+  "zeugma-villa-ground": "zeugma-villa-ground-clear.jpg",
+  "zeugma-villa-terrain": "zeugma-villa-terrain-clear.jpg",
+  "zeugma-villa-detail": null,
+  "zeugma-villa-flora": null
+ },
+ "terrain": "zeugma-villa-terrain",
+ "plants": 37,
+ "azim": 183.57043438516146,
+ "files": [
+  "zeugma-villa-baked.glb"
+ ]
+}

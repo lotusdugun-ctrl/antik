@@ -75,8 +75,23 @@ fs.writeFileSync(
   JSON.stringify(meta, null, 1),
 );
 const skirt = path.join(src, `${id}-skirt.glb`);
-if (fs.existsSync(skirt))
+const fallbackSkirt = path.join(
+  app,
+  "unity",
+  "AntikViewer",
+  "Assets",
+  "Antik",
+  "Baked",
+  `${id}-skirt.glb`,
+);
+if (fs.existsSync(skirt)) {
   fs.copyFileSync(skirt, path.join(dst, `${id}-skirt.glb`));
+} else if (
+  fs.existsSync(fallbackSkirt) &&
+  !fs.existsSync(path.join(dst, `${id}-skirt.glb`))
+) {
+  fs.copyFileSync(fallbackSkirt, path.join(dst, `${id}-skirt.glb`));
+}
 fs.rmSync(tmp, { recursive: true, force: true });
 const size = fs
   .readdirSync(dst)

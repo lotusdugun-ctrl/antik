@@ -1,0 +1,18 @@
+{
+ "model": "laodikeia-bati-tiyatrosu",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "laodikeia-bati-tiyatrosu-near": "laodikeia-bati-tiyatrosu-near-clear.jpg",
+  "laodikeia-bati-tiyatrosu-ground": "laodikeia-bati-tiyatrosu-ground-clear.jpg",
+  "laodikeia-bati-tiyatrosu-terrain": "laodikeia-bati-tiyatrosu-terrain-clear.jpg",
+  "laodikeia-bati-tiyatrosu-detail": null,
+  "laodikeia-bati-tiyatrosu-flora": null
+ },
+ "terrain": "laodikeia-bati-tiyatrosu-terrain",
+ "plants": 173,
+ "azim": 48.49573328079581,
+ "files": [
+  "laodikeia-bati-tiyatrosu-baked.glb"
+ ]
+}

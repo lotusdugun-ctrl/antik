@@ -1,0 +1,18 @@
+{
+ "model": "suleymaniye-camii",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "suleymaniye-camii-near": "suleymaniye-camii-near-clear.jpg",
+  "suleymaniye-camii-ground": "suleymaniye-camii-ground-clear.jpg",
+  "suleymaniye-camii-terrain": "suleymaniye-camii-terrain-clear.jpg",
+  "suleymaniye-camii-detail": null,
+  "suleymaniye-camii-flora": null
+ },
+ "terrain": "suleymaniye-camii-terrain",
+ "plants": 305,
+ "azim": 179.1623470457217,
+ "files": [
+  "suleymaniye-camii-baked.glb"
+ ]
+}

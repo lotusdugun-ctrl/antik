@@ -498,7 +498,7 @@ function mergeByPosition(THREE: typeof THREE_NS, geometry: THREE_NS.BufferGeomet
  * multiplies the field colours) of soft patches, dry stalks and pebbles.
  * Not colour-managed, so a value of 0.95 darkens by five per cent.
  */
-function groundDetail(THREE: typeof THREE_NS, biome: Biome) {
+export function groundDetail(THREE: typeof THREE_NS, biome: Biome) {
   const size = 256;
   const canvas = document.createElement("canvas");
   canvas.width = size;

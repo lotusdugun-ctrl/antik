@@ -7780,36 +7780,12 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
   const R = spec.tumulusDiameter / 2;
   // The mound, its foot just behind the plinth the statues sit on: grey
   // limestone chips, darker than the dressed stone of the gods in front of it.
+  // Built as a single weathered cone (whose gullies and scree shade variation
+  // are applied per vertex in the renderer) so intersecting cones never poke
+  // pale stone blotches or bake-shadow seams through the slope.
   parts.push(
     scenery(worn(cyl("rock", [-R - 2.5, -0.5, 0], R, R * 0.06, spec.tumulusHeight, 72), 1.6)),
   );
-  /*
-   * The mound is loose scree, fist-sized chips of limestone heaped up, and
-   * the rain has run it into lobes and gullies of paler and darker stone.
-   * Two more heaps a little off the first, each weathered its own way and a shade
-   * apart, break
-   * through its surface here and there: the cone stops reading as a cone.
-   */
-  for (const [dx, dz, k, material] of [
-    [2.2, -3.4, 0.975, "stoneDark"],
-    [-1.6, 3.8, 0.97, "stone"],
-  ] as const) {
-    parts.push(
-      scenery(
-        worn(
-          cyl(
-            material,
-            [-R - 2.5 - dx, -0.5, dz],
-            R * k,
-            R * 0.05,
-            spec.tumulusHeight * (k + 0.012),
-            72,
-          ),
-          1.7,
-        ),
-      ),
-    );
-  }
 
   // The terrace: the paved court, and the plinth along its west side.
   const halfCourt = spec.courtWidth / 2;

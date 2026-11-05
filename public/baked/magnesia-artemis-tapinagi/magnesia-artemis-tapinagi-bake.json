@@ -1,0 +1,18 @@
+{
+ "model": "magnesia-artemis-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "magnesia-artemis-tapinagi-near": "magnesia-artemis-tapinagi-near-clear.jpg",
+  "magnesia-artemis-tapinagi-ground": "magnesia-artemis-tapinagi-ground-clear.jpg",
+  "magnesia-artemis-tapinagi-terrain": "magnesia-artemis-tapinagi-terrain-clear.jpg",
+  "magnesia-artemis-tapinagi-detail": null,
+  "magnesia-artemis-tapinagi-flora": null
+ },
+ "terrain": "magnesia-artemis-tapinagi-terrain",
+ "plants": 126,
+ "azim": 174.73343833057547,
+ "files": [
+  "magnesia-artemis-tapinagi-baked.glb"
+ ]
+}

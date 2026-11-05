@@ -1,0 +1,17 @@
+{
+ "model": "efes-yamac-evler",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "efes-yamac-evler-near": "efes-yamac-evler-near-clear.jpg",
+  "efes-yamac-evler-terrain": "efes-yamac-evler-terrain-clear.jpg",
+  "efes-yamac-evler-detail": null,
+  "efes-yamac-evler-flora": null
+ },
+ "terrain": "efes-yamac-evler-terrain",
+ "plants": 15,
+ "azim": 188.434948822922,
+ "files": [
+  "efes-yamac-evler-baked.glb"
+ ]
+}

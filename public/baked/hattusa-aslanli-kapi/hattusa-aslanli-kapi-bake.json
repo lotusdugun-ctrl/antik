@@ -1,0 +1,18 @@
+{
+ "model": "hattusa-aslanli-kapi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "hattusa-aslanli-kapi-near": "hattusa-aslanli-kapi-near-clear.jpg",
+  "hattusa-aslanli-kapi-ground": "hattusa-aslanli-kapi-ground-clear.jpg",
+  "hattusa-aslanli-kapi-terrain": "hattusa-aslanli-kapi-terrain-clear.jpg",
+  "hattusa-aslanli-kapi-detail": null,
+  "hattusa-aslanli-kapi-flora": null
+ },
+ "terrain": "hattusa-aslanli-kapi-terrain",
+ "plants": 67,
+ "azim": 190.77225468204585,
+ "files": [
+  "hattusa-aslanli-kapi-baked.glb"
+ ]
+}

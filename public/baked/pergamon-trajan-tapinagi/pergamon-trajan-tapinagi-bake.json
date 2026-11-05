@@ -1,0 +1,18 @@
+{
+ "model": "pergamon-trajan-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "pergamon-trajan-tapinagi-near": "pergamon-trajan-tapinagi-near-clear.jpg",
+  "pergamon-trajan-tapinagi-ground": "pergamon-trajan-tapinagi-ground-clear.jpg",
+  "pergamon-trajan-tapinagi-terrain": "pergamon-trajan-tapinagi-terrain-clear.jpg",
+  "pergamon-trajan-tapinagi-detail": null,
+  "pergamon-trajan-tapinagi-flora": null
+ },
+ "terrain": "pergamon-trajan-tapinagi-terrain",
+ "plants": 33,
+ "azim": 174.73343833057547,
+ "files": [
+  "pergamon-trajan-tapinagi-baked.glb"
+ ]
+}

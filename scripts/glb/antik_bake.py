@@ -197,22 +197,73 @@ whole = join(building, f"{name}-all")
 lift_coplanar(whole)
 zs = sorted(v.co.z for v in whole.data.vertices)
 ground_z = zs[len(zs) // 2]
-tall = [v.co for v in whole.data.vertices if v.co.z > ground_z + 2.5]
+bpy.ops.object.select_all(action="DESELECT")
+whole.select_set(True)
+bpy.context.view_layer.objects.active = whole
+bpy.ops.object.mode_set(mode="EDIT")
+bpy.ops.mesh.select_all(action="SELECT")
+bpy.ops.mesh.remove_doubles(threshold=0.0005, use_sharp_edge_from_normals=True)
+bm = bmesh.from_edit_mesh(whole.data)
+bm.faces.ensure_lookup_table()
+# Group connected components so a continuous surface (an earth bank behind a theatre
+# or a tumulus cone) is never sliced in half between near and ground, and distant
+# horizon hills (sunk below ground_z - 2.5 at r > 90 m) do not inflate the near box.
+seen_comp = bytearray(len(bm.faces))
+comps = []
+horizon_faces = set()
+for f0 in bm.faces:
+    if seen_comp[f0.index]:
+        continue
+    seen_comp[f0.index] = 1
+    stack = [f0]; part = []
+    while stack:
+        f = stack.pop(); part.append(f)
+        for e in f.edges:
+            for g in e.link_faces:
+                if not seen_comp[g.index]:
+                    seen_comp[g.index] = 1; stack.append(g)
+    verts = {v for f in part for v in f.verts}
+    z_min = min(v.co.z for v in verts)
+    z_max = max(v.co.z for v in verts)
+    cx = sum(v.co.x for v in verts) / len(verts)
+    cy = sum(v.co.y for v in verts) / len(verts)
+    is_horizon = z_min < ground_z - 2.5 and math.hypot(cx, cy) > 90.0
+    if is_horizon:
+        horizon_faces.update(f.index for f in part)
+    comps.append((part, verts, z_min, z_max, is_horizon))
+
+tall = [
+    v.co
+    for _, verts, _, _, is_horizon in comps
+    if not is_horizon
+    for v in verts
+    if v.co.z > ground_z + 2.5
+]
 if tall:
     pad = 15.0
     x0, x1 = min(c.x for c in tall) - pad, max(c.x for c in tall) + pad
     y0, y1 = min(c.y for c in tall) - pad, max(c.y for c in tall) + pad
 else:
     x0 = y0 = -40.0; x1 = y1 = 40.0
-bpy.ops.object.select_all(action="DESELECT")
-whole.select_set(True)
-bpy.context.view_layer.objects.active = whole
-bpy.ops.object.mode_set(mode="EDIT")
-bm = bmesh.from_edit_mesh(whole.data)
+
+whole_near = set()
+for part, verts, z_min, z_max, is_horizon in comps:
+    if is_horizon:
+        continue
+    # A raised structure or slope (bank, tumulus, wall) that touches the near box
+    # stays in near as one whole piece so no lightmap seam cuts across it.
+    if z_max > ground_z + 1.0 and any(x0 <= v.co.x <= x1 and y0 <= v.co.y <= y1 for v in verts):
+        whole_near.update(f.index for f in part)
+
 inside = 0
 for f in bm.faces:
-    c = f.calc_center_median()
-    f.select = x0 <= c.x <= x1 and y0 <= c.y <= y1
+    if f.index in horizon_faces:
+        f.select = False
+    elif f.index in whole_near:
+        f.select = True
+    else:
+        c = f.calc_center_median()
+        f.select = x0 <= c.x <= x1 and y0 <= c.y <= y1
     inside += f.select
 bmesh.update_edit_mesh(whole.data)
 near_obj, ground_obj = whole, None
@@ -238,10 +289,12 @@ if ground_obj:
 
 def dense_parts(bm, texel_area):
     """Faces of connected pieces whose triangles are mostly smaller than a texel or so
-    (scans: tens of thousands of tiny triangles)."""
+    (scans: tens of thousands of tiny triangles), plus connected large surfaces whose
+    stray crease triangles must not be torn out into vertex-lit detail."""
     bm.faces.ensure_lookup_table()
     seen = bytearray(len(bm.faces))
     out = set()
+    keep_whole = set()
     for f0 in bm.faces:
         if seen[f0.index]:
             continue
@@ -253,15 +306,15 @@ def dense_parts(bm, texel_area):
                 for g in e.link_faces:
                     if not seen[g.index]:
                         seen[g.index] = 1; stack.append(g)
-        if len(part) < 400:
-            continue
         areas = sorted(f.calc_area() for f in part)
         total = sum(areas) or 1.0
         big = sum(a for a in areas if a > 4.0 * texel_area)
-        # mostly tiny triangles, and no large flat surface (a wall) that needs the atlas
-        if areas[len(areas) // 2] < 2.0 * texel_area and big < 0.2 * total:
+        if len(part) >= 400 and areas[len(areas) // 2] < 2.0 * texel_area and big < 0.2 * total:
+            # mostly tiny triangles, and no large flat surface (a wall) that needs the atlas
             out.update(f.index for f in part)
-    return out
+        elif total >= 32.0 * texel_area:
+            keep_whole.update(f.index for f in part)
+    return out, keep_whole
 
 
 def select_only(o):
@@ -305,8 +358,9 @@ for o in targets:
     # Scanned statues and other dense pieces go to the vertex light whole: split by
     # island size, some of their triangles would land in the atlas and the rest in
     # the vertex colour, and the two never agree (bright and dark shards on a statue).
-    dense = dense_parts(bm, texel_area)
-    small |= dense
+    # Conversely, large connected surfaces (walls, banks, tumuli) stay in the atlas whole.
+    dense, keep_whole = dense_parts(bm, texel_area)
+    small = (small - keep_whole) | dense
     print(f"[antik] {o.name}: {len(dense)} faces in dense pieces (scans) lit per vertex")
     for f in bm.faces:
         f.select = f.index in small

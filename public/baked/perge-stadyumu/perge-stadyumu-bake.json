@@ -1,0 +1,18 @@
+{
+ "model": "perge-stadyumu",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "perge-stadyumu-near": "perge-stadyumu-near-clear.jpg",
+  "perge-stadyumu-ground": "perge-stadyumu-ground-clear.jpg",
+  "perge-stadyumu-terrain": "perge-stadyumu-terrain-clear.jpg",
+  "perge-stadyumu-detail": null,
+  "perge-stadyumu-flora": null
+ },
+ "terrain": "perge-stadyumu-terrain",
+ "plants": 451,
+ "azim": 96.18920625702694,
+ "files": [
+  "perge-stadyumu-baked.glb"
+ ]
+}

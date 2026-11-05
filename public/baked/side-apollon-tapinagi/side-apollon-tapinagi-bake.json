@@ -1,0 +1,18 @@
+{
+ "model": "side-apollon-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "side-apollon-tapinagi-near": "side-apollon-tapinagi-near-clear.jpg",
+  "side-apollon-tapinagi-ground": "side-apollon-tapinagi-ground-clear.jpg",
+  "side-apollon-tapinagi-terrain": "side-apollon-tapinagi-terrain-clear.jpg",
+  "side-apollon-tapinagi-detail": null,
+  "side-apollon-tapinagi-flora": null
+ },
+ "terrain": "side-apollon-tapinagi-terrain",
+ "plants": 29,
+ "azim": 174.73343833057547,
+ "files": [
+  "side-apollon-tapinagi-baked.glb"
+ ]
+}

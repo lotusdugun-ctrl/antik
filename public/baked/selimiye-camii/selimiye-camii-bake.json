@@ -1,0 +1,18 @@
+{
+ "model": "selimiye-camii",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "selimiye-camii-near": "selimiye-camii-near-clear.jpg",
+  "selimiye-camii-ground": "selimiye-camii-ground-clear.jpg",
+  "selimiye-camii-terrain": "selimiye-camii-terrain-clear.jpg",
+  "selimiye-camii-detail": null,
+  "selimiye-camii-flora": null
+ },
+ "terrain": "selimiye-camii-terrain",
+ "plants": 228,
+ "azim": 179.1623470457217,
+ "files": [
+  "selimiye-camii-baked.glb"
+ ]
+}

@@ -178,8 +178,38 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
       }
       return [x / around, y / around, z / around];
     };
+    const rad = new Float32Array(rings * around);
+    const vShade = new Float32Array(rings * around + 2);
+    vShade.fill(1);
+    for (let k = 0; k < rings; k += 1) {
+      const [cx, , cz] = centre(k);
+      let rMean = 0;
+      for (let j = 0; j < around; j += 1) {
+        const idx = k * around + j;
+        const dx = pos[idx * 3]! - cx!;
+        const dz = pos[idx * 3 + 2]! - cz!;
+        const r = Math.hypot(dx, dz);
+        rad[idx] = r;
+        rMean += r;
+      }
+      rMean /= Math.max(1, around);
+      const v = rings > 1 ? k / (rings - 1) : 0.5;
+      const vert = 0.94 + 0.08 * v;
+      for (let j = 0; j < around; j += 1) {
+        const idx = k * around + j;
+        const r = rad[idx]!;
+        const rPrev = rad[k * around + ((j - 1 + around) % around)]!;
+        const rNext = rad[k * around + ((j + 1) % around)]!;
+        const rAvg = 0.5 * (rPrev + rNext);
+        const rel = rAvg > 1e-4 ? (r - rAvg) / rAvg : 0;
+        const wave = rMean > 1e-4 ? (r - rMean) / rMean : 0;
+        const foldSignal = Math.max(-0.24, Math.min(0.16, rel * 2.1 + wave * 0.95));
+        vShade[idx] = Math.max(0.72, Math.min(1.08, vert * (1 + foldSignal)));
+      }
+    }
     if (o.bottom) {
       const c = pos.length / 3;
+      vShade[c] = 0.88;
       pos.push(...centre(0));
       for (let j = 0; j < around; j += 1) {
         index.push(c, j, (j + 1) % around);
@@ -188,6 +218,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     }
     if (o.top) {
       const c = pos.length / 3;
+      vShade[c] = 1.03;
       pos.push(...centre(rings - 1));
       const last = (rings - 1) * around;
       for (let j = 0; j < around; j += 1) {
@@ -198,18 +229,32 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     const indexed = new THREE.BufferGeometry();
     indexed.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
     indexed.setIndex(index);
-    if (!o.flat) indexed.computeVertexNormals();
+    indexed.computeVertexNormals();
     const geometry = indexed.toNonIndexed();
     indexed.dispose();
-    if (o.flat) geometry.computeVertexNormals();
+    if (o.flat) {
+      const smoothN = (geometry.attributes["normal"]!.array as Float32Array).slice();
+      geometry.computeVertexNormals();
+      const flatN = geometry.attributes["normal"]!.array as Float32Array;
+      for (let i = 0; i < flatN.length; i += 3) {
+        const nx = smoothN[i]! * 0.65 + flatN[i]! * 0.35;
+        const ny = smoothN[i + 1]! * 0.65 + flatN[i + 1]! * 0.35;
+        const nz = smoothN[i + 2]! * 0.65 + flatN[i + 2]! * 0.35;
+        const len = Math.hypot(nx, ny, nz) || 1;
+        flatN[i] = nx / len;
+        flatN[i + 1] = ny / len;
+        flatN[i + 2] = nz / len;
+      }
+    }
     const triangles = index.length / 3;
     const colours = new Float32Array(triangles * 9);
     for (let t = 0; t < triangles; t += 1) {
       tmp.set(typeof colour === "number" ? colour : colour(quad[t * 2]!, quad[t * 2 + 1]!));
       for (let v = 0; v < 3; v += 1) {
-        colours[t * 9 + v * 3] = tmp.r;
-        colours[t * 9 + v * 3 + 1] = tmp.g;
-        colours[t * 9 + v * 3 + 2] = tmp.b;
+        const s = vShade[index[t * 3 + v]!] ?? 1;
+        colours[t * 9 + v * 3] = Math.min(1, tmp.r * s);
+        colours[t * 9 + v * 3 + 1] = Math.min(1, tmp.g * s);
+        colours[t * 9 + v * 3 + 2] = Math.min(1, tmp.b * s);
       }
     }
     geometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
@@ -270,6 +315,39 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     flat.setAttribute("color", new THREE.BufferAttribute(colours, 3));
     return flat;
   };
+
+  /** Colour every vertex smoothly by its own position and surface normal. */
+  const tintSmooth = (
+    geometry: Geo,
+    colour: (x: number, y: number, z: number, nx: number, ny: number, nz: number) => number,
+  ) => {
+    if (!geometry.attributes["normal"]) geometry.computeVertexNormals();
+    const flat = geometry.index ? geometry.toNonIndexed() : geometry;
+    if (flat !== geometry) geometry.dispose();
+    flat.deleteAttribute("uv");
+    const p = flat.attributes["position"]!.array as Float32Array;
+    const n = flat.attributes["normal"]!.array as Float32Array;
+    const colours = new Float32Array(p.length);
+    for (let v = 0; v < p.length; v += 3) {
+      tmp.set(colour(p[v]!, p[v + 1]!, p[v + 2]!, n[v]!, n[v + 1]!, n[v + 2]!));
+      colours[v] = tmp.r;
+      colours[v + 1] = tmp.g;
+      colours[v + 2] = tmp.b;
+    }
+    flat.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+    return flat;
+  };
+
+  /** Strand-textured hair and beard colouring with crown sheen and root depth. */
+  const tintHair = (geometry: Geo, hex: number) =>
+    tintSmooth(geometry, (x, y, z, _nx, ny) => {
+      const a = Math.atan2(x, z);
+      const strand = Math.sin(a * 22 + y * 58) * 0.5 + Math.cos(a * 11 - y * 34) * 0.5;
+      const sheen = Math.max(0, ny) * 0.12 + Math.max(0, (y - 0.88) * 0.9);
+      const root = Math.max(0, -ny) * 0.16;
+      const k = Math.max(0.72, Math.min(1.16, 0.94 + strand * 0.1 + sheen - root));
+      return shade(hex, k);
+    });
 
   const ball = (r: number, at: V3, scale: V3, hex: number, w = 8, h = 6) => {
     const g = new THREE.SphereGeometry(r, w, h);
@@ -373,7 +451,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
   const headPieces = (look: Look) => {
     const out: Geo[] = [];
     const masked = look.headwear === "mask";
-    const head = new THREE.SphereGeometry(1, 24, 18);
+    const head = new THREE.SphereGeometry(1, 28, 22);
     // Put the seam at the back, so a column of vertices runs down the face.
     head.rotateY(-Math.PI / 2);
     const p = head.attributes["position"]!;
@@ -381,42 +459,138 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
       const ux = p.getX(i);
       const uy = p.getY(i);
       const uz = p.getZ(i);
-      const jaw = uy < 0 ? 1 - 0.22 * (-uy) ** 1.6 : 1;
-      const x = ux * 0.056 * jaw;
+      const jaw = uy < 0 ? 1 - 0.23 * (-uy) ** 1.55 : 1;
+      let x = ux * 0.056 * jaw;
       const y = uy * 0.066;
       let z = uz * 0.062 * (uz < 0 ? 1.05 : 1) * (uy < 0 ? 1 - 0.05 * -uy : 1);
-      if (uz > 0.2 && !masked) {
+      if (uz > 0.15 && !masked) {
         const ax = Math.abs(ux);
-        z += 0.016 * gauss(ux, 0.13) * gauss(uy + 0.24, 0.15); // nose
-        z += 0.004 * gauss(ux, 0.12) * gauss(uy - 0.05, 0.12); // its bridge
-        z += 0.0035 * gauss(uy - 0.22, 0.09) * (ax < 0.6 ? 1 : 0); // brow
-        z -= 0.005 * gauss(ax - 0.38, 0.14) * gauss(uy - 0.02, 0.11); // eye sockets
-        z += 0.006 * gauss(ux, 0.3) * gauss(uy + 0.8, 0.16); // chin
+        // Nose bridge, tip, and nostril wings.
+        z += 0.0155 * gauss(ux, 0.125) * gauss(uy + 0.23, 0.14);
+        z += 0.0055 * gauss(ux, 0.11) * gauss(uy - 0.04, 0.14);
+        z += 0.0038 * gauss(ax - 0.095, 0.055) * gauss(uy + 0.25, 0.065);
+        // Brow arch and glabella.
+        z += 0.004 * gauss(uy - 0.21, 0.085) * (ax < 0.62 ? 1 : 0);
+        // Eye sockets.
+        z -= 0.0055 * gauss(ax - 0.37, 0.14) * gauss(uy - 0.02, 0.105);
+        // Cheekbones (zygomatic arch).
+        z += 0.0036 * gauss(ax - 0.45, 0.18) * gauss(uy + 0.14, 0.14);
+        x += Math.sign(ux) * 0.002 * gauss(ax - 0.56, 0.18) * gauss(uy + 0.1, 0.15);
+        // Upper & lower lips with parting line and mentolabial hollow.
+        const mouthW = gauss(ux, 0.22);
+        z += 0.0038 * mouthW * gauss(uy + 0.43, 0.055);
+        z += 0.0044 * mouthW * gauss(uy + 0.54, 0.06);
+        z -= 0.002 * mouthW * gauss(uy + 0.485, 0.025);
+        z -= 0.0022 * gauss(ux, 0.22) * gauss(uy + 0.63, 0.06);
+        // Chin.
+        z += 0.0065 * gauss(ux, 0.29) * gauss(uy + 0.79, 0.15);
       }
       p.setXYZ(i, x, y + 0.925, z + 0.005);
     }
     head.computeVertexNormals();
-    const lips = mix(look.skin, 0x7a3b30, 0.22);
+    const upperLip = mix(look.skin, 0x743028, look.female ? 0.38 : 0.28);
+    const lowerLip = mix(look.skin, 0x944236, look.female ? 0.34 : 0.24);
+    const lipCrease = mix(look.skin, 0x3b1713, 0.48);
+    const blush = mix(look.skin, 0xc46652, look.female ? 0.18 : 0.11);
     out.push(
-      tint(head, (x, y, z) =>
-        !masked && z > 0.03 && Math.abs(x) < 0.016 && y < 0.925 - 0.034 && y > 0.925 - 0.05
-          ? lips
-          : look.skin,
-      ),
+      tintSmooth(head, (x, y, z, _nx, ny) => {
+        if (masked) return look.skin;
+        const cy = y - 0.925;
+        const ax = Math.abs(x);
+        if (z > 0.038 && ax < 0.0155 && cy < -0.023 && cy > -0.041) {
+          if (Math.abs(cy + 0.032) < 0.0022) return lipCrease;
+          return cy >= -0.032 ? upperLip : lowerLip;
+        }
+        let c = look.skin;
+        if (z > 0.02) {
+          // Warm blush on cheeks and nose tip.
+          const cheek = gauss(ax - 0.027, 0.014) * gauss(cy + 0.011, 0.013);
+          const noseWarm = gauss(ax, 0.009) * gauss(cy + 0.015, 0.009) * 0.55;
+          const w = Math.min(1, cheek + noseWarm);
+          if (w > 0.05) c = mix(c, blush, w);
+          // Orbital eye-socket shadow.
+          const socket = gauss(ax - 0.0205, 0.011) * gauss(cy - 0.001, 0.0085);
+          if (socket > 0.05) c = shade(c, 1 - 0.18 * socket);
+          // Sub-nose and mentolabial crease shadow.
+          const philtrum = gauss(ax, 0.008) * gauss(cy + 0.021, 0.005);
+          const subLip = gauss(ax, 0.012) * gauss(cy + 0.043, 0.005);
+          if (philtrum + subLip > 0.05) c = shade(c, 1 - 0.13 * Math.min(1, philtrum + subLip));
+        }
+        // Under-jaw AO and brow/crown warmth.
+        if (ny < -0.2) c = shade(c, Math.max(0.82, 1 + (ny + 0.2) * 0.22));
+        else if (ny > 0.25 && z > 0.02) c = shade(c, 1 + Math.min(0.06, (ny - 0.25) * 0.09));
+        return c;
+      }),
     );
     if (!masked) {
-      // Eyes: dark, set a little into their sockets.
-      for (const side of [-1, 1])
-        out.push(ball(0.0085, [side * 0.0212, 0.926, 0.0575], [1, 0.72, 0.45], 0x1d1510, 8, 6));
+      const h = lookHash(look);
+      const irisPalette = [0x3b2618, 0x4c3420, 0x2c1d13, 0x4a4228];
+      const irisHex = irisPalette[h % irisPalette.length]!;
+      const lashHex = mix(look.skin, look.hair, 0.58);
+      const browHex = shade(look.hair, 0.86);
+      for (const side of [-1, 1]) {
+        const ex = side * 0.0208;
+        const ey = 0.9262;
+        const ez = 0.0558;
+        // Sclera (white of the eye, softly shaded at the corners).
+        const sclera = new THREE.SphereGeometry(0.0088, 10, 7);
+        sclera.scale(1.12, 0.68, 0.46);
+        sclera.translate(ex, ey, ez);
+        out.push(
+          tintSmooth(sclera, (x, y) => {
+            const corner = Math.min(1, Math.hypot((x - ex) / 0.009, (y - ey) / 0.006));
+            return mix(0xf3ece0, look.skin, 0.28 * corner ** 1.6);
+          }),
+        );
+        // Iris & pupil set slightly forward on the cornea.
+        const iris = new THREE.SphereGeometry(0.0054, 10, 7);
+        iris.scale(0.92, 0.92, 0.38);
+        iris.translate(side * 0.0204, ey, ez + 0.0026);
+        out.push(
+          tintSmooth(iris, (x, y) => {
+            const r = Math.hypot(x - side * 0.0204, y - ey);
+            return r < 0.0022 ? 0x0e0a08 : r > 0.0042 ? shade(irisHex, 0.72) : irisHex;
+          }),
+        );
+        // Upper eyelid and lash fold.
+        out.push(ball(0.0092, [ex, ey + 0.0023, ez + 0.0005], [1.14, 0.34, 0.48], lashHex, 9, 5));
+        // Sculpted eyebrow arch.
+        out.push(
+          roll(
+            [
+              [side * 0.0095, 0.9368, 0.0608],
+              [side * 0.0205, 0.9388, 0.0595],
+              [side * 0.0305, 0.9352, 0.0535],
+            ],
+            look.female ? 0.0022 : 0.0028,
+            browHex,
+            false,
+            6,
+          ),
+        );
+      }
     }
-    // Ears.
-    for (const side of [-1, 1])
-      out.push(ball(0.015, [side * 0.054, 0.921, -0.004], [0.36, 1, 0.68], look.skin, 6, 5));
-    // The neck.
+    // Ears with inner concha depth.
+    for (const side of [-1, 1]) {
+      const ear = new THREE.SphereGeometry(0.015, 8, 6);
+      ear.scale(0.36, 1, 0.68);
+      ear.translate(side * 0.054, 0.921, -0.004);
+      out.push(
+        tintSmooth(ear, (x, _y, z) =>
+          Math.abs(x) < 0.0545 && z > -0.006 ? shade(look.skin, 0.84) : look.skin,
+        ),
+      );
+    }
+    // Contoured neck with sub-chin shadow.
     out.push(
-      kit.paint(
-        new THREE.CylinderGeometry(0.027, 0.031, 0.065, 10, 1, true).translate(0, 0.86, -0.004),
-        look.skin,
+      loft(
+        [
+          { y: 0.824, z: -0.004, rx: 0.033, rz: 0.031 },
+          { y: 0.855, z: -0.004, rx: 0.028, rz: 0.028 },
+          { y: 0.892, z: -0.003, rx: 0.027, rz: 0.027 },
+        ],
+        14,
+        (k) => (k === 1 ? shade(look.skin, 0.86) : look.skin),
       ),
     );
     if (!masked) {
@@ -424,8 +598,8 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         // Bald on the crown: the hair left round the back and over the ears.
         const fringe = new THREE.SphereGeometry(
           0.0695,
-          16,
-          4,
+          18,
+          6,
           Math.PI * 0.85,
           Math.PI * 1.3,
           Math.PI * 0.36,
@@ -434,14 +608,14 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         fringe.scale(0.93, 0.94, 1);
         fringe.rotateX(-0.18);
         fringe.translate(0, 0.925, -0.004);
-        out.push(kit.paint(fringe, look.hair));
+        out.push(tintHair(fringe, look.hair));
       } else {
         // Hair: a cap from a hairline over the brow to the nape.
-        const cap = new THREE.SphereGeometry(0.069, 24, 8, 0, TAU, 0, Math.PI / 2);
+        const cap = new THREE.SphereGeometry(0.0695, 24, 10, 0, TAU, 0, Math.PI / 2);
         cap.scale(0.93, look.female ? 1.0 : 0.94, 1);
         cap.rotateX(-0.42);
         cap.translate(0, 0.929, -0.004);
-        out.push(kit.paint(cap, look.hair));
+        out.push(tintHair(cap, look.hair));
       }
       if (look.female) {
         if (look.headwear !== "veil") out.push(...kit.hairdo(look));
@@ -761,17 +935,31 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
     };
     const TT = torsoTable(female);
     const chest = g === "armour" ? 0.012 : 0;
+    const torsoColumns = 28;
     body.push(
       loftBy(
         TT.length,
-        24,
+        torsoColumns,
         (k, _j, a) => {
-          const [x, z] = surface(female, TT[k]![0], a, chest);
-          return [x, TT[k]![0], z];
+          const y = TT[k]![0];
+          const [x, z] = surface(female, y, a, chest);
+          const clothed = y <= neckline && g !== "armour" && torsoPlain(y, a) !== look.skin;
+          if (!clothed) return [x, y, z];
+          // Natural catenary & waist-gathered cloth folds on the upper garment.
+          const waistGather = gauss(y - 0.58, 0.09);
+          const fold =
+            (0.025 + 0.03 * waistGather) *
+            (0.65 * Math.cos(a * 10 + (h % 5)) + 0.35 * Math.sin(a * 6 - y * 18));
+          const s = 1 + fold;
+          return [x * s, y, z * s];
         },
         (k, j) => {
-          const a = ((j + 0.5) / 24) * TAU;
-          return torsoColour((TT[k]![0] + TT[k + 1]![0]) / 2, a);
+          const a = ((j + 0.5) / torsoColumns) * TAU;
+          const midY = (TT[k]![0] + TT[k + 1]![0]) / 2;
+          const c = torsoColour(midY, a);
+          // Subtle collar rim shadow where the neck meets the garment neckline.
+          if (k === TT.length - 3 && c !== look.skin) return shade(c, 0.86);
+          return c;
         },
         { bottom: true },
       ),
@@ -1244,7 +1432,12 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
         ],
         14,
         (k) => (k < rows ? cloth : look.skin),
-        { top: true, bottom: true },
+        {
+          fold: (k, _j, a) =>
+            k < rows ? 0.04 + 0.03 * Math.cos(a * 4 + side) : 0.015 * Math.cos(a * 2),
+          top: true,
+          bottom: true,
+        },
       ),
     ];
     if (g === "chiton" && look.female) {
@@ -1270,11 +1463,11 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
       upper.push(
         loftBy(
           ys.length,
-          12,
+          14,
           (k, _j, a) => {
             const [rx, rz] = radii[k]!;
             const fall = Math.max(0, 1 - (ys[k]! + 0.12) / 0.13);
-            const f = 1 + 0.07 * fall * Math.cos(a * 3 + side);
+            const f = 1 + 0.075 * fall * Math.cos(a * 4 + side);
             // The hem hangs lower at the back of the arm than at the front.
             const dip = k < 2 ? -0.022 * Math.max(0, -Math.sin(a)) : 0;
             return [
@@ -1289,31 +1482,85 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
       );
       for (const y of [0.0, -0.035, -0.07]) upper.push(pin([side * 0.044, y, 0], GOLD, 0.006));
     }
-    // Forearm and a mitten of a hand, palm to the thigh, thumb forward.
+    // Forearm, sculpted palm, four articulated fingers and thumb.
     const sleeve = g === "persian" ? 2 : g === "robe" || (g === "toga" && left) ? 1 : 0;
+    const palmShade = shade(look.skin, 0.91);
+    const knuckleHighlight = shade(look.skin, 1.04);
     const fore: Geo[] = [
       loft(
         [
           { y: 0, rx: 0.028, rz: 0.028 },
           { y: -0.05, rx: 0.026, rz: 0.025 },
           { y: -0.125, rx: 0.019, rz: 0.017 },
-          { y: -0.142, rx: 0.016, rz: 0.015 },
-          { y: -0.16, rx: 0.012, rz: 0.022, z: 0.002 },
-          { y: -0.185, rx: 0.011, rz: 0.022, z: 0.005 },
-          { y: -0.205, rx: 0.009, rz: 0.016, z: 0.009 },
-          { y: -0.217, rx: 0.004, rz: 0.007, z: 0.011 },
+          { y: -0.145, rx: 0.015, rz: 0.016, z: 0.001 },
+          { y: -0.164, rx: 0.0115, rz: 0.022, z: 0.003 },
+          { y: -0.181, rx: 0.0105, rz: 0.021, z: 0.004 },
         ],
         14,
-        (k) => (k < sleeve ? look.main : k === sleeve && g === "persian" ? look.trim : look.skin),
-        { top: true, bottom: true },
-      ),
-      kit.paint(
-        new THREE.CylinderGeometry(0.0055, 0.0068, 0.036, 5)
-          .rotateX(0.55)
-          .translate(-side * 0.003, -0.168, 0.022),
-        look.skin,
+        (k, j) => {
+          if (k < sleeve) return look.main;
+          if (k === sleeve && g === "persian") return look.trim;
+          if (k >= 4) {
+            const a = ((j + 0.5) / 14) * TAU;
+            return Math.cos(a) * side > 0.2 ? knuckleHighlight : palmShade;
+          }
+          return look.skin;
+        },
+        {
+          fold: (k, _j, a) => (k < sleeve ? 0.045 * (1 + 0.4 * Math.cos(a * 4)) : 0),
+          top: true,
+          bottom: true,
+        },
       ),
     ];
+    // Four fingers (index, middle, ring, little) slightly curled inward toward the palm.
+    const fingerSpecs: readonly [zOff: number, len: number, r: number, curl: number][] = [
+      [0.0165, 0.035, 0.0044, 0.16],
+      [0.0065, 0.039, 0.0046, 0.19],
+      [-0.0035, 0.036, 0.0044, 0.22],
+      [-0.0125, 0.029, 0.0039, 0.25],
+    ];
+    for (let f = 0; f < fingerSpecs.length; f += 1) {
+      const [zOff, len, r, curl] = fingerSpecs[f]!;
+      const fingerHex = f % 2 === 1 ? shade(look.skin, 0.95) : look.skin;
+      fore.push(
+        loft(
+          [
+            { y: -0.179, x: 0, z: zOff, rx: r, rz: r * 1.05 },
+            {
+              y: -0.179 - len * 0.52,
+              x: -side * len * curl * 0.35,
+              z: zOff + 0.002,
+              rx: r * 0.88,
+              rz: r * 0.92,
+            },
+            {
+              y: -0.179 - len,
+              x: -side * len * curl,
+              z: zOff + 0.0045,
+              rx: r * 0.65,
+              rz: r * 0.7,
+            },
+          ],
+          6,
+          (k) => (k === 1 ? shade(fingerHex, 0.94) : fingerHex),
+          { bottom: true },
+        ),
+      );
+    }
+    // Sculpted two-segment thumb opposing the palm.
+    fore.push(
+      loft(
+        [
+          { y: -0.153, x: -side * 0.002, z: 0.015, rx: 0.0068, rz: 0.0072 },
+          { y: -0.168, x: -side * 0.004, z: 0.023, rx: 0.0056, rz: 0.006 },
+          { y: -0.183, x: -side * 0.006, z: 0.027, rx: 0.0042, rz: 0.0045 },
+        ],
+        6,
+        look.skin,
+        { bottom: true, top: true },
+      ),
+    );
     fore.push(...kit.handItems(carry, action, side > 0));
     return { upper, fore };
   };
@@ -1322,7 +1569,7 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
   const legPieces = (look: Look, robedSeated: boolean, feetOnly: boolean) => {
     const g = look.garment;
     const trousers = g === "persian";
-    const legCloth = trousers ? shade(look.main, 0.7) : robedSeated ? look.main : look.skin;
+    const legCloth = trousers ? shade(look.main, 0.72) : robedSeated ? look.main : look.skin;
     // The Hittites wore shoes with the toe turned up; the Neolithic went barefoot.
     const upturned = era === "hittite";
     const shoe: "sandal" | "boot" | "shoe" | "bare" =
@@ -1353,7 +1600,10 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
             ],
             14,
             legCloth,
-            { bottom: true },
+            {
+              fold: (k, _j, a) => (trousers ? 0.055 * Math.cos(a * 5 + k * 1.3) : 0),
+              bottom: true,
+            },
           ),
         ];
     const shin: Geo[] = [];
@@ -1375,7 +1625,10 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
             if (shoe === "sandal" && k === 3) return LEATHER;
             return legCloth;
           },
-          { top: true },
+          {
+            fold: (k, _j, a) => (trousers && k < 2 ? 0.06 * Math.cos(a * 5 + k * 1.5) : 0),
+            top: true,
+          },
         ),
       );
     }
@@ -1394,14 +1647,16 @@ export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {
       (k, j) => {
         if (shoe === "boot") return 0x4a3426;
         if (shoe === "shoe") return shoeHex;
-        if (shoe === "bare") return look.skin;
+        if (shoe === "bare") {
+          return k >= 4 && j % 2 === 0 ? shade(look.skin, 0.92) : look.skin;
+        }
         // Sandal straps: round the heel and ankle, across the instep, and
         // the thong between the toes.
         const upperSide = j >= 4;
         if (k === 1) return LEATHER;
         if (k === 3 && upperSide) return LEATHER;
         if (k === 4 && (j === 5 || j === 6)) return LEATHER;
-        return look.skin;
+        return k >= 4 && j % 2 === 0 ? shade(look.skin, 0.93) : look.skin;
       },
       { top: true, bottom: true },
     );

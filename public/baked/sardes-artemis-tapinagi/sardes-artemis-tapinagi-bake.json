@@ -1,0 +1,18 @@
+{
+ "model": "sardes-artemis-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "sardes-artemis-tapinagi-near": "sardes-artemis-tapinagi-near-clear.jpg",
+  "sardes-artemis-tapinagi-ground": "sardes-artemis-tapinagi-ground-clear.jpg",
+  "sardes-artemis-tapinagi-terrain": "sardes-artemis-tapinagi-terrain-clear.jpg",
+  "sardes-artemis-tapinagi-detail": null,
+  "sardes-artemis-tapinagi-flora": null
+ },
+ "terrain": "sardes-artemis-tapinagi-terrain",
+ "plants": 257,
+ "azim": 174.73343833057547,
+ "files": [
+  "sardes-artemis-tapinagi-baked.glb"
+ ]
+}

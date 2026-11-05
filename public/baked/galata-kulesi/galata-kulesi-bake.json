@@ -1,0 +1,18 @@
+{
+ "model": "galata-kulesi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "galata-kulesi-near": "galata-kulesi-near-clear.jpg",
+  "galata-kulesi-ground": "galata-kulesi-ground-clear.jpg",
+  "galata-kulesi-terrain": "galata-kulesi-terrain-clear.jpg",
+  "galata-kulesi-detail": null,
+  "galata-kulesi-flora": null
+ },
+ "terrain": "galata-kulesi-terrain",
+ "plants": 100,
+ "azim": 179.1623470457217,
+ "files": [
+  "galata-kulesi-baked.glb"
+ ]
+}

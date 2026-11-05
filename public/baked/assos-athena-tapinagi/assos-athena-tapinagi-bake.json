@@ -1,0 +1,18 @@
+{
+ "model": "assos-athena-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "assos-athena-tapinagi-near": "assos-athena-tapinagi-near-clear.jpg",
+  "assos-athena-tapinagi-ground": "assos-athena-tapinagi-ground-clear.jpg",
+  "assos-athena-tapinagi-terrain": "assos-athena-tapinagi-terrain-clear.jpg",
+  "assos-athena-tapinagi-detail": null,
+  "assos-athena-tapinagi-flora": null
+ },
+ "terrain": "assos-athena-tapinagi-terrain",
+ "plants": 30,
+ "azim": 174.73343833057547,
+ "files": [
+  "assos-athena-tapinagi-baked.glb"
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "model": "priene-athena-tapinagi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "priene-athena-tapinagi-near": "priene-athena-tapinagi-near-clear.jpg",
+  "priene-athena-tapinagi-ground": "priene-athena-tapinagi-ground-clear.jpg",
+  "priene-athena-tapinagi-terrain": "priene-athena-tapinagi-terrain-clear.jpg",
+  "priene-athena-tapinagi-detail": null,
+  "priene-athena-tapinagi-flora": null
+ },
+ "terrain": "priene-athena-tapinagi-terrain",
+ "plants": 43,
+ "azim": 174.73343833057547,
+ "files": [
+  "priene-athena-tapinagi-baked.glb"
+ ]
+}

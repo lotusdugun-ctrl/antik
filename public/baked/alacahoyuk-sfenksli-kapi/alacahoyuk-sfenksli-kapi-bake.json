@@ -1,0 +1,18 @@
+{
+ "model": "alacahoyuk-sfenksli-kapi",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "alacahoyuk-sfenksli-kapi-near": "alacahoyuk-sfenksli-kapi-near-clear.jpg",
+  "alacahoyuk-sfenksli-kapi-ground": "alacahoyuk-sfenksli-kapi-ground-clear.jpg",
+  "alacahoyuk-sfenksli-kapi-terrain": "alacahoyuk-sfenksli-kapi-terrain-clear.jpg",
+  "alacahoyuk-sfenksli-kapi-detail": null,
+  "alacahoyuk-sfenksli-kapi-flora": null
+ },
+ "terrain": "alacahoyuk-sfenksli-kapi-terrain",
+ "plants": 57,
+ "azim": 179.1623470457217,
+ "files": [
+  "alacahoyuk-sfenksli-kapi-baked.glb"
+ ]
+}
