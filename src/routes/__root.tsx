@@ -27,6 +27,7 @@ import {
   type Lang,
 } from "@/lib/i18n";
 import { websiteTags } from "@/lib/seo";
+import { PassProvider } from "@/lib/pass";
 import { ProgressProvider } from "@/lib/progress";
 import { ThemeProvider } from "@/lib/theme";
 import { Toaster } from "@/components/ui/sonner";
@@ -128,10 +129,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "author", content: "Antik Türkiye" },
-        { name: "theme-color", content: "#f7f4ee" },
+        { name: "theme-color", content: "#0b0b0c" },
         { name: "application-name", content: "Antik Türkiye" },
         { name: "apple-mobile-web-app-capable", content: "yes" },
-        { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+        { name: "apple-mobile-web-app-status-bar-style", content: "black" },
         { name: "apple-mobile-web-app-title", content: "Antik Türkiye" },
         { name: "mobile-web-app-capable", content: "yes" },
       ],
@@ -144,7 +145,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@700;800;900&family=Sofia+Sans:wght@400;500;600;700;800&family=Brygada+1918:ital,wght@0,400;0,500;1,400&display=swap",
         },
         { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       ],
@@ -165,7 +166,7 @@ function RootShell({ children }: { children: ReactNode }) {
   });
 
   return (
-    <html lang={lang}>
+    <html lang={lang} className="dark">
       <head>
         <HeadContent />
       </head>
@@ -273,10 +274,12 @@ function RootComponent() {
       <ThemeProvider>
         <LanguageProvider lang={lang} setLang={setLang}>
           <ProgressProvider>
-            <AppShell>
-              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-              <Outlet />
-            </AppShell>
+            <PassProvider>
+              <AppShell>
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+              </AppShell>
+            </PassProvider>
             <PwaRegistration />
             <Toaster position="top-center" richColors />
           </ProgressProvider>

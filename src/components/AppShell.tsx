@@ -14,12 +14,10 @@ import {
   Map as MapIcon,
   MapPinned,
   Menu,
-  Monitor,
-  Moon,
   Newspaper,
   Route as RouteIcon,
   Search,
-  Sun,
+  Star,
   User,
   Users,
   X,
@@ -34,9 +32,9 @@ import {
   type ReactNode,
   type TouchEvent,
 } from "react";
+import { ArchMark, Logo } from "@/components/Brand";
 import { PageCredits } from "@/components/PageCredits";
 import { LANGS, useI18n, type Lang, type TKey } from "@/lib/i18n";
-import { useTheme, type ThemePref } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 type NavItem = { to: string; key: TKey; desc?: TKey; icon: LucideIcon };
@@ -64,6 +62,7 @@ const MENU: NavGroup[] = [
       { to: "/antik-kentler", key: "nav_ancient", desc: "nav_ancient_d", icon: Landmark },
       { to: "/tarihi-yerler", key: "nav_places", desc: "nav_places_d", icon: Castle },
       { to: "/muzeler", key: "nav_museums", desc: "nav_museums_d", icon: Building2 },
+      { to: "/pass", key: "pass_name", desc: "pass_page_kicker", icon: Star },
     ],
   },
   {
@@ -135,16 +134,16 @@ function usePath() {
   return useRouterState({ select: (state) => state.location.pathname });
 }
 
-/** The app's mark: a temple front on the brand colour. */
+/** The app's mark: the arch-A on a black tile, as on the app icon. */
 function Mark({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "grid shrink-0 place-items-center rounded-[10px] bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.18)]",
+        "grid shrink-0 place-items-center rounded-[10px] bg-background text-foreground shadow-[inset_0_0_0_1px_var(--border)]",
         className,
       )}
     >
-      <Landmark className="h-[55%] w-[55%]" strokeWidth={2} />
+      <ArchMark className="h-[58%] w-[58%]" />
     </span>
   );
 }
@@ -249,7 +248,6 @@ function useSwipeToClose(close: () => void) {
  */
 function MenuDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { t, lang, setLang } = useI18n();
-  const { pref, setPref } = useTheme();
   const path = usePath();
   const navigate = useNavigate();
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -438,7 +436,7 @@ function MenuDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o: b
                 >
                   {t("nav_settings")}
                 </h2>
-                <div className="grid gap-3.5 lg:grid-cols-2 lg:gap-5">
+                <div className="grid gap-3.5">
                   <div>
                     <div className="mb-1.5 flex items-baseline justify-between gap-2 px-0.5 text-[13px]">
                       <span className="font-semibold text-foreground">{t("nav_language")}</span>
@@ -456,21 +454,6 @@ function MenuDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o: b
                         lang: code,
                         title: LANG_NAME[code],
                       }))}
-                    />
-                  </div>
-                  <div>
-                    <div className="mb-1.5 px-0.5 text-[13px] font-semibold text-foreground">
-                      {t("nav_theme")}
-                    </div>
-                    <Segmented<ThemePref>
-                      label={t("nav_theme")}
-                      value={pref}
-                      onChange={setPref}
-                      options={[
-                        { value: "light", label: t("theme_light_short"), icon: Sun },
-                        { value: "dark", label: t("theme_dark_short"), icon: Moon },
-                        { value: "system", label: t("theme_system_short"), icon: Monitor },
-                      ]}
                     />
                   </div>
                 </div>
@@ -501,64 +484,50 @@ function MenuDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o: b
 }
 
 /**
- * Five tabs a thumb can hit: home, the map, the 3D models in the middle, the
- * profile, and the same menu the header opens. They step aside while a 3D
- * model is walked through or shown full screen (`data-immersive` on <html>).
+ * Five tabs a thumb can hit: home, the map, the 3D buildings, Antik Pass and
+ * the same menu the header opens. They step aside while a 3D model is walked
+ * through or shown full screen (`data-immersive` on <html>).
  */
 function MobileTabs({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolean }) {
   const { t } = useI18n();
   const path = usePath();
   const tab = cn(
-    "flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl px-0.5 pb-1 pt-1.5 text-[11px] leading-none",
+    "flex min-w-0 flex-1 flex-col items-center gap-1 rounded-md px-0.5 pb-1 pt-2 text-[11px] leading-none",
     FOCUS,
   );
-  const pill =
-    "grid h-8 w-14 place-items-center rounded-full transition-colors duration-200 motion-reduce:transition-none";
-  const item = (to: string, key: TKey, Icon: LucideIcon) => {
+  const item = (to: string, key: TKey, Icon: LucideIcon, accent = false) => {
     const on = isActive(path, to) && !menuOpen;
     return (
       <Link
         key={to}
         to={to}
         aria-current={on ? "page" : undefined}
-        className={cn(tab, on ? "font-bold text-primary" : "font-medium text-muted-foreground")}
+        className={cn(
+          tab,
+          accent
+            ? "font-bold text-primary"
+            : on
+              ? "font-bold text-foreground"
+              : "font-semibold text-muted-foreground",
+        )}
       >
-        <span className={cn(pill, on && "bg-primary/12")}>
-          <Icon className="h-[22px] w-[22px]" strokeWidth={on ? 2.1 : 1.75} />
-        </span>
+        <Icon className="h-6 w-6" strokeWidth={on ? 2.1 : 1.75} />
         <span className="max-w-full truncate">{t(key)}</span>
       </Link>
     );
   };
-  const in3d = isActive(path, "/rekonstruksiyonlar") && !menuOpen;
 
   return (
     <nav
       aria-label={t("nav_menu")}
       data-tabbar
-      className="fixed inset-x-0 bottom-0 z-[1000] border-t border-border/70 bg-background/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 transition-transform duration-300 motion-reduce:transition-none print:hidden lg:hidden [html[data-immersive]_&]:translate-y-full"
+      className="fixed inset-x-0 bottom-0 z-[1000] border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl transition-transform duration-300 motion-reduce:transition-none print:hidden lg:hidden [html[data-immersive]_&]:translate-y-full"
     >
-      <div className="mx-auto flex max-w-xl items-stretch justify-between px-1.5 pb-1 pt-0.5">
+      <div className="mx-auto flex max-w-xl items-stretch justify-between px-1.5 pb-1">
         {item("/", "nav_home", House)}
         {item("/harita", "nav_map", MapIcon)}
-        <Link
-          to="/rekonstruksiyonlar"
-          aria-current={in3d ? "page" : undefined}
-          aria-label={t("nav_reconstructions")}
-          className={cn(tab, "font-bold text-primary")}
-        >
-          <span
-            className={cn(
-              pill,
-              "bg-primary text-primary-foreground shadow-[0_4px_12px_-4px_var(--primary)]",
-              in3d && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background",
-            )}
-          >
-            <Box className="h-5 w-5" strokeWidth={2} />
-          </span>
-          <span className="max-w-full truncate">{t("recon_badge")}</span>
-        </Link>
-        {item("/profil", "nav_profile", User)}
+        {item("/rekonstruksiyonlar", "recon_badge", Box)}
+        {item("/pass", "nav_pass", Star, true)}
         <button
           type="button"
           onClick={onMenu}
@@ -566,12 +535,10 @@ function MobileTabs({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolea
           aria-haspopup="dialog"
           className={cn(
             tab,
-            menuOpen ? "font-bold text-primary" : "font-medium text-muted-foreground",
+            menuOpen ? "font-bold text-foreground" : "font-semibold text-muted-foreground",
           )}
         >
-          <span className={cn(pill, menuOpen && "bg-primary/12")}>
-            <Menu className="h-[22px] w-[22px]" strokeWidth={menuOpen ? 2.1 : 1.75} />
-          </span>
+          <Menu className="h-6 w-6" strokeWidth={menuOpen ? 2.1 : 1.75} />
           <span className="max-w-full truncate">{t("nav_menu")}</span>
         </button>
       </div>
@@ -579,68 +546,114 @@ function MobileTabs({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolea
   );
 }
 
+/** The few places a desktop visitor jumps between; everything else is in the menu. */
+const TOP_LINKS: { to: string; key: TKey }[] = [
+  { to: "/", key: "nav_home" },
+  { to: "/rekonstruksiyonlar", key: "nav_reconstructions" },
+  { to: "/harita", key: "nav_map" },
+  { to: "/antik-kentler", key: "nav_ancient" },
+  { to: "/hikayeler", key: "nav_stories" },
+];
+
+function LangPicker() {
+  const { lang, setLang, t } = useI18n();
+  return (
+    <label className="relative hidden h-10 items-center rounded-md bg-secondary text-sm font-bold text-foreground sm:inline-flex">
+      <span className="sr-only">{t("nav_language")}</span>
+      <select
+        value={lang}
+        onChange={(event) => setLang(event.target.value as Lang)}
+        className={cn(
+          "h-10 cursor-pointer appearance-none bg-transparent pl-3 pr-3 uppercase",
+          FOCUS,
+          "rounded-md",
+        )}
+      >
+        {LANGS.map((code) => (
+          <option key={code} value={code} lang={code} className="bg-popover normal-case">
+            {code.toUpperCase()} · {LANG_NAME[code]}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
   const path = usePath();
   const [menuOpen, setMenuOpen] = useState(false);
-  const in3d = isActive(path, "/rekonstruksiyonlar");
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-[1000] border-b border-border/60 bg-background/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 print:hidden">
-        <div className="mx-auto flex h-14 max-w-7xl items-center gap-1.5 px-3 sm:h-16 sm:gap-3 sm:px-5">
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-expanded={menuOpen}
-            aria-haspopup="dialog"
-            data-menu-trigger
-            className={cn(
-              "inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-border bg-card pl-3 pr-3.5 text-sm font-semibold text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.06)] transition-[background-color,transform,border-color] duration-150 hover:border-foreground/20 hover:bg-secondary active:scale-[0.96] motion-reduce:transition-none motion-reduce:active:scale-100 aria-expanded:bg-secondary",
-              FOCUS,
-            )}
-          >
-            <Menu className="h-5 w-5" strokeWidth={2} />
-            <span>{t("nav_menu")}</span>
-          </button>
+      <header className="sticky top-0 z-[1000] border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl print:hidden">
+        <div className="mx-auto flex h-14 max-w-7xl items-center gap-2 px-4 sm:h-16 sm:gap-5 sm:px-6">
           <Link
             to="/"
             aria-label={t("appName")}
-            className={cn("ml-0.5 flex min-w-0 items-center gap-2 rounded-lg", FOCUS)}
+            className={cn("flex min-w-0 items-center rounded", FOCUS)}
           >
-            {/* On a narrow phone the name alone is the logo, so it never truncates. */}
-            <Mark className="hidden h-8 w-8 min-[400px]:grid" />
-            <span className="truncate font-display text-base font-semibold leading-tight tracking-[-0.01em] sm:text-lg">
-              {t("appName")}
-            </span>
+            <Logo edition={t("edition_tr")} className="text-[24px] sm:text-[28px]" />
           </Link>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          <nav
+            aria-label={t("nav_group_explore")}
+            className="ml-4 hidden items-center gap-6 lg:flex"
+          >
+            {TOP_LINKS.map((link) => {
+              const on = isActive(path, link.to);
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  aria-current={on ? "page" : undefined}
+                  className={cn(
+                    "rounded text-[15px] font-semibold transition-colors",
+                    FOCUS,
+                    on ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {t(link.key)}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2.5">
             <Link
               to={SEARCH_PAGE}
               aria-label={t("search_action")}
               title={t("search_action")}
               className={cn(
-                "grid h-11 w-10 place-items-center rounded-full text-foreground/80 sm:w-11 transition-colors hover:bg-secondary hover:text-foreground",
+                "grid h-10 w-10 place-items-center rounded-md text-foreground/85 transition-colors hover:bg-secondary hover:text-foreground",
                 FOCUS,
               )}
             >
               <Search className="h-5 w-5" strokeWidth={2} />
             </Link>
-            <Link
-              to="/rekonstruksiyonlar"
-              aria-label={t("nav_reconstructions")}
+            <LangPicker />
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-expanded={menuOpen}
+              aria-haspopup="dialog"
+              aria-label={t("nav_menu")}
+              data-menu-trigger
               className={cn(
-                "inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-sm font-semibold transition-colors sm:px-3.5",
+                "grid h-10 w-10 place-items-center rounded-md text-foreground/85 transition-colors hover:bg-secondary hover:text-foreground aria-expanded:bg-secondary",
                 FOCUS,
-                in3d
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground",
               )}
             >
-              <Box className="h-4 w-4" strokeWidth={2} />
-              <span className="hidden sm:inline">{t("nav_reconstructions")}</span>
-              <span className="sm:hidden">{t("recon_badge")}</span>
+              <Menu className="h-5 w-5" strokeWidth={2} />
+            </button>
+            <Link
+              to="/pass"
+              className={cn(
+                "hidden h-10 items-center rounded-md bg-primary px-4 text-sm font-extrabold text-primary-foreground transition-colors hover:bg-primary/90 sm:inline-flex",
+                FOCUS,
+              )}
+            >
+              {t("pass_name")}
             </Link>
           </div>
         </div>
@@ -648,29 +661,21 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <main className="flex-1 pb-20 print:pb-0 lg:pb-0">{children}</main>
 
-      <footer className="border-t border-border px-6 py-10 pb-24 print:hidden lg:pb-10">
+      <footer className="border-t border-border px-4 pb-28 pt-12 print:hidden sm:px-6 lg:pb-12">
         <div className="mx-auto grid max-w-7xl gap-8 text-sm sm:grid-cols-2 lg:grid-cols-[minmax(0,1.3fr)_repeat(4,minmax(0,1fr))]">
           <div className="sm:col-span-2 lg:col-span-1">
-            <Link to="/" className="inline-flex items-center gap-2.5">
-              <Mark className="h-8 w-8" />
-              <span className="font-display text-base font-semibold text-foreground">
-                {t("appName")}
-              </span>
+            <Link to="/" aria-label={t("appName")} className={cn("inline-flex rounded", FOCUS)}>
+              <Logo className="text-[30px]" />
             </Link>
-            <p className="mt-2 max-w-xs text-muted-foreground">{t("tagline")}</p>
+            <p className="mt-3 max-w-xs text-muted-foreground">{t("tagline")}</p>
           </div>
           {MENU.map((group) => (
             <div key={group.key} className="hidden sm:block">
-              <p className="mb-2.5 text-[11px] font-bold uppercase tracking-[0.09em] text-muted-foreground">
-                {t(group.key)}
-              </p>
+              <p className="mb-2.5 text-[13px] font-bold text-foreground">{t(group.key)}</p>
               <ul className="space-y-1.5">
                 {group.items.map((item) => (
                   <li key={item.to}>
-                    <Link
-                      to={item.to}
-                      className="text-foreground/80 hover:text-foreground hover:underline"
-                    >
+                    <Link to={item.to} className="text-muted-foreground hover:text-foreground">
                       {t(item.key)}
                     </Link>
                   </li>
@@ -681,7 +686,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <nav
           aria-label={t("nav_legal")}
-          className="mx-auto mt-8 flex max-w-7xl flex-wrap gap-x-5 gap-y-2 border-t border-border pt-5 text-xs text-muted-foreground"
+          className="mx-auto mt-10 flex max-w-7xl flex-wrap gap-x-5 gap-y-2 border-t border-border pt-5 text-xs text-muted-foreground"
         >
           {LEGAL.map((item) => (
             <Link key={item.to} to={item.to} className="hover:text-foreground hover:underline">

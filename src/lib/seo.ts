@@ -316,3 +316,31 @@ export function personTags(options: {
     }),
   ];
 }
+
+/**
+ * A 3D reconstruction as a schema.org `3DModel`, with `isAccessibleForFree`
+ * so a search engine can tell the free buildings from the Pass ones.
+ */
+export function modelTags(options: {
+  name: string;
+  description: string;
+  pathname: string;
+  image?: string | undefined;
+  free: boolean;
+  lang: Lang;
+}): ScriptTag[] {
+  const origin = siteOrigin();
+  if (!origin) return [];
+  return [
+    jsonLd({
+      "@context": "https://schema.org",
+      "@type": "3DModel",
+      name: options.name,
+      description: options.description,
+      url: urlFor(options.pathname, options.lang, origin),
+      ...(options.image ? { image: `${origin}${options.image}` } : {}),
+      inLanguage: options.lang,
+      isAccessibleForFree: options.free,
+    }),
+  ];
+}

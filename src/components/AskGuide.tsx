@@ -214,7 +214,7 @@ export function AskGuide({ site }: { site: Site }) {
 
   return (
     <section className="rounded-2xl surface-panel p-5">
-      <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+      <h2 className="flex items-center gap-2 font-display text-[26px]">
         <MessageCircleQuestion className="h-5 w-5 text-primary" /> {t("ask_title")}
       </h2>
       <p className="mt-1 text-xs text-muted-foreground">{t("ask_sub_web")}</p>
@@ -232,7 +232,7 @@ export function AskGuide({ site }: { site: Site }) {
           maxLength={500}
           placeholder={t("ask_placeholder")}
           aria-label={t("ask_placeholder")}
-          className="h-10 min-w-0 flex-1 rounded-full border border-border bg-card px-4 text-sm outline-none focus:ring-2 focus:ring-ring"
+          className="h-10 min-w-0 flex-1 rounded-md border border-border bg-card px-4 text-sm outline-none focus:ring-2 focus:ring-ring"
         />
         {canListen && (
           <button
@@ -264,7 +264,7 @@ export function AskGuide({ site }: { site: Site }) {
           <button
             key={chip}
             onClick={() => void ask(chip)}
-            className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium hover:border-primary"
+            className="rounded-md border border-border bg-card px-3 py-1 text-xs font-medium hover:border-primary"
           >
             {chip}
           </button>
@@ -323,7 +323,7 @@ export function AskGuide({ site }: { site: Site }) {
                   <div className="mt-1.5 flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
                     <span className="flex flex-wrap items-center gap-1.5">
                       {item.offline && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5">
                           <WifiOff className="h-3 w-3" aria-hidden /> {t("ask_offline")}
                         </span>
                       )}
@@ -490,17 +490,13 @@ function ReportForm({
       />
       {state === "error" && <p className="text-destructive">{t("report_error")}</p>}
       <div className="flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-full px-3 py-1 hover:bg-secondary"
-        >
+        <button type="button" onClick={onClose} className="rounded-md px-3 py-1 hover:bg-secondary">
           {t("report_cancel")}
         </button>
         <button
           type="submit"
           disabled={state === "sending"}
-          className="rounded-full bg-primary px-3 py-1 font-semibold text-primary-foreground disabled:opacity-50"
+          className="rounded-md bg-primary px-3 py-1 font-semibold text-primary-foreground disabled:opacity-50"
         >
           {t("report_send")}
         </button>

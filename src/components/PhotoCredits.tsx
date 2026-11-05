@@ -18,7 +18,7 @@ export function PhotoCredits({ urls, className }: { urls: readonly string[]; cla
 
   return (
     <section className={className}>
-      <h2 className="flex items-center gap-2 font-display text-base font-semibold">
+      <h2 className="flex items-center gap-2 font-display text-2xl">
         <Camera className="h-4 w-4 text-muted-foreground" /> {t("credits")}
       </h2>
       <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t("credits_sub")}</p>

@@ -17,13 +17,15 @@ const ThemeCtx = createContext<{
 const systemTheme = (): Theme =>
   window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
-function apply(theme: Theme) {
-  document.documentElement.classList.toggle("dark", theme === "dark");
+// The v3 design is dark only: the 3D scenes and photographs live on black.
+// The preference is still stored so nothing that reads it breaks.
+function apply(_theme: Theme) {
+  document.documentElement.classList.add("dark");
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [pref, setPrefState] = useState<ThemePref>("system");
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
     // Storage access throws outright when it is blocked (Safari with "Block
@@ -43,14 +45,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // setting (or the evening switch) while the page is open.
   useEffect(() => {
     if (pref !== "system") {
-      setTheme(pref);
+      setTheme("dark");
       apply(pref);
       return;
     }
     const query = window.matchMedia("(prefers-color-scheme: dark)");
     const sync = () => {
       const next = systemTheme();
-      setTheme(next);
+      setTheme("dark");
       apply(next);
     };
     sync();

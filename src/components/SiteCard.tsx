@@ -35,12 +35,12 @@ export function SiteCard({
           <div className="absolute inset-0 hero-scrim" />
           <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
             {site.unesco === "listed" && (
-              <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-foreground">
+              <span className="rounded-md bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-foreground">
                 {t("unesco")}
               </span>
             )}
             {site.fee === 0 && (
-              <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent-foreground">
+              <span className="rounded-md bg-accent px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent-foreground">
                 {t("free")}
               </span>
             )}
@@ -51,9 +51,7 @@ export function SiteCard({
             </span>
           )}
           <div className="absolute inset-x-0 bottom-0 p-4">
-            <h2 className="font-display text-lg font-semibold leading-tight text-white">
-              {L(site.name)}
-            </h2>
+            <h2 className="font-display text-[32px] leading-[0.9] text-white">{L(site.name)}</h2>
             <p className="mt-0.5 flex items-center gap-1 text-xs text-white/90">
               <MapPin className="h-3 w-3" />
               {L(site.province)}

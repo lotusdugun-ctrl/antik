@@ -51,12 +51,12 @@ function HistoryPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0 max-w-3xl">
-          <h1 className="font-display text-3xl font-semibold sm:text-4xl">{t("nav_history")}</h1>
+          <h1 className="font-display text-[52px] sm:text-[72px]">{t("nav_history")}</h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("civs_sub")}</p>
         </div>
         <Link
           to="/zaman-cizelgesi"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+          className="inline-flex shrink-0 items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
         >
           <Clock className="h-4 w-4" /> {t("nav_timeline")}
         </Link>
@@ -73,7 +73,7 @@ function HistoryPage() {
               <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">
                 {L(civ.periodLabel)}
               </p>
-              <h2 className="mt-1 font-display text-lg font-semibold">{L(civ.name)}</h2>
+              <h2 className="mt-1 font-display text-[26px]">{L(civ.name)}</h2>
               <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                 {L(civ.summary)}
               </p>
@@ -87,7 +87,7 @@ function HistoryPage() {
       </ol>
 
       <section className="mt-12">
-        <h2 className="mb-4 flex items-center gap-2 font-display text-2xl font-semibold">
+        <h2 className="mb-4 flex items-center gap-2 font-display text-[38px]">
           <Users className="h-6 w-6 text-primary" /> {t("civs_people")}
         </h2>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

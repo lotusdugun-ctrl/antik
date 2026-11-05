@@ -79,7 +79,7 @@ function CollectionPage() {
       </Link>
 
       <header className="mt-3">
-        <h1 className="font-display text-3xl font-semibold sm:text-4xl">{L(collection.title)}</h1>
+        <h1 className="font-display text-[52px] sm:text-[72px]">{L(collection.title)}</h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           {L(collection.blurb)}
         </p>

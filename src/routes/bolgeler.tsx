@@ -26,7 +26,7 @@ function RegionsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <header className="mb-6">
-        <h1 className="font-display text-3xl font-semibold sm:text-4xl">{t("regions_title")}</h1>
+        <h1 className="font-display text-[52px] sm:text-[72px]">{t("regions_title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("region_sub")}</p>
       </header>
 
@@ -50,7 +50,7 @@ function RegionsPage() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 hero-scrim" />
-                <h2 className="absolute bottom-3 left-4 font-display text-xl font-semibold text-white">
+                <h2 className="absolute bottom-3 left-4 font-display text-[32px] text-white">
                   {L(region.name)}
                 </h2>
               </div>

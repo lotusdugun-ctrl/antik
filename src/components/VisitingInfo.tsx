@@ -28,7 +28,7 @@ export function VisitingInfo({ site }: { site: Site }) {
 
   return (
     <section className="rounded-2xl surface-panel p-5">
-      <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+      <h2 className="flex items-center gap-2 font-display text-[26px]">
         <Info className="h-5 w-5 text-primary" /> {t("visiting")}
       </h2>
 
@@ -61,7 +61,7 @@ export function VisitingInfo({ site }: { site: Site }) {
             {!free && !unknownFee && (
               <>
                 {site.fee} ₺{" "}
-                <span className="rounded-full bg-secondary px-2 py-0.5 text-[11px] font-semibold text-secondary-foreground">
+                <span className="rounded-md bg-secondary px-2 py-0.5 text-[11px] font-semibold text-secondary-foreground">
                   {t("fee_indicative")}
                 </span>
               </>

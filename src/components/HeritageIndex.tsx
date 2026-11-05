@@ -212,7 +212,7 @@ export function HeritageIndex({
       <ScopeTabs active={scope} />
 
       <header className="mb-6">
-        <h1 className="font-display text-3xl font-semibold sm:text-4xl">{title}</h1>
+        <h1 className="font-display text-[52px] sm:text-[72px]">{title}</h1>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">{subtitle}</p>
       </header>
 
@@ -235,12 +235,12 @@ export function HeritageIndex({
           onClick={() => setSheet(true)}
           data-filter-trigger
           aria-haspopup="dialog"
-          className="relative inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-border bg-card px-4 text-sm font-semibold outline-none transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring"
+          className="relative inline-flex h-11 shrink-0 items-center gap-2 rounded-md border border-border bg-card px-4 text-sm font-semibold outline-none transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring"
         >
           <SlidersHorizontal className="h-4 w-4" />
           <span className="max-sm:sr-only">{t("filter_button")}</span>
           {sheetCount > 0 && (
-            <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-bold text-primary-foreground max-sm:absolute max-sm:-right-1 max-sm:-top-1">
+            <span className="grid h-5 min-w-5 place-items-center rounded-md bg-primary px-1 text-[11px] font-bold text-primary-foreground max-sm:absolute max-sm:-right-1 max-sm:-top-1">
               {sheetCount}
             </span>
           )}
@@ -263,7 +263,7 @@ export function HeritageIndex({
               aria-pressed={isMap === map}
               aria-label={label}
               title={label}
-              className={`flex h-full items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold transition-colors sm:px-3 ${isMap === map ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              className={`flex h-full items-center gap-1.5 rounded-md px-2.5 text-xs font-semibold transition-colors sm:px-3 ${isMap === map ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
             >
               <Icon className="h-4 w-4" />
               <span className="hidden sm:inline">{label}</span>
@@ -316,7 +316,7 @@ export function HeritageIndex({
           <button
             type="button"
             onClick={clearFilters}
-            className="h-8 rounded-full px-2 text-xs font-semibold text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+            className="h-8 rounded-md px-2 text-xs font-semibold text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
           >
             {t("clear_filters")}
           </button>
@@ -335,9 +335,7 @@ export function HeritageIndex({
           >
             <div className="mx-auto mt-2.5 h-1 w-10 rounded-full bg-border sm:hidden" />
             <div className="flex items-center justify-between px-5 pb-2 pt-3">
-              <Dialog.Title className="font-display text-lg font-semibold">
-                {t("filters")}
-              </Dialog.Title>
+              <Dialog.Title className="font-display text-[26px]">{t("filters")}</Dialog.Title>
               <Dialog.Close
                 aria-label={t("nav_close")}
                 className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -437,11 +435,11 @@ export function HeritageIndex({
                 type="button"
                 onClick={() => setParam({ ...EMPTY_SHEET })}
                 disabled={sheetCount === 0 && !search.region}
-                className="h-11 rounded-full px-4 text-sm font-semibold text-muted-foreground hover:text-foreground disabled:opacity-50"
+                className="h-11 rounded-md px-4 text-sm font-semibold text-muted-foreground hover:text-foreground disabled:opacity-50"
               >
                 {t("filter_reset")}
               </button>
-              <Dialog.Close className="h-11 flex-1 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground">
+              <Dialog.Close className="h-11 flex-1 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">
                 {t("filter_show")} ({filtered.length})
               </Dialog.Close>
             </div>

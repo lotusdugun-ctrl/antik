@@ -86,7 +86,7 @@ function TeacherPage() {
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 print:max-w-none print:p-0">
       {/* ——— Controls (not printed) ——— */}
       <div className="print:hidden">
-        <h1 className="flex items-center gap-2 font-display text-3xl font-semibold sm:text-4xl">
+        <h1 className="flex items-center gap-2 font-display text-[52px] sm:text-[72px]">
           <GraduationCap className="h-8 w-8 text-primary" /> {t("teacher_title")}
         </h1>
         <p className="mt-2 max-w-3xl text-sm text-muted-foreground">{t("teacher_sub")}</p>
@@ -214,13 +214,13 @@ function TeacherPage() {
             <button
               onClick={() => window.print()}
               disabled={list.length === 0}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
             >
               <Printer className="h-4 w-4" /> {t("teacher_print")}
             </button>
             <button
               onClick={() => setSeed((s) => s + 1)}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold"
             >
               <RefreshCw className="h-4 w-4" /> {t("teacher_new_questions")}
             </button>
@@ -235,7 +235,7 @@ function TeacherPage() {
       {/* ——— The sheet ——— */}
       <article className="worksheet rounded-2xl border border-border bg-white p-8 text-[#1f1a15] shadow-sm print:rounded-none print:border-0 print:p-0 print:shadow-none">
         <header className="border-b-2 border-[#1f1a15] pb-3">
-          <h1 className="font-display text-2xl font-semibold">{sheetTitle}</h1>
+          <h1 className="font-display text-[38px]">{sheetTitle}</h1>
           <div className="mt-3 grid grid-cols-3 gap-4 text-sm">
             <span>{t("teacher_name")}: ____________________</span>
             <span>{t("teacher_class")}: __________</span>
@@ -249,7 +249,7 @@ function TeacherPage() {
               const reading = readingFor(site, lang);
               return (
                 <div key={site.slug} className="break-inside-avoid">
-                  <h2 className="font-display text-lg font-semibold">
+                  <h2 className="font-display text-[26px]">
                     {L(site.name)}{" "}
                     <span className="text-sm font-normal text-[#5b5047]">
                       · {L(site.province)} · {L(site.era)}
@@ -269,7 +269,7 @@ function TeacherPage() {
 
         {withTrip && trip.length > 1 && (
           <section className="mt-6 break-inside-avoid">
-            <h2 className="font-display text-lg font-semibold">{t("teacher_trip")}</h2>
+            <h2 className="font-display text-[26px]">{t("teacher_trip")}</h2>
             <ol className="mt-2 list-decimal space-y-0.5 pl-5 text-sm">
               {trip.map((stop, i) => (
                 <li key={stop.site.slug}>
@@ -286,7 +286,7 @@ function TeacherPage() {
 
         {questions.length > 0 && (
           <section className="mt-6">
-            <h2 className="font-display text-lg font-semibold">{t("teacher_questions")}</h2>
+            <h2 className="font-display text-[26px]">{t("teacher_questions")}</h2>
             <ol className="mt-2 space-y-3 text-sm">
               {questions.map((q, i) => (
                 <li key={`${q.site}-${i}`} className="break-inside-avoid">

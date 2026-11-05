@@ -92,13 +92,13 @@ function CivilizationPage() {
       </Link>
 
       <header className="mt-3 max-w-3xl">
-        <h1 className="font-display text-3xl font-semibold sm:text-4xl">{L(civ.name)}</h1>
+        <h1 className="font-display text-[52px] sm:text-[72px]">{L(civ.name)}</h1>
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 font-medium">
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary px-3 py-1 font-medium">
             <Clock className="h-3.5 w-3.5 text-primary" /> {L(civ.periodLabel)}
           </span>
           {civ.capital && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 font-medium">
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-secondary px-3 py-1 font-medium">
               <Landmark className="h-3.5 w-3.5 text-primary" /> {t("civ_capital")}: {L(civ.capital)}
             </span>
           )}
@@ -107,7 +107,7 @@ function CivilizationPage() {
       </header>
 
       <section className="mt-6 max-w-3xl rounded-2xl surface-panel p-5">
-        <h2 className="mb-2 font-display text-lg font-semibold">{t("civ_highlights")}</h2>
+        <h2 className="mb-2 font-display text-[26px]">{t("civ_highlights")}</h2>
         <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed">
           {civ.highlights.map((item, i) => (
             <li key={i}>{L(item)}</li>
@@ -118,7 +118,7 @@ function CivilizationPage() {
 
       {persons.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+          <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
             <Users className="h-5 w-5 text-primary" /> {t("civ_people")}
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -127,7 +127,7 @@ function CivilizationPage() {
                 key={person.id}
                 to="/kisi/$id"
                 params={{ id: person.id }}
-                className="rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold transition-colors hover:border-primary"
+                className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold transition-colors hover:border-primary"
               >
                 {L(person.name)}
                 <span className="ml-1.5 text-xs font-normal text-muted-foreground">
@@ -141,7 +141,7 @@ function CivilizationPage() {
 
       {list.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 font-display text-xl font-semibold">
+          <h2 className="mb-3 font-display text-[32px]">
             {t("civ_sites")} · {list.length}
           </h2>
           <SiteMap sites={list} height="360px" />

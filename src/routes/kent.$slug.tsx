@@ -275,14 +275,14 @@ function SiteDetail() {
         <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto flex max-w-6xl items-start justify-between px-4 pt-4 sm:px-6">
           <Link
             to="/kentler"
-            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-card/85 px-3 py-1.5 text-xs font-semibold backdrop-blur"
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-md bg-card/85 px-3 py-1.5 text-xs font-semibold backdrop-blur"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> {t("back")}
           </Link>
           <button
             type="button"
             onClick={() => setZoomed(activeImage)}
-            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-card/85 px-3 py-1.5 text-xs font-semibold backdrop-blur transition-colors hover:bg-card"
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-md bg-card/85 px-3 py-1.5 text-xs font-semibold backdrop-blur transition-colors hover:bg-card"
           >
             <Maximize2 className="h-3.5 w-3.5" /> {t("photo_expand")}
           </button>
@@ -290,17 +290,15 @@ function SiteDetail() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-6 sm:px-6">
           <div className="mb-2 flex flex-wrap gap-1.5">
             {site.unesco !== "none" && (
-              <span className="rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-bold text-gold-foreground">
+              <span className="rounded-md bg-gold px-2.5 py-0.5 text-[11px] font-bold text-gold-foreground">
                 {site.unesco === "listed" ? t("unesco_listed") : t("unesco_tentative")}
               </span>
             )}
-            <span className="rounded-full bg-card/85 px-2.5 py-0.5 text-[11px] font-semibold backdrop-blur">
+            <span className="rounded-md bg-card/85 px-2.5 py-0.5 text-[11px] font-semibold backdrop-blur">
               {L(region.name)}
             </span>
           </div>
-          <h1 className="font-display text-4xl font-semibold text-white sm:text-5xl">
-            {L(site.name)}
-          </h1>
+          <h1 className="font-display text-[56px] text-white sm:text-[88px]">{L(site.name)}</h1>
           <p className="mt-1 flex items-center gap-1.5 text-sm text-white/90">
             <MapPin className="h-4 w-4" /> {L(site.province)} · {L(site.era)}
           </p>
@@ -333,7 +331,7 @@ function SiteDetail() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={onVisit}
-            className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] ${
+            className={`inline-flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] ${
               visited ? "bg-success text-success-foreground" : "bg-primary text-primary-foreground"
             }`}
           >
@@ -342,7 +340,7 @@ function SiteDetail() {
           </button>
           <button
             onClick={() => toggleFavorite(slug)}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold"
           >
             <Heart
               className={`h-4 w-4 ${isFavorite(slug) ? "fill-destructive text-destructive" : ""}`}
@@ -353,7 +351,7 @@ function SiteDetail() {
           <Link
             to="/rota"
             search={{ start: slug }}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold"
           >
             <RouteIcon className="h-4 w-4" /> {t("nav_route")}
           </Link>
@@ -361,7 +359,7 @@ function SiteDetail() {
             href={`https://www.google.com/maps/dir/?api=1&destination=${site.lat},${site.lng}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold"
           >
             <Navigation className="h-4 w-4" /> {t("directions")}
           </a>
@@ -385,7 +383,7 @@ function SiteDetail() {
 
         {/* Gallery */}
         <section className="mt-8">
-          <h2 className="mb-3 font-display text-xl font-semibold">{t("gallery")}</h2>
+          <h2 className="mb-3 font-display text-[32px]">{t("gallery")}</h2>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {gallery.map((img, i) => (
               <button
@@ -417,7 +415,7 @@ function SiteDetail() {
         <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
           <div className="space-y-8">
             <section>
-              <h2 className="mb-2 font-display text-xl font-semibold">{t("history")}</h2>
+              <h2 className="mb-2 font-display text-[32px]">{t("history")}</h2>
               <p className="text-[15px] leading-relaxed text-muted-foreground">{L(site.summary)}</p>
               {detail && (
                 <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
@@ -428,7 +426,7 @@ function SiteDetail() {
 
             {detail && detail.structures.length > 0 && (
               <section>
-                <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+                <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
                   <Building2 className="h-5 w-5 text-primary" /> {t("structures")}
                 </h2>
                 <ul className="grid gap-2 sm:grid-cols-2">
@@ -474,7 +472,7 @@ function SiteDetail() {
                   <span className="block text-xs font-bold uppercase tracking-wide text-primary">
                     {t("stories_title")}
                   </span>
-                  <span className="block font-display text-lg font-semibold">{L(story.title)}</span>
+                  <span className="block font-display text-[26px]">{L(story.title)}</span>
                   <span className="block text-sm text-muted-foreground">{L(story.role)}</span>
                 </span>
               </Link>
@@ -482,7 +480,7 @@ function SiteDetail() {
 
             {detail && (
               <section className="rounded-2xl border-l-4 border-gold bg-secondary p-5">
-                <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+                <h2 className="flex items-center gap-2 font-display text-[26px]">
                   <Lightbulb className="h-5 w-5 text-gold" /> {t("did_you_know")}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-secondary-foreground">
@@ -493,7 +491,7 @@ function SiteDetail() {
 
             {facts.length > 0 && (
               <section>
-                <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+                <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
                   <Sparkles className="h-5 w-5 text-gold" /> {t("facts")}
                 </h2>
                 <ul className="space-y-3">
@@ -510,7 +508,7 @@ function SiteDetail() {
             )}
 
             <section>
-              <h2 className="mb-3 font-display text-xl font-semibold">{t("location")}</h2>
+              <h2 className="mb-3 font-display text-[32px]">{t("location")}</h2>
               <SiteMap sites={[site]} center={[site.lat, site.lng]} zoom={12} height="360px" />
             </section>
           </div>
@@ -608,7 +606,7 @@ function SiteDetail() {
                 </figcaption>
               </figure>
               <DialogHeader>
-                <DialogTitle className="font-display text-xl">{openStructure}</DialogTitle>
+                <DialogTitle className="font-display text-3xl">{openStructure}</DialogTitle>
                 <DialogDescription>
                   {selectedStructure?.blurb
                     ? L(selectedStructure.blurb)

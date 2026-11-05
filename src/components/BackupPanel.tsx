@@ -39,7 +39,7 @@ export function BackupPanel() {
 
   return (
     <section className="mt-8">
-      <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+      <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
         <Save className="h-5 w-5 text-primary" /> {t("backup_title")}
       </h2>
       <div className="rounded-2xl surface-panel p-5">
@@ -47,13 +47,13 @@ export function BackupPanel() {
         <div className="mt-4 flex flex-wrap gap-2">
           <button
             onClick={download}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
           >
             <Download className="h-4 w-4" /> {t("backup_export")}
           </button>
           <button
             onClick={() => fileInput.current?.click()}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold"
           >
             <Upload className="h-4 w-4" /> {t("backup_import")}
           </button>

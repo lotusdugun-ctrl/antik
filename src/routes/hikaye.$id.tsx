@@ -124,10 +124,10 @@ function StoryPage() {
       </Link>
 
       <header className="mt-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-foreground">
+        <span className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-foreground">
           <BookOpen className="h-3 w-3" /> {t("stories_title")}
         </span>
-        <h1 className="mt-3 font-display text-3xl font-semibold sm:text-4xl">{L(story.title)}</h1>
+        <h1 className="mt-3 font-display text-[52px] sm:text-[72px]">{L(story.title)}</h1>
         <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
           {site && (
             <Link
@@ -150,12 +150,12 @@ function StoryPage() {
             {t("stories_end")} · {L(scene.ending.title)}
           </p>
         )}
-        <p className="font-display text-lg leading-relaxed sm:text-xl">{L(scene.text)}</p>
+        <p className="font-serif text-lg leading-relaxed sm:text-xl">{L(scene.text)}</p>
 
         {mounted && voice.supported && (
           <button
             onClick={reading ? voice.pause : voice.play}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
           >
             {reading ? <Pause className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
             {reading ? t("guide_pause") : t("stories_listen")}
@@ -193,7 +193,7 @@ function StoryPage() {
           {path.length > 1 && (
             <button
               onClick={() => setPath((p) => p.slice(0, -1))}
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
             >
               <Undo2 className="h-3.5 w-3.5" /> {t("stories_back")}
             </button>
@@ -201,7 +201,7 @@ function StoryPage() {
           {(scene.ending || path.length > 2) && (
             <button
               onClick={() => setPath([story.start])}
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
             >
               <RotateCcw className="h-3.5 w-3.5" /> {t("stories_restart")}
             </button>

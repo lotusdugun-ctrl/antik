@@ -27,7 +27,7 @@ export function QuestSummary() {
   if (totals.quests === 0) return null;
   return (
     <section className="mt-8">
-      <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+      <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
         <Trophy className="h-5 w-5 text-gold" /> {L(RS.questsProfile)}
       </h2>
       <p className="rounded-2xl surface-panel p-5 text-sm" data-quest-summary>

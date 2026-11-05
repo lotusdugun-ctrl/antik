@@ -76,10 +76,10 @@ export function CompareSlider({
           ⇆
         </span>
       </div>
-      <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white">
+      <span className="absolute left-3 top-3 rounded-md bg-black/60 px-2.5 py-1 text-xs font-semibold text-white">
         {beforeLabel}
       </span>
-      <span className="absolute right-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white">
+      <span className="absolute right-3 top-3 rounded-md bg-black/60 px-2.5 py-1 text-xs font-semibold text-white">
         {afterLabel}
       </span>
       <input

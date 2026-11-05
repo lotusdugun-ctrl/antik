@@ -79,7 +79,7 @@ function GamesPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <header className="mb-6">
-        <h1 className="font-display text-3xl font-semibold sm:text-4xl">{t("games_title")}</h1>
+        <h1 className="font-display text-[52px] sm:text-[72px]">{t("games_title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("games_sub")}</p>
       </header>
 
@@ -89,7 +89,7 @@ function GamesPage() {
       >
         <BookOpen className="h-8 w-8 shrink-0 text-gold" />
         <span className="flex-1">
-          <span className="block font-display text-lg font-semibold">{t("stories_title")}</span>
+          <span className="block font-display text-[26px]">{t("stories_title")}</span>
           <span className="mt-0.5 block text-sm text-secondary-foreground">
             {t("stories_intro")}
           </span>
@@ -125,9 +125,9 @@ function GamesPage() {
               className="rounded-2xl surface-panel p-5 text-left lift"
             >
               <Gamepad2 className="h-6 w-6 text-primary" />
-              <h2 className="mt-3 font-display text-lg font-semibold">{t(m.title)}</h2>
+              <h2 className="mt-3 font-display text-[26px]">{t(m.title)}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{t(m.desc)}</p>
-              <span className="mt-4 inline-block rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground">
+              <span className="mt-4 inline-block rounded-md bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground">
                 {t("play")}
               </span>
             </button>
@@ -154,7 +154,7 @@ function GamesPage() {
                 className="mt-4 h-56 w-full rounded-xl object-cover"
               />
             )}
-            <p className="mt-4 font-display text-2xl font-semibold">{question.prompt}</p>
+            <p className="mt-4 text-2xl font-bold leading-snug">{question.prompt}</p>
 
             <div className="mt-5 grid gap-2 sm:grid-cols-2">
               {question.options.map((option) => {
@@ -202,7 +202,7 @@ function GamesPage() {
               <button
                 onClick={nextQuestion}
                 disabled={!picked}
-                className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-40"
+                className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-40"
               >
                 {t("next_question")}
               </button>

@@ -57,19 +57,19 @@ function RegionDetail() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <header className="mb-6 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
         <div className="min-w-0">
-          <h1 className="font-display text-3xl font-semibold sm:text-4xl">{L(region.name)}</h1>
+          <h1 className="font-display text-[52px] sm:text-[72px]">{L(region.name)}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{L(region.blurb)}</p>
         </div>
         <div className="flex shrink-0 items-center rounded-full border border-border bg-card p-0.5">
           <button
             onClick={() => setView("list")}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${view === "list" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+            className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${view === "list" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
           >
             <LayoutGrid className="h-3.5 w-3.5" /> {t("list_view")}
           </button>
           <button
             onClick={() => setView("map")}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${view === "map" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+            className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${view === "map" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
           >
             <MapIcon className="h-3.5 w-3.5" /> {t("map_view")}
           </button>

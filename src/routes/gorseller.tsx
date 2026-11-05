@@ -78,7 +78,7 @@ function CreditsPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
       <header>
-        <h1 className="flex items-center gap-2.5 font-display text-3xl font-semibold sm:text-4xl">
+        <h1 className="flex items-center gap-2.5 font-display text-[52px] sm:text-[72px]">
           <Camera className="h-7 w-7 text-primary" /> {t("credits")}
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -93,7 +93,7 @@ function CreditsPage() {
         {/* Not photographs, and not from Commons: the bundled images are our
             own renders, and saying so is the whole of their credit. */}
         <section>
-          <h2 className="font-display text-lg font-semibold">{t("credits_renders")}</h2>
+          <h2 className="font-display text-[26px]">{t("credits_renders")}</h2>
           <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground">
             {t("credits_renders_sub")}
           </p>
@@ -116,7 +116,7 @@ function CreditsPage() {
 
         {perSite.map((entry) => (
           <section key={entry.slug}>
-            <h2 className="font-display text-lg font-semibold">
+            <h2 className="font-display text-[26px]">
               <Link to="/kent/$slug" params={{ slug: entry.slug }} className="hover:underline">
                 {entry.name}
               </Link>
@@ -131,7 +131,7 @@ function CreditsPage() {
 
         {structureOnly.length > 0 && (
           <section>
-            <h2 className="font-display text-lg font-semibold">{t("structures")}</h2>
+            <h2 className="font-display text-[26px]">{t("structures")}</h2>
             <ul className="mt-2 space-y-1.5 text-xs text-muted-foreground">
               {structureOnly.map((credit) => (
                 <CreditRow key={credit.file} credit={credit} />
@@ -142,7 +142,7 @@ function CreditsPage() {
 
         {textures.length > 0 && (
           <section>
-            <h2 className="font-display text-lg font-semibold">{t("credits_textures")}</h2>
+            <h2 className="font-display text-[26px]">{t("credits_textures")}</h2>
             <ul className="mt-2 space-y-1.5 text-xs text-muted-foreground">
               {textures.map((credit) => (
                 <CreditRow key={credit.file} credit={credit} />
@@ -152,7 +152,7 @@ function CreditsPage() {
         )}
 
         <section>
-          <h2 className="font-display text-lg font-semibold">{t("credits_scans")}</h2>
+          <h2 className="font-display text-[26px]">{t("credits_scans")}</h2>
           <ul className="mt-2 space-y-1.5 text-xs text-muted-foreground">
             {scans.map((scan) => (
               <li key={scan.source}>
@@ -179,7 +179,7 @@ function CreditsPage() {
         </section>
 
         <section>
-          <h2 className="font-display text-lg font-semibold">{t("credits_sound")}</h2>
+          <h2 className="font-display text-[26px]">{t("credits_sound")}</h2>
           <ul className="mt-2 space-y-1.5 text-xs text-muted-foreground">
             {voices.length === 0 && <li>{t("credits_voices_device")}</li>}
             {voices.map(([lang, voice]) =>
@@ -225,7 +225,7 @@ function CreditsPage() {
         </section>
 
         <section>
-          <h2 className="font-display text-lg font-semibold">{t("credits_other")}</h2>
+          <h2 className="font-display text-[26px]">{t("credits_other")}</h2>
           <ul className="mt-2 space-y-1.5 text-xs text-muted-foreground">
             <li>
               {t("credits_map")}{" "}

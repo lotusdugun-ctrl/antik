@@ -153,7 +153,7 @@ export function AudioGuide({
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+          <h2 className="flex items-center gap-2 font-display text-[26px]">
             <Headphones className="h-5 w-5 text-primary" /> {title ?? t("guide_title")}
           </h2>
           <p className="mt-0.5 text-xs text-muted-foreground">
@@ -162,7 +162,7 @@ export function AudioGuide({
           </p>
         </div>
         {player.recorded ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1 text-[11px] font-semibold">
+          <span className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-1 text-[11px] font-semibold">
             <Mic className="h-3 w-3" /> {t("guide_recorded")}
           </span>
         ) : null}
@@ -176,7 +176,7 @@ export function AudioGuide({
             <button
               onClick={playing ? player.pause : player.play}
               disabled={!canPlay}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-50"
             >
               {playing ? (
                 <Pause className="h-4 w-4" />
@@ -226,7 +226,7 @@ export function AudioGuide({
               <select
                 value={player.rate}
                 onChange={(event) => player.setRate(Number(event.target.value))}
-                className="rounded-full border border-border bg-card px-2 py-1 text-xs text-foreground"
+                className="rounded-md border border-border bg-card px-2 py-1 text-xs text-foreground"
               >
                 {RATES.map((rate) => (
                   <option key={rate} value={rate}>
@@ -311,7 +311,7 @@ export function AudioGuide({
         <button
           onClick={() => setShowText((on) => !on)}
           aria-expanded={showText}
-          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold transition-colors hover:border-primary"
         >
           <FileText className="h-3.5 w-3.5" />
           {showText ? t("guide_hide_text") : t("guide_show_text")}

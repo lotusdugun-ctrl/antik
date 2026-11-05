@@ -84,7 +84,7 @@ export function TransferPanel() {
 
   return (
     <section className="mt-8">
-      <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+      <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
         <Smartphone className="h-5 w-5 text-primary" /> {t("transfer_title")}
       </h2>
 
@@ -103,7 +103,7 @@ export function TransferPanel() {
                 clearHash();
                 toast.success(t("transfer_merged"));
               }}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
             >
               <Check className="h-4 w-4" /> {t("transfer_merge")}
             </button>
@@ -112,7 +112,7 @@ export function TransferPanel() {
                 setIncoming(null);
                 clearHash();
               }}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold"
             >
               <X className="h-4 w-4" /> {t("nav_close")}
             </button>
@@ -125,7 +125,7 @@ export function TransferPanel() {
         {!link ? (
           <button
             onClick={create}
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
           >
             <Smartphone className="h-4 w-4" /> {t("transfer_create")}
           </button>
@@ -154,7 +154,7 @@ export function TransferPanel() {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={copy}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold"
+                  className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold"
                 >
                   {copied ? (
                     <Check className="h-4 w-4 text-success" />
@@ -165,7 +165,7 @@ export function TransferPanel() {
                 </button>
                 <button
                   onClick={share}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold"
+                  className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold"
                 >
                   <Share2 className="h-4 w-4" /> {t("transfer_share")}
                 </button>

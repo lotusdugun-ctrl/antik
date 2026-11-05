@@ -109,7 +109,7 @@ export function VisitEditor({ slug, siteName }: { slug: string; siteName: string
           <button
             onClick={onSave}
             disabled={!dirty}
-            className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-40"
+            className="flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-40"
           >
             <Save className="h-3.5 w-3.5" /> {t("visit_save")}
           </button>

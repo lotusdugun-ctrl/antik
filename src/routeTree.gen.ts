@@ -24,6 +24,7 @@ import { Route as MedeniyetlerRouteImport } from './routes/medeniyetler'
 import { Route as MuzelerRouteImport } from './routes/muzeler'
 import { Route as OgretmenRouteImport } from './routes/ogretmen'
 import { Route as OyunlarRouteImport } from './routes/oyunlar'
+import { Route as PassRouteImport } from './routes/pass'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as RekonstruksiyonlarRouteImport } from './routes/rekonstruksiyonlar'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
@@ -116,6 +117,11 @@ const OgretmenRoute = OgretmenRouteImport.update({
 const OyunlarRoute = OyunlarRouteImport.update({
   id: '/oyunlar',
   path: '/oyunlar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PassRoute = PassRouteImport.update({
+  id: '/pass',
+  path: '/pass',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfilRoute = ProfilRouteImport.update({
@@ -226,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/muzeler': typeof MuzelerRoute
   '/ogretmen': typeof OgretmenRoute
   '/oyunlar': typeof OyunlarRoute
+  '/pass': typeof PassRoute
   '/profil': typeof ProfilRoute
   '/rekonstruksiyonlar': typeof RekonstruksiyonlarRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -261,6 +268,7 @@ export interface FileRoutesByTo {
   '/muzeler': typeof MuzelerRoute
   '/ogretmen': typeof OgretmenRoute
   '/oyunlar': typeof OyunlarRoute
+  '/pass': typeof PassRoute
   '/profil': typeof ProfilRoute
   '/rekonstruksiyonlar': typeof RekonstruksiyonlarRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -297,6 +305,7 @@ export interface FileRoutesById {
   '/muzeler': typeof MuzelerRoute
   '/ogretmen': typeof OgretmenRoute
   '/oyunlar': typeof OyunlarRoute
+  '/pass': typeof PassRoute
   '/profil': typeof ProfilRoute
   '/rekonstruksiyonlar': typeof RekonstruksiyonlarRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -334,6 +343,7 @@ export interface FileRouteTypes {
     | '/muzeler'
     | '/ogretmen'
     | '/oyunlar'
+    | '/pass'
     | '/profil'
     | '/rekonstruksiyonlar'
     | '/robots.txt'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/muzeler'
     | '/ogretmen'
     | '/oyunlar'
+    | '/pass'
     | '/profil'
     | '/rekonstruksiyonlar'
     | '/robots.txt'
@@ -404,6 +415,7 @@ export interface FileRouteTypes {
     | '/muzeler'
     | '/ogretmen'
     | '/oyunlar'
+    | '/pass'
     | '/profil'
     | '/rekonstruksiyonlar'
     | '/robots.txt'
@@ -440,6 +452,7 @@ export interface RootRouteChildren {
   MuzelerRoute: typeof MuzelerRoute
   OgretmenRoute: typeof OgretmenRoute
   OyunlarRoute: typeof OyunlarRoute
+  PassRoute: typeof PassRoute
   ProfilRoute: typeof ProfilRoute
   RekonstruksiyonlarRoute: typeof RekonstruksiyonlarRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
@@ -565,6 +578,13 @@ declare module '@tanstack/react-router' {
       path: '/oyunlar'
       fullPath: '/oyunlar'
       preLoaderRoute: typeof OyunlarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pass': {
+      id: '/pass'
+      path: '/pass'
+      fullPath: '/pass'
+      preLoaderRoute: typeof PassRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profil': {
@@ -712,6 +732,7 @@ const rootRouteChildren: RootRouteChildren = {
   MuzelerRoute: MuzelerRoute,
   OgretmenRoute: OgretmenRoute,
   OyunlarRoute: OyunlarRoute,
+  PassRoute: PassRoute,
   ProfilRoute: ProfilRoute,
   RekonstruksiyonlarRoute: RekonstruksiyonlarRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,

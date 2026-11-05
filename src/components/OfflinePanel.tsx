@@ -68,7 +68,7 @@ export function OfflinePanel({
         <button
           onClick={download}
           disabled={pack.busy}
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
         >
           <CloudDownload className="h-4 w-4" />
           {pack.busy
@@ -108,7 +108,7 @@ export function OfflinePanel({
 
   return (
     <section className="mt-8">
-      <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+      <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
         <WifiOff className="h-5 w-5 text-primary" /> {title ?? t("offline_title")}
       </h2>
       <div className="rounded-2xl surface-panel p-5">{body}</div>

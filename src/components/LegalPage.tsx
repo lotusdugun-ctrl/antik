@@ -4,11 +4,11 @@ import { CONTACT_EMAIL, OPERATOR, type LegalDoc } from "@/lib/legal";
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="font-display text-3xl font-semibold sm:text-4xl">{doc.title}</h1>
+      <h1 className="font-display text-[52px] sm:text-[72px]">{doc.title}</h1>
       <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{doc.intro}</p>
       {doc.sections.map((section) => (
         <section key={section.h} className="mt-8">
-          <h2 className="font-display text-xl font-semibold">{section.h}</h2>
+          <h2 className="font-display text-[32px]">{section.h}</h2>
           {section.p.map((text) => (
             <p key={text.slice(0, 40)} className="mt-3 text-sm leading-relaxed">
               {linkify(text)}

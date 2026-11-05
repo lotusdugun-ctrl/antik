@@ -26,7 +26,7 @@ function MapPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <header className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
         <div className="min-w-0">
-          <h1 className="font-display text-3xl font-semibold sm:text-4xl">{t("nav_map")}</h1>
+          <h1 className="font-display text-[52px] sm:text-[72px]">{t("nav_map")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {sites.length} {t("heritage_sites")} · {state.visited.length}{" "}
             {t("visited_done").toLowerCase()}

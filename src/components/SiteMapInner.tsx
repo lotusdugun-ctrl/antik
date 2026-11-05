@@ -422,7 +422,7 @@ export default function SiteMapInner({
         />
         <div className="space-y-2 p-3">
           <div>
-            <h4 className="font-display text-base font-semibold leading-tight">{tr(site.name)}</h4>
+            <h4 className="font-display text-xl leading-tight">{tr(site.name)}</h4>
             <p className="text-xs text-muted-foreground">
               {tr(site.province)} · {site.civilizations[0]}
             </p>

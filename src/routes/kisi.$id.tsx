@@ -86,8 +86,8 @@ function PersonPage() {
 
       <header className="mt-3 max-w-3xl">
         <p className="text-sm font-semibold text-primary">{L(person.role)}</p>
-        <h1 className="mt-1 font-display text-3xl font-semibold sm:text-4xl">{L(person.name)}</h1>
-        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-sm font-medium">
+        <h1 className="mt-1 font-display text-[52px] sm:text-[72px]">{L(person.name)}</h1>
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-secondary px-3 py-1 text-sm font-medium">
           <Clock className="h-3.5 w-3.5 text-primary" /> {L(person.lifeLabel)}
         </p>
         <p className="mt-4 text-base leading-relaxed">{L(person.bio)}</p>
@@ -104,7 +104,7 @@ function PersonPage() {
                 key={civ.id}
                 to="/medeniyet/$id"
                 params={{ id: civ.id }}
-                className="rounded-full border border-border bg-card px-4 py-1.5 text-sm font-semibold hover:border-primary"
+                className="rounded-md border border-border bg-card px-4 py-1.5 text-sm font-semibold hover:border-primary"
               >
                 {L(civ.name)}
               </Link>
@@ -115,7 +115,7 @@ function PersonPage() {
 
       {list.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 font-display text-xl font-semibold">
+          <h2 className="mb-3 font-display text-[32px]">
             {t("person_sites")} · {list.length}
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

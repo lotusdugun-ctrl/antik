@@ -27,7 +27,7 @@ function StoriesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <header>
-        <h1 className="flex items-center gap-2.5 font-display text-3xl font-semibold sm:text-4xl">
+        <h1 className="flex items-center gap-2.5 font-display text-[52px] sm:text-[72px]">
           <BookOpen className="h-7 w-7 text-primary" /> {t("stories_title")}
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -62,7 +62,7 @@ function StoriesPage() {
                   <MapPin className="h-3.5 w-3.5" /> {site ? `${L(site.name)} · ` : ""}
                   {L(story.period)}
                 </p>
-                <h2 className="mt-1.5 font-display text-xl font-semibold">{L(story.title)}</h2>
+                <h2 className="mt-1.5 font-display text-[32px]">{L(story.title)}</h2>
                 <p className="mt-1 text-sm font-medium">{L(story.role)}</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {L(story.blurb)}

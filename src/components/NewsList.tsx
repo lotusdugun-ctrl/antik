@@ -22,7 +22,7 @@ export function NewsList({ site }: { site?: string }) {
   const subject = found ? (lang === "tr" ? found.name.tr : found.name.en) : t("news_country");
   return (
     <section className="rounded-2xl surface-panel p-5">
-      <h2 className="mb-1 flex items-center gap-2 font-display text-lg font-semibold">
+      <h2 className="mb-1 flex items-center gap-2 font-display text-[26px]">
         <Newspaper className="h-5 w-5 text-primary" /> {t("news_title")}
       </h2>
       <p className="mb-3 text-xs text-muted-foreground">
@@ -38,7 +38,7 @@ export function NewsList({ site }: { site?: string }) {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-2 text-sm font-medium hover:border-primary"
+                className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3.5 py-2 text-sm font-medium hover:border-primary"
               >
                 <Icon className="h-4 w-4 text-primary" aria-hidden />
                 {t(LABEL[link.kind])}

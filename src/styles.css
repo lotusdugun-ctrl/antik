@@ -5,22 +5,25 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Antik Türkiye design system.
- * Warm excavated-stone palette: limestone, terracotta, olive bronze.
- * All colors are oklch semantic tokens. Never hardcode colors in components.
+ * Antik design system (v3).
+ * Dark only: obsidian ground, basalt surfaces, ivory type, İznik coral for
+ * every action and for Antik Pass. Condensed capitals for headings, a
+ * humanist sans for the interface, a book serif for reading.
+ * All colors are semantic tokens. Never hardcode colors in components.
  */
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-2xl: calc(var(--radius) + 6px);
+  --radius-3xl: calc(var(--radius) + 8px);
+  --radius-4xl: calc(var(--radius) + 10px);
 
-  --font-display: "Fraunces", Georgia, serif;
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sofia Sans Extra Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-sans: "Sofia Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Brygada 1918", Georgia, "Times New Roman", serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -42,6 +45,8 @@
   --color-success-foreground: var(--success-foreground);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
+  --color-ivory: var(--ivory);
+  --color-obsidian: var(--obsidian);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -55,106 +60,63 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-soft: 0 1px 2px oklch(0.3 0.05 60 / 0.06), 0 8px 24px -12px oklch(0.3 0.05 60 / 0.18);
-  --shadow-lift: 0 2px 4px oklch(0.3 0.05 60 / 0.08), 0 24px 48px -20px oklch(0.3 0.05 60 / 0.28);
+  --shadow-soft: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 12px 32px -18px rgb(0 0 0 / 0.7);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 28px 56px -24px rgb(0 0 0 / 0.85);
 }
 
-:root {
-  --radius: 0.875rem;
-  --background: oklch(0.985 0.008 85);
-  --foreground: oklch(0.22 0.02 55);
-  --card: oklch(1 0.004 85);
-  --card-foreground: oklch(0.22 0.02 55);
-  --popover: oklch(1 0.004 85);
-  --popover-foreground: oklch(0.22 0.02 55);
-  --primary: oklch(0.52 0.13 45);
-  --primary-foreground: oklch(0.99 0.008 85);
-  --secondary: oklch(0.945 0.014 82);
-  --secondary-foreground: oklch(0.3 0.03 55);
-  --muted: oklch(0.955 0.01 82);
-  --muted-foreground: oklch(0.52 0.02 60);
-  --accent: oklch(0.55 0.07 165);
-  --accent-foreground: oklch(0.99 0.008 85);
-  --destructive: oklch(0.55 0.19 25);
-  --destructive-foreground: oklch(0.99 0.008 85);
-  --success: oklch(0.56 0.1 155);
-  --success-foreground: oklch(0.99 0.008 85);
-  --gold: oklch(0.72 0.12 78);
-  --gold-foreground: oklch(0.24 0.03 60);
-  --border: oklch(0.9 0.012 80);
-  --input: oklch(0.9 0.012 80);
-  --ring: oklch(0.52 0.13 45);
-  --sidebar: oklch(0.97 0.01 85);
-  --sidebar-foreground: oklch(0.22 0.02 55);
-  --sidebar-primary: oklch(0.52 0.13 45);
-  --sidebar-primary-foreground: oklch(0.99 0.008 85);
-  --sidebar-accent: oklch(0.945 0.014 82);
-  --sidebar-accent-foreground: oklch(0.3 0.03 55);
-  --sidebar-border: oklch(0.9 0.012 80);
-  --sidebar-ring: oklch(0.52 0.13 45);
+/* One palette for every visitor: the 3D scenes and photographs live on black. */
+:root,
+.dark {
+  color-scheme: dark;
+  --radius: 0.375rem;
+  --obsidian: #0b0b0c;
+  --ivory: #f2f0eb;
+  --background: #0b0b0c;
+  --foreground: #f2f0eb;
+  --card: #151517;
+  --card-foreground: #f2f0eb;
+  --popover: #1f1f22;
+  --popover-foreground: #f2f0eb;
+  --primary: #ff4b2b;
+  --primary-foreground: #0b0b0c;
+  --secondary: #1f1f22;
+  --secondary-foreground: #f2f0eb;
+  --muted: #151517;
+  --muted-foreground: #a3a09a;
+  --accent: #1f1f22;
+  --accent-foreground: #f2f0eb;
+  --destructive: #ff4b2b;
+  --destructive-foreground: #0b0b0c;
+  --success: #5fc48e;
+  --success-foreground: #0b0b0c;
+  --gold: #f2f0eb;
+  --gold-foreground: #0b0b0c;
+  --border: #2c2c30;
+  --input: #2c2c30;
+  --ring: #ff4b2b;
+  --sidebar: #151517;
+  --sidebar-foreground: #f2f0eb;
+  --sidebar-primary: #ff4b2b;
+  --sidebar-primary-foreground: #0b0b0c;
+  --sidebar-accent: #1f1f22;
+  --sidebar-accent-foreground: #f2f0eb;
+  --sidebar-border: #2c2c30;
+  --sidebar-ring: #ff4b2b;
 
   /*
-   * The scrim behind white text on photographs. It has to hold up over the
-   * brightest thing in the library — sunlit white marble under a pale sky —
-   * so it ramps up earlier and ends darker than a purely decorative gradient
-   * would. Titles sit in the bottom third, which is why most of the darkening
-   * is spent there.
+   * The scrim behind ivory text on photographs and renders: clear at the top,
+   * solid obsidian at the bottom where the titles sit.
    */
   --gradient-hero: linear-gradient(
     180deg,
-    oklch(0.22 0.03 55 / 0.1) 0%,
-    oklch(0.2 0.03 52 / 0.32) 40%,
-    oklch(0.18 0.03 50 / 0.72) 68%,
-    oklch(0.15 0.03 50 / 0.93) 88%,
-    oklch(0.13 0.03 50 / 0.97) 100%
+    rgb(11 11 12 / 0.35) 0%,
+    rgb(11 11 12 / 0) 22%,
+    rgb(11 11 12 / 0.15) 45%,
+    rgb(11 11 12 / 0.82) 78%,
+    rgb(11 11 12 / 0.97) 100%
   );
-  --gradient-gold: linear-gradient(120deg, oklch(0.72 0.12 78), oklch(0.6 0.14 48));
-  --gradient-surface: linear-gradient(160deg, oklch(0.99 0.01 85), oklch(0.955 0.016 78));
-}
-
-.dark {
-  --background: oklch(0.24 0.016 60);
-  --foreground: oklch(0.96 0.01 85);
-  --card: oklch(0.28 0.018 58);
-  --card-foreground: oklch(0.96 0.01 85);
-  --popover: oklch(0.28 0.018 58);
-  --popover-foreground: oklch(0.96 0.01 85);
-  --primary: oklch(0.72 0.13 55);
-  --primary-foreground: oklch(0.19 0.02 55);
-  --secondary: oklch(0.33 0.016 60);
-  --secondary-foreground: oklch(0.94 0.01 85);
-  --muted: oklch(0.32 0.014 60);
-  --muted-foreground: oklch(0.78 0.015 75);
-  --accent: oklch(0.68 0.08 168);
-  --accent-foreground: oklch(0.18 0.02 55);
-  --destructive: oklch(0.66 0.18 25);
-  --destructive-foreground: oklch(0.98 0.01 85);
-  --success: oklch(0.7 0.11 155);
-  --success-foreground: oklch(0.18 0.02 55);
-  --gold: oklch(0.8 0.12 80);
-  --gold-foreground: oklch(0.2 0.02 60);
-  --border: oklch(1 0 0 / 14%);
-  --input: oklch(1 0 0 / 18%);
-  --ring: oklch(0.72 0.13 55);
-  --sidebar: oklch(0.27 0.016 58);
-  --sidebar-foreground: oklch(0.96 0.01 85);
-  --sidebar-primary: oklch(0.72 0.13 55);
-  --sidebar-primary-foreground: oklch(0.19 0.02 55);
-  --sidebar-accent: oklch(0.33 0.016 60);
-  --sidebar-accent-foreground: oklch(0.94 0.01 85);
-  --sidebar-border: oklch(1 0 0 / 14%);
-  --sidebar-ring: oklch(0.72 0.13 55);
-
-  --gradient-hero: linear-gradient(
-    180deg,
-    oklch(0.2 0.02 55 / 0.18) 0%,
-    oklch(0.19 0.02 55 / 0.4) 40%,
-    oklch(0.19 0.02 55 / 0.78) 68%,
-    oklch(0.16 0.02 55 / 0.95) 88%,
-    oklch(0.14 0.02 55 / 0.98) 100%
-  );
-  --gradient-gold: linear-gradient(120deg, oklch(0.8 0.12 80), oklch(0.68 0.14 50));
-  --gradient-surface: linear-gradient(160deg, oklch(0.3 0.018 58), oklch(0.26 0.016 60));
+  --gradient-gold: linear-gradient(120deg, #ff4b2b, #ff4b2b);
+  --gradient-surface: linear-gradient(180deg, #151517, #151517);
 }
 
 @layer base {
@@ -171,14 +133,22 @@
 
   h1,
   h2,
-  h3,
   .font-display {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: var(--font-sans);
+    letter-spacing: 0;
   }
 
   ::selection {
-    background: oklch(0.72 0.12 78 / 0.35);
+    background: rgb(255 75 43 / 0.35);
   }
 }
 
@@ -228,7 +198,7 @@
   background: var(--color-muted);
   font-family: var(--font-sans);
 }
-.dark .leaflet-tile-pane {
+.leaflet-tile-pane {
   filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9) saturate(0.7);
 }
 .leaflet-popup-content-wrapper,
@@ -246,4 +216,52 @@
 .leaflet-control-attribution {
   background: var(--color-card);
   color: var(--color-muted-foreground);
+}
+
+/* Display type at poster scale: condensed capitals, tight leading. */
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.86;
+}
+
+/* Long-form reading text. */
+@utility prose-read {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+/* Slow drift for hero renders: the frame breathes while the page is read. */
+@utility drift {
+  animation: drift 14s ease-out both;
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.07) translateX(1%);
+  }
+  to {
+    transform: scale(1) translateX(0);
+  }
+}
+
+/* A line of country names that keeps moving. */
+@utility marquee {
+  animation: marquee 42s linear infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drift,
+  .marquee {
+    animation: none;
+  }
 }

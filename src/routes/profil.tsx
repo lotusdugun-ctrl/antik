@@ -40,9 +40,7 @@ function ProfilePage() {
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
         <div className="min-w-0">
-          <h1 className="truncate font-display text-3xl font-semibold sm:text-4xl">
-            {t("nav_profile")}
-          </h1>
+          <h1 className="truncate font-display text-[52px] sm:text-[72px]">{t("nav_profile")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("profile_sub")}</p>
         </div>
         <button
@@ -83,7 +81,7 @@ function ProfilePage() {
 
       {/* Region progress */}
       <section className="mt-8">
-        <h2 className="mb-3 font-display text-xl font-semibold">{t("progress")}</h2>
+        <h2 className="mb-3 font-display text-[32px]">{t("progress")}</h2>
         <div className="space-y-3 rounded-2xl surface-panel p-5">
           {regionProgress().map((rp) => {
             const region = regions.find((r) => r.id === rp.region)!;
@@ -109,7 +107,7 @@ function ProfilePage() {
 
       {/* Badges */}
       <section className="mt-8">
-        <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+        <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
           <Trophy className="h-5 w-5 text-gold" /> {t("badges")}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -138,7 +136,7 @@ function ProfilePage() {
 
       {/* Visit log */}
       <section className="mt-8">
-        <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+        <h2 className="mb-3 flex items-center gap-2 font-display text-[32px]">
           <BookOpen className="h-5 w-5 text-primary" /> {t("visit_log")}
         </h2>
         {entries.length === 0 ? (
@@ -165,7 +163,7 @@ function ProfilePage() {
                     <Link
                       to="/kent/$slug"
                       params={{ slug: site.slug }}
-                      className="block truncate font-display text-lg font-semibold hover:underline"
+                      className="block truncate font-display text-[26px] hover:underline"
                     >
                       {L(site.name)}
                     </Link>
@@ -198,7 +196,7 @@ function ProfilePage() {
 
       {/* Visited */}
       <section className="mt-8">
-        <h2 className="mb-3 font-display text-xl font-semibold">{t("total_visited")}</h2>
+        <h2 className="mb-3 font-display text-[32px]">{t("total_visited")}</h2>
         {visitedSites.length === 0 ? (
           <p className="rounded-2xl surface-panel p-8 text-center text-sm text-muted-foreground">
             {t("empty_visits")}
@@ -212,7 +210,7 @@ function ProfilePage() {
 
       {/* Favorites */}
       <section className="mt-8">
-        <h2 className="mb-3 font-display text-xl font-semibold">{t("favorites")}</h2>
+        <h2 className="mb-3 font-display text-[32px]">{t("favorites")}</h2>
         {favoriteSites.length === 0 ? (
           <p className="rounded-2xl surface-panel p-8 text-center text-sm text-muted-foreground">
             {t("empty_favorites")}

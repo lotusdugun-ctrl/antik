@@ -19,7 +19,7 @@ export function ScanGallery({ ids }: { ids: ScanId[] }) {
 
   return (
     <section className="mt-10">
-      <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-semibold">
+      <h2 className="mb-1 flex items-center gap-2 font-display text-[32px]">
         <ScanLine className="h-5 w-5 text-primary" /> {t("scans_title")}
       </h2>
       <p className="mb-4 max-w-3xl text-sm text-muted-foreground">{t("scans_intro")}</p>
@@ -39,7 +39,7 @@ export function ScanGallery({ ids }: { ids: ScanId[] }) {
               ) : (
                 <div className="aspect-square w-full rounded-xl bg-muted" />
               )}
-              <h3 className="mt-3 font-display text-base font-semibold">{L(scan.title)}</h3>
+              <h3 className="mt-3 font-display text-2xl">{L(scan.title)}</h3>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{L(scan.note)}</p>
               <p className="mt-2 text-[11px] text-muted-foreground">
                 {t("scans_by")} {scan.author} ·{" "}

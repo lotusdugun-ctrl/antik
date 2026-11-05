@@ -94,7 +94,7 @@ function RouteBuilderPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <header className="mb-6">
-        <h1 className="flex items-center gap-2 font-display text-3xl font-semibold sm:text-4xl">
+        <h1 className="flex items-center gap-2 font-display text-[52px] sm:text-[72px]">
           <RouteIcon className="h-8 w-8 text-primary" /> {t("route_title")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("route_sub")}</p>
@@ -141,7 +141,7 @@ function RouteBuilderPage() {
           <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
             {t("route_total")}
           </span>
-          <span className="font-display text-xl font-semibold text-primary">
+          <span className="font-display text-[32px] text-primary">
             {isLoading ? "…" : `~${data?.totalKm ?? 0} ${t("route_km")}`}
           </span>
         </div>
@@ -150,7 +150,7 @@ function RouteBuilderPage() {
           <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
             {t("route_est_time")}
           </span>
-          <span className="font-display text-xl font-semibold text-primary">
+          <span className="font-display text-[32px] text-primary">
             {isLoading ? "…" : `~${data?.totalMin ?? 0} ${t("route_min")}`}
           </span>
         </div>
@@ -179,7 +179,7 @@ function RouteBuilderPage() {
           <div className="space-y-4">
             {daysArr.map((day, di) => (
               <section key={di} className="rounded-2xl surface-panel p-5">
-                <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold">
+                <h2 className="mb-3 flex items-center gap-2 font-display text-[26px]">
                   <span className="grid h-7 w-7 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                     {di + 1}
                   </span>
@@ -240,7 +240,7 @@ function RouteBuilderPage() {
                     <button
                       key={String(on)}
                       onClick={() => setHighlights(on)}
-                      className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                      className={`rounded-md px-3 py-1.5 text-xs font-semibold ${
                         highlights === on
                           ? "bg-primary text-primary-foreground"
                           : "text-muted-foreground"

@@ -166,7 +166,7 @@ const tool =
 
 /** A secondary action under the model. */
 const chip =
-  "inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-card px-3.5 text-xs font-semibold transition-colors hover:border-primary disabled:opacity-60";
+  "inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-card px-3.5 text-xs font-semibold transition-colors hover:border-primary disabled:opacity-60";
 
 const LIGHTS = [
   ["day", Sun, "recon_light_day"],
@@ -1382,7 +1382,7 @@ export function Reconstruction3D({
               <button
                 type="button"
                 onClick={() => chooseLite(false)}
-                className="shrink-0 rounded-full bg-white px-2.5 py-1 font-semibold text-neutral-900 hover:bg-white/90"
+                className="shrink-0 rounded-md bg-white px-2.5 py-1 font-semibold text-neutral-900 hover:bg-white/90"
               >
                 {L(RS.liteHigh)}
               </button>
@@ -1661,7 +1661,7 @@ export function Reconstruction3D({
               setExportToken((n) => n + 1);
             }}
             disabled={exporting || (!arReady && !sceneReady)}
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-3.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
+            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-3.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60"
           >
             <Glasses className="h-3.5 w-3.5" />
             {exporting ? t("recon_ar_preparing") : arReady ? t("recon_ar_start") : t("recon_ar")}

@@ -57,7 +57,7 @@ export function StampButton({ site }: { site: Site }) {
     <button
       onClick={request}
       disabled={checking}
-      className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-colors hover:border-primary disabled:opacity-60"
+      className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-colors hover:border-primary disabled:opacity-60"
     >
       {checking ? (
         <Loader2 className="h-4 w-4 animate-spin" />
@@ -139,7 +139,7 @@ export function PassportPanel() {
   return (
     <section className="mt-8">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 font-display text-xl font-semibold">
+        <h2 className="flex items-center gap-2 font-display text-[32px]">
           <StampIcon className="h-5 w-5 text-primary" /> {t("passport_title")}
           <span className="text-sm font-medium text-muted-foreground">
             · {stamps.length} {t("passport_stamps")}
@@ -148,7 +148,7 @@ export function PassportPanel() {
         <button
           onClick={share}
           disabled={sharing}
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50"
         >
           {sharing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Share2 className="h-4 w-4" />}
           {t("passport_share")}

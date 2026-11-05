@@ -17,7 +17,7 @@ export function HdPanoramas({ id }: { id: string }) {
 
   return (
     <section className="mt-10">
-      <h2 className="mb-1 flex items-center gap-2 font-display text-xl font-semibold">
+      <h2 className="mb-1 flex items-center gap-2 font-display text-[32px]">
         <Orbit className="h-5 w-5 text-primary" /> {t("hd_title")}
       </h2>
       <p className="mb-4 max-w-3xl text-sm text-muted-foreground">{t("hd_intro")}</p>
@@ -30,7 +30,7 @@ export function HdPanoramas({ id }: { id: string }) {
           ) : (
             <div className="h-full w-full bg-muted" />
           )}
-          <p className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/55 px-3 py-1 text-[11px] text-white">
+          <p className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-md bg-black/55 px-3 py-1 text-[11px] text-white">
             {t("hd_drag")}
           </p>
         </div>

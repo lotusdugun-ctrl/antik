@@ -1,5 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Box, ExternalLink, MapPin, Ruler, TriangleAlert } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ExternalLink,
+  Lock,
+  MapPin,
+  Play,
+  Ruler,
+  TriangleAlert,
+} from "lucide-react";
 import { PhotoCredits } from "@/components/PhotoCredits";
 import { ScanGallery } from "@/components/ScanGallery";
 import { Reconstruction3D } from "@/components/Reconstruction3D";
@@ -11,7 +20,10 @@ import {
   type Measure,
   type Reconstruction,
 } from "@/lib/reconstructions";
-import { breadcrumbTags, seoTags } from "@/lib/seo";
+import { breadcrumbTags, modelTags, seoTags } from "@/lib/seo";
+import { isFreeModel, MODEL_COUNT, PassBenefits, PAYWALL, usePass } from "@/lib/pass";
+import { posterFor } from "@/lib/posters";
+import { AccessChip, ModelArt } from "@/components/ModelCard";
 import { scansFor } from "@/lib/scans";
 import { getSite } from "@/lib/sites";
 import { structurePhotoFor } from "@/lib/structure-photos";
@@ -48,14 +60,24 @@ export const Route = createFileRoute("/rekonstruksiyon/$id")({
         title: `${title} — ${translate("recon_title", lang)} | ${translate("appName", lang)}`,
         description: pick(loaderData.blurb, lang),
       }),
-      scripts: breadcrumbTags(
-        [
-          { name: translate("appName", lang), pathname: "/" },
-          { name: translate("recon_title", lang), pathname: "/rekonstruksiyonlar" },
-          { name: title, pathname: `/rekonstruksiyon/${loaderData.id}` },
-        ],
-        lang,
-      ),
+      scripts: [
+        ...breadcrumbTags(
+          [
+            { name: translate("appName", lang), pathname: "/" },
+            { name: translate("recon_title", lang), pathname: "/rekonstruksiyonlar" },
+            { name: title, pathname: `/rekonstruksiyon/${loaderData.id}` },
+          ],
+          lang,
+        ),
+        ...modelTags({
+          name: title,
+          description: pick(loaderData.blurb, lang),
+          pathname: `/rekonstruksiyon/${loaderData.id}`,
+          image: posterFor(loaderData.id),
+          free: !PAYWALL || isFreeModel(loaderData.id),
+          lang,
+        }),
+      ],
     };
   },
   component: ReconstructionPage,
@@ -97,40 +119,59 @@ function ReconstructionPage() {
   const item = getReconstruction(id)!;
   const { stories } = Route.useLoaderData();
   const site = getSite(item.siteSlug);
+  const { locked, openPaywall } = usePass();
+
+  const isLocked = locked(item.id);
+  const facts = item.measures.slice(0, 4);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-      <Link
-        to="/rekonstruksiyonlar"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" /> {t("recon_back")}
-      </Link>
+    <div className="mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-semibold text-muted-foreground">
+        <Link
+          to="/rekonstruksiyonlar"
+          className="inline-flex items-center gap-1.5 hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" /> {t("recon_back")}
+        </Link>
+        {site && (
+          <Link
+            to="/kent/$slug"
+            params={{ slug: site.slug }}
+            className="inline-flex items-center gap-1.5 hover:text-foreground"
+          >
+            <MapPin className="h-4 w-4 text-primary" /> {L(site.name)}
+          </Link>
+        )}
+        <span>{L(item.period)}</span>
+        <AccessChip id={item.id} />
+      </div>
 
-      <header className="mt-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-foreground">
-          <Box className="h-3 w-3" /> {t("recon_badge")}
-        </span>
-        <h1 className="mt-3 font-display text-3xl font-semibold sm:text-4xl">{L(item.title)}</h1>
-        <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-          {site && (
-            <Link
-              to="/kent/$slug"
-              params={{ slug: site.slug }}
-              className="inline-flex items-center gap-1.5 font-medium hover:text-foreground"
-            >
-              <MapPin className="h-4 w-4 text-primary" /> {L(site.name)}
-            </Link>
-          )}
-          <span>{L(item.period)}</span>
-        </p>
-        <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-muted-foreground">
-          {L(item.blurb)}
-        </p>
+      <header className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:items-end">
+        <h1 className="text-[56px] sm:text-[88px] lg:text-[112px]">{L(item.title)}</h1>
+        <p className="prose-read text-foreground/80">{L(item.blurb)}</p>
       </header>
 
-      <div className="mt-6">
-        <Reconstruction3D key={item.id} item={item} stories={stories} />
+      {facts.length > 0 && (
+        <dl className="mt-8 grid grid-cols-2 border-t border-border sm:grid-cols-4">
+          {facts.map((measure) => (
+            <div key={measure.label.tr} className="flex flex-col pr-4 pt-4">
+              <dt className="order-2 mt-1 text-[13.5px] text-muted-foreground">
+                {L(measure.label)}
+              </dt>
+              <dd className="type-display order-1 text-[44px] normal-case tabular-nums sm:text-[54px]">
+                {measureValue(measure, lang)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
+      <div className="mt-8">
+        {isLocked ? (
+          <LockedPreview id={item.id} siteSlug={item.siteSlug} onOpen={openPaywall} />
+        ) : (
+          <Reconstruction3D key={item.id} item={item} stories={stories} />
+        )}
       </div>
 
       {/* The carvings on the model are other people's photographs, and nearly
@@ -142,12 +183,11 @@ function ReconstructionPage() {
         className="mt-6"
       />
 
-
       <ScanGallery ids={scansFor(item.id)} />
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <section>
-          <h2 className="mb-3 flex items-center gap-2 font-display text-xl font-semibold">
+          <h2 className="mb-4 flex items-center gap-2 text-[36px]">
             <Ruler className="h-5 w-5 text-primary" /> {t("recon_measures")}
           </h2>
           <ul className="divide-y divide-border overflow-hidden rounded-2xl surface-panel">
@@ -173,7 +213,7 @@ function ReconstructionPage() {
                       </a>
                     )}
                   </span>
-                  <span className="shrink-0 font-display text-lg font-semibold tabular-nums">
+                  <span className="type-display shrink-0 text-[26px] normal-case tabular-nums">
                     {measureValue(measure, lang)}
                   </span>
                 </li>
@@ -184,9 +224,9 @@ function ReconstructionPage() {
 
         <aside className="space-y-4">
           {/* The honest half of a reconstruction, and not in small print. */}
-          <section className="rounded-2xl border-l-4 border-gold bg-secondary p-5">
-            <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-              <TriangleAlert className="h-5 w-5 text-gold" /> {t("recon_uncertainty")}
+          <section className="rounded-lg bg-secondary p-5 shadow-[inset_3px_0_0_var(--primary)]">
+            <h2 className="flex items-center gap-2 text-[28px]">
+              <TriangleAlert className="h-5 w-5 text-primary" /> {t("recon_uncertainty")}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-secondary-foreground">
               {L(item.uncertainty)}
@@ -199,7 +239,7 @@ function ReconstructionPage() {
           </section>
 
           <section className="rounded-2xl surface-panel p-5">
-            <h2 className="font-display text-lg font-semibold">{t("recon_sources")}</h2>
+            <h2 className="text-[28px]">{t("recon_sources")}</h2>
             <ul className="mt-2 space-y-2">
               {item.sources.map((source) => (
                 <li key={source.key}>
@@ -217,6 +257,57 @@ function ReconstructionPage() {
             </ul>
           </section>
         </aside>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A Pass building for a visitor without the Pass: the render, what opens with
+ * the Pass, and the free building as the other way in.
+ */
+function LockedPreview({
+  id,
+  siteSlug,
+  onOpen,
+}: {
+  id: string;
+  siteSlug: string;
+  onOpen: () => void;
+}) {
+  const { t } = useI18n();
+  return (
+    <div className="grid overflow-hidden rounded-lg bg-card lg:grid-cols-[minmax(0,1fr)_26rem]">
+      <div className="relative min-h-[300px] sm:min-h-[460px]">
+        <ModelArt
+          id={id}
+          siteSlug={siteSlug}
+          sizes="(min-width: 1024px) 66vw, 100vw"
+          eager
+          className="drift absolute inset-0 h-full w-full object-cover"
+        />
+        <span className="absolute left-4 top-4 inline-flex h-8 items-center gap-1.5 rounded bg-primary px-3 text-sm font-extrabold text-primary-foreground">
+          <Lock className="h-4 w-4" /> {t("pass_chip")}
+        </span>
+      </div>
+      <div className="flex flex-col gap-6 p-6 sm:p-8">
+        <h2 className="text-[44px] sm:text-[52px]">{t("pass_locked_title")}</h2>
+        <p className="text-[15px] text-muted-foreground">{t("pass_locked_body")}</p>
+        <PassBenefits count={MODEL_COUNT} className="[&_svg]:text-primary" />
+        <button
+          type="button"
+          onClick={onOpen}
+          className="inline-flex h-14 items-center justify-center gap-2 rounded-lg bg-primary text-[16px] font-extrabold text-primary-foreground outline-none transition-colors hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+        >
+          <Play className="h-4 w-4 fill-current" /> {t("pass_cta_open")}
+        </button>
+        <Link
+          to="/rekonstruksiyon/$id"
+          params={{ id: "aspendos-tiyatrosu" }}
+          className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-5 text-[15px] font-bold hover:text-primary"
+        >
+          {t("pass_try_free")}: Aspendos <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     </div>
   );

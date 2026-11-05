@@ -27,7 +27,7 @@ function CollectionsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <header>
-        <h1 className="flex items-center gap-2.5 font-display text-3xl font-semibold sm:text-4xl">
+        <h1 className="flex items-center gap-2.5 font-display text-[52px] sm:text-[72px]">
           <Layers className="h-7 w-7 text-primary" /> {t("collections_title")}
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -60,7 +60,7 @@ function CollectionsPage() {
                 )}
                 <div className="absolute inset-0 hero-scrim" />
                 <div className="absolute inset-x-0 bottom-0 p-4">
-                  <h2 className="font-display text-lg font-semibold leading-tight text-white">
+                  <h2 className="font-display text-[26px] leading-tight text-white">
                     {L(collection.title)}
                   </h2>
                   <p className="mt-0.5 flex items-center gap-1 text-xs text-white/90">

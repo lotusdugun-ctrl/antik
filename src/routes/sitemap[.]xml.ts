@@ -35,6 +35,7 @@ const staticPaths = [
   "/oyunlar",
   "/hikayeler",
   "/rekonstruksiyonlar",
+  "/pass",
   "/medeniyetler",
   "/zaman-cizelgesi",
   "/haberler",
