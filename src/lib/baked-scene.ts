@@ -1,9 +1,9 @@
 /**
- * Pişmiş ışıklı sahne (pilot, yalnızca `?pilot=1` ile).
+ * Pişmiş ışıklı sahne.
  *
- * Unity için Blender'da pişirilmiş modeli (unity/AntikViewer/Assets/Antik/Baked) web sahnesine
+ * Blender'da gündüz ışığıyla pişirilmiş modeli (public/baked/<id>/) web sahnesine
  * koyar: ışık, gölge ve ortam kapatması dokuya işlenmiştir, telefon hesaplamaz. Mozaik3D
- * tarzı yumuşak görünüm buradan gelir.
+ * tarzı temiz ve net görünüm buradan gelir.
  *
  * Unity gölgelendiricisiyle (AntikBakedLit) aynı hesap:
  *   renk = doku(uv0) × taban rengi × köşe rengi × ışık haritası(uv1) × 2
@@ -20,11 +20,13 @@ import { BAKED_SITES } from "@/lib/baked-sites";
 /** Pişmiş modeli hazır olan yerler. Dosyalar: public/baked/<id>/ */
 const READY = new Set(BAKED_SITES);
 
-/** `?pilot=1` açıksa ve yerin pişmiş modeli varsa klasörünü verir. */
+/** Pişmiş modeli hazır olan yerler için klasörünü verir (`?baked=0` veya `?pilot=0` ile kapatılabilir). */
 export function bakedFolderFor(id: string): string | undefined {
   if (typeof window === "undefined" || !READY.has(id)) return undefined;
-  const on = new URLSearchParams(window.location.search).get("pilot") === "1";
-  return on ? `/baked/${id}/` : undefined;
+  const off =
+    new URLSearchParams(window.location.search).get("baked") === "0" ||
+    new URLSearchParams(window.location.search).get("pilot") === "0";
+  return off ? undefined : `/baked/${id}/`;
 }
 
 type BakeInfo = {

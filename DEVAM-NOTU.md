@@ -18,8 +18,10 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
      - Toplam 45 yerin tamamı (Didyma, Artemis, Afrodisyas Stadyumu, Milet, Efes Büyük Tiyatro, Halikarnas, Patara, Perge, Sagalassos, Priene, Assos, Trajan, Aizanoi, Sardes, Magnesia, Ksanthos, Kaunos, Myra, Antalya Hadrianus Kapısı, Side Apollon, Letoon, Laodikeia, Afrodisyas Tetrapylon, Efes Hadrianus, Efes Yamaç Evler, Zeugma, Hattuşa, Alacahöyük, Troya, Çatalhöyük, Karahan Tepe, Ani, Yerebatan, Galata Kulesi, Süleymaniye, Selimiye vb.) Blender Cycles (AMD HIP GPU) ile `clear` gündüz ön ayarında pişirildi, meshopt (`-cc`) ile sıkıştırıldı ve `public/baked/` altına yerleştirildi.
      - Toplam `public/baked/` boyutu: **513.3 MB** (ortalama ~11.4 MB/site).
      - `baked-sites.ts`: 45 yerin tamamını içerecek şekilde güncellendi.
+  4. **Tüm 45 Pişmiş Model Canlı Sitede Varsayılan Yapıldı:**
+     - `src/lib/baked-scene.ts` içinde `?pilot=1` şartı kaldırıldı. Artık siteye giren tüm kullanıcılar doğrudan pişmiş gündüz ışıklı Mozaik3D modellerini görür (isteyen `?baked=0` ile kapatabilir).
 - **Kullanıcının Yapacağı:**
-  - `GONDER-28.bat` çalıştırılarak yapılan değişiklikler GitHub `main` dalına gönderilmeli.
+  - `GONDER-29.bat` çalıştırılarak canlı sitede varsayılan yapma değişikliği GitHub `main` dalına gönderilmeli.
 - **Sıradaki Adımlar:**
   - Celsus erdem heykelleri (Viyana Sanat Tarihi Müzesi'ndeki CC0/kamu malı referanslar) ve taş ayrıntıları.
   - Hikâye metinleri (`HIKAYELERI-YENILE.bat`, el kontrolü).
