@@ -1,8 +1,47 @@
-# Antik Türkiye: devam notu (5 Kasım 2026, gece; güncellendi)
+# Antik Türkiye: devam notu (6 Kasım 2026; güncellendi)
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## ANTIGRAVITY OTURUMU (5 Kasım 2026) — EN GÜNCEL
+## SON DURUM (6 Kasım akşam) — EN GÜNCEL, BURADAN BAŞLA
+- Kullanıcı projeye **OpenAI (Codex)** üzerinden devam edecek. Kurallar artık `AGENTS.md`'de (her araç okur).
+- `GUNCEL-CEK.bat` ile agtt'nin `4481eda` "Antik v3" tasarımı çekildi (fast-forward, sorunsuz). Yerel `main` = GitHub `main` + aşağıdaki gönderilmemiş değişiklikler.
+- v3 özeti: yalnızca koyu tema (`src/styles.css`, `src/lib/theme.tsx`), İznik mercanı vurgu rengi, yeni yazı tipleri; **Antik Pass** (`src/lib/pass.tsx`): ücretsiz 3D = Aspendos + Celsus, kalanı Pass; fiyatlar ₺399/yıl, ₺59/ay, ₺999 ömür boyu; ödeme bağlı değil, kilit `VITE_PAYWALL=1` ile açılır. Pişmiş modeller v3'te de çalışıyor.
+- **GitHub CI 30 Ekim'den (#39) beri her gönderimde kırmızı** (v3'ten önce de). Nedeni incelenmedi; ilk iş bu olabilir (Actions → son çalıştırmanın günlüğü).
+- **GONDER-30 ÇALIŞTIRILMASIN** (vite.config.ts'deki cloudflare-pages varsayılanı): site Vercel'deyse bozar. Önce yayın yerine karar verilmeli. `vite.config.ts` değişikliği yerelde commit edilmeden duruyor.
+- GONDER-31 hazır: yalnızca AGENTS.md, DEVAM-NOTU.md ve bat'ları gönderir (vite.config.ts hariç).
+- Sıradaki seçenekler: (1) CI hatası, (2) Antik Pass ödemesi (Play Billing + Stripe), (3) Celsus erdem heykelleri, (4) hikâye metinleri.
+
+## CLAUDE NOTU (6 Kasım, 2. sohbet) — DOĞRULANDI
+- `agtt` yetkisi: GEREK YOK, arkadaş zaten yetkili. `agtt` 5 Kasım'da `4481eda` "feat: Antik v3 redesign with dark theme, İznik coral and Antik Pass" commit'ini attı. Yerel depo bu commit'in GERİSİNDE; GONDER-30 içindeki `git pull` onu alır.
+- Antigravity işi doğrulandı: `public/baked/` içinde 45 klasör var, `baked-sites.ts` 45 yeri listeliyor, `baked-scene.ts` varsayılan açık (`?baked=0` / `?pilot=0` ile kapanıyor). Yerel son commit'ler 3fcfaf8 ve 05c56f1, GitHub'da da var (push edilmiş).
+- GONDER-30 HENÜZ ÇALIŞTIRILMADI. `vite.config.ts` dosyasına agtt dokunmamış, çakışma beklenmez.
+- DİKKAT: Site Vercel'de yayındaysa `preset: "cloudflare-pages"` varsayılanı Vercel derlemesini bozabilir. GONDER-30'dan önce Vercel'de `NITRO_PRESET=vercel` ortam değişkeni eklenmeli ya da Cloudflare'e geçiş tamamlanmalı.
+
+## ANTIGRAVITY OTURUMU (6 Kasım 2026) — EN GÜNCEL & CLAUDE DEVİR NOTU
+- **Özet:**
+  1. **Tüm 45 yerin pişirilmesi ve varsayılan yapılması tamamlandı:**
+     - 45 antik yerin tamamı Blender Cycles GPU ile gündüz ışığı (`clear`) ön ayarında pişirildi, meshopt (`-cc`) ile sıkıştırıldı ve `public/baked/` altına yerleştirildi (513.3 MB).
+     - `src/lib/baked-scene.ts` içinde `?pilot=1` şartı kaldırıldı; siteye giren tüm ziyaretçiler için Mozaik3D kalitesindeki pişmiş modeller varsayılan yapıldı (`GONDER-28.bat` ve `GONDER-29.bat` ile GitHub `main` dalına yollandı).
+  2. **Cloudflare Pages Dağıtım Yapılandırması Yapıldı:**
+     - `vite.config.ts`: Nitro dağıtım hedefi `preset: process.env.NITRO_PRESET || "cloudflare-pages"` olarak ayarlandı.
+     - `bun run build` ile yerel derleme test edildi ve 0 hata ile tamamlandı. Nitro, `dist/` klasörü altında Cloudflare Pages formatında (`dist/_worker.js`, `dist/_routes.json`, `dist/_headers`, statik varlıklar) kusursuz çıktı üretiyor.
+     - Cloudflare Pages Dashboard ayarları:
+       - **Framework preset**: `None`
+       - **Build command**: `bun run build` (veya `npm run build`)
+       - **Build output directory**: `dist`
+       - **Compatibility flags**: `nodejs_compat`
+       - **Environment variables**: `NODE_VERSION=20`
+     - Boyut sınırları doğrulandı: En büyük tekil dosya `artemis-tapinagi-baked.glb` (23.8 MB) olup Cloudflare Pages Free planındaki dosya başı 25 MB sınırının altındadır. Toplam 513 MB, 1.5 GB genel sınırın oldukça altındadır.
+  3. **Hazırlanan Bat:**
+     - `GONDER-30.bat`: `vite.config.ts` ve `DEVAM-NOTU.md` dosyalarını GitHub `main` dalına göndermek üzere hazırlandı.
+- **Kullanıcının Yapacağı:**
+  - `GONDER-30.bat` dosyasını çalıştırıp GitHub `main` dalına göndermek.
+  - Cloudflare Pages üzerinde projeyi bağlayıp yayınlamak.
+- **Claude İçin Sıradaki Adımlar:**
+  - Celsus erdem heykelleri (Viyana Sanat Tarihi Müzesi'ndeki CC0/kamu malı referanslar) ve taş ayrıntıları.
+  - Hikâye metinleri (`HIKAYELERI-YENILE.bat`, el kontrolü).
+
+## ANTIGRAVITY OTURUMU (5 Kasım 2026)
 - **Yapılanlar:**
   1. **Aspendos & Nemrut görsel kusurları giderildi ve yeniden pişirildi:**
      - Aspendos tiyatrosu arkasındaki toprak set (`bank`) düz gri görünüyordu; `Reconstruction3DInner.tsx` ve `landscape.ts` üzerinden çok ölçekli gürbüz toprak/çimen dokusu (`groundDetail`), tepe dalgalanması (`slopeY` noise) ve dünya koordinatı UV eşlemesi bağlandı. `baked-scene.ts` içinde pişmiş modeller için `_DETAIL` zemin doku geçişi eklendi.
