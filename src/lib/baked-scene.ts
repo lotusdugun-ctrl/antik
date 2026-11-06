@@ -47,11 +47,7 @@ export type BakedHandle = {
    * yüzden gündüze göre oranla boyanır (web'in arazisiyle aynı oran); bulutlar da aynı renk
    * ve saydamlığı alır.
    */
-  setLight: (
-    tint: THREE_NS.Color,
-    cloudColor: THREE_NS.Color,
-    cloudOpacity: number,
-  ) => void;
+  setLight: (tint: THREE_NS.Color, cloudColor: THREE_NS.Color, cloudOpacity: number) => void;
   dispose: () => void;
 };
 
@@ -134,8 +130,7 @@ function hideBuilt(scene: THREE_NS.Scene, actors: THREE_NS.Object3D | null) {
       child.visible = false;
     } else if (child.name === "life") {
       // sabit eşya (tezgâhlar, heykeller, hermler) pişmiş modelde; canlılar ve yazılar kalır
-      for (const k of child.children)
-        if (k !== actors && k.name !== "lettering") k.visible = false;
+      for (const k of child.children) if (k !== actors && k.name !== "lettering") k.visible = false;
     }
   }
 }
@@ -184,33 +179,29 @@ export async function applyBaked(
   group.name = "baked";
   const partOf = (o: THREE_NS.Object3D) => {
     for (let p: THREE_NS.Object3D | null = o; p; p = p.parent) {
-      const m = p.name.match(
-        new RegExp(`^${id}-(ground|terrain|near|detail|flora)`),
-      );
+      const m = p.name.match(new RegExp(`^${id}-(ground|terrain|near|detail|flora)`));
       if (m) return `${id}-${m[1]}`;
     }
     return "";
   };
   const nearColor = (c: THREE_NS.Color | undefined, r: number, g: number, b: number) =>
     Boolean(
-      c &&
-        Math.abs(c.r - r) < 0.025 &&
-        Math.abs(c.g - g) < 0.025 &&
-        Math.abs(c.b - b) < 0.025,
+      c && Math.abs(c.r - r) < 0.025 && Math.abs(c.g - g) < 0.025 && Math.abs(c.b - b) < 0.025,
     );
   // Unity AntikSetup.Surface ile aynı: 1 = toprak/çimen ("ground" #a9977a, "grass" #a8965f), 2 = kaya ("rock" #8b877d)
   const surfaceKind = (src: THREE_NS.MeshStandardMaterial) => {
     const n = src.name || "";
-    if (n === "ground" || n === "grass" || nearColor(src.color, 0.397, 0.309, 0.195) || nearColor(src.color, 0.392, 0.3, 0.114))
+    if (
+      n === "ground" ||
+      n === "grass" ||
+      nearColor(src.color, 0.397, 0.309, 0.195) ||
+      nearColor(src.color, 0.392, 0.3, 0.114)
+    )
       return 1;
     if (n === "rock" || nearColor(src.color, 0.258, 0.242, 0.212)) return 2;
     return 0;
   };
-  const applyGroundDetail = (
-    m: THREE_NS.MeshBasicMaterial,
-    rock: number,
-    patches: number,
-  ) => {
+  const applyGroundDetail = (m: THREE_NS.MeshBasicMaterial, rock: number, patches: number) => {
     m.onBeforeCompile = (shader) => {
       shader.uniforms["uBakedRock"] = { value: rock };
       shader.uniforms["uBakedPatches"] = { value: patches };
@@ -268,8 +259,7 @@ float bakedNoise(vec2 p) {
       const swap = (old: THREE_NS.Material) => {
         const src = old as THREE_NS.MeshStandardMaterial;
         const kind = surfaceKind(src);
-        const isGroundPart =
-          partName.endsWith("-terrain") || partName.endsWith("-ground");
+        const isGroundPart = partName.endsWith("-terrain") || partName.endsWith("-ground");
         const m = new THREE.MeshBasicMaterial({
           map: src.map ?? null,
           color: src.color ? src.color.clone() : new THREE.Color(1, 1, 1),
@@ -288,20 +278,14 @@ float bakedNoise(vec2 p) {
           m.color.multiplyScalar(scale);
         }
         if (kind !== 0 || isGroundPart) {
-          applyGroundDetail(
-            m,
-            kind === 2 ? 1 : 0,
-            kind === 1 || isGroundPart ? 0.65 : 0.35,
-          );
+          applyGroundDetail(m, kind === 2 ? 1 : 0, kind === 1 || isGroundPart ? 0.65 : 0.35);
         }
         owned.push(m);
         if (src.map) owned.push(src.map);
         old.dispose();
         return m;
       };
-      mesh.material = Array.isArray(mesh.material)
-        ? mesh.material.map(swap)
-        : swap(mesh.material);
+      mesh.material = Array.isArray(mesh.material) ? mesh.material.map(swap) : swap(mesh.material);
       mesh.castShadow = false;
       mesh.receiveShadow = false;
       owned.push(mesh.geometry);
@@ -331,9 +315,7 @@ float bakedNoise(vec2 p) {
   group.traverse((o) => {
     const mesh = o as THREE_NS.Mesh;
     if (!mesh.isMesh || mesh === clouds.dome) return;
-    for (const m of Array.isArray(mesh.material)
-      ? mesh.material
-      : [mesh.material]) {
+    for (const m of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
       const b = m as THREE_NS.MeshBasicMaterial;
       if (b.isMeshBasicMaterial) lit.push({ m: b, base: b.color.clone() });
     }

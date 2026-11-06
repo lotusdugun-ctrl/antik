@@ -2,7 +2,17 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## SON DURUM (6 Kasım akşam) — EN GÜNCEL, BURADAN BAŞLA
+## CI KIRMIZISI ÇÖZÜLDÜ (6 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+- **GitHub CI'nın 30 Ekim'den (#39) beri kırmızı olmasının nedeni bulundu:** kırmızı olan adım `Lint` (`bunx eslint . --quiet`). Kod tabanının bir kısmı `.prettierrc` (printWidth 100) ile uyumlu değildi: 7 dosyada 140 biçim hatası. Type-check, test, build ve audit bu yüzden hiç çalışmamıştı (atlanmıştı).
+  - Dosyalar: `src/components/Reconstruction3DInner.tsx`, `src/lib/baked-scene.ts`, `src/lib/panoramas.ts`, `scripts/glb/export-life.mjs`, `scripts/glb/export-glb.mjs`, `scripts/glb/export-fx.mjs`, `scripts/glb/web_pack.mjs`.
+  - **Yapıldı:** bu 7 dosya `bunx prettier --write` ile biçimlendirildi; yalnızca boşluk/satır düzeni değişti, davranış aynı.
+- **İkinci kırmızı neden (lint düzelince ortaya çıkacaktı):** `bun audit --audit-level=high` → `seroval` 1.6.3 / 1.6.9 sürümlerinde 3 yüksek güvenlik açığı. `bun audit fix` ile `seroval` 1.6.11'e çıkarıldı, `bun.lock` güncellendi. Kalan tek açık (minimatch) "high" değil; audit artık `--audit-level=high` eşiğinde temiz.
+- **vite.config.ts:** Yereldeki `cloudflare-pages` varsayılanı geri alındı; dosya commit'teki `nitro: { preset: "vercel" }` hâline döndü. Nedeni: (a) yayın yeri kararı verilmeden değiştirilmemeli (GONDER-30 hâlâ çalıştırılmamalı), (b) `process.env.NITRO_PRESET` yazımı `tsc` hatası veriyordu (TS4111; doğrusu `process.env["NITRO_PRESET"]`). Cloudflare'e geçilecekse bu düzeltmeyle birlikte yeni bir bat hazırlanmalı.
+- **Doğrulama (yerel, CI sırasıyla):** `bun install --frozen-lockfile` temiz; `tsc --noEmit` 0 hata; eslint (Linux gibi LF kopyada) 0 hata; `bun test` 547/547 ve 324.040 doğrulama; `bun run build` 0 hata; `bun audit --audit-level=high` temiz.
+- **GONDER-32.bat hazır:** yalnızca CI düzeltmelerini (7 dosya + `bun.lock` + bu not) gönderir. `vite.config.ts` ve `public/baked` dâhil değil.
+- **Sıradaki:** GONDER-32'yi çalıştır → Actions'ta CI yeşil mi bak. Sonra sırayla: (1) Antik Pass ödemesi (Play Billing + Stripe), (2) Celsus erdem heykelleri, (3) hikâye metinleri.
+
+## SON DURUM (6 Kasım akşam) — önceki
 - Kullanıcı projeye **OpenAI (Codex)** üzerinden devam edecek. Kurallar artık `AGENTS.md`'de (her araç okur).
 - `GUNCEL-CEK.bat` ile agtt'nin `4481eda` "Antik v3" tasarımı çekildi (fast-forward, sorunsuz). Yerel `main` = GitHub `main` + aşağıdaki gönderilmemiş değişiklikler.
 - v3 özeti: yalnızca koyu tema (`src/styles.css`, `src/lib/theme.tsx`), İznik mercanı vurgu rengi, yeni yazı tipleri; **Antik Pass** (`src/lib/pass.tsx`): ücretsiz 3D = Aspendos + Celsus, kalanı Pass; fiyatlar ₺399/yıl, ₺59/ay, ₺999 ömür boyu; ödeme bağlı değil, kilit `VITE_PAYWALL=1` ile açılır. Pişmiş modeller v3'te de çalışıyor.

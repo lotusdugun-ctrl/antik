@@ -88,7 +88,10 @@ const CELSUS: Panorama[] = [
     id: "meydan",
     title: l("Kütüphanenin önünde", "Before the library"),
     src: "/hd/celsus-kutuphanesi/celsus-360-meydan.jpg",
-    note: l("Dokuz basamak, iki katlı mermer cephe, kapıların üstünde kafesli pencereler.", "Nine steps, the two-storey marble front, latticed windows over the doors."),
+    note: l(
+      "Dokuz basamak, iki katlı mermer cephe, kapıların üstünde kafesli pencereler.",
+      "Nine steps, the two-storey marble front, latticed windows over the doors.",
+    ),
   },
   {
     id: "vestibul",

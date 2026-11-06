@@ -3517,10 +3517,20 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
                   // Turf in the hollows and gentler slopes; warm dry earth and rock on the steeper brow.
                   const turf = Math.max(0, Math.min(1, (macro - 0.28) * 1.45)) * ny;
                   const dry = Math.max(0, Math.min(1, (mid - 0.35) * 1.35));
-                  const shade = 0.76 + (macro - 0.5) * 0.22 + (mid - 0.5) * 0.16 + (fine - 0.5) * 0.1;
-                  const r = Math.min(1, Math.max(0.52, shade * (0.94 - turf * greenBias + dry * 0.08)));
-                  const gr = Math.min(1, Math.max(0.52, shade * (0.95 + turf * greenBias * 0.9 + dry * 0.02)));
-                  const bl = Math.min(1, Math.max(0.46, shade * (0.86 - turf * greenBias * 1.35 - dry * 0.06)));
+                  const shade =
+                    0.76 + (macro - 0.5) * 0.22 + (mid - 0.5) * 0.16 + (fine - 0.5) * 0.1;
+                  const r = Math.min(
+                    1,
+                    Math.max(0.52, shade * (0.94 - turf * greenBias + dry * 0.08)),
+                  );
+                  const gr = Math.min(
+                    1,
+                    Math.max(0.52, shade * (0.95 + turf * greenBias * 0.9 + dry * 0.02)),
+                  );
+                  const bl = Math.min(
+                    1,
+                    Math.max(0.46, shade * (0.86 - turf * greenBias * 1.35 - dry * 0.06)),
+                  );
                   colours[i * 3] = r;
                   colours[i * 3 + 1] = gr;
                   colours[i * 3 + 2] = bl;
@@ -4220,7 +4230,6 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         };
       }
 
-
       /**
        * The sky, as a gradient rather than a flat fill: pale at the horizon and
        * deeper overhead, which is what makes a model read as standing outdoors
@@ -4593,7 +4602,9 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         birdMaterial.opacity = liveAtmos.birdOpacity;
         if (bakedHandle) {
           // relative to the light the model was baked in, as the country is to the day's
-          const ref = new THREE.Color(paletteFor("light", bakedHandle.preset === "golden" ? "golden" : "day").ground);
+          const ref = new THREE.Color(
+            paletteFor("light", bakedHandle.preset === "golden" ? "golden" : "day").ground,
+          );
           const ratio = new THREE.Color(
             liveAtmos.ground.r / ref.r,
             liveAtmos.ground.g / ref.g,
@@ -4615,14 +4626,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
       if (baked) {
         void import("@/lib/baked-scene")
           .then(({ applyBaked }) =>
-            applyBaked(
-              THREE,
-              scene,
-              baked,
-              lifeHandle?.group ?? null,
-              anisotropy,
-              cloudMaterial,
-            ),
+            applyBaked(THREE, scene, baked, lifeHandle?.group ?? null, anisotropy, cloudMaterial),
           )
           .then((handle) => {
             if (disposed) handle.dispose();
