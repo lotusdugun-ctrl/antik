@@ -2,6 +2,16 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
+## YENİ ANTIK KENTLER: POMPEİ, EBORACUM, NIMES, TRIER (6 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+- **İstek:** İtalya, İngiltere, Fransa ve Almanya'dan antik kentler; Türkiye'dekiler gibi 3D modeller.
+- **Yapıldı (bu batarya):**
+  - Blender betikleri: `scripts/blender/pompeii_hd.py` (+`POMPEII-HD.bat`), `scripts/blender/eboracum_hd.py` (+`EBORACUM-HD.bat`), `scripts/blender/nimes_hd.py` (+`NIMES-HD.bat`), `scripts/blender/trier_hd.py` (+`TRIER-HD.bat`).
+  - Mimari `antik_mimari` yardımcıları + argümanlarla aynı akış (sky/sun, 3 render `--views`, 360° `--pano`, kiya, `BITTI`).
+- **Blender 5.2.3 headless doğrulaması (Claude çalıştı):** 4 betikte syntax → `py_compile` OK; `blender -b --factory-startup` çalıştırılarak geometry + sky + render + `BITTI` doğrulandı; `--no-render` çalıştırınca render yoktu (guard eklendi), `--views 0,1,2` ile gerçek render çıktı (1920x1080, 64 örnek): `<id>-hd-0/1/2.png` + `<id>-kiyas-*.jpg` `hd-out\<id>\` altında.
+- **Blender API düzeltmeleri:** `column()` imzası `column(x, y, z, height, d, order)` (isim argümanı yok) — 4 betikteki çağrılar düzeltildi; `_AM.apply_dokular` → `AM.apply_dokular` (import alias); nimes `temple()` çağrısı isim eksikti (`temple("temp", ...)`); KIYAS render blokları `if not args.no_render` ile korundu; docstring `\e`/`\n`/`\t` kaçışları `/` ile düzeltildi.
+- **Yapılmadı:** 4 yapı kartı (`docs/yapi-kartlari/{pompeii,eboracum,nimes,trier}.md`); pano (360°) render'ları; bake (`antik_bake.py`/`bake_glb.py` + web_pack); `public/baked/<id>`; `baked-sites.ts` yenileme; push.
+- **Bake denemesi (6 Kasım akşam):** `PISIR-WEB.bat pompeii` → `disa aktariliyor...` → `HATA (disa aktarma)` (`hd-out\pisir\pompeii.log`: `page.waitForFunction: Timeout 300000ms exceeded` @ export-glb.mjs:24). Neden: hedef rota `/rekonstruksiyon/pompeii` → `getReconstruction("pompeii")` → `notFound()`. Yeni kent için web GLB bake'i, `src/lib/reconstructions` kayıtları + `public/baked/<id>` + `baked-sites.ts` + `hd-files.json`/`panoramas` girmeden önce yapılamaz. (Vite/hydration uyarısı marjinaldi; zaman aşımı ana neden.)
+
 ## CI KIRMIZISI ÇÖZÜLDÜ (6 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
 - **GitHub CI'nın 30 Ekim'den (#39) beri kırmızı olmasının nedeni bulundu:** kırmızı olan adım `Lint` (`bunx eslint . --quiet`). Kod tabanının bir kısmı `.prettierrc` (printWidth 100) ile uyumlu değildi: 7 dosyada 140 biçim hatası. Type-check, test, build ve audit bu yüzden hiç çalışmamıştı (atlanmıştı).
   - Dosyalar: `src/components/Reconstruction3DInner.tsx`, `src/lib/baked-scene.ts`, `src/lib/panoramas.ts`, `scripts/glb/export-life.mjs`, `scripts/glb/export-glb.mjs`, `scripts/glb/export-fx.mjs`, `scripts/glb/web_pack.mjs`.
@@ -9,8 +19,27 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **İkinci kırmızı neden (lint düzelince ortaya çıkacaktı):** `bun audit --audit-level=high` → `seroval` 1.6.3 / 1.6.9 sürümlerinde 3 yüksek güvenlik açığı. `bun audit fix` ile `seroval` 1.6.11'e çıkarıldı, `bun.lock` güncellendi. Kalan tek açık (minimatch) "high" değil; audit artık `--audit-level=high` eşiğinde temiz.
 - **vite.config.ts:** Yereldeki `cloudflare-pages` varsayılanı geri alındı; dosya commit'teki `nitro: { preset: "vercel" }` hâline döndü. Nedeni: (a) yayın yeri kararı verilmeden değiştirilmemeli (GONDER-30 hâlâ çalıştırılmamalı), (b) `process.env.NITRO_PRESET` yazımı `tsc` hatası veriyordu (TS4111; doğrusu `process.env["NITRO_PRESET"]`). Cloudflare'e geçilecekse bu düzeltmeyle birlikte yeni bir bat hazırlanmalı.
 - **Doğrulama (yerel, CI sırasıyla):** `bun install --frozen-lockfile` temiz; `tsc --noEmit` 0 hata; eslint (Linux gibi LF kopyada) 0 hata; `bun test` 547/547 ve 324.040 doğrulama; `bun run build` 0 hata; `bun audit --audit-level=high` temiz.
-- **GONDER-32.bat hazır:** yalnızca CI düzeltmelerini (7 dosya + `bun.lock` + bu not) gönderir. `vite.config.ts` ve `public/baked` dâhil değil.
-- **Sıradaki:** GONDER-32'yi çalıştır → Actions'ta CI yeşil mi bak. Sonra sırayla: (1) Antik Pass ödemesi (Play Billing + Stripe), (2) Celsus erdem heykelleri, (3) hikâye metinleri.
+- **GONDER-32 çalıştırıldı ve CI YEŞİL:** commit `bf90a71` GitHub `main`'e gitti; Actions çalıştırması **#64 başarılı** (Install, Type-check, Lint, Test, Build, Audit — hepsi success). 30 Ekim'den beri süren kırmızı seri bitti.
+- **GONDER-32.bat:** yalnızca CI düzeltmelerini (7 dosya + `bun.lock` + bu not) gönderdi. `vite.config.ts` ve `public/baked` dâhil değildi.
+- **Sıradaki:** (1) Antik Pass ödemesi (Play Billing + Stripe), (2) Celsus erdem heykelleri, (3) hikâye metinleri. Yayın yeri (Vercel/Cloudflare) kararı hâlâ açık; Cloudflare'e geçilecekse `preset` değişikliği `process.env["NITRO_PRESET"]` yazımıyla ve ayrı bir bat ile yapılmalı.
+
+## YENİ ANTIK KENT: POMPEİ (İtalya) — 6 Kasım 2026, akşam
+- **İstek:** İtalya, İngiltere, Fransa ve Almanya'dan antik kentler; Türkiye'dekiler gibi 3D modeller.
+- **Yapıldı (İtalya — ilk): Pompeii HD betiği.**
+  - `scripts/blender/pompeii_hd.py`: forum, basilika, Capitolium, Apollo tapınağı, büyük tiyatro, amfitasar, evler, duvar, Vesuvius yamacı; sky/sun, 3 adet render (`--views`), 360° pano (`--pano`), karşılaştırma (kiyas) görünümü, `BITTI`.
+  - `POMPEII-HD.bat`: ekran kartıyla çalışır (`blender -b --factory-startup --python scripts\blender\pompeii_hd.py -- --out hd-out\pompeii --dokular gorseller-ai\dokular --res 1920x1080 --samples 256 --gpu --pano --pano-samples 192`).
+  - `scripts/blender/pompeii_hd.py` Python syntax'i geçti (`python -m py_compile` temiz).
+- **Yapılmadı:** `docs/yapi-kartlari/pompeii.md` (yapı kartı — [K]/[F]/[T] etiketli). **Kullanıcı el kontrolü şartı:** kart olmadan gerçek ölçüler/satırlar [T] kalmalı.
+- **Kullanıcı yapacak:** `POMPEII-HD.bat` çalıştır (ekran kartı) → `hd-out-pompeii-log.txt` → "pompeii hd hazir" → Claude çıktıları/açıları doğrular → 360°'leri `public/hd/pompeii/` + `hd-files.json` + `GONDER-35.bat` (Türkiye'deki GONDER-15 akışına göre).
+
+## YENİ ANTIK KENTLER: EBORACUM, NIMES, TRIER (6 Kasım 2026, akşam)
+- **İstek:** İtalya, İngiltere, Fransa ve Almanya'dan antik kentler; Türkiye'dekiler gibi 3D modeller.
+- **Yapıldı (bu batarya):**
+  - `scripts/blender/eboracum_hd.py` + `EBORACUM-HD.bat`: castellum (York), basilika, hamamlar, koloniyalı cadde, tapınak; 5 render + 360° + kiya.
+  - `scripts/blender/nimes_hd.py` + `NIMES-HD.bat`: Arena, Maison Carrée, tapınak; aynı akış.
+  - `scripts/blender/trier_hd.py` + `TRIER-HD.bat`: Porta Nigra, amfitasar, hamamlar, basilika; aynı akış.
+- **Tüm üçü Python syntax kontrolünden geçti** (`python -m py_compile` temiz).
+- **Yapılmadı:** 3 yapı kartı (`docs/yapi-kartlari/{eboracum,nimes,trier}.md`).
 
 ## SON DURUM (6 Kasım akşam) — önceki
 - Kullanıcı projeye **OpenAI (Codex)** üzerinden devam edecek. Kurallar artık `AGENTS.md`'de (her araç okur).
