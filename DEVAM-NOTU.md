@@ -2,7 +2,42 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## 360° HD PANORAMALAR REKONSTRÜKSİYON SAYFASINA ENTEGRE EDİLDİ (575/575 PASS) (7 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+## 5 ÜLKEDE 10 YENİ 3D ANTİK KENT EKLENDİ, TÜM TESTLER TAMAMLANDI (605/605 PASS) (7 Kasım 2026, gece) — EN GÜNCEL, BURADAN BAŞLA
+
+- **Kullanıcı Talebi:** Beş ayrı ülkede ikişer antik kent olmak üzere toplam 10 yeni 3D antik kentin modellenmesi ve eksiksiz entegrasyonu.
+- **Eklenen 10 Yeni Antik Kent:**
+  1. **İspanya (ES):**
+     - **Emerita Augusta (`emerita-augusta-kenti` / Mérida):** Roma Tiyatrosu (scaenae frons), Diana Tapınağı ve Los Milagros Su Kemeri.
+     - **Italica (`italica-kenti` / Santiponce):** Roma İmparatorluğu'nun en büyük 3. arenası olan dev amfitiyatro, Traianeum Tapınağı ve Neptün Hamamları.
+  2. **Yunanistan (GR):**
+     - **Delphi (`delfi-kenti` / Delfi):** Apollon Tapınağı (Pythia kehanet ocağı), Athena Pronaia Tholosu ve Delfi Tiyatrosu.
+     - **Olympia (`olimpiya-kenti` / Olimpiya):** Zeus Tapınağı (Fidias Heykeli podyumu), 192 metrelik antik stadyum ve Philippeion.
+  3. **Mısır (EG):**
+     - **İskenderiye (`iskenderiye-kenti` / Alexandria):** 110 metrelik Pharos Feneri (Antik Dünyanın 7 Harikası), Serapeum ve Kanopik Caddesi.
+     - **Karnak (`karnak-kenti` / Thebes):** 134 dev sütunlu Büyük Hipostil Salonu, I. Pilon Kapısı ve Kutsal Barque Tapınağı.
+  4. **Ürdün (JO):**
+     - **Petra (`petra-kenti` / Raqmu):** Kaya falezine oyulmuş Al-Khazneh (Hazine), dağ yamacı antik tiyatro ve Büyük Tapınak.
+     - **Jerash (`ceras-kenti` / Gerasa):** 90×80 m eliptik Oval Forum, korint sütunlu Artemis Tapınağı ve 3 kemerli Hadrianus Zafer Takı.
+  5. **Lübnan (LB):**
+     - **Baalbek (`baalbek-kenti` / Heliopolis):** Trilithon megalitli dev Jüpiter Tapınağı, kusursuz korunan Bacchus Tapınağı ve Altıgen Avlu.
+     - **Byblos (`biblos-kenti` / Cübeyl):** 12. yüzyıl Haçlı Kalesi donjonu, Fenike Dikilitaş Tapınağı ve antik doğal liman.
+
+- **Yapılan İnce Ayarlar ve Test Düzeltmeleri:**
+  1. **Geometri ve Derinlik Çakışmaları (`face-fights.test.ts`):** 10 kentin tamamında sokak aksları (`streets`) binaların dahili kaldırım/zemin taşlarıyla çakışmayacak şekilde açık meydanlara çekildi, tüm bina koordinatları parsel bazında ayrıştırıldı (131/131 PASS).
+  2. **Sahne Yaşamı & Karakter Rotaları (`scene-life.test.ts`):**
+     - `patara-deniz-feneri-life.ts`: Rıhtım aktiviteleri ve gemi konumu kulenin taban genişliğine (`spec.baseSide / 2`) göre parametrik kılındı; İskenderiye'nin 30 metrelik dev kulesiyle olan çakışmalar giderildi.
+     - `on-yeni-life.ts` (`gateLife`): Tek kemerli kapılarda pier indeksleri dinamikleştirildi, dilencinin mesafesi kalın sütun kaidelerine (`spec.columnDiameter: 2.2`) göre güvenli mesafeye alındı.
+     - `scene-life.ts` (`facadeLife`): Orta kapıdan geçen yayaların konumu kapı merkezine (`x=0.3`) çekilerek geniş cepheli kaidelerin içinden geçmesi önlendi.
+     - `reconstructions.ts`: İtalica amfitiyatrosu (`at: [150, 90]`), İskenderiye caddesi (`[0, -155, 0, 80, 8]`) ve Karnak başlangıç noktası (`viewpoint: [0, -60]`) optimize edildi.
+  3. **Yapı Kartları (`docs/yapi-kartlari/`):** 10 kentin tamamı için [K] kaynak, [F] fotoğraf ve [T] tahmin etiketli mimari kimlik ve kaynak kartları oluşturuldu.
+  4. **Doğrulama:**
+     - `bunx tsc --noEmit` → **0 hata** (Tip denetimi tamamen temiz).
+     - `bun test` → **605 pass, 0 fail (389.224 expect() çağrısı, 31 dosya)** %100 YEŞİL!
+     - `test-sonucu.txt` güncellendi.
+  5. **Gönderim:**
+     - `GONDER-41.bat` hazırlandı ve çalıştırılmaya hazır.
+
+## 360° HD PANORAMALAR REKONSTRÜKSİYON SAYFASINA ENTEGRE EDİLDİ (575/575 PASS) (7 Kasım 2026, akşam)
 
 - **Hedef:** 360° interaktif küresel panoramaların ve HD görünümlerin (`panoramas.ts`), ilgili rekonstrüksiyon detay sayfalarına (`rekonstruksiyon.$id.tsx`) `<HdPanoramas>` bileşeniyle bağlanması ve tüm antik kentlerin tam eşleşmesinin sağlanması.
 - **Yapılanlar:**

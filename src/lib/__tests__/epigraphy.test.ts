@@ -377,6 +377,16 @@ describe("the cost of the new detail", () => {
     "eboracum-kenti": 232464,
     "nimes-kenti": 134056,
     "trier-kenti": 172172,
+    "emerita-augusta-kenti": 204296,
+    "italica-kenti": 190912,
+    "delfi-kenti": 154164,
+    "olimpiya-kenti": 198752,
+    "iskenderiye-kenti": 302280,
+    "karnak-kenti": 238704,
+    "petra-kenti": 164128,
+    "ceras-kenti": 183168,
+    "baalbek-kenti": 259400,
+    "biblos-kenti": 110520,
   };
   /*
    * Allowed more, with the reason. Hattusa's glacis is now faced with its

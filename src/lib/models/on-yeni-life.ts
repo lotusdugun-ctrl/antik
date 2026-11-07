@@ -53,19 +53,22 @@ export function gateLife(spec: RomanGateSpec, era: Era, id: string): SceneLife {
         speed: 0.65 + rand() * 0.3,
       });
     }
+    const midLane = lanes[Math.floor(lanes.length / 2)]!;
+    const endLane = lanes[lanes.length - 1]!;
+    const beggarPier = L.piersX[Math.min(2, L.piersX.length - 1)]!;
     // A peasant leading a donkey with panniers through the middle arch.
-    animal(b, "donkey", [lanes[1]! + 0.6, 0, -D / 2 - 6], 0, "walk", {
+    animal(b, "donkey", [midLane + 0.6, 0, -D / 2 - 6], 0, "walk", {
       load: true,
       route: [
-        [lanes[1]! + 0.6, 0, -D / 2 - 22],
-        [lanes[1]! + 0.6, 0, D / 2 + 20],
+        [midLane + 0.6, 0, -D / 2 - 22],
+        [midLane + 0.6, 0, D / 2 + 20],
       ],
       speed: 0.6,
     });
     cast.walk(
       [
-        [lanes[1]! - 0.3, 0, -D / 2 - 23],
-        [lanes[1]! - 0.3, 0, D / 2 + 19],
+        [midLane - 0.3, 0, -D / 2 - 23],
+        [midLane - 0.3, 0, D / 2 + 19],
       ],
       { role: "worker", carry: "staff", speed: 0.6 },
     );
@@ -102,15 +105,15 @@ export function gateLife(spec: RomanGateSpec, era: Era, id: string): SceneLife {
       carry: "shield",
     });
     cast.add({ at: [cx + 1.6, 0, -D / 2 - 9.5], rotY: -PI * 0.3, action: "talk", role: "worker" });
-    const beggarZ = -D / 2 - (spec.columnDiameter ? spec.columnDiameter * 1.2 + 1.2 : 2.5);
-    trades.beggar(b, [L.piersX[2]!, 0, beggarZ], PI);
+    const beggarZ = -D / 2 - (spec.columnDiameter ? spec.columnDiameter * 2.3 + 0.8 : 2.5);
+    trades.beggar(b, [beggarPier, 0, beggarZ], PI);
     // A crowd at the sellers outside the gate.
     cast.group([L.width / 2 + T + 2, 0, -D / 2 - 8.2], 3, 0.7);
     // Inside the walls: children playing and a man drawing water.
     const x = aside(b, 4128);
     trades.ballGame(x, [-6, 0, D / 2 + 9], [-2.5, 0, D / 2 + 10.5]);
     trades.elders(x, [9, 0, D / 2 + 7], -PI / 2, 2, true);
-    dog(b, [lanes[2]! + 1.5, 0, D / 2 + 5]);
+    dog(b, [endLane + 1.5, 0, D / 2 + 5]);
     fire(b, torchStand([guardX, 0, -D / 2 - 1.2], 2.2), 0.32, true);
     fire(b, torchStand([-guardX, 0, -D / 2 - 1.2], 2.2), 0.32, true);
   } else {

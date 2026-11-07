@@ -3337,6 +3337,146 @@ export const siteFacts: Record<string, Localized[]> = {
       "Augusta Treverorum was one of the last western European capitals of the Roman empire, with imperial palaces, baths and a colonnaded square.",
     ),
   ],
+  "emerita-augusta": [
+    f(
+      "Mérida Roma Tiyatrosu MS 15-16 yıllarında Marcus Vipsanius Agrippa tarafından yaptırılmış ve 6.000 seyirci alacak şekilde tasarlanmıştır.",
+      "The Roman Theatre of Mérida was erected in 15-16 BC by Marcus Vipsanius Agrippa, designed to seat six thousand spectators.",
+    ),
+    f(
+      "Diana Tapınağı, kentin forumunun merkezinde duran ve Augustus kültüne adanmış Korint nizamında altı sütunlu bir tapınaktı.",
+      "The Temple of Diana stood at the heart of the municipal forum, a hexastyle Corinthian temple dedicated to the imperial cult.",
+    ),
+    f(
+      "Guadiana Nehri üzerindeki Roma köprüsü 792 metre uzunluğu ve 60 kemeriyle antik çağın en uzun köprülerinden biriydi.",
+      "The Roman bridge across the Guadiana was 792 metres long on 60 stone arches, among the longest bridges surviving from antiquity.",
+    ),
+  ],
+  italica: [
+    f(
+      "İtalika amfitiyatrosu 156 metre uzunluğu ve 25.000 kişilik kapasitesiyle Roma dünyasının en büyük arenalarından biriydi.",
+      "The amphitheatre of Italica spanned 156 metres and held 25,000 spectators, ranking among the largest in the Roman world.",
+    ),
+    f(
+      "İmparator Trajan ve Hadrianus bu kentte doğmuş; Hadrianus kente Traianeum tapınağını ve lüks mermer mahalleleri eklemiştir.",
+      "Emperors Trajan and Hadrian were born here; Hadrian endowed the city with the Traianeum sanctuary and lavish marble quarters.",
+    ),
+    f(
+      "Kuşlar Evi (Casa de los Pájaros), içinde otuzdan fazla farklı kuş türünün resmedildiği eşsiz taban mozaikleriyle ünlüdür.",
+      "The House of the Birds is famed for its intact polychrome floor mosaic depicting more than thirty distinct avian species.",
+    ),
+  ],
+  delfi: [
+    f(
+      "Parnassos Dağı'nın yamacındaki Apollon Tapınağı MÖ 6. yüzyıldan itibaren kehanet merkezi olarak antik Akdeniz'in kaderini belirlemiştir.",
+      "The Temple of Apollo on the slopes of Mount Parnassus served as the Mediterranean's paramount oracle from the sixth century BC onward.",
+    ),
+    f(
+      "Athena Pronaia kutsal alanındaki yuvarlak Tholos, 20 Dor sütunuyla antik Yunan mimarisinin en zarif dairesel yapısıdır.",
+      "The circular Tholos at the sanctuary of Athena Pronaia is the most refined circular building of classical Greece, ringed by 20 Doric columns.",
+    ),
+    f(
+      "Delfi Dağ Stadyumu deniz seviyesinden 650 metre yüksekte, 178 metrelik koşu pisti ve 7.000 kişilik taş oturma sıralarıyla inşa edilmiştir.",
+      "The mountain stadium of Delphi sits 650 metres above sea level with a 178-metre track and stone seating for 7,000 spectators.",
+    ),
+  ],
+  olimpiya: [
+    f(
+      "Zeus Tapınağı MÖ 470-456 yıllarında inşa edilmiş; içinde heykeltıraş Phidias'ın 13 metre boyundaki altın ve fildişi heykeli duruyordu.",
+      "The Temple of Zeus was built in 470-456 BC, housing sculptor Phidias' thirteen-metre gold and ivory statue of Zeus, one of the Seven Wonders.",
+    ),
+    f(
+      "Antik Olimpiyat Stadyumu'nun kireçtaşından balbis başlangıç çizgisi bugün hâlâ yerindedir; pist tam 192,27 metre uzunluğundadır.",
+      "The stone balbis starting line of the Olympic Stadium survives in situ today, marking a sprinting track precisely 192.27 metres long.",
+    ),
+    f(
+      "Hera Tapınağı MÖ 600 civarında inşa edilmiş olup Olympia'nın ayakta kalan en eski anıtsal tapınağıdır ve Olimpiyat meşalesi hâlâ burada yakılır.",
+      "Built around 600 BC, the Temple of Hera is the oldest monumental building at Olympia; the modern Olympic flame is still rekindled here.",
+    ),
+  ],
+  iskenderiye: [
+    f(
+      "İskenderiye Feneri (Pharos) MÖ 280 civarında mimar Sostratos tarafından 110 metre yüksekliğinde inşa edilmiş ve Antik Dünyanın 7 Harikasından biri sayılmıştır.",
+      "The Pharos of Alexandria was raised around 280 BC by architect Sostratos to a height of 110 metres, celebrated as one of the Seven Wonders of the Ancient World.",
+    ),
+    f(
+      "Serapeum kutsal alanındaki 27 metre boyundaki pembe Asvan graniti Pompey Sütunu, antik Akdeniz'in en büyük yekpare sütunlarından biridir.",
+      "Pompey's Pillar in the Serapeum sanctuary is an Asuan red granite monolith 27 metres tall, among the largest single-piece columns of antiquity.",
+    ),
+    f(
+      "Kentin 30 metre genişliğindeki Kanopik Caddesi, doğu ve batı limanlarını birbirine bağlayan sütunlu bir anayoldu.",
+      "The Canopic Way was a thirty-metre wide grand colonnaded avenue linking the eastern and western gates across the metropolis.",
+    ),
+  ],
+  karnak: [
+    f(
+      "Büyük Hipostil Salonu 102 x 53 metre ölçülerinde olup 16 sıra halinde yükselen 134 dev kumtaşı sütunla örtülüdür.",
+      "The Great Hypostyle Hall spans 102 by 53 metres, supported by 134 colossal sandstone columns arranged across 16 rows.",
+    ),
+    f(
+      "Karnak'taki Amun-Ra Tapınağı'nın birinci pilonu 113 metre genişliği ve 40 metreye varan yüksekliğiyle Mısır'ın en anıtsal kapısıdır.",
+      "The First Pylon of the Temple of Amun-Ra measures 113 metres across and stood nearly forty metres high, Egypt's most massive gate.",
+    ),
+    f(
+      "Kraliçe Hatshepsut'un diktirdiği 29,5 metre boyundaki tek parça kırmızı granit dikilitaş Mısır'da ayakta duran en yüksek antik dikilitaştır.",
+      "Queen Hatshepsut's 29.5-metre monolithic red granite obelisk remains the tallest standing ancient obelisk in Egypt.",
+    ),
+  ],
+  petra: [
+    f(
+      "Al-Khazneh (Hazine cephesi), 39 metre yüksekliğinde ve 25 metre genişliğinde olup doğrudan kızıl kumtaşı dağın yüzeyine oyulmuştur.",
+      "Al-Khazneh (The Treasury) was carved directly out of the rose-red sandstone cliff, standing 39 metres high and 25 metres wide.",
+    ),
+    f(
+      "Siq Kanyonu, şehre girişi sağlayan 1,2 kilometre uzunluğunda ve yer yer yalnızca üç metre genişliğe inen doğal bir yarıktır.",
+      "The Siq is a natural sandstone gorge 1.2 kilometres long, narrowing to barely three metres across between eighty-metre cliffs.",
+    ),
+    f(
+      "Nebati kaya tiyatrosu dağın yamacına oyularak inşa edilmiş ve 4.000'den fazla izleyici kapasitesine sahipti.",
+      "The Nabataean theatre was chiseled entirely into the mountain slope, seating more than four thousand spectators.",
+    ),
+  ],
+  ceras: [
+    f(
+      "Oval Forum 90 x 80 metre ölçülerinde olup 56 İyonik sütunla çevrilmiş ve antik kent planlamasında benzersiz bir kavisli meydandır.",
+      "The Oval Forum measures 90 by 80 metres, framed by 56 Ionic columns into an unprecedented curved civic plaza.",
+    ),
+    f(
+      "Cardo Maximus caddesi 800 metre uzunluğunda olup cadde boyunca yüzlerce Korint ve İyon sütunu sıralanmıştır.",
+      "The Cardo Maximus stretches 800 metres north-south, flanked by hundreds of Corinthian and Ionic columns above stone paving.",
+    ),
+    f(
+      "Artemis Tapınağı kentin en yüksek terasında yükselir; 13 metre boyundaki devasa Korint sütunlarından bazıları rüzgârda hafifçe esneyecek şekilde dengelenmiştir.",
+      "The Temple of Artemis crowns the city's highest terrace; its thirteen-metre Corinthian columns were famously balanced to sway imperceptibly in tremors.",
+    ),
+  ],
+  baalbek: [
+    f(
+      "Jüpiter Tapınağı 88 x 48 metre taban alanına sahipti ve 20 metre boyunda, 2,5 metre çapında 54 devasa Korint sütunuyla çevriliydi.",
+      "The Temple of Jupiter measured 88 by 48 metres, surrounded by 54 colossal Corinthian columns each twenty metres high and 2.5 metres thick.",
+    ),
+    f(
+      "Bacchus Tapınağı antik dünyadan günümüze neredeyse eksiksiz ulaşan en süslü Roma tapınağıdır; kapı lentosu ve tavan kabartmaları kusursuzdur.",
+      "The Temple of Bacchus is one of the most lavish and completely preserved Roman temples in existence, its monumental portal and ceiling reliefs intact.",
+    ),
+    f(
+      "Tapınak terasının temelinde yer alan üç devasa Trilithon taşının her biri yaklaşık 800 ton olup antik mühendisliğin en büyük gizemlerindendir.",
+      "The three Trilithon megaliths in the temple terrace foundation weigh some 800 tons apiece, among the most astonishing feats of ancient engineering.",
+    ),
+  ],
+  biblos: [
+    f(
+      "Biblos dünyada en az MÖ 5000'den bu yana kesintisiz olarak yaşanılan en eski liman kentlerinden biridir.",
+      "Byblos is among the oldest continuously inhabited maritime towns in human history, settled without pause since at least 5000 BC.",
+    ),
+    f(
+      "Dikilitaş Tapınağı MÖ 1900-1600 yıllarında inşa edilmiş olup avlusunda tapınma amaçlı onlarca dikili kireçtaşı anıt barındırır.",
+      "The Temple of the Obelisks was erected around 1900-1600 BC, its courtyard bristling with dozens of votive standing limestone stones.",
+    ),
+    f(
+      "Biblos Roma Tiyatrosu MÖ 3. yüzyılda Akdeniz manzarasına karşı inşa edilmiş; kenti denizden izleyen taş oturma basamakları korunmuştur.",
+      "The Roman Theatre of Byblos was built facing the Mediterranean panorama, its semicircular cavea looking out over the ancient harbour.",
+    ),
+  ],
 
 };
 

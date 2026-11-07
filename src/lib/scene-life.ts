@@ -2137,7 +2137,7 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
     up.push([x, y0, -0.5]);
     return [...up, ...up.slice(1, -1).reverse()];
   };
-  for (const x of [bayCentres[0]! + 0.4, 1.2, bayCentres[2]! - 0.4]) {
+  for (const x of [bayCentres[0]! + 0.4, 0.3, bayCentres[2]! - 0.4]) {
     cast.walk(stair(x), {
       carry: x > 3 ? "basket" : x > 0 ? "capsa" : "scroll",
       role: x > 3 ? "worker" : "citizen",

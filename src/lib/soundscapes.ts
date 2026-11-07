@@ -1720,6 +1720,93 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     ],
     density: 1.0,
   },
+  "emerita-augusta-kenti": {
+    add: [
+      PEOPLE(1, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.8),
+      SWIFTS(0.8),
+      CRICKETS(0.8),
+    ],
+    density: 1.1,
+  },
+  "italica-kenti": {
+    add: [
+      PEOPLE(1, ["shout", "chatter"]),
+      STEPS(["steps-stone"], 0.8),
+      CRICKETS(0.9),
+      DONKEY(0.7),
+    ],
+    density: 1.1,
+  },
+  "delfi-kenti": {
+    add: [
+      GUSTS(1.0),
+      RAPTORS(0.9, ["hoopoe", "partridge"]),
+      GOATS(0.8),
+      STEPS(["steps-stone"], 0.7),
+    ],
+    density: 0.9,
+  },
+  "olimpiya-kenti": {
+    add: [
+      SWIFTS(1.0),
+      PEOPLE(1, ["shout", "laugh"]),
+      CRICKETS(0.8),
+      SONGBIRDS(0.8, ["blackbird", "finch"]),
+    ],
+    density: 1.1,
+  },
+  "iskenderiye-kenti": {
+    add: [
+      ...HARBOUR(1.0),
+      PEOPLE(1.2, ["chatter", "shout", "laugh"]),
+      GUSTS(0.8),
+    ],
+    density: 1.3,
+  },
+  "karnak-kenti": {
+    add: [
+      PEOPLE(0.9, ["chant", "chatter"]),
+      GUSTS(0.7),
+      RAPTORS(0.8, ["hoopoe", "partridge"]),
+    ],
+    density: 1.0,
+  },
+  "petra-kenti": {
+    add: [
+      GUSTS(1.1),
+      DONKEY(0.9),
+      STEPS(["steps-gravel"], 0.8),
+      GOATS(0.7),
+    ],
+    density: 1.0,
+  },
+  "ceras-kenti": {
+    add: [
+      PEOPLE(1, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.8),
+      CRICKETS(0.8),
+      DONKEY(0.7),
+    ],
+    density: 1.1,
+  },
+  "baalbek-kenti": {
+    add: [
+      GUSTS(1.0),
+      PEOPLE(1, ["chant", "chatter"]),
+      WORK(["hammer", "chisel"], 0.7),
+      GOATS(0.7),
+    ],
+    density: 1.0,
+  },
+  "biblos-kenti": {
+    add: [
+      ...HARBOUR(1.0),
+      PEOPLE(1, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.1,
+  },
 };
 
 /** The kind's soundscape with the model's own sources and pace added. */

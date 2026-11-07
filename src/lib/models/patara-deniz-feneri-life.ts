@@ -41,7 +41,8 @@ export function lighthouseLife(spec: LighthouseSpec, era: Era): SceneLife {
   });
 
   /* A merchant ship moored along the harbour side of the mole. */
-  const shipX = L.moleStart + 24;
+  const baseEnd = spec.baseSide / 2;
+  const shipX = baseEnd + 13.4;
   const shipZ = mw / 2 + 3.2;
   b.props.push(...ship([shipX, 0, shipZ]));
   for (const [dx, action] of [
@@ -80,8 +81,8 @@ export function lighthouseLife(spec: LighthouseSpec, era: Era): SceneLife {
   cast.group([L.moleEnd - 14, 0, -1.5], 3);
 
   /* At the water's edge, a fisherman and his basket. */
-  cast.add({ at: [L.moleStart + 14, 0, -mw / 2 + 0.6], rotY: Math.PI, action: "sit" });
-  b.props.push(cyl("hide", [L.moleStart + 15, 0, -mw / 2 + 0.9], 0.25, 0.3, 0.35, 10));
+  cast.add({ at: [baseEnd + 3.4, 0, -mw / 2 + 0.6], rotY: Math.PI, action: "sit" });
+  b.props.push(cyl("hide", [baseEnd + 4.4, 0, -mw / 2 + 0.9], 0.25, 0.3, 0.35, 10));
   // Someone come out to look at the sea, beside the tower.
   cast.add({
     at: [-spec.baseSide / 2 - 1.6, 0, 2.4],
@@ -101,18 +102,17 @@ export function lighthouseLife(spec: LighthouseSpec, era: Era): SceneLife {
    * the ship, and two boys throwing a ball at the foot of the tower.
    */
   const x = aside(b, 6466);
-  const m0 = L.moleStart;
   trades.porters(x, [
-    [m0 + 18, 0, -mw / 2 + 1.8],
-    [m0 + 34, 0, -mw / 2 + 1.8],
-    [m0 + 34, 0, -mw / 2 + 1.3],
-    [m0 + 18, 0, -mw / 2 + 1.3],
+    [baseEnd + 7.4, 0, -mw / 2 + 1.8],
+    [baseEnd + 23.4, 0, -mw / 2 + 1.8],
+    [baseEnd + 23.4, 0, -mw / 2 + 1.3],
+    [baseEnd + 7.4, 0, -mw / 2 + 1.3],
   ]);
-  trades.fishmonger(x, [m0 + 17, 0, 0.6], 0);
+  trades.fishmonger(x, [baseEnd + 6.4, 0, 0.6], 0);
   x.cast.walk(
     [
-      [m0 + 36, 0, -mw / 2 + 0.75],
-      [m0 + 16, 0, -mw / 2 + 0.75],
+      [baseEnd + 25.4, 0, -mw / 2 + 0.75],
+      [baseEnd + 5.4, 0, -mw / 2 + 0.75],
     ],
     { role: "worker", carry: "sack", speed: 0.7 },
   );

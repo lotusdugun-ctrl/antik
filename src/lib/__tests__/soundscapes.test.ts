@@ -66,8 +66,8 @@ const EXPECTED: Record<string, { character: Soundscape["character"]; must: strin
 };
 
 describe("soundscapes", () => {
-  test("all fifty-five models have one", () => {
-    expect(reconstructions.length).toBe(55);
+  test("all sixty-five models have one", () => {
+    expect(reconstructions.length).toBe(65);
   });
 
   for (const item of reconstructions) {
