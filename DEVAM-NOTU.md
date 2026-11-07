@@ -1,6 +1,103 @@
-# Antik Türkiye: devam notu (7 Kasım 2026; güncellendi)
+# Antik Türkiye: devam notu (8 Kasım 2026; güncellendi)
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
+
+## 40 ADET DAHA YENİ ANTİK KENT VE 3D MODELLERİ EKLENDİ (TOPLAM 131 MODEL, 803/803 PASS) (8 Kasım 2026) — EN GÜNCEL, BURADAN BAŞLA
+
+- **Kullanıcı Talebi:** "40 adet daha antik kent sayfası tanıtım bilgileri ve 3d modellemesini yap farklı ülkelerden olabilir türkiye hariç"
+- **Kapsam:**
+  - Türkiye kesinlikle hariç tutularak, dünya çapında 20 farklı ülkeden 2'şer adet olmak üzere **40 YEPYENİ ANTİK KENT** projeye dahil edildi.
+  - Rekonstrüksiyon ve 3D şehir modeli sayısı 91'den **131'e** yükseldi.
+  - **Eklenen 40 Yeni Antik Kent ve Ülkeleri:**
+    1. **Portekiz (PT):** Conimbriga (`conimbriga-kenti`), Évora Roma Tapınağı (`evora-roma-kenti`)
+    2. **Hırvatistan (HR):** Salona (`salona-kenti`), Pula (`pula-kenti`)
+    3. **Avusturya (AT):** Carnuntum (`carnuntum-kenti`), Aguntum (`aguntum-kenti`)
+    4. **Bulgaristan (BG):** Philippopolis (`philippopolis-kenti`), Serdica (`serdica-kenti`)
+    5. **Kuzey Makedonya (MK):** Stobi (`stobi-kenti`), Heraclea Lyncestis (`heraclea-lyncestis-kenti`)
+    6. **Kıbrıs (CY):** Kourion (`kourion-kenti`), Salamis (`salamis-kibris-kenti`)
+    7. **İsrail (IL):** Caesarea Maritima (`caesarea-maritima-kenti`), Beit She'an (`beit-shean-kenti`)
+    8. **Çin (CN):** Xi'an / Chang'an (`xian-changan-kenti`), Luoyang (`luoyang-kenti`)
+    9. **Japonya (JP):** Nara / Heijo-kyo (`nara-heijo-kenti`), Kyoto / Heian-kyo (`kyoto-heian-kenti`)
+    10. **Guatemala (GT):** Tikal (`tikal-kenti`), Quiriguá (`antigua-quirigua-kenti`)
+    11. **Honduras (HN):** Copán (`copan-kenti`), El Puente (`el-puente-kenti`)
+    12. **Bolivya (BO):** Tiwanaku (`tiwanaku-kenti`), Pumapunku (`pumapunku-kenti`)
+    13. **İtalya (IT):** Ostia Antica (`ostia-antica-kenti`), Paestum (`paestum-kenti`)
+    14. **Yunanistan (GR):** Akropolis / Parthenon (`akropolis-atena-kenti`), Epidavros (`epidavros-kenti`)
+    15. **Mısır (EG):** Luksor Kenti (`luksor-kenti-kenti`), Ebu Simbel (`ebu-simbel-kenti`)
+    16. **Ürdün (JO):** Umm Qais (`umm-qais-kenti`), Amman Kalesi (`amman-kale-kenti`)
+    17. **Lübnan (LB):** Anjar (`anjar-kenti`), Tyre / Sur (`tyre-sur-kenti`)
+    18. **İspanya (ES):** Tarraco (`tarraco-kenti`), Segovia (`segovia-kenti`)
+    19. **Fransa (FR):** Pont du Gard (`pont-du-gard-kenti`), Vaison-la-Romaine (`vaison-la-romaine-kenti`)
+    20. **Almanya (DE):** Xanten (`xanten-kenti`), Saalburg (`saalburg-kenti`)
+
+- **Yapılan Somut İşler:**
+  1. **Site Tanımları (`src/lib/sites.ts`):** 12 yeni ülke kodu (`PT`, `HR`, `AT`, `BG`, `MK`, `CY`, `IL`, `CN`, `JP`, `GT`, `HN`, `BO`) eklendi; 40 kentin harita koordinatları, fotoğrafları, UNESCO miras kayıtları (`WORLD_HERITAGE`) ve uygarlık eşleşmeleri tanımlandı. `CIVILIZATIONS` sözlüğü `allCivilizations()` ile tam senkronize edildi.
+  2. **Efes Standartlarında Sayfa Bilgilendirmeleri (`src/lib/site-details.ts`):** 40 kentin tamamı için çift dilli (TR/EN) kapsamlı tarihçe, mimari üslup analizleri, 5'er adet öne çıkan yapı (`highlights`) ve vurucu hap bilgiler (`funFact`) yazıldı.
+  3. **Hap Bilgiler (`src/lib/site-facts.ts`):** 40 kentin her biri için 3'er adet doğrulanmış tarihsel ilgi çekici bilgi eklendi (toplam 120 hap bilgi).
+  4. **3D Şehir Modelleri (`src/lib/reconstructions.ts`):** 40 kentin her biri için sağlam dönem, gündüz ışığı odaklı anıtsal tapınaklar, sütunlu cepheler, zafer takları/kapılar, surlar, sokaklar, bilgilendirme noktaları (`hotspots`) ve arkeolojik ölçüler (`measures`) oluşturuldu. Toplam rekonstrüksiyon sayısı 91'den **131'e** ulaştı.
+  5. **Ses Tasarımı (`src/lib/soundscapes.ts`):** 40 kentin tamamına coğrafi ve kültürel dokusuna uygun benzersiz ambiyans tatları (`FLAVOUR`), liman/nehir sesleri (`HARBOUR`, `FROGS`), kuşlar (`SONGBIRDS`, `SWIFTS`, `RAPTORS`), zanaat sesleri (`WORK`), adımlar (`STEPS`) ve farklı ses yoğunlukları (`density`) tanımlandı.
+  6. **Arkeolojik Yapı Kartları (`docs/yapi-kartlari/`):** 40 yeni kentin tamamı için [K] kaynak, [F] fotoğraf ve [T] tahmin etiketli mimari kimlik kartları (40 yeni markdown dosyası) hazırlandı.
+  7. **Taranmış Eser Atıfları (`src/lib/scans.ts`):** Tüm yeni kentlerin prostyle tapınaklarında sergilenen CC BY / PDM heykelleri (`SCANS_BY_RECONSTRUCTION`) eksiksiz ilişkilendirildi.
+  8. **Ses Zamanlayıcısı ve Benzersizlik Doğrulaması (`sound-scheduler.test.ts`):** 131 modelin hiçbirinin ses imzası çakışmayacak şekilde özgünleştirildi (PASS).
+  9. **Sahne Yaşamı ve Güvenli Yürüme (`scene-life.test.ts`):** 131 modelin yürüme yolları, sokakları ve çarpışma geometrileri test edilerek yayaların taşa girmesi sıfırlandı (PASS).
+
+- **Doğrulama Sonuçları:**
+  - `bunx tsc --noEmit` → **0 hata** (TypeScript tip denetimi tertemiz).
+  - `bun test` → **803 pass, 0 fail (658.732 expect() çağrısı, 31 test dosyası)** %100 YEŞİL!
+  - `test-sonucu.txt` dosyası güncellendi.
+
+- **Sıradaki Adımlar:**
+  - Kullanıcı `GONDER-43.bat` dosyasını çalıştırarak tüm bu yeni 40 kenti GitHub'a aktarabilir.
+
+---
+
+## 20 FARKLI ÜLKEDEN TOPLAM 40 ANTİK KENT 3D MODELLERİ VE SAYFA İÇERİKLERİ TAMAMLANDI (683/683 PASS) (8 Kasım 2026)
+
+- **Kullanıcı Talebi:** "20 farklı ülkeden herbirinden 2 şer adet olacak şekilde 40 adet antik kent 3d modeli ekle ve şuan olan ve yapılacak tüm antik kentler için bilgilendirmeleri yap site içinde tıpkı efes antik kentinde olduğu gibi"
+- **Kapsam:** 
+  - Projede önceden 14 yabancı kent vardı: İspanya (Emerita Augusta, Italica), Yunanistan (Delfi, Olimpiya), Mısır (İskenderiye, Karnak), Ürdün (Petra, Jerash), Lübnan (Baalbek, Byblos), İtalya (Pompeii), Birleşik Krallık (Eboracum), Fransa (Nîmes), Almanya (Trier).
+  - Talep doğrultusunda eksik kalan ülkeler tamamlandı ve 11 yeni ülke sisteme dahil edilerek **tam 20 ülke × 2 antik kent = 40 antik kent** seviyesine ulaşıldı (toplam 26 yeni kent eklendi):
+    1. **İtalya (IT):** Pompeii + **Herculaneum (`herculaneum-kenti`)**
+    2. **Birleşik Krallık (GB):** Eboracum + **Aquae Sulis (`aquae-sulis-kenti` / Bath)**
+    3. **Fransa (FR):** Nîmes + **Arelate (`arelate-kenti` / Arles)**
+    4. **Almanya (DE):** Trier + **Colonia Agrippina (`colonia-kenti` / Köln)**
+    5. **İspanya (ES):** Emerita Augusta + Italica
+    6. **Yunanistan (GR):** Delfi + Olimpiya
+    7. **Mısır (EG):** İskenderiye + Karnak
+    8. **Ürdün (JO):** Petra + Jerash (Ceras)
+    9. **Lübnan (LB):** Baalbek + Byblos (Biblos)
+    10. **Tunus (TN):** **Kartaca (`kartaca-kenti`)** + **El Cem (`el-cem-kenti`)**
+    11. **Cezayir (DZ):** **Timgad (`timgad-kenti`)** + **Djemila (`djemila-kenti`)**
+    12. **Fas (MA):** **Volubilis (`volubilis-kenti`)** + **Liksus (`liksus-kenti`)**
+    13. **Libya (LY):** **Leptis Magna (`leptis-magna-kenti`)** + **Sabratha (`sabratha-kenti`)**
+    14. **Suriye (SY):** **Palmira (`palmira-kenti`)** + **Bosra (`bosra-kenti`)**
+    15. **Irak (IQ):** **Babil (`babil-kenti`)** + **Ur (`ur-kenti`)**
+    16. **İran (IR):** **Persepolis (`persepolis-kenti`)** + **Pasargad (`pasargad-kenti`)**
+    17. **Hindistan (IN):** **Mohenco-daro (`mohencodaro-kenti`)** + **Hampi (`hampi-kenti`)**
+    18. **Kamboçya (KH):** **Angkor Vat (`angkor-vat-kenti`)** + **Bayon (`bayon-kenti`)**
+    19. **Meksika (MX):** **Teotihuacan (`teotihuacan-kenti`)** + **Chichén Itzá (`cisen-itza-kenti`)**
+    20. **Peru (PE):** **Machu Picchu (`macu-picu-kenti`)** + **Chan Chan (`can-can-kenti`)**
+
+- **Yapılan Somut İşler:**
+  1. **Site Tanımları (`src/lib/sites.ts`):** 26 kentin tamamı harita koordinatları, fotoğrafları, UNESCO miras kayıtları (`WORLD_HERITAGE`) ve tüm uygarlık eşleşmeleri ile eklendi.
+  2. **Efes Standartlarında Sayfa Bilgilendirmeleri (`src/lib/site-details.ts`):** 26 kentin tamamı için çift dilli (TR/EN) kapsamlı tarihçe, mimari üslup analizleri, 5'er adet öne çıkan yapı (`highlights`) ve vurucu hap bilgiler (`funFact`) yazıldı.
+  3. **Hap Bilgiler (`src/lib/site-facts.ts`):** 26 kentin her biri için 3'er adet doğrulanmış tarihsel ilgi çekici bilgi eklendi.
+  4. **Ses Tasarımı (`src/lib/soundscapes.ts`):** 26 kentin tamamına coğrafi ve kültürel dokusuna uygun ambiyans tatları (`FLAVOUR`) atandı.
+  5. **3D Şehir Modelleri (`src/lib/reconstructions.ts`):** 26 kentin her biri için sağlam dönem, gündüz ışığı odaklı anıtsal yapılar, surlar, kuleler, kapılar, sokaklar, bilgilendirme noktaları (`hotspots`) ve arkeolojik ölçüler (`measures`) oluşturuldu. Toplam rekonstrüksiyon sayısı 65'ten 91'e ulaştı.
+  6. **Arkeolojik Yapı Kartları (`docs/yapi-kartlari/`):** 26 kentin tamamı için [K] kaynak, [F] fotoğraf ve [T] tahmin etiketli mimari kimlik kartları (26 yeni markdown dosyası) hazırlandı.
+  7. **Geometri ve Derinlik Uyumu (`face-fights.test.ts`):** Sokak aksları ve bina parsel tabanları ayrıştırıldı, 40 kentin tamamında z-buffer çakışmaları sıfırlandı (PASS).
+  8. **Sahne Yaşamı ve Güvenli Yürüme (`scene-life.test.ts`):** Sokaklar binaların açık meydan akslarına alındı, tiyatro sahne derinlikleri (`stageDepth: 7.5`) ve cavea çapları dengelenerek yaya/aktör rotalarındaki taşa girme hataları tamamen giderildi (PASS).
+  9. **Taranmış Eser Atıfları (`src/lib/scans.ts`):** Tüm kentlerin prostyle tapınaklarında kullanılan CC BY / PDM heykelleri (`SCANS_BY_RECONSTRUCTION`) eksiksiz ilişkilendirildi (PASS).
+
+- **Doğrulama Sonuçları:**
+  - `bunx tsc --noEmit` → **0 hata** (TypeScript tip denetimi tertemiz).
+  - `bun test` → **683 pass, 0 fail (502.229 expect() çağrısı, 31 test dosyası)** %100 YEŞİL!
+  - `test-sonucu.txt` dosyası güncellendi.
+
+- **Sıradaki Adımlar:**
+  - Kullanıcı `GONDER-42.bat` dosyasını çalıştırarak tüm bu yeni 40 kenti GitHub'a aktarabilir.
+
+---
 
 ## 5 ÜLKEDE 10 YENİ 3D ANTİK KENT EKLENDİ, TÜM TESTLER TAMAMLANDI (605/605 PASS) (7 Kasım 2026, gece) — EN GÜNCEL, BURADAN BAŞLA
 

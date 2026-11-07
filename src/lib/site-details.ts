@@ -3284,6 +3284,1326 @@ export const siteDetails: Record<string, SiteDetail> = {
     "Eski Yunancada papirüse 'byblos' denirdi; çünkü Mısır papirüsleri Akdeniz'e bu limandan dağıtılırdı ve 'İncil' (Bible) adı buradan gelir.",
     "The Greek word for papyrus roll was 'byblos' after this port that traded it, which ultimately gave the world the word 'Bible'.",
   ),
+  ["herculaneum"]: d(
+    "MS 79 yılında Vezüv Yanardağı'nın piroklastik çamur ve gaz akıntısı altında kalarak oksijensiz ortamda korunan zengin Roma sahil kenti. Kömürleşmiş ahşap mobilyalar, iki katlı villalar, renkli freskler ve sahil kayıkhaneleri günümüze eksiksiz ulaşmıştır.",
+    "The affluent Roman seaside resort sealed airtight under twenty metres of volcanic tuff during the eruption of Vesuvius in 79 AD. Preserves intact carbonised wooden beams, upper floors, painted peristyles and seaside boat arches.",
+    [
+      "Kent planı",
+      "Palaestra Külliyesi",
+      "Karakteristik Ahşap Bölmeli Ev",
+      "Merkezi Termal Hamamlar",
+      "Sahil Kemerleri ve İskele",
+    ],
+    [
+      "The City Plan",
+      "The Grand Palaestra",
+      "House of the Wooden Partition",
+      "Central Thermal Baths",
+      "Seaside Vaulted Boat Chambers",
+    ],
+    "Herculaneum'da patlama sırasında yanan ahşap çatılar, karyolalar ve parşömen kütüphanesi (Villa dei Papiri) 2.000 yıl boyunca bozulmadan kalmıştır.",
+    "Unlike Pompeii which was crushed by falling pumice, Herculaneum was buried in superheated mud that preserved wooden beds, doors and papyrus scrolls intact.",
+  ),
+  ["aquae-sulis"]: d(
+    "Roma Britanya'sının en ünlü kutsal termal kaplıca kenti. Kelt su tanrıçası Sulis ile Roma bilgelik tanrıçası Minerva'nın birleştirildiği tapınak, kurşun levhalarla kaplı dev sıcak su havuzu ve buhar banyolarıyla imparatorluğun dört bir yanından gelen şifa arayıcılarını ağırlamıştır.",
+    "The celebrated thermal healing sanctuary of Roman Britain. Centred on the natural thermal springs where Celtic water goddess Sulis merged with Minerva, boasting a vast lead-lined Great Bath, colonnaded hot halls and hypocaust saunas.",
+    [
+      "Kent planı",
+      "Büyük Roma Hamamı",
+      "Sulis Minerva Tapınağı",
+      "Kutsal Sıcak Kaynak Havuzu",
+      "Dairesel Soğukluk Havuzu",
+    ],
+    [
+      "The City Plan",
+      "The Great Bath",
+      "Temple of Sulis Minerva",
+      "The Sacred Spring Reservoir",
+      "Circular Cold Plunge Pool",
+    ],
+    "Büyük Havuz'un tabanını kaplayan devasa kurşun levhalar 2.000 yıl önce Mendip tepelerindeki madenlerden çıkarılmış ve hâlâ su sızdırmazlığını korumaktadır.",
+    "The Great Bath is lined with 45 massive sheets of lead mined from the nearby Mendip Hills, remaining watertight to this day.",
+  ),
+  ["arelate"]: d(
+    "Rône Nehri kıyısında Galya'nın 'Küçük Roma'sı olarak anılan ticaret ve donanma metropolü. 20.000 seyirci kapasiteli iki katlı 120 kemerli dev Roma amfitiyatrosu, Augustus dönemi antik tiyatrosu ve kentin altındaki anıtsal yeraltı tonoz galerileriyle ünlüdür.",
+    "The naval hub and inland river port of southern Gaul, acclaimed as the 'Little Rome of the West'. Dominated by its intact two-tier 120-arched amphitheatre seating 20,000, its Augustan theatre and the colossal underground cryptoporticus beneath the forum.",
+    [
+      "Kent planı",
+      "Arles Roma Amfitiyatrosu",
+      "Antik Tiyatro",
+      "Forum Cryptoporticus'u",
+      "Konstantin Hamamları",
+    ],
+    [
+      "The City Plan",
+      "The Roman Amphitheatre",
+      "The Augustan Theatre",
+      "The Forum Cryptoporticus",
+      "Baths of Constantine",
+    ],
+    "Orta Çağ'da amfitiyatro bir kaleye dönüştürülmüş, içine 200'den fazla ev ve iki kilise inşa edilerek müstahkem bir şehir hâline getirilmiştir.",
+    "In medieval times, the amphitheatre was fortified into a fortress-city containing over 200 dwellings, four defensive towers and two chapels.",
+  ),
+  ["colonia"]: d(
+    "Germania Inferior eyaletinin Ren Nehri sınırındaki görkemli başkenti. İmparatoriçe Agrippina'nın doğum yeri olan kent; vali sarayı Praetorium, anıtsal çift kemerli Kuzey Kapısı, Dionysos mozaiği ve gelişmiş su kemerleriyle Roma mühendisliğinin doruk noktasıdır.",
+    "The Roman capital of Germania Inferior stationed on the Rhine limes. Birthplace of Empress Agrippina, featuring the riverfront Praetorium palace, monumental double-arched North Gate and Dionysus mosaic villa.",
+    [
+      "Kent planı",
+      "Praetorium Vali Sarayı",
+      "Roma Kuzey Kapısı",
+      "Cardo Maximus ve Forum",
+      "Dionysos Mozaikli Konut",
+    ],
+    [
+      "The City Plan",
+      "The Praetorium Palace",
+      "The Roman North Gate",
+      "Cardo Maximus and Forum",
+      "The Dionysus Mosaic Villa",
+    ],
+    "Kentin altındaki 95 kilometrelik Eifel Su Kemeri, Roma İmparatorluğu'nun inşa ettiği en uzun ve en gelişmiş su taşıma altyapılarından biriydi.",
+    "The 95-kilometre Eifel Aqueduct supplying the city was among the longest and most engineered water conveyance systems in the entire Roman world.",
+  ),
+  ["kartaca"]: d(
+    "Akdeniz'in kadim deniz ve ticaret süper gücü Pön İmparatorluğu'nun ve ardından Roma Afrika'sının başkenti. Byrsa Tepesi akropolü, dairesel askeri liman cothon ve deniz kıyısındaki devasa Antoninus Hamamları ile antik dünyanın en büyük metropollerindendir.",
+    "The ancient Phoenician naval superpower and later the glorious Roman capital of Africa Proconsularis. Dominated by Byrsa Hill acropolis, the circular naval cothon harbour and the colossal seaside Antonine Baths.",
+    [
+      "Kent planı",
+      "Antoninus Hamamları",
+      "Byrsa Tepesi Akropolü",
+      "Dairesel Pön Askeri Limanı",
+      "Kartaca Roma Tiyatrosu",
+    ],
+    [
+      "The City Plan",
+      "The Antonine Baths",
+      "Byrsa Hill Acropolis",
+      "The Circular Punic Naval Cothon",
+      "The Roman Theatre of Carthage",
+    ],
+    "Kartaca'nın dairesel cothon limanında, ortadaki amirallik adası ve çevresi aynı anda 220 savaş kadırgasını gizleyebiliyordu.",
+    "The circular cothon naval basin concealed dry docks for 220 warships, commanded from a central circular admiralty island.",
+  ),
+  ["el-cem"]: d(
+    "Roma Afrika'sının zeytinyağı ticaret merkezi Thysdrus'ta yükselen çöl incisi. Roma Colosseum'undan sonra Akdeniz dünyasının en iyi korunmuş ve üçüncü büyük amfitiyatrosudur; 35.000 seyirciyi üç katlı korint kemerli cephesiyle ağırlar.",
+    "The oil-trading metropolis of Roman Africa, home to the finest intact amphitheatre in the Roman world after Rome's Colosseum. Accommodated 35,000 spectators across three soaring storeys of Corinthian arches.",
+    [
+      "Kent planı",
+      "El Cem Amfitiyatrosu",
+      "Yeraltı Gladyatör Galerileri",
+      "Podyum ve Arena",
+      "Thysdrus Forum Kalıntıları",
+    ],
+    [
+      "The City Plan",
+      "The Amphitheatre of El Jem",
+      "The Subterranean Service Vaults",
+      "The Podium and Arena Floor",
+      "The Ruins of the Thysdrus Forum",
+    ],
+    "El Cem Amfitiyatrosu hiçbir dağ yamacına yaslanmadan, tamamen düz ovada kireçtaşı bloklarının birbiri üzerine kilitlenmesiyle yükseltilmiştir.",
+    "The amphitheatre was constructed entirely freestanding on a flat plain without hillside support, using massive quarried stone blocks.",
+  ),
+  ["timgad"]: d(
+    "İmparator Traianus tarafından III. Augusta Lejyonu gazileri için kurulan kusursuz Roma ızgara planlı ordugah kenti. Üç kemerli Traianus Zafer Takı, 3.500 kişilik antik tiyatrosu, halk kütüphanesi ve hamamlarıyla Roma kent tasarımının dünyadaki en mükemmel örneğidir.",
+    "Founded by Emperor Trajan for veterans of the Third Augustan Legion, this is the world's best preserved Roman grid city. Celebrated for Trajan's Triumphal Arch, an intact public library, theatre and 14 bath complexes.",
+    [
+      "Kent planı",
+      "Traianus Zafer Takı",
+      "Timgad Roma Tiyatrosu",
+      "Antik Halk Kütüphanesi",
+      "Decumanus Maximus ve Forum",
+    ],
+    [
+      "The City Plan",
+      "Trajan's Triumphal Arch",
+      "The Roman Theatre of Timgad",
+      "The Ancient Public Library",
+      "Decumanus Maximus and Forum",
+    ],
+    "Timgad forumundaki taş yazıt Roma kolonistlerinin hayat anlayışını özetler: 'Avlanmak, yıkanmak, oynamak, gülmek; işte yaşamak budur!'",
+    "A pavement inscription in the forum famously reads: 'To hunt, to bathe, to play, to laugh: this is to live!'",
+  ),
+  ["djemila"]: d(
+    "Cezayir dağlarının 900 metre rakımında iki vadi arasına kurulmuş mücevher Roma kolonisi Cuicul. Dağ topoğrafyasına ustalıkla uyarlanmış forum meydanı, Caracalla Zafer Takı, Septimius Severus Tapınağı ve yamaç antik tiyatrosuyla ünlüdür.",
+    "Perched 900 metres high between two river ravines in the Algerian mountains, ancient Cuicul harmonises classical Roman monuments with rugged terrain: the Arch of Caracalla, Severan Temple and hillside theatre.",
+    [
+      "Kent planı",
+      "Caracalla Zafer Takı",
+      "Septimius Severus Tapınağı",
+      "Cuicul Yamaç Tiyatrosu",
+      "Severus Forumu ve Bazilika",
+    ],
+    [
+      "The City Plan",
+      "The Arch of Caracalla",
+      "The Temple of Septimius Severus",
+      "The Hillside Theatre of Cuicul",
+      "The Severan Forum and Basilica",
+    ],
+    "Kentin dik yamaçları nedeniyle klasik ızgara plan yerine araziye göre kademeli teraslar inşa edilmiş ve iki ayrı forum kurulmuştur.",
+    "Due to the steep hillside terrain, Cuicul abandoned the rigid military grid, building terraces and two distinct forums across two centuries.",
+  ),
+  ["volubilis"]: d(
+    "Mauretania Tingitana eyaletinin en güneybatı Roma başkenti. Zerhoun dağlarının eteklerinde yükselen Caracalla Zafer Takı, korint sütunlu Bazilika, anıtsal Capitolium ve Akdeniz'in en zengin mitolojik yer mozaikleriyle donatılmış villaları barındırır.",
+    "The southwestern outpost and capital of Roman Mauretania Tingitana. Commands the fertile Zerhoun plain with the Arch of Caracalla, grand judicial Basilica, Capitolium and mansions with exquisite intact mosaics.",
+    [
+      "Kent planı",
+      "Caracalla Zafer Takı",
+      "Anıtsal Roma Bazilikası",
+      "Capitolium Tapınağı",
+      "Decumanus Maximus ve Tingis Kapısı",
+    ],
+    [
+      "The City Plan",
+      "The Triumphal Arch of Caracalla",
+      "The Judicial Basilica",
+      "The Capitoline Temple",
+      "Decumanus Maximus and Tingis Gate",
+    ],
+    "Volubilis'te zeytinyağı üretimi o kadar büyüktü ki kentte bugüne kadar 58 adet anıtsal hidrolik zeytin presi tespit edilmiştir.",
+    "Olive oil was the city's golden wealth; archaeologists have excavated 58 olive presses within the residential quarters.",
+  ),
+  ["liksus"]: d(
+    "Loukkos Nehri'nin Atlantik Okyanusu'na döküldüğü tepede MÖ 8. yüzyılda Fenikeliler tarafından kurulan kadim liman kenti. Akropol tapınakları, Roma dairesel amfitiyatrosu ve antik dünyanın en büyük garum (balık sosu) fabrikalarıyla ünlüdür.",
+    "Founded by Phoenicians on a hilltop over the Loukkos estuary facing the Atlantic Ocean. Famous for its acropolis sanctuaries, circular theatre-amphitheatre and colossal industrial fish-salting (garum) factories.",
+    [
+      "Kent planı",
+      "Liksus Amfitiyatrosu",
+      "Akropol Tapınakları",
+      "Garum Üretim Kompleksi",
+      "Liman ve Nehir Terasları",
+    ],
+    [
+      "The City Plan",
+      "The Amphitheatre of Lixus",
+      "The Acropolis Sanctuaries",
+      "The Garum Salting Complex",
+      "Harbour and River Terraces",
+    ],
+    "Lixus, mitolojide Herakles'in yüz başlı ejderha Ladon'u öldürerek altın elmaları topladığı Hesperidler Bahçesi'nin efsanevi yeridir.",
+    "Ancient myth identified Lixus as the Garden of the Hesperides, where Hercules defeated the dragon Ladon to gather golden apples.",
+  ),
+  ["leptis-magna"]: d(
+    "Roma İmparatoru Septimius Severus'un doğup Akdeniz mermerleriyle donattığı görkemli sahil metropolü. Dört cepheli anıtsal Severus Zafer Takı, 30 metre yüksekliğindeki sütunlu Severus Bazilikası, yeni forum ve Akdeniz'e bakan tiyatrosuyla eşsizdir.",
+    "The birthplace of Emperor Septimius Severus, transformed into the grandest marble metropolis of the Mediterranean. Features the four-faced Severan Arch, the 30-metre Severan Basilica, forum and coastal theatre.",
+    [
+      "Kent planı",
+      "Septimius Severus Dört Cepheli Takı",
+      "Severus Bazilikası",
+      "Severus Forumu ve Revakları",
+      "Leptis Magna Sahil Tiyatrosu",
+    ],
+    [
+      "The City Plan",
+      "The Quadrifrons Arch of Septimius Severus",
+      "The Severan Basilica",
+      "The Severan Forum and Porticoes",
+      "The Maritime Theatre of Leptis",
+    ],
+    "Leptis Magna'nın Severus Bazilikası sütun başlıklarında Medusa başları ve Herakles kabartmaları kusursuz şekilde korunmuştur.",
+    "The Severan Basilica's colossal piers still retain finely carved reliefs of Medusa and the Labours of Hercules in crisp detail.",
+  ),
+  ["sabratha"]: d(
+    "Libya sahilinde Akdeniz mavisiyle birleşen Trípolis kenti. 3 katlı, 96 adet beyaz mermer sütunun Akdeniz dalgalarına karşı yükseldiği nefes kesici scaenae frons cephesine sahip Roma tiyatrosuyla dünya mirasıdır.",
+    "Ancient Tripolitan port along the Libyan coast, world-famous for its majestic maritime Roman theatre whose three-storey scaenae frons of 96 white marble columns stands directly against the Mediterranean Sea.",
+    [
+      "Kent planı",
+      "Sabratha Deniz Tiyatrosu",
+      "Antoninus Tapınağı",
+      "Liber Pater Tapınağı",
+      "Deniz Hamamları ve Forum",
+    ],
+    [
+      "The City Plan",
+      "The Maritime Theatre of Sabratha",
+      "The Temple of Antoninus",
+      "The Temple of Liber Pater",
+      "The Ocean Baths and Forum",
+    ],
+    "Sabratha Tiyatrosu'nun sahne arkalığı (scaenae frons), 20. yüzyılda İtalyan arkeologlar tarafından yüzlerce orijinal parçası birleştirilerek ayağa kaldırılmıştır.",
+    "The theatre's three-storey columned scaenae frons was meticulously reconstructed by anastylosis using original marble elements.",
+  ),
+  ["palmira"]: d(
+    "Suriye çölünün vahasında İpek Yolu'nun kervan zenginliğiyle kurulan efsanevi ticaret kenti. Kraliçe Zenobia'nın Roma'ya meydan okuduğu başkent; 1,2 kilometrelik anıtsal Sütunlu Cadde, Bel Tapınağı ve Anıtsal Zafer Takı ile çöl mimarisinin zirvesidir.",
+    "The legendary oasis metropolis of the Syrian desert, enriched by the Silk Road caravan trade. Imperial seat of Queen Zenobia who challenged Rome, featuring the 1.2-kilometre Grand Colonnade, Temple of Bel and Monumental Arch.",
+    [
+      "Kent planı",
+      "Anıtsal Sütunlu Cadde",
+      "Bel Tapınağı Kompleksi",
+      "Palmira Anıtsal Zafer Takı",
+      "Palmira Antik Tiyatrosu",
+    ],
+    [
+      "The City Plan",
+      "The Grand Colonnade Street",
+      "The Temple of Bel Sanctuary",
+      "The Monumental Triumphal Arch",
+      "The Roman Theatre of Palmyra",
+    ],
+    "Palmira Sütunlu Caddesi'ndeki her sütunda bir konsol bulunurdu; kente hizmet eden tüccarların ve komutanların bronz heykelleri buralarda sergilenirdi.",
+    "Every column along Palmyra's main thoroughfare was fitted with a projecting bracket bearing an inscribed bronze statue of a notable citizen or caravan leader.",
+  ),
+  ["bosra"]: d(
+    "Roma'nın Arabia Petraea eyalet başkenti ve kervan yollarının kavşağı. Siyah volkanik bazalt taşından inşa edilmiş 15.000 kişilik tiyatrosu, Orta Çağ Eyyubi kalesinin koruyucu kucağında dünyanın en sağlam kalmış antik tiyatrosudur.",
+    "The Nabataean and Roman provincial capital of Arabia Petraea. Famed for its pristine 15,000-seat black basalt theatre, preserved almost completely intact through centuries inside an Islamic concentric fortress citadel.",
+    [
+      "Kent planı",
+      "Bosra Roma Tiyatrosu",
+      "Nebati Zafer Takı",
+      "Decumanus Maximus",
+      "Bosra Katedrali ve Surlar",
+    ],
+    [
+      "The City Plan",
+      "The Roman Theatre of Bosra",
+      "The Nabataean Triumphal Arch",
+      "Decumanus Maximus Colonnade",
+      "The Cathedral and Basalt Walls",
+    ],
+    "Bosra Tiyatrosu'nun dışına 13. yüzyılda inşa edilen sekiz dev hisar kulesi, sahne arkasını ve tüm oturma sıralarını depremlerden ve yıkımdan korumuştur.",
+    "The eight fortress towers built around the theatre by the Ayyubids in the 13th century enclosed the entire Roman cavea and scaenae like an armour.",
+  ),
+  ["babil"]: d(
+    "Fırat Nehri kıyısında insanlık tarihinin en görkemli antik imparatorluk metropolü. Hammurabi Kanunları'nın yazıldığı, mavi sırlı İştar Kapısı, kutsal tören yolu, Etemenanki Zigguratı ve Babil Aslanı ile Mezopotamya uygarlığının kalbidir.",
+    "The colossal ancient metropolis along the Euphrates, seat of Hammurabi's legal code and Nebuchadnezzar's Neo-Babylonian Empire. Famous for the glazed cobalt-blue Ishtar Gate, Processional Way, Etemenanki ziggurat and Palace of Nebuchadnezzar.",
+    [
+      "Kent planı",
+      "İştar Kapısı ve Tören Yolu",
+      "Etemenanki Zigguratı",
+      "Güney Sarayı ve Taht Odası",
+      "Babil Aslanı ve Ninmah Tapınağı",
+    ],
+    [
+      "The City Plan",
+      "The Ishtar Gate and Processional Way",
+      "The Etemenanki Ziggurat",
+      "The Southern Palace and Throne Room",
+      "The Lion of Babylon and Ninmah Temple",
+    ],
+    "İştar Kapısı'nın kobalt mavisi tuğlaları bitüm harcıyla birbirine kenetlenmiş olup üzerinde ejderha Muşhuşşu ve boğa kabartmaları ışıldardı.",
+    "The Ishtar Gate shone in vibrant glazed blue bricks adorned with molded reliefs of dragons (Mushuḫshu) and young bulls sacred to Marduk and Adad.",
+  ),
+  ["ur"]: d(
+    "Güney Mezopotamya'da MÖ 4. binyılda kurulan Sümer uygarlığının kutsal başkenti. Ay Tanrısı Nanna'ya adanmış üç kademeli devasa pişmiş tuğla Ur Zigguratı, altın takılı kraliyet mezarları ve çivi yazısının ilk tablet arşivleriyle medeniyetin doğuş yeridir.",
+    "The legendary Sumerian capital of southern Mesopotamia dating back to 3800 BC. Dominated by the soaring stepped mud-and-burnt-brick Ziggurat of Ur dedicated to moon god Nanna, the Royal Tombs of Ur and early cuneiform school tablets.",
+    [
+      "Kent planı",
+      "Ur Büyük Zigguratı",
+      "Kraliyet Mezarları Kompleksi",
+      "Ay Tanrısı Nanna Tapınağı",
+      "Sümer Sarayı ve Konut Mahallesi",
+    ],
+    [
+      "The City Plan",
+      "The Great Ziggurat of Ur",
+      "The Royal Cemetery of Ur",
+      "The Sanctuary of Moon God Nanna",
+      "The Sumerian Royal Palace Quarter",
+    ],
+    "Ur Zigguratı'nın 4.000 yıllık pişmiş tuğla duvarları bitüm (doğal zift) harcıyla örülmüş olup günümüzde ilk katı orijinal hâliyle ayaktadır.",
+    "The monumental base of the Ziggurat of Ur was bonded with natural petroleum bitumen mortar 4,100 years ago and remains intact to its full original height.",
+  ),
+  ["persepolis"]: d(
+    "Büyük Darius tarafından MÖ 518'de Zagros Dağları eteklerinde kurulan Pers İmparatorluğu'nun törensel başkenti. Tüm Milletler Kapısı, 72 sütunlu dev Apadana Sarayı, Nevruz elçi kabartmaları ve Yüz Sütunlu Salon ile antik Yakın Doğu'nun en görkemli saray kompleksidir.",
+    "Founded by Darius the Great in 518 BC on a vast terrace against the Zagros mountains, this was the ceremonial capital of the Persian Achaemenid Empire. World-famed for the Gate of All Nations, the colossal 72-column Apadana palace and tribute reliefs.",
+    [
+      "Kent planı",
+      "Tüm Milletler Kapısı",
+      "Apadana Sarayı ve Sütunları",
+      "Yüz Sütunlu Taht Salonu",
+      "Darius'un Taçara Sarayı",
+    ],
+    [
+      "The City Plan",
+      "The Gate of All Nations",
+      "The Apadana Palace and Colonnade",
+      "The Throne Hall of a Hundred Columns",
+      "The Tachara Palace of Darius",
+    ],
+    "Apadana merdiven kabartmalarında Pers İmparatorluğu'na bağlı 23 farklı halkın milli giysileri, getirdikleri atlar, aslanlar ve hediyeler kusursuz taş işçiliğiyle kazınmıştır.",
+    "The monumental grand stairways depict delegates from 23 subject nations bearing offerings in their traditional costumes with remarkable historical fidelity.",
+  ),
+  ["pasargad"]: d(
+    "Pers İmparatorluğu'nun kurucusu Büyük Kiros'un MÖ 550 civarında kurduğu ilk başkent. Altı basamaklı piramidal beyaz taş podyum üzerindeki Büyük Kiros'un Anıt Mezarı, kabul sarayları, su kanallı ilk Çaharbağ (dörtlü bahçe) ve Tall-e Takht kalesiyle Pers mimarisinin kökenidir.",
+    "The first dynastic capital founded by Cyrus the Great around 550 BC. Celebrated for the stepped stone tomb of Cyrus, royal palaces, the earliest geometric quadripartite Persian Garden (Chahar Bagh) and the stone acropolis of Tall-e Takht.",
+    [
+      "Kent planı",
+      "Büyük Kiros'un Anıt Mezarı",
+      "Kabul Sarayı (Saray P)",
+      "Giriş Sarayı ve Kanatlı Cin Kabartması",
+      "Kraliyet Çaharbağ Bahçesi",
+    ],
+    [
+      "The City Plan",
+      "The Tomb of Cyrus the Great",
+      "The Residential Palace (Palace P)",
+      "The Gatehouse Palace and Winged Genius",
+      "The Royal Chahar Bagh Gardens",
+    ],
+    "Büyük Kiros'un mezarı hiçbir harç kullanılmadan, birbirine kurşun kenetlerle bağlanan devasa beyaz kireçtaşı bloklardan yapılmıştır.",
+    "The tomb of Cyrus was built entirely of dry-jointed white megalithic limestone blocks fastened together with iron and lead dove-tail clamps.",
+  ),
+  ["mohencodaro"]: d(
+    "İndus Vadisi Uygarlığı'nın MÖ 2500 civarında fırınlanmış pişmiş tuğlalardan inşa ettiği dünyanın ilk planlı ızgara metropolü. Doğal ziftle yalıtılmış Büyük Hamam, anıtsal tahıl ambarı, iki katlı avlulu evler ve kenti saran sofistike kanalizasyon sistemiyle antik şehirciliğin mucizesidir.",
+    "The bronze-age metropolis of the Indus Valley built around 2500 BC entirely from standardized kiln-fired bricks. Renowned for the bitumen-lined Great Bath, the massive granary, courtyard homes and the world's earliest urban drainage network.",
+    [
+      "Kent planı",
+      "Büyük Hamam",
+      "Büyük Tahıl Ambarı",
+      "Stupa Höyüğü",
+      "Rahip Kral Mahallesi ve Drenaj Caddesi",
+    ],
+    [
+      "The City Plan",
+      "The Great Bath",
+      "The Great Granary",
+      "The Stupa Mound",
+      "Priest-King Quarter and Main Drain",
+    ],
+    "Mohenjo-daro'nun Büyük Hamamı, 4.500 yıl önce doğal nehir zifti (bitüm) tabakasıyla kaplanarak sızdırmaz kılınmış tarihin bilinen ilk halka açık havuzudur.",
+    "The Great Bath was waterproofed with a thick layer of natural bitumen between baked brick courses 4,500 years ago, creating history's earliest public pool.",
+  ),
+  ["hampi"]: d(
+    "14. ve 16. yüzyıllar arasında Güney Hindistan'a hükmeden zengin Vijayanagara İmparatorluğu'nun masalsı granit başkenti. Tungabhadra Nehri kıyısında yükselen Virupaksha Tapınağı, yekpare granitten oyulmuş Taş Araba ve anıtsal Fil Ahırlarıyla granit heykelciliğin zirvesidir.",
+    "The legendary capital of the Vijayanagara Empire from the 14th to 16th century, set amidst a surreal boulder-strewn landscape along the Tungabhadra. Famous for the soaring Virupaksha Temple, the monolithic stone chariot of Vittala and royal elephant stables.",
+    [
+      "Kent planı",
+      "Virupaksha Tapınağı",
+      "Vittala Taş Araba Tapınağı",
+      "Kraliyet Fil Ahırları",
+      "Lotus Mahal ve Havuzlar",
+    ],
+    [
+      "The City Plan",
+      "The Virupaksha Temple",
+      "The Vittala Stone Chariot Temple",
+      "The Royal Elephant Stables",
+      "The Lotus Mahal and Stepped Tanks",
+    ],
+    "Vittala Tapınağı'ndaki ünlü yekpare granit Taş Araba'nın tekerlekleri geçmişte gerçekten dönebilecek serbestlikte dingillere oturtulmuştu.",
+    "The wheels of the famous monolithic granite chariot shrine at Vittala Temple were originally sculpted to rotate freely around their stone axles.",
+  ),
+  ["angkor-vat"]: d(
+    "Kral II. Suryavarman tarafından 12. yüzyılda inşa edilen ve Hindu evreninin merkezi Meru Dağı'nı temsil eden dünyanın en büyük dini anıtı. Beş nilüfer tomurcuğu kulesi, 190 metre genişliğindeki anıtsal kutsal hendek ve 800 metrelik taş kabartma galerileriyle Khmer dehasının şaheseridir.",
+    "Built in the early 12th century by King Suryavarman II as the earthly representation of Mount Meru, home of Hindu gods. Renowned for its five lotus-like central towers, a 190-metre protective moat and 800 metres of intricate low-relief stone narrative carvings.",
+    [
+      "Kent planı",
+      "Beş Nilüfer Kulesi (Meru Dağı)",
+      "Anıtsal Kutsal Hendek",
+      "Süt Denizi Çalkalanması Galerisi",
+      "Batı Giriş Gopurası ve Köprüsü",
+    ],
+    [
+      "The City Plan",
+      "The Five Lotus Towers of Mount Meru",
+      "The Monumental Sacred Moat",
+      "Gallery of the Churning of the Ocean of Milk",
+      "The West Gate Gopura and Causeway",
+    ],
+    "Angkor Wat'ın ana girişi diğer tüm Khmer tapınaklarının aksine doğuya değil, koruyucu tanrı Vişnu'ya adandığı için batıya bakar.",
+    "Unlike nearly all other Khmer temples oriented to the rising sun, Angkor Wat faces west, aligned with the deity Vishnu.",
+  ),
+  ["bayon"]: d(
+    "Kral VII. Jayavarman tarafından 12. yüzyıl sonunda Khmer başkenti Angkor Thom'un merkezine dikilen gizemli Budist tapınak dağ. 54 kulede yer alan 216 devasa dingin taş yüz ve gündelik Khmer pazar, savaş ve deniz yaşamını anlatan duvar kabartmalarıyla ünlüdür.",
+    "The enigmatic Mahayana Buddhist state temple built at the exact centre of Angkor Thom by King Jayavarman VII. Famed for its 54 stone towers adorned with 216 monumental smiling faces of Lokeshvara, complemented by lively relief friezes of daily Khmer life.",
+    [
+      "Kent planı",
+      "216 Gülen Yüz Kulesi",
+      "Dış Galeri Tarihsel Kabartmaları",
+      "İç Galeri Mitolojik Frizleri",
+      "Angkor Thom Güney Zafer Kapısı",
+    ],
+    [
+      "The City Plan",
+      "The 216 Smiling Face Towers",
+      "Outer Gallery Historical Reliefs",
+      "Inner Gallery Mythological Carvings",
+      "The South Gate of Angkor Thom",
+    ],
+    "Bayon'un dev taş yüzleri, günün farklı saatlerinde güneş ışığının geliş açısına göre tebessüm eden veya derin düşüncelere dalan bir ifadeye bürünür.",
+    "The monumental face towers change expression with the shifting sunlight of dawn and dusk, seeming to smile serenely across the jungle canopy.",
+  ),
+  ["teotihuacan"]: d(
+    "MÖ 100 civarında Meksika Vadisi'nde kurulan ve Kolomb öncesi Amerika'nın en büyük metropolü olan gizemli kutsal kent. 65 metre yüksekliğindeki devasa Güneş Piramidi, Ay Piramidi, 2 kilometre uzunluğundaki Ölüler Yolu ve Tüylü Yılan Tapınağı ile anıtsal mimarinin zirvesidir.",
+    "The colossal pre-Columbian metropolis in the Basin of Mexico flourishing from 100 BC to 650 AD. World-famous for the towering 65-metre Pyramid of the Sun, the Pyramid of the Moon, the Avenue of the Dead and the sculpted Temple of Quetzalcoatl.",
+    [
+      "Kent planı",
+      "Güneş Piramidi",
+      "Ay Piramidi",
+      "Ölüler Yolu (Calzada de los Muertos)",
+      "Tüylü Yılan (Quetzalcoatl) Tapınağı",
+    ],
+    [
+      "The City Plan",
+      "The Pyramid of the Sun",
+      "The Pyramid of the Moon",
+      "The Avenue of the Dead",
+      "Temple of the Feathered Serpent",
+    ],
+    "65 metre yüksekliğindeki Güneş Piramidi yaklaşık bir milyon metreküp kerpiç ve taştan inşa edilmiş olup taban alanı Mısır'daki Keops Piramidi ile neredeyse aynıdır.",
+    "The Pyramid of the Sun contains over one million cubic metres of adobe fill, sharing an almost identical footprint base to the Great Pyramid of Giza.",
+  ),
+  ["cisen-itza"]: d(
+    "Yucatán Yarımadası'nda klasik sonrası Maya uygarlığının en büyük dini ve astronomik metropolü. Ekinoksta basamaklarından inen gölge yılanı yanılsamasıyla bilinen El Castillo (Kukulkan) Piramidi, Amerika'nın en büyük top sahası ve Karakol Gözlemevi ile Maya astronomisinin doruğudur.",
+    "The pinnacle of Terminal Classic Maya civilisation in the Yucatán jungle. Celebrated for El Castillo (Temple of Kukulcán) where equinox light casts a slithering serpent illusion, the immense Great Ballcourt and the circular El Caracol astronomical observatory.",
+    [
+      "Kent planı",
+      "El Castillo (Kukulkan Piramidi)",
+      "Büyük Mezoamerikan Top Sahası",
+      "Karakol Astronomi Gözlemevi",
+      "Bin Sütunlu Savaşçılar Tapınağı",
+    ],
+    [
+      "The City Plan",
+      "El Castillo (Pyramid of Kukulcán)",
+      "The Great Ballcourt",
+      "El Caracol Astronomical Observatory",
+      "Temple of the Thousand Warriors",
+    ],
+    "İlkbahar ve sonbahar ekinokslarında, El Castillo piramidinin basamakları üzerine düşen gölgeler, piramidin tabanındaki yılan başıyla birleşerek aşağı inen dev bir yılan oluşturur.",
+    "During the spring and autumn equinoxes, the setting sun casts a serpent-like shadow that slithers down the northern staircase to meet the giant stone serpent head.",
+  ),
+  ["macu-picu"]: d(
+    "And Dağları'nın 2.430 metre rakımındaki sarp granit sırtında İnka İmparatoru Pachacuti tarafından kurulan efsanevi kutsal kraliyet yerleşimi. Harçsız birbirine kilitlenen andezit taş işçiliği, Güneş Tapınağı (Torreón), Intihuatana Güneş Saati ve bulut ormanı teraslarıyla bir doğa-mimari mucizesidir.",
+    "The 15th-century royal estate of Inca Emperor Pachacuti perched dramatically on an Andean ridge 2,430 metres above sea level. Acclaimed for mortarless polished andesite masonry, the curved Temple of the Sun (Torreón), Intihuatana sunstone and terraced mountain flanks.",
+    [
+      "Kent planı",
+      "Güneş Tapınağı (Torreón)",
+      "Intihuatana Güneş Taşı",
+      "Üç Pencereli Tapınak",
+      "Kutsal Kraliyet Meydanı ve Teraslar",
+    ],
+    [
+      "The City Plan",
+      "The Temple of the Sun (Torreón)",
+      "The Intihuatana Stone",
+      "The Temple of the Three Windows",
+      "The Sacred Plaza and Farming Terraces",
+    ],
+    "İnka taş ustaları devasa andezit blokları harç kullanmadan birbirine o kadar hassas kenetlemiştir ki deprem anında bloklar birbirinden ayrılmadan sallanır ve yerine oturur.",
+    "Inca stonemasons fitted multi-ton andesite blocks with such precision without mortar that a knife blade cannot penetrate the joints, enabling seismic survival.",
+  ),
+  ["can-can"]: d(
+    "Moche Vadisi'nde Pasifik Okyanusu kıyısında kurulan Chimú İmparatorluğu'nun kerpiçten yapılmış efsanevi başkenti. 20 kilometrekarelik alanıyla Kolomb öncesi Amerika'nın en büyük şehri ve dünyanın en büyük kerpiç metropolüdür; geometrik deniz kabartmalı dev saray kaleleriyle tanınır.",
+    "The sprawling capital of the Chimú Kingdom on the arid northern coast of Peru, spanning 20 square kilometres. Recognized as the largest adobe city in the world and the largest pre-Columbian city in the Americas, famous for 10 citadel palaces adorned with marine reliefs.",
+    [
+      "Kent planı",
+      "Tschudi Saray Kalesi (Nik An)",
+      "Büyük Törensel Meydan",
+      "Pelikan ve Balık Kabartmalı Duvarlar",
+      "Kraliyet Huachaque Rezervuar Havuzu",
+    ],
+    [
+      "The City Plan",
+      "The Tschudi Royal Citadel (Nik An)",
+      "The Grand Ceremonial Plaza",
+      "Relief Walls of Pelicans and Fish",
+      "The Royal Huachaque Sunken Reservoir",
+    ],
+    "Chan Chan'ın kerpiç duvarları deniz meltemini içeri alacak şekilde petek örgülü inşa edilmiş ve balıkçıl kuşlar, dalgalar ve balık kabartmalarıyla süslenmiştir.",
+    "The thick adobe walls were built with lattice-work openings to channel Pacific breezes, sculpted with stylized reliefs of sea birds, otters and fishing nets.",
+  ),
+  ["ostia-antica"]: d(
+    "Tiber Nehri'nin Akdeniz'e döküldüğü noktada Roma'nın liman kenti olarak kurulan Ostia Antica, imparatorluğun tahıl ve ticaret can damarıydı. Cumhuriyet döneminden itibaren genişleyen kent, çok katlı apartmanları (insulae), hamamları, tiyatrosu, tapınakları ve ticaret loncaları meydanıyla Roma günlük yaşamının en iyi korunmuş tanığıdır.",
+    "Founded at the mouth of the Tiber as the seaport of Rome, Ostia Antica was the grain and commercial lifeline of the empire. Expanding from the Republic through the Imperial era, it features multi-storey apartment blocks (insulae), thermal baths, a theatre, temples and the Corporations Square, offering an unparalleled window into Roman urban life.",
+    [
+          "Kent planı",
+          "Ostia Roma Tiyatrosu",
+          "Capitolium Tapınağı",
+          "Şirketler Meydanı (Piazzale delle Corporazioni)",
+          "Neptün Hamamları"
+    ],
+    [
+          "The City Plan",
+          "Roman Theatre of Ostia",
+          "Capitolium Temple",
+          "Corporations Square (Piazzale delle Corporazioni)",
+          "Baths of Neptune"
+    ],
+    "Şirketler Meydanı'ndaki (Piazzale delle Corporazioni) 60'tan fazla ofisin tabanında, İskenderiye'den Kartaca'ya kadar Akdeniz tüccarlarının gemi, tahıl ve fil figürlü mozaik reklam tabelaları yer alır.",
+    "The Piazzale delle Corporazioni features over 60 commercial guild offices, each floored with black-and-white mosaics showing ships, dolphins and grain measures that served as ancient corporate logos.",
+  ),
+  ["paestum"]: d(
+    "MÖ 6. yüzyılda Akhaialı Yunan kolonistler tarafından Poseidonia adıyla kurulan kent, Magna Graecia'nın en görkemli yerleşimlerindendi. MÖ 273'te Roma egemenliğine giren kentte inşa edilen üç anıtsal Dor tapınağı, antik Yunan mimarisinin dünyada günümüze en sağlam ulaşmış örnekleri arasındadır.",
+    "Founded in the 6th century BC by Achaean Greek settlers as Poseidonia, it was one of the jewels of Magna Graecia. Falling to Rome in 273 BC, Paestum preserves three monumental archaic Doric temples that stand among the best-preserved classical Greek temples in the world.",
+    [
+          "Kent planı",
+          "I. Hera Tapınağı (Bazilika)",
+          "II. Hera (Neptün) Tapınağı",
+          "Athena (Ceres) Tapınağı",
+          "Roma Forumu ve Amfitiyatro"
+    ],
+    [
+          "The City Plan",
+          "First Temple of Hera (The Basilica)",
+          "Second Temple of Hera (Temple of Neptune)",
+          "Temple of Athena (Temple of Ceres)",
+          "Roman Forum and Amphitheatre"
+    ],
+    "Paestum'un II. Hera (Neptün) Tapınağı, tavanını taşıyan çift katlı iç sütun dizisiyle birlikte günümüze neredeyse eksiksiz ulaşan dünyadaki yegâne Dorik tapınaktır.",
+    "Paestum's Second Temple of Hera is the only surviving Doric temple in the world whose interior two-storey colonnade that supported the roof is still intact.",
+  ),
+  ["akropolis-atena"]: d(
+    "Klasik Yunan uygarlığının ve demokrasisinin zirvesini simgeleyen Atina Akropolü, MÖ 5. yüzyılda Perikles'in altın çağında heykeltıraş Pheidias önderliğinde yeniden inşa edildi. Mermer işçiliğinin şaheseri Parthenon, zarif Erekhtheion, Propylaia anıtsal kapısı ve Athena Nike Tapınağı ile antik mimarlık tarihinin en etkili kutsal alanıdır.",
+    "The supreme symbol of classical Greek civilization and democracy, the Acropolis of Athens was rebuilt in the 5th century BC during the Golden Age of Pericles under the supervision of the sculptor Phidias. With the Parthenon, Erechtheion, Propylaea gateway and Temple of Athena Nike, it is the most influential sacred precinct in world history.",
+    [
+          "Kutsal alan planı",
+          "Parthenon (Athena Parthenos Tapınağı)",
+          "Erekhtheion ve Karyatidler Terası",
+          "Propylaia Anıtsal Giriş Kapısı",
+          "Athena Nike Tapınağı"
+    ],
+    [
+          "The Sanctuary Plan",
+          "The Parthenon (Temple of Athena)",
+          "The Erechtheion and Caryatid Porch",
+          "The Monumental Propylaea Gateway",
+          "Temple of Athena Nike"
+    ],
+    "Parthenon'un hiçbir sütunu ve basamağı tam düz veya dikey değildir; sütunların hafif dışa kavisli (entasis) ve basamakların bombeli yapılması, insan gözünün perspektif yanılsamasını düzelterek yapının kusursuz düz görünmesini sağlar.",
+    "The Parthenon contains virtually no straight lines or true right angles; its columns taper with entasis and the foundations curve upward to correct optical illusions and appear perfectly straight to human eyes.",
+  ),
+  ["epidavros"]: d(
+    "Yunan mitolojisinde hekimlik ve şifa tanrısı Asklepios'un baş kutsal alanı olan Epidauros, antik çağın en ünlü sağlık merkeziydi. Genç Polykleitos tarafından MÖ 4. yüzyılda inşa edilen 14.000 kişilik tiyatrosu, kusursuz oranları ve orkestradan fısıldanan sesin en üst sıradan duyulmasını sağlayan benzersiz akustiğiyle dünya mirasıdır.",
+    "The principal sanctuary of the healing god Asclepius, Epidaurus was the most renowned therapeutic sanatorium of the classical Greek world. Its 14,000-seat theatre, designed in the 4th century BC by Polykleitos the Younger, is celebrated globally for its perfect geometric proportions and unmatched acoustics.",
+    [
+          "Kutsal alan planı",
+          "Epidauros Antik Tiyatrosu",
+          "Asklepios Tapınağı",
+          "Tholos (Yuvarlak Mermer Labirent)",
+          "Abaton (Şifa Uyku Salonu)"
+    ],
+    [
+          "The Sanctuary Plan",
+          "The Ancient Theatre of Epidaurus",
+          "Temple of Asclepius",
+          "The Tholos (Round Marble Labyrinth)",
+          "The Abaton (Dormitory of Sacred Incubation)"
+    ],
+    "Epidauros tiyatrosunun orkestra merkezinde yere düşürülen bir madeni paranın veya kibritin sesi, kireçtaşı basamakların filtreleme etkisi sayesinde en üstteki 55. sıradan bile berrak şekilde duyulur.",
+    "A coin dropped or a match struck at the centre of the Epidaurus orchestra can be clearly heard by spectators sitting in the 55th row at the very top, thanks to limestone seat acoustic filtering.",
+  ),
+  ["luksor-kenti"]: d(
+    "Antik Mısır'ın görkemli başkenti Thebai'nin merkezinde yer alan Luksor (Ipet-resyt), Nil Nehri kıyısında tanrı Amun-Ra, Mut ve Honsu onuruna inşa edildi. III. Amenhotep ve II. Ramses tarafından anıtsal pilonlar, 24 metrelik devasa heykeller, papirüs başlıklı sütun dizileri ve obelisklerle donatılan tapınak, yıllık Opet Festivali'nin kalbiydi.",
+    "Located in the heart of ancient Thebes, Luxor Temple (Ipet-resyt) was built on the east bank of the Nile in honour of the Theban Triad of Amun-Ra, Mut and Khonsu. Lavishly expanded by Amenhotep III and Ramesses II with colossal pylons, 24-metre seated colossi, papyrus-bud colonnades and obelisks, it was the focal sanctuary of the annual Opet Festival.",
+    [
+          "Tapınak kompleksi planı",
+          "II. Ramses Ön Avlusu ve Oturan Koloslar",
+          "III. Amenhotep Sütunlu Hipostil Salonu",
+          "Büyük Pilon ve Granit Obelisk",
+          "Sfenksler Kutsal Yolu (Karnak Aksı)"
+    ],
+    [
+          "The Temple Complex Plan",
+          "Peristyle Court and Colossi of Ramesses II",
+          "Colonnade Hall of Amenhotep III",
+          "The Grand Pylon and Granite Obelisk",
+          "The Avenue of Sphinxes to Karnak"
+    ],
+    "Luksor Tapınağı'nın girişindeki pilon önünde duran iki dev obeliskten biri 1833'te Fransa'ya hediye edilmiş ve bugün Paris'in ünlü Concorde Meydanı'na dikilmiştir; diğeri ise hâlâ Luksor'da nöbet tutar.",
+    "One of the twin granite obelisks fronting the entrance pylon of Luxor was gifted to France in 1833 and now stands at the Place de la Concorde in Paris, while its twin remains in Egypt.",
+  ),
+  ["ebu-simbel"]: d(
+    "Mısır ile Nubya sınırında Nil kıyısındaki kumtaşı dağa oyulan Ebu Simbel, Firavun II. Ramses'in MÖ 13. yüzyılda Kadeş Zaferi anısına yaptırdığı şaheserdir. Girişteki 20 metrelik dört devasa Ramses kolosu, iç salondaki Osiris heykelleri ve Kraliçe Nefertari için yapılan Hathor Tapınağı, kaya mimarisinin zirvesidir.",
+    "Hewn into a sandstone mountain above the Nile on the Nubian frontier, Abu Simbel is the masterwork commissioned by Pharaoh Ramesses II in the 13th century BC to commemorate his triumph at Kadesh. Fronted by four colossal 20-metre statues, its hypostyle hall and the adjacent temple for Queen Nefertari represent the pinnacle of rock-cut architecture.",
+    [
+          "Kutsal kaya kompleksi planı",
+          "Büyük Tapınak ve Dört Dev Ramses Heykeli",
+          "Büyük Hipostil Salonu ve Osiris Kolonları",
+          "İç Kutsal Alan (Naos)",
+          "Küçük Nefertari ve Hathor Tapınağı"
+    ],
+    [
+          "The Rock-Cut Precinct Plan",
+          "Great Temple and Four Colossi of Ramesses II",
+          "Great Hypostyle Hall with Osirid Pillars",
+          "Inner Sanctuary (Naos)",
+          "Small Temple of Nefertari and Hathor"
+    ],
+    "Büyük Tapınak öyle bir açıyla hizalanmıştır ki, her yıl sadece 22 Şubat ve 22 Ekim tarihlerinde güneş ışınları 65 metre derinlikteki kutsal alana ulaşarak Ramses, Amun ve Ra heykellerini aydınlatır; karanlıklar tanrısı Ptah ise gölgede kalır.",
+    "The Great Temple is precisely aligned so that twice a year, on February 22 and October 22, the rising sun penetrates 65 metres into the dark sanctuary to illuminate the seated statues of Ramesses, Amun and Ra, leaving Ptah in shadow.",
+  ),
+  ["umm-qais"]: d(
+    "Antik adı Gadara olan Umm Qais, Dekapolis birliğinin en zengin Helenistik ve Roma kültür merkezlerinden biriydi. Taberiye (Celile) Gölü ve Golan Tepeleri manzarasına hakim bir sırtta yer alan kent, siyah bazalt taşından inşa edilmiş batı tiyatrosu, sütunlu caddeleri, bazilikaları ve hamamlarıyla ünlüdür.",
+    "Known in antiquity as Gadara, Umm Qais was a prominent Hellenistic and Roman city of the Decapolis League, famed as a city of philosophers and poets. Perched on a scenic ridge overlooking the Sea of Galilee and Golan Heights, it features a black basalt theatre, colonnaded decumanus, basilicas and Ottoman courtyard village.",
+    [
+          "Kent planı",
+          "Siyah Bazalt Batı Tiyatrosu",
+          "Sütunlu Decumanus Maximus",
+          "Oktagonal Bizans Bazilikası",
+          "Roma Hamamları ve Nymphaeum"
+    ],
+    [
+          "The City Plan",
+          "Black Basalt Western Theatre",
+          "Colonnaded Decumanus Maximus",
+          "Octagonal Byzantine Basilica",
+          "Roman Baths and Nymphaeum"
+    ],
+    "Umm Qais'te bulunan bir mezar taşında filozof Arabius'un ziyaretçilere şu dizeleri kazılıdır: 'Şimdi sana seslenen ben bir zamanlar senin gibiydim; sen de bir gün benim gibi toprak olacaksın. Hayatın tadını çıkar, çünkü fanisin.'",
+    "An epitaph discovered in Gadara bears the poetic greeting of the philosopher Arabius: 'I was as you are now; you will be as I am. Enjoy life, mortal, for your time is brief.'",
+  ),
+  ["amman-kale"]: d(
+    "Ürdün'ün başkenti Amman'ın merkezindeki en yüksek tepe (Cebel el-Qala) üzerine kurulu Amman Kalesi (antik Philadelphia), Tunç Çağı'ndan Emeviler'e uzanan kesintisiz bir yerleşim merkezidir. İmparator Marcus Aurelius dönemine tarihlenen devasa Herakles Tapınağı sütunları, 6. yüzyıl Bizans Kilisesi ve kubbeli anıtsal Emevi Sarayı aynı terasta buluşur.",
+    "Crowning Jebel al-Qal'a, the highest hill of Jordan's capital Amman, the Citadel (ancient Philadelphia) was occupied continuously from the Bronze Age through the Umayyad era. It preserves colossal Corinthian columns of the Temple of Hercules, a 6th-century Byzantine basilica and a monumental domed Umayyad Palace compound.",
+    [
+          "Kale terası planı",
+          "Herakles Tapınağı ve Devasa Mermer El",
+          "Emevi Sarayı ve Giriş Köşkü",
+          "Bizans Bazilikası",
+          "Büyük Su Sarnıcı ve Savunma Surları"
+    ],
+    [
+          "The Citadel Terrace Plan",
+          "Temple of Hercules and Colossal Marble Hand",
+          "Umayyad Palace and Monumental Vestibule",
+          "Byzantine Basilica",
+          "Great Circular Cistern and Fortification Walls"
+    ],
+    "Herakles Tapınağı'nın yanında bulunan mermer heykel parçaları arasında 1 metrelik tek bir insan eli parmağı vardır; bu ölçü, tapınaktaki asıl Herakles heykelinin 12 metre boyunda devasa bir anıt olduğunu kanıtlar.",
+    "Archaeologists unearthed a colossal sculpted marble hand near the Temple of Hercules measuring over a metre across, revealing that the original statue of Hercules stood more than 12 metres high.",
+  ),
+  ["anjar"]: d(
+    "Lübnan'ın verimli Bekaa Vadisi'nde 8. yüzyıl başında Emevi Halifesi I. Velid tarafından kurulan Anjar, klasik Roma ızgara planına göre inşa edilmiş dünyadaki en özgün erken İslam kentidir. Dört anıtsal kapısı, revaklı Cardo ve Decumanus caddeleri, kavşaktaki Tetrapylon anıtı, Büyük Saray ve hamamlarıyla kusursuz bir simetriye sahiptir.",
+    "Founded in the early 8th century by Umayyad Caliph Al-Walid I in Lebanon's Bekaa Valley, Anjar is unique in the Islamic world for its strict adoption of classical Roman urban grid planning. Its cardo and decumanus colonnades meet at a four-way Tetrapylon, framed by fortified walls, a grand residential palace, mosque and thermal baths.",
+    [
+          "Kent planı",
+          "Büyük Emevi Sarayı",
+          "Dört Yollu Tetrapylon Anıtı",
+          "Cardo Maximus ve Sütunlu Dükkanlar",
+          "Ulu Cami ve Hamam Kompleksi"
+    ],
+    [
+          "The City Plan",
+          "Grand Umayyad Palace",
+          "Monumental Tetrapylon",
+          "Cardo Maximus and Porticoed Shops",
+          "Great Mosque and Thermal Bath Complex"
+    ],
+    "Anjar, antik bir harabenin üzerine kurulmamış, sıfırdan planlanmış bir Emevi saray kentidir; taş işçiliğinde Roma ve Bizans tapınaklarından devşirilen Korint başlıkları ve sütunlar harmanlanmıştır.",
+    "Anjar was not built on ancient ruins but founded from scratch as a royal Umayyad commercial inland city, incorporating salvaged Roman and Byzantine Corinthian capitals into Islamic arcades.",
+  ),
+  ["tyre-sur"]: d(
+    "Antik çağda Akdeniz ticaretine ve denizciliğine hükmeden Fenikelilerin ana limanı olan Sur (Tyre), mor erguvan boyası ve sedir ağacı ihracatıyla zenginleşti. Büyük İskender'in ada kenti anakaraya bağlayan ünlü kuşatmasından sonra Roma egemenliğinde devasa anıtlarla donatılan kent, 480 metrelik dünyanın en büyük Roma hipodromuna sahiptir.",
+    "The premier maritime metropolis of the Phoenicians, Tyre dominated Mediterranean navigation and became renowned for its royal Tyrian purple dye. Following Alexander the Great's monumental causeway siege, Tyre became a magnificent Roman provincial centre, boasting the colossal 480-metre Al-Bass Hippodrome.",
+    [
+          "Kent planı",
+          "El-Bass Roma Hipodromu",
+          "Anıtsal Üç Kemerli Zafer Takı",
+          "Sütunlu Cadde ve Su Kemeri",
+          "Al-Mina Denizcilik Forumu ve Agora"
+    ],
+    [
+          "The City Plan",
+          "Al-Bass Roman Hippodrome",
+          "Monumental Triple Triumphal Arch",
+          "Colonnaded Way and Aqueduct",
+          "Al-Mina Seaside Agora and Public Baths"
+    ],
+    "Sur kentine antik dünyada eşsiz zenginliğini veren mor erguvan boyası, murex deniz salyangozlarından elde ediliyordu; bir gram saf kraliyet moru boyası üretebilmek için on binden fazla salyangoz eziliyordu.",
+    "Tyre's fabled royal purple dye was extracted from secretions of thousands of murex sea snails; producing a single gram of pure purple pigment required crushing over ten thousand snails, making it worth more than its weight in gold.",
+  ),
+  ["tarraco"]: d(
+    "İspanya'nın Akdeniz kıyısında MÖ 218'de Scipio kardeşler tarafından kurulan Tarraco (Tarragona), İber Yarımadası'ndaki en eski Roma yerleşimi ve Hispania Tarraconensis eyaletinin başkentiydi. İmparator Augustus'un iki yıl bizzat ikamet ettiği kent; deniz kıyısındaki amfitiyatrosu, sirk (araba yarış alanı), forumu ve Les Ferreres su kemeriyle parlar.",
+    "Founded in 218 BC by the Scipio brothers during the Second Punic War, Tarraco (Tarragona) was the oldest Roman settlement in Iberia and capital of Hispania Tarraconensis. Embellished when Emperor Augustus resided here, it boasts a seaside amphitheatre, provincial forum, chariot circus and the colossal Les Ferreres aqueduct.",
+    [
+          "Kent planı",
+          "Deniz Kıyısı Roma Amfitiyatrosu",
+          "Tarraco Roma Sirki (Circus)",
+          "Les Ferreres (Şeytan) Su Kemeri",
+          "Eyalet Forumu ve Praetorium Kulesi"
+    ],
+    [
+          "The City Plan",
+          "Seaside Roman Amphitheatre",
+          "Roman Circus of Tarraco",
+          "Les Ferreres (Devil's) Aqueduct",
+          "Provincial Forum and Praetorium Tower"
+    ],
+    "Tarraco Roma Amfitiyatrosu doğrudan Akdeniz dalgalarının kıyısına inşa edilmiştir; arena oyunlarında ölen gladyatörler ve vahşi hayvanlar için denize açılan özel kapılar kullanılıyordu.",
+    "Tarraco's amphitheatre was cut directly into the coastal rock overlooking the Mediterranean, allowing gladiator games to be framed by the sea and animal cages to be supplied directly from port ships.",
+  ),
+  ["segovia"]: d(
+    "İspanya'nın Kastilya yaylasında kayalık bir burun üzerinde yükselen Segovia, Kelt-İber kökenli olup MÖ 1. yüzyılda Roma egemenliğine girdi. Harç kullanılmadan sadece granit blokların dengesiyle inşa edilen ve MS 1. yüzyıldan 20. yüzyıla kadar kesintisiz su taşıyan 28 metre yüksekliğindeki Roma Su Kemeri, mühendislik tarihinin mucizelerindendir.",
+    "Rising on a dramatic rocky spur above the Castilian plateau, Segovia originated as a Celtiberian hillfort before Romanization. Its iconic double-tiered granite aqueduct, soaring 28 metres without mortar across 167 arches, transported mountain water from the Guadarrama Range continuously until the 20th century.",
+    [
+          "Kent planı",
+          "Çift Katlı Anıtsal Roma Su Kemeri",
+          "Kemerin Azálvaro Başlangıç Havuzu",
+          "Segovia Roma Kalesi ve Burçları",
+          "Granit Cadde ve Çeşmeler"
+    ],
+    [
+          "The City Plan",
+          "Double-Tiered Monumental Roman Aqueduct",
+          "Azálvaro Decantation Basin",
+          "Roman Citadel and Defensive Towers",
+          "Granite Paved Streets and Fountains"
+    ],
+    "Segovia Su Kemeri'nin 167 kemerini oluşturan 20.400'den fazla dev granit blok arasında tek bir damla kireç veya harç yoktur; yapı yalnızca blokların kusursuz kesimi ve birbirine uyguladığı yerçekimi basıncıyla ayakta durur.",
+    "The 167 soaring arches of Segovia's aqueduct contain more than 20,400 granite blocks fitted together entirely without mortar, held aloft solely by gravity and precision masonry balance.",
+  ),
+  ["pont-du-gard"]: d(
+    "Güney Fransa'da Gardon Nehri kanyonu üzerinde yükselen Pont du Gard, MS 1. yüzyılda Nemausus (Nîmes) kentine 50 kilometre uzaktaki pınarlardan su taşımak amacıyla Marcus Vipsanius Agrippa döneminde inşa edildi. Üç katlı kemer sistemi ve 48,8 metre yüksekliğiyle antik Roma dünyasının ayakta kalmış en yüksek su kemeri köprüsüdür.",
+    "Spanning the limestone gorge of the Gardon River in southern France, the Pont du Gard was constructed in the mid-1st century AD under Augustus and Agrippa to carry water along a 50-kilometre channel to Nîmes. Standing 48.8 metres high with three tiers of arches, it is the tallest surviving aqueduct bridge of the Roman world.",
+    [
+          "Köprü aksı planı",
+          "Alt Kat Ağır Nehir Kemerleri (6 Kemer)",
+          "Orta Kat Ana Taşıyıcı Kemerler (11 Kemer)",
+          "Üst Kat Kapalı Su Kanalı (Specus - 35 Kemer)",
+          "Gardon Nehri Kanyon Yaklaşım Yolları"
+    ],
+    [
+          "The Aqueduct Axis Plan",
+          "Lower Level River Arches (6 Arches)",
+          "Middle Level Supporting Tier (11 Arches)",
+          "Upper Level Enclosed Conduit (Specus - 35 Arches)",
+          "Gardon Gorge Approach Roads"
+    ],
+    "50 kilometrelik Nîmes su kemerinin toplam yükseklik farkı sadece 12 metredir; Pont du Gard köprüsü üzerinde suyun eğimi kilometrede sadece 2,5 milimetre gibi insan aklını zorlayan bir mühendislik hassasiyetiyle hesaplanmıştır.",
+    "The entire 50-kilometre Nîmes aqueduct falls only 12 metres from source to city; across the Pont du Gard bridge itself, the gradient drops just 2.5 millimetres per kilometre.",
+  ),
+  ["vaison-la-romaine"]: d(
+    "Fransa'nın Provence bölgesinde Ouvèze Nehri kıyısında yer alan Vaison-la-Romaine (Vasio Vocontiorum), zengin Kelt Vocontii kabilesinin müttefik Roma kentiydi. 15 hektarlık arkeolojik alanıyla Fransa'nın en büyük antik yerleşimi olan kent; lüks villaları, mozaikli avluları, tiyatrosu ve bugün hâlâ üzerinden araç geçen tek kemerli Roma köprüsüyle tanınır.",
+    "Situated in Provence along the Ouvèze River, Vaison-la-Romaine (Vasio Vocontiorum) was the affluent capital of the Celtic Vocontii federated with Rome. Spanning over 15 hectares of excavated ruins, it features lavish peristyle villas with exquisite mosaics, public thermal complexes, a hillside theatre and an intact Roman single-arch stone bridge.",
+    [
+          "Kent planı",
+          "Vaison Roma Tiyatrosu",
+          "Yunuslu Villa (Maison au Dauphin)",
+          "Tavuskuşlu Villa (Maison du Paon)",
+          "Ouvèze Nehri Tek Kemerli Roma Köprüsü"
+    ],
+    [
+          "The City Plan",
+          "Roman Theatre of Vaison",
+          "House of the Dolphin (Maison au Dauphin)",
+          "House of the Peacock (Maison du Paon)",
+          "Roman Single-Arch Stone Bridge over the Ouvèze"
+    ],
+    "Vaison-la-Romaine'in Ouvèze Nehri üzerine kurulan 17 metrelik tek gözlü Roma taş köprüsü, inşa edildiği MS 1. yüzyıldan bu yana 2.000 yıldır kesintisiz kullanılmaktadır ve 1992'deki büyük nehir selinde modern köprüler yıkılırken dimdik ayakta kalmıştır.",
+    "The 17-metre Roman bridge spanning the Ouvèze has remained in continuous vehicular use for over 2,000 years; when a catastrophic flood tore through Vaison in 1992 destroying modern bridges, the Roman arch stood undamaged.",
+  ),
+  ["xanten"]: d(
+    "Almanya'da Ren Nehri sınırında kurulan Colonia Ulpia Traiana (Xanten), İmparator Trajan tarafından MS 100 dolaylarında koloni statüsüne yükseltilen Germania Inferior eyaletinin en önemli metropolüydü. 10.000 kişilik nüfusu, anıtsal Liman Tapınağı, amfitiyatrosu, hamamları ve yüksek surlarıyla Roma'nın Cermen sınırındaki en kuzeydeki uygarlık kalesiydi.",
+    "Established on the Rhine frontier in Germany, Colonia Ulpia Traiana (Xanten) was elevated to a colony by Emperor Trajan around 100 AD, becoming the second largest city in Germania Inferior. Boasting a population of 10,000, it featured the monumental Harbour Temple, a large amphitheatre, baths and massive gate-flanked perimeter walls.",
+    [
+          "Kent planı",
+          "Ulpia Traiana Liman Tapınağı",
+          "Roma Amfitiyatrosu",
+          "Kuzey Giriş Kapısı (Burginatium Kapısı)",
+          "Büyük Hamam Kompleksi (Thermae)"
+    ],
+    [
+          "The City Plan",
+          "The Harbour Temple of Ulpia Traiana",
+          "Roman Amphitheatre",
+          "Northern City Gate (Burginatium Gate)",
+          "Great Public Baths (Thermae)"
+    ],
+    "Xanten antik kenti Orta Çağ'da üzerine yeni bir şehir inşa edilmeyen dünyadaki nadir Roma metropollerindendir; bu sayede tüm Roma cadde ızgarası, tapınakları ve tiyatrosu toprak altında bozulmadan korunabilmiştir.",
+    "Unlike Cologne or Trier, Colonia Ulpia Traiana was never built over during the Middle Ages, leaving its complete Roman street grid, water pipes and foundation footprints intact for archaeological excavation.",
+  ),
+  ["saalburg"]: d(
+    "Almanya'nın Taunus Dağları ormanlarında Roma İmparatorluğu'nun Cermen sınırını (Limes Germanicus) korumak için MS 90'da kurulan Saalburg, 500 lejyonere ev sahipliği yapan bir Roma sınır garnizonuydu (castrum). 19. yüzyıl sonunda İmparator II. Wilhelm'in emriyle arkeolojik kazı temelleri üzerinde aslına uygun yeniden inşa edilen dünyadaki tek tam garnizondur.",
+    "Nestled in the forested Taunus hills of Germany, Saalburg was a cohort fort (castrum) along the Upper Germanic Limes border wall, garrisoning 500 legionary infantry and cavalry. Reconstructed between 1897 and 1907 on original foundations by order of Kaiser Wilhelm II, it is the world's only completely rebuilt Roman border fort.",
+    [
+          "Garnizon planı",
+          "Principia (Karargâh Binası ve Sancak Odası)",
+          "Praetoria Giriş Kapısı ve Çift Hendek",
+          "Horreum (Tahıl Ambarı ve Askerî Müze)",
+          "Kohort Kışlaları ve Komutanlık Konutu"
+    ],
+    [
+          "The Castrum Plan",
+          "Principia (Headquarters and Shrine of the Standards)",
+          "Porta Praetoria with Double Defensive Ditches",
+          "Horreum (Granary and Military Arsenal)",
+          "Cohort Barracks and Commander's Praetorium"
+    ],
+    "Saalburg'un karargâh binasındaki kutsal sancak odasının (aedes) altında, lejyonerlerin maaşlarının ve emeklilik birikimlerinin kilit altında saklandığı demir kapılı yer altı hazine kasası yer alıyordu.",
+    "Beneath the sacred shrine of the standards (aedes) inside the Saalburg headquarters lay a secure subterranean strongroom where soldiers' pay bags and collective burial funds were safely locked.",
+  ),
+  ["conimbriga"]: d(
+    "Portekiz'in Coimbra kenti yakınlarında yer alan Conimbriga, İber Yarımadası'ndaki en iyi korunmuş ve en zengin Roma yerleşimlerindendir. Demir Çağı Kelt yerleşimi üzerine kurulan ve Augustus döneminde gelişen kent; muhteşem mitolojik yer mozaikleri, fıskiyeli iç avlulara sahip Çeşmeler Evi (Casa dos Repuxos) ve anıtsal su kemeriyle meşhurdur.",
+    "Located near Coimbra in central Portugal, Conimbriga is the largest and most lavishly preserved Roman archaeological site in the country. Prospering under Augustus, it is internationally renowned for magnificent polychrome floor mosaics, the peristyle courtyards of the House of Fountains (Casa dos Repuxos) and public baths.",
+    [
+          "Kent planı",
+          "Çeşmeler Evi (Casa dos Repuxos)",
+          "Cantaber'in Büyük Aristokrat Villası",
+          "Forum ve Augustus Bazilikası",
+          "Geç Roma Savunma Sur Duvarı"
+    ],
+    [
+          "The City Plan",
+          "House of the Fountains (Casa dos Repuxos)",
+          "Grand Aristocratic Villa of Cantaber",
+          "Forum and Augustan Civic Basilica",
+          "Late Roman Defensive City Wall"
+    ],
+    "Çeşmeler Evi'nde (Casa dos Repuxos) 500'den fazla su fıskiye nozulu ve avluyu çevreleyen sütunlu revaklarda dört mevsimi, av sahnelerini ve Perseus mitini tasvir eden göz alıcı mozaikler bugün hâlâ çalışır durumdadır.",
+    "The House of Fountains features an intricate hydraulic system with over 500 water jet nozzles set within garden flowerbeds, surrounded by mosaics depicting hunting scenes and mythical beasts.",
+  ),
+  ["evora-roma"]: d(
+    "Portekiz'in Alentejo bölgesinde yer alan Évora (Ebora Liberalitas Julia), Roma döneminde Lusitania eyaletinin kilit idari merkeziydi. Şehrin akropolünde 1. yüzyılda inşa edilen ve halk arasında yanlışlıkla 'Diana Tapınağı' olarak bilinen Korint nizamındaki mermer tapınak, İber Yarımadası'nda günümüze ulaşan en görkemli Roma tapınak kalıntısıdır.",
+    "Situated in the rolling plains of Alentejo, Évora (Ebora Liberalitas Julia) was a prominent Roman municipality in the province of Lusitania. Crowning the town's highest acropolis ridge, the 1st-century Corinthian temple, colloquially known as the Temple of Diana, is the most intact Roman monument surviving in Portugal.",
+    [
+          "Akropol planı",
+          "Évora Roma Tapınağı (Diana Tapınağı)",
+          "Yüksek Granit Podyum ve Korint Sütunları",
+          "Roma Hamamları Kalıntıları",
+          "Giraldo Meydanı Roma Su Kemeri Aksı"
+    ],
+    [
+          "The Acropolis Plan",
+          "Roman Temple of Évora (Temple of Diana)",
+          "Granite Podium and Estremoz Marble Capitals",
+          "Ruins of the Imperial Public Baths",
+          "Praca do Giraldo Aqueduct Axis"
+    ],
+    "Évora Roma Tapınağı, Orta Çağ'da yerel kalenin cephaneliği ve ardından belediye mezbahası olarak duvarlarla kapatılarak kullanıldığı için taşları sökülmekten kurtulmuş ve mucize eseri günümüze sağlam kalmıştır.",
+    "Évora's Roman temple survived centuries of quarrying because it was walled up during the Middle Ages to serve as a fortress armory and later as the town slaughterhouse, before being liberated in 1871.",
+  ),
+  ["salona"]: d(
+    "Hırvatistan'ın Adriyatik kıyısında bugünkü Split yakınlarında yer alan Salona, 60.000 kişilik nüfusuyla Roma İmparatorluğu'nun Dalmaçya eyaletinin görkemli başkentiydi. İmparator Diocletianus'un doğum yeri olan kent; 18.000 kişilik amfitiyatrosu, tiyatrosu, erken Hristiyan bazilikaları ve anıtsal nekropolleriyle Akdeniz'in en büyük arkeolojik parklarındandır.",
+    "Nestled along the Dalmatian coast near modern Split, Salona was the thriving capital of the Roman province of Dalmatia, home to 60,000 inhabitants. Birthplace of Emperor Diocletian, the sprawling city features an 18,000-spectator amphitheatre, theatre, early Christian basilica complexes and monumental sarcophagi necropolises.",
+    [
+          "Kent planı",
+          "Salona Roma Amfitiyatrosu",
+          "Tiyatro ve Forum Terası",
+          "Porta Caesarea Anıtsal Giriş Kapısı",
+          "Manastirine Erken Hristiyan Nekropolü"
+    ],
+    [
+          "The City Plan",
+          "Roman Amphitheatre of Salona",
+          "Theatre and Forum Terrace",
+          "Porta Caesarea City Gate",
+          "Manastirine Early Christian Basilica and Necropolis"
+    ],
+    "Salona Amfitiyatrosu, Venedikliler tarafından 17. yüzyılda Osmanlı ordularının sığınak ve kale olarak kullanmasını engellemek amacıyla barutla patlatılarak kısmen yıkılmıştır.",
+    "The massive amphitheatre of Salona was deliberately dismantled with gunpowder by Venetian military engineers in 1647 to prevent Ottoman forces from using its towering stone rings as a fortress.",
+  ),
+  ["pula"]: d(
+    "Hırvatistan'ın Istria Yarımadası'nın güney ucunda yer alan Pula (Colonia Pietas Iulia Pola), Augustus döneminde kurulan önemli bir Roma limanıydı. Dünyada dört dış kulesi ve tüm kemerli dış kabuğu eksiksiz ayakta kalan altı büyük Roma arenasından biri olan Pula Arenası ve kusursuz Augustus Tapınağı ile ünlüdür.",
+    "Positioned at the tip of the Istrian peninsula in Croatia, Pula was developed under Augustus into a vital naval station. Its crown jewel is the Pula Arena, one of the world's six largest surviving Roman amphitheatres and the only one to preserve all four side corner towers and its complete three-tier outer limestone ring.",
+    [
+          "Kent planı",
+          "Pula Roma Arenası (Amfitiyatro)",
+          "Augustus ve Roma Tapınağı",
+          "Sergii Zafer Takı (Altın Kapı)",
+          "İkiz Kapılar (Porta Gemina) ve Forum"
+    ],
+    [
+          "The City Plan",
+          "Pula Roman Arena (Amphitheatre)",
+          "Temple of Augustus and Roma",
+          "Triumphal Arch of the Sergii (Golden Gate)",
+          "Twin Gates (Porta Gemina) and Forum Plaza"
+    ],
+    "Pula Arenası, zemin eğimi nedeniyle denize bakan tarafında 3 kat ve 32 metre yüksekliğe sahipken, tepeye dayanan tarafında 2 katlı inşa edilmiştir; dış halkasındaki 4 kulede seyircilerin üzerine parfüm ve gül suyu püskürten kokulu mekanizmalar vardı.",
+    "The Pula Arena's four outer towers once housed ingenious scent machines (velaria miscellanea) that sprayed misted rosewater and saffron perfumes over the 23,000 spectators on scorching summer days.",
+  ),
+  ["carnuntum"]: d(
+    "Avusturya'da Viyana ile Bratislava arasında Tuna Nehri kıyısında yer alan Carnuntum, Pannonia Superior eyaletinin başkenti ve 50.000 kişilik nüfusuyla Roma'nın Tuna sınırındaki (Danubian Limes) en kritik askeri ve sivil metropolüydü. İmparator Marcus Aurelius'un 'Kendime Düşünceler' adlı eserinin bir kısmını yazdığı kent, iki amfitiyatrosu ve Heidentor Zafer Takı ile parlar.",
+    "Situated on the south bank of the Danube between Vienna and Bratislava, Carnuntum was the capital of Pannonia Superior and the most strategic legionary fortress along the Danubian frontier. Home to 50,000 people, where Marcus Aurelius penned parts of his Meditations, it boasts two stone amphitheatres and the majestic Heidentor Pagan Gate.",
+    [
+          "Metropol planı",
+          "Heidentor (Pagan Kapısı) Dört Yollu Anıtı",
+          "Askerî Lejyoner Amfitiyatrosu",
+          "Sivil Kent Amfitiyatrosu",
+          "Vali Sarayı ve Roma Mahallesi"
+    ],
+    [
+          "The Metropolis Plan",
+          "Heidentor (Pagan Gate) Quadrifrons Monument",
+          "Legionary Military Amphitheatre",
+          "Civilian City Amphitheatre",
+          "Governor's Palace and Reconstructed Roman Quarter"
+    ],
+    "MS 308 yılında Roma İmparatorluğu'nun kaderini değiştiren ünlü 'İmparatorlar Konferansı' Carnuntum'da toplanmış; emekli Diocletianus, Maximianus ve Galerius burada bir araya gelerek Büyük Konstantin'in yükselişinin yolunu açmıştır.",
+    "In 308 AD, Carnuntum hosted the historic Conference of the Emperors, where the retired Diocletian, Maximian and Galerius convened to negotiate the imperial succession and avert civil war.",
+  ),
+  ["aguntum"]: d(
+    "Avusturya'nın Doğu Tirol Alpleri vadisinde yükselen Aguntum (Municipium Claudium Aguntum), İmparator Claudius tarafından Alplerdeki maden ve ticaret yollarını denetlemek üzere kurulmuş bir Roma dağ kentiydi. 900 metre rakımda yer alan kent; anıtsal şehir kapısı, lüks atriumlu villası ve Alplerin en büyük Roma termal hamam kompleksiyle ünlüdür.",
+    "Cradled in the Drava valley of the East Tyrolean Alps, Aguntum was established as an alpine municipality under Emperor Claudius to exploit rich mineral veins and control the high trade pass. Nestled at 900 metres elevation, it preserves an imposing double-towered gate, luxury atrium villa and the largest Roman thermal bath complex in the Alps.",
+    [
+          "Alp kenti planı",
+          "Anıtsal Çift Kuleli Şehir Kapısı",
+          "Büyük Termal Hamam Kompleksi (Thermae)",
+          "Atriumlu Lüks Aristokrat Konutu",
+          "Tüccarlar Forumu ve Zanaatkâr Dükkanları"
+    ],
+    [
+          "The Alpine Town Plan",
+          "Monumental Double-Towered City Gate",
+          "Great Alpine Thermal Baths (Thermae)",
+          "Luxury Atrium Villa and Peristyle",
+          "Civic Forum and Craftsmen's Market Row"
+    ],
+    "Aguntum sakinleri, kış aylarında Alp dağlarının dondurucu karına karşı tüm villalarını ve hamamlarını, yer altından odun ateşi dumanı geçiren hipokaust (tabandan ısıtma) sistemiyle sıcacık tutuyordu.",
+    "To endure brutal sub-zero Alpine winters, Aguntum's villas and public baths were equipped with advanced hypocaust systems that circulated furnace heat beneath stone tile floors and through hollow wall tiles.",
+  ),
+  ["philippopolis"]: d(
+    "Bulgaristan'ın Filibe kentinde yedi tepe üzerinde kurulan Philippopolis, MÖ 342'de Büyük İskender'in babası II. Filip tarafından fethedilerek onun adıyla anıldı. Roma döneminde Trakya eyaletinin başkenti olan kent; tepeye oyulmuş nefis manzaralı antik tiyatrosu, 30.000 kişilik stadyumu ve zengin mozaikli bazilikalarıyla Avrupa'nın en eski kesintisiz yerleşimlerindendir.",
+    "Spreading across seven syenite hills in Plovdiv, Bulgaria, Philippopolis was conquered and named in 342 BC by King Philip II of Macedon. As capital of the Roman province of Thracia, it flourished with a breathtaking hillside marble theatre, a 30,000-seat stadium, forum and early Christian basilicas, making it one of Europe's oldest continuously inhabited cities.",
+    [
+          "Kent planı",
+          "Philippopolis Antik Roma Tiyatrosu",
+          "Roma Stadyumu (Piazza Dzhumaya)",
+          "Roma Forumu ve Odeon",
+          "Piskoposluk Bazilikası Büyük Mozaikleri"
+    ],
+    [
+          "The City Plan",
+          "Ancient Roman Theatre of Philippopolis",
+          "Roman Stadium of Trimontium",
+          "Roman Forum Complex and Odeon",
+          "Bishop's Basilica Mosaic Complex"
+    ],
+    "Filibe Roma Tiyatrosu, 1968 yılında meydana gelen devasa bir tepe toprak kayması sonrasında yerin altından tesadüfen keşfedilmiş ve temizlenerek bugün dünya çapında opera ve konserlere ev sahipliği yapar hale getirilmiştir.",
+    "Philippopolis's stunning Roman Theatre lay completely buried under metres of soil until a massive hillside landslide in 1968 dramatically exposed its intact marble seats to astonished modern archaeologists.",
+  ),
+  ["serdica"]: d(
+    "Bulgaristan'ın başkenti Sofya'nın kalbinde yer alan Serdica, Trak Serdi kabilesinin yerleşimi olup Roma döneminde Dacia Mediterranea eyaletinin başkenti oldu. İmparator Büyük Konstantin'in 'Benim Roma'm Serdica'dır' sözüyle sevdiği kent; amfitiyatrosu, kırmızı tuğlalı 4. yüzyıl Azize Sofya Kilisesi, Aziz George Rotundası ve anıtsal Decumanus caddesiyle parlar.",
+    "Forming the archaeological core beneath modern Sofia, Serdica originated as a Thracian settlement before becoming capital of Roman Dacia Mediterranea. Cherished by Emperor Constantine the Great, who proclaimed 'Serdica is my Rome', it preserves an amphitheatre, the 4th-century Red Church of Saint George Rotunda and paved colonnaded boulevards.",
+    [
+          "Yeraltı kent planı",
+          "Aziz George Rotundası (Kırmızı Tuğlalı Kilise)",
+          "Serdica Roma Amfitiyatrosu",
+          "Decumanus Maximus ve Mozaikli Sokaklar",
+          "Doğu Şehir Kapısı ve Termal Pınarlar"
+    ],
+    [
+          "The Underground City Plan",
+          "Church of Saint George Rotunda",
+          "Roman Amphitheatre of Serdica",
+          "Decumanus Maximus and Mosaic Porticoes",
+          "Eastern City Gate and Thermal Springs"
+    ],
+    "MS 311 yılında İmparator Galerius, Hristiyanlara Roma İmparatorluğu sınırları içinde ibadet özgürlüğü tanıyan tarihteki ilk resmi hoşgörü fermanını (Serdica Fermanı) Milano Fermanı'ndan iki yıl önce burada ilan etmiştir.",
+    "In 311 AD, Emperor Galerius issued the historic Edict of Serdica from this city, granting official religious toleration to Christians throughout the Roman Empire two years before Constantine's Edict of Milan.",
+  ),
+  ["stobi"]: d(
+    "Kuzey Makedonya'da Erigon (Crna) ve Axios (Vardar) nehirlerinin kavşağında yer alan Stobi, antik Paeonia krallığının ardından Roma ve Erken Bizans döneminde Macedonia Salutaris eyaletinin başkenti oldu. 7.000 kişilik tiyatrosu, Parthenius Sarayı, vaftizhaneli Piskoposluk Bazilikası ve eşsiz geyik-tavuskuşu taban mozaikleriyle zengin bir ticaret ve piskoposluk merkeziydi.",
+    "Commanding the confluence of the Crna and Vardar rivers in North Macedonia, Stobi was an ancient Paeonian centre that grew into the capital of Roman Macedonia Salutaris. It features a 7,000-seat theatre, the luxurious Palace of Theodosius, the Episcopal Basilica with its cloverleaf baptistery and vivid mosaics of peacocks and stags drinking from chalices.",
+    [
+          "Kent planı",
+          "Stobi Roma Tiyatrosu",
+          "Piskoposluk Bazilikası ve Mozaikli Vaftizhane",
+          "Parthenius Sarayı ve İç Avlu",
+          "Via Sacra Kutsal Caddesi ve Çeşmeler"
+    ],
+    [
+          "The City Plan",
+          "Roman Theatre of Stobi",
+          "Episcopal Basilica with Cloverleaf Baptistery",
+          "Palace of Theodosius (Parthenius Palace)",
+          "Via Sacra Colonnaded Avenue and Fountains"
+    ],
+    "Stobi'deki Piskoposluk Bazilikası'nın zemininde yer alan ve Cennet'i simgeleyen tavuskuşu mozaikleri o kadar ünlüdür ki, Kuzey Makedonya'nın ulusal para birimi 10 Denar banknotunun üzerine basılmıştır.",
+    "The vivid mosaic peacocks flanking a golden fountain on the baptistery floor of Stobi are considered a national symbol and are depicted on North Macedonia's 10-denar banknote.",
+  ),
+  ["heraclea-lyncestis"]: d(
+    "Kuzey Makedonya'nın Manastır (Bitola) kenti yakınlarında Baba Dağı eteklerinde kurulan Heraclea Lyncestis, MÖ 4. yüzyıl ortalarında II. Filip tarafından stratejik sınır kalesi olarak inşa edildi. Roma döneminde ünlü Via Egnatia ticaret yolu üzerinde zenginleşen kent; tepe yamacındaki Roma tiyatrosu, termal hamamları ve erken Hristiyan bazilikalarındaki olağanüstü hayvan cenneti mozaikleriyle tanınır.",
+    "Founded in the 4th century BC by Philip II of Macedon at the foot of Mount Baba near Bitola, Heraclea Lyncestis guarded the frontier of ancient Lyncestis. Flourishing along the famous Roman highway Via Egnatia, it is renowned for its hillside theatre, baths and 5th-century Christian basilicas floored with intricate wildlife mosaics.",
+    [
+          "Kent planı",
+          "Heraclea Roma Tiyatrosu",
+          "Büyük Bazilika ve Narteks Mozaikleri",
+          "Küçük Bazilika ve Vaftiz Havuzu",
+          "Roma Mahkemesi ve Via Egnatia Aksı"
+    ],
+    [
+          "The City Plan",
+          "Roman Theatre of Heraclea",
+          "Great Basilica and Narthex Wildlife Mosaics",
+          "Small Basilica and Baptistery",
+          "Roman Courthouse and Via Egnatia Pavement"
+    ],
+    "Büyük Bazilika'nın zemin mozaiği 100 metrekareyi aşan tek parça bir şaheserdir; aslanların boğalara saldırdığı, leopar, geyik ve nar ağaçlarının tasvir edildiği mozaik, Hristiyan kozmolojisindeki Yeryüzü Cenneti'ni anlatır.",
+    "The narthex floor mosaic of the Great Basilica covers over 100 square metres with a stunning depiction of the Garden of Eden, filled with snarling leopards, cheetahs, stags and blossoming pomegranate trees.",
+  ),
+  ["kourion"]: d(
+    "Kıbrıs'ın güneybatı sahilinde Episkopi Körfezi'ne bakan 70 metrelik sarp kireçtaşı uçurum üzerinde yükselen Kourion, Miken kökenli krallıklardan Roma metropolüne dönüşen bir ada incisiydi. Uçurum kenarında denize nazır yarım daire Roma tiyatrosu, Eustolios Evi'nin mozaikli havuzları, gladyatör villası ve Apollon Hylates Kutsal Alanı ile Akdeniz'in en etkileyici manzaralarından birini sunar.",
+    "Perched dramatically on a 70-metre limestone bluff overlooking the Mediterranean in southern Cyprus, Kourion was a Mycenaean city-kingdom that flourished into a grand Roman and Byzantine centre. It boasts a cliffside theatre with sweeping bay views, the seaside Villa of Eustolios with mosaic baths and the inland Sanctuary of Apollo Hylates.",
+    [
+          "Uçurum kenti planı",
+          "Deniz Manzaralı Kourion Roma Tiyatrosu",
+          "Eustolios Evi ve Mozaikli Termal Kompleks",
+          "Gladyatörler Evi Mozaikleri",
+          "Apollon Hylates Kutsal Alanı ve Dorik Tapınak"
+    ],
+    [
+          "The Cliffside City Plan",
+          "Seaside Roman Theatre of Kourion",
+          "House of Eustolios with Mosaic Thermal Suite",
+          "House of the Gladiators Mosaics",
+          "Sanctuary of Apollo Hylates and Doric Temple"
+    ],
+    "Eustolios Evi'nin giriş mozaiğinde kentin Hristiyanlığa geçişini simgeleyen şu zarif kitabe yer alır: 'Bu ev artık kaba taş ve demirle değil, Mesih'in çok saygıdeğer sembolleriyle korunmaktadır.'",
+    "A mosaic inscription greeting visitors at the entrance of the House of Eustolios proudly proclaims that the mansion is safeguarded 'not by iron or strong walls, but by the revered signs of Christ.'",
+  ),
+  ["salamis-kibris"]: d(
+    "Kuzey Kıbrıs'ın Gazimağusa kıyısında Pedieos Nehri deltasında yer alan Salamis, Troya Savaşı kahramanı Teukros tarafından MÖ 11. yüzyılda kurulan adanın en güçlü antik kent krallığıydı. Roma döneminde devasa bir metropole dönüşen kent; mermer sütunlu anıtsal Gymnasion'u, 15.000 kişilik tiyatrosu, halk hamamları ve agora kalıntılarıyla Doğu Akdeniz'in en geniş arkeolojik alanıdır.",
+    "Situated on the eastern coast of Cyprus near Famagusta, Salamis was fabled to have been founded by the Trojan War hero Teucer in the 11th century BC. Expanding into a magnificent Roman provincial emporium, it preserves a grand marble-columned Gymnasium, a 15,000-seat theatre, public baths with hypocausts and a sprawling agora.",
+    [
+          "Kent planı",
+          "Salamis Roma Gymnasion'u ve Palaestra",
+          "Büyük Antik Tiyatro",
+          "Roma Termal Hamamları ve Sudatorium",
+          "Kral Mezarları ve Cellasız Taş Tümülüsler"
+    ],
+    [
+          "The City Plan",
+          "Salamis Roman Gymnasium and Palaestra",
+          "Great Ancient Theatre of Salamis",
+          "Roman Thermal Baths and Sudatorium",
+          "Royal Tombs and Dromos Burial Chambers"
+    ],
+    "Salamis Kraliyet Mezarları kazılarında, kralların ölümleri sonrasında mezar dromosuna (giriş koridoruna) diri diri gömülen atlar, cenaze arabaları ve fildişi tahtlar bozulmadan gün ışığına çıkarılmıştır.",
+    "Excavations of the Salamis Royal Tombs revealed that royal funeral cortèges included entire teams of war horses and royal bronze-adorned chariots sacrificed directly in the entrance dromos.",
+  ),
+  ["caesarea-maritima"]: d(
+    "İsrail'in Akdeniz kıyısında Kral Hirodes tarafından MÖ 22-10 yılları arasında İmparator Augustus onuruna sıfırdan inşa edilen Caesarea Maritima, antik dünyanın mühendislik harikasıydı. Hidrolik beton teknolojisiyle açık denizde inşa edilen devasa yapay limanı (Sebastos), deniz kenarındaki Roma tiyatrosu, hipodromu ve sahil su kemeriyle Roma'nın Yahudiye eyalet başkentiydi.",
+    "Built from scratch on the Mediterranean coast between 22 and 10 BC by King Herod the Great in honour of Caesar Augustus, Caesarea Maritima was an engineering marvel. It featured the massive all-weather Sebastos artificial harbour poured in pozzolanic underwater concrete, a seaside theatre, coastal hippodrome and grand aqueduct.",
+    [
+          "Liman ve sahil kenti planı",
+          "Sebastos Yapay Dış Limanı ve Dalgakıranlar",
+          "Deniz Kıyısı Roma Tiyatrosu",
+          "Sahil Araba Yarışı Hipodromu",
+          "Yüksek Kemerli Kıyı Su Kemeri"
+    ],
+    [
+          "The Harbour and Coastal Plan",
+          "Sebastos Artificial Deepwater Harbour",
+          "Seaside Roman Theatre of Caesarea",
+          "Coastal Chariot Racing Hippodrome",
+          "High-Level Coastal Beach Aqueduct"
+    ],
+    "İncil'de İsa'nın yargılanmasını yöneten Roma Valisi Pontius Pilatus'un adını taşıyan tarihteki tek çağdaş arkeolojik yazıt ('Pilatus Taşı'), 1961 yılında Caesarea tiyatrosunun basamakları altında bulunmuştur.",
+    "The famous 'Pilate Stone', the only contemporary archaeological inscription verifying the historical existence of Roman prefect Pontius Pilate, was discovered reused as a step in the theatre of Caesarea in 1961.",
+  ),
+  ["beit-shean"]: d(
+    "Ürdün Vadisi ile Yizreel Vadisi'nin kesişiminde yer alan Beit Shean (Scythopolis), Dekapolis birliğinin en zengin ve tek batı yakası kentiydi. Mısır Yeni Krallık garnizonundan Helenistik ve Roma metropolüne evrilen kent; siyah bazalt höyüğü, Palladius sütunlu caddesi, 7.000 kişilik tiyatrosu, kamu hamamları ve anıtsal tapınak terasıyla olağanüstü korunmuştur.",
+    "Positioned at the strategic crossroads of the Jordan Valley and Jezreel Valley, Beit Shean (Scythopolis) was the leading city of the Decapolis League. Evolving from an Egyptian New Kingdom administrative outpost into a lavish Roman metropolis, it preserves a high basalt tell, the grand colonnaded Palladius Street, a theatre, baths and temples.",
+    [
+          "Kent ve höyük planı",
+          "Scythopolis Roma Tiyatrosu",
+          "Sütunlu Palladius Caddesi ve Dükkanlar",
+          "Büyük Termal Hamam Kompleksi",
+          "Antik Tel Höyüğü ve Mısır Garnizonu"
+    ],
+    [
+          "The City and Mound Plan",
+          "Roman Theatre of Scythopolis",
+          "Colonnaded Palladius Street and Shops",
+          "Great Public Thermal Baths",
+          "Ancient Tel Mound and Egyptian Citadel"
+    ],
+    "MS 749 yılında meydana gelen feci Celile depreminde, Beit Shean'ın onlarca tonluk mermer ve bazalt sütunları aynı anda aynı yöne domino taşları gibi devrilmiş ve 1.200 yıl boyunca düştükleri gibi toprak altında kilitli kalmıştır.",
+    "During the catastrophic Golan-Galilee earthquake of 749 AD, the monumental colonnades along Palladius Street collapsed in uniform domino fashion, preserved exactly where they fell for twelve centuries.",
+  ),
+  ["xian-changan"]: d(
+    "Çin'in kadim başkenti Xi'an (Chang'an), İpek Yolu'nun doğu başlangıç noktası ve Han ile Tang hanedanlıklarının 1 milyonu aşan nüfuslu dünyanın en büyük metropolüydü. Kusursuz satranç tahtası ızgara planı, devasa Daming Sarayı, Budist kutsal emanetlerini barındıran Büyük Vahşi Kaz Pagodası ve 14 kilometrelik dev surlarıyla Doğu Asya mimarisinin başyapıtıdır.",
+    "The ancient imperial capital of China and eastern terminus of the Silk Road, Chang'an (Xi'an) was the largest city in the medieval world under the Han and Tang dynasties, boasting over one million inhabitants. Designed on a rigid grid, it was celebrated for the colossal Daming Palace, the Giant Wild Goose Pagoda and imposing defensive moated city walls.",
+    [
+          "İmparatorluk kent planı",
+          "Daming Sarayı (Hanyuan Taht Salonu)",
+          "Büyük Vahşi Kaz Pagodası (Dayan Ta)",
+          "Xi'an Anıtsal Savunma Sur Duvarları",
+          "Gündüz ve Gece Doğu/Batı İpek Yolu Pazarları"
+    ],
+    [
+          "The Imperial City Plan",
+          "Daming Palace (Hanyuan Audience Hall)",
+          "Giant Wild Goose Pagoda (Dayan Ta)",
+          "Monumental City Walls and South Gate",
+          "East and West Silk Road Market Compounds"
+    ],
+    "Tang dönemi Chang'an şehri, Japonya'nın imparatorluk başkentleri Nara (Heijō-kyō) ve Kyoto (Heian-kyō) şehirlerine doğrudan kentsel ve mimari model oluşturmuştur.",
+    "Chang'an's grand grid plan, monumental south-facing gates and symmetrical royal palaces served as the direct urban blueprint for Japan's ancient imperial capitals of Nara and Kyoto.",
+  ),
+  ["luoyang"]: d(
+    "Sarı Nehir'in güneyinde Yi ve Luo nehirlerinin kesiştiği ovada kurulan Luoyang, 13 Çin hanedanına başkentlik yapmış Doğu Asya'nın en eski kutsal şehirlerindendir. Doğu Han, Wei ve Tang dönemlerinin kültür merkezi olan kent; devasa Longmen Kaya Mağaraları'ndaki binlerce Buda heykeli ve Çin'in ilk Budist tapınağı olan Beyaz At Tapınağı ile dünya mirasıdır.",
+    "Situated in the central plains of China where the Luo and Yi rivers merge, Luoyang served as capital to 13 imperial dynasties over two millennia. As the cultural powerhouse of the Eastern Han, Northern Wei and Tang, it is celebrated for the Longmen Grottoes carved with 100,000 Buddhist statues and the White Horse Temple, the first Buddhist sanctuary in China.",
+    [
+          "İmparatorluk kent planı",
+          "Longmen Kaya Mağaraları ve Vairocana Budası",
+          "Beyaz At Tapınağı (Baima Si)",
+          "Sui ve Tang Luoyang Saray Salonları",
+          "Ming ve Luotian Törensel Astronomi Kulesi"
+    ],
+    [
+          "The Imperial City Plan",
+          "Longmen Grottoes and Colossal Vairocana Buddha",
+          "White Horse Temple (Baima Si)",
+          "Sui and Tang Dynasty Imperial City Palaces",
+          "Ming Tang and Heavenly Astronomical Hall"
+    ],
+    "Longmen Mağaraları'ndaki 17 metre yüksekliğindeki devasa Vairocana Buda heykelinin yüz hatlarının, Çin tarihinin tek kadın imparatoriçesi olan Wu Zetian'ın kendi yüzünden esinlenerek yontulduğu kabul edilir.",
+    "The serene, commanding facial features of the 17-metre-tall colossal Vairocana Buddha at Longmen Grottoes were carved to mirror the real face of Empress Wu Zetian, China's sole female sovereign.",
+  ),
+  ["nara-heijo"]: d(
+    "Japonya'da 710 yılında İmparatoriçe Genmei tarafından Çin'in Chang'an kentinin planı örnek alınarak kurulan Heijō-kyō (Nara), ülkenin ilk kalıcı imparatorluk başkentiydi. Japonya'nın altın çağını başlatan kent; dünyanın en büyük ahşap binası Tōdai-ji, 15 metrelik bronz Büyük Buda heykeli (Daibutsu) ve Suzaku Ana Kapısı ile ahşap mimarlığın zirvesidir.",
+    "Established in 710 AD by Empress Genmei as Japan's first permanent imperial capital, Heijō-kyō (Nara) was modelled directly on Tang China's capital Chang'an. It inaugurated the brilliant classical Nara period, dominated by the colossal wooden Tōdai-ji temple housing the Great Bronze Buddha (Daibutsu), and the imperial Suzaku Gate.",
+    [
+          "İmparatorluk başkent planı",
+          "Heijō Sarayı ve Suzaku Anıtsal Güney Kapısı",
+          "Tōdai-ji Büyük Buda Salonu (Daibutsuden)",
+          "Yakushi-ji Üç Katlı Doğu Pagodası",
+          "Kōfuku-ji Beş Katlı Ahşap Pagodası"
+    ],
+    [
+          "The Imperial Capital Plan",
+          "Heijō Palace Compound and Suzaku Gate",
+          "Tōdai-ji Great Buddha Hall (Daibutsuden)",
+          "Yakushi-ji Three-Storeyed East Pagoda",
+          "Kōfuku-ji Five-Storeyed Wooden Pagoda"
+    ],
+    "Tōdai-ji tapınağının içindeki 15 metre yüksekliğindeki devasa bronz Buda heykelini dökmek için 752 yılında Japonya'nın bilinen tüm bakır rezervi kullanılmış ve inşaat ülkenin ekonomisini neredeyse tüketmiştir.",
+    "Casting the 15-metre, 500-tonne bronze Daibutsu statue in 752 AD consumed virtually all available copper reserves in Japan, requiring the labour of an estimated 2.6 million people.",
+  ),
+  ["kyoto-heian"]: d(
+    "Japonya'da 794 yılında İmparator Kanmu tarafından kurulan Heian-kyō (Huzur ve Barış Başkenti), bin yılı aşkın süre Japon imparatorlarının ikametgâhı olan bugünkü Kyoto'dur. Çin felsefesi feng shui (geomansi) ilkelerine göre dağlar ve nehirlerle çevrili bir vadide kurulan kent; sarayları, Kiyomizu-dera gibi ahşap teraslı tapınakları ve bahçeleriyle Japon klasik kültürünün beşiğidir.",
+    "Founded in 794 AD by Emperor Kanmu as Heian-kyō ('Capital of Peace and Tranquillity'), this planned metropolis served as the residence of Japan's emperors for over a millennium as modern Kyoto. Governed by classical feng shui geomancy framed by protective mountain ranges, it nurtured the flowering of courtly literature, architecture and Zen rock gardens.",
+    [
+          "Başkent ve tapınaklar planı",
+          "Heian İmparatorluk Sarayı (Daidairi)",
+          "Kiyomizu-dera Asma Ahşap Terası",
+          "Tō-ji Beş Katlı Ahşap Pagodası",
+          "Byōdō-in Anka Kuşu Salonu (Amida Tapınağı)"
+    ],
+    [
+          "The Imperial City Plan",
+          "Heian Imperial Palace (Daidairi)",
+          "Kiyomizu-dera Suspended Timber Stage",
+          "Tō-ji Five-Storeyed Wooden Pagoda",
+          "Byōdō-in Phoenix Hall (Amida Temple)"
+    ],
+    "Kiyomizu-dera tapınağının 13 metre yükseklikte uçuruma uzanan devasa ahşap terası, 139 masif zelkova ağacı sütunu üzerine tek bir çivi dahi kullanılmadan birbirine geçen geçmeli ahşap kilit tekniğiyle kurulmuştur.",
+    "The cantilevered main hall of Kiyomizu-dera projects 13 metres over a steep ravine, supported by 139 massive zelkova pillars interlocking without a single nail, capable of withstanding severe earthquakes.",
+  ),
+  ["tikal"]: d(
+    "Guatemala'nın kuzeyindeki Petén yağmur ormanlarının balta girmemiş derinliklerinde yükselen Tikal (Yax Mutal), Klasik Maya uygarlığının en kudretli süper gücü ve başkentiydi. MÖ 6. yüzyıldan MS 9. yüzyıla kadar hüküm süren krallık; 47 metreye ulaşan dik basamaklı kireçtaşı piramit tapınakları, Kuzey Akropolü, sarayları ve törensel top sahalarıyla yağmur ormanının kalbinde bir mucizedir.",
+    "Rising above the dense jungle canopy of northern Guatemala's Petén Basin, Tikal (ancient Yax Mutal) was the premier superpower of the Classic Maya civilization. Dominating the lowlands from the 6th century BC to the 9th century AD, it features towering limestone temple-pyramids rising up to 47 metres, royal acropolises, causeways and ball courts.",
+    [
+          "Orman metropolü planı",
+          "I. Tapınak (Büyük Jaguar Piramidi)",
+          "II. Tapınak (Maskeler Piramidi)",
+          "Kuzey Akropolü ve Kral Mezarları",
+          "Büyük Meydan (Plaza Mayor) ve Top Sahası"
+    ],
+    [
+          "The Jungle Metropolis Plan",
+          "Temple I (Temple of the Great Jaguar)",
+          "Temple II (Temple of the Masks)",
+          "North Acropolis Royal Tomb Complex",
+          "Great Plaza (Plaza Mayor) and Ball Court"
+    ],
+    "Tikal'in I. Tapınağı (Büyük Jaguar), Kral Jasaw Chan K'awiil'in anıt mezarı olarak inşa edilmiştir; 1962'de mezar odasında yapılan kazıda kralın iskeleti, 16 kilo yeşim taşı takı ve oyulmuş jaguar kemikleriyle bulunmuştur.",
+    "The tomb of King Jasaw Chan K'awiil beneath Temple I contained 16 kilograms of royal jade jewellery, carved human and jaguar bones depicting mythical voyages to the underworld.",
+  ),
+  ["antigua-quirigua"]: d(
+    "Guatemala'nın doğusunda verimli Motagua Nehri vadisinde yer alan Quiriguá, Klasik Maya döneminin nehir ticaret yollarını ve yeşim madenlerini denetleyen önemli bir başkentiydi. Kral K'ak' Tiliw Chan Yopaat'ın MS 738'de komşu süper güç Copán'ı yenerek bağımsızlığını ilan etmesiyle zenginleşen kent, Kolomb öncesi Amerika'nın en yüksek tek parça taş dikilitaşlarına sahiptir.",
+    "Situated in the lush Motagua River valley of eastern Guatemala, Quiriguá controlled strategic river trade routes and prized jade deposits during the Classic Maya era. Flourishing after King K'ak' Tiliw Chan Yopaat captured and sacrificed the king of rival Copán in 738 AD, it is renowned for carving the tallest freestanding stone stelae in the Americas.",
+    [
+          "Tören alanı planı",
+          "Stela E (10,6 Metrelik Dev Monolit Dikilitaş)",
+          "Zoomorf P (Büyük Kozmik Kaplumbağa Taşı)",
+          "Büyük Tören Meydanı",
+          "Akropol Saray Terasları ve Top Sahası"
+    ],
+    [
+          "The Ceremonial Precinct Plan",
+          "Stela E (10.6-Metre Colossal Monolithic Stela)",
+          "Zoomorph P (The Cosmic Turtle-Earth Monster)",
+          "The Great Ceremonial Plaza",
+          "Acropolis Palace Platform and Ballcourt"
+    ],
+    "Quiriguá'daki Stela E dikilitaşı 10,6 metre yüksekliği ve 65 ton ağırlığıyla Yeni Dünya'da (Amerika kıtasında) antik halklar tarafından metal alet kullanılmadan taş ocağından çıkarılıp dikilen en büyük tek parça taştır.",
+    "Quiriguá's Stela E stands 10.6 metres tall and weighs over 65 tonnes, making it the largest quarried and erected freestanding monolithic monument in the entire pre-Columbian Americas.",
+  ),
+  ["copan"]: d(
+    "Honduras'ın batısında Copán Nehri vadisinde ormanlar arasında yer alan Copán (antik Oxwitik), zarafeti, heykel sanatı ve mimari inceliği nedeniyle 'Maya Dünyasının Atinası' olarak anılır. 16 krallık bir hanedan tarafından yönetilen kent; 63 basamağında 2.000'den fazla kabartma glif barındıran Hiyeroglifli Merdivenler Tapınağı ve üç boyutlu portre stelleriyle bir açık hava heykel müzesidir.",
+    "Nestled in the lush western mountains of Honduras along the Copán River, Copán (ancient Oxwitik) is celebrated as the 'Athens of the Maya World' for the extraordinary quality of its sculpture and hieroglyphic texts. Ruled by a 16-king dynasty, its crown jewel is the Hieroglyphic Stairway with over 2,000 glyphs carved on 63 stone steps.",
+    [
+          "Akropol planı",
+          "Hiyeroglifli Merdivenler Tapınağı (Tapınak 26)",
+          "Büyük Tören Meydanı ve Portre Stelleri",
+          "Copán Kraliyet Top Sahası",
+          "Altar Q (16 Kralın Taht Devri Anıtı)"
+    ],
+    [
+          "The Acropolis Plan",
+          "Hieroglyphic Stairway (Temple 26)",
+          "Great Plaza with High-Relief Stelae",
+          "Copán Royal Ballcourt",
+          "Altar Q (Dynastic Succession Monument of 16 Kings)"
+    ],
+    "Copán'daki Hiyeroglifli Merdivenler, Kolomb öncesi Amerika kıtasında bilinen en uzun yazılı tarihi metindir; 63 basamak boyunca kentin hanedanlık tarihini, savaşlarını ve hükümdarlarını ayrıntıyla anlatır.",
+    "The Hieroglyphic Stairway of Copán contains the longest known written stone inscription in the pre-Columbian Western Hemisphere, detailing the dynastic history and coronations of the dynasty across 63 steps.",
+  ),
+  ["el-puente"]: d(
+    "Honduras'ın Copán departmanında Chamelecón ve Chinamito nehirlerinin vadisinde kurulan El Puente, Klasik Maya döneminde Copán krallığına bağlı ikinci en büyük siyasi ve törensel merkezdi. 9 hektarlık koruma alanında 200'den fazla tepe ve platform barındıran kent; 12 metre yüksekliğindeki basamaklı ana piramidi, tören meydanları ve taş rampa geçitleriyle bölgenin kilit ticaret kavşağıydı.",
+    "Located in the fertile Chamelecón and Chinamito river valleys of Honduras, El Puente was the second most important Classic Maya regional centre in the Copán polity. Encompassing over 200 mounds across a 9-hectare archaeological park, it features a 12-metre terraced pyramidal acropolis, open ceremonial plazas, causeways and sophisticated drainage systems.",
+    [
+          "Tören alanı planı",
+          "1 Numaralı Ana Basamaklı Piramit",
+          "3 Numaralı Törensel Konut Platformu",
+          "Kuzey ve Doğu Plazaları",
+          "Chinamito Nehri Kıyı Rampa Geçitleri"
+    ],
+    [
+          "The Ceremonial Precinct Plan",
+          "Structure 1 (Main Stepped Pyramidal Temple)",
+          "Structure 3 (Ceremonial Elite Platform)",
+          "North and East Public Plazas",
+          "Chinamito River Processional Causeways"
+    ],
+    "El Puente, Copán'ın 738'de Quiriguá karşısında aldığı yenilgi sonrası gücünü kaybettiği dönemde, vadideki bağımsız ticaretini sürdürerek Copán'dan daha uzun süre iskân edilmiş bir merkezdir.",
+    "While the royal dynasty of Copán collapsed abruptly after military defeats in the 8th century, El Puente continued to thrive as an independent regional trading centre well into the Terminal Classic period.",
+  ),
+  ["tiwanaku"]: d(
+    "Bolivya'da Titikaka Gölü yakınlarında 3.850 metre rakımdaki Altiplano yaylasında kurulan Tiwanaku, İnka uygarlığının atası kabul edilen devasa bir And imparatorluğunun kutsal başkentiydi. Devasa andezit bloklarla örülü Akapana Piramidi, astronomik hizalanışlı Kalasasaya Tapınağı ve tek parça taştan oyulmuş ikonik Güneş Kapısı (Puerta del Sol) ile Güney Amerika'nın en etkileyici megalitik merkezidir.",
+    "Perched 3,850 metres above sea level on the high Andean plateau near Lake Titicaca in Bolivia, Tiwanaku was the spiritual and political capital of a pre-Inca empire. It is celebrated for its monumental stone masonry, the terraced Akapana pyramid, the astronomically aligned Kalasasaya Temple and the monolithic Sun Gate (Puerta del Sol).",
+    [
+          "Kutsal merkez planı",
+          "Güneş Kapısı (Puerta del Sol Monoliti)",
+          "Kalasasaya Tapınağı ve Ponce Monoliti",
+          "Yarı Yeraltı Tapınağı (Templete Semisubterráneo)",
+          "Akapana Basamaklı Teras Piramidi"
+    ],
+    [
+          "The Sacred Precinct Plan",
+          "Gate of the Sun (Puerta del Sol Monolith)",
+          "Kalasasaya Temple and Ponce Monolith",
+          "Semi-Subterranean Sunken Courtyard",
+          "Akapana Stepped Terrace Pyramid"
+    ],
+    "Tiwanaku'nun Güneş Kapısı (Puerta del Sol), 10 ton ağırlığında tek bir andezit kaya kütlesinden oyulmuştur; üzerindeki frizde elinde asa tutan Viracocha (Ağlayan Tanrı) ve 48 kanatlı haberci figürü yer alır.",
+    "The Sun Gate was carved from a single 10-tonne block of volcanic andesite; its upper frieze depicts the Staff God (Viracocha) weeping tears that turn into celestial rain, flanked by 48 winged heralds.",
+  ),
+  ["pumapunku"]: d(
+    "Tiwanaku kompleksi içinde yer alan Puma Punku ('Puma Kapısı'), antik dünyanın en şaşırtıcı taş işçiliğine sahip teraslı tapınak platformudur. 130 tona varan dev andezit ve kırmızı kumtaşı blokları, milimetrik gönye açıları, iç içe geçen 'H' biçimli modüler taş blokları ve dökme bronz kenet yuvalarıyla And Dağları'nda ulaşılan en yüksek mühendislik seviyesini sergiler.",
+    "Located near Tiwanaku in the Bolivian Altiplano, Puma Punku ('Door of the Puma') is a terraced temple platform renowned for the most sophisticated stone-cutting in the pre-Columbian world. Its mega-blocks of red sandstone and volcanic andesite, weighing up to 130 tonnes, feature razor-sharp geometric cuts, interlocking 'H-blocks' and cast bronze cramp sockets.",
+    [
+          "Teras platform planı",
+          "H Biçimli Megalit Bloklar Kompleksi",
+          "Kırmızı Kumtaşı Anıtsal Teras Döşemesi",
+          "Bronz Kenet Yuvalı Andezit Bloklar",
+          "Puma Punku Batı Giriş Kapısı Kalıntıları"
+    ],
+    [
+          "The Terrace Platform Plan",
+          "Interlocking H-Block Megalith Complex",
+          "Monumental Red Sandstone Paved Platform",
+          "Andesite Blocks with Bronze Clamp Sockets",
+          "Western Gate Approach of Puma Punku"
+    ],
+    "Puma Punku'nun andezit bloklarındaki 'H' biçimli oymalar ve düz hatlar o kadar pürüzsüz ve dik açılıdır ki, blokların ek yerlerine bir jilet dahi sokulamaz; bloklar harç yerine erimiş bronz-bakır alaşımı kenetler dökülerek birbirine kilitlenmiştir.",
+    "Puma Punku's volcanic andesite blocks feature precision-cut 90-degree right angles and recessed grooves so exact that a razor blade cannot fit between joints, locked together with cast molten bronze cramps.",
+  ),
 };
 
 export function getSiteDetail(slug: string): SiteDetail | undefined {

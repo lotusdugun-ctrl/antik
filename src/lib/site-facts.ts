@@ -3477,7 +3477,931 @@ export const siteFacts: Record<string, Localized[]> = {
       "The Roman Theatre of Byblos was built facing the Mediterranean panorama, its semicircular cavea looking out over the ancient harbour.",
     ),
   ],
+  herculaneum: [
+    f(
+      "Vezüv patlamasında kente ulaşan 500°C'lik piroklastik gaz ve çamur akıntısı, ahşap yatakları, kapıları, beşiklerini ve hatta ekmek somunlarını kömürleştirerek fosilleştirmiştir.",
+      "The 500°C pyroclastic flow from Vesuvius carbonised and sealed wooden beds, cradles, shutter doors and even loaves of bread without burning them to ash.",
+    ),
+    f(
+      "Sahildeki kayıkhanelerde (fornici) kentin tahliyesini beklerken hayatını kaybeden 300'den fazla vatandaşın iskeletleri ve yanlarındaki mücevherler bulunmuştur.",
+      "Over 300 skeletons were discovered crowded into the vaulted seaside boat-houses, clutching family jewels and coins while awaiting naval rescue.",
+    ),
+    f(
+      "Villa dei Papiri'de bulunan 1.800'den fazla kömürleşmiş parşömen rulosu, antik dünyadan günümüze kalan tek eksiksiz felsefe kütüphanesidir.",
+      "The Villa of the Papyri yielded over 1,800 carbonised scrolls, the only classical library to survive intact from antiquity.",
+    ),
+  ],
+  "aquae-sulis": [
+    f(
+      "Kutsal kaynaktan her gün 46°C sıcaklıkta 1,17 milyon litre mineral bakımından zengin jeotermal su kaynar.",
+      "Every day, 1.17 million litres of steaming, mineral-rich thermal water surge from the sacred spring at a constant 46°C.",
+    ),
+    f(
+      "Romalılar kutsal pınara 'lanet tabletleri' (defixiones) atarak hırsızları tanrıça Sulis Minerva'ya şikâyet etmişlerdir; 130'dan fazla kurşun tablet bulunmuştur.",
+      "Worshippers threw lead curse tablets (defixiones) into the spring demanding Sulis avenge stolen cloaks or money, creating a unique window into daily life.",
+    ),
+    f(
+      "Büyük Havuz'un tabanındaki orijinal Roma kurşun tabakası günümüzde hâlâ sızdırmazlığını korumaktadır.",
+      "The original Roman lead lining installed on the floor of the Great Bath 2,000 years ago still holds water perfectly today.",
+    ),
+  ],
+  arelate: [
+    f(
+      "Arles Roma Amfitiyatrosu 136 x 109 metre ölçülerinde olup iki kat boyunca uzanan 120 adet Dor ve Korint tarzı yarım sütunlu kemere sahiptir.",
+      "The Amphitheatre of Arles measures 136 by 109 metres, framed across two tiers by 120 round arches flanked by Doric and Corinthian pilasters.",
+    ),
+    f(
+      "Julius Caesar MÖ 46 yılında VI. Lejyon gazileri için Arles'ı resmi Roma kolonisi (Colonia Julia Paterna) ilan etmiştir.",
+      "Julius Caesar established Arles as a premier veteran colony for his Sixth Legion in 46 BC, turning it into the commercial gateway of Gaul.",
+    ),
+    f(
+      "Forumun altındaki Cryptoporticus (yeraltı galerisi), bataklık zemin üzerine dev bir U şeklinde podyum inşa etmek ve tahıl depolamak için tonozlarla örülmüştür.",
+      "The subterranean Cryptoporticus beneath the forum forms a massive U-shaped vaulted gallery built to level the slope and keep municipal grain cool.",
+    ),
+  ],
+  colonia: [
+    f(
+      "Colonia Agrippina, İmparator Claudius'un eşi ve Nero'nun annesi olan İmparatoriçe Küçük Agrippina'nın doğum yeridir ve kente onun adı verilmiştir.",
+      "The city was elevated to imperial colony status in 50 AD by Empress Agrippina the Younger, wife of Claudius, who was born on the Rhine shore here.",
+    ),
+    f(
+      "Praetorium vali sarayı 3,5 hektarlık alanı kaplayan anıtsal sekizgen kabul salonları ve Ren manzaralı mermer teraslarıyla Alplerin kuzeyindeki en görkemli saraydı.",
+      "The Praetorium was the grandest Roman palace north of the Alps, featuring monumental octagonal reception halls overlooking the Rhine.",
+    ),
+    f(
+      "Roma Kuzey Kapısı'nın (Nordtor) orta kemerinde kentin resmi baş harfleri olan CCAA (Colonia Claudia Ara Agrippinensium) kazınmıştır.",
+      "The central portal of the Roman North Gate bore the carved imperial abbreviation CCAA for the colony's grand full title.",
+    ),
+  ],
+  kartaca: [
+    f(
+      "Kartaca'nın ünlü dairesel askeri limanı (cothon), ortasındaki amirallik adasından yönetilen 220 adet kapalı savaş gemisi tersanesine sahipti.",
+      "Carthage's circular naval cothon enclosed 220 roofed dry docks for triremes, commanded from a central artificial island fortress.",
+    ),
+    f(
+      "Antoninus Hamamları, Roma'daki Caracalla ve Diocletianus hamamlarından sonra Roma İmparatorluğu'nun en büyük üçüncü termal kompleksiydi.",
+      "The Antonine Baths stretched 200 metres along the Mediterranean coast, ranking as the third-largest bath complex in the entire Roman world.",
+    ),
+    f(
+      "Efsanevi Kartacalı general Hannibal Barca, MÖ 218'de 37 savaş fili ve 40.000 askeriyle Alpleri aşarak Roma'yı dize getiren seferini buradan yönetti.",
+      "Hannibal Barca led his famous campaign against Rome from Carthage, marching 37 war elephants across the Alps in 218 BC.",
+    ),
+  ],
+  "el-cem": [
+    f(
+      "El Cem Amfitiyatrosu 148 metre uzunluğunda ve 122 metre genişliğinde olup 35.000 seyirciyi ağırlayabilen devasa bir taştan ovadır.",
+      "The Amphitheatre of El Jem measures 148 by 122 metres, holding 35,000 spectators across three tiers of vaulted arcades.",
+    ),
+    f(
+      "Amfitiyatro hiçbir doğal yamaca dayanmadan, tamamen serbest duran sarı kireçtaşı bloklarıyla düz ova üzerine inşa edilmiştir.",
+      "Unlike most Greek or Roman theatres, El Jem was erected entirely freestanding on an open plain using massive ashlar blocks.",
+    ),
+    f(
+      "Arenanın altındaki iki katlı yeraltı tonoz galerileri, gladyatörlerin ve vahşi hayvanların sahneye asansörlerle çıkarıldığı mükemmel bir mekanizmaya sahipti.",
+      "The subterranean tunnels beneath the arena floor still preserve the trapdoors and counterweight lifts that hoisted wild beasts into combat.",
+    ),
+  ],
+  timgad: [
+    f(
+      "Timgad, Roma şehir planlamacılığında 'centuriatio' adı verilen mükemmel kare ızgara planın dünya üzerindeki en kusursuz örneğidir.",
+      "Timgad represents the absolute ideal of Roman military grid planning, divided into perfect square insulae by orthogonal streets.",
+    ),
+    f(
+      "12 metre yüksekliğindeki üç kemerli Traianus Zafer Takı, yontulmuş kumtaşı blokları ve yivli korint sütunlarıyla kentin batı girişini taçlandırır.",
+      "Trajan's Arch stands 12 metres tall with three barrel-vaulted portals, welcoming visitors along the Decumanus Maximus from the west.",
+    ),
+    f(
+      "Kentin halk kütüphanesi, duvarlarındaki sekizgen nişlerde 20.000'den fazla papirüs rulosunu barındıracak kapasiteye sahipti.",
+      "The public library of Timgad was endowed with semicircular reading halls and tiered wall niches designed to hold over 20,000 papyrus scrolls.",
+    ),
+  ],
+  djemila: [
+    f(
+      "Cuicul antik kenti deniz seviyesinden 900 metre yüksekte, iki nehir vadisinin birleştiği üçgen bir dağ sırtına kurulmuştur.",
+      "Ancient Cuicul is perched on a jagged mountain ridge 900 metres above sea level, framed dramatically between two river gorges.",
+    ),
+    f(
+      "Caracalla Zafer Takı, MS 216 yılında imparator ve annesi Julia Domna onuruna tek kemerli ve podyumlu korint sütunlarla inşa edilmiştir.",
+      "The Arch of Caracalla was erected in 216 AD in honour of Emperor Caracalla and his mother Julia Domna with ornate Corinthian aedicules.",
+    ),
+    f(
+      "Kentin yamaç tiyatrosu 3.000 kişilik olup, dik dağ yamacına oyulmuş basamaklarıyla vadiye doğru panoramik bir manzaraya açılır.",
+      "The 3,000-seat theatre was hewn directly into the natural rocky slope, providing dramatic acoustic views over the mountain landscape.",
+    ),
+  ],
+  volubilis: [
+    f(
+      "Volubilis, Roma İmparatorluğu'nun Afrika'daki en batı eyaleti olan Mauretania Tingitana'nın idari ve ticari merkeziydi.",
+      "Volubilis was the thriving administrative capital of Roman Mauretania Tingitana at the westernmost frontier of the empire.",
+    ),
+    f(
+      "Caracalla Zafer Takı, MS 217 yılında tüm imparatorluk halkına Roma vatandaşlığı tanıyan Caracalla'ya şükran amacıyla kentin ana caddesine dikilmiştir.",
+      "The Triumphal Arch was dedicated in 217 AD to Emperor Caracalla in gratitude for granting full Roman citizenship to the city's inhabitants.",
+    ),
+    f(
+      "Kentteki kazılarda Herakles'in 12 Görevi, Diana'nın Yıkanması ve Orpheus'u betimleyen dünyanın en zarif yer mozaikleri bulunmuştur.",
+      "The mansions of Volubilis are celebrated for their intact mosaic pavements depicting the Labours of Hercules, Diana and the Nymphs.",
+    ),
+  ],
+  liksus: [
+    f(
+      "Liksus, Fenikeliler tarafından MÖ 8. yüzyılda Kartaca'dan bile önce kurulan kadim bir Atlantik ticaret kolonisiydi.",
+      "Lixus was established by Phoenician mariners in the 8th century BC as one of the earliest seafaring outposts along the Atlantic coast.",
+    ),
+    f(
+      "Antik mitolojide Herakles'in altın elmaları bekleyen ejderha Ladon'u öldürdüğü efsanevi Hesperidler Bahçesi'nin Lixus tepeleri olduğuna inanılırdı.",
+      "Greek and Roman myth located the legendary Garden of the Hesperides on the heights of Lixus where Hercules plucked the golden apples.",
+    ),
+    f(
+      "Kentin nehri gören teraslarında yer alan 10 büyük garum fabrikası, yılda binlerce ton mayalanmış balık sosu üreterek Roma'ya ihraç ediyordu.",
+      "Lixus housed 10 major fish-salting factories equipped with deep vats, producing premium garum sauce shipped across the Mediterranean.",
+    ),
+  ],
+  "leptis-magna": [
+    f(
+      "Leptis Magna, Roma İmparatoru Septimius Severus'un (MS 193-211) doğum yeridir ve imparator kendi kentini mermer harikasına dönüştürmüştür.",
+      "Leptis Magna was the home city of Emperor Septimius Severus, who lavishly rebuilt it with white Proconnesian marble from Anatolia.",
+    ),
+    f(
+      "Severus Zafer Takı, dört yöne açılan tetrapylon kemer mimarisi ve imparatorluk ailesinin zafer kabartmalarıyla Roma sanatının şaheseridir.",
+      "The Arch of Septimius Severus is a four-way tetrapylon triumphal gate adorned with relief friezes of the imperial family in triumph.",
+    ),
+    f(
+      "Severus Bazilikası 92 metre uzunluğunda ve 40 metre genişliğinde olup iki ucundaki apsisleri Medusa başlı oymalarla süslü sütunlarla taçlandırılmıştır.",
+      "The Severan Basilica spans 92 by 40 metres, framed at either end by colossal apses with carved figures of Medusa and Dionysian scenes.",
+    ),
+  ],
+  sabratha: [
+    f(
+      "Sabratha Roma Tiyatrosu, arkasındaki Akdeniz'e bakan 96 adet beyaz ve pembe mermer sütunlu üç katlı sahne cephesiyle (scaenae frons) ünlüdür.",
+      "The Theatre of Sabratha is renowned for its three-tiered scaenae frons comprising 96 marble columns set dramatically against the sea.",
+    ),
+    f(
+      "Tiyatronun podyum frizinde tiyatro maskeleri, müzisyenler, tanrılar ve Roma senatörlerini tasvir eden zarif mermer kabartmalar yer alır.",
+      "The podium wall separating the orchestra from the stage features exquisitely carved reliefs of tragedy and comedy muses, dancers and sacrifices.",
+    ),
+    f(
+      "Sabratha, Roma döneminde Sahra Çölü'nden gelen fildişi, altın tozu ve egzotik hayvanların Roma'ya sevk edildiği ana limandı.",
+      "Sabratha served as the primary Mediterranean port terminal for trans-Saharan caravans transporting ivory, gold dust and exotic African animals.",
+    ),
+  ],
+  palmira: [
+    f(
+      "Palmira'nın 1,2 kilometre uzunluğundaki Büyük Sütunlu Caddesi (Grand Colonnade), 750 adet korint sütunla çöl kumları arasından Zafer Takı'na uzanır.",
+      "Palmyra's Grand Colonnade ran 1.2 kilometres lined with over 750 Corinthian columns, linking the Funerary Temple to the Monumental Arch.",
+    ),
+    f(
+      "Kraliçe Zenobia, MS 270 yılında Roma'ya isyan ederek Mısır ve Anadolu'yu fethetmiş ve Palmira İmparatorluğu'nu ilan etmiştir.",
+      "Queen Zenobia led a daring rebellion against Rome in 270 AD, conquering Egypt and Levant to establish the short-lived Palmyrene Empire.",
+    ),
+    f(
+      "Kentin anıtsal Zafer Takı, caddenin yön değiştirdiği 30 derecelik dirsek açısını gizlemek için dahi bir çift taraflı cephe mimarisiyle inşa edilmiştir.",
+      "The Monumental Arch was brilliantly designed with two angled facades to seamlessly disguise a 30-degree turn in the main colonnaded street.",
+    ),
+  ],
+  bosra: [
+    f(
+      "Bosra Roma Tiyatrosu 15.000 seyirci kapasitesine sahip olup tamamı yerel siyah bazalt taşından inşa edilmiştir.",
+      "The Roman Theatre of Bosra seated 15,000 spectators and was constructed entirely from local black volcanic basalt stone.",
+    ),
+    f(
+      "Orta Çağ'da tiyatronun etrafına inşa edilen hendekli Eyyubi kalesi sayesinde tiyatro tribünleri ve sahnesi günümüze neredeyse sıfır hasarla ulaşmıştır.",
+      "The massive Ayyubid moated fortress built around the theatre preserved its seating cavea, scaena and acoustic arcades in near-mint condition.",
+    ),
+    f(
+      "Bosra, İmparator Traianus tarafından MS 106 yılında kurulan Roma'nın Arabia Petraea eyaletinin resmi başkenti ve III. Cyrenaica Lejyonu üssüydü.",
+      "In 106 AD Emperor Trajan made Bosra the capital of the province of Arabia Petraea and the permanent fortress headquarters of Legio III Cyrenaica.",
+    ),
+  ],
+  babil: [
+    f(
+      "Babil'in anıtsal İştar Kapısı, kobalt mavisi sırlı pişmiş tuğlalar üzerine kabartma ejderhalar (Muşhuşşu) ve boğalarla süslenmişti.",
+      "The Ishtar Gate was clad in shimmering lapis-blue glazed ceramic tiles sculpted with 575 relief dragons and wild bulls.",
+    ),
+    f(
+      "Kentin merkezindeki 91 metre yüksekliğindeki yedi katlı Etemenanki Zigguratı, tarihe ve kutsal metinlere 'Babil Kulesi' olarak geçmiştir.",
+      "The 91-metre-high seven-tiered Etemenanki Ziggurat dedicated to Marduk is widely identified as the historical inspiration for the Tower of Babel.",
+    ),
+    f(
+      "Kral Hammurabi'nin 282 maddelik ünlü adalet yasaları, MÖ 1750 civarında Babil'de iki metrelik siyah diyorit stel üzerine çivi yazısıyla kazınmıştır.",
+      "The famous Code of Hammurabi, one of history's earliest legal systems comprising 282 laws, was inscribed here on a black diorite stele.",
+    ),
+  ],
+  ur: [
+    f(
+      "Ur Büyük Zigguratı, MÖ 2100 civarında Sümer Kralı Ur-Nammu tarafından Ay Tanrısı Nanna (Sin) onuruna üç teras hâlinde inşa edilmiştir.",
+      "The Great Ziggurat of Ur was erected around 2100 BC by King Ur-Nammu as a three-stepped pyramidal temple tower dedicated to moon god Nanna.",
+    ),
+    f(
+      "İngiliz arkeolog Leonard Woolley 1920'lerde Ur Kraliyet Mezarları'nda Kraliçe Puabi'nin altın başlığını ve ünlü 'Ur Standardı' mozaiğini bulmuştur.",
+      "Excavations by Leonard Woolley in the 1920s uncovered royal tombs with Queen Puabi's gold headdress and the inlaid mosaic Standard of Ur.",
+    ),
+    f(
+      "Ur zigguratının duvarları zift (doğal nehir bitümü) ve kamış hasırlarla harçlanmış 720.000 adet fırınlanmış pişmiş tuğlayla kaplanmıştır.",
+      "The monumental core was faced with over 720,000 kiln-fired bricks laid in natural bitumen mortar and reinforced with reed matting layers.",
+    ),
+  ],
+  persepolis: [
+    f(
+      "Persepolis, Pers krallarının Nevruz yeni yıl bayramını ve imparatorluk elçilerini kabul ettiği devasa yapay taş teras üzerine kurulmuştur.",
+      "Persepolis was founded by Darius the Great on a massive stone terrace as the ritual and ceremonial capital for Persian New Year (Nowruz).",
+    ),
+    f(
+      "Tüm Milletler Kapısı'nda (Gate of All Nations), insan başlı ve kanatlı devasa Asur tarzı Lamassu boğa heykelleri ziyaretçileri karşılardı.",
+      "The Gate of All Nations was guarded by colossal stone Lamassu figures — winged human-headed bulls sculpted with imposing dignity.",
+    ),
+    f(
+      "Apadana Sarayı'nın 72 adet 20 metre yüksekliğindeki sütunları, birbirine bakan boğa ve aslan başlıklı eşsiz Pers mimarisine sahipti.",
+      "The Apadana audience hall was supported by 72 monumental 20-metre columns crowned by distinctive double-bull protome capitals.",
+    ),
+  ],
+  pasargad: [
+    f(
+      "Büyük Kiros'un mezarı, altı kademeli beyaz taş podyum üzerinde beşik çatılı sade bir mezar odasından oluşan mimari bir şaheserdir.",
+      "The Tomb of Cyrus consists of a modest gabled limestone chamber perched atop a six-tiered stepped pyramidal stone base.",
+    ),
+    f(
+      "MÖ 330'da kenti fetheden Büyük İskender, Kiros'un mezarını ziyaret etmiş, mezara altın bir pelerin sermiş ve tahrip edilmesini yasaklamıştır.",
+      "Alexander the Great visited Cyrus's tomb in 330 BC, ordering it restored and guarded in reverence to the great conqueror.",
+    ),
+    f(
+      "Pasargad saray bahçeleri, taş su kanalları ve simetrik dörtlü parselleriyle İslam ve dünya mimarisini etkileyen tarihin ilk 'Çaharbağ' bahçesidir.",
+      "The palace precinct preserves the stone water channels of the world's earliest documented quadripartite geometric garden (Chahar Bagh).",
+    ),
+  ],
+  mohencodaro: [
+    f(
+      "Mohenjo-daro'nun Büyük Hamamı (Great Bath), 12 metre uzunluğunda, 7 metre genişliğinde ve 2,4 metre derinliğinde olup iki ucunda tuğla merdivenler yer alır.",
+      "The Great Bath measures 12 by 7 metres and reaches a depth of 2.4 metres, accessed by wide brick staircases at either end.",
+    ),
+    f(
+      "Kentteki evlerin neredeyse tamamı özel banyo ve tuvalete sahipti; atık sular pişmiş kil borularla sokak altındaki kapalı ana kanalizasyona akardı.",
+      "Almost every residence featured private bathing rooms connected via terracotta pipes to covered brick street sewers.",
+    ),
+    f(
+      "İndus Vadisi'nde keşfedilen ünlü 'Dans Eden Kız' bronz heykeli ve sabuntaşından oyulmuş 'Rahip Kral' büstü Mohenjo-daro kazılarında bulunmuştur.",
+      "The world-renowned bronze statuette of the 'Dancing Girl' and the carved steatite bust of the 'Priest-King' were excavated here.",
+    ),
+  ],
+  hampi: [
+    f(
+      "Hampi'deki Virupaksha Tapınağı'nın 50 metre yüksekliğindeki 9 katlı anıtsal giriş kulesi (Gopuram), 15. yüzyıldan bu yana kesintisiz ibadete açıktır.",
+      "The 50-metre-high 9-tiered eastern gopuram of Virupaksha Temple has remained an active Hindu place of worship continuously since the 15th century.",
+    ),
+    f(
+      "Vittala Tapınağı'ndaki 'Müzikal Sütunlar', hafifçe vurulduğunda yedi farklı Hint müziği notasını (Sa-Re-Ga-Ma) çıkaracak şekilde oyulmuştur.",
+      "The 56 musical pillars of Vittala Temple produce distinct acoustic musical notes when gently tapped, crafted from solid resonant granite.",
+    ),
+    f(
+      "Kraliyet Fil Ahırları, kubbeli 11 dev bölmesiyle imparatorun en değerli savaş fillerini barındıran Hint-İslam mimarisinin şaheseridir.",
+      "The Royal Elephant Stables features 11 majestic domed chambers designed to shelter the emperor's prized royal war elephants.",
+    ),
+  ],
+  "angkor-vat": [
+    f(
+      "Angkor Wat, 162 hektarlık alanıyla (Vatikan'ın dört katı) insanlık tarihinin inşa ettiği en büyük dini yapıdır.",
+      "Spanning 162.6 hectares (four times the area of Vatican City), Angkor Wat is officially recognized as the largest religious complex ever built.",
+    ),
+    f(
+      "Tapınağın beş kulesi, Hindu mitolojisinde tanrıların evi ve evrenin ekseni olan kutsal Meru Dağı'nın beş zirvesini simgeler.",
+      "The five central quincunx towers emulate the mythical five sacred peaks of Mount Meru, cosmic centre of Hindu cosmology.",
+    ),
+    f(
+      "Dış galeride 800 metreden uzun taş frizlerde Hint destanları Mahabharata, Ramayana ve ünlü 'Süt Denizi'nin Çalkalanması' kabartmaları işlenmiştir.",
+      "Over 800 metres of bas-relief galleries depict Hindu epics including the Mahabharata and the monumental Churning of the Ocean of Milk.",
+    ),
+  ],
+  bayon: [
+    f(
+      "Bayon Tapınağı'nın 54 kulesinin dört bir yanında Kral Jayavarman VII'nin yüzünü taşıyan toplam 216 devasa taş tebessüm kabartması yer alır.",
+      "The 54 gothic towers of Bayon bear 216 colossal sculpted faces gazing outward to the cardinal points with serene compassion.",
+    ),
+    f(
+      "Tapınağın dış duvarlarında Khmer ordusunun Çam savaşçılarıyla deniz savaşları, horoz dövüşleri ve sokak pazarları canlı sahnelerle betimlenmiştir.",
+      "The outer bas-reliefs offer vivid panoramas of 12th-century life: naval battles on Tonlé Sap lake, bustling markets and feast celebrations.",
+    ),
+    f(
+      "Bayon, Angkor bölgesinde Hindu tapınaklarının aksine tamamen Mahayana Budizmi inancına adanmış tek büyük kraliyet tapınak dağıdır.",
+      "Unlike the earlier Hindu state monuments of Angkor, Bayon was built as the primary royal pantheon of Mahayana Buddhism.",
+    ),
+  ],
+  teotihuacan: [
+    f(
+      "Güneş Piramidi 65 metre yüksekliğinde ve 225 metre taban genişliğinde olup Amerika kıtasının en büyük piramitlerinden biridir.",
+      "The Pyramid of the Sun reaches 65 metres in height with a 225-metre base, standing among the largest monumental pyramids in the Americas.",
+    ),
+    f(
+      "Ölüler Yolu (Calzada de los Muertos) 45 metre genişliğinde ve 2,5 kilometre uzunluğunda olup Güneş ve Ay piramitlerini birbirine bağlar.",
+      "The Avenue of the Dead spans 45 metres wide and over 2.5 kilometres long, forming the celestial axis connecting the main temples.",
+    ),
+    f(
+      "Tüylü Yılan (Quetzalcoatl) Tapınağı cephesinde taştan oyulmuş yüzlerce yılankavi baş ve su tanrısı Tlaloc büstleri yer alır.",
+      "The Temple of the Feathered Serpent is adorned with dramatic high-relief stone carvings of Quetzalcoatl flanked by rain god Tlaloc.",
+    ),
+  ],
+  "cisen-itza": [
+    f(
+      "El Castillo piramidinin dört cephesindeki 91'er basamak ve en üstteki tapınak platformu toplandığında yılın 365 gününü (91 × 4 + 1 = 365) verir.",
+      "The four staircases of El Castillo each have 91 steps; combined with the final platform they total exactly 365, matching the solar year.",
+    ),
+    f(
+      "Büyük Top Sahası 168 × 70 metre ölçülerinde olup Mezoamerika'nın bilinen en büyük antik spor arenasıdır.",
+      "The Great Ballcourt measures 168 by 70 metres with 8-metre vertical walls, ranking as the largest athletic ballcourt in Mesoamerica.",
+    ),
+    f(
+      "El Caracol (Karakol) Gözlemevi, pencereleri Venüs gezegeninin en kuzey ve en güney hareketlerini izlemek üzere tasarlanmış dairesel bir kuledir.",
+      "El Caracol observatory tower features specially aligned observation slits designed to calculate the complex orbital cycle of Venus.",
+    ),
+  ],
+  "macu-picu": [
+    f(
+      "Machu Picchu, 1911 yılında Amerikalı tarihçi Hiram Bingham tarafından yerel yerlilerin rehberliğinde dünyaya tanıtılmıştır.",
+      "Machu Picchu was brought to international scientific acclaim in 1911 by Yale historian Hiram Bingham led by Quechua farmers.",
+    ),
+    f(
+      "Intihuatana taşı ('Güneşi Bağlayan Taş'), İnka rahiplerinin kış gündönümünde güneşin dönüşünü hesapladığı kutsal bir astronomik saattir.",
+      "The Intihuatana stone served as an astronomical calendar where Inca priests ritually 'tied the sun' at the winter solstice.",
+    ),
+    f(
+      "Kentin 700'den fazla tarım terası, hem erozyonu önlüyor hem de mikroklima yaratarak dağın tepesinde mısır ve patates yetiştirilmesini sağlıyordu.",
+      "Over 700 stone agricultural terraces prevented mountain landslides and retained solar warmth to cultivate maize at 2,400 metres.",
+    ),
+  ],
+  "can-can": [
+    f(
+      "Chan Chan, 20 kilometrekarelik alanıyla Kolomb öncesi Amerika'nın en büyük şehri ve dünyanın en geniş antik kerpiç metropolüdür.",
+      "Covering 20 square kilometres in Peru's coastal desert, Chan Chan was the largest pre-Columbian urban centre in the entire American hemisphere.",
+    ),
+    f(
+      "Kentteki 10 dev saray kalesinin (ciudadelas) 12 metreye varan kalın kerpiç duvarları, Pasifik depremlerine dayanması için tabanı geniş piramidal yapılmıştır.",
+      "The 10 royal citadels were enclosed by 12-metre-high adobe walls tapered at the base to absorb the seismic shockwaves of coastal earthquakes.",
+    ),
+    f(
+      "Kerpiç duvarlardaki geometrik frizlerde ağ atan balıkçılar, dalgalar, karabataklar ve deniz samurları kabartma olarak işlenmiştir.",
+      "The adobe relief panels are filled with maritime motifs: stylized sea birds, rolling ocean waves, fishing nets and otters.",
+    ),
+  ],
 
+  ["ostia-antica"]: [
+    f(
+      "Ostia Antica, Roma'nın fırınlarına Mısır ve Sicilya'dan gelen buğdayın boşaltıldığı imparatorluk tahıl ambarıydı; yüz binlerce ton buğday Horrea Epagathiana gibi tonozlu dev depolarda saklanırdı.",
+      "Ostia was the imperial granary receiving grain fleets from Egypt and Sicily; hundreds of thousands of tonnes were stored in monumental vaulted warehouses like Horrea Epagathiana.",
+    ),
+    f(
+      "Kentteki Termopolia (antik lokantalar), mermer tezgahları, şarap küpleri ve duvarlarındaki menü resimleriyle modern fast-food dükkanlarının ilk örneğidir.",
+      "Thermopolia (ancient cookshops) lined the avenues with L-shaped marble service counters, sunken wine amphorae and frescoed snack menus, functioning as antiquity's fast-food bars.",
+    ),
+    f(
+      "MÖ 4. yüzyılda kurulan Ostia, Tiber Nehri'nin taşıdığı alüvyonlar sebebiyle bugün Akdeniz kıyısından yaklaşık 3 kilometre içeride kalmıştır.",
+      "Founded on the Tyrrhenian coast in the 4th century BC, Ostia now sits 3 kilometres inland because centuries of silt deposition by the Tiber pushed the shoreline westward.",
+    ),
+  ],
+  ["paestum"]: [
+    f(
+      "Paestum'un surları 4,75 kilometre uzunluğunda olup 28 kulesi ve dört ana kapısıyla antik dünyanın en sağlam korunmuş Yunan savunma hatlarındandır.",
+      "Paestum's circuit wall stretches 4.75 kilometres, fortified with 28 towers and four monumental gates, among the most complete Greek defensive perimeters.",
+    ),
+    f(
+      "Kentteki 'Dalgıcın Mezarı' (Tomba del Tuffatore), MÖ 480 dolaylarına tarihlenen ve mavi sulara atlayan bir genci tasvir eden dünyadaki tek sağlam klasik Yunan figürlü duvar freskidir.",
+      "The Tomb of the Diver (Tomba del Tuffatore), dating to c. 480 BC, preserves the only intact classical Greek figurative fresco depicting a youth diving gracefully into azure waters.",
+    ),
+    f(
+      "MÖ 6. yüzyılda inşa edilen I. Hera Tapınağı (Bazilika), 9x18 sütunlu arkaik planıyla Yunan dünyasında ön cephesinde tek sayıda (9 sütun) sütun bulunan çok nadir yapılardandır.",
+      "The 6th-century BC Temple of Hera I (the Basilica) features an archaic 9x18 peripteral plan, one of the rarest temples in the Greek world with an odd number of front columns.",
+    ),
+  ],
+  ["akropolis-atena"]: [
+    f(
+      "Parthenon, antik çağ boyunca Athena Tapınağı, Bizans döneminde Meryem Ana Kilisesi, Osmanlı döneminde ise cami olarak kesintisiz kullanılmıştır.",
+      "The Parthenon functioned continuously across centuries: as a temple to Athena, an Eastern Roman cathedral dedicated to the Virgin Mary, and an Ottoman mosque.",
+    ),
+    f(
+      "1687 yılında Venedik kuşatmasında atılan bir havan mermisi, Osmanlıların baruthane olarak kullandığı Parthenon'un çatısını ve sütunlarını havaya uçurmuştur.",
+      "During the 1687 Venetian siege of Athens, a direct mortar hit detonated gunpowder stored inside the Parthenon, blowing out its roof and collapsing 28 columns.",
+    ),
+    f(
+      "Erekhtheion'un güney terasında çatıyı taşıyan altı kadın heykeli (Karyatidler), sütun yerine kadın figürünün taşıyıcı olarak kullanıldığı tarihteki en ünlü mimari örnektir.",
+      "The six sculpted maidens supporting the roof on the Erechtheion's southern porch (the Caryatids) form the most celebrated architectural use of sculpted human figures as load-bearing columns.",
+    ),
+  ],
+  ["epidavros"]: [
+    f(
+      "Epidauros'taki Asklepios tapınağında şifa arayan hastalar 'abaton' adı verilen salonda gece uykuya yatar ve rüyalarında tanrının veya kutsal yılanların kendilerini tedavi etmesini beklerdi.",
+      "Suppliants seeking divine cures spent the night sleeping in the sacred Abaton (incubation hall), believing Asclepius or his sacred serpent would heal them in nocturnal visions.",
+    ),
+    f(
+      "Tiyatronun oturma sıraları kırmızımsı ve gözenekli kireçtaşından oyulmuştur; bu taş düşük frekanslı arka plan rüzgar sesini yutup insan sesinin yüksek frekansını yansıtır.",
+      "The theatre's limestone tiers act as an acoustic filter, attenuating low-frequency crowd murmur and wind noise while amplifying high-frequency vocal projections from the stage.",
+    ),
+    f(
+      "Tiyatronun orkestrası tam bir dairedir (20,3 metre çapında) ve 34 alt sıra ile 21 üst sıra olmak üzere 55 basamakta 14.000 seyirciyi ağırlar.",
+      "The circular orchestra measures 20.3 metres in diameter, enveloped by 55 stone tiers divided by a diazoma aisle to seat 14,000 festival spectators.",
+    ),
+  ],
+  ["luksor-kenti"]: [
+    f(
+      "Luksor Tapınağı ile Karnak Tapınağı arasında uzanan 2,7 kilometrelik kutsal yol boyunca 1.057 adet insan ve koç başlı sfenks dizilmiştir.",
+      "A ceremonial dromos stretching 2.7 kilometres connected Luxor to Karnak, flanked by 1,057 stone sphinxes with human and ram heads.",
+    ),
+    f(
+      "Tapınak kompleksi içinde, Hristiyanlık döneminde inşa edilmiş kilise freskleri ve 13. yüzyıldan kalma Abu el-Haggag Camii yan yana varlığını sürdürür.",
+      "Within the temple walls, 4th-century Roman imperial chapel frescoes and the 13th-century Abu el-Haggag Mosque coexist atop ancient Pharaonic masonry.",
+    ),
+    f(
+      "II. Ramses'in tapınak girişine diktirdiği devasa oturan heykeller tek parça siyah granitten yontulmuş olup her biri 14 metre yüksekliğindedir.",
+      "The seated colossi of Ramesses II flanking the main pylon were sculpted from monolithic black granite, rising 14 metres above the desert pavement.",
+    ),
+  ],
+  ["ebu-simbel"]: [
+    f(
+      "Ebu Simbel tapınakları, 1960'larda Assuan Barajı suları altında kalmaktan kurtarılmak için UNESCO öncülüğünde 20 ila 30 tonluk 1.036 blok halinde kesilerek 65 metre yukarı taşınmıştır.",
+      "Between 1964 and 1968, UNESCO dismantled Abu Simbel into 1,036 blocks weighing 20-30 tonnes each and reassembled them 65 metres higher to escape Lake Nasser's waters.",
+    ),
+    f(
+      "Firavun II. Ramses'in 20 metrelik dev heykellerinin bacaklarının arasında eşi Nefertari, annesi Mut-Tuy ve çocuklarının heykelleri diz boyu olarak oyulmuştur.",
+      "Flanking the feet of the colossal 20-metre enthroned Ramesses statues are smaller, knee-high sculpted figures of Queen Nefertari, the Queen Mother Tuya and their children.",
+    ),
+    f(
+      "Küçük Tapınak'ta Kraliçe Nefertari'nin heykelleri, Mısır tarihinde eşine az rastlanır şekilde kocası Firavun II. Ramses ile aynı boyda yapılmıştır.",
+      "At the adjacent Small Temple, Queen Nefertari was depicted standing the exact same height as Pharaoh Ramesses II, an extraordinary tribute to female royal status in Egyptian art.",
+    ),
+  ],
+  ["umm-qais"]: [
+    f(
+      "Umm Qais (Gadara), antik çağın en parlak şair ve düşünürlerinden Menippos ve Meleagros'un doğduğu 'şairler kenti' olarak anılıyordu.",
+      "Ancient Gadara was renowned across the classical world as a cradle of philosophy and poetry, home to Meleager, Menippus and Philodemus.",
+    ),
+    f(
+      "Siyah volkanik bazalt taşından oyulan Batı Tiyatrosu'nun basamaklarında, o dönemde bilet yerine geçen ve yer sahiplerinin adını taşıyan Yunanca yazıtlar hâlâ okunabilir.",
+      "The Western Theatre, carved entirely from jet-black volcanic basalt, preserves Greek seat inscriptions designating reserved seating for local town magistrates.",
+    ),
+    f(
+      "Kentin yüksek terasından bakıldığında Taberiye (Celile) Gölü, Ürdün Vadisi, Golan Tepeleri ve Yarmuk Nehri kanyonu aynı anda panoramik olarak görülür.",
+      "From the crest of Gadara's basalt plateau, one enjoys a panoramic vista across the Sea of Galilee, the Jordan Rift Valley, the Golan Heights and the Yarmouk Gorge.",
+    ),
+  ],
+  ["amman-kale"]: [
+    f(
+      "Amman Kalesi terası, deniz seviyesinden 850 metre yüksekte olup Amman'ın yedi tarihi tepesinin en yükseğidir ve MÖ 7000 Neolitik Çağ'dan beri yerleşim görmüştür.",
+      "Jebel al-Qal'a rises 850 metres above sea level as the highest summit in Amman, with archaeological traces spanning 7,000 years from Pottery Neolithic settlements.",
+    ),
+    f(
+      "Herakles Tapınağı'nın sütunları 10 metre yüksekliğinde olup başlıklarıyla birlikte 13 metreyi bulur; tapınağın tamamlanması halinde Roma'nın en büyük tapınaklarından biri olacaktı.",
+      "The Temple of Hercules was planned with 13-metre-high Corinthian columns; had it been finished, it would have been among the largest Roman temples in the Near East.",
+    ),
+    f(
+      "Emevi Sarayı'nın haç planlı anıtsal giriş salonu, Sasani ve Bizans mimarisinin sentezi olan ahşap rekonstrüksiyon kubbesiyle dikkat çeker.",
+      "The monumental cruciform audience hall of the Umayyad Palace complex features an iconic timber dome synthesizing Byzantine architectural geometry with Sasanian decor.",
+    ),
+  ],
+  ["anjar"]: [
+    f(
+      "Anjar, 8. yüzyıl başında inşa edilip Abbasi darbesi sonrasında kısa süre içinde terk edildiği için sonraki çağların tahribatına uğramadan orijinal Emevi planıyla donup kalmıştır.",
+      "Completed c. 715 AD and abandoned after the Abbasid takeover in 750 AD, Anjar was frozen in time, escaping subsequent medieval overbuilding.",
+    ),
+    f(
+      "Kentin 40 dükkanlı sütunlu Cardo Maximus caddesinin altında, modern şehirciliği aratmayan taş kanalizasyon ve yağmur suyu tahliye kanalları uzanır.",
+      "Beneath the Cardo Maximus, flanked by 40 merchant shops, runs a sophisticated subterranean vaulted stone sewer and drainage grid.",
+    ),
+    f(
+      "Şehrin surları 370 x 310 metre ölçülerinde bir dikdörtgen olup köşelerinde ve kenarlarında 40 adet yarım daire savunma kulesiyle korunuyordu.",
+      "The city wall forms a rectangle of 370 by 310 metres, reinforced with 40 semi-circular towers and four square corner bastions.",
+    ),
+  ],
+  ["tyre-sur"]: [
+    f(
+      "Sur Hipodromu 480 metre uzunluğu ve 90 metre genişliğiyle Roma dünyasının en büyük ikinci hipodromudur ve 20.000 seyirci kapasitesine sahipti.",
+      "The Al-Bass Hippodrome is 480 metres long and 90 metres wide, seating 20,000 spectators as the second largest chariot arena in the Roman Empire.",
+    ),
+    f(
+      "Büyük İskender, MÖ 332'de yedi ay boyunca direnen ada kenti fethetmek için anakaradan adaya 1 kilometre uzunluğunda dev bir taş mendirek inşa ettirmiş ve adayı yarımadaya çevirmiştir.",
+      "In 332 BC, Alexander the Great built a colossal 1-kilometre stone causeway into the sea to breach the island fortress, permanently turning Tyre into a peninsula.",
+    ),
+    f(
+      "Sur nekropolü boyunca yüzlerce anıtsal mermer lahit dizilidir; bu lahitlerin kabartmalarında Akhilleus ve Troya efsaneleri canlı şekilde tasvir edilmiştir.",
+      "The necropolis avenue at Al-Bass is flanked by hundreds of monumental marble sarcophagi elaborately sculpted with scenes from the Iliad and the Trojan War.",
+    ),
+  ],
+  ["tarraco"]: [
+    f(
+      "Tarraco, Roma İmparatoru Augustus'un MÖ 26-25 yıllarında Kantabria savaşlarını bizzat yönetirken imparatorluğu buradan idare etmesiyle fiilen Roma'nın başkenti olmuştur.",
+      "Tarraco served as the de facto capital of the Roman world in 26-25 BC when Augustus made it his imperial headquarters while directing the Cantabrian campaigns.",
+    ),
+    f(
+      "Şehir surlarının MÖ 3. yüzyıldan kalan alt katmanı, devasa kaba yontulmuş kiklopik taş bloklarıyla Roma'nın İtalya dışındaki en eski askeri mimarisidir.",
+      "The lower tier of Tarraco's defensive walls, built with megalithic cyclopean boulders, is the oldest surviving Roman military architecture outside Italy.",
+    ),
+    f(
+      "Les Ferreres Su Kemeri (Şeytan Köprüsü), 217 metre uzunluğunda ve 27 metre yüksekliğinde olup Francolí Nehri'nden şehre su taşımıştır.",
+      "The Les Ferreres Aqueduct (Pont del Diable) spans 217 metres in length and rises 27 metres across two tiers of arches, channeling water from the Francolí River.",
+    ),
+  ],
+  ["segovia"]: [
+    f(
+      "Segovia Su Kemeri, Frio Nehri'nden aldığı suyu kente ulaştırmak için Guadarrama dağlarından 17 kilometre boyunca kıvrılarak gelir.",
+      "The aqueduct carried mountain water from the Frio River in the Sierra de Guadarrama across a 17-kilometre canal route before crossing the city gorge.",
+    ),
+    f(
+      "28,5 metre yüksekliğindeki iki katlı anıtsal köprü bölümünde, granit taşların kaldırılması için kullanılan vinç kıskaçlarının delikleri taşların üzerinde bugün bile görülebilir.",
+      "At its highest point of 28.5 metres over Plaza del Azoguejo, the granite ashlar blocks still bear visible hoist socket indentations made by Roman cranes.",
+    ),
+    f(
+      "Kemer, İspanya'da Roma döneminden 1970'li yıllara kadar neredeyse iki bin yıl boyunca şehre kesintisiz içme suyu sağlamaya devam etmiştir.",
+      "The Roman aqueduct remained in continuous municipal operation carrying potable water to the citizens of Segovia until the 1970s.",
+    ),
+  ],
+  ["pont-du-gard"]: [
+    f(
+      "Pont du Gard, harçsız inşa edilen dev blokların yerleştirilmesi için taşların üzerine kazınmış numaralar ve marangoz iskele yuvalarıyla antik bir şantiye rehberi gibidir.",
+      "The masonry displays mason marks, numbered stone courses and projecting corbels left in place to hold wooden scaffolding during maintenance.",
+    ),
+    f(
+      "Köprünün inşasında her biri 6 tona kadar çıkan 50.400 ton kireçtaşı blok kullanılmış ve inşaat sadece 5 yılda tamamlanmıştır.",
+      "Constructing the bridge required 50,400 tonnes of shelly limestone blocks weighing up to 6 tonnes each, quarried from the adjacent Estel ravine.",
+    ),
+    f(
+      "Orta Çağ boyunca köprünün ikinci katındaki ayaklar, at arabalarının geçebilmesi için oyularak inceltilmiş, 18. yüzyılda mühendisler yapıyı kurtarmak için yanına yeni bir yol köprüsü eklemiştir.",
+      "In the Middle Ages, piers on the lower tier were notched to allow wheeled cart traffic, until 18th-century engineers added a parallel road bridge to preserve the structure.",
+    ),
+  ],
+  ["vaison-la-romaine"]: [
+    f(
+      "Vaison-la-Romaine, Fransa'nın Pompeii'si olarak anılır; 15 hektarlık alanda ortaya çıkarılan lüks villalarda zengin Roma aristokratlarının gündelik hayatı eksiksiz izlenebilir.",
+      "Often called the 'Pompeii of France', Vaison displays extensive aristocratic suburban villas with complete garden courtyards and marble-lined dining rooms.",
+    ),
+    f(
+      "Yunuslu Villa (Maison au Dauphin), 2.700 metrekarelik alanıyla kendi özel hamamına, kışlık ve yazlık yemek odalarına ve mermer çeşmeli bir bahçeye sahipti.",
+      "The House of the Dolphin encompasses 2,700 square metres, equipped with a private bath suite, seasonal triclinia and landscaped garden peristyles.",
+    ),
+    f(
+      "Roma taş köprüsü, Ouvèze Nehri'nin kayalık boğazında tek bir basık kemerle (9 metre genişlik) her iki yakayı birbirine bağlar ve sel baskınlarına karşı aerodinamik açıklığa sahiptir.",
+      "The Roman bridge features a semi-circular arch with a 17-metre span, anchored directly into solid bedrock to withstand torrential Alpine spate currents.",
+    ),
+  ],
+  ["xanten"]: [
+    f(
+      "Colonia Ulpia Traiana (Xanten), İmparator Trajan'ın kendi adını verdiği (Ulpia) Roma dünyasındaki tek koloni kentidir.",
+      "Colonia Ulpia Traiana was founded c. 100 AD by Emperor Trajan, named after his ancestral gens Ulpia as an imperial foundation.",
+    ),
+    f(
+      "Şehrin amfitiyatrosu ahşap ve taş karma teknikle inşa edilmiş olup 10.000 kişi alıyordu; gladyatör dövüşlerinin yanı sıra vahşi Ren ormanı hayvanlarının avları sergileniyordu.",
+      "The amphitheatre seated 10,000 spectators, built with external stone piers supporting timber seating banks for gladiator combats and beast hunts.",
+    ),
+    f(
+      "Liman Tapınağı, 27 metreye varan yüksekliğiyle Alplerin kuzeyindeki en anıtsal Roma dini yapısıydı ve Ren Nehri'nden geçen gemiler için bir fener gibi parlıyordu.",
+      "The Harbour Temple stood 27 metres tall on a high podium, acting as a visual landmark for naval and merchant traffic cruising the Rhine.",
+    ),
+  ],
+  ["saalburg"]: [
+    f(
+      "Saalburg Kalesi, Roma'nın Cermen sınırını koruyan 550 kilometrelik Limes tahkimat hattının en önemli garnizon merkezlerinden biriydi.",
+      "Saalburg was a vital cohort fort protecting the Taunus pass along the 550-kilometre fortified Upper Germanic-Rhaetian Limes boundary.",
+    ),
+    f(
+      "Garnizonun içinde fırınlar, tahıl ambarları, revir ve 500 askerin kaldığı 8 kışla binası yer alıyordu; kale surlarının dışında ise sivil tüccarların yaşadığı bir kasaba (vicus) vardı.",
+      "The fort accommodated the Cohors II Raetorum civium Romanorum equitata, complete with eight barrack blocks, stables, an infirmary and a bathhouse.",
+    ),
+    f(
+      "Kalede yapılan kazılarda lejyoneerlere ait binlerce deri sandalet (caligae), kılıç, kalkan tokası ve bronz sikkeler orman toprağında oksijensiz kalarak mükemmel korunmuştur.",
+      "Waterlogged anaerobic soil around Saalburg preserved thousands of leather marching sandals (caligae), wooden tools and military gear.",
+    ),
+  ],
+  ["conimbriga"]: [
+    f(
+      "Conimbriga'nın zemin mozaiklerinde labirentler, deniz canavarları, av köpekleri ve Minotauros efsanesi canlı renkli taşlarla işlenmiştir.",
+      "The polychrome mosaics exhibit astonishing geometric labyrinths, Bellerophon slaying the Chimera, and lively wild boar and deer hunts.",
+    ),
+    f(
+      "MS 468'de Suevi akınları yaklaştığında kent sakinleri panikle şehri küçültmüş ve anıtsal villaların taşlarını sökerek aceleyle evlerin ortasından geçen yeni bir savunma suru örmüştür.",
+      "Threatened by Suebic raids in 468 AD, the citizens erected an emergency defensive wall that bisected the city, demolishing lavish houses to salvage building stone.",
+    ),
+    f(
+      "Çeşmeler Evi'nin bahçesinde bugün çalışan hidrolik su fıskiyeleri, ziyaretçilere Roma çağının bahçe seslerini ve serinliğini birebir yaşatır.",
+      "Modern visitors can experience the restored hydraulic water jets in the garden of the House of Fountains, recreating Roman auditory ambiance.",
+    ),
+  ],
+  ["evora-roma"]: [
+    f(
+      "Évora Roma Tapınağı, korint başlıkları ve sütun kaideleri beyaz Estremoz mermerinden, sütun gövdeleri ise yerel sert granitten yapılarak iki renkli estetik kazanmıştır.",
+      "The temple combined fluted columns of local grey granite with bases and Corinthian capitals carved from luminous white marble from nearby Estremoz.",
+    ),
+    f(
+      "Tapınak, 14 sütunu ve arşitravıyla İber Yarımadası'nda 2.000 yıl boyunca yıkılmadan ayakta kalabilmiş en kusursuz Roma tapınağıdır.",
+      "With 14 columns still standing intact upon a 3-metre-high granite masonry podium, it is the most complete Roman hexastyle temple in Portugal.",
+    ),
+    f(
+      "Tapınağın bulunduğu akropol tepesi, kentin en yüksek noktası olup Roma döneminde forum ve kamu binalarının çevrelediği kutsal alandı.",
+      "Perched at the summit of Évora, the temple occupied the primary religious terrace of the municipal forum, surrounded by civic basilicas and porticoes.",
+    ),
+  ],
+  ["salona"]: [
+    f(
+      "Salona, İmparator Diocletianus'un emeklilik sarayını Split'te inşa ettirdiği yerin sadece 5 kilometre kuzeyindedir ve imparatorun gerçek doğum yeridir.",
+      "Diocletian was born in or near Salona c. 244 AD, subsequently building his colossal retirement palace just 5 kilometres south along the shore at Split.",
+    ),
+    f(
+      "18.000 kişilik amfitiyatroda gladyatörlerin yanı sıra su oyunları (naumachia) için tabanın suyla doldurulmasını sağlayan gelişmiş bir tahliye kanalı vardı.",
+      "The amphitheatre had a subterranean canal system that allowed the arena floor to be drained rapidly after staging mock naval battles (naumachiae).",
+    ),
+    f(
+      "Manastirine erken Hristiyan mezarlığında, Roma zulmünde şehit edilen Dalmaçya piskoposu Aziz Domnius'un lahti ve yüzlerce kabartmalı taş mezar bulunmuştur.",
+      "Manastirine is the resting place of Saint Domnius (Duje), bishop of Salona martyred under Diocletian, surrounded by hundreds of early Christian sarcophagi.",
+    ),
+  ],
+  ["pula"]: [
+    f(
+      "Pula Arenası kireçtaşından inşa edilmiş olup 23.000 seyirci kapasitesiyle Roma İmparatorluğu'nun ayakta kalan en büyük beşinci amfitiyatrosudur.",
+      "Constructed of local white limestone, Pula's amphitheatre seated 23,000, ranking among the six largest surviving gladiatorial arenas of antiquity.",
+    ),
+    f(
+      "Arenanın altındaki yer altı galerileri, gladyatörlerin ve vahşi hayvanların kafeslerini barındırıyordu; bugün burada antik zeytinyağı ve şarap amforaları sergilenmektedir.",
+      "Subterranean hypogeum corridors beneath the arena floor originally held animal cages and scenery hoists, now displaying amphorae from Istrian olive oil mills.",
+    ),
+    f(
+      "Şehrin girişindeki Sergii Zafer Takı, Aktium Deniz Savaşı'nda zafer kazanan Sergii ailesinin üç kardeşinin anısına özel bütçeyle MÖ 30'da dikilmiştir.",
+      "The Arch of the Sergii was commissioned privately c. 30 BC by Salvia Postuma to honour three brothers of the Sergii family who fought at Actium.",
+    ),
+  ],
+  ["carnuntum"]: [
+    f(
+      "İmparator Marcus Aurelius, Carnuntum'da kışlarken ünlü felsefi günlüğü 'Kendime Düşünceler'in (Meditations) ikinci kitabını Tuna Nehri kıyısında kaleme almıştır.",
+      "Emperor Marcus Aurelius spent three years campaigning from Carnuntum during the Marcomannic Wars, penning Book II of his Meditations on the Danube.",
+    ),
+    f(
+      "Heidentor (Pagan Kapısı), 4. yüzyılda İmparator II. Constantius tarafından zafer anıtı olarak dikilen dört ayaklı devasa bir tetrapylondur.",
+      "The Heidentor is an imposing 4th-century quadrifrons triumphal arch, towering over the Pannonian plains as the iconic symbol of ancient Austria.",
+    ),
+    f(
+      "Carnuntum Arkeoloji Parkı'nda bir Roma villası, hamam ve tüccar evi, antik temeller üzerine tamamen çalışan yerden ısıtma sistemleriyle aslına uygun yeniden inşa edilmiştir.",
+      "Carnuntum features fully functional reconstructed Roman townhouses, complete with working underfloor hypocausts and authentic frescoed interior rooms.",
+    ),
+  ],
+  ["aguntum"]: [
+    f(
+      "Aguntum, Alplerin 900 metre rakımında kurulmuş olup İtalya'yı Tuna eyaletlerine bağlayan yüksek dağ geçidi ticaretinin gümrük kapısıydı.",
+      "Positioned at 900 metres above sea level, Aguntum controlled cross-Alpine traffic passing along the Via Julia Augusta linking Aquileia to the Danube.",
+    ),
+    f(
+      "Kentin termal hamamları, Alpler bölgesinde keşfedilmiş en büyük Roma hamamıdır ve soğuk dağ iklimine karşı çift katlı hipokaust fırınlarıyla ısıtılıyordu.",
+      "Covering over 2,500 square metres, Aguntum's thermal baths were the largest in the central Alpine provinces, boasting heated indoor pools and saunas.",
+    ),
+    f(
+      "Kazılarda bulunan bronz tüccar terazileri ve mühürler, kentin Alp dağlarındaki demir, kurşun ve kristal madenlerinin ticaret üssü olduğunu gösterir.",
+      "Excavated bronze balances and official trade seals prove Aguntum was the regional clearinghouse for Tyrian mountain zinc, rock crystals and lead.",
+    ),
+  ],
+  ["philippopolis"]: [
+    f(
+      "Filibe Roma Stadyumu 240 metre uzunluğunda olup Delphi Stadyumu model alınarak inşa edilmiş ve 30.000 seyirciyi ağırlamıştır; bugün modern ana caddenin altında korunur.",
+      "The stadium stretched 240 metres through the valley, seating 30,000 spectators for Pythian Games; its curved northern sphendone sits beneath modern Plovdiv's main street.",
+    ),
+    f(
+      "Antik Tiyatro, 1. yüzyılda İmparator Trajan döneminde inşa edilmiş olup güneydeki Rodop Dağları'na bakan muhteşem bir tiyatro sahnesine sahiptir.",
+      "Built under Emperor Trajan, the theatre commands a dramatic panorama over the Thracian plain toward the Rhodope Mountains from between two granite hills.",
+    ),
+    f(
+      "Piskoposluk Bazilikası'nın iki katlı zemininde, 100'den fazla farklı kuş türünün tasvir edildiği 2.000 metrekareden geniş benzersiz erken Bizans mozaikleri yer alır.",
+      "The Bishop's Basilica preserves over 2,000 square metres of 4th-to-6th-century floor mosaics depicting more than 100 identifiable bird species.",
+    ),
+  ],
+  ["serdica"]: [
+    f(
+      "İmparator Büyük Konstantin, imparatorluğun yeni başkentini seçmeden önce uzun süre Serdica'yı düşünmüş ve 'Serdica benim Roma'mdır' demiştir.",
+      "Constantine the Great ruled from Serdica for months, famously declaring 'Serdica is my Rome' before ultimately selecting Byzantium as his new capital.",
+    ),
+    f(
+      "Aziz George Rotundası, 4. yüzyılda kırmızı tuğladan inşa edilmiş olup Sofya'nın ayakta duran en eski yapısıdır ve kubbesinde üç kat tarihi fresk barındırır.",
+      "The Church of Saint George Rotunda, constructed in red brick in the 4th century, is Sofia's oldest surviving monument, preserving three layers of medieval frescoes.",
+    ),
+    f(
+      "Sofya metrosunun inşası sırasında Serdica'nın ana caddeleri, ısıtmalı villaları ve hamamları sağlam olarak ortaya çıkarılmış ve metro istasyonuyla entegre bir yer altı müzesine dönüştürülmüştür.",
+      "Excavations for Sofia's metro unearthed the main cardo and decumanus with portico shops, now preserved under glass domes as an open underground museum.",
+    ),
+  ],
+  ["stobi"]: [
+    f(
+      "Stobi, iki nehrin kesişimindeki konumu sayesinde antik tuz ticaret yolunun ana kontrol noktasıydı ve kendi parasını basma ayrıcalığına sahipti.",
+      "Located at the strategic junction of the Vardar and Crna river valleys, Stobi guarded the ancient Balkan salt trade route, minting its own municipal coinage.",
+    ),
+    f(
+      "Tiyatronun oturma sıralarında yerel aristokrat ailelerin ve loncaların adları Yunanca kazınmış olup antik çağın rezerve koltuk sistemini belgeler.",
+      "The limestone seats of Stobi's 2nd-century theatre bear inscribed Greek family and guild names, documenting seat reservations in antiquity.",
+    ),
+    f(
+      "Parthenius Sarayı'nda zengin mozaikli kabul salonları, sütunlu havuzlu bahçeler ve özel hamam dairesi yer alıyordu.",
+      "The Palace of Theodosius was an aristocratic urban estate featuring a colonnaded peristyle court, marble pools, fountains and heated hypocaust private suites.",
+    ),
+  ],
+  ["heraclea-lyncestis"]: [
+    f(
+      "Heraclea Lyncestis, Roma'yı Konstantinopolis'e bağlayan ünlü Via Egnatia askeri ve ticaret yolunun en önemli konaklama istasyonlarından biriydi.",
+      "Heraclea was a vital waystation on the Via Egnatia, the primary Roman military highway linking Dyrrhachium on the Adriatic to Byzantium on the Bosphorus.",
+    ),
+    f(
+      "Tiyatronun orkestra duvarında, arenada gladyatörlerle dövüşen vahşi hayvanların seyircilere saldırmasını önlemek için yüksek demir parmaklık yuvaları bulunur.",
+      "The orchestra of the hillside Roman theatre features protective perimeter iron-grill sockets installed in the 2nd century AD for wild venatio beast fights.",
+    ),
+    f(
+      "Büyük Bazilika'nın mozaiklerinde tasvir edilen aslan ve leopar figürleri, antik çağda Balkan dağlarında hâlâ yırtıcı büyük kedilerin yaşadığına dair kanıt sayılır.",
+      "The naturalistic big cats depicted in the basilica mosaics reflect classical accounts that lions and leopards roamed the surrounding Balkan forests in antiquity.",
+    ),
+  ],
+  ["kourion"]: [
+    f(
+      "Kourion Tiyatrosu, Akdeniz'e dik inen kireçtaşı uçurumun yamacına oyulmuştur; orkestrasından gün batımında Episkopi Körfezi'nin panoramik manzarası izlenir.",
+      "The theatre was carved into the coastal bluff in the 2nd century BC, accommodating 3,500 spectators framed by the turquoise waters of Episkopi Bay.",
+    ),
+    f(
+      "Eustolios Evi, 30'dan fazla odası ve zengin hamamlarıyla başlangıçta bir pagan villasıyken 5. yüzyılda Hristiyan hacıların dinlenme evine dönüştürülmüştür.",
+      "The House of Eustolios spans over 30 rooms with private cold and hot baths, adorned with personifications of Creation (Ktisis) holding a building rod.",
+    ),
+    f(
+      "Apollon Hylates ('Ormanların Apollon'u') Kutsal Alanı, antik Kıbrıs'ın en büyük dinî merkezlerinden biri olup tapınağa izinsiz dokunanların uçurumdan denize atıldığına inanılırdı.",
+      "The inland Sanctuary of Apollo Hylates (Apollo of the Woodlands) was guarded by strict taboos; sacrilegious trespassers were cast from Kourion's sea cliffs.",
+    ),
+  ],
+  ["salamis-kibris"]: [
+    f(
+      "Salamis Gymnasion'u, mermer sütunlu devasa palaestrası ve etrafını saran heykelleriyle adada gençlerin spor ve felsefe eğitimi aldığı ana merkezdi.",
+      "The Gymnasium of Salamis boasts an immense marble palaestra surrounded by Corinthian colonnades, once populated by marble statues of Apollo, Heracles and Aphrodite.",
+    ),
+    f(
+      "Kentin antik tiyatrosu 15.000 kişilik kapasitesiyle Kıbrıs adasındaki en büyük tiyatrodur ve 50 basamaklı yarım daire oturma alanına sahiptir.",
+      "With 50 rows of stone seats, Salamis's theatre held 15,000 people, ranking as the largest ancient performance arena on the entire island of Cyprus.",
+    ),
+    f(
+      "Salamis, MS 4. yüzyılda meydana gelen şiddetli depremler ve tsunami sonucu kısmen sular altında kalmış, İmparator II. Constantius tarafından 'Constantia' adıyla yeniden kurulmuştur.",
+      "Devastated by 4th-century earthquakes and tsunamis, Salamis was refounded by Emperor Constantius II as Constantia, serving as the metropolitan Christian capital.",
+    ),
+  ],
+  ["caesarea-maritima"]: [
+    f(
+      "Caesarea Limanı (Sebastos), açık denizde su altında katılaşan volkanik kül (puzolan) harcıyla dökülmüş bloklarla inşa edilen tarihteki ilk tam yapay açık deniz limanıdır.",
+      "Sebastos was antiquity's first all-artificial deep-water harbour, constructed by submerging wooden barges filled with hydraulic pozzolana concrete into the Mediterranean.",
+    ),
+    f(
+      "Sahildeki Roma tiyatrosu, arkasında Akdeniz dalgalarının fon oluşturduğu eşsiz konumuyla bugün hâlâ modern konserler için kullanılmaktadır.",
+      "Herod's seaside theatre seated 4,000 spectators against the open sea, restored today as one of Israel's premier open-air concert venues.",
+    ),
+    f(
+      "Sahil boyunca kilometrelerce uzanan çift kanallı Roma su kemeri, Karmel Dağı pınarlarından kente her gün milyonlarca litre tatlı su taşıyordu.",
+      "The multi-channel high-level aqueduct ran 17 kilometres from Mount Carmel springs across sand dunes, delivering fresh water to Caesarea's fountains.",
+    ),
+  ],
+  ["beit-shean"]: [
+    f(
+      "Beit Shean (Scythopolis), Dekapolis'in Şeria Nehri'nin batısında kalan tek kenti olup antik çağda keten dokumacılığı ve zeytinyağı ticaretiyle büyük zenginlik kazanmıştır.",
+      "Scythopolis was the only member of the Decapolis League west of the Jordan River, celebrated across the Roman Empire for exquisite fine linen textiles.",
+    ),
+    f(
+      "Palladius Caddesi'nin tabanı geometrik mozaiklerle kaplıydı ve cadde boyunca sütunlu revaklar altında onlarca lüks dükkan sıralanıyordu.",
+      "Palladius Street ran 150 metres between the theatre and the tell, flanked by mosaic-paved colonnades, porticoed shops and an ornate Sigma dining plaza.",
+    ),
+    f(
+      "Şehrin kuzeyindeki sarp bazalt tepede (Tel Beit Shean), MÖ 15. yüzyıldan kalan Mısır Yeni Krallığı valilik sarayı ve III. Tutmosis kitabeleri bulunmuştur.",
+      "The towering summit of Tel Beit Shean guarded Egyptian New Kingdom administrative governorates under Thutmose III, Seti I and Ramesses II.",
+    ),
+  ],
+  ["xian-changan"]: [
+    f(
+      "Tang Hanedanı döneminde Chang'an, 84 kilometrekarelik sur içi alanıyla antik Roma'dan yedi kat, Konstantinopolis'ten üç kat daha büyüktü.",
+      "Spanning 84 square kilometres, Tang Chang'an was seven times larger than contemporary Rome and housed over one million residents.",
+    ),
+    f(
+      "Daming Sarayı'nın ana taht salonu olan Hanyuan Salonu, imparatorun yabancı elçileri ve binlerce bürokratı kabul ettiği 11 basamaklı dev bir teras üzerinde yükseliyordu.",
+      "Hanyuan Hall in Daming Palace rose atop a triple-tiered terrace, hosting grand state ceremonies with foreign diplomats from Persia, Japan and Byzantium.",
+    ),
+    f(
+      "Büyük Vahşi Kaz Pagodası, 652 yılında ünlü Budist rahip Xuanzang'ın Hindistan'dan İpek Yolu üzerinden getirdiği kutsal el yazmalarını ve heykelleri korumak için yapılmıştır.",
+      "The Giant Wild Goose Pagoda was built in 652 AD by monk Xuanzang to enshrine sacred Buddhist Sanskrit sutras and relics brought back from India.",
+    ),
+  ],
+  ["luoyang"]: [
+    f(
+      "Longmen Mağaraları'nda 2.300'den fazla mağara ve niş içinde boyları 2 santimetreden 17 metreye kadar değişen yaklaşık 100.000 Buda heykeli oyulmuştur.",
+      "Longmen Grottoes span one kilometre of limestone cliffs, encompassing 2,345 caves and niches housing nearly 100,000 Buddhist statues.",
+    ),
+    f(
+      "Beyaz At Tapınağı (Baima Si), MS 68 yılında İmparator Ming döneminde kurulan ve Budizm'in Çin'e ilk girişini simgeleyen kutsal ana tapınaktır.",
+      "Founded in 68 AD under Eastern Han Emperor Ming, the White Horse Temple is celebrated as the cradle of Chinese Buddhism.",
+    ),
+    f(
+      "Luoyang, antik İpek Yolu'nun doğu başlangıç akslarından biri olup Doğu Han döneminde dünyanın ilk sismografını icat eden bilim insanı Zhang Heng burada yaşamıştır.",
+      "Polymath Zhang Heng invented the world's first earthquake detector (seismoscope) in Luoyang in 132 AD, detecting tremors hundreds of miles away.",
+    ),
+  ],
+  ["nara-heijo"]: [
+    f(
+      "Heijō-kyō Sarayı'nın Suzaku Giriş Kapısı, 25 metre genişliğinde iki katlı masif ahşap çatısıyla imparatorluk törenlerinin yapıldığı anıtsal ana kapıydı.",
+      "The reconstructed Suzaku Gate of Heijō Palace spans 25 metres across, fronting the 74-metre-wide Suzaku Avenue leading into the imperial enclosure.",
+    ),
+    f(
+      "Tōdai-ji tapınağının Daibutsuden (Büyük Buda Salonu), defalarca yangın geçirip küçülmesine rağmen bugün hâlâ dünyanın en büyük ahşap yapısı unvanını korur.",
+      "Even after being rebuilt one-third smaller following a medieval fire, Tōdai-ji's Daibutsuden remains the world's largest timber building under one roof.",
+    ),
+    f(
+      "Nara kenti sokaklarında serbestçe dolaşan binden fazla geyik, Shinto inancına göre tanrıların kutsal habercisi kabul edilir ve 1.300 yıldır koruma altındadır.",
+      "More than 1,000 sika deer roam freely across Nara's temple grounds, revered for 1,300 years as divine messengers of the Kasuga Grand Shrine.",
+    ),
+  ],
+  ["kyoto-heian"]: [
+    f(
+      "Heian-kyō, kuzeyindeki dağların soğuk rüzgarları kesmesi ve iki nehrin kente su sağlaması için antik Çin geomansi (feng shui) kurallarına göre milimetrik planlanmıştır.",
+      "Heian-kyō was laid out strictly on Chinese feng shui tenets, guarded by mountains on three sides and flanked by the Kamo and Katsura rivers.",
+    ),
+    f(
+      "Tō-ji tapınağının 55 metre yüksekliğindeki beş katlı pagodası, Japonya'nın ayakta kalan en yüksek tarihi ahşap kulesidir ve depremlere karşı esneyen orta direk (shinbashira) sistemine sahiptir.",
+      "Tō-ji's 55-metre five-storey pagoda is the tallest wooden pagoda in Japan, engineered with a central pendulum shinbashira pillar that dissipates seismic tremors.",
+    ),
+    f(
+      "Heian dönemi saray kültürü, dünyanın ilk romanı kabul edilen Murasaki Shikibu'nun yazdığı 'Genji'nin Hikâyesi'ne (Genji Monogatari) ilham kaynağı olmuştur.",
+      "The aristocratic refinement of the Heian imperial court gave rise to The Tale of Genji, authored c. 1000 AD by noblewoman Murasaki Shikibu.",
+    ),
+  ],
+  ["tikal"]: [
+    f(
+      "Tikal'in I. Tapınağı (Büyük Jaguar), 47 metre yüksekliğinde olup dik merdivenleri doğrudan gökyüzüne tırmanacak şekilde 9 basamaklı (Maya yeraltı dünyasının 9 katı) tasarlanmıştır.",
+      "Temple I soars 47 metres above the Great Plaza; its 9 stepped tiers symbolize the nine levels of the Maya underworld (Xibalba).",
+    ),
+    f(
+      "Tikal, yağmur mevsiminde milyonlarca litre suyu depolayan devasa taş kaplı rezervuarlar ve filtreleme havuzları sayesinde kurak mevsimde 60.000'den fazla insanı beslemiştir.",
+      "Lacking rivers or natural springs, Tikal sustained 60,000 citizens by channeling rainwater into massive plastered reservoirs filtered through quartz sand.",
+    ),
+    f(
+      "Tikal ile 300 kilometre güneydeki Copán arasında krallar ve tüccarlar düzenli diplomatik temas ve hanedan evlilikleri kurmuştur.",
+      "Dynastic inscriptions demonstrate intimate diplomatic ties between Tikal and Copán, including royal accessions verified by Tikal's sovereign lords.",
+    ),
+  ],
+  ["antigua-quirigua"]: [
+    f(
+      "Quiriguá'nın kumtaşı monolit stelleri o kadar detaylı yontulmuştur ki kralların tüy taçları, yeşim kolyeleri, sandalet bağları ve takvim glifleri üç boyutlu olarak okunabilir.",
+      "Carved from hard yellow sandstone, Quiriguá's stelae feature intricate full-figure hieroglyphs and royal portraits carved in deep three-dimensional relief.",
+    ),
+    f(
+      "Zoomorf P anıtı, 20 tonluk tek parça bir andezit blok üzerine oyulmuş kozmik kaplumbağa-toprak canavarı olup Maya sanatının en karmaşık heykeli sayılır.",
+      "Zoomorph P is a 20-tonne boulder carved into an astonishing mythological earth-monster tortoise from whose open jaws King Sky Xul emerges enthroned.",
+    ),
+    f(
+      "Quiriguá, 738 yılında Copán Kralı Uaxaclajuun Ub'aah K'awiil'i esir alıp törenle kurban ederek zengin yeşim ticaret yolunun tek hakimi olmuştur.",
+      "In 738 AD, Quiriguá defeated its overlord Copán, capturing and decapitating King 18 Rabbit and securing the monopoly over the jade trade.",
+    ),
+  ],
+  ["copan"]: [
+    f(
+      "Copán'ın Hiyeroglifli Merdivenleri üzerindeki 2.000'den fazla glif, 16 kralın soyağacını ve zaferlerini anlatan taş bir kütüphane gibidir.",
+      "Rising 21 metres up Temple 26, the 63 stone steps preserve more than 2,000 glyphs recording two centuries of dynastic accessions and royal ceremonies.",
+    ),
+    f(
+      "Altar Q anıtının dört kenarında, hanedanın kurucusu K'inich Yax K'uk' Mo'dan 16. kral Yax Pasaj Chan Yopaat'a kadar tüm krallar taht devir teslimi yaparken kabartma olarak gösterilmiştir.",
+      "Altar Q portrays the complete 16-ruler dynasty seated on their name glyphs, depicting founder K'inich Yax K'uk' Mo' passing the royal sceptre to the 16th king.",
+    ),
+    f(
+      "Copán Krallığı'nın kurucusu K'inich Yax K'uk' Mo'nun kemikleri üzerinde yapılan izotop analizleri, kralın yüzlerce kilometre uzaktaki Tikal'den geldiğini kanıtlamıştır.",
+      "Bone isotope analysis of the founder's skeleton buried deep within the Hunal tomb confirmed he spent his youth at Tikal before establishing Copán in 426 AD.",
+    ),
+  ],
+  ["el-puente"]: [
+    f(
+      "El Puente, Copán Vadisi'nin kuzeyinde dağ geçitlerini ve Chinamito Nehri boyunca akan ticaret kervanlarını denetleyen bir sınır akropolüydü.",
+      "Guarding the river gateway between the Copán Valley and the Caribbean lowlands, El Puente levied transit duties on obsidian, cacao and quetzal plumes.",
+    ),
+    f(
+      "1 Numaralı Piramit, 12 metre yüksekliğinde olup basamaklı terasları ve törensel rampalarıyla yerel halkın dinsel törenler için toplandığı merkezdi.",
+      "Structure 1 stands 12 metres high across multiple tiers, fronting the main ceremonial plaza where public religious festivals were observed.",
+    ),
+    f(
+      "Kazılarda bulunan yeşim boncuklar, obsidyen bıçaklar ve polikrom seramikler, kentin Guatemala yaylaları ve Karayip kıyılarıyla geniş ticaret bağlarını gösterir.",
+      "Excavations uncovered ceremonial jade beads, green obsidian bladelets and Copán polychrome pottery verifying active trade links across Mesoamerica.",
+    ),
+  ],
+  ["tiwanaku"]: [
+    f(
+      "Tiwanaku'nun Kalasasaya Tapınağı, ekinoks ve gündönümü günlerinde güneşin doğuşunu tam tapınak kapılarının ve köşe taşlarının arasından geçirecek şekilde hizalanmıştır.",
+      "The Kalasasaya platform is astronomically aligned: on both equinoxes, the rising sun shines directly through the centre of the main entrance portal.",
+    ),
+    f(
+      "Yarı Yeraltı Tapınağı'nın (Templete Semisubterráneo) kırmızı kumtaşı duvarlarında, çevre kabileleri temsil eden 175 adet farklı taştan oyulmuş insan başı kabartması yer alır.",
+      "The sunken courtyard features 175 protruding sculpted limestone and sandstone heads inserted into its walls, each displaying distinct facial features of subjugated tribes.",
+    ),
+    f(
+      "Akapana Piramidi, 7 basamaklı devasa bir teras piramidi olup içinde yağmur sularını törensel olarak tahliye eden karmaşık taş kanallar barındırır.",
+      "The Akapana is an immense 7-tiered stepped pyramid measuring 200 metres across, equipped with subterranean stone drainage channels designed to cascade water.",
+    ),
+  ],
+  ["pumapunku"]: [
+    f(
+      "Puma Punku'nun 'H Blokları', birbirine geçmeli modüler tasarımıyla modern prefabrik mimariyi andıran milimetrik kesimlere sahiptir.",
+      "The iconic andesite 'H-blocks' exhibit identical precision-cut slots, mortises and tenons, forming pre-Columbian modular architecture.",
+    ),
+    f(
+      "Platformun zeminindeki en büyük kırmızı kumtaşı döşeme bloğu 131 ton ağırlığında, 7,8 metre uzunluğunda ve 5 metre genişliğindedir; Altiplano'da 10 kilometre uzaktan taşınmıştır.",
+      "The largest sandstone slab (Plataforma Lítica) weighs an estimated 131 tonnes, transported over 10 kilometres across the high plateau without draught animals.",
+    ),
+    f(
+      "Andezit blokların birleşim yerlerine harç yerine eritilerek dökülen bakır-arsenik-nikel alaşımlı T biçimli metal kenetler, şiddetli And depremlerinde blokların kaymasını engellemiştir.",
+      "Stonemasons poured molten ternary bronze alloy directly into carved T-shaped sockets across adjacent stone joints, providing seismic resistance.",
+    ),
+  ],
 };
 
 /** The extra facts for a site, or an empty list when none are written yet. */

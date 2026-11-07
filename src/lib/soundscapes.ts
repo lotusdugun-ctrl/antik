@@ -1807,6 +1807,600 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     ],
     density: 1.1,
   },
+  "herculaneum-kenti": {
+    add: [
+      ...HARBOUR(0.9),
+      PEOPLE(1, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.8),
+      CRICKETS(0.7),
+    ],
+    density: 1.1,
+  },
+  "aquae-sulis-kenti": {
+    add: [
+      PEOPLE(1, ["chatter", "chant"]),
+      STEPS(["steps-stone"], 0.8),
+      SONGBIRDS(0.8, ["blackbird", "finch"]),
+    ],
+    density: 1.0,
+  },
+  "arelate-kenti": {
+    add: [
+      PEOPLE(1, ["chatter", "shout", "laugh"]),
+      GUSTS(0.9),
+      STEPS(["steps-stone"], 0.8),
+      WORK(["hammer"], 0.6),
+    ],
+    density: 1.2,
+  },
+  "colonia-kenti": {
+    add: [
+      ...HARBOUR(0.8),
+      PEOPLE(1, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.8),
+      WORK(["hammer", "chisel"], 0.7),
+    ],
+    density: 1.1,
+  },
+  "kartaca-kenti": {
+    add: [
+      ...HARBOUR(1.1),
+      PEOPLE(1.1, ["chatter", "shout"]),
+      SONGBIRDS(0.8, ["gull"]),
+      WORK(["hammer"], 0.6),
+    ],
+    density: 1.2,
+  },
+  "el-cem-kenti": {
+    add: [
+      GUSTS(1.1),
+      PEOPLE(1.2, ["shout", "laugh"]),
+      STEPS(["steps-stone"], 1.0),
+      CRICKETS(0.8),
+    ],
+    density: 1.1,
+  },
+  "timgad-kenti": {
+    add: [
+      GUSTS(1.0),
+      PEOPLE(1.0, ["chatter"]),
+      STEPS(["steps-stone"], 0.9),
+      WORK(["chisel"], 0.6),
+    ],
+    density: 1.0,
+  },
+  "djemila-kenti": {
+    add: [
+      GUSTS(1.2),
+      GOATS(0.9),
+      RAPTORS(0.8, ["partridge"]),
+      STEPS(["steps-gravel"], 0.7),
+    ],
+    density: 0.9,
+  },
+  "volubilis-kenti": {
+    add: [
+      GUSTS(0.9),
+      SWIFTS(1.0),
+      PEOPLE(0.9, ["chatter"]),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.0,
+  },
+  "liksus-kenti": {
+    add: [
+      ...HARBOUR(1.0),
+      GUSTS(1.1),
+      SONGBIRDS(0.9, ["gull"]),
+      WORK(["hammer"], 0.5),
+    ],
+    density: 1.0,
+  },
+  "leptis-magna-kenti": {
+    add: [
+      ...HARBOUR(0.9),
+      PEOPLE(1.1, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.9),
+      WORK(["chisel", "hammer"], 0.7),
+    ],
+    density: 1.15,
+  },
+  "sabratha-kenti": {
+    add: [
+      ...HARBOUR(1.0),
+      SONGBIRDS(0.8, ["gull"]),
+      PEOPLE(0.8, ["chatter"]),
+      STEPS(["steps-stone"], 0.7),
+    ],
+    density: 0.95,
+  },
+  "palmira-kenti": {
+    add: [
+      GUSTS(1.2),
+      DONKEY(0.9),
+      PEOPLE(1.1, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.9),
+      WORK(["hammer"], 0.5),
+    ],
+    density: 1.1,
+  },
+  "bosra-kenti": {
+    add: [
+      GUSTS(1.0),
+      PEOPLE(1.1, ["chatter"]),
+      STEPS(["steps-stone"], 1.0),
+      WORK(["chisel"], 0.6),
+    ],
+    density: 1.0,
+  },
+  "babil-kenti": {
+    add: [
+      ...HARBOUR(0.9),
+      GUSTS(1.0),
+      PEOPLE(1.2, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.9),
+      WORK(["hammer"], 0.7),
+    ],
+    density: 1.2,
+  },
+  "ur-kenti": {
+    add: [
+      GUSTS(1.2),
+      PEOPLE(0.8, ["chatter"]),
+      STEPS(["steps-gravel"], 0.8),
+      CRICKETS(0.7),
+    ],
+    density: 0.9,
+  },
+  "persepolis-kenti": {
+    add: [
+      GUSTS(1.3),
+      PEOPLE(1.0, ["chatter"]),
+      STEPS(["steps-stone"], 1.0),
+      WORK(["chisel"], 0.8),
+    ],
+    density: 1.05,
+  },
+  "pasargad-kenti": {
+    add: [
+      GUSTS(1.1),
+      SONGBIRDS(0.9, ["lark", "dove"]),
+      STEPS(["steps-stone"], 0.7),
+    ],
+    density: 0.85,
+  },
+  "mohencodaro-kenti": {
+    add: [
+      GUSTS(1.0),
+      PEOPLE(1.1, ["chatter"]),
+      STEPS(["steps-gravel"], 0.9),
+      WORK(["grind"], 0.6),
+    ],
+    density: 1.0,
+  },
+  "hampi-kenti": {
+    add: [
+      GUSTS(1.1),
+      SONGBIRDS(0.9, ["dove"]),
+      PEOPLE(1.0, ["chatter"]),
+      STEPS(["steps-stone"], 0.9),
+    ],
+    density: 1.05,
+  },
+  "angkor-vat-kenti": {
+    add: [
+      ...HARBOUR(0.8),
+      SONGBIRDS(1.1, ["beeeater", "blackbird"]),
+      PEOPLE(1.1, ["chatter"]),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.1,
+  },
+  "bayon-kenti": {
+    add: [
+      SONGBIRDS(1.2, ["beeeater"]),
+      GUSTS(0.9),
+      STEPS(["steps-stone"], 0.8),
+      PEOPLE(0.9, ["chatter"]),
+    ],
+    density: 1.0,
+  },
+  "teotihuacan-kenti": {
+    add: [
+      GUSTS(1.3),
+      RAPTORS(1.0, ["partridge"]),
+      PEOPLE(1.2, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 1.0),
+    ],
+    density: 1.15,
+  },
+  "cisen-itza-kenti": {
+    add: [
+      GUSTS(1.1),
+      SONGBIRDS(1.0, ["swift"]),
+      PEOPLE(1.1, ["chatter"]),
+      STEPS(["steps-stone"], 0.9),
+    ],
+    density: 1.05,
+  },
+  "macu-picu-kenti": {
+    add: [
+      GUSTS(1.4),
+      RAPTORS(1.1, ["partridge"]),
+      STEPS(["steps-stone"], 0.8),
+      GOATS(0.7),
+    ],
+    density: 0.9,
+  },
+  "can-can-kenti": {
+    add: [
+      ...HARBOUR(1.1),
+      GUSTS(1.2),
+      SONGBIRDS(0.9, ["gull"]),
+      STEPS(["steps-gravel"], 0.8),
+    ],
+    density: 1.0,
+  },
+  "ostia-antica-kenti": {
+    add: [
+      ...HARBOUR(0.9),
+      PEOPLE(1.1, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.85),
+      SONGBIRDS(0.8, ["gull"]),
+    ],
+    density: 1.12,
+  },
+  "paestum-kenti": {
+    add: [
+      SONGBIRDS(1.0, ["lark", "dove"]),
+      GUSTS(0.9),
+      STEPS(["steps-gravel"], 0.8),
+      CRICKETS(0.85),
+    ],
+    density: 0.92,
+  },
+  "akropolis-atena-kenti": {
+    add: [
+      GUSTS(1.2),
+      SWIFTS(1.1),
+      PEOPLE(1.2, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.95),
+    ],
+    density: 1.18,
+  },
+  "epidavros-kenti": {
+    add: [
+      SONGBIRDS(1.2, ["blackbird"]),
+      STEPS(["steps-stone"], 0.75),
+      PEOPLE(0.8, ["chatter"]),
+      CRICKETS(0.9),
+    ],
+    density: 0.88,
+  },
+  "luksor-kenti-kenti": {
+    add: [
+      ...HARBOUR(0.7),
+      PEOPLE(1.15, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.9),
+      DONKEY(0.8),
+    ],
+    density: 1.14,
+  },
+  "ebu-simbel-kenti": {
+    add: [
+      GUSTS(1.4),
+      RAPTORS(1.0, ["hoopoe"]),
+      STEPS(["steps-gravel"], 0.7),
+      PEOPLE(0.7, ["chatter"]),
+    ],
+    density: 0.82,
+  },
+  "umm-qais-kenti": {
+    add: [
+      GUSTS(1.1),
+      SONGBIRDS(0.9, ["sparrow", "dove"]),
+      STEPS(["steps-stone"], 0.8),
+      GOATS(0.75),
+    ],
+    density: 0.94,
+  },
+  "amman-kale-kenti": {
+    add: [
+      GUSTS(1.3),
+      SWIFTS(0.9),
+      PEOPLE(1.0, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.85),
+    ],
+    density: 1.02,
+  },
+  "anjar-kenti": {
+    add: [
+      GUSTS(0.95),
+      SONGBIRDS(1.0, ["dove", "finch"]),
+      STEPS(["steps-stone"], 0.8),
+      WORK(["chisel"], 0.6),
+    ],
+    density: 0.96,
+  },
+  "tyre-sur-kenti": {
+    add: [
+      ...HARBOUR(1.2),
+      SONGBIRDS(1.0, ["gull"]),
+      PEOPLE(1.1, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.16,
+  },
+  "tarraco-kenti": {
+    add: [
+      ...HARBOUR(0.85),
+      SONGBIRDS(0.85, ["gull"]),
+      PEOPLE(1.05, ["chatter"]),
+      STEPS(["steps-stone"], 0.85),
+    ],
+    density: 1.08,
+  },
+  "segovia-kenti": {
+    add: [
+      GUSTS(1.25),
+      SWIFTS(1.2),
+      STEPS(["steps-stone"], 0.9),
+      PEOPLE(0.95, ["chatter"]),
+    ],
+    density: 1.04,
+  },
+  "pont-du-gard-kenti": {
+    add: [
+      FROGS(0.85),
+      SONGBIRDS(1.1, ["blackbird"]),
+      STEPS(["steps-gravel"], 0.75),
+      GUSTS(0.8),
+    ],
+    density: 0.86,
+  },
+  "vaison-la-romaine-kenti": {
+    add: [
+      CRICKETS(1.1),
+      SONGBIRDS(1.0, ["sparrow", "dove"]),
+      STEPS(["steps-stone"], 0.8),
+      PEOPLE(0.9, ["chatter", "laugh"]),
+    ],
+    density: 0.98,
+  },
+  "xanten-kenti": {
+    add: [
+      GUSTS(1.0),
+      SONGBIRDS(0.9, ["blackbird"]),
+      STEPS(["steps-gravel"], 0.85),
+      WORK(["hammer"], 0.7),
+    ],
+    density: 1.06,
+  },
+  "saalburg-kenti": {
+    add: [
+      GUSTS(1.15),
+      RAPTORS(0.9, ["woodpecker"]),
+      STEPS(["steps-gravel"], 0.8),
+      WORK(["hammer", "chisel"], 0.55),
+    ],
+    density: 0.91,
+  },
+  "conimbriga-kenti": {
+    add: [
+      SONGBIRDS(1.05, ["sparrow"]),
+      STEPS(["steps-stone"], 0.8),
+      CRICKETS(0.8),
+      PEOPLE(0.95, ["chatter"]),
+    ],
+    density: 0.97,
+  },
+  "evora-roma-kenti": {
+    add: [
+      GUSTS(1.05),
+      SWIFTS(0.95),
+      STEPS(["steps-stone"], 0.85),
+      GOATS(0.65),
+    ],
+    density: 0.89,
+  },
+  "salona-kenti": {
+    add: [
+      ...HARBOUR(0.75),
+      SONGBIRDS(0.85, ["gull"]),
+      PEOPLE(1.05, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.07,
+  },
+  "pula-kenti": {
+    add: [
+      ...HARBOUR(0.95),
+      PEOPLE(1.15, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.9),
+      SONGBIRDS(0.8, ["gull"]),
+    ],
+    density: 1.13,
+  },
+  "carnuntum-kenti": {
+    add: [
+      GUSTS(1.2),
+      STEPS(["steps-gravel"], 0.9),
+      PEOPLE(1.0, ["chatter", "shout"]),
+      WORK(["hammer"], 0.65),
+    ],
+    density: 1.09,
+  },
+  "aguntum-kenti": {
+    add: [
+      GUSTS(1.35),
+      RAPTORS(1.1, ["cuckoo"]),
+      STEPS(["steps-stone"], 0.75),
+      WORK(["grind"], 0.6),
+    ],
+    density: 0.87,
+  },
+  "philippopolis-kenti": {
+    add: [
+      SWIFTS(1.15),
+      PEOPLE(1.1, ["chatter", "laugh"]),
+      STEPS(["steps-stone"], 0.85),
+      CRICKETS(0.75),
+    ],
+    density: 1.11,
+  },
+  "serdica-kenti": {
+    add: [
+      PEOPLE(1.05, ["chatter"]),
+      STEPS(["steps-stone"], 0.85),
+      WORK(["chisel"], 0.5),
+      CRICKETS(0.7),
+    ],
+    density: 1.03,
+  },
+  "stobi-kenti": {
+    add: [
+      FROGS(0.75),
+      SONGBIRDS(0.95, ["dove"]),
+      STEPS(["steps-stone"], 0.8),
+      PEOPLE(0.95, ["chatter"]),
+    ],
+    density: 0.95,
+  },
+  "heraclea-lyncestis-kenti": {
+    add: [
+      GUSTS(1.0),
+      SONGBIRDS(1.0, ["blackbird"]),
+      STEPS(["steps-stone"], 0.8),
+      CRICKETS(0.8),
+    ],
+    density: 0.93,
+  },
+  "kourion-kenti": {
+    add: [
+      ...HARBOUR(0.65),
+      GUSTS(1.25),
+      SONGBIRDS(0.9, ["gull"]),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.01,
+  },
+  "salamis-kibris-kenti": {
+    add: [
+      ...HARBOUR(1.05),
+      PEOPLE(1.05, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.85),
+      CRICKETS(0.65),
+    ],
+    density: 1.15,
+  },
+  "caesarea-maritima-kenti": {
+    add: [
+      ...HARBOUR(1.3),
+      PEOPLE(1.2, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.9),
+      SONGBIRDS(0.95, ["gull"]),
+    ],
+    density: 1.21,
+  },
+  "beit-shean-kenti": {
+    add: [
+      CRICKETS(0.95),
+      DONKEY(0.7),
+      PEOPLE(1.0, ["chatter"]),
+      STEPS(["steps-stone"], 0.85),
+    ],
+    density: 0.99,
+  },
+  "xian-changan-kenti": {
+    add: [
+      PEOPLE(1.25, ["chatter", "shout", "laugh"]),
+      STEPS(["steps-stone"], 0.95),
+      WORK(["hammer", "chisel"], 0.7),
+      GUSTS(0.9),
+    ],
+    density: 1.23,
+  },
+  "luoyang-kenti": {
+    add: [
+      PEOPLE(1.2, ["chatter", "shout"]),
+      STEPS(["steps-stone"], 0.9),
+      WORK(["chisel"], 0.65),
+      SWIFTS(0.85),
+    ],
+    density: 1.17,
+  },
+  "nara-heijo-kenti": {
+    add: [
+      SONGBIRDS(1.15, ["dove"]),
+      STEPS(["steps-gravel"], 0.85),
+      CRICKETS(0.9),
+      GUSTS(0.85),
+    ],
+    density: 0.84,
+  },
+  "kyoto-heian-kenti": {
+    add: [
+      SONGBIRDS(1.2, ["blackbird", "sparrow"]),
+      STEPS(["steps-gravel"], 0.8),
+      PEOPLE(0.9, ["chatter"]),
+      CRICKETS(0.85),
+    ],
+    density: 0.90,
+  },
+  "tikal-kenti": {
+    add: [
+      RAPTORS(1.2, ["partridge"]),
+      SONGBIRDS(1.3, ["beeeater"]),
+      GUSTS(1.1),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.025,
+  },
+  "antigua-quirigua-kenti": {
+    add: [
+      FROGS(0.95),
+      SONGBIRDS(1.25, ["beeeater"]),
+      GUSTS(1.0),
+      STEPS(["steps-gravel"], 0.75),
+    ],
+    density: 0.83,
+  },
+  "copan-kenti": {
+    add: [
+      RAPTORS(1.15, ["partridge"]),
+      SONGBIRDS(1.1, ["swift"]),
+      STEPS(["steps-stone"], 0.8),
+      WORK(["chisel"], 0.6),
+    ],
+    density: 0.945,
+  },
+  "el-puente-kenti": {
+    add: [
+      SONGBIRDS(1.0, ["dove", "sparrow"]),
+      GUSTS(1.05),
+      STEPS(["steps-gravel"], 0.7),
+      CRICKETS(0.75),
+    ],
+    density: 0.81,
+  },
+  "tiwanaku-kenti": {
+    add: [
+      GUSTS(1.5),
+      RAPTORS(1.25, ["hoopoe"]),
+      STEPS(["steps-stone"], 0.75),
+      WORK(["chisel"], 0.5),
+    ],
+    density: 0.825,
+  },
+  "pumapunku-kenti": {
+    add: [
+      GUSTS(1.45),
+      RAPTORS(1.1, ["partridge"]),
+      STEPS(["steps-stone"], 0.7),
+      WORK(["grind"], 0.55),
+    ],
+    density: 0.79,
+  },
 };
 
 /** The kind's soundscape with the model's own sources and pace added. */
