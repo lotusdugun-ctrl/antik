@@ -96,6 +96,7 @@ export type RomanFacadeSpec = {
   lowerOrderHeight: number;
   upperColumns: number;
   columnDiameter: number;
+  inscribed?: boolean;
 };
 
 /** A Roman theatre built as one block with its stage building. */
@@ -302,6 +303,81 @@ export type StadiumSpec = {
   hillside?: boolean;
 };
 
+/**
+ * A Roman amphitheatre: an oval arena ringed by tiers of seating, the whole
+ * wrapped in an outer arcade. The three modelled here are the ones that still
+ * shape their cities - Pompeii's, Nimes' and Trier's.
+ */
+export type AmphitheatreSpec = {
+  kind: "roman-amphitheatre";
+  /** Cited: the overall oval, outside the outer wall. */
+  outerLength: number;
+  outerWidth: number;
+  /** Cited: the arena at the bottom. */
+  arenaLength: number;
+  arenaWidth: number;
+  /** Cited: how high the outer wall stands above the ground. */
+  wallHeight: number;
+  /** Modelled: the seating, and therefore how many rows fit. */
+  rows: number;
+  tiers: number;
+  seatRise: number;
+  seatTread: number;
+  podiumHeight: number;
+  /** Arched bays in the outer wall, per tier. */
+  bays: number;
+  /** What the seats and walls are built of. */
+  stone: "limestone" | "marble" | "conglomerate";
+  /** How much of the outer arcade survives: Nimes whole, Pompeii low. */
+  outerWall: "arcade" | "low" | "none";
+};
+
+/**
+ * One building on a city plan: the monument's own spec, the point on the
+ * ground where it stands, and which way it faces (degrees clockwise).
+ */
+export type CityPlacement = {
+  spec: ModelSpec;
+  /** Plan position, metres: x east, z south. */
+  at: [number, number];
+  /** Degrees clockwise about the vertical. Omitted for no turn. */
+  rotate?: number;
+};
+
+/**
+ * A city: its monuments placed on one plan, under one sky.
+ *
+ * The alternative - one new builder per city - would have meant four more
+ * copies of the theatre, temple and house already modelled here. A city is
+ * therefore a composition: each monument is built by its own builder and then
+ * set down on the plan, so Pompeii's theatre is the same measured theatre the
+ * rest of the app uses, only standing in Pompeii.
+ */
+export type CitySpec = {
+  kind: "city";
+  /** Radius of the ground the city stands on, in metres. */
+  radius: number;
+  places: CityPlacement[];
+  /** The fortification circuit, where the city still had one. */
+  walls?: {
+    /** West-east and north-south sides, metres. */
+    length: number;
+    width: number;
+    height: number;
+    thickness: number;
+    towers: number;
+    gates: number;
+    /** The gap left for each gate, metres. */
+    gateWidth: number;
+  };
+  /** Paved streets: from x,z to x,z, and how wide. */
+  streets?: [number, number, number, number, number][];
+  /** A mountain the city sits under, as at Pompeii. */
+  hill?: { angle: number; distance: number; height: number; radius: number };
+  /** Where a visitor stands on the plan (`at`, metres) and what they look at. */
+  viewpoint?: { at: [number, number]; look: [number, number, number] };
+};
+
 /** A Pre-Pottery Neolithic enclosure: a ring of T-shaped pillars in a wall. */
 export type NeolithicEnclosureSpec = {
   kind: "neolithic-enclosure";
@@ -373,6 +449,8 @@ export type ModelSpec =
   | NeolithicEnclosureSpec
   | GreatAltarSpec
   | StadiumSpec
+  | AmphitheatreSpec
+  | CitySpec
   | PeristyleHouseSpec
   | MausoleumSpec
   | TumulusSanctuarySpec
@@ -2641,6 +2719,623 @@ export const reconstructions: Reconstruction[] = [
       coneHeight: 5,
       wallLength: 80,
       wallTowers: 4,
+    },
+  },
+  {
+    id: "pompeii-kenti",
+    siteSlug: "pompeii",
+    structure: l("Kent planı", "The City Plan"),
+    title: l("Pompeii", "The City of Pompeii"),
+    blurb: l(
+      "MS 79'da Vezüv'ün patlamasıyla ölen kentin duvarları, freskleri ve evleri ayakta bırakır; forum, Capitolium, basilika, Apollo Tapınağı, iki tiyatrosu ve amfitiyatrosu tek bir planda.",
+      "The city of Pompeii as it stood when Vesuvius buried it: walls, frescoes and houses left standing, the forum, the Capitolium, the basilica, the Temple of Apollo, two theatres and the amphitheatre in one pattern.",
+    ),
+    period: l("MÖ 6. - MS 79", "6th century BC - AD 79"),
+    measures: [
+      {
+        value: 135,
+        unit: "m",
+        label: l("Amfitiyatrosunun oval ölçüü", "Amphitheatre: its oval"),
+        source: "wiki-amfi",
+      },
+      {
+        value: 67,
+        unit: "m",
+        label: l("Amfitiyatrosunun arenası", "Amphitheatre: arena length"),
+        source: "wiki-amfi",
+      },
+      {
+        value: 6,
+        unit: "count",
+        label: l("Capitolium'daki sütun sayısı", "Capitolium: column count"),
+        source: "wiki-cap",
+      },
+      {
+        value: 34,
+        unit: "m",
+        label: l("Basilikasin genişi", "Basilica: width"),
+        source: "wiki-bas",
+      },
+    ],
+    uncertainty: l(
+      "Kentin sur duvarları plan üzerindeki konumları HD betiğinden okunur; forumun kare ölçüesi kanık olarak okunmaz, tahmin. Evlerin ve sokaklarını yerleri tahmin.",
+      "The city's walls are read off from their places on the plan in the HD script; the forum's square is not directly measurable, it is estimated. The houses and the streets are estimates.",
+    ),
+    hotspots: [
+      spot(
+        [0, 16, -64],
+        "Capitolium",
+        "The Capitolium",
+        "Forumun tam merkezinde MS 2. yüzyılda Lucius Iulius Collatinus tarafından yaptırılan tanrı evi; forumun karnında.",
+        "At the very centre of the forum, built there in the second century AD by Lucius Iulius Collatinus: the god's house of the forum.",
+      ),
+      spot(
+        [24, 9, -2],
+        "Basilika",
+        "The Basilica",
+        "Ticaret, yargı ve kamu işleri için kullanılan iki katlı basilika; MS 2. yüzyılda yaptırıldı.",
+        "The two-storey basilica for commerce, law and public business, built in the second century AD.",
+      ),
+      spot(
+        [170, 18, 98],
+        "Amfitiyatrosu",
+        "The Amphitheatre",
+        "MS 70'de inşa edilmiş, MS 79 Vesuv patlamasından önce ayakta kalan antik dunyanın en eski amfitiyatrosu.",
+        "Built around AD 70 and still standing when Vesuvius erupted in AD 79: the oldest stone amphitheatre of antiquity.",
+      ),
+    ],
+    sources: [
+      {
+        key: "wiki-amfi",
+        title: l(
+          "Wikipedia (English): Amphitheatre of Pompeii",
+          "Wikipedia: Amphitheatre of Pompeii",
+        ),
+        url: "https://en.wikipedia.org/wiki/Amphitheatre_of_Pompeii",
+      },
+      {
+        key: "wiki-cap",
+        title: l("Wikipedia (English): Pompeii", "Wikipedia: Pompeii"),
+        url: "https://en.wikipedia.org/wiki/Pompeii",
+      },
+      {
+        key: "wiki-bas",
+        title: l("Wikipedia (English): Pompeii", "Wikipedia: Pompeii"),
+        url: "https://en.wikipedia.org/wiki/Pompeii",
+      },
+    ],
+    model: {
+      kind: "city",
+      radius: 420,
+      places: [
+        {
+          spec: {
+            kind: "prostyle-temple",
+            columns: 6,
+            pillars: 2,
+            statueBases: 2,
+            facadeWidth: 17,
+            columnHeight: 12,
+            columnDiameter: 1.2,
+            porchDepth: 4,
+            cellaDepth: 20,
+            podiumHeight: 3,
+            entablatureHeight: 3,
+          },
+          at: [0, -70],
+          rotate: 180,
+        },
+        {
+          spec: {
+            kind: "roman-facade",
+            facadeWidth: 34,
+            facadeHeight: 15,
+            lowerColumns: 4,
+            steps: 3,
+            doors: 1,
+            porchDepth: 3,
+            hallWidth: 26,
+            hallDepth: 8,
+            apseWidth: 6,
+            nicheHeight: 2.5,
+            wallHeight: 5,
+            lowerOrderHeight: 7,
+            upperColumns: 4,
+            columnDiameter: 1,
+            inscribed: false,
+          },
+          at: [40, 0],
+          rotate: 90,
+        },
+        {
+          spec: {
+            kind: "prostyle-temple",
+            columns: 6,
+            pillars: 2,
+            statueBases: 2,
+            facadeWidth: 14,
+            columnHeight: 10,
+            columnDiameter: 1.1,
+            porchDepth: 3,
+            cellaDepth: 14,
+            podiumHeight: 2,
+            entablatureHeight: 2,
+          },
+          at: [-55, 30],
+          rotate: -90,
+        },
+        {
+          spec: {
+            kind: "roman-theatre",
+            caveaDiameter: 60,
+            orchestraDiameter: 22,
+            scaenaeHeight: 12,
+            seatTread: 0.72,
+            seatRise: 0.42,
+            podiumHeight: 1.2,
+            stageDepth: 7.5,
+            stairways: 7,
+            lowerRows: 13,
+            upperRows: 12,
+            character: {
+              stone: "limestone",
+              ground: "plain",
+              facade: "wall",
+              screen: "plain",
+              storeys: 1,
+              topGallery: false,
+            },
+          },
+          at: [-90, 90],
+        },
+        {
+          spec: {
+            kind: "roman-amphitheatre",
+            outerLength: 135,
+            outerWidth: 104,
+            arenaLength: 67,
+            arenaWidth: 35,
+            wallHeight: 21,
+            rows: 24,
+            tiers: 2,
+            seatRise: 0.24,
+            seatTread: 0.65,
+            podiumHeight: 3.2,
+            bays: 60,
+            outerWall: "low",
+            stone: "limestone",
+          },
+          at: [170, 150],
+        },
+      ],
+      walls: {
+        length: 1100,
+        width: 850,
+        height: 8,
+        thickness: 3,
+        towers: 20,
+        gates: 7,
+        gateWidth: 12,
+      },
+      streets: [
+        [-40, -60, -90, 50, 8],
+        [-60, -60, 95, 100, 8],
+        [40, -60, 40, -25, 6],
+      ],
+      hill: { angle: 270, distance: 900, height: 500, radius: 260 },
+      viewpoint: { at: [0, 90], look: [0, 12, -120] },
+    },
+  },
+  {
+    id: "eboracum-kenti",
+    siteSlug: "eboracum",
+    structure: l("Kent planı", "The City Plan"),
+    title: l("Eboracum", "Eboracum (York)"),
+    blurb: l(
+      "MS 71'de Britanya'ya kurulan en böyük garnizonun sur planı: VI. Victrix lejyonu, ordunun suyunu, hamamini ve karargahını barındıran kale ve evler.",
+      "The fortress plan of the largest garrison Rome ever built in Britain: the walls, houses and the VIth Victrix carrying the army's water, baths and headquarters.",
+    ),
+    period: l("MS 71 - MS 5. yüzyıl", "AD 71 - 5th century AD"),
+    measures: [
+      {
+        value: 60,
+        unit: "m",
+        label: l("Karargah: genişi", "Headquarters: width"),
+        source: "wiki-eb",
+      },
+      {
+        value: 6,
+        unit: "count",
+        label: l("Kale: kule sayısı", "Fortress: tower count"),
+        source: "wiki-eb",
+      },
+    ],
+    uncertainty: l(
+      "Ordunun su yolu kalenin içi ile dışı arasında planlanırdı; hamam ve karargahının ince duvarları plan üzerinden okunmaz, tahmin.",
+      "The army's water course is planned between the fortress and the town; the baths and the headquarters are read off thin walls, estimated.",
+    ),
+    hotspots: [
+      spot(
+        [0, 12, -10],
+        "Karargah",
+        "The headquarters",
+        "Ordunun karargahında ticaret, yargı ve askeri idari; MS 120'ler.",
+        "The headquarters of the army's administration, commerce, law and military command; AD 120s.",
+      ),
+      spot(
+        [0, 10, -70],
+        "Kale",
+        "The fortress",
+        "VI. Victrix lejyonunun surları; MS 71'den MS 410'a kadar ayakta.",
+        "The walls of the VIth Victrix, standing from AD 71 to AD 410.",
+      ),
+    ],
+    sources: [
+      {
+        key: "wiki-eb",
+        title: l("Wikipedia (English): Eboracum", "Wikipedia: Eboracum"),
+        url: "https://en.wikipedia.org/wiki/Eboracum",
+      },
+    ],
+    model: {
+      kind: "city",
+      radius: 320,
+      places: [
+        {
+          spec: {
+            kind: "roman-facade",
+            facadeWidth: 60,
+            facadeHeight: 14,
+            lowerColumns: 6,
+            steps: 2,
+            doors: 1,
+            porchDepth: 6,
+            hallWidth: 42,
+            hallDepth: 16,
+            apseWidth: 8,
+            nicheHeight: 4,
+            wallHeight: 6,
+            lowerOrderHeight: 8,
+            upperColumns: 6,
+            columnDiameter: 1.2,
+            inscribed: false,
+          },
+          at: [0, 30],
+          rotate: 0,
+        },
+        {
+          spec: {
+            kind: "prostyle-temple",
+            columns: 6,
+            pillars: 2,
+            statueBases: 1,
+            facadeWidth: 12,
+            columnHeight: 9,
+            columnDiameter: 1.1,
+            porchDepth: 3,
+            cellaDepth: 10,
+            podiumHeight: 2,
+            entablatureHeight: 2,
+          },
+          at: [0, -85],
+          rotate: 180,
+        },
+        {
+          spec: {
+            kind: "roman-facade",
+            facadeWidth: 40,
+            facadeHeight: 12,
+            lowerColumns: 4,
+            steps: 2,
+            doors: 1,
+            porchDepth: 4,
+            hallWidth: 28,
+            hallDepth: 10,
+            apseWidth: 6,
+            nicheHeight: 2.5,
+            wallHeight: 5,
+            lowerOrderHeight: 7,
+            upperColumns: 4,
+            columnDiameter: 1,
+            inscribed: false,
+          },
+          at: [0, -10],
+          rotate: 180,
+        },
+      ],
+      walls: {
+        length: 700,
+        width: 600,
+        height: 9,
+        thickness: 4,
+        towers: 6,
+        gates: 4,
+        gateWidth: 14,
+      },
+      streets: [
+        [-38, -110, -38, 60, 8],
+        [-38, -60, 90, -60, 8],
+      ],
+      viewpoint: { at: [0, 60], look: [0, 10, -80] },
+    },
+  },
+  {
+    id: "nimes-kenti",
+    siteSlug: "nimes",
+    structure: l("Kent planı", "The City Plan"),
+    title: l("Nimes", "Nimes"),
+    blurb: l(
+      "MS 1. yüzyıl yılda Augustus'un Galya kolonisi olan Nimes'in en belirgin bölünülmeleri: 24.000 seyirci kapasiteli arena, Maison Carrée ve kenti sulayan Pont du Gard.",
+      "The most striking remains of Nimes, Augustus's colony in Gaul: a 24,000-seat arena, the Maison Carrée and the Pont du Gard aqueduct that fed it.",
+    ),
+    period: l("M.Ö. 1. - MS 5. yüzyıl", "1st century BC - 5th century AD"),
+    measures: [
+      {
+        value: 133,
+        unit: "m",
+        label: l("Amfitiyatrosunun oval ölçüü", "Amphitheatre: its oval"),
+        source: "wiki-amfi-n",
+      },
+      {
+        value: 69,
+        unit: "m",
+        label: l("Amfitiyatrosunun arenası", "Amphitheatre: arena length"),
+        source: "wiki-amfi-n",
+      },
+      {
+        value: 26,
+        unit: "m",
+        label: l("Maison Carrée'nin genişi", "Maison Carrée: width"),
+        source: "wiki-maison",
+      },
+    ],
+    uncertainty: l(
+      "Arena tabanına kazınma yerleri, MS 90'ların Titus imparatorluğu ile ilişi olarak tahmin. Arenanın kapasitesi koltuk sayısı ile hesaplandı.",
+      "The arena floor's excavations belong to Titus's age and are estimated. The capacity comes from the row count.",
+    ),
+    hotspots: [
+      spot(
+        [0, 20, 40],
+        "Arena",
+        "The arena",
+        "133 x 101 metrelik oval, MS 90'lar Titus tarafından inşa edilen, MS 5. yüzyıl ile ilişi.",
+        "The 133 by 101 metre oval, built by Titus in the 90s AD, in the fifth century.",
+      ),
+      spot(
+        [0, 23, 128],
+        "Maison Carrée",
+        "The Maison Carrée",
+        "MS 19'da Augustus'un torunları için inşa edilen, 26 x 13 metrelik dikgen tapınak.",
+        "Built in AD 19 for Augustus's grandsons, the 26 by 13 metre temple.",
+      ),
+    ],
+    sources: [
+      {
+        key: "wiki-amfi-n",
+        title: l("Wikipedia (English): Nimes Arena", "Wikipedia: Nimes Arena"),
+        url: "https://en.wikipedia.org/wiki/Nimes_Arena",
+      },
+      {
+        key: "wiki-maison",
+        title: l("Wikipedia (English): Maison Carrée", "Wikipedia: Maison Carrée"),
+        url: "https://en.wikipedia.org/wiki/Maison_Carr%C3%A9e",
+      },
+    ],
+    model: {
+      kind: "city",
+      radius: 340,
+      places: [
+        {
+          spec: {
+            kind: "roman-amphitheatre",
+            outerLength: 133,
+            outerWidth: 101,
+            arenaLength: 69,
+            arenaWidth: 38,
+            wallHeight: 21,
+            rows: 24,
+            tiers: 2,
+            seatRise: 0.24,
+            seatTread: 0.6,
+            podiumHeight: 3,
+            bays: 60,
+            outerWall: "arcade",
+            stone: "limestone",
+          },
+          at: [0, 40],
+        },
+        {
+          spec: {
+            kind: "prostyle-temple",
+            columns: 6,
+            pillars: 2,
+            statueBases: 2,
+            facadeWidth: 26,
+            columnHeight: 17,
+            columnDiameter: 1.2,
+            porchDepth: 4,
+            cellaDepth: 12,
+            podiumHeight: 2.5,
+            entablatureHeight: 2.5,
+          },
+          at: [0, 130],
+          rotate: 180,
+        },
+        {
+          spec: {
+            kind: "aqueduct",
+            arches: 22,
+            archHeight: 20,
+            towerSide: 3,
+            towerHeight: 18,
+            span: 12,
+            pier: 2,
+            width: 3.4,
+          },
+          at: [-160, -60],
+        },
+      ],
+      walls: {
+        length: 900,
+        width: 700,
+        height: 8,
+        thickness: 2.5,
+        towers: 12,
+        gates: 4,
+        gateWidth: 10,
+      },
+      streets: [
+        [75, -60, 75, 140, 8],
+        [-60, -30, 80, -30, 8],
+      ],
+      viewpoint: { at: [0, -30], look: [0, 10, 40] },
+    },
+  },
+  {
+    id: "trier-kenti",
+    siteSlug: "trier",
+    structure: l("Kent planı", "The City Plan"),
+    title: l("Augusta Treverorum", "Augusta Treverorum (Trier)"),
+    blurb: l(
+      "MS 16'da kurulan ve MS 4. yüzyıl başlında Batı Roma baskentine dönen Augusta Treverorum'un planı: Porta Nigra, amfitiyatro, Konstantin Bazilikası ve imparatorluk hamamları.",
+      "The plan of Augusta Treverorum, founded in Gaul around 16 BC and made the capital of the western empire in AD 4: the Porta Nigra, the amphitheatre, the Basilica of Constantine and the imperial baths.",
+    ),
+    period: l("M.Ö. 16 - MS 5. yüzyıl", "16 BC - 5th century AD"),
+    measures: [
+      {
+        value: 145,
+        unit: "m",
+        label: l("Amfitiyatrosunun oval ölçüü", "Amphitheatre: its oval"),
+        source: "wiki-amfi-t",
+      },
+      {
+        value: 67,
+        unit: "m",
+        label: l("Konstantin Bazilikasinin genişi", "Basilica: width"),
+        source: "wiki-bas-t",
+      },
+      {
+        value: 2,
+        unit: "count",
+        label: l("Porta Nigra'daki giris sayısı", "Porta Nigra: number of openings"),
+        source: "wiki-porta",
+      },
+    ],
+    uncertainty: l(
+      "Amfitiyatronun tabanına kazınma yerleri, MS 2. yüzyıl Titus imparatorluğu ile ilişi; Konstantin Bazilikasının planı MS 4. yüzyıl imparatorluğu ile ilgilidir.",
+      "The amphitheatre's floor excavations belong to Titus's age; the basilica's plan belongs to the fourth-century empire.",
+    ),
+    hotspots: [
+      spot(
+        [0, 31, -300],
+        "Porta Nigra",
+        "The Porta Nigra",
+        "MS 100 civarında Roma kolonisine yaptırılan sur kapısı; MS 4. yüzyılinde Batı Roma baskentine dönüştü.",
+        "The city gate built for a Roman colony around the first century AD; it became the capital of the western empire in the fourth century AD.",
+      ),
+      spot(
+        [240, 20, 40],
+        "Amfitiyatrosu",
+        "The amphitheatre",
+        "MS 2. yüzyıl Titus imparatorluğu tarafından inşa edilen amfitiyatro; MS 4. yüzyıl depremi sonrasında tabanına kazınmışlar var.",
+        "The amphitheatre built by Titus in the second century AD; later ruin shows on the arena floor.",
+      ),
+    ],
+    sources: [
+      {
+        key: "wiki-amfi-t",
+        title: l("Wikipedia (English): Trier Amphitheatre", "Wikipedia: Trier Amphitheatre"),
+        url: "https://en.wikipedia.org/wiki/Trier_Amphitheatre",
+      },
+      {
+        key: "wiki-bas-t",
+        title: l("Wikipedia (English): Aula Palatina", "Wikipedia: Aula Palatina"),
+        url: "https://en.wikipedia.org/wiki/Aula_Palatina",
+      },
+      {
+        key: "wiki-porta",
+        title: l("Wikipedia (English): Porta Nigra", "Wikipedia: Porta Nigra"),
+        url: "https://en.wikipedia.org/wiki/Porta_Nigra",
+      },
+    ],
+    model: {
+      kind: "city",
+      radius: 360,
+      places: [
+        {
+          spec: {
+            kind: "roman-gate",
+            variant: "arch",
+            openings: 2,
+            archSpan: 12,
+            archHeight: 12,
+            totalHeight: 30,
+            entablatureHeight: 6,
+            columnHeight: 9,
+            columnDiameter: 1.2,
+            columnsPerFace: 2,
+            pierWidth: 2,
+            depth: 6,
+          },
+          at: [0, -300],
+          rotate: 180,
+        },
+        {
+          spec: {
+            kind: "roman-amphitheatre",
+            outerLength: 145,
+            outerWidth: 120,
+            arenaLength: 75,
+            arenaWidth: 50,
+            wallHeight: 16,
+            rows: 26,
+            tiers: 2,
+            seatRise: 0.22,
+            seatTread: 0.58,
+            podiumHeight: 2.8,
+            bays: 60,
+            outerWall: "low",
+            stone: "limestone",
+          },
+          at: [240, 40],
+        },
+        {
+          spec: {
+            kind: "roman-facade",
+            facadeWidth: 67,
+            facadeHeight: 33,
+            lowerColumns: 8,
+            steps: 4,
+            doors: 1,
+            porchDepth: 8,
+            hallWidth: 50,
+            hallDepth: 30,
+            apseWidth: 12,
+            nicheHeight: 6,
+            wallHeight: 15,
+            lowerOrderHeight: 18,
+            upperColumns: 8,
+            columnDiameter: 1.6,
+            inscribed: false,
+          },
+          at: [0, 60],
+          rotate: 90,
+        },
+      ],
+      walls: {
+        length: 800,
+        width: 700,
+        height: 10,
+        thickness: 3,
+        towers: 16,
+        gates: 6,
+        gateWidth: 12,
+      },
+      streets: [
+        [0, -200, 0, -60, 8],
+        [0, -60, 160, 40, 8],
+      ],
+      viewpoint: { at: [0, 100], look: [0, 14, -260] },
     },
   },
   ...SAGALASSOS_ZEUGMA_SUMELA_PATARA,

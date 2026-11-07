@@ -71,6 +71,9 @@ import {
   streetParts,
 } from "@/lib/models/efes-mazaeus-kapisi";
 import type {
+  AmphitheatreSpec,
+  CityPlacement,
+  CitySpec,
   GreatAltarSpec,
   IonicDipterosSpec,
   MausoleumSpec,
@@ -1683,6 +1686,7 @@ function cornice(
   width: number,
   depth: number,
   height: number,
+  options?: { backDentils?: boolean },
 ): Part[] {
   const [x, y, z] = at;
   const course = height / 3;
@@ -1715,6 +1719,7 @@ function cornice(
     const count = Math.min(140, Math.floor(length / spacing));
     for (let i = 0; i < count; i += 1) {
       const t = -length / 2 + spacing * (i + 0.5) + (length - count * spacing) / 2;
+      if (along === "z" && options?.backDentils === false && z + t > -0.05) continue;
       parts.push(
         box(
           material,
@@ -1728,6 +1733,7 @@ function cornice(
   };
   if (course > 0.08) {
     for (const side of [-1, 1]) {
+      if (side === 1 && options?.backDentils === false) continue;
       dentils(midWidth, "x", side * (midDepth / 2 + lip));
       dentils(midDepth, "z", side * (midWidth / 2 + lip));
     }
@@ -2637,10 +2643,18 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       box("paintRed", [door.centre, y0 + doorHeight + 0.75, 0.03], [door.width * 1.15, 1.5, 0.12]),
     );
     parts.push(
-      box("paintGold", [door.centre, y0 + doorHeight + 0.68, 0.02], [door.width * 1.3, 0.09, 0.08]),
+      box(
+        "paintGold",
+        [door.centre, y0 + doorHeight - 0.045, -0.03],
+        [door.width * 1.3, 0.09, 0.08],
+      ),
     );
     parts.push(
-      box("paintGold", [door.centre, y0 + doorHeight + 2.25, 0.02], [door.width * 1.3, 0.09, 0.08]),
+      box(
+        "paintGold",
+        [door.centre, y0 + doorHeight + 1.545, -0.03],
+        [door.width * 1.3, 0.09, 0.08],
+      ),
     );
   }
   parts.push(
@@ -2799,32 +2813,36 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     // caryatid; above, one of the stand-ins is a portrait statue found at
     // Ephesus and carved in the very years the library was built.
     const scanned: ScanId | null =
-      who.name === "Sophia"
-        ? "celsus-sophia"
-        : who.name === "Arete"
-          ? "celsus-arete"
-          : who.name === "Ennoia"
-            ? "muse-polyhymnia"
-            : who.name === "Episteme"
-              ? "caryatid"
-              : who.dress === "toga"
-                ? upperStandIns[upperIndex++ % upperStandIns.length]!
-                : null;
+      spec.inscribed === false
+        ? null
+        : who.name === "Sophia"
+          ? "celsus-sophia"
+          : who.name === "Arete"
+            ? "celsus-arete"
+            : who.name === "Ennoia"
+              ? "muse-polyhymnia"
+              : who.name === "Episteme"
+                ? "caryatid"
+                : who.dress === "toga"
+                  ? upperStandIns[upperIndex++ % upperStandIns.length]!
+                  : null;
     // The deeper statues — the bearded man in his mantle, the cuirassed
     // Hadrian — stand further out of the niche, or their backs would be in
     // its back wall.
     const out = scanned === "asklepios" || scanned === "hadrian-troy" ? 0.42 : scanned ? 0.15 : 0;
-    parts.push({
-      ...person(
-        [centre, base + pedestal - 0.02, -0.045 - out],
-        statueHeight,
-        Math.PI,
-        robe,
-        who,
-        paint,
-      ),
-      ...(scanned ? { scan: { id: scanned } } : {}),
-    });
+    if (spec.inscribed !== false) {
+      parts.push({
+        ...person(
+          [centre, base + pedestal - 0.02, -0.045 - out],
+          statueHeight,
+          Math.PI,
+          robe,
+          who,
+          paint,
+        ),
+        ...(scanned ? { scan: { id: scanned } } : {}),
+      });
+    }
     for (const side of [-1, 1]) {
       parts.push(
         box(
@@ -2852,6 +2870,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
         spread * 2 + diameter * 2.4,
         diameter * 2.8,
         entablature,
+        { backDentils: false },
       ),
     );
     /*
@@ -2862,7 +2881,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
     {
       const soffit = base + pedestal + shaft;
       const sx = spread - diameter / 2 - 0.12;
-      const sz = diameter * 1.4 - 0.16;
+      const sz = Math.min(diameter * 1.4 - 0.16, -z - 0.08);
       const nx = 2;
       const nz = 2;
       const cw = (sx * 2) / nx;
@@ -2913,7 +2932,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
      * lower order the building inscription running on along the architrave
      * of each pair.
      */
-    if (label) {
+    if (spec.inscribed !== false && label) {
       const die = pedestal - 0.32;
       parts.push(
         ...inscription({
@@ -2927,7 +2946,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
         }),
       );
     }
-    if (frieze) {
+    if (spec.inscribed !== false && frieze) {
       const course = entablature / 3;
       parts.push(
         ...inscription({
@@ -2995,7 +3014,7 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
    * right, each piece taking as much of it as it is wide.
    */
   const architrave: string[] = [];
-  {
+  if (spec.inscribed !== false) {
     const reach = lowerSpread + spec.columnDiameter * 1.2 + 0.2;
     const edges = [
       -w / 2 + 0.4,
@@ -3052,7 +3071,9 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
       robes[index % robes.length]!,
       IDENTITIES.celsusVirtues[index % IDENTITIES.celsusVirtues.length]!,
       PAINT.celsusVirtues[index % PAINT.celsusVirtues.length]!,
-      VIRTUE_BASES[IDENTITIES.celsusVirtues[index % IDENTITIES.celsusVirtues.length]!.name],
+      spec.inscribed === false
+        ? undefined
+        : VIRTUE_BASES[IDENTITIES.celsusVirtues[index % IDENTITIES.celsusVirtues.length]!.name],
       architrave[index],
     );
   });
@@ -3078,7 +3099,9 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
        * (IEph 5104 by his daughter, 5106 by his grandson); no base text for
        * Aquila's statue is known, so his die is left uncut.
        */
-      index === 0 ? TEXTS.celsusByDaughter : index === 2 ? TEXTS.celsusByGrandson : undefined,
+      spec.inscribed === false
+        ? undefined
+        : index === 0 ? TEXTS.celsusByDaughter : index === 2 ? TEXTS.celsusByGrandson : undefined,
     );
   });
 
@@ -3135,65 +3158,67 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
    * front reads as the end of a public square rather than as a building in a
    * field: the eye gets something at ground level to measure the steps by.
    */
-  for (const side of [-1, 1]) {
-    const px = side * (w * 0.56);
-    const pz = -spec.steps * stepTread - 2.6;
-    parts.push(box("marbleWorn", [px, 0, pz], [2.6, 0.28, 3.4]));
-    parts.push(box("marble", [px, 0.28, pz], [2.2, 2.4, 3.0]));
-    parts.push(box("marbleWorn", [px, 2.68, pz], [2.6, 0.26, 3.4]));
-    /*
-     * The inscriptions that gave the statues their reason: Celsus' career,
-     * and his son Aquila who set the statue up — the Latin on the front, to
-     * the square, and the long Greek text on the face turned to the stair,
-     * as the library's bilingual bases carry both (IEph 5102; the Latin as
-     * ILS 8971).
-     */
-    const front = TEXTS.celsusRiderLatin;
-    const inner = flowing(TEXTS.celsusRiderGreek);
-    parts.push(
-      ...inscribedPanel({
-        at: [px, 0.62, pz - 1.5],
-        rotY: FACING.south,
-        width: 1.8,
-        height: 1.7,
-        material: "marble",
-        letter: 0.1,
-        text: front,
-      }),
-      ...inscribedPanel({
-        at: [px - side * 1.1, 0.62, pz],
-        rotY: side > 0 ? FACING.west : FACING.east,
-        width: 2.5,
-        height: 1.7,
-        material: "marble",
-        letter: 0.1,
-        rows: 40,
-        text: inner,
-      }),
-    );
-    /*
-     * The statue on it, in bronze, a little over life size, turned a touch
-     * towards the stair so the pair address whoever climbs it. What stood
-     * here is lost; the two stand in scans of Roman statues of the kind such
-     * bases carried — a bearded man wrapped in his mantle, the dress of the
-     * Greek East's honorific statues, and the veiled Tiberius in his toga.
-     */
-    parts.push({
-      kind: "figure",
-      material: "bronze",
-      at: [px, 2.94, pz + 0.05],
-      height: 2.3,
-      rotY: Math.PI + (side > 0 ? -0.3 : 0.3),
-      identity: {
-        name: "Benefactor",
-        sex: "male",
-        bearded: false,
-        hair: "short",
-        dress: "toga",
-        gesture: "raised",
-      },
-      scan: { id: side < 0 ? "asklepios" : "tiberius-velatus" },
-    });
+  if (spec.inscribed !== false) {
+    for (const side of [-1, 1]) {
+      const px = side * (w * 0.56);
+      const pz = -spec.steps * stepTread - 2.6;
+      parts.push(box("marbleWorn", [px, 0, pz], [2.6, 0.28, 3.4]));
+      parts.push(box("marble", [px, 0.28, pz], [2.2, 2.4, 3.0]));
+      parts.push(box("marbleWorn", [px, 2.68, pz], [2.6, 0.26, 3.4]));
+      /*
+       * The inscriptions that gave the statues their reason: Celsus' career,
+       * and his son Aquila who set the statue up — the Latin on the front, to
+       * the square, and the long Greek text on the face turned to the stair,
+       * as the library's bilingual bases carry both (IEph 5102; the Latin as
+       * ILS 8971).
+       */
+      const front = TEXTS.celsusRiderLatin;
+      const inner = flowing(TEXTS.celsusRiderGreek);
+      parts.push(
+        ...inscribedPanel({
+          at: [px, 0.62, pz - 1.5],
+          rotY: FACING.south,
+          width: 1.8,
+          height: 1.7,
+          material: "marble",
+          letter: 0.1,
+          text: front,
+        }),
+        ...inscribedPanel({
+          at: [px - side * 1.1, 0.62, pz],
+          rotY: side > 0 ? FACING.west : FACING.east,
+          width: 2.5,
+          height: 1.7,
+          material: "marble",
+          letter: 0.1,
+          rows: 40,
+          text: inner,
+        }),
+      );
+      /*
+       * The statue on it, in bronze, a little over life size, turned a touch
+       * towards the stair so the pair address whoever climbs it. What stood
+       * here is lost; the two stand in scans of Roman statues of the kind such
+       * bases carried — a bearded man wrapped in his mantle, the dress of the
+       * Greek East's honorific statues, and the veiled Tiberius in his toga.
+       */
+      parts.push({
+        kind: "figure",
+        material: "bronze",
+        at: [px, 2.94, pz + 0.05],
+        height: 2.3,
+        rotY: Math.PI + (side > 0 ? -0.3 : 0.3),
+        identity: {
+          name: "Benefactor",
+          sex: "male",
+          bearded: false,
+          hair: "short",
+          dress: "toga",
+          gesture: "raised",
+        },
+        scan: { id: side < 0 ? "asklepios" : "tiberius-velatus" },
+      });
+    }
   }
 
   /* The hall: side walls, rear wall and apse, stopped at the height the
@@ -3510,7 +3535,7 @@ export function theatreLayout(spec: RomanTheatreSpec) {
     storeys: 2,
     topGallery: true,
   };
-  const outerRadius = spec.caveaDiameter / 2;
+  const caveaRadius = spec.caveaDiameter / 2;
   const orchestraRadius = spec.orchestraDiameter / 2;
   const middle = spec.middleRows ?? 0;
   const rows = spec.lowerRows + middle + spec.upperRows;
@@ -3524,6 +3549,10 @@ export function theatreLayout(spec: RomanTheatreSpec) {
     const inner = podiumOuter + index * spec.seatTread + walkways;
     return { inner, outer: inner + spec.seatTread, y: spec.podiumHeight + index * spec.seatRise };
   };
+  // A cavea whose given diameter cannot hold its own top row still needs a rim
+  // outside that row: grow the footprint rather than turn the rim inside out.
+  const rim = 0.6;
+  const outerRadius = Math.max(caveaRadius, rows > 0 ? rowAt(rows - 1).outer + rim : caveaRadius);
   /*
    * A Roman theatre closes its seating with a semicircle and bonds its stage
    * building to the ends of it, across the full width. One built on a Greek
@@ -7983,6 +8012,299 @@ export function tumulusSanctuaryParts(spec: TumulusSanctuarySpec): Part[] {
   return parts;
 }
 
+/* ------------------------------------------------------------------ *
+ * Cities and amphitheatres
+ * ------------------------------------------------------------------ */
+
+const DEG = Math.PI / 180;
+
+/** A point on an ellipse with semi-axes `a` and `b`. */
+const ellipsePoint = (a: number, b: number, theta: number): [number, number] => [
+  a * Math.cos(theta),
+  b * Math.sin(theta),
+];
+
+/**
+ * One course of blocks round an ellipse: a seat row, a wall, a cornice.
+ *
+ * An amphitheatre is an oval, not a circle, and the ring primitive is
+ * circular. Rather than round Nimes' 133 x 101 m footprint into a circle, the
+ * ring is drawn as short blocks, each set on the tangent, so the oval reads as
+ * an oval and every segment still has a real size.
+ */
+function ellipseCourse(
+  parts: Part[],
+  a: number,
+  b: number,
+  y: number,
+  height: number,
+  depth: number,
+  material: Material,
+  segments: number,
+  outward = 0,
+  weather = 0,
+): void {
+  for (let i = 0; i < segments; i += 1) {
+    const theta = (i / segments) * TAU;
+    const [x1, z1] = ellipsePoint(a, b, theta - Math.PI / segments);
+    const [x2, z2] = ellipsePoint(a, b, theta + Math.PI / segments);
+    const [x, z] = ellipsePoint(a, b, theta);
+    const chord = Math.hypot(x2 - x1, z2 - z1);
+    const tangent = Math.atan2(z2 - z1, x2 - x1);
+    const block = box(
+      material,
+      [x + outward * Math.cos(theta), y, z + outward * Math.sin(theta)],
+      [chord * 1.04, height, depth],
+      -tangent,
+    );
+    parts.push(weather ? worn(block, weather) : block);
+  }
+}
+
+export function amphitheatreParts(spec: AmphitheatreSpec): Part[] {
+  const parts: Part[] = [];
+  const stone = spec.stone;
+  // Enough blocks that a 133 m oval does not show its corners.
+  const segments = Math.max(32, Math.round((spec.outerLength + spec.outerWidth) / 4.5));
+
+  // The arena floor, raked sand and all.
+  parts.push(box("sand", [0, -0.1, 0], [spec.arenaLength, 0.22, spec.arenaWidth]));
+
+  // The podium wall the front row sat above.
+  ellipseCourse(
+    parts,
+    spec.arenaLength / 2,
+    spec.arenaWidth / 2,
+    0,
+    spec.podiumHeight,
+    1.1,
+    stone,
+    segments,
+    0,
+    0.02,
+  );
+
+  // The cavea: one solid terrace per row, climbing outwards from the arena.
+  for (let row = 0; row < spec.rows; row += 1) {
+    const a = spec.arenaLength / 2 + (row + 1) * spec.seatTread;
+    const b = spec.arenaWidth / 2 + (row + 1) * spec.seatTread;
+    const top = spec.podiumHeight + (row + 1) * spec.seatRise;
+    ellipseCourse(parts, a, b, 0, top, spec.seatTread * 1.06, stone, segments, 0, 0.015);
+  }
+
+  if (spec.outerWall !== "none") {
+    // Pompeii's outer arcade fell with the earthquake of AD 62; only its low
+    // footings were rebuilt by 79. Nimes' two tiers still stand whole.
+    const height =
+      spec.outerWall === "low"
+        ? Math.min(spec.wallHeight, spec.podiumHeight + spec.rows * spec.seatRise + 2.5)
+        : spec.wallHeight;
+    const a = spec.outerLength / 2 - 0.9;
+    const b = spec.outerWidth / 2 - 0.9;
+    ellipseCourse(parts, a, b, 0, height, 1.9, stone, segments, 0, 0.05);
+
+    if (spec.outerWall === "arcade") {
+      // The arches are recesses rather than holes: at this scale a dark bay
+      // on the face reads as the opening, and the wall keeps its strength.
+      for (let tier = 0; tier < spec.tiers; tier += 1) {
+        const y = (height / (spec.tiers + 1)) * (tier + 1) - height * 0.11;
+        ellipseCourse(
+          parts,
+          a + 1.0,
+          b + 1.0,
+          y,
+          height * 0.2,
+          0.08,
+          "shadow",
+          Math.max(24, spec.bays),
+          0,
+        );
+      }
+    }
+
+    // The cornice and the gallery walk on top.
+    ellipseCourse(parts, a + 0.5, b + 0.5, height, 0.55, 2.5, stone, segments);
+    ellipseCourse(parts, a - 2.6, b - 2.6, height, 1.0, 0.45, "stoneDark", segments);
+  }
+
+  // Four gateways, sunk into the seating on the axes.
+  for (const [x, z] of [
+    [0, -spec.outerWidth / 2],
+    [0, spec.outerWidth / 2],
+    [-spec.outerLength / 2, 0],
+    [spec.outerLength / 2, 0],
+  ] as [number, number][]) {
+    parts.push(box("shadow", [x, 0, z], [3.2, spec.podiumHeight + 3.0, 2.2]));
+  }
+
+  return parts;
+}
+
+/** A paved street from one plan point to another. */
+function cityStreetParts(x1: number, z1: number, x2: number, z2: number, width: number): Part[] {
+  const dx = x2 - x1;
+  const dz = z2 - z1;
+  const length = Math.hypot(dx, dz);
+  const angle = -Math.atan2(dz, dx);
+  return [box("stoneDark", [(x1 + x2) / 2, -0.09, (z1 + z2) / 2], [length, 0.14, width], angle)];
+}
+
+/** The fortification circuit: wall runs, towers and a gatehouse on each side. */
+function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
+  const parts: Part[] = [];
+  const halfLength = walls.length / 2;
+  const halfWidth = walls.width / 2;
+  const gate = walls.gateWidth / 2;
+  const h = walls.height;
+  const t = walls.thickness;
+
+  const run = (x1: number, z1: number, x2: number, z2: number) => {
+    const dx = x2 - x1;
+    const dz = z2 - z1;
+    const length = Math.hypot(dx, dz);
+    if (length < 0.5) return;
+    const angle = -Math.atan2(dz, dx);
+    parts.push(
+      worn(
+        box("stone", [(x1 + x2) / 2, 0, (z1 + z2) / 2], [length, h, t], angle),
+        0.08,
+      ),
+    );
+    // Battlements: a short block every five metres, set on the outer edge.
+    const nx = Math.sin(angle);
+    const nz = Math.cos(angle);
+    for (let s = 2.5; s < length; s += 5) {
+      const px = x1 + (dx * s) / length;
+      const pz = z1 + (dz * s) / length;
+      parts.push(
+        box(
+          "stone",
+          [px + nx * (t / 2 - 0.35), h, pz + nz * (t / 2 - 0.35)],
+          [1.5, 1.0, 0.7],
+          angle,
+        ),
+      );
+    }
+  };
+
+  // North and south, with the gate gap on the middle of each.
+  for (const z of [-halfWidth, halfWidth]) {
+    run(-halfLength, z, -gate, z);
+    run(gate, z, halfLength, z);
+  }
+  // West and east.
+  for (const x of [-halfLength, halfLength]) {
+    run(x, -halfWidth, x, -gate);
+    run(x, gate, x, halfWidth);
+  }
+
+  const towerAt = (x: number, z: number) => {
+    parts.push(worn(box("stone", [x, 0, z], [6.2, h + 4.5, 6.2]), 0.12));
+    parts.push(box("stoneDark", [x, h + 4.5, z], [7.0, 0.7, 7.0]));
+  };
+
+  for (const x of [-halfLength, halfLength])
+    for (const z of [-halfWidth, halfWidth]) towerAt(x, z);
+
+  const extra = Math.max(0, walls.towers - 4);
+  const perimeter = 2 * (walls.length + walls.width);
+  for (let i = 0; i < extra; i += 1) {
+    let s = ((i + 0.5) / extra) * perimeter;
+    if (s < walls.length) towerAt(-halfLength + s, -halfWidth);
+    else if ((s -= walls.length) < walls.width) towerAt(halfLength, -halfWidth + s);
+    else if ((s -= walls.width) < walls.length) towerAt(halfLength - s, halfWidth);
+    else {
+      s -= walls.length;
+      towerAt(-halfLength, halfWidth - s);
+    }
+  }
+
+  // A gatehouse on each side, its towers flanking the gap and a lintel over it.
+  const gatehouses: [number, number, number][] = [
+    [0, -halfWidth, 0],
+    [0, halfWidth, 0],
+    [-halfLength, 0, Math.PI / 2],
+    [halfLength, 0, Math.PI / 2],
+  ];
+  for (const [gx, gz, turn] of gatehouses) {
+    const ex = Math.cos(turn);
+    const ez = -Math.sin(turn);
+    for (const sign of [-1, 1]) {
+      const x = gx + ex * sign * (gate + 2.6);
+      const z = gz + ez * sign * (gate + 2.6);
+      parts.push(worn(box("stone", [x, 0, z], [6.4, h + 5, 6.4]), 0.1));
+    }
+    const size: Vec3 =
+      Math.abs(ex) > 0.5 ? [walls.gateWidth + 6, 3.2, t + 2.2] : [t + 2.2, 3.2, walls.gateWidth + 6];
+    parts.push(box("stone", [gx, h - 3.2, gz], size));
+    // The dark mouth of the passage below the lintel.
+    const mouth: Vec3 = Math.abs(ex) > 0.5 ? [walls.gateWidth, h - 3.2, 0.2] : [0.2, h - 3.2, walls.gateWidth];
+    parts.push(box("shadow", [gx, 0, gz], mouth));
+  }
+
+  return parts;
+}
+
+/** Set a building's parts down on the city plan, turned as it faces. */
+function placedParts(place: CityPlacement): Part[] {
+  const turn = (place.rotate ?? 0) * DEG;
+  const c = Math.cos(turn);
+  const s = Math.sin(turn);
+  return buildParts(place.spec)
+    .filter((part) => !part.decor)
+    .map((part) => {
+      const [lx, y, lz] = part.at;
+      const at: Vec3 = [place.at[0] + lx * c + lz * s, y, place.at[1] - lx * s + lz * c];
+      if (part.kind === "ring" || part.kind === "bank") {
+        return { ...part, at, thetaStart: part.thetaStart + turn };
+      }
+      if ("rotY" in part) return { ...part, at, rotY: part.rotY + turn };
+      return { ...part, at };
+    });
+}
+
+export function cityParts(spec: CitySpec): Part[] {
+  const parts: Part[] = [];
+
+  for (const place of spec.places) parts.push(...placedParts(place));
+  if (spec.walls) parts.push(...cityWallParts(spec.walls));
+  for (const [x1, z1, x2, z2, width] of spec.streets ?? [])
+    parts.push(...cityStreetParts(x1, z1, x2, z2, width));
+
+  if (spec.hill) {
+    const { angle, distance, height, radius } = spec.hill;
+    const theta = angle * DEG;
+    parts.push(
+      scenery(
+        worn(
+          cyl(
+            "ground",
+            [Math.cos(theta) * distance, 0, Math.sin(theta) * distance],
+            radius,
+            radius * 0.12,
+            height,
+            32,
+          ),
+          5,
+        ),
+      ),
+    );
+  }
+
+  // One setting for the whole city: rubble and grass in the fields outside the
+  // walls, and the low ridges on the horizon.
+  parts.push(
+    ...setting(spec.radius, 6173, {
+      hills: 0.18,
+      stone: 0.5,
+      grass: 1.25,
+      ground: "limestone",
+    }),
+  );
+
+  return parts;
+}
+
 export function partsFor(spec: ModelSpec): Part[] {
   return dryScenery(buildParts(spec));
 }
@@ -8027,6 +8349,10 @@ function buildParts(spec: ModelSpec): Part[] {
       return peristyleHouseParts(spec);
     case "stadium":
       return stadiumParts(spec);
+    case "roman-amphitheatre":
+      return amphitheatreParts(spec);
+    case "city":
+      return cityParts(spec);
     case "mausoleum":
       return mausoleumParts(spec);
     case "tumulus-sanctuary":
@@ -8204,6 +8530,22 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return mudbrickWalkStart(spec);
     case "sphinx-gate":
       return sphinxGateWalkStart(spec);
+    case "roman-amphitheatre":
+      // Down on the sand, a little off the short axis, looking across the
+      // arena at the seating opposite.
+      return {
+        at: [0, spec.arenaWidth * 0.3],
+        floor: 0,
+        look: [0, spec.wallHeight * 0.45, -spec.arenaWidth / 2],
+      };
+    case "city":
+      // A city is a plan, so the city says where the visitor stands: the
+      // forum at Pompeii, the street before the Porta Nigra at Trier.
+      return {
+        at: spec.viewpoint?.at ?? [0, spec.radius * 0.4],
+        floor: 0,
+        look: spec.viewpoint?.look ?? [0, 8, 0],
+      };
   }
 }
 

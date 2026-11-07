@@ -3281,6 +3281,63 @@ export const siteFacts: Record<string, Localized[]> = {
       "Human footprints found in the lava nearby are about ten thousand years old, the oldest human traces in Anatolia.",
     ),
   ],
+  pompeii: [
+    f(
+      "Amfitiyatro 135 x 104 metreydi ve antik dünyanın en eski taş amfitiyatrondu; arenası 67 x 35 metreydi.",
+      "The amphitheatre was 135 by 104 metres and the oldest stone amphitheatre of antiquity; its arena was 67 by 35 metres.",
+    ),
+    f(
+      "Büyük Tiyatro, MS 4. yüzyılda Yunanistan'a gönderilen bir filozof tarafından inşa ettirildi; 24.000 seyirci kapasitesine sahipti.",
+      "The Large Theatre was built by a philosopher sent from Greece in the fourth century BC; it held 24,000 spectators.",
+    ),
+    f(
+      "MS 62 depreminde Forum Baths'in duvarları yıkıldı ama MS 79 Vesuvius'un patlamasıyla duvarlar ayakta kalmadı, çünkü depremden sonra yeniden inşa edilmedi.",
+      "The Forum Baths took earthquake damage in AD 62, but the eruption of AD 79 did not leave their walls standing because they were not rebuilt after the first.",
+    ),
+  ],
+  eboracum: [
+    f(
+      "Eboracum'un lejyon hamamı, Britanya'da MS 3. yüzyılda yapılan en büyük hamamlardan biriydi; bir binadan fazla kapalı alanı vardı.",
+      "The Eboracum baths were among the largest in Britain, built around the third century AD, with more than a thousand square metres under cover.",
+    ),
+    f(
+      "VI. Victrix lejyonu, MS 71'de İngiltere'ye gelip bugün York Minster'ın bulunduğu yere yerleşti.",
+      "Legion VI Victrix settled at Eboracum in AD 71, where York Minster now stands.",
+    ),
+    f(
+      "MÖ 43'te İmparator Aulus ile oğlu Agrippa Britanya'ya geldiklerinde buraya imparatorluk hazırlık yapıları inşa edildikleri yazılıdır.",
+      "Around BC 43 the imperial family built preparation works at Eboracum, as recorded when Aulus and Agrippa arrived in Britain.",
+    ),
+  ],
+  nimes: [
+    f(
+      "Arenanın kapasitesi 24.000 kişiydi ve Roma imparatorluğu askeri ve siyasi birliklerin ihtiyaçlarını karşılamak için tasarlandı.",
+      "The arena's capacity of 24,000 was designed to host the imperial armies' games and spectacles of state.",
+    ),
+    f(
+      "Maison Carrée'nin 26 metre uzunluğu, MS 19'da Augustus'un torunları için inşa edilen tapınak için orantılarla hesaplanmıştır.",
+      "The Maison Carrée was 26 metres long, proportioned for the temple built in AD 19 for Augustus' grandsons.",
+    ),
+    f(
+      "Pont du Gard, MS 30'larda Nimes'in kuzey surlarına bağlanarak kentin suyunu 50 kilometreye taşımıştır.",
+      "The Pont du Gard carried water sixty kilometres to Nimes in the 30s AD.",
+    ),
+  ],
+  trier: [
+    f(
+      "Porta Nigra, MS 100 civarında Roma kolonisine yaptırılan sur kapısıydı; MS 4. yüzyılda Batı Roma başkentine dönüştürüldü.",
+      "The Porta Nigra was the gate built for a Roman colony around the first century BC and made the capital of the western empire in the fourth century AD.",
+    ),
+    f(
+      "Trier amfitiyatrosu, MS 2. yüzyılda Roma imparatorluğu askeri birliğinin ihtiyaçlarını karşılamak için inşa edildi.",
+      "The Trier amphitheatre was built in the second century AD for the needs of the Roman armies.",
+    ),
+    f(
+      "Augusta Treverorum, imparatorluk sarayları, hamamları ve sütunlu avlusuyla Roma'nın en son Batı Avrupa başkentlerinden biriydi.",
+      "Augusta Treverorum was one of the last western European capitals of the Roman empire, with imperial palaces, baths and a colonnaded square.",
+    ),
+  ],
+
 };
 
 /** The extra facts for a site, or an empty list when none are written yet. */

@@ -39,13 +39,17 @@ describe("the site list", () => {
   });
 
   test("every site sits inside Türkiye", () => {
-    const stray = sites.filter(
-      (s) =>
-        s.lat < TR_BOUNDS.minLat ||
-        s.lat > TR_BOUNDS.maxLat ||
-        s.lng < TR_BOUNDS.minLng ||
-        s.lng > TR_BOUNDS.maxLng,
-    );
+    // The four European cities are reconstructed in the same app, but they stand
+    // where they stand, not in Turkey; only a Turkish site is checked here.
+    const stray = sites
+      .filter((s) => s.country === "TR")
+      .filter(
+        (s) =>
+          s.lat < TR_BOUNDS.minLat ||
+          s.lat > TR_BOUNDS.maxLat ||
+          s.lng < TR_BOUNDS.minLng ||
+          s.lng > TR_BOUNDS.maxLng,
+      );
     expect(stray.map((s) => `${s.slug} (${s.lat}, ${s.lng})`)).toEqual([]);
   });
 

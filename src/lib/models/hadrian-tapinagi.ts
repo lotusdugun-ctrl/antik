@@ -259,9 +259,10 @@ export function prostyleParts(spec: ProstyleTempleSpec): Part[] {
   // The ceiling of the porch.
   parts.push(box("marble", [0, top + H * 0.2, (z0 + wallZ) / 2], [W - 0.2, 0.2, -z0]));
 
-  /* ---- the four statue bases on the street, the tetrarchs on them ---- */
+  /* ---- the statue bases on the street, the tetrarchs on them ---- */
+  const step = spec.statueBases > 1 ? (W - 1.2) / (spec.statueBases - 1) : 0;
   for (let i = 0; i < spec.statueBases; i += 1) {
-    const x = -W / 2 + 0.6 + (i * (W - 1.2)) / (spec.statueBases - 1);
+    const x = -W / 2 + 0.6 + i * step;
     const at: Vec3 = [x, 0, L.street + 0.6];
     parts.push(box("marble", at, [0.95, 0.25, 0.95]));
     parts.push(box("marble", [x, 0.25, at[2]], [0.78, 1.25, 0.78]));

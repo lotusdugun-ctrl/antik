@@ -86,7 +86,7 @@ export function gateLife(spec: RomanGateSpec, era: Era, id: string): SceneLife {
         ...amphora([cx - 0.5 + (i % 2) * 0.5, 0.85, -D / 2 - 14.6 + Math.floor(i / 2) * 0.5], 0.8),
       );
     const T = spec.towerSide ?? 7;
-    const guardX = -(L.width / 2 + 1.2);
+    const guardX = lanes[0]! - 1.8;
     cast.add({
       at: [guardX, 0, -D / 2 - 3],
       rotY: PI * 0.8,
@@ -102,7 +102,8 @@ export function gateLife(spec: RomanGateSpec, era: Era, id: string): SceneLife {
       carry: "shield",
     });
     cast.add({ at: [cx + 1.6, 0, -D / 2 - 9.5], rotY: -PI * 0.3, action: "talk", role: "worker" });
-    trades.beggar(b, [L.piersX[2]!, 0, -D / 2 - 1.4], PI);
+    const beggarZ = -D / 2 - (spec.columnDiameter ? spec.columnDiameter * 1.2 + 1.2 : 2.5);
+    trades.beggar(b, [L.piersX[2]!, 0, beggarZ], PI);
     // A crowd at the sellers outside the gate.
     cast.group([L.width / 2 + T + 2, 0, -D / 2 - 8.2], 3, 0.7);
     // Inside the walls: children playing and a man drawing water.

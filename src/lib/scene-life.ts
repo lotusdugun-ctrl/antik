@@ -42,6 +42,9 @@ import {
 } from "@/lib/models/anadolu-yeni-life";
 import * as trades from "@/lib/scene-trades";
 import type {
+  AmphitheatreSpec,
+  CityPlacement,
+  CitySpec,
   GreatAltarSpec,
   IonicDipterosSpec,
   MausoleumSpec,
@@ -58,7 +61,7 @@ import type {
  * The life of a place, as opposed to its stone.
  *
  * `reconstruction-parts.ts` builds what was measured; this module fills it with
- * what was not — the people, fires and furniture that a building existed for.
+ * what was not â€” the people, fires and furniture that a building existed for.
  * None of it is a claim about a particular day: the dress, the offerings and
  * the lamps follow what each period wore and used, and where they stand
  * follows the building, but the scene itself is an illustration. That is why
@@ -126,7 +129,7 @@ export type Headwear =
   /** A pointed hood, as monks and priests wore it. */
   | "hood"
   /**
-   * The felt cap of craftsmen, sailors and travellers — Hephaistos wears it on
+   * The felt cap of craftsmen, sailors and travellers â€” Hephaistos wears it on
    * the vases, and every potter and smith in the street did.
    */
   | "pilos"
@@ -206,7 +209,7 @@ export type Carry =
 
 /**
  * What they are doing. `walk` follows `route`; the others stay where they are
- * and move the way that activity moves — a speaker's hand, a reader's bowed
+ * and move the way that activity moves â€” a speaker's hand, a reader's bowed
  * head, the raised arms of prayer, an actor playing to the back row.
  */
 export type Action =
@@ -348,7 +351,7 @@ export type HairStyle =
   /**
    * The Trajanic "orbis": a high crescent of tight curls built up over the
    * brow on a frame, the hair behind braided and coiled into a nest at the
-   * crown — the fashion of the empress Plotina and of the well-off women of
+   * crown â€” the fashion of the empress Plotina and of the well-off women of
    * the years the library was built.
    */
   | "orbis"
@@ -362,7 +365,7 @@ const ROMAN_HAIR_STYLES: HairStyle[] = [...HAIR_STYLES, "orbis"];
 
 /**
  * A choice made from colours already rolled, so it costs no extra roll of
- * the die: every later roll — where people stand, which way they walk —
+ * the die: every later roll â€” where people stand, which way they walk â€”
  * stays exactly as it was.
  */
 const choose = (seed: number, n: number) => (((seed * 2654435761) >>> 0) >>> 8) % n;
@@ -387,7 +390,7 @@ export type Person = {
   /** Offsets their animation, so a crowd does not move in step. */
   phase: number;
   /**
-   * A walker who stops now and then — to look, to rest, to greet someone —
+   * A walker who stops now and then â€” to look, to rest, to greet someone â€”
    * for this share of the time, in pauses of a few seconds.
    */
   pause?: number;
@@ -570,10 +573,10 @@ type Role =
 
 /**
  * Dress someone for their period and their part in the scene. The rules are
- * broad on purpose — a Roman in a provincial city mostly wore a tunic and a
+ * broad on purpose â€” a Roman in a provincial city mostly wore a tunic and a
  * Greek mantle, not a toga; a woman went out with her mantle drawn over her
  * head; a Commagenian priest wore the Persian dress the king's law laid down
- * for him — and within them every choice is a die roll, so no two people in
+ * for him â€” and within them every choice is a die roll, so no two people in
  * a crowd are dressed alike.
  */
 function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
@@ -582,7 +585,7 @@ function dress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
 
 const GREY_HAIR = 0x9a948a;
 const WHITE_HAIR = 0xd9d4ca;
-/** Fairer skins, more common in the north — the Pontic valleys, the Caucasus. */
+/** Fairer skins, more common in the north â€” the Pontic valleys, the Caucasus. */
 const FAIR_SKIN = [0xe0bc98, 0xd9b08c, 0xe6c4a2];
 /**
  * Darker skins: the ports of Roman Asia had Egyptian, Nubian and Syrian
@@ -1117,8 +1120,8 @@ function baseDress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
         const trim = pick(rand, GREEK_CLOTH);
         /*
          * Most women in the street went bareheaded, their hair dressed; a
-         * mantle drawn up over the head was for some — a matron at a rite,
-         * or out in the sun — not the rule.
+         * mantle drawn up over the head was for some â€” a matron at a rite,
+         * or out in the sun â€” not the rule.
          */
         const veiled = rand() < 0.12;
         const styles = era === "roman" ? ROMAN_HAIR_STYLES : HAIR_STYLES;
@@ -1164,7 +1167,7 @@ type PersonInit = Omit<Person, "look" | "height" | "phase"> & {
 };
 
 type WalkInit = Omit<PersonInit, "at" | "rotY" | "action" | "route"> & {
-  /** How they go: a march, a sweep of the broom, a run — a walk by default. */
+  /** How they go: a march, a sweep of the broom, a run â€” a walk by default. */
   gait?: Action;
 };
 
@@ -1247,7 +1250,7 @@ class Cast {
 /**
  * Every statue stands in a real scan of an ancient statue of the same type,
  * never in the procedural figure, which reads as a doll: Athena in a
- * caryatid of her own Erechtheion, Zeus in the bearded Neptune of Nîmes, an
+ * caryatid of her own Erechtheion, Zeus in the bearded Neptune of NÃ®mes, an
  * emperor in the veiled Tiberius. A bronze or gilded statue takes the same
  * scans; the renderer gives the surface the colour of the metal.
  */
@@ -1506,7 +1509,7 @@ function armarium(at: Vec3, width: number, height: number, rotY: number, rand: R
       ),
     );
   }
-  const tags: Material[] = ["paintRed", "paintBlue", "paintGold", "linen"];
+  const tags: Material[] = ["paintRed", "paintBlue", "paintGold"];
   for (let s = 0; s < shelves; s += 1) {
     const perRow = Math.floor((width - 0.1) / 0.085);
     for (let k = 0; k < perRow; k += 1) {
@@ -1843,7 +1846,7 @@ function stoneBench(at: Vec3, length: number, rotY: number): Part[] {
   ];
 }
 
-/** A dressed stone altar — garlands, bolsters, fire-tray — and its fire. */
+/** A dressed stone altar â€” garlands, bolsters, fire-tray â€” and its fire. */
 function altar(
   at: Vec3,
   w: number,
@@ -1891,8 +1894,8 @@ function make(era: Era, seed: number): Builder {
 }
 
 /**
- * The same scene, with a die of its own: what is added through it — more
- * people, their benches and workshops — takes none of the scene's own rolls,
+ * The same scene, with a die of its own: what is added through it â€” more
+ * people, their benches and workshops â€” takes none of the scene's own rolls,
  * so everyone already there stays exactly where they were.
  */
 function aside(b: Builder, salt: number): Builder {
@@ -2009,7 +2012,7 @@ function seat(b: Builder, at: Vec3, rotY: number) {
 
 /**
  * The Library of Celsus on a working morning: readers on the steps and at the
- * tables, scrolls carried in, the city crossing the square — and inside the
+ * tables, scrolls carried in, the city crossing the square â€” and inside the
  * hall, the cupboards in the niches filled with what the building was for.
  */
 function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
@@ -2033,94 +2036,96 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   /*
    * The square in front: people crossing it, and stopping to talk. They
    * cross in front of the horsemen's plinths (2.6 m before the stair, 3.4 m
-   * deep), not through them, which is where a crossing ending at x = ±12
+   * deep), not through them, which is where a crossing ending at x = Â±12
    * had walked a third of them.
    */
   const plinthFront = stairFoot - 2.6 - 1.7;
-  for (let i = 0; i < 9; i += 1) {
-    const z = between(rand, stairFoot - 9, plinthFront - 2);
-    const dir = rand() < 0.5 ? 1 : -1;
-    const x0 = dir * -12;
-    cast.walk(
-      [
-        [x0, 0, z],
-        [-x0, 0, z + between(rand, -1.5, 1.5)],
-      ],
-      {
-        role: rand() < 0.25 ? "worker" : "citizen",
-        ...(rand() < 0.3
-          ? { carry: pick(rand, ["amphora", "basket", "jar", "scroll"] as const) }
-          : {}),
-      },
-    );
+  if (spec.inscribed !== false) {
+    for (let i = 0; i < 9; i += 1) {
+      const z = between(rand, stairFoot - 9, plinthFront - 2);
+      const dir = rand() < 0.5 ? 1 : -1;
+      const x0 = dir * -12;
+      cast.walk(
+        [
+          [x0, 0, z],
+          [-x0, 0, z + between(rand, -1.5, 1.5)],
+        ],
+        {
+          role: rand() < 0.25 ? "worker" : "citizen",
+          ...(rand() < 0.3
+            ? { carry: pick(rand, ["amphora", "basket", "jar", "scroll"] as const) }
+            : {}),
+        },
+      );
+    }
+    /*
+     * Through the Gate of Mazaeus and Mithridates (`models/efes-mazaeus-kapisi.ts`):
+     * people coming out of the agora by the middle opening, crossing the square,
+     * and going back in by the side ones.
+     */
+    // (Not by the opening on the library side: the horseman's plinth stands in front of it.)
+    for (let i = 0; i < 4; i += 1) {
+      const lane = [-9.2, -9.2, -14.0, -14.0][i]!;
+      const off = between(rand, -0.3, 0.3);
+      cast.walk(
+        [
+          [-27, 0, lane + off],
+          [-13.5, 0, lane + off],
+          [between(rand, -7, -3), 0, between(rand, stairFoot - 14, stairFoot - 5.8)],
+          [-13.5, 0, lane - off],
+        ],
+        {
+          role: rand() < 0.4 ? "worker" : "citizen",
+          ...(rand() < 0.5
+            ? { carry: pick(rand, ["amphora", "basket", "jar", "scroll"] as const) }
+            : {}),
+        },
+      );
+    }
+    /*
+     * Down Curetes Street to the square, and back up it; and along Marble
+     * Street from the north (`models/efes-mazaeus-kapisi.ts`).
+     */
+    for (let i = 0; i < 5; i += 1) {
+      const x = between(rand, 2.2, 7.8);
+      cast.walk(
+        [
+          [x, 0, -50],
+          [x + between(rand, -0.6, 0.6), 0, -24],
+          [between(rand, 3, 8), 0, between(rand, stairFoot - 14, stairFoot - 6)],
+          [x, 0, -24],
+        ],
+        {
+          role: rand() < 0.35 ? "worker" : "citizen",
+          ...(rand() < 0.4 ? { carry: pick(rand, ["amphora", "basket", "jar"] as const) } : {}),
+        },
+      );
+    }
+    for (let i = 0; i < 3; i += 1) {
+      const z = between(rand, -31.8, -27.8);
+      cast.walk(
+        [
+          [-50, 0, z],
+          [-14, 0, z],
+          [between(rand, -9, -4), 0, between(rand, stairFoot - 15, stairFoot - 8)],
+          [-14, 0, z],
+        ],
+        { role: rand() < 0.5 ? "worker" : "citizen" },
+      );
+    }
+    cast.group([4.6, 0, -40], 2, 0.6);
+    cast.group([-40, 0, -30.4], 3);
+    cast.group([-4.5, 0, stairFoot - 2.4], 3);
+    cast.group([5.2, 0, stairFoot - 4.2], 2, 0.6);
+    cast.group([-8.5, 0, stairFoot - 6.5], 2, 0.6);
   }
-  /*
-   * Through the Gate of Mazaeus and Mithridates (`models/efes-mazaeus-kapisi.ts`):
-   * people coming out of the agora by the middle opening, crossing the square,
-   * and going back in by the side ones.
-   */
-  // (Not by the opening on the library side: the horseman's plinth stands in front of it.)
-  for (let i = 0; i < 4; i += 1) {
-    const lane = [-9.2, -9.2, -14.0, -14.0][i]!;
-    const off = between(rand, -0.3, 0.3);
-    cast.walk(
-      [
-        [-27, 0, lane + off],
-        [-13.5, 0, lane + off],
-        [between(rand, -7, -3), 0, between(rand, stairFoot - 14, stairFoot - 5.8)],
-        [-13.5, 0, lane - off],
-      ],
-      {
-        role: rand() < 0.4 ? "worker" : "citizen",
-        ...(rand() < 0.5
-          ? { carry: pick(rand, ["amphora", "basket", "jar", "scroll"] as const) }
-          : {}),
-      },
-    );
-  }
-  /*
-   * Down Curetes Street to the square, and back up it; and along Marble
-   * Street from the north (`models/efes-mazaeus-kapisi.ts`).
-   */
-  for (let i = 0; i < 5; i += 1) {
-    const x = between(rand, 2.2, 7.8);
-    cast.walk(
-      [
-        [x, 0, -50],
-        [x + between(rand, -0.6, 0.6), 0, -24],
-        [between(rand, 3, 8), 0, between(rand, stairFoot - 14, stairFoot - 6)],
-        [x, 0, -24],
-      ],
-      {
-        role: rand() < 0.35 ? "worker" : "citizen",
-        ...(rand() < 0.4 ? { carry: pick(rand, ["amphora", "basket", "jar"] as const) } : {}),
-      },
-    );
-  }
-  for (let i = 0; i < 3; i += 1) {
-    const z = between(rand, -31.8, -27.8);
-    cast.walk(
-      [
-        [-50, 0, z],
-        [-14, 0, z],
-        [between(rand, -9, -4), 0, between(rand, stairFoot - 15, stairFoot - 8)],
-        [-14, 0, z],
-      ],
-      { role: rand() < 0.5 ? "worker" : "citizen" },
-    );
-  }
-  cast.group([4.6, 0, -40], 2, 0.6);
-  cast.group([-40, 0, -30.4], 3);
-  cast.group([-4.5, 0, stairFoot - 2.4], 3);
-  cast.group([5.2, 0, stairFoot - 4.2], 2, 0.6);
-  cast.group([-8.5, 0, stairFoot - 6.5], 2, 0.6);
   // The three doors, the middle one the widest.
   const bayCentres = [
     -((w * 0.152) / 2 + w * 0.152 + (w * 0.114) / 2),
     0,
     (w * 0.152) / 2 + w * 0.152 + (w * 0.114) / 2,
   ];
-  // Up and down the nine steps, to the doors and back — in line with a
+  // Up and down the nine steps, to the doors and back â€” in line with a
   // door, not with the podium of an aedicula between two of them.
   // Tread by tread, and back down the same way.
   const stair = (x: number): Vec3[] => {
@@ -2139,41 +2144,44 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
       speed: 0.8,
     });
   }
-  // Readers sitting on the steps in the sun, scrolls open on their knees.
-  for (const [x, step] of [
-    [-6.2, 2],
-    [-5.4, 2],
-    [6.8, 3],
-    [-1.0, 5],
-  ] as const) {
-    const p = stepTop(step);
+  if (spec.inscribed !== false) {
+    // Readers sitting on the steps in the sun, scrolls open on their knees.
+    for (const [x, step] of [
+      [-6.2, 2],
+      [-5.4, 2],
+      [6.8, 3],
+      [-1.0, 5],
+    ] as const) {
+      if (step >= spec.steps) continue;
+      const p = stepTop(step);
+      cast.add({
+        at: [x, p[1], p[2]],
+        rotY: Math.PI,
+        action: rand() < 0.7 ? "read" : "talk",
+        carry: "scroll",
+      });
+    }
+    // A teacher and his pupils at the foot of the steps.
     cast.add({
-      at: [x, p[1], p[2]],
-      rotY: Math.PI,
-      action: rand() < 0.7 ? "read" : "talk",
+      at: [-8.6, 0, stairFoot - 1.4],
+      rotY: Math.PI * 0.85,
+      action: "lecture",
       carry: "scroll",
+      role: "official",
     });
-  }
-  // A teacher and his pupils at the foot of the steps.
-  cast.add({
-    at: [-8.6, 0, stairFoot - 1.4],
-    rotY: Math.PI * 0.85,
-    action: "lecture",
-    carry: "scroll",
-    role: "official",
-  });
-  for (let i = 0; i < 3; i += 1) {
-    cast.add({
-      at: [-8.0 + i * 0.7, 0, stairFoot - 2.6 - (i % 2) * 0.4],
-      rotY: facing(-0.6 - i * 0.7, 1.2),
-      action: "stand",
-      role: "child",
-    });
-  }
+    for (let i = 0; i < 3; i += 1) {
+      cast.add({
+        at: [-8.0 + i * 0.7, 0, stairFoot - 2.6 - (i % 2) * 0.4],
+        rotY: facing(-0.6 - i * 0.7, 1.2),
+        action: "stand",
+        role: "child",
+      });
+    }
 
-  // A stall selling ink, pens and papyrus at the edge of the square.
-  b.props.push(...stall([-11.8, 0, stairFoot - 7.5], 0.35, rand, "books"));
-  cast.add({ at: [-11.4, 0, stairFoot - 8.4], rotY: 0.35, action: "talk", role: "worker" });
+    // A stall selling ink, pens and papyrus at the edge of the square.
+    b.props.push(...stall([-11.8, 0, stairFoot - 7.5], 0.35, rand, "books"));
+    cast.add({ at: [-11.4, 0, stairFoot - 8.4], rotY: 0.35, action: "talk", role: "worker" });
+  }
 
   // Torches either side of each door, and a brazier at each horseman.
   const doorHalf = [w * 0.114 * 0.36, w * 0.152 * 0.36, w * 0.114 * 0.36];
@@ -2187,186 +2195,210 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
   }
 
   /* The hall. */
-  // The cupboards in the niches, two storeys of them.
-  const nicheWidth = 1.1;
-  for (let storey = 0; storey < 2; storey += 1) {
-    const base = y0 + 1 + storey * (spec.nicheHeight + 0.5);
-    if (base + spec.nicheHeight > y0 + spec.wallHeight) continue;
-    for (let i = 0; i < 4; i += 1) {
-      const x = -halfHall + (halfHall * 2 * (i + 0.5)) / 4;
-      if (Math.abs(x) < spec.apseWidth / 2 + 0.8) continue;
-      b.props.push(
-        ...armarium([x, base, hallBack - 0.38], nicheWidth - 0.08, spec.nicheHeight, Math.PI, rand),
-      );
-    }
-    for (const side of [-1, 1]) {
-      for (let i = 0; i < 3; i += 1) {
-        const z = hallFront + (spec.hallDepth * (i + 0.5)) / 3;
+  if (spec.inscribed !== false) {
+    // The cupboards in the niches, two storeys of them.
+    const nicheWidth = 1.1;
+    for (let storey = 0; storey < 2; storey += 1) {
+      const base = y0 + 1 + storey * (spec.nicheHeight + 0.5);
+      if (base + spec.nicheHeight > y0 + spec.wallHeight) continue;
+      for (let i = 0; i < 4; i += 1) {
+        const x = -halfHall + (halfHall * 2 * (i + 0.5)) / 4;
+        if (Math.abs(x) < spec.apseWidth / 2 + 0.8) continue;
         b.props.push(
           ...armarium(
-            [side * (halfHall - 0.38), base, z],
+            [x, base, hallBack - 0.38],
             nicheWidth - 0.08,
             spec.nicheHeight,
-            side > 0 ? -Math.PI / 2 : Math.PI / 2,
+            Math.PI,
             rand,
           ),
         );
       }
+      for (const side of [-1, 1]) {
+        for (let i = 0; i < 3; i += 1) {
+          const z = hallFront + (spec.hallDepth * (i + 0.5)) / 3;
+          b.props.push(
+            ...armarium(
+              [side * (halfHall - 0.38), base, z],
+              nicheWidth - 0.08,
+              spec.nicheHeight,
+              side > 0 ? -Math.PI / 2 : Math.PI / 2,
+              rand,
+            ),
+          );
+        }
+      }
     }
-  }
-  // Athena in the apse, goddess of wisdom, over the tomb of the founder.
-  b.props.push(box("marbleWorn", [0, floor, hallBack + 0.9], [1.6, 1.0, 1.2]));
-  b.props.push(
-    decor({
-      kind: "figure",
-      material: "marble",
-      at: [0, floor + 1.0, hallBack + 0.9],
-      height: 3.1,
-      rotY: Math.PI,
-      identity: STATUES.athena,
-      paint: { cloth: 0xe7dcc4, mantle: 0x8fa4b8, hair: 0x7a5a3c, accent: 0xc8a24a },
-    }),
-  );
-  /*
-   * Portraits of the authors, as Roman libraries had them: herms of the
-   * historians and philosophers on pillars along the hall — Herodotus of
-   * Halicarnassus among them, from just down the coast.
-   */
-  const herms: ScanId[] = [
-    "herm-thucydides-herodotus",
-    "herm-plato",
-    "herm-socrates-seneca",
-    "herm-epicurus-metrodorus",
-  ];
-  herms.forEach((id, i) => {
-    const side = i % 2 === 0 ? -1 : 1;
-    const x = side * (halfHall - 1.7);
-    const z = hallFront + (i < 2 ? 1.4 : spec.hallDepth - 1.8);
-    b.props.push(box("marbleWorn", [x, floor, z], [0.5, 1.15, 0.5]));
+    // Athena in the apse, goddess of wisdom, over the tomb of the founder.
+    b.props.push(box("marbleWorn", [0, floor, hallBack + 0.9], [1.6, 1.0, 1.2]));
     b.props.push(
       decor({
         kind: "figure",
         material: "marble",
-        at: [x, floor + 1.15, z],
-        height: 0.62,
-        rotY: side < 0 ? Math.PI / 2 : -Math.PI / 2,
-        scan: { id },
+        at: [0, floor + 1.0, hallBack + 0.9],
+        height: 3.1,
+        rotY: Math.PI,
+        identity: STATUES.athena,
+        paint: { cloth: 0xe7dcc4, mantle: 0x8fa4b8, hair: 0x7a5a3c, accent: 0xc8a24a },
       }),
     );
-  });
-  // Reading tables down the middle of the hall, and lamps between them.
-  for (const [tz, tx] of [
-    [hallFront + 2.6, -2.6],
-    [hallFront + 2.6, 2.6],
-    [hallFront + 6.4, -2.6],
-    [hallFront + 6.4, 2.6],
-  ] as const) {
-    b.props.push(...table([tx, floor, tz], 2.2, 0.9));
-    b.props.push(...scrolls([tx, floor + 0.75, tz], 3, 0, rand));
-    for (const side of [-1, 1]) {
-      b.props.push(...bench([tx, floor, tz + side * 0.85], 2.0));
+    /*
+     * Portraits of the authors, as Roman libraries had them: herms of the
+     * historians and philosophers on pillars along the hall — Herodotus of
+     * Halicarnassus among them, from just down the coast.
+     */
+    const herms: ScanId[] = [
+      "herm-thucydides-herodotus",
+      "herm-plato",
+      "herm-socrates-seneca",
+      "herm-epicurus-metrodorus",
+    ];
+    herms.forEach((id, i) => {
+      const side = i % 2 === 0 ? -1 : 1;
+      const x = side * (halfHall - 1.7);
+      const z = hallFront + (i < 2 ? 1.4 : spec.hallDepth - 1.8);
+      b.props.push(box("marbleWorn", [x, floor, z], [0.5, 1.15, 0.5]));
+      b.props.push(
+        decor({
+          kind: "figure",
+          material: "marble",
+          at: [x, floor + 1.15, z],
+          height: 0.62,
+          rotY: side < 0 ? Math.PI / 2 : -Math.PI / 2,
+          scan: { id },
+        }),
+      );
+    });
+    // Reading tables down the middle of the hall, and lamps between them.
+    for (const [tz, tx] of [
+      [hallFront + 2.6, -2.6],
+      [hallFront + 2.6, 2.6],
+      [hallFront + 6.4, -2.6],
+      [hallFront + 6.4, 2.6],
+    ] as const) {
+      b.props.push(...table([tx, floor, tz], 2.2, 0.9));
+      b.props.push(...scrolls([tx, floor + 0.75, tz], 3, 0, rand));
+      for (const side of [-1, 1]) {
+        b.props.push(...bench([tx, floor, tz + side * 0.85], 2.0));
+      }
+      const readers = 1 + Math.floor(rand() * 3);
+      for (let r = 0; r < readers; r += 1) {
+        const side = r % 2 === 0 ? -1 : 1;
+        cast.add({
+          at: [tx - 0.7 + r * 0.7, floor + 0.46, tz + side * 0.85],
+          rotY: side < 0 ? 0 : Math.PI,
+          action: "read",
+          carry: "scroll",
+        });
+      }
     }
-    const readers = 1 + Math.floor(rand() * 3);
-    for (let r = 0; r < readers; r += 1) {
-      const side = r % 2 === 0 ? -1 : 1;
-      cast.add({
-        at: [tx - 0.7 + r * 0.7, floor + 0.46, tz + side * 0.85],
-        rotY: side < 0 ? 0 : Math.PI,
-        action: "read",
-        carry: "scroll",
-      });
+    for (const [lx, lz] of [
+      [0, hallFront + 1.2],
+      [0, hallFront + 4.5],
+      [0, hallFront + 8.2],
+      [-6.2, hallFront + 4.5],
+      [6.2, hallFront + 4.5],
+    ] as const) {
+      fire(b, lampstand([lx, floor, lz], 1.6), 0.12, lx === 0 && lz > hallFront + 4);
     }
+    // A librarian fetching from the shelves, and a slave carrying the box of
+    // scrolls a reader asked for.
+    cast.add({
+      at: [-5.9, floor, hallBack - 1.3],
+      rotY: 0,
+      action: "read",
+      carry: "scroll",
+      role: "official",
+    });
+    // Down the hall inside the line of the herms, not through them.
+    cast.walk(
+      [
+        [-5.7, floor, hallFront + 1.6],
+        [-5.7, floor, hallBack - 1.6],
+        [5.7, floor, hallBack - 1.6],
+        [5.7, floor, hallFront + 1.6],
+      ],
+      // A library slave fetching rolls from the cupboards, in their round box.
+      { role: "worker", carry: "capsa", speed: 0.7 },
+    );
+  } else {
+    // In a basilica or civic hall: a magistrate and citizens conducting civic affairs.
+    cast.add({
+      at: [0, floor, hallFront + spec.hallDepth * 0.5],
+      rotY: 0,
+      action: "talk",
+      role: "official",
+    });
+    cast.add({
+      at: [1.2, floor, hallFront + spec.hallDepth * 0.5],
+      rotY: Math.PI,
+      action: "talk",
+      role: "citizen",
+    });
   }
-  for (const [lx, lz] of [
-    [0, hallFront + 1.2],
-    [0, hallFront + 4.5],
-    [0, hallFront + 8.2],
-    [-6.2, hallFront + 4.5],
-    [6.2, hallFront + 4.5],
-  ] as const) {
-    fire(b, lampstand([lx, floor, lz], 1.6), 0.12, lx === 0 && lz > hallFront + 4);
-  }
-  // A librarian fetching from the shelves, and a slave carrying the box of
-  // scrolls a reader asked for.
-  cast.add({
-    at: [-5.9, floor, hallBack - 1.3],
-    rotY: 0,
-    action: "read",
-    carry: "scroll",
-    role: "official",
-  });
-  // Down the hall inside the line of the herms, not through them.
-  cast.walk(
-    [
-      [-5.7, floor, hallFront + 1.6],
-      [-5.7, floor, hallBack - 1.6],
-      [5.7, floor, hallBack - 1.6],
-      [5.7, floor, hallFront + 1.6],
-    ],
-    // A library slave fetching rolls from the cupboards, in their round box.
-    { role: "worker", carry: "capsa", speed: 0.7 },
-  );
-  // A donkey with panniers led across the square, and the town's dogs.
-  animal(b, "donkey", [12, 0, stairFoot - 5.6], 0, "walk", {
-    route: [
-      [12, 0, stairFoot - 5.6],
-      [-12, 0, stairFoot - 6.4],
-    ],
-    speed: 0.75,
-    load: true,
-  });
-  cast.walk(
-    [
-      [12.9, 0, stairFoot - 5.6],
-      [-11.1, 0, stairFoot - 6.4],
-    ],
-    { role: "worker", carry: "staff", speed: 0.75 },
-  );
-  dog(b, [
-    [-9, 0, stairFoot - 3],
-    [-3, 0, stairFoot - 8],
-    [4, 0, stairFoot - 4],
-  ]);
-  dog(b, [7.6, 0, stairFoot - 1.6]);
+  if (spec.inscribed !== false) {
+    // A donkey with panniers led across the square, and the town's dogs.
+    animal(b, "donkey", [12, 0, stairFoot - 5.6], 0, "walk", {
+      route: [
+        [12, 0, stairFoot - 5.6],
+        [-12, 0, stairFoot - 6.4],
+      ],
+      speed: 0.75,
+      load: true,
+    });
+    cast.walk(
+      [
+        [12.9, 0, stairFoot - 5.6],
+        [-11.1, 0, stairFoot - 6.4],
+      ],
+      { role: "worker", carry: "staff", speed: 0.75 },
+    );
+    dog(b, [
+      [-9, 0, stairFoot - 3],
+      [-3, 0, stairFoot - 8],
+      [4, 0, stairFoot - 4],
+    ]);
+    dog(b, [7.6, 0, stairFoot - 1.6]);
 
-  /*
-   * The square's own business, beside the library's: children at
-   * knucklebones by the steps, a letter-writer for those who could not
-   * write, a money-changer at the corner by the agora gate, a philosopher
-   * with his listeners, a piper, a beggar at the horseman's base, a slave
-   * sweeping the foot of the stair, porters under a pole, old men on a bench.
-   */
-  const x = aside(b, 9002);
-  const sf = stairFoot;
-  trades.knucklebones(x, [-1.2, 0, sf - 4.8], 0.4);
-  trades.scribe(x, [-3.1, 0, sf - 1.3], Math.PI, { outfit: { old: true } });
-  trades.changer(x, [-11.5, 0, sf - 11.5], Math.PI / 2);
-  trades.lecture(x, [-5.5, 0, sf - 15.2], 0, 2);
-  trades.busker(x, [3.0, 0, sf - 12.9], 0, "aulos");
-  trades.beggar(x, [10.0, 0, sf - 4.7], Math.PI);
-  trades.sweeper(x, [
-    [-3, 0, sf - 0.9],
-    [3.4, 0, sf - 0.9],
-  ]);
-  trades.porters(x, [
-    [-10, 0, sf - 9.4],
-    [9, 0, sf - 9.4],
-    [9, 0, sf - 8.95],
-    [-10, 0, sf - 8.95],
-  ]);
-  trades.handInHand(
-    x,
-    [
-      [-8, 0, sf - 10],
-      [6, 0, sf - 10],
-      [6, 0, sf - 9.6],
-      [-8, 0, sf - 9.6],
-    ],
-    0.46,
-    { female: true },
-  );
-  trades.gazer(x, [3.0, 0, sf - 5.2], [1.5, 6, 0], {}, true);
-  trades.elders(x, [5.2, 0, sf - 15.0], 0);
+    /*
+     * The square's own business, beside the library's: children at
+     * knucklebones by the steps, a letter-writer for those who could not
+     * write, a money-changer at the corner by the agora gate, a philosopher
+     * with his listeners, a piper, a beggar at the horseman's base, a slave
+     * sweeping the foot of the stair, porters under a pole, old men on a bench.
+     */
+    const x = aside(b, 9002);
+    const sf = stairFoot;
+    trades.knucklebones(x, [-1.2, 0, sf - 4.8], 0.4);
+    trades.scribe(x, [-3.1, 0, sf - 1.3], Math.PI, { outfit: { old: true } });
+    trades.changer(x, [-11.5, 0, sf - 11.5], Math.PI / 2);
+    trades.lecture(x, [-5.5, 0, sf - 15.2], 0, 2);
+    trades.busker(x, [3.0, 0, sf - 12.9], 0, "aulos");
+    trades.beggar(x, [10.0, 0, sf - 4.7], Math.PI);
+    trades.sweeper(x, [
+      [-3, 0, sf - 0.9],
+      [3.4, 0, sf - 0.9],
+    ]);
+    trades.porters(x, [
+      [-10, 0, sf - 9.4],
+      [9, 0, sf - 9.4],
+      [9, 0, sf - 8.95],
+      [-10, 0, sf - 8.95],
+    ]);
+    trades.handInHand(
+      x,
+      [
+        [-8, 0, sf - 10],
+        [6, 0, sf - 10],
+        [6, 0, sf - 9.6],
+        [-8, 0, sf - 9.6],
+      ],
+      0.46,
+      { female: true },
+    );
+    trades.gazer(x, [3.0, 0, sf - 5.2], [1.5, 6, 0], {}, true);
+    trades.elders(x, [5.2, 0, sf - 15.0], 0);
+  }
   return finish(b);
 }
 
@@ -2384,7 +2416,7 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
 
   /*
    * The audience. Fuller near the front, thinner at the back and the ends,
-   * with blocks left empty the way a real house fills — and capped, because
+   * with blocks left empty the way a real house fills â€” and capped, because
    * every one of them is drawn.
    */
   const budget = 2600;
@@ -2523,7 +2555,7 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
   /*
    * Along the walkway and back. A route of more than two points is a loop,
    * and this one used to close with a straight line from one end of the
-   * walkway to the other — so the seller flew across the cavea, nine metres
+   * walkway to the other â€” so the seller flew across the cavea, nine metres
    * up, every lap.
    */
   const lap = [...arc, ...arc.slice(1, -1).reverse()];
@@ -2644,7 +2676,7 @@ function theatreLife(spec: RomanTheatreSpec, era: Era, seed: number): SceneLife 
 /**
  * A great Ionic temple on a festival day: a procession with offerings coming
  * to the altar in front, the priest at the fire, worshippers on the platform
- * between the columns — and what was particular to each sanctuary inside.
+ * between the columns â€” and what was particular to each sanctuary inside.
  */
 function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
   const b = make(era, id.length * 977);
@@ -2919,8 +2951,8 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
    * Round the altar and the forecourt: a priest pouring the libation, a
    * pilgrim looking up at the columns, a beggar at the way in, a seller of
    * offering cakes, old men on a bench, children chasing. Didyma was never
-   * finished — masons worked on it for five centuries, and the building
-   * accounts were kept on stone — so its forecourt has a mason's yard and
+   * finished â€” masons worked on it for five centuries, and the building
+   * accounts were kept on stone â€” so its forecourt has a mason's yard and
    * the clerk who wrote them; at Aizanoi a sculptor works on a votive
    * statue; at Ephesus the girls dance for Artemis.
    */
@@ -2950,7 +2982,7 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
 }
 
 /**
- * Göbeklitepe at a gathering: a fire in the enclosure, people in hides sitting
+ * GÃ¶beklitepe at a gathering: a fire in the enclosure, people in hides sitting
  * on the benches round the wall, a carver at work on a pillar with a flint, and
  * the great stone troughs that may have held the feast's drink.
  */
@@ -3059,7 +3091,7 @@ function enclosureLife(spec: NeolithicEnclosureSpec, era: Era): SceneLife {
     b.props.push(cyl("timber", [x, floor, z], 0.04, 0.035, 1.3, 6));
     b.flames.push({ at: [x, floor + 1.32, z], size: 0.3 });
   }
-  // Dogs by the fire — they were already living with people here — and
+  // Dogs by the fire â€” they were already living with people here â€” and
   // gazelle grazing on the plain beyond the wall.
   dog(b, [hearth[0] + 1.2, floor, hearth[2] + 1.1]);
   dog(b, [
@@ -3073,8 +3105,8 @@ function enclosureLife(spec: NeolithicEnclosureSpec, era: Era): SceneLife {
   flock(b, "gazelle", [-20, 0, 18], 4, 4);
 
   /*
-   * The work of the gathering: wild grain ground on a quern — the site has
-   * given up thousands of grinding stones — a knapper squatting over his
+   * The work of the gathering: wild grain ground on a quern â€” the site has
+   * given up thousands of grinding stones â€” a knapper squatting over his
    * flint with a child watching, a hide scraped on its frame, and somebody
    * bringing in a basket of grain.
    */
@@ -3132,7 +3164,7 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
   /*
    * Up the stair: the procession, from the square over the five steps round
    * the building and then the flight between the wings, tread by tread (see
-   * greatAltarParts: risers of 0.3 m, the flight 8.5 m deep) — and back down
+   * greatAltarParts: risers of 0.3 m, the flight 8.5 m deep) â€” and back down
    * the same way. Drawn as a straight ramp from a starting point already at
    * the top of the five steps, it floated over the square and sank through
    * every nosing; closed as a loop, it came back down through the building.
@@ -3180,7 +3212,7 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
       action: rand() < 0.3 ? "talk" : rand() < 0.5 ? "pray" : "stand",
     });
   }
-  // Guards either side of the foot of the stair, on the square — not where
+  // Guards either side of the foot of the stair, on the square â€” not where
   // they stood before, a metre up in the air over the second step.
   cast.add({
     at: [-spec.stairWidth / 2 + 1, 0, foot - 0.8],
@@ -3221,7 +3253,7 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
   cast.walk(led(-3, 7.4, 5), { role: "priest", carry: "staff", speed: 0.5 });
   dog(b, [spec.baseWidth * 0.3, 0, foot - 5]);
   /*
-   * The roof of the colonnade carried statues — gods, and horses — standing
+   * The roof of the colonnade carried statues â€” gods, and horses â€” standing
    * along the cornice above the columns; and in the court, the god and his
    * daughter stand either side of the fire.
    */
@@ -3270,8 +3302,8 @@ function altarLife(spec: GreatAltarSpec, era: Era): SceneLife {
   );
 
   /*
-   * The square at the foot: a scribe at work — Pergamon gave its name to
-   * parchment — a philosopher holding forth, children chasing each other,
+   * The square at the foot: a scribe at work â€” Pergamon gave its name to
+   * parchment â€” a philosopher holding forth, children chasing each other,
    * a beggar at the edge of the crowd; and in the court a priest pouring
    * the libation of wine on the fire altar.
    */
@@ -3443,7 +3475,7 @@ function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
   if (spec.vaults) {
     /*
      * Perge's chambers under the seats were shops, opening outwards under
-     * their arches — the inscriptions on them still name who sold what.
+     * their arches â€” the inscriptions on them still name who sold what.
      * Awnings over a few of them, goods set out, shopkeepers and customers.
      */
     const bay = (2 * endCentre) / spec.vaults;
@@ -3494,7 +3526,7 @@ function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
 
   /*
    * Along the arena's edge, outside the chariots' lanes: athletes waiting
-   * their turn — wrestlers at grips with their trainer watching, one
+   * their turn â€” wrestlers at grips with their trainer watching, one
    * stretching, one swinging a discus.
    */
   const x = aside(b, (seed ^ 0x2c41) >>> 0);
@@ -3522,7 +3554,7 @@ function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
   if (spec.vaults) {
     /*
      * The other shops under the seats: a potter, a butcher, a baker, a
-     * money-changer, a cook selling hot food, a carpenter — each in front of
+     * money-changer, a cook selling hot food, a carpenter â€” each in front of
      * its own arch.
      */
     const bay = (2 * endCentre) / spec.vaults;
@@ -3704,7 +3736,7 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
   /*
    * The rest of the household. In the left-hand room, behind the loom: the
    * kitchen hearth with its pots, shelves of jars, a bed with its bolster in
-   * the far corner, and the lararium — the little painted shrine of the
+   * the far corner, and the lararium â€” the little painted shrine of the
    * household gods, a lamp burning in front of it.
    */
   const ox = -sideX;
@@ -3789,8 +3821,8 @@ function houseLife(spec: PeristyleHouseSpec, era: Era): SceneLife {
 
   /*
    * The household's day besides the dinner: a painter freshening the
-   * frescoes of the side room — the Terrace Houses were repainted again and
-   * again — a slave sweeping the colonnade, a boy at his letters with his
+   * frescoes of the side room â€” the Terrace Houses were repainted again and
+   * again â€” a slave sweeping the colonnade, a boy at his letters with his
    * tutor, and a woman spinning.
    */
   const x = aside(b, 2719);
@@ -4105,8 +4137,8 @@ export const STATUES = {
 
 /**
  * The gods, Muses and worthies a Roman stage front or a temple roof was
- * crowded with. Each has the attribute that names it — Dionysos's cup and
- * thyrsos, Tyche's crown and horn, a Muse's scroll — and is dealt its own
+ * crowded with. Each has the attribute that names it â€” Dionysos's cup and
+ * thyrsos, Tyche's crown and horn, a Muse's scroll â€” and is dealt its own
  * face, so a row of them reads as a company of individuals.
  */
 const PANTHEON: FigureIdentity[] = [
@@ -4324,16 +4356,23 @@ export function lifeFor(item: Reconstruction): SceneLife {
 }
 
 function sceneFor(item: Reconstruction): SceneLife {
-  const era = ERA[item.id] ?? "roman";
-  const seed = [...item.id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
-  const spec = item.model;
+  return lifeOfSpec(item.model, ERA[item.id] ?? "roman", item.id);
+}
+
+/**
+ * The life of any model, by id. Split out so a city can give each of its
+ * monuments the scene it would have had standing alone: the same crowd on
+ * Pompeii's theatre steps, only placed on the city plan.
+ */
+function lifeOfSpec(spec: Reconstruction["model"], era: Era, id: string): SceneLife {
+  const seed = [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
   switch (spec.kind) {
     case "roman-facade":
       return facadeLife(spec, era);
     case "roman-theatre":
       return theatreLife(spec, era, seed);
     case "ionic-dipteros":
-      return templeLife(spec, era, item.id);
+      return templeLife(spec, era, id);
     case "neolithic-enclosure":
       return enclosureLife(spec, era);
     case "great-altar":
@@ -4363,7 +4402,7 @@ function sceneFor(item: Reconstruction): SceneLife {
     case "lighthouse":
       return lighthouseLife(spec, era);
     case "roman-gate":
-      return gateLife(spec, era, item.id);
+      return gateLife(spec, era, id);
     case "prostyle-temple":
       return prostyleLife(spec, era);
     case "lycian-heroon":
@@ -4388,7 +4427,242 @@ function sceneFor(item: Reconstruction): SceneLife {
       return mudbrickLife(spec, era);
     case "sphinx-gate":
       return sphinxGateLife(spec, era);
+    case "roman-amphitheatre":
+      return amphitheatreLife(spec, era, seed);
+    case "city":
+      return cityLife(spec, era, id);
   }
+}
+
+/* ------------------------------------------------------------------ *
+ * Cities and amphitheatres
+ * ------------------------------------------------------------------ */
+
+const DEG = Math.PI / 180;
+
+/** A point on an oval, and the direction that faces its centre from there. */
+function ovalPoint(a: number, b: number, theta: number): { at: Vec3; inward: number } {
+  const x = Math.cos(theta) * a;
+  const z = Math.sin(theta) * b;
+  return { at: [x, 0, z], inward: Math.atan2(-x, -z) };
+}
+
+/**
+ * A day at the games: the cavea packed, the magistrates in their box, and two
+ * pairs on the sand. Pompeii's arena held roughly 20,000; Nimes' 24,000. The
+ * crowd here is thinned to what a real-time scene can carry, seated row on
+ * row so the bank of people still reads as full from the arena floor.
+ */
+function amphitheatreLife(spec: AmphitheatreSpec, era: Era, seed: number): SceneLife {
+  const b = make(era, seed);
+  const { cast, rand } = b;
+
+  const budget = 1500;
+  const seatsPerRow = 120;
+  const density = Math.min(0.62, budget / (spec.rows * seatsPerRow));
+  for (let row = 0; row < spec.rows; row += 1) {
+    const a = spec.arenaLength / 2 + (row + 0.55) * spec.seatTread;
+    const bb = spec.arenaWidth / 2 + (row + 0.55) * spec.seatTread;
+    const y = spec.podiumHeight + (row + 1) * spec.seatRise + 0.04;
+    const n = Math.max(24, Math.round(seatsPerRow * (row / Math.max(1, spec.rows - 1))));
+    for (let k = 0; k < n; k += 1) {
+      if (rand() > density) continue;
+      const theta = (k / n) * TAU + row * 0.013;
+      const p = ovalPoint(a, bb, theta);
+      seat(b, [p.at[0], y, p.at[2]], p.inward);
+    }
+  }
+
+  // The magistrates' box on the short axis, cushioned and shaded.
+  for (let i = 0; i < 5; i += 1) {
+    const x = (i - 2) * 0.9;
+    cast.add({
+      at: [x, spec.podiumHeight + spec.seatRise + 0.3, -spec.arenaWidth / 2 + 1.2],
+      rotY: 0,
+      action: "sit",
+      role: "official",
+    });
+  }
+  b.props.push(
+    box(
+      "paintRed",
+      [0, spec.podiumHeight + spec.seatRise + 0.26, -spec.arenaWidth / 2 + 1.2],
+      [5.4, 0.1, 1.1],
+    ),
+  );
+
+  // Two pairs on the sand: a murmillo and a retiarius, and two more waiting.
+  const fighters: [number, number, number][] = [
+    [-spec.arenaLength * 0.16, -spec.arenaWidth * 0.12, 0.5],
+    [spec.arenaLength * 0.1, spec.arenaWidth * 0.08, Math.PI * 0.8],
+    [-spec.arenaLength * 0.3, spec.arenaWidth * 0.18, -0.3],
+    [spec.arenaLength * 0.28, -spec.arenaWidth * 0.16, 2.6],
+  ];
+  for (const [x, z, turn] of fighters) {
+    cast.add({
+      at: [x, 0.12, z],
+      rotY: turn,
+      action: "perform",
+      role: "soldier",
+      carry: "spear",
+      carryLeft: "shield",
+    });
+  }
+  // The referee with his staff between them.
+  cast.add({ at: [0, 0.12, 0], rotY: 0, action: "stand", role: "official", carry: "staff" });
+  // A horn player at the arena edge, and the beast-cage door men.
+  cast.add({
+    at: [-spec.arenaLength * 0.46, 0.12, 0],
+    rotY: Math.PI / 2,
+    action: "play",
+    role: "musician",
+    carry: "aulos",
+  });
+
+  // The arena floor: vendors, workers, guards at the arena gates.
+  for (const side of [-1, 1]) {
+    cast.walk(
+      [
+        [side * (spec.arenaLength * 0.38), 0, -2],
+        [side * (spec.arenaLength * 0.15), 0, 2],
+      ],
+      { role: "worker", speed: 0.7, ...(rand() < 0.5 ? { carry: "basket" as const } : {}) },
+    );
+    cast.add({
+      at: [side * (spec.arenaLength * 0.42), 0, 0],
+      rotY: side > 0 ? -Math.PI / 2 : Math.PI / 2,
+      action: "stand",
+      role: "soldier",
+      carry: "spear",
+    });
+  }
+
+  return finish(b);
+}
+
+/** Turn a finished scene onto the city plan, as its building was turned. */
+function placeLife(life: SceneLife, place: CityPlacement): SceneLife {
+  const turn = (place.rotate ?? 0) * DEG;
+  const c = Math.cos(turn);
+  const s = Math.sin(turn);
+  const point = (p: Vec3): Vec3 => [
+    place.at[0] + p[0] * c + p[2] * s,
+    p[1],
+    place.at[1] - p[0] * s + p[2] * c,
+  ];
+  const part = (p: Part): Part => {
+    const at = point(p.at);
+    if (p.kind === "ring" || p.kind === "bank") {
+      return { ...p, at, thetaStart: p.thetaStart + turn };
+    }
+    if ("rotY" in p) return { ...p, at, rotY: p.rotY + turn };
+    return { ...p, at };
+  };
+  return {
+    ...life,
+    people: life.people.map((p) => ({
+      ...p,
+      at: point(p.at),
+      rotY: p.rotY + turn,
+      ...(p.route ? { route: p.route.map(point) } : {}),
+    })),
+    props: life.props.map(part),
+    flames: life.flames.map((f) => ({ ...f, at: point(f.at) })),
+    crowd: life.crowd.map((p) => ({ ...p, at: point(p.at), rotY: p.rotY + turn })),
+    animals: life.animals.map((a) => ({
+      ...a,
+      at: point(a.at),
+      rotY: a.rotY + turn,
+      ...(a.route ? { route: a.route.map(point) } : {}),
+    })),
+    chariots: life.chariots.map((ch) => ({ ...ch, route: ch.route.map(point) })),
+  };
+}
+
+/**
+ * A city is the sum of its monuments' scenes, set out on one plan, plus the
+ * street life between them: the forum's stalls, the carts, the dogs, and the
+ * people walking the decumanus.
+ */
+function cityLife(spec: CitySpec, era: Era, id: string): SceneLife {
+  const b = make(era, 8807);
+  const { cast, rand } = b;
+
+  // The main streets, walked end to end by people going about the town.
+  for (const [x1, z1, x2, z2, width] of spec.streets ?? []) {
+    const alongX = Math.abs(x2 - x1) > Math.abs(z2 - z1);
+    const lanes = Math.max(1, Math.floor(width / 3));
+    for (let lane = 0; lane < lanes; lane += 1) {
+      if (rand() < 0.45) continue;
+      const off = (lane - (lanes - 1) / 2) * 2.2;
+      const dx = alongX ? 0 : off;
+      const dz = alongX ? off : 0;
+      const there = rand() < 0.5;
+      cast.walk(
+        [
+          [x1 + dx, 0, z1 + dz],
+          [x2 + dx, 0, z2 + dz],
+        ],
+        {
+          speed: between(rand, 0.8, 1.35),
+          ...(rand() < 0.28
+            ? ({ carry: pick(rand, ["amphora", "basket", "jar"] as const) } as const)
+            : {}),
+        },
+      );
+      if (there && rand() < 0.4) {
+        const t = between(rand, 0.2, 0.8);
+        cast.add({
+          at: [x1 + (x2 - x1) * t + dx, 0, z1 + (z2 - z1) * t + dz],
+          rotY: rand() * TAU,
+          action: rand() < 0.5 ? "talk" : "stand",
+        });
+      }
+    }
+  }
+
+  // Each monument's own scene, placed on the plan and gathered here.
+  const lives = spec.places.map((place, i) =>
+    placeLife(lifeOfSpec(place.spec, era, `${id}-${i}`), place),
+  );
+  const own = finish(b);
+  const people = [...own.people];
+  const props = [...own.props];
+  const flames = [...own.flames];
+  const crowd = [...own.crowd];
+  const animals = [...own.animals];
+  const chariots = [...own.chariots];
+  const links = [...(own.links ?? [])];
+  for (const life of lives) {
+    const base = people.length;
+    people.push(...life.people);
+    props.push(...life.props);
+    flames.push(...life.flames);
+    crowd.push(...life.crowd);
+    animals.push(...life.animals);
+    chariots.push(...life.chariots);
+    for (const link of life.links ?? [])
+      links.push({ ...link, a: link.a + base, b: link.b + base });
+  }
+
+  // A phone can only draw a handful of real dynamic lights:
+  let lightCount = 0;
+  for (const f of flames) {
+    if (f.light) {
+      if (lightCount >= 6) f.light = false;
+      else lightCount += 1;
+    }
+  }
+  return {
+    era,
+    people,
+    props,
+    flames,
+    crowd,
+    animals,
+    chariots,
+    ...(links.length ? { links } : {}),
+  };
 }
 
 /* ------------------------------------------------------------------ *
@@ -4402,8 +4676,8 @@ type PieceKind =
 type Piece = { kind: PieceKind; at: Vec3; rotY: number; goods?: Goods };
 
 /**
- * Each piece's footprint in its own frame — half-widths across and along,
- * and how far its middle sits from `at` along `z` — including the place a
+ * Each piece's footprint in its own frame â€” half-widths across and along,
+ * and how far its middle sits from `at` along `z` â€” including the place a
  * stallholder stands behind the counter.
  */
 const FOOTPRINT: Record<PieceKind, { hx: number; hz: number; cz: number }> = {
@@ -4673,7 +4947,7 @@ function samplesOf(r: Rect): [number, number][] {
   return out;
 }
 
-/** Whether a part occupies the point (x, y, z) — a solid, or water underfoot. */
+/** Whether a part occupies the point (x, y, z) â€” a solid, or water underfoot. */
 function occupies(part: Part, x: number, y: number, z: number): boolean {
   if (part.material === "grass" || part.material === "human") return false;
   if (part.kind === "box" || part.kind === "prism") {
@@ -4735,8 +5009,8 @@ function occupies(part: Part, x: number, y: number, z: number): boolean {
 
 /**
  * What an honorific base in the square says. Where a real statue base of the
- * place has been read — the Asiarch Apollodoros at Miletus, the high priest
- * Kleon at Ephesus — the first statue carries it; any other carries only the
+ * place has been read â€” the Asiarch Apollodoros at Miletus, the high priest
+ * Kleon at Ephesus â€” the first statue carries it; any other carries only the
  * formula such bases open with ("the council and the people honoured"), the
  * name below worn away rather than invented.
  */
@@ -4756,7 +5030,7 @@ function honorificText(id: string, index: number, female: boolean): EpigraphicTe
 /**
  * Sets the scene's street furniture down where it fits: on open ground the
  * landscape leaves flat, clear of the building and of everything else in
- * the scene, and out of the way of everyone who walks — a piece in the path
+ * the scene, and out of the way of everyone who walks â€” a piece in the path
  * of a walker is left out rather than walked through. Built from its own
  * random source, so the rest of the scene is exactly what it was.
  */
@@ -5234,9 +5508,9 @@ function troyLife(spec: TroyCitadelSpec, era: Era): SceneLife {
 }
 
 /**
- * Çatalhöyük on a working day: people on the roofs, which were the streets
- * and the workplaces — grinding grain, knapping obsidian, minding a fire,
- * drying a hide — and inside the open house, a woman at the oven, a child
+ * Ã‡atalhÃ¶yÃ¼k on a working day: people on the roofs, which were the streets
+ * and the workplaces â€” grinding grain, knapping obsidian, minding a fire,
+ * drying a hide â€” and inside the open house, a woman at the oven, a child
  * on the platform; sheep and goats in the yard, dogs everywhere.
  */
 function townLife(spec: NeolithicTownSpec, era: Era): SceneLife {
@@ -5366,7 +5640,7 @@ function townLife(spec: NeolithicTownSpec, era: Era): SceneLife {
 
   /*
    * More of the roofs' work: reeds carried over for matting and roofing, a
-   * second quern, a spinner — spindle whorls are common finds here — and
+   * second quern, a spinner â€” spindle whorls are common finds here â€” and
    * children with a handful of sheep's knucklebones, which the houses also
    * give up.
    */
@@ -5527,7 +5801,7 @@ function cathedralLife(spec: CathedralSpec, era: Era): SceneLife {
 
 /*
  * The scene-building pieces, for the scenes kept beside their models in
- * `src/lib/models/` (the Sagalassos, Zeugma, Sümela and Patara ones). Used
+ * `src/lib/models/` (the Sagalassos, Zeugma, SÃ¼mela and Patara ones). Used
  * only inside functions there, so the import cycle is harmless.
  */
 export {

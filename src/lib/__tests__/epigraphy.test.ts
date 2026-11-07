@@ -371,6 +371,12 @@ describe("the cost of the new detail", () => {
     "arslantepe-saray": 15252,
     "laodikeia-bati-tiyatrosu": 68674,
     "alacahoyuk-sfenksli-kapi": 23880,
+    // The Roman cities: their walls, streets and buildings on the plan, priced
+    // before the lettering was written into them.
+    "pompeii-kenti": 262300,
+    "eboracum-kenti": 232464,
+    "nimes-kenti": 134056,
+    "trier-kenti": 172172,
   };
   /*
    * Allowed more, with the reason. Hattusa's glacis is now faced with its

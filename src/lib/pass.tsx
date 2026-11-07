@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils";
  * Antik Pass: two 3D buildings per country are free for everyone, the rest
  * open with the Pass.
  *
+ * The two free buildings of Tırkiye are its old towns; the four European
+ * cities are free as well, since a visitor overseas pays a local entrance fee
+ * either way.
  * Payment is not wired up yet (Google Play Billing in the TWA, Stripe on the
  * web), so the lock is off unless the build sets `VITE_PAYWALL=1`. With it
  * off the site shows the Free / Pass labels and the Pass page, and nothing is
@@ -17,10 +20,17 @@ import { cn } from "@/lib/utils";
 export const PAYWALL = import.meta.env["VITE_PAYWALL"] === "1";
 
 /** The free 3D buildings, per country. Türkiye is the only edition so far. */
-export const FREE_MODELS: readonly string[] = ["aspendos-tiyatrosu", "celsus-kutuphanesi"];
+export const FREE_MODELS: readonly string[] = [
+  "aspendos-tiyatrosu",
+  "celsus-kutuphanesi",
+  "pompeii-kenti",
+  "eboracum-kenti",
+  "nimes-kenti",
+  "trier-kenti",
+];
 
 /** How many 3D buildings there are; used where the full list is too heavy to import. */
-export const MODEL_COUNT = 51;
+export const MODEL_COUNT = 55;
 
 export function isFreeModel(id: string) {
   return FREE_MODELS.includes(id);

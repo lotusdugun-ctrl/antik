@@ -1,8 +1,40 @@
-# Antik Türkiye: devam notu (6 Kasım 2026; güncellendi)
+# Antik Türkiye: devam notu (7 Kasım 2026; güncellendi)
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## YENİ ANTIK KENTLER: POMPEİ, EBORACUM, NIMES, TRIER (6 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+## 4 YENİ ANTİK KENT (POMPEİ, EBORACUM, NÎMES, TRİER) ENTEGRASYONU TAMAMLANDI, TÜM TESTLER %100 YEŞİL (559/559 PASS) (7 Kasım 2026, öğle) — EN GÜNCEL, BURADAN BAŞLA
+- **Hedef:** İtalya (Pompeii), İngiltere (Eboracum), Fransa (Nîmes) ve Almanya (Trier) yeni 4 antik kentin 3D modelleme/rekonstrüksiyon entegrasyonu tamamlanarak tüm doğrulama testlerinin (%100, 559/559) yeşile çekilmesi, yapı kartları ve dokümantasyonun tamamlanması.
+- **Yapılanlar:**
+  1. **Geometri ve Z-Fighting Düzeltmeleri (`src/lib/reconstruction-parts.ts`):**
+     - Celsus heykellerinin prosedürel olarak üretilmesi kütüphane dışındaki binalarda (Pompeii, Eboracum, Trier) kapatıldı (`if (spec.inscribed !== false)`), böylece `scans.test.ts` temizlendi.
+     - Kornişlerde (`cornice`) duvara yaslanan aedicula kısımlarında duvara batan arka dişler opsiyonel yapıldı (`backDentils: false`).
+     - Kaset tavan derinliği duvar sınırına çekildi (`const sz = Math.min(diameter * 1.4 - 0.16, -z - 0.08)`).
+     - Kapı üstü panellerindeki `paintRed` ve `paintGold` çıtaları ayrıştırılarak Z-fighting sıfırlandı.
+  2. **Yaşam ve İnsan/Hayvan Koordinatları (`src/lib/scene-life.ts`, `src/lib/models/on-yeni-life.ts`):**
+     - Armarium papirüs etiketlerindeki `linen` kaldırıldı (pazar tentesi algılama çakışması çözüldü).
+     - `facadeLife` içindeki basamak koruması (`if (step >= spec.steps) continue;`) eklendi; kütüphane okuyucuları ve Efes sokak hayatı bazilikalardan ayrıldı (`if (spec.inscribed !== false)`).
+     - `amphitheatreLife` nöbetçileri ve yürüyüş rotaları cavea taş basamakları ve podyum duvarından arenanın kum tabanına çekildi (`arenaLength * 0.42` ve `arenaLength * 0.38`).
+     - Porta Nigra dilencisi (`trades.beggar`) sütun ve kaide içine batmaktan kurtarılarak sütun önüne caddeye taşındı.
+  3. **Kent Planı ve Cadde Çakışmaları (`src/lib/reconstructions.ts`):**
+     - Eboracum Tapınağı (`eboracum-kenti` Place 1) konumu `at: [0, -85]` olarak ayarlandı. Böylece tapınağın sokak taşları ile kentin Z=-60 caddesi arasındaki derinlik tamponu sağlandı, Place 2 arkasıyla çakışma ortadan kalktı.
+  4. **Doğrulama ve Kalite:**
+     - `bunx tsc --noEmit` → **0 hata** (Tip denetimi tamamen temiz).
+     - `bun test` → **559 pass, 0 fail (343.151 expect() doğrulaması, 31 dosya)** %100 YEŞİL!
+     - `test-sonucu.txt` güncellendi.
+     - Prettier biçimlendirmesi (`bunx prettier --write`) doğrulandı.
+     - Geçici probe dosyaları (`tmp_probe*.ts`, `tmp_fight_probe.ts`) temizlendi.
+  5. **Gönderim Bat:**
+     - Kullanıcı için `GONDER-37.bat` hazırlandı (`git add` ile değişen kaynak dosyalar, yapı kartları, `DEVAM-NOTU.md`, `test-sonucu.txt` ve push).
+
+## UKİYO-E ANİMASYONLU EXPLAINER: "NEDEN OYUN OYNUYORUZ?" (7 Kasım 2026, sabah)
+- **İstek:** "Neden oyun oynuyoruz" konulu, Ukiyo-e Woodblock (Hokusai/Hiroshige ahşap baskı) üslubunda görsel storyboard ve tam animasyonlu anlatıcı.
+- **Yapıldı:**
+  1. **Görsel Storyboard:** `storyboard.html` (1280x720, 6 beat: Giriş/Kanca, Güvenli Simülasyon, Dopamin Döngüsü, Sosyal Bağ & 3.4B Oyuncu, Akış Boyutu & Büyülü Halka, Sonuç). Kullanıcı tarafından onaylandı.
+  2. **Tam Animasyon (HTML + Web Audio):** `index.html` ve `explainer.html` (21.0 saniye, 1280x720 responsive canvas, letterbox, oynat/duraklat, seek slider, ses/döngü butonları, In-sen makamı koto + taiko + klaket ses tasarımı, Noto Serif JP tipografisi, `window.seek`, `window.DURATION`, `window.scoreSound` API'leri).
+  3. **MP4 Video Render:** Headless Playwright + FFmpeg ile 630 kare ve 48 kHz stereo ses sentezlenerek `neden-oyun-oynuyoruz.mp4` (~8.0 MB) ve `explainer-sound.wav` üretildi.
+- **Konum:** `C:\Users\caner\.gemini\antigravity\brain\7efeab97-dcc2-4438-8ba6-67c3ecf5efaa\`
+
+## YENİ ANTIK KENTLER: POMPEİ, EBORACUM, NIMES, TRIER (6 Kasım 2026, akşam)
 - **İstek:** İtalya, İngiltere, Fransa ve Almanya'dan antik kentler; Türkiye'dekiler gibi 3D modeller.
 - **Yapıldı (bu batarya):**
   - Blender betikleri: `scripts/blender/pompeii_hd.py` (+`POMPEII-HD.bat`), `scripts/blender/eboracum_hd.py` (+`EBORACUM-HD.bat`), `scripts/blender/nimes_hd.py` (+`NIMES-HD.bat`), `scripts/blender/trier_hd.py` (+`TRIER-HD.bat`).

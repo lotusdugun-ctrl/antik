@@ -35,13 +35,23 @@ import type { Localized } from "@/lib/i18n";
 const slugs = new Set(sites.map((s) => s.slug));
 const filled = (v: Localized) => v.tr.trim().length > 0 && v.en.trim().length > 0;
 
-/** Every number in a model spec, however deeply nested. */
+/** Every number in a model spec, however deeply nested. Plan positions are
+ * coordinates, not dimensions, so keys that place a part are not read as
+ * measurements - a city's plan is full of negative metres. A city's monuments
+ * nest their real dimensions under `places[].spec`; only the placement around
+ * them is geometry, not measurement.
+ */
 function specNumbers(spec: object): number[] {
-  return Object.values(spec).flatMap((value) => {
-    if (typeof value === "number") return [value];
-    if (value && typeof value === "object") return specNumbers(value as object);
-    return [];
-  });
+  const out: number[] = [];
+  for (const [key, value] of Object.entries(spec)) {
+    if (key === "at" || key === "rotate" || key === "look" || key === "streets" || key === "viewpoint" || key === "hill")
+      continue;
+    if (typeof value === "number") out.push(value);
+    else if (Array.isArray(value))
+      out.push(...value.flatMap((entry) => (entry && typeof entry === "object" ? specNumbers(entry as object) : [])));
+    else if (value && typeof value === "object") out.push(...specNumbers(value as object));
+  }
+  return out;
 }
 
 /** Metres and counts shape the model; a headcount is context beside it. */

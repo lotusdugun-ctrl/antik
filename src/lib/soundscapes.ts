@@ -197,7 +197,8 @@ export type Soundscape = {
     | "mountain"
     | "neolithic"
     | "citadel"
-    | "church";
+    | "church"
+    | "city";
   beds: Bed[];
   happenings: Happening[];
   director?: Director;
@@ -436,6 +437,48 @@ function agora(): Soundscape {
     ],
     synth: { wind: 0.2, cicadas: true, crackle: false },
     space: { seconds: 1.1, wet: 0.2, early: 0.45 },
+  };
+}
+
+/**
+ * A city: the market street, the fountain of its square, the dogs of its
+ * blocks, the night with its own insects. The four Roman cities each get
+ * their own flavour on top - the forum of Pompeii, the fortress of Eboracum,
+ * the arena of Nimes, the gate of Trier.
+ */
+function city(): Soundscape {
+  return {
+    character: "city",
+    beds: [
+      { clip: "market", level: { day: 0.7, golden: 0.6, night: 0 }, wet: 0.3 },
+      { clip: "fountain", level: { day: 0.25, golden: 0.27, night: 0.35 }, pan: 0.4, wet: 0.25 },
+      BIRDS(0.35),
+      { ...NIGHT_INSECTS, level: { golden: 0.25, night: 0.8 } },
+    ],
+    happenings: [
+      {
+        sounds: ["vendor-oil", "vendor-bread", "vendor-fish", "vendor-figs", "vendor-wine"],
+        every: [12, 30],
+        level: { day: 0.35, golden: 0.28 },
+        spread: 0.9,
+        rate: [0.96, 1.04],
+        muffle: 6000,
+        wet: 0.35,
+      },
+      {
+        sounds: ["footsteps"],
+        every: [9, 26],
+        level: { day: 0.3, golden: 0.3, night: 0.22 },
+        spread: 0.8,
+        rate: [0.9, 1.1],
+        wet: 0.3,
+      },
+      DOGS,
+      OWL,
+      DOVES,
+    ],
+    synth: { wind: 0.25, cicadas: true, crackle: false },
+    space: { seconds: 1.2, wet: 0.2, early: 0.4 },
   };
 }
 
@@ -1628,6 +1671,55 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     ],
     density: 1.1,
   },
+  "pompeii-kenti": {
+    // The forum and the amphitheatre: the market square crowded by the
+    // people of the houses the forum served, the streets of the houses behind.
+    add: [
+      PEOPLE(1.2, ["chatter", "laugh", "shout"]),
+      SONGBIRDS(0.9, ["sparrow", "blackbird"]),
+      STEPS(["steps-stone"], 0.9),
+      CRICKETS(0.9),
+    ],
+    density: 1.3,
+  },
+  "eboracum-kenti": {
+    // The fortress of the Iceni: the herds of the field, the smiths of the
+    // hill, the wind over the wall.
+    add: [
+      GOATS(0.9),
+      DONKEY(0.8),
+      WORK(["hammer"], 0.8),
+      GUSTS(0.9),
+      RAPTORS(0.9, ["partridge", "hoopoe"]),
+      CRICKETS(0.9),
+    ],
+    density: 1.0,
+  },
+  "nimes-kenti": {
+    // The arena: the race of the games, the river's frogs, the swift over the
+    // stands.
+    add: [
+      SWIFTS(1),
+      PEOPLE(1, ["chatter", "shout", "laugh"]),
+      FROGS(0.8),
+      CRICKETS(0.8),
+      STEPS(["steps-stone"], 0.8),
+    ],
+    density: 1.2,
+  },
+  "trier-kenti": {
+    // The Porta Nigra and the gate quarter: the market of the crossing, the
+    // smithy, the flocks of the Rheinisches land.
+    add: [
+      GOATS(0.8),
+      DONKEY(0.7),
+      WORK(["hammer"], 0.7),
+      GUSTS(0.8),
+      RAPTORS(0.8, ["partridge", "hoopoe"]),
+      CRICKETS(0.8),
+    ],
+    density: 1.0,
+  },
 };
 
 /** The kind's soundscape with the model's own sources and pace added. */
@@ -1704,6 +1796,9 @@ function kindScape(item: Pick<Reconstruction, "id"> & { model: { kind: string } 
     case "mudbrick-complex":
     case "sphinx-gate":
       return citadel(false);
+    case "city":
+      // A Roman city: the market street, the fountain, the night.
+      return flavour(id, city());
     default:
       // A kind added later still gets birds, wind and the night.
       return {

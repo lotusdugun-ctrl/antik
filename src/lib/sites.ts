@@ -46,13 +46,22 @@ export type HeritageType =
   | "old-town"
   | "museum";
 export type RegionId =
-  "ege" | "akdeniz" | "marmara" | "ic-anadolu" | "karadeniz" | "guneydogu" | "dogu";
+  | "ege"
+  | "akdeniz"
+  | "marmara"
+  | "ic-anadolu"
+  | "karadeniz"
+  | "guneydogu"
+  | "dogu"
+  | "avrupa";
 
 export type UnescoStatus = "listed" | "tentative" | "none";
 
+export type CountryCode = "TR" | "IT" | "GB" | "FR" | "DE";
+
 export type Site = {
   slug: string;
-  country: "TR";
+  country: CountryCode;
   heritageType: HeritageType;
   /** Remote photo URL (Wikimedia Commons, freely licensed). */
   photo?: string;
@@ -82,6 +91,12 @@ export type Site = {
   summary: Localized;
   figures: string[];
   popularity: number; // 1-10, drives "popular" ordering
+  /**
+   * The official page to check for opening times and tariffs. Turkish sites
+   * use the ministry's portal; a site abroad names its own authority, since
+   * the ministry's rules say nothing about it.
+   */
+  officialUrl?: string;
 };
 
 /**
@@ -196,6 +211,15 @@ export const regions: {
       en: "Urartian fortresses and stone cities on high plateaus.",
     },
   },
+  {
+    id: "avrupa",
+    name: { tr: "Avrupa", en: "Europe" },
+    image: landscapeHills,
+    blurb: {
+      tr: "Roma'nın sınırlarını aşan kentler: Pompeii, Eboracum, Nemausus ve Augusta Treverorum.",
+      en: "Cities beyond Rome's Anatolian provinces: Pompeii, Eboracum, Nemausus and Augusta Treverorum.",
+    },
+  },
 ];
 
 /**
@@ -218,6 +242,7 @@ const regionImage: Record<RegionId, string> = {
   karadeniz: landscapeHills,
   guneydogu: landscapeSteppe,
   dogu: landscapeSteppe,
+  avrupa: landscapeHills,
 };
 
 export function coverImage(site: Site) {
@@ -614,6 +639,16 @@ export const sitePhoto: Partial<Record<string, string>> = Object.fromEntries(
   Object.entries(photoRef).map(([slug, ref]) => [slug, expandPhoto(ref!)]),
 );
 
+// The four European cities have no photograph on Commons that is both free and
+// reliably of the right building; their covers are frames from the app's own
+// HD renders, which it owns outright.
+Object.assign(sitePhoto, {
+  pompeii: "/hd/pompeii/pompeii-hd-0.png",
+  eboracum: "/hd/eboracum/eboracum-hd-0.png",
+  nimes: "/hd/nimes/nimes-hd-0.png",
+  trier: "/hd/trier/trier-hd-0.png",
+} satisfies Partial<Record<string, string>>);
+
 /**
  * The vocabulary drifted as the data grew: "Frig" and "Frigya" both appeared,
  * so did "Karia" and "Karya", "Troya" and "Truva". Each pair split one concept
@@ -720,6 +755,9 @@ const h = (input: {
   summary: Localized;
   figures?: string[];
   popularity: number;
+  /** Defaults to Türkiye; the four European cities set their own. */
+  country?: CountryCode;
+  officialUrl?: string;
 }): Site => ({
   country: "TR",
   unesco: "none",
@@ -5915,6 +5953,87 @@ export const sites: Site[] = [
     },
     popularity: 5,
   }),
+  // ----- Avrupa -----
+  h({
+    slug: "pompeii",
+    name: { tr: "Pompeii", en: "Pompeii" },
+    heritageType: "ancient-city",
+    region: "avrupa",
+    province: { tr: "Campania", en: "Campania" },
+    lat: 40.7519,
+    lng: 14.4869,
+    civilizations: ["Etrüsk", "Yunan", "Roma"],
+    era: { tr: "MÖ 6. yüzyıl – MS 79", en: "6th century BC – AD 79" },
+    unesco: "listed",
+    summary: {
+      tr: "Vezüv'ün MS 79'daki patlamasıyla küllenen, bu yüzden olduğu gibi kalan Roma kenti: forum, iki tiyatro, amfitiyatro ve freskli evler.",
+      en: "The Roman city buried by Vesuvius in AD 79 and preserved in the ash: forum, two theatres, amphitheatre and frescoed houses.",
+    },
+    figures: ["Vesuvius", "Genç Plinius", "Eumachia", "Marcus Holconius Rufus"],
+    popularity: 10,
+    country: "IT",
+    officialUrl: "https://pompeisites.org/",
+  }),
+  h({
+    slug: "eboracum",
+    name: { tr: "Eboracum (York)", en: "Eboracum (York)" },
+    heritageType: "ancient-city",
+    region: "avrupa",
+    province: { tr: "North Yorkshire", en: "North Yorkshire" },
+    lat: 53.9623,
+    lng: -1.0819,
+    civilizations: ["Roma", "Anglosakson"],
+    era: { tr: "MS 71 – MS 5. yüzyıl", en: "AD 71 – 5th century AD" },
+    unesco: "none",
+    summary: {
+      tr: "VI. Victrix lejyonunun kuzey karargâhı; York Minster'ın altında principia, Ouse kıyısında sivil kent ve imparatorluk ilanlarının yapıldığı yer.",
+      en: "The northern headquarters of Legio VI Victrix: its principia beneath York Minster, a civilian town by the Ouse, and the place where emperors were proclaimed.",
+    },
+    figures: ["Septimius Severus", "Constantinus", "Legio VI Victrix"],
+    popularity: 7,
+    country: "GB",
+    officialUrl: "https://www.english-heritage.org.uk/visit/places/cliffords-tower-york/",
+  }),
+  h({
+    slug: "nimes",
+    name: { tr: "Nemausus (Nîmes)", en: "Nemausus (Nîmes)" },
+    heritageType: "ancient-city",
+    region: "avrupa",
+    province: { tr: "Gard", en: "Gard" },
+    lat: 43.8367,
+    lng: 4.358,
+    civilizations: ["Roma", "Galya"],
+    era: { tr: "MÖ 1. yüzyıl – MS 5. yüzyıl", en: "1st century BC – 5th century AD" },
+    unesco: "listed",
+    summary: {
+      tr: "Augustus'un Galya'daki kolonisi; Maison Carrée, 24.000 kişilik arena ve kenti besleyen Pont du Gard su kemeri.",
+      en: "Augustus' colony in Gaul: the Maison Carrée, a 24,000-seat arena and the Pont du Gard aqueduct that fed the city.",
+    },
+    figures: ["Augustus", "Agrippa", "Titus"],
+    popularity: 8,
+    country: "FR",
+    officialUrl: "https://www.nimes-tourisme.com/",
+  }),
+  h({
+    slug: "trier",
+    name: { tr: "Augusta Treverorum (Trier)", en: "Augusta Treverorum (Trier)" },
+    heritageType: "ancient-city",
+    region: "avrupa",
+    province: { tr: "Renanya-Palatina", en: "Rhineland-Palatinate" },
+    lat: 49.7597,
+    lng: 6.6441,
+    civilizations: ["Roma", "Treveri"],
+    era: { tr: "MÖ 16 – MS 5. yüzyıl", en: "16 BC – 5th century AD" },
+    unesco: "listed",
+    summary: {
+      tr: "Batı Roma'nın geç dönem başkenti: Porta Nigra, amfitiyatro, Konstantin Bazilikası ve imparatorluk hamamları.",
+      en: "The late capital of the western empire: the Porta Nigra, amphitheatre, Basilica of Constantine and the imperial baths.",
+    },
+    figures: ["Augustus", "Constantinus", "Ausonius"],
+    popularity: 8,
+    country: "DE",
+    officialUrl: "https://www.trier-info.de/",
+  }),
 ];
 
 export const totalSites = sites.length;
@@ -6105,6 +6224,9 @@ export const WORLD_HERITAGE: Record<string, string> = {
   "sivrihisar-ulu-cami": "Wooden Hypostyle Mosques of Medieval Anatolia",
   "afyon-ulu-cami": "Wooden Hypostyle Mosques of Medieval Anatolia",
   "arslanhane-camii": "Wooden Hypostyle Mosques of Medieval Anatolia",
+  pompeii: "Archaeological Areas of Pompei, Herculaneum and Torre Annunziata",
+  nimes: "Maison Carrée of Nîmes",
+  trier: "Roman Monuments, Cathedral of St Peter and Church of Our Lady in Trier",
 };
 
 export const CIVILIZATIONS: readonly string[] = [
@@ -6114,6 +6236,7 @@ export const CIVILIZATIONS: readonly string[] = [
   "Akkoyunlu",
   "Amik Krallığı",
   "Amurru",
+  "Anglosakson",
   "Artuklu",
   "Arzawa",
   "Asur",
@@ -6130,10 +6253,12 @@ export const CIVILIZATIONS: readonly string[] = [
   "Epipaleolitik",
   "Ermeni Krallığı",
   "Eşrefoğulları",
+  "Etrüsk",
   "Eyyubi",
   "Fenike",
   "Frig",
   "Galat",
+  "Galya",
   "Geç Hitit",
   "Germiyanoğulları",
   "Haçlı",
@@ -6176,6 +6301,7 @@ export const CIVILIZATIONS: readonly string[] = [
   "Süryani",
   "Trabzon İmparatorluğu",
   "Trak",
+  "Treveri",
   "Troya",
   "Tunç Çağı",
   "Urartu",
