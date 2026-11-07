@@ -397,6 +397,469 @@ export const moreStories: Story[] = [
       },
     },
   },
+  /* ------------------------- Pompeii ------------------------- */
+  {
+    id: "pompeii-firinici",
+    siteSlug: "pompeii",
+    title: l("Vezüv'ün Gölgesinde Fırıncı", "The Baker under Vesuvius"),
+    role: l(
+      "Stabiae Caddesi'ndeki fırında çalışan un öğütücüsü",
+      "A flour miller at the bakery on the Via di Stabia",
+    ),
+    period: l("MS 79 Ağustos sonu", "Late August, AD 79"),
+    blurb: l(
+      "Sabahın erken saatlerinde değirmen taşları dönüyor, ekmekler kabarıyor. Ancak dağdan gelen derin gürültüler ve gökten yağan ince beyaz kül, bugünün diğer günlere benzemeyeceğini gösteriyor.",
+      "Early in the morning the millstones are turning and the loaves are rising. But deep rumblings from the mountain and fine white ash falling from the sky show this day will be unlike any other.",
+    ),
+    start: "firin",
+    scenes: {
+      firin: {
+        text: l(
+          "Sabahın köründe lav taşından değirmenler dönüyor, ocakta meşe odunları çıtırdıyor. Yuvarlak somunlar kalıplara dizilmiş. Birden yer derinden sarsılıyor; değirmeni çeviren eşekler duraksıyor. Fırının avlusuna ince, tebeşir gibi beyaz bir kül dökülmeye başlıyor. Ustan telaşla somunları fırına sürmeye çalışıyor.",
+          "At dawn the millstones of volcanic lava are turning, oak wood crackling in the great brick oven. Round loaves are set in their pans. Suddenly the ground shudders; the donkeys turning the mills come to a halt. Fine white ash begins to drift into the open yard. Your master urgently tries to push the loaves into the oven.",
+        ),
+        choices: [
+          go(
+            "Ustanı ikna et, limana doğru kaçın",
+            "Persuade your master — run for the harbour",
+            "liman",
+          ),
+          go(
+            "Foruma koşup sulh yargıcından haber al",
+            "Run to the forum to hear the magistrates",
+            "forum",
+          ),
+        ],
+      },
+      forum: {
+        text: l(
+          "Forum meydanı ana baba günü. Capitolium basamaklarında sulh yargıçları halkı sakinleştirmeye çalışıyor ama Vezüv'ün üzerinden göğe devasa, çam ağacı şeklinde simsiyah bir kül bulutu yükseliyor. Çatılardan ponza taşları yağmaya başlıyor; sütunların altına sığınanlar başlarını yastıklarla koruyor.",
+          "The forum square is in uproar. On the steps of the Capitolium the magistrates try to calm the crowd, but a towering cloud shaped like a stone pine rises black above Vesuvius. Pumice stones begin to pelt the tile roofs; people under the porticoes tie cushions to their heads for shelter.",
+        ),
+        history: l(
+          "Genç Plinius'un tanıklığına göre MS 79 patlamasında Vezüv'den yükselen duman bulutu tipik bir Akdeniz çamı şeklindeydi. Sokaklara hızla yağan ponza taşları binaların çatılarını çökertti.",
+          "According to the eyewitness account of Pliny the Younger, the eruption cloud rising from Vesuvius resembled an umbrella pine. The rapid fall of pumice stones collapsed roofs throughout the city.",
+        ),
+        choices: [
+          go(
+            "Nocera Kapısı'ndan açık bağlara kaç",
+            "Flee through the Nocera Gate toward open fields",
+            "nocera",
+          ),
+          go("Amfitiyatronun kemerlerine sığın", "Take shelter beneath the amphitheatre", "amfi"),
+        ],
+      },
+      liman: {
+        text: l(
+          "Marina Kapısı'ndan deniz kıyısına iniyorsunuz. Deniz köpürmüş, kıyıya dev dalgalar vuruyor. Balıkçılar ve tüccarlar teknelerini bağlayan halatları çözmeye çalışıyor. Havada keskin kükürt kokusu var.",
+          "You reach the shore through the Marine Gate. The sea is churned into foam and surging against the beach. Fishermen and merchants are struggling with their mooring ropes. The air smells sharp with sulphur.",
+        ),
+        history: l(
+          "Patlama sırasında denizdeki çalkantı ve karaya vuran dev dalgalar sebebiyle birçok tekne denize açılamadı; kaçabilenler rüzgarı arkasına alan açık deniz tekneleriydi.",
+          "During the eruption, severe tremors and high surge waves trapped many small craft on the beach; only those with offshore winds managed to escape by sea.",
+        ),
+        choices: [
+          go(
+            "Açığa kürek çeken balıkçı teknesine atla",
+            "Leap into the fishing boat rowing offshore",
+            "tekne",
+          ),
+          go(
+            "Kıyı boyu güneye, Stabiae'ye doğru yürü",
+            "Walk south along the coast toward Stabiae",
+            "stabiae",
+          ),
+        ],
+      },
+      amfi: {
+        text: l(
+          "Amfitiyatronun çift katlı tonozlu koridorlarına yüzlerce insanla birlikte sığınıyorsunuz. Dışarıda kıyamet kopuyor; taşlar ve küller kapı ağızlarını kapatıyor. Gece boyunca taş duvarlar sizi koruyor ama sabah olduğunda çıkış yolu tamamen kapanmış durumda.",
+          "You crowd into the twin arcades of the amphitheatre with hundreds of townspeople. Outside, pumice and ash pile against the exterior arches. The sturdy stone walls keep the falling stones off, but by morning the exits are choked with volcanic debris.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Taş kemerlerin altında", "Beneath the stone arches"),
+          kind: "hard",
+        },
+      },
+      nocera: {
+        text: l(
+          "Başınıza birer keten yastık bağlayıp Nocera Kapısı'ndan açık bağlara doğru koşuyorsunuz. Küller bacaklarınıza kadar ulaşıyor ama kentin yıkılan taşlarından uzaktasınız. Güneydeki Sarno vadisine ulaştığınızda kentin üzerinde kızıl bir alev parıltısı kalıyor.",
+          "Tying linen cushions over your heads, you sprint through the Nocera Gate into the open vineyards. Pumice piles knee-deep, but you are clear of collapsing buildings. By the time you reach the southern Sarno plain, only a glowing crimson haze hangs over Pompeii.",
+        ),
+        history: l(
+          "Plinius, insanların başlarına taş darbelerine karşı kumaş parçaları ve yastıklar bağladığını yazar. Kentten erken saatlerde güneye doğru kaçanların çoğu hayatta kalmayı başarmıştır.",
+          "Pliny writes that refugees tied pillows to their heads with napkins against falling stones. Many of those who fled early toward the south survived the catastrophe.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Açık denize doğru", "Toward the open sea"),
+          kind: "good",
+        },
+      },
+      tekne: {
+        text: l(
+          "Küreklere var gücünüzle asılıyorsunuz. Kıyıdan uzaklaştıkça Vezüv'ün devasa kül sütunu ufku kaplıyor; kızgın korlar denize düşüp cızırdayarak sönüyor. Akşam çöktüğünde Napoli Körfezi'nin karşı kıyısına güvenle yanaşıyorsunuz.",
+          "You pull at the oars with all your might. As the boat pulls away, the immense pillar of ash blots out the sky; hot lapilli hiss as they plunge into the sea. When night falls, you make landfall safely across the Bay of Naples.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Kurtuluş rotası", "The course of escape"),
+          kind: "good",
+        },
+      },
+      stabiae: {
+        text: l(
+          "Sahil boyu duman ve kül altında saatlerce yürüyorsunuz. Stabiae villalarına vardığınızda buranın da sarsıldığını görüyorsunuz ama denizden gelen taze esinti nefes almayı kolaylaştırıyor. Geride bıraktığınız kenti bir daha asla göremeyeceksiniz.",
+          "You walk for hours beneath rain of ash along the beach. Reaching the villas of Stabiae, you find the ground shaking there too, but a fresh sea breeze allows you to breathe. The city you left behind will not be seen again for seventeen centuries.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Kül ve tuz", "Ash and salt"),
+          kind: "bittersweet",
+        },
+      },
+    },
+  },
+  /* ------------------------- Eboracum ------------------------- */
+  {
+    id: "eboracum-lejyoneer",
+    siteSlug: "eboracum",
+    title: l("Kuzey Garnizonunun Nöbeti", "The Northern Watch"),
+    role: l(
+      "VI. Lejyon Victrix'te görevli genç bir nöbetçi",
+      "A young sentinel of the Sixth Legion Victrix",
+    ),
+    period: l("MS 120'ler", "120s AD"),
+    blurb: l(
+      "İmparator Hadrianus Britanya sınırına ulaşıyor. Eboracum kalesinin Ouse nehri kapısında dondurucu sis altında nöbet tutarken kuzeyden gelen bir süvari birliği habercisi yaklaşıyor.",
+      "The Emperor Hadrian is approaching the British frontier. As you stand guard in the freezing mist at Eboracum's river gate, a cavalry courier arrives from the wild north.",
+    ),
+    start: "nobet",
+    scenes: {
+      nobet: {
+        text: l(
+          "Ouse nehri üzerinde yoğun bir sonbahar sisi var; kule meşaleleri taş duvarda soluk sarı lekeler bırakıyor. Yün pelerininize sarınmış nöbet tutarken köprü tarafından bir at nalı sesi yankılanıyor. Çamurlu pelerinli bir süvari habercisi kale kapısında duruyor.",
+          "Dense autumn mist blankets the River Ouse; torchlight makes pale yellow pools against the stone gate towers. Wrapped in your thick woolen sagum, you hear galloping hooves echo across the timber bridge. A mud-spattered cavalry courier halts at the gate.",
+        ),
+        choices: [
+          go(
+            "Habercinin geçiş belgesini inceleyip karargaha götür",
+            "Check his diploma and escort him to the headquarters",
+            "principia",
+          ),
+          go(
+            "Önce köprü kulesindeki nöbetçi yüzbaşıyı çağır",
+            "Call the centurion of the watch at the bridge tower",
+            "kule",
+          ),
+        ],
+      },
+      principia: {
+        text: l(
+          "Karargah binasının (Principia) sütunlu avlusu meşalelerle aydınlanmış. Lejyon komutanı ve kurmayları harita masasının başında toplanmış. İmparator Hadrianus'un emri açık: Kaleden kuzeye, İrlanda Denizi'nden Kuzey Denizi'ne kadar uzanan devasa bir taş duvar inşa edilecek ve VI. Lejyon en zorlu sektörü üstlenecek.",
+          "The colonnaded courtyard of the Principia is lit by braziers. The legionary legate and tribunes stand gathered around a large map table. The Emperor Hadrian's orders are unequivocal: a continuous stone wall will be built across the isle from sea to sea, and the Sixth Legion is assigned to the central crags.",
+        ),
+        history: l(
+          "MS 122 yılında İmparator Hadrianus Britanya'yı ziyaret etti ve adayı ayıran 117 kilometrelik Hadrian Duvarı'nın inşasını başlattı. VI. Victrix Lejyonu bu inşaatta ve sınırdaki tahkimatlarda kilit rol oynadı.",
+          "In AD 122 the Emperor Hadrian visited Britain and ordered the construction of the 73-mile Hadrian's Wall across the country. Legio VI Victrix was stationed at Eboracum and carried out much of the central construction.",
+        ),
+        choices: [
+          go(
+            "Kuzeydeki duvar inşaat taburuna gönüllü yazıl",
+            "Volunteer for the frontier wall construction cohort",
+            "duvar",
+          ),
+          go(
+            "Eboracum kalesinde kalarak nehir lojistiğini yönet",
+            "Remain at Eboracum to organise river logistics",
+            "lojistik",
+          ),
+        ],
+      },
+      kule: {
+        text: l(
+          "Yüzbaşı meşale ışığında mühürlü tableti inceliyor. Kuzeydeki kabilelerin nehir boyundaki ticaret yollarına yaklaştığı bildirilmiş. Yüzbaşı sana dönüyor: 'Sis dağılmadan nehir devriyesine çıkmamız şart.'",
+          "The centurion inspects the wax tablet by torchlight. Reports indicate raiding parties near the river supply road. He turns to you: 'We need an armed scout boat out before the fog clears.'",
+        ),
+        choices: [
+          go(
+            "Nehir devriye botuyla kuzeye açıl",
+            "Board the river scout craft heading upstream",
+            "devriye",
+          ),
+          go(
+            "Raporu hızla karargah komutanına götür",
+            "Take the urgent dispatch directly to headquarters",
+            "principia",
+          ),
+        ],
+      },
+      duvar: {
+        text: l(
+          "Kuzeyin rüzgarlı tepelerinde devasa kumtaşı blokları harçla birleştiriyorsunuz. Her mil kalesinde nöbetçiler, her hendekte lejyonun gücü hissediliyor. Hadrianus teftişe geldiğinde birliğinizin kusursuz işçiliğini bizzat övüyor.",
+          "High on the windy crags of the Whin Sill, you dress and set great sandstone blocks. Milecastles rise, ditches are cut, and the power of Rome is set in stone. When Hadrian inspects the sector, he commends your cohort's masonry.",
+        ),
+        history: l(
+          "Hadrian Duvarı boyunca bulunan yapı yazıtlarında (centurial stones) VI. Victrix Lejyonu'nun askerlerinin inşa ettiği bölümler ve komutanlarının adları günümüze kadar ulaşmıştır.",
+          "Centurial stones found along Hadrian's Wall record the precise stretches built by the centuries of Legio VI Victrix and the names of their officers.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Taştan imparatorluk sınırı", "The stone frontier of Rome"),
+          kind: "good",
+        },
+      },
+      lojistik: {
+        text: l(
+          "Ouse nehrinden gelen tahıl, kurşun ve demir yüklerini Eboracum rıhtımında düzenliyorsunuz. Kuzeydeki lejyonerlerin ekmeği ve teçhizatı senin titiz kayıtların sayesinde aksamadan sınıra ulaşıyor.",
+          "You manage the shipments of grain, lead and iron arriving at Eboracum's quays. Thanks to your meticulous ledgers, rations and weapons reach the frontier garrisons without a day's delay.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Garnizonun omurgası", "The backbone of the garrison"),
+          kind: "good",
+        },
+      },
+      devriye: {
+        text: l(
+          "Sisli sığlıklarda sessizce kürek çekiyorsunuz. Orman sınırında pusu kurmaya hazırlanan bir süvari birliğini erkenden fark edip uyarı borusu çalıyorsunuz. Kale süvarileri yetişerek tehlikeyi savuşturuyor.",
+          "You row quietly through the misty shoals. Spotting an ambush preparing at the wood's edge, you sound the bronze carnyx signal. Cavalry rides out from the fort in time to scatter the raiders.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Nehirdeki uyanık göz", "The vigilant eye on the river"),
+          kind: "bittersweet",
+        },
+      },
+    },
+  },
+  /* ------------------------- Nîmes ------------------------- */
+  {
+    id: "nimes-su-muhendisi",
+    siteSlug: "nimes",
+    title: l("Pont du Gard'ın Suyu", "The Waters of Nîmes"),
+    role: l(
+      "Nemausus kolonisinin su yollarından sorumlu genç bir usta",
+      "A young aquarius of the colony of Nemausus",
+    ),
+    period: l("MS 1. yüzyıl sonu", "Late 1st century AD"),
+    blurb: l(
+      "Nîmes amfitiyatrosundaki büyük açılış oyunlarına iki gün kaldı. Kentin çeşmeleri ve arenanın su kanalları Pont du Gard üzerinden gelecek suyu bekliyor; ancak Gardon vadisinde su akışı aniden zayıfladı.",
+      "Two days before the grand games in the amphitheatre of Nîmes, water is desperately needed for the arena's canals and the public baths. But flow across the Pont du Gard has abruptly slowed.",
+    ),
+    start: "kemer",
+    scenes: {
+      kemer: {
+        text: l(
+          "Gardon nehrinin kırk dokuz metre yukarısındaki üçüncü kat kemer kanalında fenerle yürüyorsunuz. Ayaklarınızın altında buz gibi kaynak suyu akıyor ama kanal tabanında kalın bir kireç tabakası birikmiş; üstelik vadideki son fırtınada kanala bir kaya parçası yuvarlanmış.",
+          "Holding a clay oil lamp, you walk inside the covered conduit on the third tier of the Pont du Gard, forty-nine metres above the river. Cold spring water runs past your sandals, but thick calcium carbonate incrustations and a fallen rock block the flow.",
+        ),
+        history: l(
+          "Pont du Gard, Uzès yakınlarındaki Eure kaynağından Nîmes'e 50 kilometrelik bir güzergahta günde yaklaşık 40.000 metreküp su taşıyordu. Kanalın eğimi kilometre başına yalnızca 34 santimetreydi.",
+          "The Pont du Gard carried roughly 40,000 cubic metres of spring water daily from Uzès along a 31-mile course to Nîmes. Its average gradient was a masterwork of surveying: just 34 centimetres per kilometre.",
+        ),
+        choices: [
+          go(
+            "Taşçı işçilerini çağırıp kayayı kırarak kireci kazı",
+            "Summon stonemasons to split the boulder and scrape the lime",
+            "kazima",
+          ),
+          go(
+            "Kente koşup Castellum Divisorium dağıtım vanalarını ayarla",
+            "Rush to the Castellum Divisorium in town to balance valves",
+            "castellum",
+          ),
+        ],
+      },
+      kazima: {
+        text: l(
+          "İşçiler dar kanalda balyoz ve bronz keskilerle kayayı parçalıyor. Tıkanıklık açılır açılmaz birikmiş su gürleyerek kemer boyunca akmaya başlıyor. Suyun önünden kente doğru dörtnala haberci gönderiyorsun.",
+          "Working in the narrow conduit, masons split the limestone block with iron wedges. The moment it gives way, pent-up water surges down the channel. You send a courier galloping ahead to the city gates.",
+        ),
+        choices: [
+          go(
+            "Doğrudan amfitiyatroya inip arena zeminini sula",
+            "Go straight to the amphitheatre to flood the arena conduits",
+            "arena",
+          ),
+          go(
+            "Maison Carrée önündeki şehir meclisine durumu bildir",
+            "Report success to the decurions before the Maison Carrée",
+            "meclis",
+          ),
+        ],
+      },
+      castellum: {
+        text: l(
+          "Kentin en yüksek noktasındaki dairesel taştan Castellum Divisorium'dasınız. On adet kurşun boru kentin farklı mahallelerine su dağıtıyor. Gelen su sınırlı; hangi vanaların kısılacağına karar vermeniz gerekiyor.",
+          "You stand beside the circular basin of the Castellum Divisorium at the crest of Nîmes. Ten round lead pipes radiate outward to supply different city quarters. Flow is low; you must decide which sluices to prioritize.",
+        ),
+        history: l(
+          "Nîmes'teki Castellum Divisorium, antik dünyadan günümüze sağlam kalan en önemli su dağıtım terminalidir. Dairesel havuzundaki kurşun borular kamu çeşmelerine, hamamlara ve villalara ayrı ayrı su iletirdi.",
+          "The Castellum Divisorium of Nîmes is the best-preserved aqueduct delivery terminal from antiquity. Its circular basin fitted with ten lead mains supplied public fountains, thermal baths and private villas.",
+        ),
+        choices: [
+          go(
+            "Suyu halk çeşmelerine ve umumi hamamlara yönlendir",
+            "Divert the full head to public fountains and baths",
+            "halk",
+          ),
+          go(
+            "Suyu doğrudan yeni inşa edilen amfitiyatroya akıt",
+            "Direct the flow straight to the new amphitheatre",
+            "arena",
+          ),
+        ],
+      },
+      arena: {
+        text: l(
+          "Yirmi dört bin kişilik amfitiyatronun arena zeminindeki kanallara su doluyor. Toz kalkan kumlar sulanıyor, seyirciler kemer altındaki çeşmelerden serinliyor. Koloni valisi yanına gelip ustalığını kutluyor.",
+          "Water gushes through the floor channels of the 24,000-seat amphitheatre. The dusty arena sand is settled, and spectators drink from cool stone fountains beneath the arcades. The magistrate applauds your engineering.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Oyunların serin suyu", "Cool waters for the games"),
+          kind: "good",
+        },
+      },
+      meclis: {
+        text: l(
+          "Maison Carrée'nin kusursuz Korint sütunları önünde toplanan meclis üyeleri suyun geldiğini haykıran kalabalığı duyuyor. Adın koloninin onur tabletine 'aquarum curator' unvanıyla kaydediliyor.",
+          "Before the exquisite Corinthian portico of the Maison Carrée, the city council hears the cheers as public fountains begin to splash. Your name is entered into the town records as curator aquarum.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Taşa kazınan övgü", "Honour carved in stone"),
+          kind: "good",
+        },
+      },
+      halk: {
+        text: l(
+          "Mahalle çeşmeleri şırıldamaya başlıyor; kadınlar, çocuklar ve esnaflar bronz testilerini dolduruyor. Hamamların havuzları doluyor. Arena oyunları biraz gecikse de halkın duası seninle.",
+          "Street fountains begin to spout clear mountain water; townspeople and craftsmen fill their bronze jugs with smiles. The bath pools fill to the brim. The arena waits an hour, but the town is refreshed.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Kentin can damarı", "The lifeblood of the colony"),
+          kind: "good",
+        },
+      },
+    },
+  },
+  /* ------------------------- Trier ------------------------- */
+  {
+    id: "trier-saray-katibi",
+    siteSlug: "trier",
+    title: l("Konstantin'in Fermanı", "The Decree of Constantine"),
+    role: l(
+      "Aula Palatina taht salonunda görevli imparatorluk kâtibi",
+      "An imperial scribe in the Aula Palatina",
+    ),
+    period: l("MS 310 civarı", "Around AD 310"),
+    blurb: l(
+      "Augusta Treverorum, Batı Roma İmparatorluğu'nun başkenti. İmparator Konstantin'in devasa bazilikasında yeni bir vergi ve imar fermanı yazılırken, Porta Nigra'dan gelen Ren sınırı elçileri kente giriyor.",
+      "Augusta Treverorum has become the capital of the Western Empire. In Constantine's vast basilica, an imperial decree is being penned as frontier envoys arrive at the Porta Nigra.",
+    ),
+    start: "saray",
+    scenes: {
+      saray: {
+        text: l(
+          "Devasa kırmızı tuğlalı Aula Palatina'nın dev pencerelerinden sabah ışığı dökülüyor. Tabanın altındaki hipokaust fırınları salonu sıcacık tutuyor. Masanda parşömen, divit ve imparatorluk moru mürekkep duruyor. Konstantin kürsüde kurmaylarıyla konuşurken elçilerin geldiği bildiriliyor.",
+          "Morning light pours through the immense double tier of arched windows in the brick-built Aula Palatina. Hypocaust channels beneath the marble floor warm the great hall. On your desk lie fine calfskin parchment, bronze pens and imperial purple ink. As Constantine confers with his prefects, frontier envoys are announced.",
+        ),
+        history: l(
+          "MS 310 civarında inşa edilen Konstantin Bazilikası (Aula Palatina), 67 metre uzunluğunda, 27 metre genişliğinde ve 33 metre yüksekliğinde tek bir devasa salondur. Sütunsuz en büyük antik kapalı mekanlardan biridir.",
+          "Built around AD 310, the Aula Palatina of Trier is a single monumental hall 67 metres long and 33 metres high. It remains the largest surviving unpillared hall from antiquity.",
+        ),
+        choices: [
+          go(
+            "Fermanı hızla tamamlayıp imparatorun onayına sun",
+            "Finish drafting the decree and present it to the emperor",
+            "imparator",
+          ),
+          go(
+            "Porta Nigra'dan gelen elçilerin getirdiği sınır raporlarını karşıla",
+            "Go to the Porta Nigra to examine the frontier dispatches",
+            "porta",
+          ),
+        ],
+      },
+      imparator: {
+        text: l(
+          "Konstantin tahtında oturuyor; fermanı dikkatle okuyup altın mühür yüzüğünü kırmızı balmumuna basıyor. 'Bu ferman amfitiyatroda toplanan halka okunacak,' diyor, 'imparatorluğun yeni başkentinin gücünü herkes duysun.'",
+          "Constantine sits upon his dais; he reads the decree carefully and presses his gold signet ring into the warm vermilion wax. 'Let this be read publicly before the assembly in the amphitheatre,' he decrees. 'Let all Gaul know the majesty of our capital.'",
+        ),
+        choices: [
+          go(
+            "Fermanı amfitiyatroda bizzat halka oku",
+            "Read the decree yourself at the amphitheatre",
+            "amfi",
+          ),
+          go(
+            "Fermanın resmi kopyasını saray arşivine mühürle",
+            "File and seal the master copy in the imperial archives",
+            "arsiv",
+          ),
+        ],
+      },
+      porta: {
+        text: l(
+          "Porta Nigra'nın devasa siyah kumtaşı kemerleri altındasınız. Dört katlı kulelerin arasından Ren nehrinden gelen kürk ve şarap kervanları geçiyor. Demir kenetlerle harçsız örülmüş taşların heybeti yabancı elçileri büyülüyor.",
+          "You stand beneath the colossal blackened sandstone arches of the Porta Nigra. Between the four-storey towers, merchants with wine casks and furs from the Rhine pass the guards. The mortarless masonry bound by iron clamps overawes the northern delegates.",
+        ),
+        history: l(
+          "Porta Nigra (Kara Kapı), Roma dünyasından günümüze kalan en iyi korunmuş şehir kapısıdır. Devasa kumtaşı blokları harç kullanılmadan, demir kenetler ve kurşun dökülerek birbirine tutturulmuştur.",
+          "The Porta Nigra is the best-preserved Roman city gate in the world. Its massive sandstone ashlar blocks were laid dry without mortar, secured entirely with iron clamps run with molten lead.",
+        ),
+        choices: [
+          go(
+            "Gümrük kâtibiyle birlikte sınır ticaret defterlerini düzenle",
+            "Organise the frontier customs ledgers with the gate scribe",
+            "gumruk",
+          ),
+          go(
+            "Elçileri alıp hızla Aula Palatina taht salonuna geri dön",
+            "Escort the envoys straight back to the Aula Palatina",
+            "imparator",
+          ),
+        ],
+      },
+      amfi: {
+        text: l(
+          "Yirmi bin kişinin doldurduğu amfitiyatro podyumuna çıkıyorsunuz. İmparatorun fermanını gür bir sesle okuduğunuzda galerilerden büyük bir alkış kopuyor; halk başkentin koruyucusuna tezahürat ediyor.",
+          "You ascend the speaker's podium of the amphitheatre before twenty thousand citizens. As your voice carries the emperor's words across the oval, a roar of acclaim rises from the cavea.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Başkentin sesi", "The voice of the capital"),
+          kind: "good",
+        },
+      },
+      arsiv: {
+        text: l(
+          "Mühürlü parşömeni sarayın sedir ağacından yapılmış arşiv dolaplarına kaldırıyorsunuz. İmparator Konstantin'in Batı Roma'yı yönettiği günlerin en değerli belgesi senin titizliğinle geleceğe miras kalıyor.",
+          "You place the sealed scroll into the cedarwood armaria of the palace library. The records of the days when Constantine ruled the Western Empire from the Moselle are preserved for posterity by your hand.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Tarihin koruyucusu", "Guardian of the record"),
+          kind: "good",
+        },
+      },
+      gumruk: {
+        text: l(
+          "Kara Kapı'dan giren her kervanın harç ve gümrük vergilerini kuruşu kuruşuna kaydediyorsunuz. Augusta Treverorum'un hazinesi zenginleşiyor; saray ile sınır birlikleri arasındaki düzen kusursuz işliyor.",
+          "You audit every tax ledger and import manifest passing through the Black Gate. The treasury of Augusta Treverorum swells, and order between frontier posts and the imperial court is flawlessly maintained.",
+        ),
+        choices: [],
+        ending: {
+          title: l("Kara Kapı'nın nizamı", "Order at the Black Gate"),
+          kind: "good",
+        },
+      },
+    },
+  },
 ];
 
 /**

@@ -56,3 +56,9 @@ yerebatan-sarnici
 galata-kulesi
 suleymaniye-camii
 selimiye-camii
+
+# 6. Grup - Yeni Avrupa Antik Kentleri:
+pompeii-kenti
+eboracum-kenti
+nimes-kenti
+trier-kenti

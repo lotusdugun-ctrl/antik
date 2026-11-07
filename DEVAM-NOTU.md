@@ -2,7 +2,32 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## 4 YENİ ANTİK KENT (POMPEİ, EBORACUM, NÎMES, TRİER) ENTEGRASYONU TAMAMLANDI, TÜM TESTLER %100 YEŞİL (559/559 PASS) (7 Kasım 2026, öğle) — EN GÜNCEL, BURADAN BAŞLA
+## ANTİK PASS ÖDEME AKIŞI + 4 YENİ KENT HİKÂYESİ & WEB PİŞİRME ALTYAPISI (575/575 PASS) (7 Kasım 2026, öğle) — EN GÜNCEL, BURADAN BAŞLA
+
+- **Hedef:** Antik Pass satın alma/geri yükleme (TWA Google Play Billing + Stripe web) entegrasyonu, Pompeii, Eboracum, Nîmes, Trier için interaktif hikâyeler (CYOA) ve web GLB pişirme altyapısı.
+- **Yapılanlar:**
+  1. **Antik Pass Ödeme ve Restore Akışı (`src/lib/pass.tsx`):**
+     - `useBuyPass`: Android TWA ortamında Google Play Digital Goods API (`window.getDigitalGoodsService`), web ortamında Stripe Checkout yönlendirmesi (`VITE_STRIPE_CHECKOUT_URL`) ve geri bildirim bildirimleri (toast) bağlandı.
+     - `restorePass`: Hem Google Play `listPurchases()` hem de yerel depolama doğrulamasıyla satın alımı geri yükler duruma getirildi.
+     - `Paywall` bileşeninde `pass_restore` metni tıklanabilir aktif bir butona dönüştürüldü.
+  2. **İnteraktif Hikâyeler (`src/lib/stories-more.ts`):**
+     - `pompeii-firinici`: Vezüv patlaması sırasında fırıncı çırağının kaçış hikâyesi (7 sahne; Nocera kapısı, marina teknesi, amfitiyatro sığınağı ve Stabiae sonları; Yaşlı/Genç Plinius dipnotları).
+     - `eboracum-lejyoneer`: MS 122 Hadrianus ziyareti ve VI. Victrix nöbeti (6 sahne; Principia karargahı, Hadrian Duvarı inşası, nehir devriyesi ve lojistik sonları).
+     - `nimes-su-muhendisi`: Pont du Gard su kemeri ve Castellum Divisorium su dağıtımı (6 sahne; kemer tıkanıklığı, amfitiyatro su kanalları, halk çeşmeleri sonları).
+     - `trier-saray-katibi`: MS 310 Konstantin Bazilikası (Aula Palatina) ve Porta Nigra fermanı (6 sahne; imparatorluk mührü, amfitiyatro duyurusu, saray arşivi sonları).
+     - Hikâyeler hem Türkçe hem İngilizce tam metin ve dallanma kurallarına tam uyumludur (49 hikâye testinin tamamı geçti).
+  3. **Web GLB Pişirme Altyapısı (`scripts/glb/web-sites.txt`, `PISIR-YENI-KENTLER.bat`):**
+     - `web-sites.txt` listesine 6. Grup olarak `pompeii-kenti`, `eboracum-kenti`, `nimes-kenti`, `trier-kenti` eklendi.
+     - Kullanıcının tek tıkla yeni 4 kentin 3D sahnelerini Blender GPU ile web için pişirmesini sağlayan `PISIR-YENI-KENTLER.bat` hazırlandı.
+  4. **Doğrulama ve Kalite:**
+     - `bunx tsc --noEmit` → **0 hata** (Tip denetimi temiz).
+     - `bun test` → **575 pass, 0 fail (343.390 expect() çağrısı, 31 dosya)** %100 YEŞİL!
+     - `test-sonucu.txt` güncellendi.
+  5. **Gönderim Bat:**
+     - `GONDER-38.bat` hazırlandı (`git add` ile değişen kaynak dosyalar, test sonucu ve DEVAM-NOTU.md; push).
+
+## 4 YENİ ANTİK KENT (POMPEİ, EBORACUM, NÎMES, TRİER) ENTEGRASYONU TAMAMLANDI, TÜM TESTLER %100 YEŞİL (559/559 PASS) (7 Kasım 2026, öğle)
+
 - **Hedef:** İtalya (Pompeii), İngiltere (Eboracum), Fransa (Nîmes) ve Almanya (Trier) yeni 4 antik kentin 3D modelleme/rekonstrüksiyon entegrasyonu tamamlanarak tüm doğrulama testlerinin (%100, 559/559) yeşile çekilmesi, yapı kartları ve dokümantasyonun tamamlanması.
 - **Yapılanlar:**
   1. **Geometri ve Z-Fighting Düzeltmeleri (`src/lib/reconstruction-parts.ts`):**
@@ -27,6 +52,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
      - Kullanıcı için `GONDER-37.bat` hazırlandı (`git add` ile değişen kaynak dosyalar, yapı kartları, `DEVAM-NOTU.md`, `test-sonucu.txt` ve push).
 
 ## UKİYO-E ANİMASYONLU EXPLAINER: "NEDEN OYUN OYNUYORUZ?" (7 Kasım 2026, sabah)
+
 - **İstek:** "Neden oyun oynuyoruz" konulu, Ukiyo-e Woodblock (Hokusai/Hiroshige ahşap baskı) üslubunda görsel storyboard ve tam animasyonlu anlatıcı.
 - **Yapıldı:**
   1. **Görsel Storyboard:** `storyboard.html` (1280x720, 6 beat: Giriş/Kanca, Güvenli Simülasyon, Dopamin Döngüsü, Sosyal Bağ & 3.4B Oyuncu, Akış Boyutu & Büyülü Halka, Sonuç). Kullanıcı tarafından onaylandı.
@@ -35,6 +61,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **Konum:** `C:\Users\caner\.gemini\antigravity\brain\7efeab97-dcc2-4438-8ba6-67c3ecf5efaa\`
 
 ## YENİ ANTIK KENTLER: POMPEİ, EBORACUM, NIMES, TRIER (6 Kasım 2026, akşam)
+
 - **İstek:** İtalya, İngiltere, Fransa ve Almanya'dan antik kentler; Türkiye'dekiler gibi 3D modeller.
 - **Yapıldı (bu batarya):**
   - Blender betikleri: `scripts/blender/pompeii_hd.py` (+`POMPEII-HD.bat`), `scripts/blender/eboracum_hd.py` (+`EBORACUM-HD.bat`), `scripts/blender/nimes_hd.py` (+`NIMES-HD.bat`), `scripts/blender/trier_hd.py` (+`TRIER-HD.bat`).
@@ -45,6 +72,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **Bake denemesi (6 Kasım akşam):** `PISIR-WEB.bat pompeii` → `disa aktariliyor...` → `HATA (disa aktarma)` (`hd-out\pisir\pompeii.log`: `page.waitForFunction: Timeout 300000ms exceeded` @ export-glb.mjs:24). Neden: hedef rota `/rekonstruksiyon/pompeii` → `getReconstruction("pompeii")` → `notFound()`. Yeni kent için web GLB bake'i, `src/lib/reconstructions` kayıtları + `public/baked/<id>` + `baked-sites.ts` + `hd-files.json`/`panoramas` girmeden önce yapılamaz. (Vite/hydration uyarısı marjinaldi; zaman aşımı ana neden.)
 
 ## CI KIRMIZISI ÇÖZÜLDÜ (6 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+
 - **GitHub CI'nın 30 Ekim'den (#39) beri kırmızı olmasının nedeni bulundu:** kırmızı olan adım `Lint` (`bunx eslint . --quiet`). Kod tabanının bir kısmı `.prettierrc` (printWidth 100) ile uyumlu değildi: 7 dosyada 140 biçim hatası. Type-check, test, build ve audit bu yüzden hiç çalışmamıştı (atlanmıştı).
   - Dosyalar: `src/components/Reconstruction3DInner.tsx`, `src/lib/baked-scene.ts`, `src/lib/panoramas.ts`, `scripts/glb/export-life.mjs`, `scripts/glb/export-glb.mjs`, `scripts/glb/export-fx.mjs`, `scripts/glb/web_pack.mjs`.
   - **Yapıldı:** bu 7 dosya `bunx prettier --write` ile biçimlendirildi; yalnızca boşluk/satır düzeni değişti, davranış aynı.
@@ -56,6 +84,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **Sıradaki:** (1) Antik Pass ödemesi (Play Billing + Stripe), (2) Celsus erdem heykelleri, (3) hikâye metinleri. Yayın yeri (Vercel/Cloudflare) kararı hâlâ açık; Cloudflare'e geçilecekse `preset` değişikliği `process.env["NITRO_PRESET"]` yazımıyla ve ayrı bir bat ile yapılmalı.
 
 ## YENİ ANTIK KENT: POMPEİ (İtalya) — 6 Kasım 2026, akşam
+
 - **İstek:** İtalya, İngiltere, Fransa ve Almanya'dan antik kentler; Türkiye'dekiler gibi 3D modeller.
 - **Yapıldı (İtalya — ilk): Pompeii HD betiği.**
   - `scripts/blender/pompeii_hd.py`: forum, basilika, Capitolium, Apollo tapınağı, büyük tiyatro, amfitasar, evler, duvar, Vesuvius yamacı; sky/sun, 3 adet render (`--views`), 360° pano (`--pano`), karşılaştırma (kiyas) görünümü, `BITTI`.
@@ -65,6 +94,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **Kullanıcı yapacak:** `POMPEII-HD.bat` çalıştır (ekran kartı) → `hd-out-pompeii-log.txt` → "pompeii hd hazir" → Claude çıktıları/açıları doğrular → 360°'leri `public/hd/pompeii/` + `hd-files.json` + `GONDER-35.bat` (Türkiye'deki GONDER-15 akışına göre).
 
 ## YENİ ANTIK KENTLER: EBORACUM, NIMES, TRIER (6 Kasım 2026, akşam)
+
 - **İstek:** İtalya, İngiltere, Fransa ve Almanya'dan antik kentler; Türkiye'dekiler gibi 3D modeller.
 - **Yapıldı (bu batarya):**
   - `scripts/blender/eboracum_hd.py` + `EBORACUM-HD.bat`: castellum (York), basilika, hamamlar, koloniyalı cadde, tapınak; 5 render + 360° + kiya.
@@ -74,6 +104,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **Yapılmadı:** 3 yapı kartı (`docs/yapi-kartlari/{eboracum,nimes,trier}.md`).
 
 ## SON DURUM (6 Kasım akşam) — önceki
+
 - Kullanıcı projeye **OpenAI (Codex)** üzerinden devam edecek. Kurallar artık `AGENTS.md`'de (her araç okur).
 - `GUNCEL-CEK.bat` ile agtt'nin `4481eda` "Antik v3" tasarımı çekildi (fast-forward, sorunsuz). Yerel `main` = GitHub `main` + aşağıdaki gönderilmemiş değişiklikler.
 - v3 özeti: yalnızca koyu tema (`src/styles.css`, `src/lib/theme.tsx`), İznik mercanı vurgu rengi, yeni yazı tipleri; **Antik Pass** (`src/lib/pass.tsx`): ücretsiz 3D = Aspendos + Celsus, kalanı Pass; fiyatlar ₺399/yıl, ₺59/ay, ₺999 ömür boyu; ödeme bağlı değil, kilit `VITE_PAYWALL=1` ile açılır. Pişmiş modeller v3'te de çalışıyor.
@@ -83,12 +114,14 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - Sıradaki seçenekler: (1) CI hatası, (2) Antik Pass ödemesi (Play Billing + Stripe), (3) Celsus erdem heykelleri, (4) hikâye metinleri.
 
 ## CLAUDE NOTU (6 Kasım, 2. sohbet) — DOĞRULANDI
+
 - `agtt` yetkisi: GEREK YOK, arkadaş zaten yetkili. `agtt` 5 Kasım'da `4481eda` "feat: Antik v3 redesign with dark theme, İznik coral and Antik Pass" commit'ini attı. Yerel depo bu commit'in GERİSİNDE; GONDER-30 içindeki `git pull` onu alır.
 - Antigravity işi doğrulandı: `public/baked/` içinde 45 klasör var, `baked-sites.ts` 45 yeri listeliyor, `baked-scene.ts` varsayılan açık (`?baked=0` / `?pilot=0` ile kapanıyor). Yerel son commit'ler 3fcfaf8 ve 05c56f1, GitHub'da da var (push edilmiş).
 - GONDER-30 HENÜZ ÇALIŞTIRILMADI. `vite.config.ts` dosyasına agtt dokunmamış, çakışma beklenmez.
 - DİKKAT: Site Vercel'de yayındaysa `preset: "cloudflare-pages"` varsayılanı Vercel derlemesini bozabilir. GONDER-30'dan önce Vercel'de `NITRO_PRESET=vercel` ortam değişkeni eklenmeli ya da Cloudflare'e geçiş tamamlanmalı.
 
 ## ANTIGRAVITY OTURUMU (6 Kasım 2026) — EN GÜNCEL & CLAUDE DEVİR NOTU
+
 - **Özet:**
   1. **Tüm 45 yerin pişirilmesi ve varsayılan yapılması tamamlandı:**
      - 45 antik yerin tamamı Blender Cycles GPU ile gündüz ışığı (`clear`) ön ayarında pişirildi, meshopt (`-cc`) ile sıkıştırıldı ve `public/baked/` altına yerleştirildi (513.3 MB).
@@ -113,6 +146,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
   - Hikâye metinleri (`HIKAYELERI-YENILE.bat`, el kontrolü).
 
 ## ANTIGRAVITY OTURUMU (5 Kasım 2026)
+
 - **Yapılanlar:**
   1. **Aspendos & Nemrut görsel kusurları giderildi ve yeniden pişirildi:**
      - Aspendos tiyatrosu arkasındaki toprak set (`bank`) düz gri görünüyordu; `Reconstruction3DInner.tsx` ve `landscape.ts` üzerinden çok ölçekli gürbüz toprak/çimen dokusu (`groundDetail`), tepe dalgalanması (`slopeY` noise) ve dünya koordinatı UV eşlemesi bağlandı. `baked-scene.ts` içinde pişmiş modeller için `_DETAIL` zemin doku geçişi eklendi.
@@ -137,6 +171,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
   - Hikâye metinleri (`HIKAYELERI-YENILE.bat`, el kontrolü).
 
 ## Kurallar
+
 - Türkçe yaz. Kullanıcıya gereksiz soru sorma; kullanıcı çoğu zaman bilgisayar başında değil.
 - Gönderme işini kullanıcı GONDER-N.bat ile yapar. Buluttan push yapılmaz, gönderilmiş geçmiş yeniden yazılmaz (AGENTS.md).
 - `scripts/glb/recon-dev-patch.diff` (Reconstruction3DInner.tsx'teki 2 satır) asla commit edilmez.
@@ -145,6 +180,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - Uygulama Google Play'de TWA (web uygulaması) olarak ücretli satılacak.
 
 ## YENİ YÖN (kullanıcı kararı, 2 Kasım)
+
 - **Öncelik yapının kendisi**: gerçekçi ve olabildiğince doğru. Arazi ve ağaçlar ikinci planda, "inandırıcı zemin" yeter.
 - **Hedef her zaman SAĞLAM DÖNEM**: yapıların bugünkü yıkık hâli değil, kullanıldıkları dönemdeki hâli. Bugünkü fotoğraflar yalnızca kanıt.
 - Yöntem: her yapı için önce **yapı kartı** (`docs/yapi-kartlari/<yer>.md`). Her ölçü/öğe kaynaklı ve [K] kaynak / [F] fotoğraf / [T] tahmin etiketli. Sonra model bu karttan kurulur, sonra fotoğraflarla karşılaştırılır.
@@ -153,6 +189,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - Bulutta Blender yok; `pip install bpy==5.2.3 --break-system-packages` ile kuruluyor. 2 çekirdek: 960x540 / 24 örnek ≈ 4–5 dk/görünüm.
 
 ## Karanlık Kilise (ilk pilot yapı)
+
 - Önemli bulgu: kilise peribacasına değil, **büyük kaya kütlesine oyulmuş manastır avlusunun** (5 × 14 m) içinde. Avlu cephesi iki katlı: alt katta kapılar + 19 kör niş + Malta haçları, üst katta revak (kubbeli/tonozlu bölmeler). Kilise üst seviyede, kuzeydeki kavisli merdivenle çıkılıyor. Fresk zeminleri koyu lacivert değil, **mavi-gri**.
 - `docs/yapi-kartlari/karanlik-kilise.md`: yapı kartı (kaynaklar, sağlam dönem tamamlamaları, açık sorular).
 - `scripts/blender/karanlik_hd.py` (**v2**, iç mekân dahil). Narteks, mezar odası, naos (4 sütun, 5 kubbe, 3 apsis), yemekhane, alt kat odaları ve kandiller eklendi. `--pano` ile 5 adet 360° görüntü üretiyor. **KARANLIK-HD.bat** bunları ekran kartıyla işler, çıktı `hd-out\karanlik`; kullanıcı "karanlik hd hazir" yazınca 360°'leri `public/hd/goreme-kaya-kiliseleri/`'ne koy, `hd-files.json`'u güncelle, GONDER-15'i hazırla. Önizleme: `Claude outputs\karanlik-v2-onizleme.jpg`. Freskler şimdilik yer tutucu (figür uydurulmadı).
@@ -167,6 +204,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - `goreme_hd.py`: vadi düzeltmeleri (basamaklı tüf katmanları, peribacası çeşitleri, renk farkı, yıpranmış cephe, kesim güvenliği) yazıldı. **Ancak peribacasına oyulmuş kilise yanlış**; Karanlık modeli hazır olunca vadiye o yerleştirilecek. GOREME-HD.bat şimdilik çalıştırılmasın.
 
 ## HEP GÜNDÜZ + PISIR-WEB (4 Kasım gece) — EN GÜNCEL
+
 - **Kullanıcı kararı:** gün/akşam/gece ayrımı kalktı; her yer gündüz, Mozaik3D gibi temiz ve net. Reconstruction3D'de ışık düğmeleri, "zaman akışı" anahtarı ve foto modundaki ışık düğmesi kaldırıldı (atmos sabit "day").
 - **Unity bake'leri web için kusurlu:** akşam ışığı (cepheler gölgede) ve ağır yerlerde (Hierapolis, Side, Pergamon, Halikarnas) bake öncesi `gltfpack -si` sadeleştirmesi oturma sıralarını parçalamış (Hierapolis'te "kırık cam" görünümü; ham Unity dosyasında da var). Bu yüzden web için hepsi YENİDEN pişirilecek.
 - **Yeni ön ayar `clear`** (antik_bake.py): güneş 42°, güneş yönü uygulamanın açılış görünüşünden (`<id>-view.json`, export-glb yazar; `ANTIK_VIEW`): izleyicinin omzunun üstünden, 35° yandan. Celsus bulutta pişti (2048/96, ~35 dk CPU), web'de temiz ve parlak (`Claude outputs\celsus-gunduz.png`). baked-sites.ts artık yalnızca bunları listeler: `celsus-kutuphanesi`.
@@ -176,6 +214,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - (eski) Sırada: kullanıcı GONDER-26 → PISIR-WEB.bat → "pisirme bitti" → logları oku, sorun yoksa GONDER (public\baked + baked-sites.ts). Sonra insanlar.
 
 ## PİŞMİŞ IŞIK YAYGINLAŞTIRMA (4 Kasım gece)
+
 - **Güncelleme (GONDER-25):** Kamera durunca görüntü kararıyordu: kalite modu (GTAO + OutputPass, bilgisayarda varsayılan açık) pişmiş modeli ikinci kez tonluyor ve gölgeliyordu. Pişmiş model varken kalite modu atlanır.
 - **Güncelleme (GONDER-24):** Kullanıcı akşam açılışını çok koyu buldu, gündüz görünümünü beğendi → sahne yine **Gündüz** açılır. Ton: ışık oranının çoğu parlaklık, %35'i renk; en fazla %15 parlaklaşır (tam renk oranı gündüzde maviye/çok açığa kaçıyordu).
 - Kullanıcı: "Mozaik3D estetiği; kalanları yap". Sıra: (1) ışık/gök + yayma [YAPILDI, bu bölüm], (2) insanlar, (3) taş ayrıntısı, (4) heykeller.
@@ -189,6 +228,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - Cloud dışa aktarma: `git apply scripts/glb/recon-dev-patch.diff` (yalnız bulutta, commit ETME) + `bunx vite dev --port 5180` + `node scripts/glb/export-glb.mjs <id> <out>`; Celsus building.glb 137 MB.
 
 ## PİLOT DURUMU (4 Kasım akşam) — EN GÜNCEL
+
 - **Bulgu:** Unity için 24 yerin Blender'da pişirilmiş modelleri zaten var (`unity/AntikViewer/Assets/Antik/Baked/<id>-baked.glb` + `-near/-ground/-terrain-golden.png` ışık haritaları + `-bake.json`, `-skirt.glb`). Bunlar web'in kendi modelinden (heykeller, yazıtlar, kapı, ağaçlar dahil) üretilmiş. Bu yüzden HD Blender modelinden pişirme (`bake_glb.py`, `CELSUS-PISIR.bat`) gereksiz kaldı; CELSUS-PISIR.bat çalıştırılmasın.
 - **Yapıldı:** `src/lib/baked-scene.ts` + Reconstruction3D(Inner) değişikliği: `?pilot=1` ile pişmiş Celsus web'de gösterilir (`public/baked/celsus-kutuphanesi/`, ~25 MB). Unity gölgelendiricisinin hesabı: doku × renk × köşe rengi × ışık haritası(uv1) × 2, MeshBasicMaterial, toneMapped false. Web'in binası/arazisi/taramaları/sabit eşyası gizlenir; insanlar, yazıtlar, ateş, kuş, gök kalır. tsc temiz; bulutta testler (ses dosyaları hariç tutulduğu için düşen 9'u dışında) geçti. Karşılaştırma: `Claude outputs\celsus-pilot-karsilastirma.jpg`.
 - **GONDER-22.bat** hazır (henüz çalıştırılmadı): pilotu ve araçları gönderir.
@@ -196,6 +236,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **Mozaik'e kalan farklar (sıradaki):** (1) gök: bulutlu, daha parlak öğle ışığı (bake "golden" 16° güneş → "day" ön ayarı denenmeli), (2) insanlar: şu an küçük, basit figürler → gerçekçi (CC0 MakeHuman + dönem kıyafeti + hareket), (3) heykellerin ayrıntısı, (4) yükleme boyutu (20 MB GLB telefonda ağır: meshopt/KTX2 ya da karolu yükleme), (5) diğer 23 yer için aynı geçiş.
 
 ## YENİ HEDEF (4 Kasım, kullanıcı kararı): Mozaik3D estetiği
+
 - Kullanıcı Mozaik3D "Akropolis" ekran görüntüleri gönderdi: hedef bu seviyeye "çok yakın" bir sahne; **yapı + gerçekçi insanlar + heykeller + dolu çevre**. (Mozaik'ten hiçbir şey kopyalanmaz; yalnızca yöntem.)
 - Yöntem: HD Blender modeli → ışık/gölge/AO dokuya pişirilir → uygulamada ışıksız (MeshBasicMaterial) gösterilir.
 - **Yapıldı:** `scripts/blender/bake_glb.py` (bulutta yazıldı, bilgisayar çevrimdışıydı; `Claude outputs`/pilot'tan repoya kopyalanmalı) ve `CELSUS-PISIR.bat`. Yöntem: renk (COLOR) ve ışık (DIRECT+INDIRECT) ayrı pişirilir, ışık OIDN ile temizlenir (yardımcı sahnede birleştirici), çarpılır, AgX ile tonlanıp JPEG. Gruplar: önü / arkası (`--split-y 1.0`, iç mekân ayrı pozlama `--exposure-arka 0.4`) / zemin (meydan). Arazi atılır (uygulamanın kendi arazisi var). Celsus: ~61 bin yüz, GLB ~4 MB + dokular. Bulut denemesi (1024 px, 32 örnek, gerçek doku yok) iyi; önizleme `celsus-pismis-ilk-deneme.jpg`.
@@ -203,6 +244,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - Bulut ağı yalnızca paket kayıtlarına açık (pypi/npm); Poly Haven, MakeHuman vb. indirmeler kullanıcının bilgisayarında bat ile yapılmalı. Bulut önizleme: three.js + Playwright (swiftshader).
 
 ## EN SON DURUM (2 Kasım gece, sonraki oturum)
+
 - **Kullanıcı kararı: HD/Blender işi şimdilik DURUYOR.** GONDER-16 ile 360°, kaynak ("nereden biliyoruz") bölümleri siteden kaldırıldı; GONDER-17 eski "bugün ve antik çağda" kaydırıcısını (CompareSlider) geri getirdi. GONDER-18/19 Celsus cephe taraması önizlemesi denendi, GONDER-20/21 ile tamamen geri alındı. `Reconstruction3D.tsx` artık yalnızca CompareSlider'ı kullanıyor (HdPanoramas/EvidencePanel bağlı değil).
 - Celsus HD (CELSUS-HD.bat) 3 dış görünümü işledi, 4. görünümde (salon içi) log uyarısız kesildi; BITTI yok, 360° ve kıyas üretilmedi. HD'ye dönülürse: kaldığı yerden süren bir bat yapılmalı (`--views 3` + `--pano`), gerekirse iç görünüm CPU ile.
 - Test (TEST-CALISTIR.bat, paket kurulumuyla): tsc hatasız, **547 test geçti, 0 hata**.
@@ -211,6 +253,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - **Sıradaki:** (1) ~~Testler~~ tamam. (2) HIKAYELERI-YENILE.bat → "hikayeler gonderildi" → check-stories, aktar, audio-script, SESLENDIR-GEMINI. (3) Unity'ye dönülecekse zinciri yeniden kur.
 
 ## SON DURUM (2 Kasım gece) — eski
+
 - KARANLIK-HD.bat ekran kartıyla işlendi. İlk denemede fresk yolu göreliydi ve Wikimedia 7 fotoğrafı vermedi; ikisi de düzeltildi.
 - GONDER-15 çalıştı: commit 109588e push edildi, hd-files.json'da Karanlık'ın 5 adet 360° görüntüsü ve kıyas görüntüsü var. Testlerin çalıştığına dair çıktı bulunamadı; **TEST-CALISTIR.bat** ile `test-sonucu.txt` okunmalı.
 - Sırada: CELSUS-HD.bat → kontrol → ASPENDOS-HD.bat → AYASOFYA-HD.bat → yeni bir GONDER. GONDER-15 tekrar çalıştırılabilir, varsa yeni çıktıları da kopyalar.
@@ -221,6 +264,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
   - Fresklerdeki kazıma izlerine sağlam dönem rötuşu yapılacak.
 
 ## Bu oturumun önceki durumu (kullanıcı dışarıdayken yapılanlar)
+
 - **Bekleyen (kullanıcı evde):** önce **KARANLIK-HD.bat** çalıştırılacak. Bu bat önce 13 fresk fotoğrafını Commons'tan `gorseller-ai\karanlik-fresk`'e indirir (curl), sonra ekran kartıyla işler. Kullanıcı "karanlik hd hazir" yazınca → çıktılara bak → **GONDER-15.bat**. GONDER-15, 360°leri `public\hd\goreme-kaya-kiliseleri`'ne kopyalar, `hd-files.json`'u PowerShell ile üretir ve gönderir. Gerekirse **CELSUS-HD.bat** de çalıştırılabilir.
 - Uygulama: `src/lib/panoramas.ts` Karanlık'ın 5 adet 360° görüntüsünü (avlu, üst revak, narteks, naos, yemekhane) TR/EN başlık ve notlarla tanımlıyor; `credit` alanı eklendi. `HdPanoramas.tsx` atfı gösteriyor (CC BY 4.0, Jose Huwaidi). Göreme'nin eski 4 girişi kaldırıldı. tsc/test bulutta çalıştırılamadı; GONDER-15'ten önce yerelde `bun test` iyi olur.
 - Freskler: `scripts/blender/karanlik-freskler.json` (13 fotoğraf, yalnızca CC BY ve kamu malı; yer, yazar, lisans). `karanlik_hd.py --frescoes <klasör>` fotoğrafları karttaki yerlerine düzlemsel izdüşümle koyuyor. Yönler sahte görsellerle denendi; gerçek fotoğraflarla sonuç henüz görülmedi.
@@ -259,6 +303,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
 - Anlatım kontrolü: `docs\anlatim-kontrol-goreme.md`. Göreme hikâyesinde Karanlık'ı peribacasında gösteren cümle, "10 yıl" restorasyon ve "eşsiz mavi" ifadeleri düzeltilmeli.
 
 ## Durum
+
 - **Kalite modu takılması:** Düzeltildi (yarım çözünürlüklü ambient occlusion, yalnızca kamera dururken). GONDER-13 ile gönderildi.
 - **Blender:** Kullanıcının bilgisayarında Blender 5.2.3 var ve RX 7700 XT'yi HIP ile kullanabiliyor.
 - **Görseller:** Nano Banana, AI Studio'da artık ücretli. gemini.google.com'da ücretsiz; Claude bunu Chrome eklentisiyle kullandı. Göreme için 14 görsel indirildi (`İndirilenler\goreme-*.png`):
@@ -267,6 +312,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
   - freskler: fresk-azizler, fresk-kubbe, fresk-sahne, fresk-apsis
 
   GOREME-HD.bat bunları `gorseller-ai\goreme` klasörüne taşır.
+
 - **Göreme HD (pilot):**
   - `scripts/blender/goreme_hd.py` (+ `goreme-layout.json`) Blender'da gerçek kaya peribacaları kurar: yağmur olukları, tüf katmanları, bazalt şapkalar, boolean ile kayaya oyulmuş kilise cephesi.
   - Karanlık Kilise'nin içi de var: çapraz plan, 4 sütun, kubbe, 3 apsis, fresk malzemesi, kandiller.
@@ -291,6 +337,7 @@ Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve 
   - Kalanlar: Göreme, Divriği, Arslantepe, Hierapolis, Efes tiyatrosu, Side tiyatrosu, Pergamon Trajaneum, Nemrut, Aspendos tiyatrosu.
 
 ## Sıradaki işler
+
 1. Kullanıcı KARANLIK-HD.bat çalıştıracak. Sonra 360°leri uygulamaya ekle (GONDER-15). Ardından freskler, malzemeler, ölçü doğrulaması.
 2. Karanlık bitince Göreme vadisine yerleştir, 360° görüntüleri üret, uygulamaya ekle, GONDER-15.
 3. Aynı yöntemle (önce yapı kartı, sonra model; hep sağlam dönem) diğer vitrin yerlerine geç (yer başına `scripts/blender/<yer>_hd.py`): Efes Celsus, Aspendos, Göbeklitepe, Ayasofya, Termessos, Hierapolis, Nemrut, Pergamon, Side. Her yer için önce Gemini'de konsept görselleri ve dokular üret.

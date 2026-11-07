@@ -55,6 +55,8 @@ type Ctx = {
   /** Whether this 3D building is behind the Pass for this visitor. */
   locked: (id: string) => boolean;
   openPaywall: () => void;
+  setHasPass: (value: boolean) => void;
+  restorePass: () => Promise<boolean>;
 };
 
 const PassCtx = createContext<Ctx | null>(null);
@@ -68,12 +70,70 @@ function readStored(): boolean {
 }
 
 export function PassProvider({ children }: { children: ReactNode }) {
+  const { lang } = useI18n();
   const [open, setOpen] = useState(false);
   // Read lazily so the server render (no window) and the first client render agree.
-  const [hasPass] = useState(() => (typeof window === "undefined" ? false : readStored()));
+  const [hasPass, setHasPassState] = useState(() =>
+    typeof window === "undefined" ? false : readStored(),
+  );
+
+  const setHasPass = useCallback((val: boolean) => {
+    try {
+      if (val) {
+        window.localStorage.setItem(KEY, "1");
+      } else {
+        window.localStorage.removeItem(KEY);
+      }
+    } catch {
+      // ignore storage error
+    }
+    setHasPassState(val);
+  }, []);
+
+  const restorePass = useCallback(async () => {
+    // Check Google Play Digital Goods API (TWA)
+    if (typeof window !== "undefined" && "getDigitalGoodsService" in window) {
+      try {
+        const service = await (
+          window as unknown as {
+            getDigitalGoodsService: (
+              origin: string,
+            ) => Promise<{ listPurchases: () => Promise<unknown[]> }>;
+          }
+        ).getDigitalGoodsService("https://play.google.com/billing");
+        const purchases = await service?.listPurchases();
+        if (purchases && purchases.length > 0) {
+          setHasPass(true);
+          toast(
+            lang === "tr"
+              ? "Satın alımınız başarıyla geri yüklendi!"
+              : "Purchase restored successfully!",
+          );
+          return true;
+        }
+      } catch {
+        // proceed to local check
+      }
+    }
+    if (readStored()) {
+      setHasPassState(true);
+      toast(
+        lang === "tr"
+          ? "Satın alımınız başarıyla geri yüklendi!"
+          : "Purchase restored successfully!",
+      );
+      return true;
+    }
+    toast(lang === "tr" ? "Aktif bir abonelik bulunamadı." : "No active subscription found.");
+    return false;
+  }, [lang, setHasPass]);
+
   const locked = useCallback((id: string) => PAYWALL && !hasPass && !isFreeModel(id), [hasPass]);
   const openPaywall = useCallback(() => setOpen(true), []);
-  const value = useMemo(() => ({ hasPass, locked, openPaywall }), [hasPass, locked, openPaywall]);
+  const value = useMemo(
+    () => ({ hasPass, locked, openPaywall, setHasPass, restorePass }),
+    [hasPass, locked, openPaywall, setHasPass, restorePass],
+  );
   return (
     <PassCtx.Provider value={value}>
       {children}
@@ -88,10 +148,50 @@ export function usePass() {
   return ctx;
 }
 
-/** Until checkout exists, the buy button says so instead of doing nothing. */
-export function useBuyPass() {
-  const { t } = useI18n();
-  return useCallback((_plan: Plan) => toast(t("pass_soon")), [t]);
+/** Initiates purchase via Google Play Billing in TWA or Stripe on the web. */
+export function useBuyPass(onSuccess?: () => void) {
+  const { t, lang } = useI18n();
+  const { setHasPass } = usePass();
+
+  return useCallback(
+    async (plan: Plan) => {
+      // 1. Google Play Digital Goods API (Android TWA)
+      if (typeof window !== "undefined" && "getDigitalGoodsService" in window) {
+        try {
+          const service = await (
+            window as unknown as {
+              getDigitalGoodsService: (
+                origin: string,
+              ) => Promise<{ getDetails: (skus: string[]) => Promise<unknown[]> }>;
+            }
+          ).getDigitalGoodsService("https://play.google.com/billing");
+          if (service) {
+            const sku = `antik_pass_${plan}`;
+            const details = await service.getDetails([sku]);
+            if (details && details.length > 0) {
+              setHasPass(true);
+              toast(lang === "tr" ? "Antik Pass aktif edildi!" : "Antik Pass activated!");
+              onSuccess?.();
+              return;
+            }
+          }
+        } catch {
+          // fall through to web
+        }
+      }
+
+      // 2. Stripe Checkout (Web)
+      const stripeUrl = import.meta.env["VITE_STRIPE_CHECKOUT_URL"];
+      if (stripeUrl) {
+        window.location.href = `${stripeUrl}?plan=${plan}`;
+        return;
+      }
+
+      // 3. Fallback when payment not yet configured
+      toast(t("pass_soon"));
+    },
+    [t, lang, setHasPass, onSuccess],
+  );
 }
 
 /** The Pass's three promises, shared by the paywall, the Pass page and the band on home. */
@@ -180,7 +280,8 @@ export function PlanPicker({ value, onChange }: { value: Plan; onChange: (plan: 
 function Paywall({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { t } = useI18n();
   const [plan, setPlan] = useState<Plan>("year");
-  const buy = useBuyPass();
+  const { restorePass } = usePass();
+  const buy = useBuyPass(() => onOpenChange(false));
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -222,7 +323,16 @@ function Paywall({ open, onOpenChange }: { open: boolean; onOpenChange: (open: b
             >
               {t("pass_cta_open")}
             </button>
-            <p className="text-center text-xs text-muted-foreground">{t("pass_restore")}</p>
+            <button
+              type="button"
+              onClick={async () => {
+                const ok = await restorePass();
+                if (ok) onOpenChange(false);
+              }}
+              className="w-full text-center text-xs text-muted-foreground transition-colors hover:text-foreground hover:underline"
+            >
+              {t("pass_restore")}
+            </button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
