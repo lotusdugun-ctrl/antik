@@ -1,0 +1,18 @@
+{
+ "model": "pompeii-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "pompeii-kenti-near": "pompeii-kenti-near-clear.jpg",
+  "pompeii-kenti-ground": "pompeii-kenti-ground-clear.jpg",
+  "pompeii-kenti-terrain": "pompeii-kenti-terrain-clear.jpg",
+  "pompeii-kenti-detail": null,
+  "pompeii-kenti-flora": null
+ },
+ "terrain": "pompeii-kenti-terrain",
+ "plants": 462,
+ "azim": 179.1623470457217,
+ "files": [
+  "pompeii-kenti-baked.glb"
+ ]
+}

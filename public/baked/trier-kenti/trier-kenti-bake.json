@@ -1,0 +1,18 @@
+{
+ "model": "trier-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "trier-kenti-near": "trier-kenti-near-clear.jpg",
+  "trier-kenti-ground": "trier-kenti-ground-clear.jpg",
+  "trier-kenti-terrain": "trier-kenti-terrain-clear.jpg",
+  "trier-kenti-detail": null,
+  "trier-kenti-flora": null
+ },
+ "terrain": "trier-kenti-terrain",
+ "plants": 467,
+ "azim": 179.1623470457217,
+ "files": [
+  "trier-kenti-baked.glb"
+ ]
+}

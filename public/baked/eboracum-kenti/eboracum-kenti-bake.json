@@ -1,0 +1,18 @@
+{
+ "model": "eboracum-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "eboracum-kenti-near": "eboracum-kenti-near-clear.jpg",
+  "eboracum-kenti-ground": "eboracum-kenti-ground-clear.jpg",
+  "eboracum-kenti-terrain": "eboracum-kenti-terrain-clear.jpg",
+  "eboracum-kenti-detail": null,
+  "eboracum-kenti-flora": null
+ },
+ "terrain": "eboracum-kenti-terrain",
+ "plants": 471,
+ "azim": 179.1623470457217,
+ "files": [
+  "eboracum-kenti-baked.glb"
+ ]
+}

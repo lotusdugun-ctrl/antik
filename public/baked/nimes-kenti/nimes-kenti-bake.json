@@ -1,0 +1,18 @@
+{
+ "model": "nimes-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "nimes-kenti-near": "nimes-kenti-near-clear.jpg",
+  "nimes-kenti-ground": "nimes-kenti-ground-clear.jpg",
+  "nimes-kenti-terrain": "nimes-kenti-terrain-clear.jpg",
+  "nimes-kenti-detail": null,
+  "nimes-kenti-flora": null
+ },
+ "terrain": "nimes-kenti-terrain",
+ "plants": 464,
+ "azim": 179.1623470457217,
+ "files": [
+  "nimes-kenti-baked.glb"
+ ]
+}

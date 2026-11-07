@@ -2,7 +2,26 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## ANTİK PASS ÖDEME AKIŞI + 4 YENİ KENT HİKÂYESİ & WEB PİŞİRME ALTYAPISI (575/575 PASS) (7 Kasım 2026, öğle) — EN GÜNCEL, BURADAN BAŞLA
+## YENİ 4 ANTİK KENTİN (POMPEİ, EBORACUM, NÎMES, TRİER) WEB GLB PİŞİRMESİ TAMAMLANDI, BAKED SİTES 49'A ÇIKTI (575/575 PASS) (7 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+
+- **Hedef:** Yeni 4 kentin (Pompeii, Eboracum, Nîmes, Trier) 3D sahnelerinin Blender GPU Cycles ile gündüz ışığı ("clear") ön ayarında pişirilmesi, meshopt ile web için sıkıştırılması, `public/baked/` altına yerleştirilmesi ve `baked-sites.ts`'nin güncellenmesi.
+- **Yapılanlar:**
+  1. **Blender Cycles GPU Baking:**
+     - `pompeii-kenti`: 211 MB'lık model pişirildi, 27.9 MB baked GLB + ışık dokuları üretildi.
+     - `eboracum-kenti`: 98 MB'lık model pişirildi, 18.6 MB baked GLB + ışık dokuları üretildi.
+     - `nimes-kenti`: 165 MB'lık model pişirildi, 13.1 MB baked GLB + ışık dokuları üretildi.
+     - `trier-kenti`: 190 MB'lık model pişirildi, 13.6 MB baked GLB + ışık dokuları üretildi.
+     - Toplam 49 antik kent pişmiş (Mozaik3D kalitesinde gölgeli) modelleriyle varsayılan olarak web'de hazır.
+  2. **`src/lib/baked-sites.ts` Güncellemesi:**
+     - 45 kentten 49 kente çıkarıldı (`eboracum-kenti`, `nimes-kenti`, `pompeii-kenti`, `trier-kenti` eklendi).
+  3. **Doğrulama ve Kalite:**
+     - `bunx tsc --noEmit` → **0 hata** (Tip denetimi temiz).
+     - `bun test` → **575 pass, 0 fail (343.390 expect() çağrısı, 31 dosya)** %100 YEŞİL!
+     - `test-sonucu.txt` güncellendi.
+  4. **Gönderim:**
+     - `GONDER-39.bat` hazırlandı (`git add public/baked/ src/lib/baked-sites.ts test-sonucu.txt DEVAM-NOTU.md GONDER-39.bat`).
+
+## ANTİK PASS ÖDEME AKIŞI + 4 YENİ KENT HİKÂYESİ & WEB PİŞİRME ALTYAPISI (575/575 PASS) (7 Kasım 2026, öğle)
 
 - **Hedef:** Antik Pass satın alma/geri yükleme (TWA Google Play Billing + Stripe web) entegrasyonu, Pompeii, Eboracum, Nîmes, Trier için interaktif hikâyeler (CYOA) ve web GLB pişirme altyapısı.
 - **Yapılanlar:**
