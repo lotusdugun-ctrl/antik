@@ -262,9 +262,13 @@ const ALL: Record<string, Panorama[]> = {
   "celsus-kutuphanesi": CELSUS,
   "aspendos-tiyatrosu": ASPENDOS,
   pompeii: POMPEII,
+  "pompeii-kenti": POMPEII,
   eboracum: EBORACUM,
+  "eboracum-kenti": EBORACUM,
   nimes: NIMES,
+  "nimes-kenti": NIMES,
   trier: TRIER,
+  "trier-kenti": TRIER,
 };
 const present = new Set<string>(files as string[]);
 for (const [id, list] of Object.entries(ALL)) {

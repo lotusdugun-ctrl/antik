@@ -2,7 +2,22 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## YENİ 4 ANTİK KENTİN (POMPEİ, EBORACUM, NÎMES, TRİER) WEB GLB PİŞİRMESİ TAMAMLANDI, BAKED SİTES 49'A ÇIKTI (575/575 PASS) (7 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+## 360° HD PANORAMALAR REKONSTRÜKSİYON SAYFASINA ENTEGRE EDİLDİ (575/575 PASS) (7 Kasım 2026, akşam) — EN GÜNCEL, BURADAN BAŞLA
+
+- **Hedef:** 360° interaktif küresel panoramaların ve HD görünümlerin (`panoramas.ts`), ilgili rekonstrüksiyon detay sayfalarına (`rekonstruksiyon.$id.tsx`) `<HdPanoramas>` bileşeniyle bağlanması ve tüm antik kentlerin tam eşleşmesinin sağlanması.
+- **Yapılanlar:**
+  1. **`src/lib/panoramas.ts` Güncellemesi:**
+     - `ALL` nesnesine hem slug hem de reconstruction id anahtarları tanımlandı (`"pompeii-kenti": POMPEII`, `"eboracum-kenti": EBORACUM`, `"nimes-kenti": NIMES`, `"trier-kenti": TRIER`).
+  2. **`src/routes/rekonstruksiyon.$id.tsx` Entegrasyonu:**
+     - `<HdPanoramas id={item.id} />` bileşeni `<ScanGallery>` altına yerleştirildi. Artık ziyaretçiler Göreme, Celsus Kütüphanesi, Aspendos, Pompeii, Eboracum, Nîmes ve Trier sayfalarında 360° interaktif panoramaları doğrudan inceleyebilmektedir.
+  3. **Doğrulama ve Kalite:**
+     - `bunx tsc --noEmit` → **0 hata** (Tip denetimi temiz).
+     - `bun test` → **575 pass, 0 fail (343.390 expect() çağrısı, 31 dosya)** %100 YEŞİL!
+     - `test-sonucu.txt` güncellendi.
+  4. **Gönderim:**
+     - `GONDER-40.bat` hazırlandı (`git add src/lib/panoramas.ts src/routes/rekonstruksiyon.$id.tsx test-sonucu.txt DEVAM-NOTU.md GONDER-40.bat`).
+
+## YENİ 4 ANTİK KENTİN (POMPEİ, EBORACUM, NÎMES, TRİER) WEB GLB PİŞİRMESİ TAMAMLANDI, BAKED SİTES 49'A ÇIKTI (575/575 PASS) (7 Kasım 2026, akşam)
 
 - **Hedef:** Yeni 4 kentin (Pompeii, Eboracum, Nîmes, Trier) 3D sahnelerinin Blender GPU Cycles ile gündüz ışığı ("clear") ön ayarında pişirilmesi, meshopt ile web için sıkıştırılması, `public/baked/` altına yerleştirilmesi ve `baked-sites.ts`'nin güncellenmesi.
 - **Yapılanlar:**

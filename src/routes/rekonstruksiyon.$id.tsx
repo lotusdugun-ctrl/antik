@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { PhotoCredits } from "@/components/PhotoCredits";
 import { ScanGallery } from "@/components/ScanGallery";
+import { HdPanoramas } from "@/components/HdPanoramas";
 import { Reconstruction3D } from "@/components/Reconstruction3D";
 import { parseLang, translate, useI18n, pick, type Lang } from "@/lib/i18n";
 import { partsFor } from "@/lib/reconstruction-parts";
@@ -184,6 +185,8 @@ function ReconstructionPage() {
       />
 
       <ScanGallery ids={scansFor(item.id)} />
+
+      <HdPanoramas id={item.id} />
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <section>
