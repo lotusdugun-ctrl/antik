@@ -45,6 +45,10 @@ import {
   asianHallLife,
   egyptianPylonLife,
   megalithicPlatformLife,
+  zigguratLife,
+  persianApadanaLife,
+  khmerTempleLife,
+  indicMonumentLife,
 } from "@/lib/models/dunya-modelleri-life";
 import * as trades from "@/lib/scene-trades";
 import type {
@@ -4443,6 +4447,14 @@ function lifeOfSpec(spec: Reconstruction["model"], era: Era, id: string): SceneL
       return egyptianPylonLife(spec, era);
     case "megalithic-platform":
       return megalithicPlatformLife(spec, era);
+    case "ziggurat":
+      return zigguratLife(spec, era);
+    case "persian-apadana":
+      return persianApadanaLife(spec, era);
+    case "khmer-temple":
+      return khmerTempleLife(spec, era);
+    case "indic-monument":
+      return indicMonumentLife(spec, era);
     case "roman-amphitheatre":
       return amphitheatreLife(spec, era, seed);
     case "city":

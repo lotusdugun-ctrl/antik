@@ -71,6 +71,14 @@ import {
   egyptianPylonWalkStart,
   megalithicPlatformParts,
   megalithicPlatformWalkStart,
+  zigguratParts,
+  zigguratWalkStart,
+  persianApadanaParts,
+  persianApadanaWalkStart,
+  khmerTempleParts,
+  khmerTempleWalkStart,
+  indicMonumentParts,
+  indicMonumentWalkStart,
 } from "@/lib/models/dunya-modelleri";
 import {
   lightColumn,
@@ -8417,6 +8425,14 @@ function buildParts(spec: ModelSpec): Part[] {
       return egyptianPylonParts(spec);
     case "megalithic-platform":
       return megalithicPlatformParts(spec);
+    case "ziggurat":
+      return zigguratParts(spec);
+    case "persian-apadana":
+      return persianApadanaParts(spec);
+    case "khmer-temple":
+      return khmerTempleParts(spec);
+    case "indic-monument":
+      return indicMonumentParts(spec);
   }
 }
 
@@ -8556,6 +8572,14 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return egyptianPylonWalkStart(spec);
     case "megalithic-platform":
       return megalithicPlatformWalkStart(spec);
+    case "ziggurat":
+      return zigguratWalkStart(spec);
+    case "persian-apadana":
+      return persianApadanaWalkStart(spec);
+    case "khmer-temple":
+      return khmerTempleWalkStart(spec);
+    case "indic-monument":
+      return indicMonumentWalkStart(spec);
     case "roman-amphitheatre":
       // Down on the sand, a little off the short axis, looking across the
       // arena at the seating opposite.

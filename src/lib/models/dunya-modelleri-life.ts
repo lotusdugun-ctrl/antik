@@ -18,6 +18,10 @@ import type {
   AsianHallSpec,
   EgyptianPylonSpec,
   MegalithicPlatformSpec,
+  ZigguratSpec,
+  PersianApadanaSpec,
+  KhmerTempleSpec,
+  IndicMonumentSpec,
 } from "@/lib/models/dunya-modelleri";
 import * as trades from "@/lib/scene-trades";
 
@@ -231,6 +235,240 @@ export function megalithicPlatformLife(spec: MegalithicPlatformSpec, era: Era): 
   const x = aside(b, 4421);
   trades.cook(x, [-spec.platformWidth * 0.35, 0, frontZ - 18], Math.PI / 2);
   trades.hawker(x, [spec.platformWidth * 0.35, 0, frontZ - 18], -Math.PI / 2);
+
+  return finish(b);
+}
+
+/* ================================================================== *
+ * 5. MESOPOTAMIAN ZIGGURAT LIFE (BABYLON & UR)
+ * ================================================================== */
+
+export function zigguratLife(spec: ZigguratSpec, era: Era): SceneLife {
+  const b = make(era, 4129);
+  const { cast, rand } = b;
+  const frontZ = -(spec.baseDepth / 2) - 14;
+
+  // Bronze brazier fire burning before the central staircase:
+  fire(b, brazier([-3.5, 0, frontZ - 2]), 0.85, true, true);
+  fire(b, brazier([3.5, 0, frontZ - 2]), 0.85, true, true);
+
+  // Babylonian high priest in kaunakes fringed wool robe offering incense:
+  cast.add({
+    at: [0, 0, frontZ - 2.5],
+    rotY: Math.PI,
+    action: "tend",
+    role: "priest",
+    carry: "incense",
+  });
+  cast.add({
+    at: [-2.0, 0, frontZ - 3.2],
+    rotY: Math.PI * 0.8,
+    action: "pray",
+    role: "priest",
+    carry: "offering",
+  });
+  cast.add({
+    at: [2.0, 0, frontZ - 3.2],
+    rotY: -Math.PI * 0.8,
+    action: "play",
+    role: "musician",
+    carry: "lyre",
+  });
+
+  // Temple guards with bronze spears guarding the staircase landing:
+  cast.add({
+    at: [-spec.stairWidth / 2 - 1.2, 0, frontZ],
+    rotY: 0,
+    action: "stand",
+    role: "soldier",
+    carry: "spear",
+  });
+  cast.add({
+    at: [spec.stairWidth / 2 + 1.2, 0, frontZ],
+    rotY: 0,
+    action: "stand",
+    role: "soldier",
+    carry: "spear",
+  });
+
+  // Sumerian / Babylonian scribes and citizens in the forecourt:
+  cast.group([-spec.baseWidth * 0.28, 0, frontZ - 8], 3, 0.7);
+  cast.group([spec.baseWidth * 0.28, 0, frontZ - 10], 2, 0.65);
+
+  const x = aside(b, 5119);
+  trades.hawker(x, [-spec.baseWidth * 0.32, 0, frontZ - 14], Math.PI / 2);
+  trades.cook(x, [spec.baseWidth * 0.32, 0, frontZ - 14], -Math.PI / 2);
+
+  return finish(b);
+}
+
+/* ================================================================== *
+ * 6. PERSIAN APADANA LIFE (PERSEPOLIS & PASARGADAE)
+ * ================================================================== */
+
+export function persianApadanaLife(spec: PersianApadanaSpec, era: Era): SceneLife {
+  const b = make(era, 6219);
+  const { cast, rand } = b;
+  const frontZ = -(spec.platformDepth / 2) - 12;
+
+  // Achaemenid Immortals (Royal Guard) in pleated robes with golden spears:
+  cast.add({
+    at: [-4.5, 0, frontZ],
+    rotY: 0,
+    action: "stand",
+    role: "soldier",
+    carry: "spear",
+  });
+  cast.add({
+    at: [4.5, 0, frontZ],
+    rotY: 0,
+    action: "stand",
+    role: "soldier",
+    carry: "spear",
+  });
+
+  // Persian and Median court dignitaries gathered at the stairway approach:
+  cast.group([-spec.platformWidth * 0.25, 0, frontZ - 6], 3, 0.85);
+  cast.group([spec.platformWidth * 0.25, 0, frontZ - 8], 2, 0.75);
+
+  // Zoroastrian sacred fire altar on the ceremonial esplanade:
+  fire(b, altar([0, 0, frontZ - 8], 2.2, 1.4, 0.9), 0.9, true, true);
+  cast.add({
+    at: [0, 0, frontZ - 6.5],
+    rotY: Math.PI,
+    action: "tend",
+    role: "priest",
+    carry: "incense",
+  });
+
+  // Tribute bearers carrying offerings towards the grand staircase:
+  cast.add({
+    at: [-8, 0, frontZ - 10],
+    rotY: Math.PI * 0.25,
+    action: "walk",
+    role: "citizen",
+    carry: "offering",
+  });
+
+  const x = aside(b, 7319);
+  trades.hawker(x, [-spec.platformWidth * 0.35, 0, frontZ - 14], Math.PI / 2);
+
+  return finish(b);
+}
+
+/* ================================================================== *
+ * 7. KHMER TEMPLE LIFE (ANGKOR WAT & BAYON)
+ * ================================================================== */
+
+export function khmerTempleLife(spec: KhmerTempleSpec, era: Era): SceneLife {
+  const b = make(era, 7129);
+  const { cast, rand } = b;
+  const moatZ = -spec.baseDepth / 2 - spec.causewayLength / 2 - 4;
+  const bridgeHeadZ = moatZ - 15;
+
+  // Buddhist monks in saffron robes along the ceremonial causeway:
+  cast.add({
+    at: [-1.5, 0.81, moatZ + 4],
+    rotY: 0,
+    action: "walk",
+    role: "priest",
+    carry: "incense",
+  });
+  cast.add({
+    at: [1.5, 0.81, moatZ - 2],
+    rotY: 0,
+    action: "pray",
+    role: "priest",
+    carry: "offering",
+  });
+
+  // Devout worshippers placing lotus flowers and lighting incense:
+  fire(b, brazier([0, 0.81, moatZ + 8]), 0.75, true, true);
+  cast.add({
+    at: [0, 0.81, moatZ + 6.5],
+    rotY: Math.PI,
+    action: "tend",
+    role: "citizen",
+    carry: "incense",
+  });
+
+  // Khmer citizens outside the causeway plaza:
+  const plazaZ = bridgeHeadZ - 6;
+  cast.group([-12, 0, plazaZ], 2, 0.75);
+  cast.group([12, 0, plazaZ - 2], 3, 0.7);
+
+  const x = aside(b, 8419);
+  trades.hawker(x, [-16, 0, plazaZ - 4], Math.PI / 2);
+  trades.cook(x, [16, 0, plazaZ - 4], -Math.PI / 2);
+
+  return finish(b);
+}
+
+/* ================================================================== *
+ * 8. INDIC MONUMENT LIFE (HAMPI & MOHENJO-DARO)
+ * ================================================================== */
+
+export function indicMonumentLife(spec: IndicMonumentSpec, era: Era): SceneLife {
+  const b = make(era, 9119);
+  const { cast, rand } = b;
+  const frontZ = -(spec.baseDepth / 2) - 8;
+
+  if (spec.monumentType === "great-bath") {
+    // Mohenjo-daro: Indus Valley citizens at the Great Bath:
+    cast.add({
+      at: [-4, 0.6, 0],
+      rotY: Math.PI / 2,
+      action: "stand",
+      role: "citizen",
+    });
+    cast.add({
+      at: [4, 0.6, 0],
+      rotY: -Math.PI / 2,
+      action: "stand",
+      role: "citizen",
+    });
+    cast.group([0, 0, frontZ - 2], 3, 0.75);
+
+    const x = aside(b, 9219);
+    trades.potter(x, [-spec.baseWidth * 0.35, 0, frontZ - 6], Math.PI / 2);
+    trades.hawker(x, [spec.baseWidth * 0.35, 0, frontZ - 6], -Math.PI / 2);
+
+    return finish(b);
+  }
+
+  // Hampi: Virupaksha Gopuram temple courtyard with priests, musicians and devotees:
+  fire(b, brazier([-3, 0, frontZ]), 0.8, true, true);
+  fire(b, brazier([3, 0, frontZ]), 0.8, true, true);
+
+  cast.add({
+    at: [0, 0, frontZ - 2],
+    rotY: Math.PI,
+    action: "pray",
+    role: "priest",
+    carry: "incense",
+  });
+  cast.add({
+    at: [-2, 0, frontZ - 3],
+    rotY: Math.PI * 0.75,
+    action: "play",
+    role: "musician",
+    carry: "aulos",
+  });
+  cast.add({
+    at: [2, 0, frontZ - 3],
+    rotY: -Math.PI * 0.75,
+    action: "pray",
+    role: "citizen",
+    carry: "offering",
+  });
+
+  // Devotees gathered near the Vittala Stone Chariot:
+  cast.group([-spec.baseWidth * 0.25, 0, frontZ - 6], 3, 0.8);
+  cast.group([spec.baseWidth * 0.25, 0, frontZ - 8], 2, 0.7);
+
+  const x = aside(b, 9319);
+  trades.hawker(x, [-spec.baseWidth * 0.32, 0, frontZ - 10], Math.PI / 2);
+  trades.cook(x, [spec.baseWidth * 0.32, 0, frontZ - 10], -Math.PI / 2);
 
   return finish(b);
 }

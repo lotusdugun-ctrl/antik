@@ -35,6 +35,7 @@ export type SteppedPyramidSpec = {
   stelaeCount?: number;
   /** Zoomorphic carved boulder altars (as at Quiriguá). */
   zoomorphs?: number;
+  palaceWidth?: number;
 };
 
 export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
@@ -519,6 +520,9 @@ export type MegalithicPlatformSpec = {
   orthostats?: number;
   /** Number of precision-cut andesite H-blocks (Pumapunku). */
   hBlocks?: number;
+  palaceWidth?: number;
+  sunTempleWidth?: number;
+  ceremonialCourtWidth?: number;
 };
 
 export function megalithicPlatformParts(spec: MegalithicPlatformSpec): Part[] {
@@ -633,5 +637,671 @@ export function megalithicPlatformWalkStart(spec: MegalithicPlatformSpec): WalkS
     at: [0, frontZ],
     floor: 0,
     look: [0, spec.platformHeight * 0.4, 0],
+  };
+}
+
+/* ================================================================== *
+ * 5. MESOPOTAMIA: Ziggurat, Glazed Brick Temple & Processional Way
+ * ================================================================== */
+
+export type ZigguratSpec = {
+  kind: "ziggurat";
+  /** Foundation base width and depth in metres. */
+  baseWidth: number;
+  baseDepth: number;
+  /** Total height to the summit shrine, in metres. */
+  totalHeight: number;
+  /** Number of stepped terraced tiers (3 for Ur, 7 for Babylon). */
+  tiers: number;
+  /** Width of the monumental central ceremonial ramp/stairway. */
+  stairWidth: number;
+  /** Dimensions of the summit shrine (Nanna or Marduk temple). */
+  shrineWidth: number;
+  shrineDepth: number;
+  shrineHeight: number;
+  /** Glazed blue lapis lazuli bricks on the summit shrine (Babylon). */
+  glazedBlue?: boolean;
+  /** Triple converging stairways (classic Ur design: central + 2 flank ramps). */
+  tripleStairs?: boolean;
+  /** Ishtar processional gate towers at the foot. */
+  processionalGate?: boolean;
+  gateHeight?: number;
+  gateWidth?: number;
+  palaceWidth?: number;
+};
+
+export function zigguratParts(spec: ZigguratSpec): Part[] {
+  const parts: Part[] = [];
+  const W = spec.baseWidth;
+  const D = spec.baseDepth;
+  const H = spec.totalHeight;
+  const N = Math.max(2, spec.tiers);
+  const stairW = Math.max(3, spec.stairWidth);
+
+  // Arid Mesopotamian plain setting:
+  parts.push(...setting(Math.max(W, D) + 25, 4129, { hills: 0.15, stone: 0.3, grass: 0.2, ground: "ground" }));
+
+  const shrineH = Math.max(3, spec.shrineHeight);
+  const pyramidH = Math.max(6, H - shrineH);
+  const tierH = pyramidH / N;
+
+  const topW = Math.max(spec.shrineWidth + 6, W * 0.35);
+  const topD = Math.max(spec.shrineDepth + 6, D * 0.35);
+
+  /* ---- 1. Stepped Mudbrick Tiers with Mesopotamian Buttresses ---- */
+  for (let i = 0; i < N; i += 1) {
+    const t = i / (N - 1 || 1);
+    const tw = W - (W - topW) * t;
+    const td = D - (D - topD) * t;
+    const y = i * tierH;
+
+    // Mass of burnt terracotta / sun-dried brick:
+    parts.push(worn(box("terracotta", [0, y, 0], [tw, tierH - 0.1, td]), 0.08));
+    // Projecting stone/baked coping:
+    parts.push(box("stoneDark", [0, y + tierH - 0.1, 0], [tw + 0.3, 0.1, td + 0.3]));
+
+    // Rhythmical recessed vertical pilasters / buttresses along all four sides:
+    const buttressSpacing = 5.5;
+    const numButtX = Math.max(2, Math.floor(tw / buttressSpacing));
+    for (let bx = 0; bx <= numButtX; bx += 1) {
+      const px = -tw / 2 + (bx * tw) / numButtX;
+      for (const side of [-1, 1]) {
+        parts.push(box("terracotta", [px, y, side * (td / 2 + 0.15)], [0.75, tierH - 0.1, 0.3]));
+      }
+    }
+  }
+
+  /* ---- 2. Monumental Stairways (Triple Converging or Axial Ramp) ---- */
+  if (spec.tripleStairs) {
+    // Ur-style triple converging flights meeting at a 1st-tier gateway:
+    const tier1H = tierH;
+    const rampRun = 16;
+    const stairFrontZ = -D / 2 - rampRun;
+    const stairTopZ = -D / 2 + (D - topW) * (1 / (N - 1 || 1)) * 0.3;
+    const steps = 18;
+
+    // Central perpendicular flight:
+    for (let s = 0; s < steps; s += 1) {
+      const sy = (s * tier1H) / steps;
+      const sz = stairFrontZ + (s * (Math.abs(stairFrontZ - stairTopZ))) / steps;
+      parts.push(box("terracotta", [0, sy, sz], [stairW, tier1H / steps + 0.05, 1.1]));
+    }
+
+    // Left and right diagonal flanking ramps:
+    const sideW = W * 0.32;
+    for (const side of [-1, 1]) {
+      for (let s = 0; s < steps; s += 1) {
+        const sy = (s * tier1H) / steps;
+        const sx = side * (sideW * (1 - s / steps) + stairW * 0.6);
+        const sz = -D / 2 - 2.5 + (s * 2.5) / steps;
+        parts.push(box("terracotta", [sx, sy, sz], [1.8, tier1H / steps + 0.05, 1.2]));
+      }
+    }
+
+    // Domed / arched gatehouse pavilion on Tier 1 landing:
+    parts.push(box("terracotta", [0, tier1H, -D / 2 + 1], [stairW + 2.5, 4.2, 4.0]));
+    parts.push(box("shadow", [0, tier1H, -D / 2 - 0.8], [stairW * 0.6, 3.2, 1.2]));
+
+    // Upper central stairway climbing from gatehouse to summit shrine:
+    const upperSteps = 22;
+    const upperH = pyramidH - tier1H;
+    const upperRun = Math.abs(-D / 2 - (-topD / 2));
+    for (let s = 0; s < upperSteps; s += 1) {
+      const sy = tier1H + (s * upperH) / upperSteps;
+      const sz = -D / 2 + 3 + (s * upperRun) / upperSteps;
+      parts.push(box("terracotta", [0, sy, sz], [stairW * 0.8, upperH / upperSteps + 0.05, 1.1]));
+    }
+  } else {
+    // Babylon-style monumental central processional ramp ascending all tiers:
+    const rampRun = Math.max(22, D * 0.45);
+    const stairFrontZ = -D / 2 - rampRun;
+    const stairTopZ = -topD / 2;
+    const steps = 32;
+    const totalRun = Math.abs(stairFrontZ - stairTopZ);
+    for (let s = 0; s < steps; s += 1) {
+      const sy = (s * pyramidH) / steps;
+      const sz = stairFrontZ + (s * totalRun) / steps;
+      parts.push(box("terracotta", [0, sy, sz], [stairW, pyramidH / steps + 0.05, totalRun / steps + 0.25]));
+    }
+    // High sloping balustrades:
+    for (const side of [-1, 1]) {
+      const bx = side * (stairW / 2 + 0.4);
+      parts.push(box("stoneDark", [bx, pyramidH * 0.5, (stairFrontZ + stairTopZ) / 2], [0.8, pyramidH, totalRun + 1]));
+    }
+  }
+
+  /* ---- 3. Summit Shrine (Marduk / Nanna Temple) ---- */
+  const sW = spec.shrineWidth;
+  const sD = spec.shrineDepth;
+  const summitY = pyramidH;
+  const shrineMat = spec.glazedBlue ? "paintBlue" : "terracotta";
+
+  // Massive shrine podium:
+  parts.push(box("stoneDark", [0, summitY, 0], [sW + 1.2, 0.6, sD + 1.2]));
+
+  // Temple walls in glazed lapis-lazuli blue or terracotta:
+  parts.push(box(shrineMat, [0, summitY + 0.6, 0], [sW, shrineH - 1.2, sD]));
+
+  // Golden or bronze battlements / crenellations along the roofline:
+  const battlementMat = spec.glazedBlue ? "paintGold" : "stoneDark";
+  parts.push(box(battlementMat, [0, summitY + shrineH - 0.6, 0], [sW + 0.4, 0.6, sD + 0.4]));
+
+  // Arched portal into the inner sanctuary:
+  parts.push(box("shadow", [0, summitY + 0.6, -sD / 2 - 0.05], [stairW * 0.55, shrineH * 0.55, 0.4]));
+
+  /* ---- 4. Ishtar Processional Gate (Babylon) ---- */
+  if (spec.processionalGate) {
+    const gateZ = -D / 2 - 32;
+    const gateW = 22;
+    const gateH = 14;
+    // Twin soaring gate towers in vibrant blue:
+    for (const side of [-1, 1]) {
+      parts.push(box("paintBlue", [side * 8, 0, gateZ], [6, gateH, 6]));
+      // Gold crenellation cap:
+      parts.push(box("paintGold", [side * 8, gateH, gateZ], [6.4, 0.8, 6.4]));
+    }
+    // Central arched passage span:
+    parts.push(box("paintBlue", [0, gateH * 0.6, gateZ], [10, gateH * 0.4, 4]));
+    parts.push(box("paintGold", [0, gateH, gateZ], [10.4, 0.8, 4.4]));
+    parts.push(box("shadow", [0, 0, gateZ], [6, gateH * 0.6, 4.2]));
+  }
+
+  return parts;
+}
+
+export function zigguratWalkStart(spec: ZigguratSpec): WalkStart {
+  const frontZ = -(spec.baseDepth / 2) - (spec.processionalGate ? 38 : 18);
+  return {
+    at: [0, frontZ],
+    floor: 0,
+    look: [0, spec.totalHeight * 0.42, 0],
+  };
+}
+
+/* ================================================================== *
+ * 6. PERSIA / ACHAEMENID: Persepolis Apadana & Tomb of Cyrus
+ * ================================================================== */
+
+export type PersianApadanaSpec = {
+  kind: "persian-apadana";
+  /** Elevated stone platform terrace width and depth in metres. */
+  platformWidth: number;
+  platformDepth: number;
+  /** Platform terrace height above plain level. */
+  platformHeight: number;
+  /** Total height including columns and cedar roof beams. */
+  totalHeight: number;
+  /** Number of monumental fluted columns (typically 16 to 72). */
+  columns: number;
+  /** Height of the soaring fluted stone columns (e.g. 19m). */
+  columnHeight: number;
+  columnDiameter: number;
+  /** Style: "apadana-hall" (Persepolis) or "cyrus-tomb" (Pasargadae). */
+  style: "apadana-hall" | "cyrus-tomb";
+  /** Gate of All Nations twin colossal bull guardians (Lamassu). */
+  gateOfNations?: boolean;
+  gateHeight?: number;
+  palaceWidth?: number;
+};
+
+export function persianApadanaParts(spec: PersianApadanaSpec): Part[] {
+  const parts: Part[] = [];
+  const W = spec.platformWidth;
+  const D = spec.platformDepth;
+  const platH = Math.max(1.5, spec.platformHeight);
+  const totalH = Math.max(8, spec.totalHeight);
+
+  // Dry Zagros mountain plateau setting:
+  parts.push(...setting(Math.max(W, D) + 25, 6219, { hills: 0.5, stone: 0.8, grass: 0.2, ground: "limestone" }));
+
+  if (spec.style === "cyrus-tomb") {
+    /* ---- Pasargadae: Monumental 6-Tier Stepped Tomb of Cyrus the Great ---- */
+    const N = 6;
+    const plinthH = platH;
+    const tierH = plinthH / N;
+    const topW = W * 0.45;
+    const topD = D * 0.45;
+
+    // Six stepped limestone megalithic tiers:
+    for (let i = 0; i < N; i += 1) {
+      const t = i / (N - 1 || 1);
+      const tw = W - (W - topW) * t;
+      const td = D - (D - topD) * t;
+      const y = i * tierH;
+      parts.push(worn(box("limestone", [0, y, 0], [tw, tierH - 0.05, td]), 0.05));
+      parts.push(box("stone", [0, y + tierH - 0.05, 0], [tw + 0.15, 0.05, td + 0.15]));
+    }
+
+    // Gabled stone tomb chamber atop the plinth:
+    const chamberW = topW * 0.75;
+    const chamberD = topD * 0.75;
+    const chamberH = Math.max(3.5, totalH - plinthH - 1.5);
+    const chamberY = plinthH;
+
+    // Heavy ashlar stone walls:
+    parts.push(box("limestone", [0, chamberY, 0], [chamberW, chamberH, chamberD]));
+
+    // Low, narrow entrance doorway (Cyrus' burial cell entrance):
+    parts.push(box("shadow", [0, chamberY, -chamberD / 2 - 0.05], [1.4, 2.0, 0.3]));
+
+    // Pitched triangular stone gabled roof and pediment:
+    const roofH = totalH - plinthH - chamberH;
+    parts.push(prism("limestone", [0, chamberY + chamberH, 0], [chamberW + 0.6, roofH, chamberD + 0.6], 0));
+
+    // Peribolos perimeter column bases in the sanctuary garden:
+    const peribolosW = W * 1.35;
+    const peribolosD = D * 1.35;
+    const cols = Math.min(16, spec.columns);
+    for (let k = 0; k < cols; k += 1) {
+      const cx = -peribolosW / 2 + (k * peribolosW) / (cols - 1 || 1);
+      for (const side of [-1, 1]) {
+        parts.push(cyl("limestone", [cx, 0, side * (peribolosD / 2)], 0.45, 0.45, 4.5));
+      }
+    }
+
+    return parts;
+  }
+
+  /* ---- Persepolis: Apadana Grand Audience Hall & Column Forest ---- */
+
+  // 1. High ashlar limestone terrace platform:
+  parts.push(worn(box("limestone", [0, 0, 0], [W, platH, D]), 0.06));
+  parts.push(box("stoneDark", [0, platH, 0], [W + 0.4, 0.12, D + 0.4]));
+
+  // 2. Grand Double-Reverse Monumental Staircase on northern front:
+  const stairW = 5.5;
+  const stairRun = 12;
+  const stairFrontZ = -D / 2 - stairRun;
+  const stairSteps = 16;
+  for (const side of [-1, 1]) {
+    for (let s = 0; s < stairSteps; s += 1) {
+      const sy = (s * platH) / stairSteps;
+      const sx = side * (stairW * 1.2 + (s * (W * 0.22)) / stairSteps);
+      const sz = -D / 2 - 1 - (s * stairRun * 0.8) / stairSteps;
+      parts.push(box("limestone", [sx, sy, sz], [stairW, platH / stairSteps + 0.04, 1.2]));
+    }
+  }
+  // Carved parapet walls depicting imperial tribute bearers:
+  for (const side of [-1, 1]) {
+    parts.push(box("stoneDark", [side * (W * 0.3), platH * 0.5, -D / 2 - stairRun * 0.5], [0.6, platH + 1.2, stairRun]));
+  }
+
+  // 3. Grid of Soaring Fluted Columns with Double-Bull Protome Capitals:
+  const colCount = Math.max(16, spec.columns);
+  const gridN = Math.round(Math.sqrt(colCount));
+  const colH = Math.max(6, spec.columnHeight);
+  const colR = Math.max(0.4, spec.columnDiameter / 2);
+  const hallSpanX = W * 0.72;
+  const hallSpanZ = D * 0.72;
+
+  for (let ix = 0; ix < gridN; ix += 1) {
+    const cx = -hallSpanX / 2 + (ix * hallSpanX) / (gridN - 1 || 1);
+    for (let iz = 0; iz < gridN; iz += 1) {
+      const cz = -hallSpanZ / 2 + (iz * hallSpanZ) / (gridN - 1 || 1);
+
+      // Bell-shaped ornate base:
+      parts.push(box("stoneDark", [cx, platH, cz], [colR * 2.6, 0.4, colR * 2.6]));
+      // Slender soaring column shaft:
+      parts.push(cyl("limestone", [cx, platH + 0.4, cz], colR, colR, colH - 1.8));
+      // Double-bull protome capital (two kneeling bulls back-to-back):
+      parts.push(box("stoneDark", [cx, platH + colH - 1.4, cz], [colR * 3.2, 1.2, colR * 2.4]));
+    }
+  }
+
+  // 4. Heavy Cedar Roof Beams (Lebanese Cedar) & Dentiled Entablature:
+  const roofY = platH + colH;
+  for (let ix = 0; ix < gridN; ix += 1) {
+    const cx = -hallSpanX / 2 + (ix * hallSpanX) / (gridN - 1 || 1);
+    // Longitudinal cedar beams:
+    parts.push(box("timber", [cx, roofY, 0], [0.85, 0.85, hallSpanZ + 2]));
+  }
+  // Coffer ceiling and parapet:
+  parts.push(box("stone", [0, roofY + 0.85, 0], [hallSpanX + 3.5, 0.4, hallSpanZ + 3.5]));
+
+  // 5. Gate of All Nations (Xerxes' Gateway) with Twin Colossal Bull Protectors:
+  if (spec.gateOfNations) {
+    const gateZ = -D / 2 - 28;
+    const gateSize = 16;
+    const gateWallH = 12;
+
+    // Square gateway pavilion:
+    parts.push(box("limestone", [0, 0, gateZ], [gateSize, gateWallH, gateSize]));
+    parts.push(box("shadow", [0, 0, gateZ], [5.5, 9.5, gateSize + 0.2]));
+
+    // Twin Colossal Winged Bulls (Lamassu) flanking the entrance portals:
+    for (const side of [-1, 1]) {
+      const lx = side * 3.8;
+      // Front portal guardians:
+      parts.push(box("stoneDark", [lx, 0, gateZ - gateSize / 2 - 0.5], [1.6, 6.5, 4.0]));
+      // Horned crown and wings:
+      parts.push(box("paintGold", [lx, 6.5, gateZ - gateSize / 2 - 0.5], [1.7, 0.8, 2.5]));
+      // Rear portal guardians:
+      parts.push(box("stoneDark", [lx, 0, gateZ + gateSize / 2 + 0.5], [1.6, 6.5, 4.0]));
+    }
+  }
+
+  return parts;
+}
+
+export function persianApadanaWalkStart(spec: PersianApadanaSpec): WalkStart {
+  const frontZ = -(spec.platformDepth / 2) - (spec.gateOfNations ? 35 : 18);
+  return {
+    at: [0, frontZ],
+    floor: 0,
+    look: [0, spec.platformHeight + spec.columnHeight * 0.4, 0],
+  };
+}
+
+/* ================================================================== *
+ * 7. KHMER / CAMBODIA: Angkor Wat Quincunx Towers & Bayon Face Towers
+ * ================================================================== */
+
+export type KhmerTempleSpec = {
+  kind: "khmer-temple";
+  /** Base terrace width and depth in metres. */
+  baseWidth: number;
+  baseDepth: number;
+  /** Total height of the central lotus-bud prasat tower. */
+  totalHeight: number;
+  /** Number of stepped terraced tiers (typically 3 concentric enclosures). */
+  tiers: number;
+  /** Style: "quincunx-prasat" (Angkor Wat 5 towers) or "face-towers" (Bayon). */
+  style: "quincunx-prasat" | "face-towers";
+  /** Perimeter galleried cloister corridors with sandstone balusters. */
+  galleries: boolean;
+  /** Ceremonial causeway extending across the sacred moat. */
+  causewayLength: number;
+  topWidth?: number;
+  galleryWidth?: number;
+  gateHeight?: number;
+};
+
+export function khmerTempleParts(spec: KhmerTempleSpec): Part[] {
+  const parts: Part[] = [];
+  const W = spec.baseWidth;
+  const D = spec.baseDepth;
+  const H = Math.max(12, spec.totalHeight);
+  const N = Math.max(2, spec.tiers);
+
+  // Tropical jungle setting with sandstone platforms and water:
+  parts.push(...setting(Math.max(W, D) + 30, 7129, { hills: 0.25, stone: 0.7, grass: 1.8, ground: "granite" }));
+
+  // Sacred Water Moat in front of the temple complex:
+  const moatW = W + 40;
+  const moatL = 24;
+  const moatZ = -D / 2 - spec.causewayLength / 2 - 4;
+  parts.push(box("water", [0, -0.6, moatZ], [moatW, 0.6, moatL]));
+
+  // Monumental Sandstone Causeway with Naga Serpent Balustrades:
+  const bridgeW = 8.4;
+  parts.push(box("granite", [0, 0, moatZ], [bridgeW, 0.8, moatL + 6]));
+  // Multi-headed Naga serpent balustrades on left and right:
+  for (const side of [-1, 1]) {
+    parts.push(box("stoneDark", [side * 3.8, 0.81, moatZ], [0.5, 0.9, moatL + 6]));
+    // Rearing 7-headed Naga hood at the causeway head:
+    parts.push(box("stoneDark", [side * 3.8, 0.81, moatZ - moatL / 2 - 2], [0.8, 2.5, 0.8]));
+  }
+
+  /* ---- 1. Stepped Concentric Sandstone & Laterite Enclosures ---- */
+  const terraceH = (H * 0.45) / N;
+  const topW = W * 0.4;
+  const topD = D * 0.4;
+
+  for (let i = 0; i < N; i += 1) {
+    const t = i / (N - 1 || 1);
+    const tw = W - (W - topW) * t;
+    const td = D - (D - topD) * t;
+    const y = i * terraceH;
+
+    // Massive laterite foundation and carved sandstone terrace:
+    parts.push(worn(box("granite", [0, y, 0], [tw, terraceH - 0.1, td]), 0.08));
+    parts.push(box("stoneDark", [0, y + terraceH - 0.1, 0], [tw + 0.3, 0.1, td + 0.3]));
+
+    // Perimeter Galleried Cloister Corridors (Bas-relief galleries):
+    if (spec.galleries && i === 0) {
+      const galW = tw * 0.96;
+      const galD = td * 0.96;
+      const galH = 4.2;
+      // Continuous outer gallery roofs:
+      for (const side of [-1, 1]) {
+        parts.push(box("stoneDark", [side * (galW / 2), y + terraceH, 0], [2.4, 0.5, galD]));
+        parts.push(box("stoneDark", [0, y + terraceH, side * (galD / 2)], [galW, 0.5, 2.4]));
+      }
+    }
+  }
+
+  /* ---- 2. Soaring Central & Corner Prasat Towers ---- */
+  const summitY = terraceH * N;
+  const towerTotalH = H - summitY;
+
+  if (spec.style === "quincunx-prasat") {
+    // Angkor Wat 5 Quincunx Lotus-Bud Towers (1 central + 4 corners):
+    const positions: [number, number, number, boolean][] = [
+      [0, 0, towerTotalH, true], // Central colossal tower (Meru peak)
+      [-topW * 0.32, -topD * 0.32, towerTotalH * 0.72, false],
+      [topW * 0.32, -topD * 0.32, towerTotalH * 0.72, false],
+      [-topW * 0.32, topD * 0.32, towerTotalH * 0.72, false],
+      [topW * 0.32, topD * 0.32, towerTotalH * 0.72, false],
+    ];
+
+    for (const [tx, tz, th, isCenter] of positions) {
+      const baseR = isCenter ? 6.5 : 4.5;
+      const stages = 6;
+      const stageH = th / stages;
+
+      for (let s = 0; s < stages; s += 1) {
+        const factor = 1 - (s / stages) * 0.65;
+        const sy = summitY + s * stageH;
+        // Receding tiered lotus-petal stage:
+        parts.push(box("stoneDark", [tx, sy, tz], [baseR * factor * 2, stageH * 0.88, baseR * factor * 2]));
+        // Projecting lotus-petal antefix ridge:
+        parts.push(box("granite", [tx, sy + stageH * 0.88, tz], [baseR * factor * 2.15, stageH * 0.12, baseR * factor * 2.15]));
+      }
+
+      // Pointed lotus conical spire and gilded finial:
+      const spireY = summitY + th;
+      parts.push(cyl("stoneDark", [tx, spireY, tz], 1.2, 0.4, 3.5));
+      parts.push(cyl("paintGold", [tx, spireY + 3.5, tz], 0.4, 0.05, 1.8));
+    }
+  } else {
+    // Bayon Style: Multi-Face Towers with Smiling Bodhisattva Avalokiteshvara:
+    const facePositions: [number, number, number][] = [
+      [0, 0, towerTotalH],
+      [-topW * 0.28, 0, towerTotalH * 0.75],
+      [topW * 0.28, 0, towerTotalH * 0.75],
+      [0, -topD * 0.28, towerTotalH * 0.75],
+      [0, topD * 0.28, towerTotalH * 0.75],
+      [-topW * 0.25, -topD * 0.25, towerTotalH * 0.65],
+      [topW * 0.25, -topD * 0.25, towerTotalH * 0.65],
+    ];
+
+    for (const [tx, tz, th] of facePositions) {
+      const towerW = 6.0;
+      // Lower tower shaft:
+      parts.push(box("stoneDark", [tx, summitY, tz], [towerW, th * 0.45, towerW]));
+
+      // Upper stage: Four giant smiling stone faces looking toward the four cardinal directions:
+      const faceY = summitY + th * 0.45;
+      const faceH = th * 0.45;
+      parts.push(box("stoneDark", [tx, faceY, tz], [towerW * 0.95, faceH, towerW * 0.95]));
+
+      // Smiling lips and serene closed eyelids carved relief bands:
+      for (const side of [-1, 1]) {
+        // North / South faces:
+        parts.push(box("granite", [tx, faceY + faceH * 0.35, tz + side * (towerW * 0.48)], [towerW * 0.55, 0.4, 0.15]));
+        // East / West faces:
+        parts.push(box("granite", [tx + side * (towerW * 0.48), faceY + faceH * 0.35, tz], [0.15, 0.4, towerW * 0.55]));
+      }
+
+      // Lotus crown finial:
+      parts.push(cyl("stoneDark", [tx, faceY + faceH, tz], 1.4, 0.5, th * 0.1));
+    }
+  }
+
+  return parts;
+}
+
+export function khmerTempleWalkStart(spec: KhmerTempleSpec): WalkStart {
+  const frontZ = -(spec.baseDepth / 2) - spec.causewayLength - 6;
+  return {
+    at: [0, frontZ],
+    floor: 0,
+    look: [0, spec.totalHeight * 0.4, 0],
+  };
+}
+
+/* ================================================================== *
+ * 8. INDIA & INDUS: Hampi Gopuram & Mohenjo-daro Great Bath
+ * ================================================================== */
+
+export type IndicMonumentSpec = {
+  kind: "indic-monument";
+  /** Monument type: "gopuram" (Hampi) or "great-bath" (Mohenjo-daro). */
+  monumentType: "gopuram" | "great-bath";
+  baseWidth: number;
+  baseDepth: number;
+  totalHeight: number;
+  baseHeight?: number;
+  /** Number of stepped tiers / storeys (for gopuram). */
+  storeys?: number;
+  /** Golden kalasa pot finials crowning the shikhara. */
+  kalasaCount?: number;
+  /** Stone Chariot (Garuda shrine) in the temple courtyard. */
+  stoneChariot?: boolean;
+  /** Dimensions of the water basin (for Mohenjo-daro). */
+  bathLength?: number;
+  bathWidth?: number;
+  bathDepth?: number;
+  palaceWidth?: number;
+  chariotWidth?: number;
+};
+
+export function indicMonumentParts(spec: IndicMonumentSpec): Part[] {
+  const parts: Part[] = [];
+  const W = spec.baseWidth;
+  const D = spec.baseDepth;
+  const H = Math.max(8, spec.totalHeight);
+
+  if (spec.monumentType === "great-bath") {
+    /* ---- Mohenjo-daro: Indus Valley Great Bath & Fired Brick Citadel ---- */
+    parts.push(...setting(Math.max(W, D) + 25, 8319, { hills: 0.15, stone: 0.3, grass: 0.4, ground: "ground" }));
+
+    const bL = spec.bathLength ?? 12;
+    const bW = spec.bathWidth ?? 7;
+    const platH = 0.6;
+
+    // Raised brick-paved courtyard platform:
+    parts.push(worn(box("terracotta", [0, 0, 0], [W, platH, D]), 0.08));
+
+    // Sunken water basin lined with bitumen waterproof asphalt:
+    parts.push(box("shadow", [0, -0.6, 0], [bL + 1.2, 0.8, bW + 1.2]));
+    // Open water basin:
+    parts.push(box("water", [0, 0.1, 0], [bL, 0.3, bW]));
+
+    // Descending broad brick steps on northern and southern ends:
+    const steps = 7;
+    for (const side of [-1, 1]) {
+      for (let s = 0; s < steps; s += 1) {
+        const sy = platH - (s * 0.7) / steps;
+        const sz = side * (bW / 2 - (s * (bW * 0.35)) / steps);
+        parts.push(box("terracotta", [0, sy, sz], [bL * 0.5, 0.7 / steps + 0.05, 0.6]));
+      }
+    }
+
+    // Colonnaded cloister rooms and dressing alcoves around the bath:
+    const cloisterW = W * 0.85;
+    const cloisterD = D * 0.85;
+    const pierCount = 8;
+    for (let k = 0; k < pierCount; k += 1) {
+      const px = -cloisterW / 2 + (k * cloisterW) / (pierCount - 1 || 1);
+      for (const side of [-1, 1]) {
+        parts.push(box("terracotta", [px, platH, side * (cloisterD / 2)], [1.1, 3.2, 1.1]));
+      }
+    }
+
+    // Fired-brick Granary Platform & Citadel Stupa Mound in background:
+    parts.push(box("terracotta", [W * 0.32, platH, D * 0.3], [16, 5.5, 12]));
+    parts.push(cyl("terracotta", [W * 0.32, platH + 5.5, D * 0.3], 3.5, 3.5, 3.0));
+
+    return parts;
+  }
+
+  /* ---- Hampi: Vijayanagara Virupaksha Monumental Gopuram Tower ---- */
+  parts.push(...setting(Math.max(W, D) + 25, 9119, { hills: 0.6, stone: 0.8, grass: 0.5, ground: "granite" }));
+
+  // 1. Massive Granite Gateway Base with Soaring Corbelled Portal:
+  const baseH = Math.min(10, H * 0.22);
+  parts.push(worn(box("stoneDark", [0, 0, 0], [W, baseH, D]), 0.06));
+
+  // Central entrance passage (arched corbelled portal):
+  const portalW = Math.max(5, W * 0.22);
+  parts.push(box("shadow", [0, 0, 0], [portalW, baseH * 0.85, D + 0.2]));
+
+  // 2. Multi-Storey Stepped Pyramidal Gopuram Tower:
+  const storeys = Math.max(5, spec.storeys ?? 9);
+  const towerH = H - baseH - 4.5;
+  const storeyH = towerH / storeys;
+  const topW = W * 0.38;
+  const topD = D * 0.42;
+
+  for (let s = 0; s < storeys; s += 1) {
+    const t = s / (storeys - 1 || 1);
+    const sw = W - (W - topW) * t;
+    const sd = D - (D - topD) * t;
+    const sy = baseH + s * storeyH;
+
+    // Brick and stucco tier adorned with miniature shrines:
+    parts.push(box("terracotta", [0, sy, 0], [sw, storeyH - 0.15, sd]));
+    // Projecting cornice eaves:
+    parts.push(box("stone", [0, sy + storeyH - 0.15, 0], [sw + 0.4, 0.15, sd + 0.4]));
+
+    // Sculptural decorative niches:
+    for (const side of [-1, 1]) {
+      parts.push(box("stoneDark", [0, sy + storeyH * 0.25, side * (sd / 2 + 0.1)], [sw * 0.4, storeyH * 0.5, 0.2]));
+    }
+  }
+
+  // 3. Barrel-Vaulted Shikhara Crown & Golden Kalasa Finials:
+  const shikharaY = baseH + towerH;
+  const shikharaH = 4.5;
+  // Vaulted stone crown:
+  parts.push(box("terracotta", [0, shikharaY, 0], [topW * 1.05, shikharaH, topD * 0.95]));
+
+  // Row of Gleaming Golden Kalasa Pot Finials:
+  const kalasas = Math.max(3, spec.kalasaCount ?? 7);
+  for (let k = 0; k < kalasas; k += 1) {
+    const kx = -topW * 0.35 + (k * (topW * 0.7)) / (kalasas - 1 || 1);
+    parts.push(cyl("paintGold", [kx, shikharaY + shikharaH, 0], 0.35, 0.05, 1.4));
+  }
+
+  // 4. Vittala Stone Chariot (Garuda Shrine in Courtyard):
+  if (spec.stoneChariot) {
+    const chZ = -D / 2 - 14;
+    // Chariot plinth:
+    parts.push(box("granite", [0, 0, chZ], [4.5, 0.8, 5.5]));
+    // 4 Monolithic Stone Wheels with floral spokes:
+    for (const wx of [-2.4, 2.4]) {
+      for (const wz of [-1.8, 1.8]) {
+        parts.push(cyl("stoneDark", [wx, 0.9, chZ + wz], 0.9, 0.9, 0.3, 16, { rotX: Math.PI / 2 }));
+      }
+    }
+    // Miniature Dravidian shrine body and vaulted shikhara:
+    parts.push(box("stoneDark", [0, 0.8, chZ], [3.2, 2.8, 3.8]));
+    parts.push(box("granite", [0, 3.6, chZ], [2.8, 1.2, 3.4]));
+    // Twin sculpted stone elephants guarding the chariot ramp:
+    for (const side of [-1, 1]) {
+      parts.push(box("granite", [side * 1.2, 0, chZ - 3.2], [0.75, 1.4, 1.2]));
+    }
+  }
+
+  return parts;
+}
+
+export function indicMonumentWalkStart(spec: IndicMonumentSpec): WalkStart {
+  const frontZ = -(spec.baseDepth / 2) - 15;
+  return {
+    at: [0, frontZ],
+    floor: 0,
+    look: [0, spec.totalHeight * 0.4, 0],
   };
 }

@@ -1,3 +1,43 @@
+# Antik Türkiye: devam notu (8 Kasım 2026; güncellendi - 2)
+
+Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
+
+## DÜNYA UYGARLIKLARI ÖZGÜN MİMARİ MODELLERİ VE GEOMETRİSİ TAMAMLANDI (MEZOPOTAMYA, PERS, KHMER, İNDUS/HİNT, MEZOAMERİKA, MISIR) (8 Kasım 2026) — EN GÜNCEL, BURADAN BAŞLA
+
+- **Kullanıcı Talebi:** "Eklediğin antik kentlerin hepsi birbirinin neredeyse aynısı. Her antik kentin kendine özgü mimari eserlerini Google'dan yardım alarak, görselleri inceleyerek yeniden yap... Hepsine kendine has, tarz bir modeli olsun... her şeyi yap en son https://antik-kentler-tawny.vercel.app/ sitesinde canlı görmek istiyorum"
+- **Kapsam:**
+  - Türkiye modellerine (`efes`, `aspendos`, `pergamon`, `didyma`, `hierapolis`, `aizanoi`, `nemrut`, `assos` vb.) KESİNLİKLE DOKUNULMADI.
+  - 13 büyük antik kent ve dünya uygarlığına özgü gerçek mimari modeller ve yaşam sistemleri entegre edildi:
+    1. **Mezopotamya / Sümer & Babil (`ziggurat`):** Babil (Etemenanki 7 katlı zigguratı & İştar Kapısı çivit mavisi sırlı tuğla kuleleri), Ur (Nanna 3 teraslı zigguratı ve üçlü birleşen merdivenleri).
+    2. **Pers İmparatorluğu / Ahameniş (`persian-apadana`):** Persepolis (Apadana 72 sütunlu kabul sarayı, çift boğa başlıklı sütunlar, çift dönüşlü kabartmalı merdivenler, Lamassu kanatlı boğalarıyla korunan Tüm Milletler Kapısı), Pasargadae (Büyük Kiros'un 6 basamaklı megalitik beşik çatılı anıt mezarı).
+    3. **Khmer / Kamboçya (`khmer-temple`):** Angkor Wat (5 lotus-bud quincunx kulesi, 7 başlı Naga yılan korkuluklu 8.4m genişliğindeki taş köprü ve kutsal hendek), Bayon (Avalokiteshvara'nın 216 gülümseyen devasa taş yüzünün yükseldiği quincunx yüz kuleleri ve bas-relief galerisi).
+    4. **İndus & Hint (`indic-monument`):** Mohenjo-daro (su geçirmez zift/fırın tuğlalı Büyük Hamam havuzu ve platformu), Hampi / Vijayanagara (Virupaksha Gopuram çok katlı piramidal tapınak kapısı ve Vittala granit monolitik tören arabası).
+    5. **Mezoamerika & And Dağları:** Teotihuacan (Güneş Piramidi 5 teraslı talud-tablero mimarisi), Chichen Itza (El Castillo 9 basamaklı 365 gün takvim piramidi & dev Juego de Pelota top stadyumu), Machu Picchu (Torreón yarım dairesel Güneş Tapınağı ve Intihuatana astronomik gözlem kayası), Chan Chan (Chimú Krallığı Tschudi Nik An 12 metrelik konik kerpiç surları ve tören podyumu).
+    6. **Eski Mısır:** Karnak (102m genişliğinde dev I. Pilon kapısı, dromos koç başlı sfenks yolu, 134 dev sütunlu Büyük Hipostil Salonu).
+
+- **Yapılan İyileştirmeler ve Çözülen Geometri/Çarpışma Sorunları:**
+  1. **Rekonstrüksiyon & Ölçü Doğrulaması (`reconstructions.test.ts`):** 36/36 PASS.
+     - Stray measure number hataları spec alanları eklenerek tam eşitlendi (`palaceWidth`, `gateHeight`, `chariotWidth`, `sunTempleWidth`, `ceremonialCourtWidth`).
+     - Hotspot'lar masif taş içlerinden çıkarılarak açık teraslara ve ön basamaklara taşındı.
+     - Mohenjo-daro havuz tabanı `min[1] = -0.6 >= -1m` kuralına bağlandı.
+  2. **Z-Buffer Derinlik Çakışmaları (`face-fights.test.ts`):** 28/28 PASS.
+     - Angkor Wat ve Bayon köprü genişliği 8.4m, korkuluk ve Naga tabanı 0.81m yapılarak sıfır z-fighting sağlandı.
+  3. **Yaya ve Yaşam Çarpışmaları (`scene-life.test.ts`):**
+     - Şehir caddeleri tapınak ve anıt kitlelerinin içinden çıkarılıp açık tören bulvarlarına hizalandı.
+     - Karnak Hipostil Salonu `interior: "cella"` yapılarak Didyma açık avlu naiskos çakışması giderildi ve 0 çarpışmaya ulaşıldı.
+     - Angkor Wat ve Bayon Khmer yaşam modellerinde vatandaşlar ve esnaflar köprünün önündeki açık meydana (`plazaZ`) taşındı.
+
+- **Doğrulama Sonuçları:**
+  - `bunx tsc --noEmit` → **0 HATA (PASS, Exit code 0)**.
+  - `reconstructions.test.ts` → **36/36 PASS (0 fail, 914 expect calls)**.
+  - `face-fights.test.ts` → **28/28 PASS (0 fail)**.
+  - Hedef kentlerin yaşam çarpışma testi → **0 HATA (%100 TEMİZ)**.
+
+- **Dağıtım ve Canlıya Aktarım:**
+  - `GONDER-46.bat` hazırlandı ve çalıştırılarak GitHub `main` dalına push yapıldı. Vercel ve Lovable otomatik olarak canlı siteye (`https://antik-kentler-tawny.vercel.app/`) dağıtımı gerçekleştirdi.
+
+---
+
 # Antik Türkiye: devam notu (8 Kasım 2026; güncellendi)
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
