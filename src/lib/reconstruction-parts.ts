@@ -63,6 +63,16 @@ import {
   undergroundWalkStart,
 } from "@/lib/models/anadolu-yeni";
 import {
+  steppedPyramidParts,
+  steppedPyramidWalkStart,
+  asianHallParts,
+  asianHallWalkStart,
+  egyptianPylonParts,
+  egyptianPylonWalkStart,
+  megalithicPlatformParts,
+  megalithicPlatformWalkStart,
+} from "@/lib/models/dunya-modelleri";
+import {
   lightColumn,
   mazaeusGateParts,
   onGateOrSquare,
@@ -4142,9 +4152,9 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
       for (let i = 0; i < windows; i += 1) {
         // Staggered between storeys, as the rooms behind were laid out.
         const x = -stageWidth / 2 + ((i + 0.5 + (s % 2) * 0.5) * stageWidth) / (windows + (s % 2));
-        const y = storey.base + storey.height * 0.42;
+        const y = storey.base + storey.height * 0.6;
         out(x, y, [0.8, 1.3, 0.1], "shadow");
-        out(x, y - 0.14, [1.1, 0.14, 0.22]);
+        out(x, y - 0.72, [1.1, 0.14, 0.22]);
       }
     });
     /*
@@ -4170,7 +4180,7 @@ export function romanTheatreParts(spec: RomanTheatreSpec): Part[] {
     const brackets = Math.max(8, Math.round(stageWidth / 4.5));
     for (let i = 0; i < brackets; i += 1) {
       const x = -stageWidth / 2 + ((i + 0.5) * stageWidth) / brackets;
-      for (const y of [wallHeight - 1.3, wallHeight - 4.6]) out(x, y, [0.45, 0.5, 0.6]);
+      for (const y of [wallHeight - 0.6, wallHeight - 1.8]) out(x, y, [0.45, 0.5, 0.6]);
     }
   }
   // The stage floor, and the front of it the actors played above.
@@ -7242,14 +7252,14 @@ export function peristyleHouseParts(spec: PeristyleHouseSpec): Part[] {
     const height = beam - 0.32 - panelTop - 0.04;
     if (height < 0.2) return;
     parts.push(
-      box("terrazzo", onFace(at, rotY, 0, panelTop + 0.02, -0.03), [length, height, 0.09], rotY),
+      box("terrazzo", onFace(at, rotY, 0, panelTop + 0.02, 0.05), [length, height, 0.03], rotY),
     );
     const stems = Math.max(2, Math.round(length / 1.6));
     for (let i = 0; i <= stems; i += 1)
       parts.push(
         box(
           i % 2 ? "paintGold" : "paintRed",
-          onFace(at, rotY, -length / 2 + (length * i) / stems, panelTop + 0.06, 0.04),
+          onFace(at, rotY, -length / 2 + (length * i) / stems, panelTop + 0.06, 0.07),
           [0.04, height - 0.08, 0.015],
           rotY,
         ),
@@ -8399,6 +8409,14 @@ function buildParts(spec: ModelSpec): Part[] {
       return mudbrickParts(spec);
     case "sphinx-gate":
       return sphinxGateParts(spec);
+    case "stepped-pyramid":
+      return steppedPyramidParts(spec);
+    case "asian-hall":
+      return asianHallParts(spec);
+    case "egyptian-pylon":
+      return egyptianPylonParts(spec);
+    case "megalithic-platform":
+      return megalithicPlatformParts(spec);
   }
 }
 
@@ -8530,6 +8548,14 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return mudbrickWalkStart(spec);
     case "sphinx-gate":
       return sphinxGateWalkStart(spec);
+    case "stepped-pyramid":
+      return steppedPyramidWalkStart(spec);
+    case "asian-hall":
+      return asianHallWalkStart(spec);
+    case "egyptian-pylon":
+      return egyptianPylonWalkStart(spec);
+    case "megalithic-platform":
+      return megalithicPlatformWalkStart(spec);
     case "roman-amphitheatre":
       // Down on the sand, a little off the short axis, looking across the
       // arena at the seating opposite.

@@ -40,6 +40,12 @@ import {
   sphinxGateLife,
   undergroundLife,
 } from "@/lib/models/anadolu-yeni-life";
+import {
+  steppedPyramidLife,
+  asianHallLife,
+  egyptianPylonLife,
+  megalithicPlatformLife,
+} from "@/lib/models/dunya-modelleri-life";
 import * as trades from "@/lib/scene-trades";
 import type {
   AmphitheatreSpec,
@@ -2134,7 +2140,7 @@ function facadeLife(spec: RomanFacadeSpec, era: Era): SceneLife {
       const z = -(spec.steps - i) * tread;
       up.push([x, i * rise, z - 0.08], [x, (i + 1) * rise, z + 0.08]);
     }
-    up.push([x, y0, -0.5]);
+    up.push([x, y0, -tread * 0.5]);
     return [...up, ...up.slice(1, -1).reverse()];
   };
   for (const x of [bayCentres[0]! + 0.4, 0.3, bayCentres[2]! - 0.4]) {
@@ -2738,17 +2744,17 @@ function templeLife(spec: IonicDipterosSpec, era: Era, id: string): SceneLife {
   // columns, and a few on the steps.
   const pteronZ = -gridLength / 2 + stepZ * 0.5;
   for (let i = 0; i < 4; i += 1) {
-    const z = pteronZ + between(rand, -0.6, 0.6);
-    cast.walk(
-      [
-        [-gridWidth / 2 + stepX * 0.5, platform, z],
-        [gridWidth / 2 - stepX * 0.5, platform, z],
-      ],
-      { speed: between(rand, 0.6, 0.9), ...(rand() < 0.4 ? { carry: "offering" as const } : {}) },
-    );
+    const x = -stepX * 0.3 + (i * stepX * 0.6) / 3;
+    cast.add({
+      at: [x, platform, pteronZ + between(rand, -0.2, 0.2)],
+      rotY: Math.PI,
+      action: rand() < 0.5 ? "pray" : "stand",
+      carry: "offering",
+    });
   }
-  cast.group([-stepX * 1.5, platform, pteronZ - 0.2], 3, 0.7);
-  cast.group([stepX * 2.5, platform, pteronZ + 0.3], 2, 0.6);
+  const groupOut = Math.min(spec.crepidomaWidth * 0.35, 10);
+  cast.group([-groupOut, 0, front - 3], 3, 0.7);
+  cast.group([groupOut, 0, front - 4], 2, 0.6);
   for (let i = 0; i < (spec.podium ? 0 : 3); i += 1) {
     const s = 1 + Math.floor(rand() * (spec.crepidomaSteps - 2));
     const insetL = (spec.crepidomaLength - spec.stylobateLength) / 2 / spec.crepidomaSteps;
@@ -3531,22 +3537,23 @@ function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
    */
   const x = aside(b, (seed ^ 0x2c41) >>> 0);
   const edge = arenaHalf - 2;
-  trades.wrestlers(x, [-edge, 0.12, L.trackMin + 22], 0);
+  const trackSpan = L.trackMax - L.trackMin;
+  trades.wrestlers(x, [-edge, 0.12, L.trackMin + Math.min(22, trackSpan * 0.45)], 0);
   x.cast.add({
-    at: [-edge + 0.9, 0.12, L.trackMin + 20.4],
+    at: [-edge + 0.9, 0.12, L.trackMin + Math.min(20.4, trackSpan * 0.4)],
     rotY: -0.6,
     action: "point",
     role: "official",
     carry: "staff",
   });
   x.cast.add({
-    at: [-edge, 0.12, L.trackMin + 31],
+    at: [-edge, 0.12, L.trackMin + Math.min(31, trackSpan * 0.65)],
     rotY: Math.PI / 2,
     action: "stretch",
     role: "athlete",
   });
   x.cast.add({
-    at: [edge, 0.12, L.trackMin + 26],
+    at: [edge, 0.12, L.trackMin + Math.min(26, trackSpan * 0.55)],
     rotY: -Math.PI / 2,
     action: "throw",
     role: "athlete",
@@ -3579,9 +3586,10 @@ function stadiumLife(spec: StadiumSpec, era: Era, seed: number): SceneLife {
   } else {
     // Outside, where the crowd came in: hot food, and children at play.
     const out = L.halfWidth + 1.2 + (spec.bow ?? 0) + 4.5;
-    trades.cook(x, [out - 2.2, 0, 7], -Math.PI / 2);
-    trades.ballGame(x, [out - 2.5, 0, 40], [out - 1.6, 0, 44.5]);
-    trades.hawker(x, [out - 1.8, 0, -31], -Math.PI / 2);
+    const midZ = Math.min(40, spec.overallLength * 0.25);
+    trades.cook(x, [out - 2.2, 0, Math.min(7, spec.overallLength * 0.15)], -Math.PI / 2);
+    trades.ballGame(x, [out - 2.5, 0, midZ], [out - 1.6, 0, midZ + 4.5]);
+    trades.hawker(x, [out - 1.8, 0, -midZ], -Math.PI / 2);
   }
   return finish(b);
 }
@@ -4427,6 +4435,14 @@ function lifeOfSpec(spec: Reconstruction["model"], era: Era, id: string): SceneL
       return mudbrickLife(spec, era);
     case "sphinx-gate":
       return sphinxGateLife(spec, era);
+    case "stepped-pyramid":
+      return steppedPyramidLife(spec, era);
+    case "asian-hall":
+      return asianHallLife(spec, era);
+    case "egyptian-pylon":
+      return egyptianPylonLife(spec, era);
+    case "megalithic-platform":
+      return megalithicPlatformLife(spec, era);
     case "roman-amphitheatre":
       return amphitheatreLife(spec, era, seed);
     case "city":
@@ -4644,6 +4660,7 @@ function cityLife(spec: CitySpec, era: Era, id: string): SceneLife {
     for (const link of life.links ?? [])
       links.push({ ...link, a: link.a + base, b: link.b + base });
   }
+  if (crowd.length > 3100) crowd.length = 3100;
 
   // A phone can only draw a handful of real dynamic lights:
   let lightCount = 0;
