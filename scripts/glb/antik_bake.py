@@ -645,8 +645,58 @@ def denoise(img):
     return img
 
 
+def fill_empty(img):
+    """Fill every texel no island covers with the light of the nearest island
+    (push-pull: average down a pyramid, then fill the holes back up from it).
+
+    A busy model's atlas is mostly empty: thousands of small islands (column
+    flutes, mouldings) on a black ground. Left black, that ground bled into the
+    islands three ways: the denoiser smeared it in, JPEG ringing carried it
+    across the island edges, and the GPU's mipmaps averaged it in at a
+    distance, so whole colonnades came out black-and-white striped (Didyma,
+    Side). Filled, every one of those only ever mixes light with light."""
+    import numpy as np
+    w, h = img.size
+    px = np.empty(w * h * 4, dtype=np.float32)
+    img.pixels.foreach_get(px)
+    px = px.reshape(h, w, 4)
+    mask = (px[:, :, 3] > 0.5).astype(np.float32)
+    if mask.min() > 0.5:
+        # the bake left no alpha to go by: take pure black as empty (a lit
+        # texel, even in deep shade, keeps some sky light)
+        mask = (px[:, :, :3].sum(axis=2) > 1e-5).astype(np.float32)
+    if mask.min() > 0.5 or mask.max() < 0.5:
+        return
+    rgb = px[:, :, :3] * mask[:, :, None]
+    levels = [(rgb, mask)]
+    while min(levels[-1][1].shape) > 1:
+        c, m = levels[-1]
+        hh, ww = (m.shape[0] + 1) // 2 * 2, (m.shape[1] + 1) // 2 * 2
+        c = np.pad(c, ((0, hh - c.shape[0]), (0, ww - c.shape[1]), (0, 0)))
+        m = np.pad(m, ((0, hh - m.shape[0]), (0, ww - m.shape[1])))
+        c2 = c.reshape(hh // 2, 2, ww // 2, 2, 3).sum(axis=(1, 3))
+        m2 = m.reshape(hh // 2, 2, ww // 2, 2).sum(axis=(1, 3))
+        levels.append((c2, m2))
+    # pull: from the coarsest level down, each hole takes its parent's mean
+    c, m = levels[-1]
+    mean = c / np.maximum(m, 1e-6)[:, :, None]
+    for c, m in reversed(levels[:-1]):
+        up = np.repeat(np.repeat(mean, 2, axis=0), 2, axis=1)[: m.shape[0], : m.shape[1]]
+        own = c / np.maximum(m, 1e-6)[:, :, None]
+        mean = np.where((m > 0)[:, :, None], own, up)
+    out = px.copy()
+    hole = mask < 0.5
+    out[:, :, :3][hole] = mean[hole]
+    out[:, :, 3] = 1.0
+    img.pixels.foreach_set(out.ravel())
+    img.update()
+
+
 def bake(obj, label, side):
-    img = bpy.data.images.new(f"{name}-{label}-{preset}", side, side, alpha=False, float_buffer=True)
+    # With alpha, so the texels the bake writes can be told from the empty ground
+    # round the islands (see `fill_empty`).
+    img = bpy.data.images.new(f"{name}-{label}-{preset}", side, side, alpha=True, float_buffer=True)
+    img.generated_color = (0.0, 0.0, 0.0, 0.0)
     obj.data.uv_layers.active = obj.data.uv_layers["lightmap"]
     for slot in obj.material_slots:
         mat = slot.material
@@ -661,6 +711,7 @@ def bake(obj, label, side):
     select_only(obj)
     bpy.ops.object.bake(type="DIFFUSE", pass_filter={"DIRECT", "INDIRECT"}, target="IMAGE_TEXTURES",
                         margin=4, margin_type="EXTEND", use_clear=True)
+    fill_empty(img)
     den = denoise(img)
     # store half the light, sRGB, so 0..2 x the albedo fits 8 bits
     px = list(den.pixels)

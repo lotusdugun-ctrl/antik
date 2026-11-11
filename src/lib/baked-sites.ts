@@ -1,25 +1,22 @@
 /**
  * Pismis isikli modeli web'de hazir olan yerler (dosyalar: public/baked/<id>/).
  * PISIR-WEB.bat yazar; elle degistirmeyin.
+ * (11 Kasim: sutunlari siyah-beyaz pisen 11 tapinak YENIDEN-PISIR.bat ile
+ * yeniden pisirilene kadar listeden cikarildi; PISIR-WEB listeyi yeniden yazar.)
  */
 // prettier-ignore
 export const BAKED_SITES: readonly string[] = [
-  "aizanoi-zeus-tapinagi",
   "alacahoyuk-sfenksli-kapi",
   "ani-katedrali",
   "antalya-hadrianus-kapisi",
   "aphrodisias-stadyumu",
   "aphrodisias-tetrapylon",
-  "artemis-tapinagi",
   "aspendos-tiyatrosu",
-  "assos-athena-tapinagi",
   "ayasofya-ana-kubbe",
   "catalhoyuk-dogu-hoyugu",
   "celsus-kutuphanesi",
-  "didyma-apollon-tapinagi",
   "eboracum-kenti",
   "efes-buyuk-tiyatro",
-  "efes-hadrianus-tapinagi",
   "efes-yamac-evler",
   "galata-kulesi",
   "gobeklitepe-d-yapisi",
@@ -30,22 +27,16 @@ export const BAKED_SITES: readonly string[] = [
   "kaunos-kaya-mezarlari",
   "ksanthos-nereidler-aniti",
   "laodikeia-bati-tiyatrosu",
-  "letoon-leto-tapinagi",
-  "magnesia-artemis-tapinagi",
   "milet-buyuk-tiyatro",
   "myra-kaya-mezarlari",
   "nemrut-dogu-terasi",
   "nimes-kenti",
   "patara-deniz-feneri",
-  "pergamon-trajan-tapinagi",
   "pergamon-zeus-sunagi",
   "perge-stadyumu",
   "pompeii-kenti",
-  "priene-athena-tapinagi",
   "sagalassos-antoninler-cesmesi",
-  "sardes-artemis-tapinagi",
   "selimiye-camii",
-  "side-apollon-tapinagi",
   "side-tiyatrosu",
   "suleymaniye-camii",
   "termessos-tiyatrosu",
