@@ -22,6 +22,7 @@ import type {
   PersianApadanaSpec,
   KhmerTempleSpec,
   IndicMonumentSpec,
+  EgyptianHypostyleSpec,
 } from "@/lib/models/dunya-modelleri";
 import * as trades from "@/lib/scene-trades";
 
@@ -85,7 +86,9 @@ export function steppedPyramidLife(spec: SteppedPyramidSpec, era: Era): SceneLif
 export function asianHallLife(spec: AsianHallSpec, era: Era): SceneLife {
   const b = make(era, 7129);
   const { cast, rand } = b;
-  const frontZ = -spec.depth / 2 - 4;
+  // Out beyond the foot of the front stair, which runs 2.2 times the
+  // podium's height out from the terrace.
+  const frontZ = -spec.depth / 2 - 2 - spec.podiumHeight * 2.2 - 3;
 
   // Twin bronze incense braziers flanking the imperial processional stairs:
   fire(b, brazier([-4.5, 0, frontZ - 5], 0.8), 0.4, true, true);
@@ -246,7 +249,10 @@ export function megalithicPlatformLife(spec: MegalithicPlatformSpec, era: Era): 
 export function zigguratLife(spec: ZigguratSpec, era: Era): SceneLife {
   const b = make(era, 4129);
   const { cast, rand } = b;
-  const frontZ = -(spec.baseDepth / 2) - 14;
+  // Before the foot of the stair: Ur's triple flights run 16 m out, Babylon's
+  // single ramp nearly half the base.
+  const frontZ =
+    -(spec.baseDepth / 2) - (spec.tripleStairs ? 16 : Math.max(22, spec.baseDepth * 0.45)) - 3;
 
   // Bronze brazier fire burning before the central staircase:
   fire(b, brazier([-3.5, 0, frontZ - 2]), 0.85, true, true);
@@ -470,5 +476,38 @@ export function indicMonumentLife(spec: IndicMonumentSpec, era: Era): SceneLife 
   trades.hawker(x, [-spec.baseWidth * 0.32, 0, frontZ - 10], Math.PI / 2);
   trades.cook(x, [spec.baseWidth * 0.32, 0, frontZ - 10], -Math.PI / 2);
 
+  return finish(b);
+}
+
+/* ================================================================== *
+ * 9. EGYPTIAN HYPOSTYLE HALL LIFE
+ * ================================================================== */
+
+/** A procession of priests carrying the god's barque down the nave, censers at the door. */
+export function egyptianHypostyleLife(spec: EgyptianHypostyleSpec, era: Era): SceneLife {
+  const b = make(era, 1427);
+  const { cast } = b;
+  const floor = 0.6;
+  const z0 = -spec.depth / 2 + 6;
+  const z1 = spec.depth / 2 - 8;
+  for (let i = 0; i < 6; i += 1) {
+    const x = (i % 2 === 0 ? -1 : 1) * 1.2;
+    cast.walk(
+      [
+        [x, floor, z0 + i * 1.6],
+        [x, floor, z1],
+      ],
+      { speed: 0.5, role: i === 0 ? "official" : "priest", carry: "offering" },
+    );
+  }
+  // In the clear nave between the two rows of columns, at the door.
+  cast.add({ at: [0, floor, z0 - 2], rotY: 0, action: "tend", role: "priest", carry: "incense" });
+  cast.add({
+    at: [0, floor, z0 - 4],
+    rotY: 0,
+    action: "play",
+    role: "musician",
+    carry: "aulos",
+  });
   return finish(b);
 }

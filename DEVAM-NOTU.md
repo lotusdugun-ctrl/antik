@@ -1,3 +1,32 @@
+# Antik Türkiye: devam notu (11 Kasım 2026)
+
+Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
+
+## YENİ KENTLERİN KONTROLÜ VE DÜZELTMESİ (11 Kasım 2026, Claude) — EN GÜNCEL, BURADAN BAŞLA
+
+- **Durum:** GitHub'dan çekildi (HEAD 80375aa = GONDER-46). Canlı sitede dünya kentleri kontrol edildi.
+- **Bulunan ana hata:** `city` modellerinde kamera 800–950 m'lik suru çerçeveliyordu; anıtlar ekranda nokta kadar kalıyordu (Babil, Tikal, Karnak, Angkor, Pompeii dahil hepsi).
+  - Düzeltme: `Part.outskirts` alanı + `frameBoundsOf()` (reconstruction-parts.ts). Kent, `places` listesindeki **ilk** yapıya (baş anıt) göre çerçevelenir; diğer yapılar, surlar ve caddeler kadrajın kenarında kalır. `Reconstruction3DInner.tsx` hedef ve kadrajı bununla hesaplar (span, gölge vb. hâlâ tüm modelden).
+  - Bu yüzden her kentte **ilk place = en önemli anıt** olmalı.
+- **Geometri hataları düzeltildi (dunya-modelleri.ts):**
+  - Zigurat ve Maya piramidi merdiven korkulukları tek parça 40–50 m'lik dik duvar olarak havada duruyordu → basamak basamak korkuluk.
+  - Merdiven basamakları havada asılıydı (zigurat, Maya, Persepolis, Andes platformu, Asya salonu) → her basamak yere kadar dolu.
+  - Persepolis korkuluk duvarları havadaydı → yere indirildi. Tüm Milletler Kapısı içi dolu küptü → gerçek geçit (iki ayak + lento).
+  - İştar Kapısı merdivenin üstüne biniyordu → tören yolunun başına alındı.
+  - Asya salonu çatısı tek düz levhaydı → 5 kademeli kalça/kavisli çatı; 2 sütun derinliğinde kapılarda eksi boyutlu duvar hatası giderildi.
+- **Kültüre aykırı parçalar değiştirildi (reconstructions.ts):**
+  - Yeni tür `egyptian-hypostyle` (Mısır sütunlu salonu: papirüs sütunlar, clerestory, taş çatı). Karnak ve Luksor'da Yunan İon tapınağı yerine bu kullanılıyor.
+  - Roma peristil evi → Babil/Ur/Mohenjo-daro/Hampi/Chan Chan'da `mudbrick-complex`, Persepolis/Pasargad'da küçük `persian-apadana`, Maya ve Teotihuacan'da alçak `stepped-pyramid`, Machu Picchu/Tiwanaku/Puma Punku'da küçük `megalithic-platform`, Çin/Japonya'da `asian-hall`.
+  - Roma zafer takı → Çin/Japonya'da kapı salonu (`asian-hall`); Maya, And ve Ebu Simbel'de kaldırıldı. Ebu Simbel Nefertari tapınağı artık kaya oyma `egyptian-pylon`.
+  - Surları olmayan yerlerden 800 m'lik sur kaldırıldı: Tikal, Copán, Quiriguá, El Puente, Teotihuacan, Chichen Itza, Machu Picchu, Tiwanaku, Puma Punku, Pasargad, Karnak, Luksor, Ebu Simbel.
+  - Etiketler (hotspot) yeni yerlere taşındı; dayanaksız 6 ölçü (kaldırılan Roma kapılarına bağlı) ve 4 kullanılmayan kaynak silindi. Kaybolan yapıya ait 4 etiket silindi.
+- **Babil pişmiş modeli (public/baked/babil-kenti) ESKİ geometriyle pişirildi** (dev gri duvar onda var). `baked-sites.ts`'ten çıkarıldı, GONDER-47 iptal. İstenirse **BABIL-PISIR.bat** yeniden çalıştırılıp sonra gönderilmeli.
+- **Doğrulama:** `tsc` 0 hata; reconstructions/face-fights/epigraphy testleri geçti. Bulutta ses dosyası eksikliğinden kaynaklı test hataları ortama ait. `scene-life` "nobody walks through stone" testi bu bulut makinesinde (2 çekirdek) taban sürümde de 300 sn sınırını aşıyor; süre geçici olarak artırılınca 17/17 geçti (CI'da sorun olursa bu testin süresi gözden geçirilmeli).
+- **Değişen dosyalar** GONDER-48.bat ile gönderilir. Eslint/prettier düzeni bu dosyalarda uygulandı (CI'daki lint için).
+- **Sıradaki öneriler:** Roma kentlerinin içi hâlâ boş kum (yalnızca 2–3 anıt + sur) → mahalle dokusu (ev blokları) eklemek; Babil'i yeniden pişirmek; Antik Pass ödemesi.
+
+---
+
 # Antik Türkiye: devam notu (8 Kasım 2026; güncellendi - 2)
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."

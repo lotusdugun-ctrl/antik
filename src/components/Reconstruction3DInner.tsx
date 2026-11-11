@@ -29,6 +29,7 @@ import type { SceneLife } from "@/lib/scene-life";
 import type * as THREE_NS from "three";
 import {
   boundsOf,
+  frameBoundsOf,
   type Fall,
   type Dress,
   type FaceShape,
@@ -4103,11 +4104,18 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
       const camera = new THREE.PerspectiveCamera(ORBIT_FOV, aspect, 0.5, span * 12);
       // A building is read from a little below its middle, not from its middle.
       const framing = (FRAMING as Partial<Record<string, { aim: number; headroom: number }>>)[kind];
-      const height = bounds.max[1] - bounds.min[1];
+      // A city is framed on its monuments, not its circuit of walls.
+      const view = frameBoundsOf(parts);
+      const viewCentre = new THREE.Vector3(
+        (view.min[0] + view.max[0]) / 2,
+        (view.min[1] + view.max[1]) / 2,
+        (view.min[2] + view.max[2]) / 2,
+      );
+      const height = view.max[1] - view.min[1];
       const target = new THREE.Vector3(
-        centre.x,
-        bounds.min[1] + (framing ? height * framing.aim : (centre.y - bounds.min[1]) * 0.75),
-        centre.z,
+        viewCentre.x,
+        view.min[1] + (framing ? height * framing.aim : (viewCentre.y - view.min[1]) * 0.75),
+        viewCentre.z,
       );
       const direction = new THREE.Vector3(...viewpointOf(kind)).normalize();
 
@@ -4121,9 +4129,9 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
        * corner sits just inside the edge of the frame.
        */
       const corners: THREE_NS.Vector3[] = [];
-      for (const x of [bounds.min[0], bounds.max[0]]) {
-        for (const y of [bounds.min[1], bounds.max[1] + height * (framing?.headroom ?? 0)]) {
-          for (const z of [bounds.min[2], bounds.max[2]]) {
+      for (const x of [view.min[0], view.max[0]]) {
+        for (const y of [view.min[1], view.max[1] + height * (framing?.headroom ?? 0)]) {
+          for (const z of [view.min[2], view.max[2]]) {
             corners.push(new THREE.Vector3(x, y, z));
           }
         }

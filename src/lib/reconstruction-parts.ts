@@ -78,6 +78,8 @@ import {
   khmerTempleParts,
   khmerTempleWalkStart,
   indicMonumentParts,
+  egyptianHypostyleParts,
+  egyptianHypostyleWalkStart,
   indicMonumentWalkStart,
 } from "@/lib/models/dunya-modelleri";
 import {
@@ -257,6 +259,14 @@ type Base = {
    * Göbeklitepe far enough away that its carvings became invisible.
    */
   decor?: boolean;
+  /**
+   * The rest of a city plan beyond its chief monument: the other monuments,
+   * its circuit of walls, its streets. They are building, not scenery, so
+   * they cast shadows and stand in the walker's way; but the first view is
+   * framed on the chief monument (see `frameBoundsOf`). Framed on a 900 m
+   * circuit, a 50 m ziggurat or pyramid came out a speck in an empty square.
+   */
+  outskirts?: boolean;
   /**
    * How hard the weather has worked on this stone, in metres of wander.
    *
@@ -3119,7 +3129,11 @@ export function romanFacadeParts(spec: RomanFacadeSpec): Part[] {
        */
       spec.inscribed === false
         ? undefined
-        : index === 0 ? TEXTS.celsusByDaughter : index === 2 ? TEXTS.celsusByGrandson : undefined,
+        : index === 0
+          ? TEXTS.celsusByDaughter
+          : index === 2
+            ? TEXTS.celsusByGrandson
+            : undefined,
     );
   });
 
@@ -8182,12 +8196,7 @@ function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
     const length = Math.hypot(dx, dz);
     if (length < 0.5) return;
     const angle = -Math.atan2(dz, dx);
-    parts.push(
-      worn(
-        box("stone", [(x1 + x2) / 2, 0, (z1 + z2) / 2], [length, h, t], angle),
-        0.08,
-      ),
-    );
+    parts.push(worn(box("stone", [(x1 + x2) / 2, 0, (z1 + z2) / 2], [length, h, t], angle), 0.08));
     // Battlements: a short block every five metres, set on the outer edge.
     const nx = Math.sin(angle);
     const nz = Math.cos(angle);
@@ -8221,8 +8230,7 @@ function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
     parts.push(box("stoneDark", [x, h + 4.5, z], [7.0, 0.7, 7.0]));
   };
 
-  for (const x of [-halfLength, halfLength])
-    for (const z of [-halfWidth, halfWidth]) towerAt(x, z);
+  for (const x of [-halfLength, halfLength]) for (const z of [-halfWidth, halfWidth]) towerAt(x, z);
 
   const extra = Math.max(0, walls.towers - 4);
   const perimeter = 2 * (walls.length + walls.width);
@@ -8253,10 +8261,13 @@ function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
       parts.push(worn(box("stone", [x, 0, z], [6.4, h + 5, 6.4]), 0.1));
     }
     const size: Vec3 =
-      Math.abs(ex) > 0.5 ? [walls.gateWidth + 6, 3.2, t + 2.2] : [t + 2.2, 3.2, walls.gateWidth + 6];
+      Math.abs(ex) > 0.5
+        ? [walls.gateWidth + 6, 3.2, t + 2.2]
+        : [t + 2.2, 3.2, walls.gateWidth + 6];
     parts.push(box("stone", [gx, h - 3.2, gz], size));
     // The dark mouth of the passage below the lintel.
-    const mouth: Vec3 = Math.abs(ex) > 0.5 ? [walls.gateWidth, h - 3.2, 0.2] : [0.2, h - 3.2, walls.gateWidth];
+    const mouth: Vec3 =
+      Math.abs(ex) > 0.5 ? [walls.gateWidth, h - 3.2, 0.2] : [0.2, h - 3.2, walls.gateWidth];
     parts.push(box("shadow", [gx, 0, gz], mouth));
   }
 
@@ -8284,15 +8295,20 @@ function placedParts(place: CityPlacement): Part[] {
 export function cityParts(spec: CitySpec): Part[] {
   const parts: Part[] = [];
 
-  for (const place of spec.places) parts.push(...placedParts(place));
-  if (spec.walls) parts.push(...cityWallParts(spec.walls));
+  // The first place is the city's chief monument, the one the first view is
+  // framed on; the others stand round it in the frame, out to the walls.
+  const [chief, ...others] = spec.places;
+  if (chief) parts.push(...placedParts(chief));
+  const far: Part[] = [];
+  for (const place of others) far.push(...placedParts(place));
+  if (spec.walls) far.push(...cityWallParts(spec.walls));
   for (const [x1, z1, x2, z2, width] of spec.streets ?? [])
-    parts.push(...cityStreetParts(x1, z1, x2, z2, width));
+    far.push(...cityStreetParts(x1, z1, x2, z2, width));
 
   if (spec.hill) {
     const { angle, distance, height, radius } = spec.hill;
     const theta = angle * DEG;
-    parts.push(
+    far.push(
       scenery(
         worn(
           cyl(
@@ -8308,6 +8324,7 @@ export function cityParts(spec: CitySpec): Part[] {
       ),
     );
   }
+  for (const part of far) parts.push({ ...part, outskirts: true });
 
   // One setting for the whole city: rubble and grass in the fields outside the
   // walls, and the low ridges on the horizon.
@@ -8427,6 +8444,8 @@ function buildParts(spec: ModelSpec): Part[] {
       return megalithicPlatformParts(spec);
     case "ziggurat":
       return zigguratParts(spec);
+    case "egyptian-hypostyle":
+      return egyptianHypostyleParts(spec);
     case "persian-apadana":
       return persianApadanaParts(spec);
     case "khmer-temple":
@@ -8574,6 +8593,8 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return megalithicPlatformWalkStart(spec);
     case "ziggurat":
       return zigguratWalkStart(spec);
+    case "egyptian-hypostyle":
+      return egyptianHypostyleWalkStart(spec);
     case "persian-apadana":
       return persianApadanaWalkStart(spec);
     case "khmer-temple":
@@ -8687,6 +8708,16 @@ export function fallFor(spec: ModelSpec): Fall | undefined {
     };
   }
   return undefined;
+}
+
+/**
+ * What the first view is fitted to: the whole model, except that a city is
+ * fitted to its chief monument and leaves the rest of the plan to the edges
+ * of the frame (see `outskirts`). A city with no monument falls back to it all.
+ */
+export function frameBoundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {
+  const core = parts.filter((part) => !part.outskirts);
+  return boundsOf(core.some((part) => !part.decor) ? core : parts);
 }
 
 export function boundsOf(parts: Part[]): { min: Vec3; max: Vec3 } {

@@ -47,7 +47,14 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
   const stairW = spec.stairWidth;
 
   // The setting: tropical limestone plaza and lush greenery.
-  parts.push(...setting(Math.max(W, D) + 25, 3819, { hills: 0.3, stone: 0.5, grass: 1.5, ground: "limestone" }));
+  parts.push(
+    ...setting(Math.max(W, D) + 25, 3819, {
+      hills: 0.3,
+      stone: 0.5,
+      grass: 1.5,
+      ground: "limestone",
+    }),
+  );
 
   // Summit temple and roof comb height allocation:
   const combH = spec.roofCombHeight;
@@ -81,15 +88,18 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
   for (let s = 0; s < stepsCount; s += 1) {
     const sy = s * stepRise;
     const sz = stairFrontZ + s * stepTread;
-    parts.push(box("stone", [0, sy, sz + stepTread / 2], [stairW, stepRise, stepTread + 0.25]));
-  }
-
-  // Sloping stairway balustrades (parapets) flanking the steps:
-  for (const side of [-1, 1]) {
-    const bx = side * (stairW / 2 + 0.4);
-    parts.push(
-      box("limestone", [bx, pyramidH * 0.5, (stairFrontZ + stairTopZ) / 2], [0.8, pyramidH, stairRun + 0.8], 0),
-    );
+    // Solid to the ground, so no tread hangs in the air off the face.
+    parts.push(box("stone", [0, 0, sz + stepTread / 2], [stairW, sy + stepRise, stepTread + 0.25]));
+    // The balustrade either side climbs with the flight, a little proud of it.
+    for (const side of [-1, 1]) {
+      parts.push(
+        box(
+          "limestone",
+          [side * (stairW / 2 + 0.4), 0, sz + stepTread / 2],
+          [0.8, sy + stepRise + 0.6, stepTread + 0.25],
+        ),
+      );
+    }
   }
 
   /* ---- 3. Summit Sanctuary Temple ---- */
@@ -107,7 +117,11 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
   // Side walls:
   for (const side of [-1, 1]) {
     parts.push(
-      box("limestone", [side * (tW / 2 - wallThick / 2), templeY + 0.5, 0], [wallThick, wallH, tD - wallThick * 2]),
+      box(
+        "limestone",
+        [side * (tW / 2 - wallThick / 2), templeY + 0.5, 0],
+        [wallThick, wallH, tD - wallThick * 2],
+      ),
     );
   }
   // Front facade with Maya corbelled doorway:
@@ -124,7 +138,11 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
   }
   // Massive stone lintel over the corbelled entrance:
   parts.push(
-    box("stone", [0, templeY + 0.5 + wallH * 0.65, -tD / 2 + wallThick / 2], [doorW + 0.6, wallH * 0.35, wallThick + 0.2]),
+    box(
+      "stone",
+      [0, templeY + 0.5 + wallH * 0.65, -tD / 2 + wallThick / 2],
+      [doorW + 0.6, wallH * 0.35, wallThick + 0.2],
+    ),
   );
 
   // Upper frieze and entablature of sanctuary:
@@ -221,7 +239,14 @@ export function asianHallParts(spec: AsianHallSpec): Part[] {
   const isPagoda = spec.roofStyle === "pagoda";
 
   // Setting: Imperial stone flagstone esplanade with pines:
-  parts.push(...setting(Math.max(W, D) + 30, 7129, { hills: 0.2, stone: 0.6, grass: 0.8, ground: "limestone" }));
+  parts.push(
+    ...setting(Math.max(W, D) + 30, 7129, {
+      hills: 0.2,
+      stone: 0.6,
+      grass: 0.8,
+      ground: "limestone",
+    }),
+  );
 
   /* ---- 1. Elevated Terraced Stone Podium ---- */
   parts.push(worn(box("marbleWorn", [0, 0, 0], [W + 4, P, D + 4]), 0.05));
@@ -238,14 +263,18 @@ export function asianHallParts(spec: AsianHallSpec): Part[] {
   const stairRun = P * 2.2;
   const middleW = Math.min(8, W * 0.2);
   // Center carved dragon ramp slab:
-  parts.push(box("marbleWorn", [0, 0, -D / 2 - 2 - stairRun / 2], [middleW * 0.4, P * 0.5, stairRun], 0));
+  parts.push(
+    box("marbleWorn", [0, 0, -D / 2 - 2 - stairRun / 2], [middleW * 0.4, P * 0.5, stairRun], 0),
+  );
   // Left and right pedestrian stair runs:
   for (const side of [-1, 1]) {
     const sx = side * (middleW * 0.8);
     for (let s = 0; s < 10; s += 1) {
       const sy = (s * P) / 10;
       const sz = -D / 2 - 2 - stairRun + (s * stairRun) / 10;
-      parts.push(box("marble", [sx, sy, sz], [middleW * 0.5, P / 10 + 0.02, stairRun / 10 + 0.1]));
+      parts.push(
+        box("marble", [sx, 0, sz], [middleW * 0.5, sy + P / 10 + 0.02, stairRun / 10 + 0.1]),
+      );
     }
   }
 
@@ -286,11 +315,15 @@ export function asianHallParts(spec: AsianHallSpec): Part[] {
     }
 
     // Interior walls & wooden lattice partitions:
-    const inW = curW - stepX * 1.6;
-    const inD = curD - stepZ * 1.6;
+    // Set back one bay from the colonnade, but never thinner than half the
+    // hall (a two-column-deep gate has no bay to spare).
+    const inW = Math.max(curW * 0.5, curW - stepX * 1.6);
+    const inD = Math.max(curD * 0.5, curD - stepZ * 1.6);
     parts.push(box("paintRed", [0, currentY + 0.25, 0], [inW, curColH, inD]));
     // Gilded door portals on front facade:
-    parts.push(box("paintGold", [0, currentY + 0.25, -curD / 2 + 0.05], [inW * 0.7, curColH * 0.75, 0.15]));
+    parts.push(
+      box("paintGold", [0, currentY + 0.25, -curD / 2 + 0.05], [inW * 0.7, curColH * 0.75, 0.15]),
+    );
 
     /* ---- 3. Dougong Wooden Bracket Clusters & Interlocking Beams ---- */
     const beamY = currentY + 0.25 + curColH;
@@ -305,15 +338,35 @@ export function asianHallParts(spec: AsianHallSpec): Part[] {
     const overhang = 2.4;
     const eaveW = curW + overhang * 2;
     const eaveD = curD + overhang * 2;
-    const roofH = isPagoda ? 2.2 : Math.max(2.2, lvl === storeys - 1 ? (spec.totalHeight - roofBaseY) : 2.5);
+    const roofH = isPagoda
+      ? 2.2
+      : Math.max(2.2, lvl === storeys - 1 ? spec.totalHeight - roofBaseY : 2.5);
 
-    // Curved eave tier in dark glazed roof tile material:
-    parts.push(worn(box("stoneDark", [0, roofBaseY, 0], [eaveW, roofH * 0.65, eaveD]), 0.15));
+    // The tiled roof, hipped and swept: courses stepping in as they rise,
+    // shallow at the eaves and steep towards the ridge, so the roof reads as
+    // the concave curve of a Tang or Nara hall rather than as one flat slab.
+    const courses = [
+      { w: 1.0, d: 1.0, h: 0.14 },
+      { w: 0.9, d: 0.84, h: 0.14 },
+      { w: 0.8, d: 0.66, h: 0.18 },
+      { w: 0.72, d: 0.46, h: 0.22 },
+      { w: 0.66, d: 0.24, h: 0.32 },
+    ];
+    let cy = roofBaseY;
+    for (const c of courses) {
+      const h = Math.max(0.2, roofH * c.h);
+      parts.push(worn(box("stoneDark", [0, cy, 0], [eaveW * c.w, h, eaveD * c.d]), 0.04));
+      cy += h;
+    }
     // Swept-up corner eaves (flying eaves):
     for (const sx of [-1, 1]) {
       for (const sz of [-1, 1]) {
         parts.push(
-          box("paintGold", [sx * (eaveW / 2 - 0.5), roofBaseY + roofH * 0.45, sz * (eaveD / 2 - 0.5)], [1.4, 0.4, 1.4]),
+          box(
+            "paintGold",
+            [sx * (eaveW / 2 - 0.5), roofBaseY + roofH * 0.45, sz * (eaveD / 2 - 0.5)],
+            [1.4, 0.4, 1.4],
+          ),
         );
       }
     }
@@ -331,7 +384,9 @@ export function asianHallParts(spec: AsianHallSpec): Part[] {
     // Pagoda sacred bronze mast (tiansha / sorin):
     parts.push(cyl("paintGold", [0, ridgeY, 0], 0.35, 0.12, 6.5));
     for (let r = 0; r < 7; r += 1) {
-      parts.push(cyl("paintGold", [0, ridgeY + 1.2 + r * 0.65, 0], 0.9 - r * 0.08, 0.9 - r * 0.08, 0.2));
+      parts.push(
+        cyl("paintGold", [0, ridgeY + 1.2 + r * 0.65, 0], 0.9 - r * 0.08, 0.9 - r * 0.08, 0.2),
+      );
     }
   } else {
     // Twin mythical horn/fish-tail finials (Shibi / Chiwen) guarding the ridge:
@@ -390,7 +445,9 @@ export function egyptianPylonParts(spec: EgyptianPylonSpec): Part[] {
   const towerW = (W - portW) / 2;
 
   // Nilotic sandstone desert setting with palm grove & river esplanade:
-  parts.push(...setting(W + 35, 1341, { hills: 0.25, stone: 0.6, grass: 0.3, ground: "limestone" }));
+  parts.push(
+    ...setting(W + 35, 1341, { hills: 0.25, stone: 0.6, grass: 0.3, ground: "limestone" }),
+  );
 
   /* ---- 1. Twin Battered Pylon Towers (Inward-Sloping Sandstone) ---- */
   for (const side of [-1, 1]) {
@@ -445,12 +502,24 @@ export function egyptianPylonParts(spec: EgyptianPylonSpec): Part[] {
     parts.push(box("stoneDark", [cx, 0, cz], [throneW, seatH, throneD]));
     // Seated torso and nemes headdress:
     const torsoH = colossusH * 0.4;
-    parts.push(box("stone", [cx, seatH, cz + throneD * 0.1], [throneW * 0.85, torsoH, throneD * 0.5]));
+    parts.push(
+      box("stone", [cx, seatH, cz + throneD * 0.1], [throneW * 0.85, torsoH, throneD * 0.5]),
+    );
     // Pharaoh head with royal beard & crown:
     const headH = colossusH * 0.25;
-    parts.push(cyl("stone", [cx, seatH + torsoH, cz + throneD * 0.1], throneW * 0.32, throneW * 0.28, headH));
+    parts.push(
+      cyl("stone", [cx, seatH + torsoH, cz + throneD * 0.1], throneW * 0.32, throneW * 0.28, headH),
+    );
     // Double Crown of Upper & Lower Egypt (Pschent):
-    parts.push(cyl("paintGold", [cx, seatH + torsoH + headH, cz + throneD * 0.1], throneW * 0.18, 0.05, headH * 0.8));
+    parts.push(
+      cyl(
+        "paintGold",
+        [cx, seatH + torsoH + headH, cz + throneD * 0.1],
+        throneW * 0.18,
+        0.05,
+        headH * 0.8,
+      ),
+    );
   }
 
   /* ---- 4. Monolithic Rose Granite Obelisk ---- */
@@ -464,7 +533,9 @@ export function egyptianPylonParts(spec: EgyptianPylonSpec): Part[] {
     // Tapering four-sided monolith shaft:
     parts.push(box("granite", [ox, 1.8, oz], [obeliskBase, oH - 1.8, obeliskBase]));
     // Gilded pyramidion summit reflecting the morning sun (Benben):
-    parts.push(box("paintGold", [ox, oH, oz], [obeliskBase * 0.85, obeliskBase * 1.2, obeliskBase * 0.85]));
+    parts.push(
+      box("paintGold", [ox, oH, oz], [obeliskBase * 0.85, obeliskBase * 1.2, obeliskBase * 0.85]),
+    );
   }
 
   /* ---- 5. Avenue of Sphinxes (Dromos) ---- */
@@ -533,7 +604,14 @@ export function megalithicPlatformParts(spec: MegalithicPlatformSpec): Part[] {
   const N = spec.tiers;
 
   // High-altitude Andean Altiplano setting with golden ichu grass and dark andesite ridges:
-  parts.push(...setting(Math.max(W, L) + 25, 5917, { hills: 0.45, stone: 0.7, grass: 0.9, ground: "stoneDark" }));
+  parts.push(
+    ...setting(Math.max(W, L) + 25, 5917, {
+      hills: 0.45,
+      stone: 0.7,
+      grass: 0.9,
+      ground: "stoneDark",
+    }),
+  );
 
   /* ---- 1. Terraced Akapana Andesite Platform ---- */
   const tierH = H / N;
@@ -560,7 +638,7 @@ export function megalithicPlatformParts(spec: MegalithicPlatformSpec): Part[] {
   for (let s = 0; s < steps; s += 1) {
     const sy = (s * H) / steps;
     const sz = stairFrontZ + (s * stairRun) / steps;
-    parts.push(box("stone", [0, sy, sz], [stairW, H / steps + 0.05, stairRun / steps + 0.2]));
+    parts.push(box("stone", [0, 0, sz], [stairW, sy + H / steps + 0.05, stairRun / steps + 0.2]));
   }
 
   /* ---- 2. Sun Gate (Puerta del Sol) Monolith ---- */
@@ -584,7 +662,13 @@ export function megalithicPlatformParts(spec: MegalithicPlatformSpec): Part[] {
   const lintelH = gateH - openingH;
   parts.push(box("stoneDark", [0, summitY + openingH, gateZ], [openingW, lintelH, gateThick]));
   // Carved sun god bas-relief (Staff God / Viracocha frieze):
-  parts.push(box("stone", [0, summitY + openingH + lintelH * 0.2, gateZ - gateThick / 2 - 0.03], [gateW * 0.9, lintelH * 0.6, 0.06]));
+  parts.push(
+    box(
+      "stone",
+      [0, summitY + openingH + lintelH * 0.2, gateZ - gateThick / 2 - 0.03],
+      [gateW * 0.9, lintelH * 0.6, 0.06],
+    ),
+  );
   // Sunken gate opening:
   parts.push(box("shadow", [0, summitY, gateZ], [openingW, openingH, gateThick * 0.5]));
 
@@ -593,7 +677,9 @@ export function megalithicPlatformParts(spec: MegalithicPlatformSpec): Part[] {
   // Standing monolithic andesite statue of the high priest:
   parts.push(box("stone", [gateW * 0.9, summitY, gateZ - 2], [1.1, monoH, 0.9]));
   // Crown and ritual kero cup carved details:
-  parts.push(box("stoneDark", [gateW * 0.9, summitY + monoH * 0.75, gateZ - 2], [1.15, monoH * 0.25, 0.95]));
+  parts.push(
+    box("stoneDark", [gateW * 0.9, summitY + monoH * 0.75, gateZ - 2], [1.15, monoH * 0.25, 0.95]),
+  );
 
   /* ---- 4. Kalasasaya Standing Orthostats (Megalithic Pillars) ---- */
   const orthostats = spec.orthostats ?? 8;
@@ -679,7 +765,14 @@ export function zigguratParts(spec: ZigguratSpec): Part[] {
   const stairW = Math.max(3, spec.stairWidth);
 
   // Arid Mesopotamian plain setting:
-  parts.push(...setting(Math.max(W, D) + 25, 4129, { hills: 0.15, stone: 0.3, grass: 0.2, ground: "ground" }));
+  parts.push(
+    ...setting(Math.max(W, D) + 25, 4129, {
+      hills: 0.15,
+      stone: 0.3,
+      grass: 0.2,
+      ground: "ground",
+    }),
+  );
 
   const shrineH = Math.max(3, spec.shrineHeight);
   const pyramidH = Math.max(6, H - shrineH);
@@ -723,8 +816,9 @@ export function zigguratParts(spec: ZigguratSpec): Part[] {
     // Central perpendicular flight:
     for (let s = 0; s < steps; s += 1) {
       const sy = (s * tier1H) / steps;
-      const sz = stairFrontZ + (s * (Math.abs(stairFrontZ - stairTopZ))) / steps;
-      parts.push(box("terracotta", [0, sy, sz], [stairW, tier1H / steps + 0.05, 1.1]));
+      const sz = stairFrontZ + (s * Math.abs(stairFrontZ - stairTopZ)) / steps;
+      // Each step a solid block down to the ground, so the flight is a ramp of brick, not treads in the air.
+      parts.push(box("terracotta", [0, 0, sz], [stairW, sy + tier1H / steps + 0.05, 1.1]));
     }
 
     // Left and right diagonal flanking ramps:
@@ -734,7 +828,7 @@ export function zigguratParts(spec: ZigguratSpec): Part[] {
         const sy = (s * tier1H) / steps;
         const sx = side * (sideW * (1 - s / steps) + stairW * 0.6);
         const sz = -D / 2 - 2.5 + (s * 2.5) / steps;
-        parts.push(box("terracotta", [sx, sy, sz], [1.8, tier1H / steps + 0.05, 1.2]));
+        parts.push(box("terracotta", [sx, 0, sz], [1.8, sy + tier1H / steps + 0.05, 1.2]));
       }
     }
 
@@ -745,11 +839,17 @@ export function zigguratParts(spec: ZigguratSpec): Part[] {
     // Upper central stairway climbing from gatehouse to summit shrine:
     const upperSteps = 22;
     const upperH = pyramidH - tier1H;
-    const upperRun = Math.abs(-D / 2 - (-topD / 2));
+    const upperRun = Math.abs(-D / 2 - -topD / 2);
     for (let s = 0; s < upperSteps; s += 1) {
       const sy = tier1H + (s * upperH) / upperSteps;
       const sz = -D / 2 + 3 + (s * upperRun) / upperSteps;
-      parts.push(box("terracotta", [0, sy, sz], [stairW * 0.8, upperH / upperSteps + 0.05, 1.1]));
+      parts.push(
+        box(
+          "terracotta",
+          [0, tier1H, sz],
+          [stairW * 0.8, sy - tier1H + upperH / upperSteps + 0.05, 1.1],
+        ),
+      );
     }
   } else {
     // Babylon-style monumental central processional ramp ascending all tiers:
@@ -761,12 +861,19 @@ export function zigguratParts(spec: ZigguratSpec): Part[] {
     for (let s = 0; s < steps; s += 1) {
       const sy = (s * pyramidH) / steps;
       const sz = stairFrontZ + (s * totalRun) / steps;
-      parts.push(box("terracotta", [0, sy, sz], [stairW, pyramidH / steps + 0.05, totalRun / steps + 0.25]));
-    }
-    // High sloping balustrades:
-    for (const side of [-1, 1]) {
-      const bx = side * (stairW / 2 + 0.4);
-      parts.push(box("stoneDark", [bx, pyramidH * 0.5, (stairFrontZ + stairTopZ) / 2], [0.8, pyramidH, totalRun + 1]));
+      const rise = sy + pyramidH / steps + 0.05;
+      parts.push(box("terracotta", [0, 0, sz], [stairW, rise, totalRun / steps + 0.25]));
+      // The parapet either side follows the flight up, a metre above each step
+      // (it was once one 50 m wall standing on end beside the stair).
+      for (const side of [-1, 1]) {
+        parts.push(
+          box(
+            "stoneDark",
+            [side * (stairW / 2 + 0.4), 0, sz],
+            [0.8, rise + 1, totalRun / steps + 0.25],
+          ),
+        );
+      }
     }
   }
 
@@ -787,11 +894,14 @@ export function zigguratParts(spec: ZigguratSpec): Part[] {
   parts.push(box(battlementMat, [0, summitY + shrineH - 0.6, 0], [sW + 0.4, 0.6, sD + 0.4]));
 
   // Arched portal into the inner sanctuary:
-  parts.push(box("shadow", [0, summitY + 0.6, -sD / 2 - 0.05], [stairW * 0.55, shrineH * 0.55, 0.4]));
+  parts.push(
+    box("shadow", [0, summitY + 0.6, -sD / 2 - 0.05], [stairW * 0.55, shrineH * 0.55, 0.4]),
+  );
 
   /* ---- 4. Ishtar Processional Gate (Babylon) ---- */
   if (spec.processionalGate) {
-    const gateZ = -D / 2 - 32;
+    // Out at the foot of the processional way, clear of the stair.
+    const gateZ = -D / 2 - Math.max(22, D * 0.45) - 30;
     const gateW = 22;
     const gateH = 14;
     // Twin soaring gate towers in vibrant blue:
@@ -852,7 +962,14 @@ export function persianApadanaParts(spec: PersianApadanaSpec): Part[] {
   const totalH = Math.max(8, spec.totalHeight);
 
   // Dry Zagros mountain plateau setting:
-  parts.push(...setting(Math.max(W, D) + 25, 6219, { hills: 0.5, stone: 0.8, grass: 0.2, ground: "limestone" }));
+  parts.push(
+    ...setting(Math.max(W, D) + 25, 6219, {
+      hills: 0.5,
+      stone: 0.8,
+      grass: 0.2,
+      ground: "limestone",
+    }),
+  );
 
   if (spec.style === "cyrus-tomb") {
     /* ---- Pasargadae: Monumental 6-Tier Stepped Tomb of Cyrus the Great ---- */
@@ -886,7 +1003,9 @@ export function persianApadanaParts(spec: PersianApadanaSpec): Part[] {
 
     // Pitched triangular stone gabled roof and pediment:
     const roofH = totalH - plinthH - chamberH;
-    parts.push(prism("limestone", [0, chamberY + chamberH, 0], [chamberW + 0.6, roofH, chamberD + 0.6], 0));
+    parts.push(
+      prism("limestone", [0, chamberY + chamberH, 0], [chamberW + 0.6, roofH, chamberD + 0.6], 0),
+    );
 
     // Peribolos perimeter column bases in the sanctuary garden:
     const peribolosW = W * 1.35;
@@ -918,12 +1037,20 @@ export function persianApadanaParts(spec: PersianApadanaSpec): Part[] {
       const sy = (s * platH) / stairSteps;
       const sx = side * (stairW * 1.2 + (s * (W * 0.22)) / stairSteps);
       const sz = -D / 2 - 1 - (s * stairRun * 0.8) / stairSteps;
-      parts.push(box("limestone", [sx, sy, sz], [stairW, platH / stairSteps + 0.04, 1.2]));
+      parts.push(box("limestone", [sx, 0, sz], [stairW, sy + platH / stairSteps + 0.04, 1.2]));
     }
   }
-  // Carved parapet walls depicting imperial tribute bearers:
+  // Carved parapet walls depicting imperial tribute bearers, standing on the
+  // ground before the terrace and as high as it (they once floated half its
+  // height in the air):
   for (const side of [-1, 1]) {
-    parts.push(box("stoneDark", [side * (W * 0.3), platH * 0.5, -D / 2 - stairRun * 0.5], [0.6, platH + 1.2, stairRun]));
+    parts.push(
+      box(
+        "stoneDark",
+        [side * (W * 0.3), 0, -D / 2 - stairRun * 0.5],
+        [0.6, platH + 1.2, stairRun],
+      ),
+    );
   }
 
   // 3. Grid of Soaring Fluted Columns with Double-Bull Protome Capitals:
@@ -965,8 +1092,17 @@ export function persianApadanaParts(spec: PersianApadanaSpec): Part[] {
     const gateWallH = 12;
 
     // Square gateway pavilion:
-    parts.push(box("limestone", [0, 0, gateZ], [gateSize, gateWallH, gateSize]));
-    parts.push(box("shadow", [0, 0, gateZ], [5.5, 9.5, gateSize + 0.2]));
+    // Two masses either side of a passage 5.5 m wide, and the lintel over it:
+    // a real way through, not a dark panel painted on a solid cube.
+    const passW = 5.5;
+    const passH = 9.5;
+    const pierW = (gateSize - passW) / 2;
+    for (const side of [-1, 1]) {
+      parts.push(
+        box("limestone", [side * (passW / 2 + pierW / 2), 0, gateZ], [pierW, gateWallH, gateSize]),
+      );
+    }
+    parts.push(box("limestone", [0, passH, gateZ], [passW, gateWallH - passH, gateSize]));
 
     // Twin Colossal Winged Bulls (Lamassu) flanking the entrance portals:
     for (const side of [-1, 1]) {
@@ -1024,7 +1160,14 @@ export function khmerTempleParts(spec: KhmerTempleSpec): Part[] {
   const N = Math.max(2, spec.tiers);
 
   // Tropical jungle setting with sandstone platforms and water:
-  parts.push(...setting(Math.max(W, D) + 30, 7129, { hills: 0.25, stone: 0.7, grass: 1.8, ground: "granite" }));
+  parts.push(
+    ...setting(Math.max(W, D) + 30, 7129, {
+      hills: 0.25,
+      stone: 0.7,
+      grass: 1.8,
+      ground: "granite",
+    }),
+  );
 
   // Sacred Water Moat in front of the temple complex:
   const moatW = W + 40;
@@ -1093,9 +1236,17 @@ export function khmerTempleParts(spec: KhmerTempleSpec): Part[] {
         const factor = 1 - (s / stages) * 0.65;
         const sy = summitY + s * stageH;
         // Receding tiered lotus-petal stage:
-        parts.push(box("stoneDark", [tx, sy, tz], [baseR * factor * 2, stageH * 0.88, baseR * factor * 2]));
+        parts.push(
+          box("stoneDark", [tx, sy, tz], [baseR * factor * 2, stageH * 0.88, baseR * factor * 2]),
+        );
         // Projecting lotus-petal antefix ridge:
-        parts.push(box("granite", [tx, sy + stageH * 0.88, tz], [baseR * factor * 2.15, stageH * 0.12, baseR * factor * 2.15]));
+        parts.push(
+          box(
+            "granite",
+            [tx, sy + stageH * 0.88, tz],
+            [baseR * factor * 2.15, stageH * 0.12, baseR * factor * 2.15],
+          ),
+        );
       }
 
       // Pointed lotus conical spire and gilded finial:
@@ -1128,9 +1279,21 @@ export function khmerTempleParts(spec: KhmerTempleSpec): Part[] {
       // Smiling lips and serene closed eyelids carved relief bands:
       for (const side of [-1, 1]) {
         // North / South faces:
-        parts.push(box("granite", [tx, faceY + faceH * 0.35, tz + side * (towerW * 0.48)], [towerW * 0.55, 0.4, 0.15]));
+        parts.push(
+          box(
+            "granite",
+            [tx, faceY + faceH * 0.35, tz + side * (towerW * 0.48)],
+            [towerW * 0.55, 0.4, 0.15],
+          ),
+        );
         // East / West faces:
-        parts.push(box("granite", [tx + side * (towerW * 0.48), faceY + faceH * 0.35, tz], [0.15, 0.4, towerW * 0.55]));
+        parts.push(
+          box(
+            "granite",
+            [tx + side * (towerW * 0.48), faceY + faceH * 0.35, tz],
+            [0.15, 0.4, towerW * 0.55],
+          ),
+        );
       }
 
       // Lotus crown finial:
@@ -1184,7 +1347,14 @@ export function indicMonumentParts(spec: IndicMonumentSpec): Part[] {
 
   if (spec.monumentType === "great-bath") {
     /* ---- Mohenjo-daro: Indus Valley Great Bath & Fired Brick Citadel ---- */
-    parts.push(...setting(Math.max(W, D) + 25, 8319, { hills: 0.15, stone: 0.3, grass: 0.4, ground: "ground" }));
+    parts.push(
+      ...setting(Math.max(W, D) + 25, 8319, {
+        hills: 0.15,
+        stone: 0.3,
+        grass: 0.4,
+        ground: "ground",
+      }),
+    );
 
     const bL = spec.bathLength ?? 12;
     const bW = spec.bathWidth ?? 7;
@@ -1227,7 +1397,14 @@ export function indicMonumentParts(spec: IndicMonumentSpec): Part[] {
   }
 
   /* ---- Hampi: Vijayanagara Virupaksha Monumental Gopuram Tower ---- */
-  parts.push(...setting(Math.max(W, D) + 25, 9119, { hills: 0.6, stone: 0.8, grass: 0.5, ground: "granite" }));
+  parts.push(
+    ...setting(Math.max(W, D) + 25, 9119, {
+      hills: 0.6,
+      stone: 0.8,
+      grass: 0.5,
+      ground: "granite",
+    }),
+  );
 
   // 1. Massive Granite Gateway Base with Soaring Corbelled Portal:
   const baseH = Math.min(10, H * 0.22);
@@ -1257,7 +1434,13 @@ export function indicMonumentParts(spec: IndicMonumentSpec): Part[] {
 
     // Sculptural decorative niches:
     for (const side of [-1, 1]) {
-      parts.push(box("stoneDark", [0, sy + storeyH * 0.25, side * (sd / 2 + 0.1)], [sw * 0.4, storeyH * 0.5, 0.2]));
+      parts.push(
+        box(
+          "stoneDark",
+          [0, sy + storeyH * 0.25, side * (sd / 2 + 0.1)],
+          [sw * 0.4, storeyH * 0.5, 0.2],
+        ),
+      );
     }
   }
 
@@ -1303,5 +1486,206 @@ export function indicMonumentWalkStart(spec: IndicMonumentSpec): WalkStart {
     at: [0, frontZ],
     floor: 0,
     look: [0, spec.totalHeight * 0.4, 0],
+  };
+}
+
+/* ================================================================== *
+ * 9. EGYPT: Hypostyle Hall (Karnak, Luxor)
+ * ================================================================== */
+
+/**
+ * A hall of columns under a stone roof, as the Egyptians built it behind a
+ * pylon: a raised central nave of tall open-papyrus columns lit by a
+ * clerestory of stone grilles, and to either side a forest of shorter
+ * closed-bud columns under a lower roof, the whole shut in by blank walls.
+ * Karnak's Great Hypostyle Hall (134 columns, 103 m by 52 m, the central 12
+ * columns some 21 m high) is the type; Luxor's court of Amenhotep III is the
+ * same idea with its roof gone. Before this kind existed both were drawn as
+ * a Greek Ionic temple.
+ */
+export type EgyptianHypostyleSpec = {
+  kind: "egyptian-hypostyle";
+  /** Cited: outer width (across the axis) and depth (along it), metres. */
+  width: number;
+  depth: number;
+  /** Cited: all the columns of the hall. */
+  totalColumns: number;
+  /** Cited: the height of the nave's open-papyrus columns. */
+  naveColumnHeight: number;
+  /** Modelled. */
+  sideColumnHeight: number;
+  naveColumnDiameter: number;
+  sideColumnDiameter: number;
+  /** The roof left off (Luxor's court stands open to the sky). */
+  open?: boolean;
+};
+
+export function egyptianHypostyleParts(spec: EgyptianHypostyleSpec): Part[] {
+  const parts: Part[] = [];
+  const W = spec.width;
+  const D = spec.depth;
+  const navH = spec.naveColumnHeight;
+  const sideH = spec.sideColumnHeight;
+  const wallT = 2.4;
+
+  parts.push(
+    ...setting(Math.max(W, D) + 30, 1427, {
+      hills: 0.25,
+      stone: 0.5,
+      grass: 0.2,
+      ground: "limestone",
+    }),
+  );
+
+  // Floor of the hall, a step up from the court.
+  parts.push(box("stone", [0, 0, 0], [W, 0.6, D]));
+  const floor = 0.6;
+
+  // The blank enclosing walls: back and both sides, the front left open to
+  // the pylon's gateway, with a doorway in the back wall on the axis.
+  const wallH = (spec.open ? sideH * 0.75 : sideH + 2.4) + floor;
+  for (const side of [-1, 1]) {
+    parts.push(worn(box("limestone", [side * (W / 2 - wallT / 2), 0, 0], [wallT, wallH, D]), 0.06));
+    // Painted register of offering scenes along the inner face.
+    parts.push(
+      box("paintBlue", [side * (W / 2 - wallT - 0.02), wallH * 0.55, 0], [0.04, 0.7, D - 6]),
+    );
+    parts.push(
+      box("paintRed", [side * (W / 2 - wallT - 0.02), wallH * 0.42, 0], [0.04, 0.5, D - 6]),
+    );
+  }
+  const backDoor = 8;
+  for (const side of [-1, 1]) {
+    const w = (W - backDoor) / 2;
+    parts.push(
+      worn(
+        box("limestone", [side * (backDoor / 2 + w / 2), 0, D / 2 - wallT / 2], [w, wallH, wallT]),
+        0.06,
+      ),
+    );
+  }
+  const doorH = Math.min(10, wallH - 1.5);
+  parts.push(box("limestone", [0, doorH, D / 2 - wallT / 2], [backDoor, wallH - doorH, wallT]));
+  parts.push(box("shadow", [0, floor, D / 2 - wallT - 0.02], [backDoor, doorH - floor, 0.04]));
+
+  // The column grid. Two rows of nave columns on the axis; the rest of the
+  // count is shared between the side halls, in rows along the axis.
+  const naveRows = 2;
+  const sideCount = spec.totalColumns;
+  const naveSpacingX = Math.max(spec.naveColumnDiameter * 2.6, 7);
+  const sideSpacing = Math.max(spec.sideColumnDiameter * 2.1, 4.2);
+  const naveHalf = naveSpacingX / 2 + spec.naveColumnDiameter;
+  const sideZone = W / 2 - wallT - 1.5 - (naveHalf + 2.5);
+  const colsPerRowSide = Math.max(1, Math.floor(sideZone / sideSpacing) + 1);
+  // Rows along the axis, chosen so the total comes out at the cited count.
+  // nave: naveRows * rows ; sides: 2 * colsPerRowSide * rows.
+  const perRow = naveRows + 2 * colsPerRowSide;
+  const rows = Math.max(2, Math.round(sideCount / perRow));
+  const rowSpacing = (D - wallT * 2 - 6) / Math.max(1, rows - 1);
+  let placed = 0;
+  const z0 = -D / 2 + wallT + 3;
+  const column = (x: number, z: number, h: number, dia: number, open: boolean) => {
+    if (placed >= spec.totalColumns) return;
+    placed += 1;
+    const r = dia / 2;
+    parts.push(box("stone", [x, floor, z], [dia * 1.25, 0.6, dia * 1.25]));
+    // Shaft, swelling slightly at the foot as papyrus stems do.
+    parts.push(
+      cyl("limestone", [x, floor + 0.6, z], r * 1.06, r * 0.92, h - (open ? 3.2 : 2.4) - 0.6, 16),
+    );
+    // Painted bands near the top of the shaft.
+    parts.push(
+      cyl("paintBlue", [x, floor + h - (open ? 4.2 : 3.4), z], r * 0.95, r * 0.95, 0.5, 16),
+    );
+    parts.push(
+      cyl("paintRed", [x, floor + h - (open ? 3.7 : 2.9), z], r * 0.94, r * 0.94, 0.4, 16),
+    );
+    if (open) {
+      // Open papyrus umbel, flaring out wide under the abacus.
+      parts.push(cyl("paintGold", [x, floor + h - 3.2, z], r * 0.92, r * 1.75, 2.4, 16));
+    } else {
+      // Closed bud: swelling and closing again.
+      parts.push(cyl("limestone", [x, floor + h - 2.4, z], r * 0.92, r * 1.18, 1.0, 16));
+      parts.push(cyl("limestone", [x, floor + h - 1.4, z], r * 1.18, r * 0.75, 0.8, 16));
+    }
+    // Square abacus block carrying the architraves.
+    parts.push(box("stone", [x, floor + h - 0.6, z], [dia * 1.1, 0.6, dia * 1.1]));
+  };
+  for (let k = 0; k < rows; k += 1) {
+    const z = z0 + k * rowSpacing;
+    for (const side of [-1, 1])
+      column(side * (naveSpacingX / 2), z, navH, spec.naveColumnDiameter, true);
+    for (let c = 0; c < colsPerRowSide; c += 1) {
+      const x = naveHalf + 2.5 + c * sideSpacing;
+      for (const side of [-1, 1]) column(side * x, z, sideH, spec.sideColumnDiameter, false);
+    }
+  }
+
+  // Architraves along each row, and the roof.
+  const zA = z0;
+  const zB = z0 + (rows - 1) * rowSpacing;
+  const runD = zB - zA + spec.sideColumnDiameter * 1.1;
+  for (const side of [-1, 1]) {
+    parts.push(
+      box(
+        "stone",
+        [side * (naveSpacingX / 2), floor + navH, (zA + zB) / 2],
+        [spec.naveColumnDiameter * 1.1, 1.2, runD],
+      ),
+    );
+  }
+  if (!spec.open) {
+    // Side roofs over the closed-bud halls, at their own height.
+    const sideInner = naveSpacingX / 2 + spec.naveColumnDiameter * 0.55;
+    const sideOuter = W / 2 - wallT;
+    const sideW = sideOuter - sideInner;
+    for (const side of [-1, 1]) {
+      parts.push(
+        box(
+          "stone",
+          [side * (sideInner + sideW / 2), floor + sideH, (zA + zB) / 2],
+          [sideW, 1.0, D - wallT * 2],
+        ),
+      );
+    }
+    // The clerestory: stone grilles standing on the side roofs up to the
+    // nave roof, letting slots of light down into the dark hall.
+    const clerH = navH - sideH;
+    for (const side of [-1, 1]) {
+      const x = side * (naveSpacingX / 2 + spec.naveColumnDiameter * 0.55);
+      parts.push(box("stone", [x, floor + sideH + 1, (zA + zB) / 2], [0.8, clerH - 1, runD]));
+      const slots = Math.max(3, Math.floor(runD / 4));
+      for (let s = 0; s < slots; s += 1) {
+        const z = zA + ((s + 0.5) * runD) / slots - spec.sideColumnDiameter * 0.55;
+        parts.push(
+          box(
+            "shadow",
+            [x + side * 0.42, floor + sideH + 1.8, z],
+            [0.04, Math.max(1, clerH - 3), 1.6],
+          ),
+        );
+      }
+    }
+    // Nave roof slabs, painted blue with gold stars on the underside.
+    parts.push(
+      box(
+        "stone",
+        [0, floor + navH + 1.2, (zA + zB) / 2],
+        [naveSpacingX + spec.naveColumnDiameter * 2.2, 1.0, D - wallT * 2],
+      ),
+    );
+    parts.push(
+      box("paintBlue", [0, floor + navH + 1.15, (zA + zB) / 2], [naveSpacingX - 0.5, 0.05, runD]),
+    );
+  }
+
+  return parts;
+}
+
+export function egyptianHypostyleWalkStart(spec: EgyptianHypostyleSpec): WalkStart {
+  return {
+    at: [0, -spec.depth / 2 + 4],
+    floor: 0.6,
+    look: [0, spec.naveColumnHeight * 0.6, spec.depth / 2],
   };
 }

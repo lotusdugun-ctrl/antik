@@ -46,6 +46,7 @@ import {
   egyptianPylonLife,
   megalithicPlatformLife,
   zigguratLife,
+  egyptianHypostyleLife,
   persianApadanaLife,
   khmerTempleLife,
   indicMonumentLife,
@@ -4449,6 +4450,8 @@ function lifeOfSpec(spec: Reconstruction["model"], era: Era, id: string): SceneL
       return megalithicPlatformLife(spec, era);
     case "ziggurat":
       return zigguratLife(spec, era);
+    case "egyptian-hypostyle":
+      return egyptianHypostyleLife(spec, era);
     case "persian-apadana":
       return persianApadanaLife(spec, era);
     case "khmer-temple":
