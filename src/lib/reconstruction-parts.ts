@@ -63,6 +63,13 @@ import {
   undergroundWalkStart,
 } from "@/lib/models/anadolu-yeni";
 import {
+  fabricParts,
+  fabricPlots,
+  type Corridor,
+  type KeepOut,
+  type Plot,
+} from "@/lib/models/kent-dokusu";
+import {
   steppedPyramidParts,
   steppedPyramidWalkStart,
   asianHallParts,
@@ -8189,6 +8196,7 @@ function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
   const gate = walls.gateWidth / 2;
   const h = walls.height;
   const t = walls.thickness;
+  const m: Material = walls.material ?? "stone";
 
   const run = (x1: number, z1: number, x2: number, z2: number) => {
     const dx = x2 - x1;
@@ -8196,7 +8204,7 @@ function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
     const length = Math.hypot(dx, dz);
     if (length < 0.5) return;
     const angle = -Math.atan2(dz, dx);
-    parts.push(worn(box("stone", [(x1 + x2) / 2, 0, (z1 + z2) / 2], [length, h, t], angle), 0.08));
+    parts.push(worn(box(m, [(x1 + x2) / 2, 0, (z1 + z2) / 2], [length, h, t], angle), 0.08));
     // Battlements: a short block every five metres, set on the outer edge.
     const nx = Math.sin(angle);
     const nz = Math.cos(angle);
@@ -8226,7 +8234,7 @@ function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
   }
 
   const towerAt = (x: number, z: number) => {
-    parts.push(worn(box("stone", [x, 0, z], [6.2, h + 4.5, 6.2]), 0.12));
+    parts.push(worn(box(m, [x, 0, z], [6.2, h + 4.5, 6.2]), 0.12));
     parts.push(box("stoneDark", [x, h + 4.5, z], [7.0, 0.7, 7.0]));
   };
 
@@ -8258,13 +8266,13 @@ function cityWallParts(walls: NonNullable<CitySpec["walls"]>): Part[] {
     for (const sign of [-1, 1]) {
       const x = gx + ex * sign * (gate + 2.6);
       const z = gz + ez * sign * (gate + 2.6);
-      parts.push(worn(box("stone", [x, 0, z], [6.4, h + 5, 6.4]), 0.1));
+      parts.push(worn(box(m, [x, 0, z], [6.4, h + 5, 6.4]), 0.1));
     }
     const size: Vec3 =
       Math.abs(ex) > 0.5
         ? [walls.gateWidth + 6, 3.2, t + 2.2]
         : [t + 2.2, 3.2, walls.gateWidth + 6];
-    parts.push(box("stone", [gx, h - 3.2, gz], size));
+    parts.push(box(m, [gx, h - 3.2, gz], size));
     // The dark mouth of the passage below the lintel.
     const mouth: Vec3 =
       Math.abs(ex) > 0.5 ? [walls.gateWidth, h - 3.2, 0.2] : [0.2, h - 3.2, walls.gateWidth];
@@ -8290,6 +8298,54 @@ function placedParts(place: CityPlacement): Part[] {
       if ("rotY" in part) return { ...part, at, rotY: part.rotY + turn };
       return { ...part, at };
     });
+}
+
+const plotCache = new WeakMap<CitySpec, Plot[]>();
+
+/**
+ * The house plots of a city (see `models/kent-dokusu.ts`), worked out once per
+ * plan: the parts and the people in the streets both read them.
+ */
+export function cityPlots(spec: CitySpec): Plot[] {
+  if (!spec.fabric) return [];
+  const cached = plotCache.get(spec);
+  if (cached) return cached;
+  const margin = 26;
+  const keepOut: KeepOut[] = spec.places.map((place) => {
+    const b = boundsOf(placedParts(place));
+    return {
+      minX: b.min[0] - margin,
+      maxX: b.max[0] + margin,
+      minZ: b.min[2] - margin,
+      maxZ: b.max[2] + margin,
+    };
+  });
+  if (spec.viewpoint) {
+    const [vx, vz] = spec.viewpoint.at;
+    keepOut.push({ minX: vx - 14, maxX: vx + 14, minZ: vz - 14, maxZ: vz + 14 });
+  }
+  const corridors: Corridor[] = (spec.streets ?? []).map(([x1, z1, x2, z2, w]) => ({
+    x1,
+    z1,
+    x2,
+    z2,
+    half: w / 2 + 3,
+  }));
+  // Inside the circuit with a lane along the wall; with no walls, a square
+  // round the monuments.
+  const area = spec.walls
+    ? { halfX: spec.walls.length / 2 - 14, halfZ: spec.walls.width / 2 - 14 }
+    : {
+        halfX: spec.fabric.extent ?? spec.radius * 0.45,
+        halfZ: spec.fabric.extent ?? spec.radius * 0.45,
+      };
+  const heart = spec.places[0]?.at ?? [0, 0];
+  const seed = Math.round(
+    spec.radius * 131 + heart[0] * 7 + heart[1] * 13 + spec.places.length * 977,
+  );
+  const plots = fabricPlots(spec.fabric, area, keepOut, corridors, heart, seed);
+  plotCache.set(spec, plots);
+  return plots;
 }
 
 export function cityParts(spec: CitySpec): Part[] {
@@ -8324,6 +8380,7 @@ export function cityParts(spec: CitySpec): Part[] {
       ),
     );
   }
+  far.push(...fabricParts(spec.fabric?.style ?? "roman", cityPlots(spec)));
   for (const part of far) parts.push({ ...part, outskirts: true });
 
   // One setting for the whole city: rubble and grass in the fields outside the

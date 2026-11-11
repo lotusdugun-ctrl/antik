@@ -2,6 +2,28 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
+## BÜYÜK İŞ: HER KENT KENDİNE HAS VE DOLU (11 Kasım 2026 akşam, Claude) — EN GÜNCEL, BURADAN BAŞLA
+
+Kullanıcı isteği: Her kent kendi döneminin mimarisiyle, kendine has, detaylı ve canlı olsun; kentler boş durmasın; bir kültürde başka kültürün yapısı (Mısır'da Roma gibi) olmasın; pişirme hataları (Apollon sütunları siyah-beyaz) düzelsin ve yeni yerlerde tekrarlamasın. Araştırma için Chrome / Nano Banana kullanılabilir.
+
+**Yapılanlar (bu oturum):**
+1. **Pişirme hatası (siyah-beyaz sütun):** Sebep: `near` ışık haritasının çoğu boş/siyah, sütun parçaları minik adalar; gürültü giderici, JPEG ve mipmap siyahı adalara bulaştırıyordu. `scripts/glb/antik_bake.py` içine `fill_empty()` eklendi (alfa maskesiyle boş dokuları push-pull ile komşu ışıkla doldurur; denoise'dan önce). bpy 5.0.1 ile alfa davranışı bulutta doğrulandı.
+   - 11 tapınak (aizanoi, artemis, assos, didyma, efes-hadrianus, letoon, magnesia, pergamon-trajan, priene, sardes, side-apollon) `baked-sites.ts`'ten geçici çıkarıldı (GONDER-49).
+   - **YENIDEN-PISIR.bat**: bu 11 tapınak + babil + pompeii/eboracum/nimes/trier (yeni ev dokusu pişmiş modelde yok) yeniden pişirilecek. Kullanıcı çalıştırınca "pisirme bitti" der → `public/baked/...` ve `baked-sites.ts` için GONDER hazırlanmalı.
+2. **Kent dokusu:** Yeni `src/lib/models/kent-dokusu.ts`. `CitySpec.fabric = { style, houses?, extent?, gridTurn? }`. 15 stil: roman, greek, hellenistic-egypt, egyptian, mesopotamian, persian, indus, levant, khmer, maya, mesoamerican, andean, chimu, chinese, japanese. Evler anıtlardan (sınır kutusu + 26 m), caddelerden ve bakış noktasından uzak tutulur, baş anıta en yakın yerden başlayarak dizilir. Evler `outskirts` (kadraja girmez). `cityPlots(spec)` (reconstruction-parts) hem parçalar hem yaşam için tek kaynak.
+   - `cityLife`: yürüyüş yolu bir evin içinden geçen kişi/hayvan/araba ve ev içine düşen tezgâh/ateş çıkarılır.
+   - `walls.material` eklendi (Babil/Ur/Chan Chan kerpiç, Mohenjo-daro tuğla, Çin/Japonya sıkıştırılmış toprak, Angkor laterit).
+   - 80 kentin hepsine stil atandı (reconstructions.ts `fabric:` satırları).
+3. Tüm testler geçti (bulut ortamına ait ses/lisans hataları hariç). scene-life testi 2 çekirdekte 300 sn'yi aşabiliyor; süre geçici artırılınca 17/17.
+
+**Sıradaki adımlar (kalan büyük iş, sırayla):**
+- Zemin ve bitki örtüsü kültüre göre: Maya/Khmer yeşil orman, And dağlık, Mısır Nil kıyısı/palmiye, Mezopotamya ova + Fırat.
+- Kent kent araştırma + imza yapılar (her kent için 3–6 özgün yapı): ör. Machu Picchu sırt ve tarım terasları (şu an Tiwanaku tipi platform — yanlış), Petra kaya cepheleri (Hazine şu an roman-facade), Teotihuacan Ölüler Caddesi + Ay Piramidi, Chichen Itza El Castillo 4 merdiven, Angkor hendek suyu, Babil Fırat ve Asma Bahçeler, Pompeii forum, vb. Roma kentlerinde forum/hamam/su kemeri gibi farklı imzalar.
+- Yaşam: kültüre göre giysi/rol (Maya'da Roma giysisi olmamalı) — `scene-life` rolleri incelenmeli.
+- Kalan kültür hataları taraması: tüm `-kenti` kayıtlarında `roman-*`, `prostyle-temple`, `peristyle-house` kullanımı kültürle uyumlu mu.
+
+---
+
 ## YENİ KENTLERİN KONTROLÜ VE DÜZELTMESİ (11 Kasım 2026, Claude) — EN GÜNCEL, BURADAN BAŞLA
 
 - **Durum:** GitHub'dan çekildi (HEAD 80375aa = GONDER-46). Canlı sitede dünya kentleri kontrol edildi.

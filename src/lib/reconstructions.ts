@@ -32,6 +32,7 @@ import type {
   IndicMonumentSpec,
   EgyptianHypostyleSpec,
 } from "@/lib/models/dunya-modelleri";
+import type { FabricSpec } from "@/lib/models/kent-dokusu";
 import { SAGALASSOS_ZEUGMA_SUMELA_PATARA } from "@/lib/models/sagalassos-zeugma-sumela-patara";
 import { ON_YENI } from "@/lib/models/on-yeni-kayitlar";
 import { ISTANBUL } from "@/lib/models/istanbul-kayitlar";
@@ -380,6 +381,8 @@ export type CitySpec = {
     gates: number;
     /** The gap left for each gate, metres. */
     gateWidth: number;
+    /** What the circuit is built of: stone unless said (mud brick at Babylon, rammed earth at Chang'an). */
+    material?: "stone" | "sand" | "terracotta" | "conglomerate" | "ground" | "limestone";
   };
   /** Paved streets: from x,z to x,z, and how wide. */
   streets?: [number, number, number, number, number][];
@@ -387,6 +390,11 @@ export type CitySpec = {
   hill?: { angle: number; distance: number; height: number; radius: number };
   /** Where a visitor stands on the plan (`at`, metres) and what they look at. */
   viewpoint?: { at: [number, number]; look: [number, number, number] };
+  /**
+   * The ordinary houses between the monuments, in the building manner of the
+   * city's own culture (see `models/kent-dokusu.ts`).
+   */
+  fabric?: FabricSpec;
 };
 
 /** A Pre-Pottery Neolithic enclosure: a ring of T-shaped pillars in a wall. */
@@ -2827,6 +2835,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 420,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -3000,6 +3009,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 320,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -3144,6 +3154,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 340,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -3281,6 +3292,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -3435,6 +3447,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -3585,6 +3598,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 400,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -3738,6 +3752,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 350,
+      fabric: { style: "greek", houses: 60 },
       places: [
         {
           spec: {
@@ -3879,6 +3894,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "greek", houses: 40 },
       places: [
         {
           spec: {
@@ -4006,6 +4022,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 420,
+      fabric: { style: "hellenistic-egypt" },
       places: [
         {
           spec: {
@@ -4141,6 +4158,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "egyptian" },
       places: [
         {
           spec: {
@@ -4251,6 +4269,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "levant" },
       places: [
         {
           spec: {
@@ -4401,6 +4420,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -4550,6 +4570,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 400,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -4701,6 +4722,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 340,
+      fabric: { style: "levant" },
       places: [
         {
           spec: {
@@ -4833,6 +4855,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 320,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -4977,6 +5000,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 300,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -5117,6 +5141,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -5266,6 +5291,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -5407,6 +5433,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -5554,6 +5581,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 400,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -5697,6 +5725,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 350,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -5845,6 +5874,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 340,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -5989,6 +6019,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 350,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -6130,6 +6161,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 320,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -6272,6 +6304,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 400,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -6420,6 +6453,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -6567,6 +6601,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "levant" },
       places: [
         {
           spec: {
@@ -6711,6 +6746,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "levant" },
       places: [
         {
           spec: {
@@ -6859,6 +6895,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 400,
+      fabric: { style: "mesopotamian" },
       places: [
         {
           spec: {
@@ -6896,6 +6933,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 18,
         gates: 4,
         gateWidth: 12,
+        material: "sand",
       },
       streets: [
         [-45, -60, 45, -60, 6],
@@ -6971,6 +7009,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 340,
+      fabric: { style: "mesopotamian" },
       places: [
         {
           spec: {
@@ -7007,6 +7046,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 12,
         gates: 4,
         gateWidth: 10,
+        material: "sand",
       },
       streets: [
         [-55, -55, 55, -55, 6],
@@ -7082,6 +7122,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "persian", houses: 80 },
       places: [
         {
           spec: {
@@ -7123,6 +7164,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 16,
         gates: 4,
         gateWidth: 12,
+        material: "sand",
       },
       streets: [
         [-45, -60, 45, -60, 6],
@@ -7192,6 +7234,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 350,
+      fabric: { style: "persian", houses: 60 },
       places: [
         {
           spec: {
@@ -7297,6 +7340,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 350,
+      fabric: { style: "indus" },
       places: [
         {
           spec: {
@@ -7330,6 +7374,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 12,
         gates: 4,
         gateWidth: 10,
+        material: "terracotta",
       },
       streets: [
         [-55, -55, 55, -55, 6],
@@ -7408,6 +7453,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "levant" },
       places: [
         {
           spec: {
@@ -7521,6 +7567,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 400,
+      fabric: { style: "khmer" },
       places: [
         {
           spec: {
@@ -7546,6 +7593,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 16,
         gates: 4,
         gateWidth: 12,
+        material: "conglomerate",
       },
       streets: [
         [-55, -55, 55, -55, 6],
@@ -7624,6 +7672,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "khmer" },
       places: [
         {
           spec: {
@@ -7650,6 +7699,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 14,
         gates: 4,
         gateWidth: 10,
+        material: "conglomerate",
       },
       streets: [
         [-55, -55, 55, -55, 6],
@@ -7725,6 +7775,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 400,
+      fabric: { style: "mesoamerican" },
       places: [
         {
           spec: {
@@ -7831,6 +7882,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
+      fabric: { style: "maya" },
       places: [
         {
           spec: {
@@ -7945,6 +7997,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 340,
+      fabric: { style: "andean" },
       places: [
         {
           spec: {
@@ -8052,6 +8105,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "chimu" },
       places: [
         {
           spec: {
@@ -8086,6 +8140,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 12,
         gates: 4,
         gateWidth: 10,
+        material: "sand",
       },
       streets: [
         [-55, -55, 55, -55, 6],
@@ -8171,6 +8226,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -8328,6 +8384,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "greek" },
       places: [
         {
           spec: {
@@ -8502,6 +8559,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "greek" },
       places: [
         {
           spec: {
@@ -8659,6 +8717,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "greek", houses: 35 },
       places: [
         {
           spec: {
@@ -8814,6 +8873,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "egyptian" },
       places: [
         {
           spec: {
@@ -8928,6 +8988,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "egyptian", houses: 40 },
       places: [
         {
           spec: {
@@ -9048,6 +9109,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -9207,6 +9269,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -9352,6 +9415,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "levant" },
       places: [
         {
           spec: {
@@ -9508,6 +9572,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -9665,6 +9730,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -9817,6 +9883,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -9975,6 +10042,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -10125,6 +10193,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -10295,6 +10364,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -10464,6 +10534,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -10630,6 +10701,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -10792,6 +10864,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -10950,6 +11023,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -11117,6 +11191,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -11287,6 +11362,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -11449,6 +11525,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -11616,6 +11693,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -11786,6 +11864,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -11957,6 +12036,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -12129,6 +12209,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -12303,6 +12384,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -12475,6 +12557,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -12642,6 +12725,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -12803,6 +12887,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "roman" },
       places: [
         {
           spec: {
@@ -12979,6 +13064,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "chinese" },
       places: [
         {
           spec: {
@@ -13037,6 +13123,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 12,
         gates: 4,
         gateWidth: 10,
+        material: "ground",
       },
       streets: [
         [0, -26, 0, 0, 8],
@@ -13140,6 +13227,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "chinese" },
       places: [
         {
           spec: {
@@ -13197,6 +13285,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 12,
         gates: 4,
         gateWidth: 10,
+        material: "ground",
       },
       streets: [
         [0, -26, 0, 0, 8],
@@ -13297,6 +13386,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "japanese" },
       places: [
         {
           spec: {
@@ -13356,6 +13446,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 12,
         gates: 4,
         gateWidth: 10,
+        material: "ground",
       },
       streets: [
         [0, -26, 0, 0, 8],
@@ -13456,6 +13547,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "japanese" },
       places: [
         {
           spec: {
@@ -13514,6 +13606,7 @@ export const reconstructions: Reconstruction[] = [
         towers: 12,
         gates: 4,
         gateWidth: 10,
+        material: "ground",
       },
       streets: [
         [0, -26, 0, 0, 8],
@@ -13614,6 +13707,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "maya" },
       places: [
         {
           spec: {
@@ -13739,6 +13833,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "maya" },
       places: [
         {
           spec: {
@@ -13871,6 +13966,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "maya" },
       places: [
         {
           spec: {
@@ -13996,6 +14092,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "maya" },
       places: [
         {
           spec: {
@@ -14116,6 +14213,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "andean" },
       places: [
         {
           spec: {
@@ -14223,6 +14321,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 360,
+      fabric: { style: "andean" },
       places: [
         {
           spec: {

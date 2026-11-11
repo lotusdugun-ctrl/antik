@@ -12,6 +12,7 @@ import {
   ornateAltar,
   stadiumLayout,
   walkStartFor,
+  cityPlots,
   type FigureIdentity,
   type FigurePaint,
   type Material,
@@ -4676,6 +4677,64 @@ function cityLife(spec: CitySpec, era: Era, id: string): SceneLife {
       links.push({ ...link, a: link.a + base, b: link.b + base });
   }
   if (crowd.length > 3100) crowd.length = 3100;
+
+  // The town's houses fill the ground between the monuments; anyone whose
+  // walk would take them through a house wall stays at home, and so do the
+  // stalls and fires that would have stood inside one.
+  const plots = cityPlots(spec);
+  const inHouse = (x: number, z: number) =>
+    plots.some((p) => {
+      const dx = x - p.x;
+      const dz = z - p.z;
+      const c = Math.cos(p.rot);
+      const s = Math.sin(p.rot);
+      const u = dx * c - dz * s;
+      const v = dx * s + dz * c;
+      // the house, its eaves and the porch or ladder in front of its door
+      return Math.abs(u) < p.w / 2 + 1.2 && Math.abs(v) < p.d / 2 + 2.6;
+    });
+  const blocked = (route: Vec3[]) => {
+    for (let k = 0; k < route.length; k += 1) {
+      const a = route[k]!;
+      const b = route[(k + 1) % route.length]!;
+      const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[2] - a[2])));
+      for (let t = 0; t <= n; t += 1)
+        if (inHouse(a[0] + ((b[0] - a[0]) * t) / n, a[2] + ((b[2] - a[2]) * t) / n)) return true;
+    }
+    return false;
+  };
+  if (plots.length) {
+    const keep: number[] = [];
+    const renumber = new Map<number, number>();
+    people.forEach((p, i) => {
+      if (blocked([p.at, ...(p.route ?? [])])) return;
+      renumber.set(i, keep.length);
+      keep.push(i);
+    });
+    const kept = keep.map((i) => people[i]!);
+    const keptLinks = links
+      .filter((l) => renumber.has(l.a) && renumber.has(l.b))
+      .map((l) => ({ ...l, a: renumber.get(l.a)!, b: renumber.get(l.b)! }));
+    people.length = 0;
+    people.push(...kept);
+    links.length = 0;
+    links.push(...keptLinks);
+    const keepAnimals = animals.filter((a) => !blocked([a.at, ...(a.route ?? [])]));
+    animals.length = 0;
+    animals.push(...keepAnimals);
+    const keepChariots = chariots.filter((c) => !blocked(c.route));
+    chariots.length = 0;
+    chariots.push(...keepChariots);
+    const keepProps = props.filter((p) => !inHouse(p.at[0], p.at[2]));
+    props.length = 0;
+    props.push(...keepProps);
+    const keepFlames = flames.filter((f) => !inHouse(f.at[0], f.at[2]));
+    flames.length = 0;
+    flames.push(...keepFlames);
+    const keepCrowd = crowd.filter((c) => !inHouse(c.at[0], c.at[2]));
+    crowd.length = 0;
+    crowd.push(...keepCrowd);
+  }
 
   // A phone can only draw a handful of real dynamic lights:
   let lightCount = 0;
