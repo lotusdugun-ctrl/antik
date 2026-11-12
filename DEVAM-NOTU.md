@@ -1,8 +1,31 @@
-# Antik Türkiye: devam notu (11 Kasım 2026)
+# Antik Türkiye: devam notu (12 Kasım 2026)
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## BÜYÜK İŞ: HER KENT KENDİNE HAS VE DOLU (11 Kasım 2026 akşam, Claude) — EN GÜNCEL, BURADAN BAŞLA
+## PİŞİRME BİTTİ + MACHU PICCHU VE CHICHEN ITZA YENİDEN (12 Kasım 2026 gece, Claude) — EN GÜNCEL, BURADAN BAŞLA
+
+**Not:** Bu oturumda kullanıcının bilgisayarında komut çalıştırılamadı (yalnızca dosya okuma/yazma). Kod bulutta `github.com/lotusdugun-ctrl/antik` (herkese açık) klonlanarak yazıldı ve test edildi; değişen dosyalar doğrudan `src/` altına yazıldı. **GONDER-51.bat** hepsini gönderir.
+
+1. **YENIDEN-PISIR bitti:** 16 yerin hepsi yeni `bake.json` ile pişti (11 tapınak, babil, pompeii, eboracum, nimes, trier). PISIR-WEB `baked-sites.ts`'e 11 tapınağı ve babil'i geri ekledi. Side Apollon bulutta açılıp bakıldı: sütunlar temiz, siyah-beyaz bant yok.
+2. **Bekleyen dosyalar uygulandı** (`hd-out\claude-bekleyen\` → `src/`): landscape-plan.ts, landscape.ts, Reconstruction3DInner.tsx, kent-dokusu.ts (zaten aynıydı), reconstructions.ts (Teotihuacan: Güneş/Ay piramitleri, Tüylü Yılan, 40 m Ölüler Caddesi). Klasör artık eskidir, silinebilir.
+   - Dikkat: 4 Roma kenti yeni zemin kuralından (yeşil ülkede kent içi yeşil) önce pişti. Canlıda zemin farkı görülürse bu 4'ü tekrar pişirmek gerekebilir.
+3. **Machu Picchu yeniden** — yeni tür `inca-citadel` (`src/lib/models/inka.ts`; parça + yürüyüş başlangıcı + yaşam): teraslarla çevrili sırt üstü kent, uzun çimen meydan, iki sıra saz çatılı ev (wayrona), Üç Pencereli Tapınak (16×16 teras, kaynaklı), Ana Tapınak, Intihuatana tepesi, kaya üstünde kavisli Torreón, güney tarım terasları, sur ve Ana Kapı, kuzeyde Huayna Picchu (kentten 260 m yüksek, kaynaklı; `outskirts`). Eski Tiwanaku platformu/Güneş Kapısı kaldırıldı; dayanaksız 18/36 m ölçüleri silindi.
+4. **Chichen Itza yeniden:** El Castillo 55,3 m taban, 30 m (6 m tapınak dahil), 9 teras, **dört yanda merdiven** (`stepped-pyramid` yeni `stairways: 4`, `templeHeight`). Roma tipi stadyum yerine yeni tür `maya-ballcourt` (`src/lib/models/maya.ts`): 168×70 m, 95 m'lik iki yan platform, 8 m duvar, eğimli bank, duvar ortasında taş halkalar, Jaguar Tapınağı, uç tapınaklar. Savaşçılar Tapınağı yanına çatılı sütunlu salon (`colonnade`). Uydurma 26/44/14 m ölçüleri silindi; kaynaklar Wikipedia Chichen Itza + El Castillo.
+   - `stepped-pyramid` steli artık varsayılan 0 (Teotihuacan'da Maya steli vardı); stel isteyen kayıt `stelaeCount` yazar.
+5. **Doğrulama (bulut):** tsc 0 hata; landscape ve scene-life dışındaki tüm testler 780/780; scene-life 16/17 (yalnız "nobody walks through stone" 300 sn sınırını 2 çekirdekte aşıyor — içerik hatası yok; Machu Picchu, Chichen Itza, Teotihuacan ve Maya kentleri ayrıca süzülerek denendi, temiz).
+
+**Bulunan ama dokunulmayan kültür hataları (sıradaki iş):**
+- `src/lib/scans.ts`: Machu Picchu ve Chan Chan'a (muhtemelen diğer dünya kentlerine de) Yunan-Roma heykel taramaları atanmış (karyatid, Hadrian, Tiberius...). Avrupa/Akdeniz dışı kentlerde kaldırılmalı.
+- Yaşam giysileri: `Era` listesinde Maya/İnka/Mısır/Çin vb. yok; dünya kentleri Roma giysisiyle dolaşıyor. `scene-life.ts` Era + giysi eklenmeli.
+- Petra: Hazine `roman-facade` → kaya oyma cephe (39,1 m yükseklik, 25,3 m genişlik; Ed-Deir 47×48 m) — `rockface.ts`/`rock-tombs` temel alınabilir.
+- Akropolis Propylaia `roman-gate` (Dor giriş yapısı olmalı); Delfi/Epidavros tiyatrosu `roman-theatre` (Yunan tiyatrosu olmalı).
+- Hampi'nin ev dokusu `levant` stilinde; Güney Hindistan stili yok.
+- Çin/Japonya kentleri hep 3× `asian-hall`: pagoda türü eklenmeli (Xi'an Büyük Yaban Kazı Pagodası, Nara/Kyoto pagodaları).
+- Kalan imza yapılar: Angkor hendek suyu, Babil Fırat ve Asma Bahçeler, Pompeii forumu (Babil/Pompeii değişirse yeniden pişirilmeli).
+
+---
+
+## BÜYÜK İŞ: HER KENT KENDİNE HAS VE DOLU (11 Kasım 2026 akşam, Claude) — önceki
 
 Kullanıcı isteği: Her kent kendi döneminin mimarisiyle, kendine has, detaylı ve canlı olsun; kentler boş durmasın; bir kültürde başka kültürün yapısı (Mısır'da Roma gibi) olmasın; pişirme hataları (Apollon sütunları siyah-beyaz) düzelsin ve yeni yerlerde tekrarlamasın. Araştırma için Chrome / Nano Banana kullanılabilir.
 
@@ -16,6 +39,13 @@ Kullanıcı isteği: Her kent kendi döneminin mimarisiyle, kendine has, detayl�
    - 80 kentin hepsine stil atandı (reconstructions.ts `fabric:` satırları).
 3. Tüm testler geçti (bulut ortamına ait ses/lisans hataları hariç). scene-life testi 2 çekirdekte 300 sn'yi aşabiliyor; süre geçici artırılınca 17/17.
 
+**BEKLEYEN (pişirme sürerken yazılmadı):** `hd-out\claude-bekleyen\` klasöründe hazır dosyalar var — YENIDEN-PISIR bittikten sonra yerlerine kopyalanacak:
+- `landscape-plan.ts` → `src/lib/` (yeni biyomlar: temperate, desert, riverine, tropical, andes, monsoon, east-asian; 45 dünya kentine atandı)
+- `landscape.ts` → `src/components/scene/` (yeşil ülkelerde kent içi zemin yeşil)
+- `Reconstruction3DInner.tsx` → `src/components/` (kentte taş döşeme yalnız baş anıt çevresinde)
+- `kent-dokusu.ts` → `src/lib/models/` (yalnız biçim düzeni)
+Not: landscape.test bulutta (8 GB) taban sürümde de bellek yetmezliğinden ölüyor; alt kümelerle çalıştırıldı, geçti.
+
 **Sıradaki adımlar (kalan büyük iş, sırayla):**
 - Zemin ve bitki örtüsü kültüre göre: Maya/Khmer yeşil orman, And dağlık, Mısır Nil kıyısı/palmiye, Mezopotamya ova + Fırat.
 - Kent kent araştırma + imza yapılar (her kent için 3–6 özgün yapı): ör. Machu Picchu sırt ve tarım terasları (şu an Tiwanaku tipi platform — yanlış), Petra kaya cepheleri (Hazine şu an roman-facade), Teotihuacan Ölüler Caddesi + Ay Piramidi, Chichen Itza El Castillo 4 merdiven, Angkor hendek suyu, Babil Fırat ve Asma Bahçeler, Pompeii forum, vb. Roma kentlerinde forum/hamam/su kemeri gibi farklı imzalar.
@@ -24,7 +54,7 @@ Kullanıcı isteği: Her kent kendi döneminin mimarisiyle, kendine has, detayl�
 
 ---
 
-## YENİ KENTLERİN KONTROLÜ VE DÜZELTMESİ (11 Kasım 2026, Claude) — EN GÜNCEL, BURADAN BAŞLA
+## YENİ KENTLERİN KONTROLÜ VE DÜZELTMESİ (11 Kasım 2026, Claude) — önceki
 
 - **Durum:** GitHub'dan çekildi (HEAD 80375aa = GONDER-46). Canlı sitede dünya kentleri kontrol edildi.
 - **Bulunan ana hata:** `city` modellerinde kamera 800–950 m'lik suru çerçeveliyordu; anıtlar ekranda nokta kadar kalıyordu (Babil, Tikal, Karnak, Angkor, Pompeii dahil hepsi).

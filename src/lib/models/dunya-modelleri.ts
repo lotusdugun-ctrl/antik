@@ -36,6 +36,12 @@ export type SteppedPyramidSpec = {
   /** Zoomorphic carved boulder altars (as at Quiriguá). */
   zoomorphs?: number;
   palaceWidth?: number;
+  /** Stairways: one up the front, or one up each of the four sides (El Castillo). */
+  stairways?: 1 | 4;
+  /** Height of the summit temple, when it is known; otherwise worked out. */
+  templeHeight?: number;
+  /** A roofed hall of square pillars beside the pyramid (Temple of the Warriors). */
+  colonnade?: { rows: number; columns: number };
 };
 
 export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
@@ -58,7 +64,7 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
 
   // Summit temple and roof comb height allocation:
   const combH = spec.roofCombHeight;
-  const templeH = Math.min(6.5, (H - combH) * 0.28);
+  const templeH = spec.templeHeight ?? Math.min(6.5, (H - combH) * 0.28);
   const pyramidH = H - combH - templeH;
   const tierH = pyramidH / N;
 
@@ -77,30 +83,42 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
     parts.push(box("stone", [0, y + tierH - 0.08, 0], [tw + 0.35, 0.08, td + 0.35]));
   }
 
-  /* ---- 2. Steep Central Axial Stairway ---- */
+  /* ---- 2. Steep Central Axial Stairway (or one on every side) ---- */
   const stepsCount = Math.max(12, Math.floor(pyramidH / 0.35));
   const stepRise = pyramidH / stepsCount;
-  const stairFrontZ = -D / 2 - 2.8;
-  const stairTopZ = -topD / 2 - 0.8;
-  const stairRun = Math.abs(stairFrontZ - stairTopZ);
-  const stepTread = stairRun / stepsCount;
-
-  for (let s = 0; s < stepsCount; s += 1) {
-    const sy = s * stepRise;
-    const sz = stairFrontZ + s * stepTread;
-    // Solid to the ground, so no tread hangs in the air off the face.
-    parts.push(box("stone", [0, 0, sz + stepTread / 2], [stairW, sy + stepRise, stepTread + 0.25]));
-    // The balustrade either side climbs with the flight, a little proud of it.
-    for (const side of [-1, 1]) {
-      parts.push(
-        box(
-          "limestone",
-          [side * (stairW / 2 + 0.4), 0, sz + stepTread / 2],
-          [0.8, sy + stepRise + 0.6, stepTread + 0.25],
-        ),
-      );
+  const sides = spec.stairways === 4 ? 4 : 1;
+  for (let side = 0; side < sides; side += 1) {
+    // Side 0 climbs the front (-z); the others turn a quarter at a time.
+    const depth = side % 2 === 0 ? D : W;
+    const top = side % 2 === 0 ? topD : topW;
+    const stairFrontZ = -depth / 2 - 2.8;
+    const stairTopZ = -top / 2 - 0.8;
+    const stairRun = Math.abs(stairFrontZ - stairTopZ);
+    const stepTread = stairRun / stepsCount;
+    const turn = (side * Math.PI) / 2;
+    const c = Math.cos(turn);
+    const sn = Math.sin(turn);
+    const put = (x: number, y: number, z: number, size: Vec3): Part =>
+      box("stone", [x * c + z * sn, y, -x * sn + z * c], size, turn);
+    for (let s = 0; s < stepsCount; s += 1) {
+      const sy = s * stepRise;
+      const sz = stairFrontZ + s * stepTread;
+      // Solid to the ground, so no tread hangs in the air off the face.
+      parts.push(put(0, 0, sz + stepTread / 2, [stairW, sy + stepRise, stepTread + 0.25]));
+      // The balustrade either side climbs with the flight, a little proud of it.
+      for (const bs of [-1, 1]) {
+        parts.push({
+          ...put(bs * (stairW / 2 + 0.4), 0, sz + stepTread / 2, [
+            0.8,
+            sy + stepRise + 0.6,
+            stepTread + 0.25,
+          ]),
+          material: "limestone",
+        });
+      }
     }
   }
+  const stairFrontZ = -D / 2 - 2.8;
 
   /* ---- 3. Summit Sanctuary Temple ---- */
   const templeY = pyramidH;
@@ -164,7 +182,7 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
   }
 
   /* ---- 5. Maya Portrait Stelae & Altars in Front Plaza ---- */
-  const stelaeCount = spec.stelaeCount ?? 4;
+  const stelaeCount = spec.stelaeCount ?? 0;
   const plazaZ = stairFrontZ - 6;
   const half = Math.ceil(stelaeCount / 2);
   for (let i = 0; i < stelaeCount; i += 1) {
@@ -179,6 +197,31 @@ export function steppedPyramidParts(spec: SteppedPyramidSpec): Part[] {
     parts.push(box("stoneDark", [sx, 0.3, sz], [1.1, steleH, 0.75]));
     // Round ceremonial drum altar set before each stele:
     parts.push(cyl("stone", [sx, 0, sz - 1.5], 0.65, 0.65, 0.45));
+  }
+
+  /* ---- 6. The pillared hall beside it, roofed in stone and plaster ---- */
+  if (spec.colonnade) {
+    const { rows, columns } = spec.colonnade;
+    const pitch = 4.5;
+    const x0 = W / 2 + 6;
+    const span = (columns - 1) * pitch;
+    const pillarH = 4.2;
+    for (let r = 0; r < rows; r += 1) {
+      for (let k = 0; k < columns; k += 1) {
+        const px = x0 + r * pitch;
+        const pz = -span / 2 + k * pitch;
+        parts.push(worn(box("limestone", [px, 0, pz], [0.95, pillarH, 0.95]), 0.02));
+        // The warrior carved on the pillar's face, once painted.
+        parts.push(box("fadedRed", [px - 0.49, 0.8, pz], [0.04, 2.4, 0.6]));
+      }
+    }
+    parts.push(
+      box(
+        "limestone",
+        [x0 + ((rows - 1) * pitch) / 2, pillarH, 0],
+        [(rows - 1) * pitch + 3, 0.7, span + 3],
+      ),
+    );
   }
 
   // Zoomorph boulder altars (as seen at QuiriguÃ¡):

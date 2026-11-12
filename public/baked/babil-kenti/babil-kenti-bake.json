@@ -1,0 +1,18 @@
+{
+ "model": "babil-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "babil-kenti-near": "babil-kenti-near-clear.jpg",
+  "babil-kenti-ground": "babil-kenti-ground-clear.jpg",
+  "babil-kenti-terrain": "babil-kenti-terrain-clear.jpg",
+  "babil-kenti-detail": null,
+  "babil-kenti-flora": null
+ },
+ "terrain": "babil-kenti-terrain",
+ "plants": 460,
+ "azim": 179.16234704572173,
+ "files": [
+  "babil-kenti-baked.glb"
+ ]
+}

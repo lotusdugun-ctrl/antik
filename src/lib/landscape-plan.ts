@@ -14,7 +14,20 @@ import { sculptBounds } from "./sculpt";
  * 1,500 m among black pine and juniper, and Sümela in the spruce and beech
  * forest of a Pontic gorge.
  */
-export type Biome = "mediterranean" | "steppe" | "mountain" | "alpine" | "pontic";
+export type Biome =
+  | "mediterranean"
+  | "steppe"
+  | "mountain"
+  | "alpine"
+  | "pontic"
+  // The world's cities: the country each one really stands in.
+  | "temperate"
+  | "desert"
+  | "riverine"
+  | "tropical"
+  | "andes"
+  | "monsoon"
+  | "east-asian";
 
 /** Which biome each model stands in; the rest are on the Mediterranean coast. */
 const BIOME_OF: Partial<Record<string, Biome>> = {
@@ -35,6 +48,58 @@ const BIOME_OF: Partial<Record<string, Biome>> = {
   "goreme-kaya-kiliseleri": "steppe",
   "divrigi-ulu-camii": "steppe",
   "arslantepe-saray": "steppe",
+  // Northern provinces: green lowland, oak and beech, low hills.
+  "eboracum-kenti": "temperate",
+  "trier-kenti": "temperate",
+  "colonia-kenti": "temperate",
+  "xanten-kenti": "temperate",
+  "saalburg-kenti": "temperate",
+  "aquae-sulis-kenti": "temperate",
+  "carnuntum-kenti": "temperate",
+  "aguntum-kenti": "alpine",
+  "serdica-kenti": "temperate",
+  "heraclea-lyncestis-kenti": "temperate",
+  "stobi-kenti": "steppe",
+  // The Nile valley and the desert edge.
+  "karnak-kenti": "desert",
+  "luksor-kenti-kenti": "desert",
+  "ebu-simbel-kenti": "desert",
+  "iskenderiye-kenti": "desert",
+  "petra-kenti": "desert",
+  "palmira-kenti": "desert",
+  "bosra-kenti": "steppe",
+  "timgad-kenti": "steppe",
+  "el-cem-kenti": "steppe",
+  "leptis-magna-kenti": "desert",
+  "sabratha-kenti": "desert",
+  // Flat alluvial plains on the great rivers.
+  "babil-kenti": "riverine",
+  "ur-kenti": "riverine",
+  "mohencodaro-kenti": "riverine",
+  // The Iranian plateau.
+  "persepolis-kenti": "steppe",
+  "pasargad-kenti": "steppe",
+  // Forest: the Maya lowlands and the Khmer plain.
+  "tikal-kenti": "tropical",
+  "copan-kenti": "tropical",
+  "antigua-quirigua-kenti": "tropical",
+  "el-puente-kenti": "tropical",
+  "cisen-itza-kenti": "tropical",
+  "angkor-vat-kenti": "tropical",
+  "bayon-kenti": "tropical",
+  // The Mexican highland and the Andes.
+  "teotihuacan-kenti": "steppe",
+  "macu-picu-kenti": "andes",
+  "tiwanaku-kenti": "andes",
+  "pumapunku-kenti": "andes",
+  "can-can-kenti": "desert",
+  // The Deccan's granite boulder country.
+  "hampi-kenti": "monsoon",
+  // China and Japan: green plains, pine and broadleaf, hills round the basin.
+  "xian-changan-kenti": "east-asian",
+  "luoyang-kenti": "east-asian",
+  "nara-heijo-kenti": "east-asian",
+  "kyoto-heian-kenti": "east-asian",
 };
 
 export const biomeFor = (id: string): Biome => BIOME_OF[id] ?? "mediterranean";
@@ -110,7 +175,7 @@ export type BiomeLook = {
   ridgeColour: number;
 };
 
-export const BIOMES: Record<Biome, BiomeLook> = {
+const BASE_BIOMES = {
   mediterranean: {
     relief: 0.42,
     palette: [0x9b8e5c, 0x7a7d46, 0xa38866],
@@ -207,6 +272,107 @@ export const BIOMES: Record<Biome, BiomeLook> = {
     ridge: 0.17,
     jagged: 0.55,
     ridgeColour: 0x2f4630,
+  },
+} satisfies Record<string, BiomeLook>;
+
+export const BIOMES: Record<Biome, BiomeLook> = {
+  ...BASE_BIOMES,
+  // The world's cities (see BIOME_OF).
+  temperate: {
+    ...BASE_BIOMES.mediterranean,
+    relief: 0.3,
+    palette: [0x6f7f45, 0x5e7038, 0x7d8a52],
+    trees: 1.6,
+    cypress: 0,
+    conifer: 0.15,
+    crownColour: 0x4d6236,
+    shrubs: 380,
+    shrubColour: 0x4f6338,
+    ridge: 0.05,
+    jagged: 0.25,
+    ridgeColour: 0x56664e,
+  },
+  desert: {
+    ...BASE_BIOMES.steppe,
+    relief: 0.25,
+    palette: [0xc9ad7a, 0xbea06c, 0xd6bd8e],
+    trees: 0.12,
+    crownColour: 0x6c7a42,
+    rocks: 70,
+    rockColour: 0xb59a74,
+    shrubs: 90,
+    shrubColour: 0x9a9060,
+    ridge: 0.06,
+    jagged: 0.45,
+    ridgeColour: 0xa98a64,
+  },
+  riverine: {
+    ...BASE_BIOMES.steppe,
+    relief: 0.08,
+    palette: [0xb09b6c, 0x9c8e5e, 0xbba678],
+    trees: 0.35,
+    crownColour: 0x5d6c3a,
+    rocks: 10,
+    shrubs: 260,
+    shrubColour: 0x7c8048,
+    ridge: 0.015,
+    jagged: 0.1,
+    ridgeColour: 0x9a8a6e,
+  },
+  tropical: {
+    ...BASE_BIOMES.pontic,
+    relief: 0.25,
+    palette: [0x4f6a2e, 0x445f28, 0x5c7536],
+    trees: 3.6,
+    conifer: 0,
+    thinning: 0.25,
+    crownColour: 0x3b5a26,
+    rocks: 30,
+    shrubs: 520,
+    shrubColour: 0x3d5a28,
+    ridge: 0.04,
+    jagged: 0.3,
+    ridgeColour: 0x3b5236,
+  },
+  andes: {
+    ...BASE_BIOMES.alpine,
+    relief: 0.9,
+    palette: [0x7f8250, 0x6c7346, 0x8f8c62],
+    trees: 0.35,
+    conifer: 0.2,
+    crownColour: 0x4f6a3a,
+    rockColour: 0x8e887c,
+    ridge: 0.22,
+    jagged: 0.9,
+    ridgeColour: 0x5a6458,
+  },
+  monsoon: {
+    ...BASE_BIOMES.steppe,
+    relief: 0.45,
+    palette: [0x8e8352, 0x7d7a48, 0x9c8e60],
+    trees: 0.6,
+    crownColour: 0x55683a,
+    rocks: 320,
+    rockColour: 0xa58a72,
+    rockScale: 2.2,
+    ridge: 0.06,
+    jagged: 0.6,
+    ridgeColour: 0x8a7462,
+  },
+  "east-asian": {
+    ...BASE_BIOMES.mediterranean,
+    relief: 0.3,
+    palette: [0x6d7a44, 0x5f6f3c, 0x7c8650],
+    trees: 1.4,
+    cypress: 0,
+    conifer: 0.45,
+    crownColour: 0x4c6234,
+    coniferColour: 0x2f4630,
+    shrubs: 360,
+    shrubColour: 0x506238,
+    ridge: 0.1,
+    jagged: 0.5,
+    ridgeColour: 0x4f6050,
   },
 };
 

@@ -3724,9 +3724,12 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
        * terrain under it.
        */
       {
+        // A city is paved round its chief monument only; between the houses
+        // and out to the walls lies the bare ground of the country.
+        const paved = kind === "city" ? frameBoundsOf(parts) : bounds;
         const footprint = Math.hypot(
-          (bounds.max[0] - bounds.min[0]) / 2,
-          (bounds.max[2] - bounds.min[2]) / 2,
+          (paved.max[0] - paved.min[0]) / 2 + (kind === "city" ? 30 : 0),
+          (paved.max[2] - paved.min[2]) / 2 + (kind === "city" ? 30 : 0),
         );
         // Done by the time the hills begin to rise (see `planLandscape`),
         // or the rising ground would cut it off along a hard line again.
@@ -5408,9 +5411,12 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         const flatLength = Math.hypot(fx, fz) || 1;
         fx /= flatLength;
         fz /= flatLength;
+        // A city is paved round its chief monument only; between the houses
+        // and out to the walls lies the bare ground of the country.
+        const paved = kind === "city" ? frameBoundsOf(parts) : bounds;
         const footprint = Math.hypot(
-          (bounds.max[0] - bounds.min[0]) / 2,
-          (bounds.max[2] - bounds.min[2]) / 2,
+          (paved.max[0] - paved.min[0]) / 2 + (kind === "city" ? 30 : 0),
+          (paved.max[2] - paved.min[2]) / 2 + (kind === "city" ? 30 : 0),
         );
         const away = footprint + Math.max(3, span * 0.08);
         const x = centre.x + fx * away;

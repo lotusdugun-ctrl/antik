@@ -1,3 +1,5 @@
+import { incaCitadelParts, incaCitadelWalkStart } from "@/lib/models/inka";
+import { mayaBallcourtParts, mayaBallcourtWalkStart } from "@/lib/models/maya";
 import { distanceTo, waterOf } from "./landscape-plan";
 import type { RockFace } from "./models/rockface";
 import {
@@ -8499,6 +8501,10 @@ function buildParts(spec: ModelSpec): Part[] {
       return egyptianPylonParts(spec);
     case "megalithic-platform":
       return megalithicPlatformParts(spec);
+    case "inca-citadel":
+      return incaCitadelParts(spec);
+    case "maya-ballcourt":
+      return mayaBallcourtParts(spec);
     case "ziggurat":
       return zigguratParts(spec);
     case "egyptian-hypostyle":
@@ -8648,6 +8654,10 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return egyptianPylonWalkStart(spec);
     case "megalithic-platform":
       return megalithicPlatformWalkStart(spec);
+    case "inca-citadel":
+      return incaCitadelWalkStart(spec);
+    case "maya-ballcourt":
+      return mayaBallcourtWalkStart(spec);
     case "ziggurat":
       return zigguratWalkStart(spec);
     case "egyptian-hypostyle":

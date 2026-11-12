@@ -1,3 +1,5 @@
+import { incaCitadelLife } from "@/lib/models/inka";
+import { mayaBallcourtLife } from "@/lib/models/maya";
 import { TEXTS, type EpigraphicText } from "@/lib/epigraphy";
 import { inscription } from "@/lib/reconstruction-detail";
 import {
@@ -4449,6 +4451,10 @@ function lifeOfSpec(spec: Reconstruction["model"], era: Era, id: string): SceneL
       return egyptianPylonLife(spec, era);
     case "megalithic-platform":
       return megalithicPlatformLife(spec, era);
+    case "inca-citadel":
+      return incaCitadelLife(spec, era);
+    case "maya-ballcourt":
+      return mayaBallcourtLife(spec, era);
     case "ziggurat":
       return zigguratLife(spec, era);
     case "egyptian-hypostyle":

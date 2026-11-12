@@ -66,7 +66,10 @@ export function buildLandscape(THREE: typeof THREE_NS, options: Options) {
    * hills do, so there is no line where the one stops and the other starts.
    */
   // Leaning to the country's own soil, so bare limestone stays grey.
-  const trodden = new THREE.Color(0xb3a283).lerp(new THREE.Color(look.palette[0]), 0.4);
+  // In green country the ground between the houses is grass and garden, not dust.
+  const lush =
+    biome === "tropical" || biome === "temperate" || biome === "east-asian" || biome === "pontic";
+  const trodden = new THREE.Color(0xb3a283).lerp(new THREE.Color(look.palette[0]), lush ? 0.8 : 0.4);
   const clear = footprint * 1.25;
   for (let i = 0; i < position.count; i += 1) {
     const x = position.getX(i) + centre.x;
@@ -533,7 +536,12 @@ export function groundDetail(THREE: typeof THREE_NS, biome: Biome) {
   const mid = lattice(16, 23);
   const fine = lattice(64, 37);
   // Grassier country is greener in its light patches; dry country browner.
-  const green = biome === "pontic" ? 0.05 : biome === "mediterranean" ? 0.03 : 0;
+  const green =
+    biome === "pontic" || biome === "tropical"
+      ? 0.05
+      : biome === "mediterranean" || biome === "temperate" || biome === "east-asian"
+        ? 0.03
+        : 0;
   let s = 99;
   const random = () => {
     s = (s * 16807) % 2147483647;
