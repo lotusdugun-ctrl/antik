@@ -10,7 +10,7 @@
   "babil-kenti-flora": null
  },
  "terrain": "babil-kenti-terrain",
- "plants": 460,
+ "plants": 522,
  "azim": 179.16234704572173,
  "files": [
   "babil-kenti-baked.glb"
