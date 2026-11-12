@@ -1,5 +1,8 @@
 import type { IncaCitadelSpec } from "@/lib/models/inka";
 import type { MayaBallcourtSpec } from "@/lib/models/maya";
+import type { PagodaSpec } from "@/lib/models/pagoda";
+import type { NabataeanFacadeSpec } from "@/lib/models/nabataean";
+import type { PropylaiaSpec } from "@/lib/models/propylaia";
 import type { Localized } from "@/lib/i18n";
 import type { HittiteGateSpec } from "@/lib/models/hattusa-aslanli-kapi";
 import type { TroyCitadelSpec } from "@/lib/models/troya-vi-surlari";
@@ -386,6 +389,13 @@ export type CitySpec = {
     /** What the circuit is built of: stone unless said (mud brick at Babylon, rammed earth at Chang'an). */
     material?: "stone" | "sand" | "terracotta" | "conglomerate" | "ground" | "limestone";
   };
+  /**
+   * A moat of open water round the walls, past a strip of open ground, with a
+   * stone causeway across it on the front (-z) side: Angkor Wat.
+   */
+  moat?: { width: number; apron: number; causewayWidth: number };
+  /** A river running north to south through the plan, its middle at x = `at`. */
+  river?: { at: number; width: number };
   /** Paved streets: from x,z to x,z, and how wide. */
   streets?: [number, number, number, number, number][];
   /** A mountain the city sits under, as at Pompeii. */
@@ -506,7 +516,10 @@ export type ModelSpec =
   | IndicMonumentSpec
   | EgyptianHypostyleSpec
   | IncaCitadelSpec
-  | MayaBallcourtSpec;
+  | MayaBallcourtSpec
+  | PagodaSpec
+  | NabataeanFacadeSpec
+  | PropylaiaSpec;
 
 /**
  * A named part of the building, pinned to the point in the model where it is.
@@ -2767,73 +2780,57 @@ export const reconstructions: Reconstruction[] = [
       {
         value: 135,
         unit: "m",
-        label: l("Amfitiyatrosunun oval ölçüü", "Amphitheatre: its oval"),
+        label: l("Amfitiyatro: uzunluk (135 × 104 m)", "Amphitheatre: length (135 × 104 m)"),
         source: "wiki-amfi",
       },
       {
         value: 67,
         unit: "m",
-        label: l("Amfitiyatrosunun arenası", "Amphitheatre: arena length"),
+        label: l(
+          "Amfitiyatro: arena uzunluğu (kaynakta 66,7 m)",
+          "Amphitheatre: arena length (66.7 m in the source)",
+        ),
         source: "wiki-amfi",
-      },
-      {
-        value: 6,
-        unit: "count",
-        label: l("Capitolium'daki sütun sayısı", "Capitolium: column count"),
-        source: "wiki-cap",
-      },
-      {
-        value: 34,
-        unit: "m",
-        label: l("Basilikasin genişi", "Basilica: width"),
-        source: "wiki-bas",
       },
     ],
     uncertainty: l(
-      "Kentin sur duvarları plan üzerindeki konumları HD betiğinden okunur; forumun kare ölçüesi kanık olarak okunmaz, tahmin. Evlerin ve sokaklarını yerleri tahmin.",
-      "The city's walls are read off from their places on the plan in the HD script; the forum's square is not directly measurable, it is estimated. The houses and the streets are estimates.",
+      "Amfitiyatronun ölçüleri kaynaktandır. Forum, Capitolium (Jüpiter Tapınağı), basilika, tiyatro ve tapınakların ölçüleri, sütun sayıları, surların ve sokakların yeri ile evler tahmindir.",
+      "The amphitheatre's dimensions are from a source. The dimensions and column counts of the forum, the Capitolium (Temple of Jupiter), the basilica, the theatre and the temples, the line of the walls and streets, and the houses are inferred.",
     ),
     hotspots: [
       spot(
         [0, 16, -64],
-        "Capitolium",
-        "The Capitolium",
-        "Forumun tam merkezinde MS 2. yüzyılda Lucius Iulius Collatinus tarafından yaptırılan tanrı evi; forumun karnında.",
-        "At the very centre of the forum, built there in the second century AD by Lucius Iulius Collatinus: the god's house of the forum.",
+        "Capitolium (Jüpiter Tapınağı)",
+        "The Capitolium (Temple of Jupiter)",
+        "Forumun kuzey ucundaki tapınak; MÖ 2. yüzyılda, kentin zenginleştiği dönemde forumla birlikte yapıldı.",
+        "The temple at the north end of the forum, built in the 2nd century BC with the forum itself, when the town grew rich.",
       ),
       spot(
         [24, 9, -2],
         "Basilika",
         "The Basilica",
-        "Ticaret, yargı ve kamu işleri için kullanılan iki katlı basilika; MS 2. yüzyılda yaptırıldı.",
-        "The two-storey basilica for commerce, law and public business, built in the second century AD.",
+        "Ticaret ve yargı işlerinin görüldüğü basilika; MÖ 2. yüzyılda yapıldı.",
+        "The basilica where business and law were conducted, built in the 2nd century BC.",
       ),
       spot(
         [170, 18, 98],
-        "Amfitiyatrosu",
+        "Amfitiyatro",
         "The Amphitheatre",
-        "MS 70'de inşa edilmiş, MS 79 Vesuv patlamasından önce ayakta kalan antik dunyanın en eski amfitiyatrosu.",
-        "Built around AD 70 and still standing when Vesuvius erupted in AD 79: the oldest stone amphitheatre of antiquity.",
+        "MÖ 70 dolayında yapıldı; 135 × 104 metre, yaklaşık 20.000 kişilik. Arenası zeminin 6 metre altındadır.",
+        "Built around 70 BC; 135 × 104 m, for around 20,000 people. Its arena lies 6 m below ground level.",
       ),
     ],
     sources: [
       {
         key: "wiki-amfi",
-        title: l(
-          "Wikipedia (English): Amphitheatre of Pompeii",
-          "Wikipedia: Amphitheatre of Pompeii",
-        ),
+        title: l("Wikipedia: Pompeii Amfitiyatrosu", "Wikipedia: Amphitheatre of Pompeii"),
         url: "https://en.wikipedia.org/wiki/Amphitheatre_of_Pompeii",
       },
       {
-        key: "wiki-cap",
-        title: l("Wikipedia (English): Pompeii", "Wikipedia: Pompeii"),
+        key: "wiki-pompeii",
+        title: l("Wikipedia: Pompeii", "Wikipedia: Pompeii"),
         url: "https://en.wikipedia.org/wiki/Pompeii",
-      },
-      {
-        key: "wiki-bas",
-        title: l("Wikipedia (English): Pompeii", "Wikipedia: Pompeii"),
-        url: "https://en.wikipedia.org/wiki/Pompeii",
+        context: true,
       },
     ],
     model: {
@@ -3779,7 +3776,7 @@ export const reconstructions: Reconstruction[] = [
           spec: {
             kind: "roman-theatre",
             caveaDiameter: 54,
-            orchestraDiameter: 18,
+            orchestraDiameter: 17.5,
             scaenaeHeight: 8,
             seatTread: 0.7,
             seatRise: 0.42,
@@ -3788,10 +3785,12 @@ export const reconstructions: Reconstruction[] = [
             stairways: 7,
             lowerRows: 12,
             upperRows: 10,
+            // A Greek theatre: cut into the hill with no outer wall or gallery,
+            // before a low stage building.
             character: {
               stone: "limestone",
               ground: "hillside",
-              facade: "wall",
+              facade: "none",
               screen: "plain",
               storeys: 1,
               topGallery: false,
@@ -4213,61 +4212,86 @@ export const reconstructions: Reconstruction[] = [
     period: l("MÖ 1. yüzyıl - MS 2. yüzyıl", "1st century BC - 2nd century AD"),
     measures: [
       {
-        value: 39,
+        value: 39.1,
         unit: "m",
-        label: l("Al-Khazneh: cephe yüksekliği", "Al-Khazneh: facade height"),
+        label: l("Al-Khazneh (Hazine): yükseklik", "Al-Khazneh (the Treasury): height"),
         source: "wiki-petra-khazneh",
       },
       {
-        value: 25,
+        value: 25.3,
         unit: "m",
-        label: l("Al-Khazneh: cephe genişliği", "Al-Khazneh: facade width"),
+        label: l("Al-Khazneh (Hazine): genişlik", "Al-Khazneh (the Treasury): width"),
         source: "wiki-petra-khazneh",
       },
       {
-        value: 45,
+        value: 47,
         unit: "m",
-        label: l("Kaya Tiyatrosu: cavea çapı", "Rock Theatre: cavea diameter"),
-        source: "wiki-petra-theatre",
+        label: l("Ed-Deir (Manastır): cephe yüksekliği", "Ad Deir (the Monastery): façade height"),
+        source: "wiki-petra-deir",
+      },
+      {
+        value: 48,
+        unit: "m",
+        label: l("Ed-Deir (Manastır): cephe genişliği", "Ad Deir (the Monastery): façade width"),
+        source: "wiki-petra-deir",
+      },
+      {
+        value: 8,
+        unit: "m",
+        label: l("Ed-Deir: kapı yüksekliği", "Ad Deir: height of the door"),
+        source: "wiki-petra-deir",
       },
     ],
     uncertainty: l(
-      "Al-Khazneh cephesinin oyma mimarisi ve kaya tiyatrosunun basamakları yerinde ölçümlere dayanır; Siq çıkışından sonraki cadde yapıları ve Nebati pazar alanları tahmindir.",
-      "The carved facade of Al-Khazneh and the rock-cut theatre steps are based on in situ surveys; the civic structures past the Siq and marketplace layouts are estimated.",
+      "Hazine ve Manastır cephelerinin yükseklik ve genişlikleri ile Manastır kapısının yüksekliği kaynaktandır (Petra maddesi Hazine için 37 × 24 m, Manastır için 45 × 50 m verir; burada yapıların kendi maddeleri izlendi). Sütun sayıları, katların oranları, kaya oyuğunun derinliği, Hazine kapısı, tiyatro ve tapınağın ölçüleri ile kent yerleşimi tahmindir.",
+      "The heights and widths of the Treasury and Monastery fronts and the Monastery door height are from sources (the Petra article gives 37 × 24 m for the Treasury and 45 × 50 m for the Monastery; the buildings' own articles are followed here). Column counts, storey proportions, the depth of the rock recess, the Treasury door, the theatre and temple dimensions and the city layout are inferred.",
     ),
     hotspots: [
       spot(
-        [-60, 20, -40],
+        [-60, 30, -44.5],
         "Al-Khazneh (Hazine)",
         "Al-Khazneh (The Treasury)",
-        "Doğrudan kızıl kumtaşı kayaya oyulmuş 39 metrelik anıtsal Helenistik/Nebati cephe.",
-        "The 39-metre Hellenistic facade chiseled directly out of the rose-red cliff face.",
+        "Kızıl kumtaşı kayaya oyulmuş 39,1 metrelik cephe: altta sütunlu revak ve alınlık, üstte kırık alınlık arasında yuvarlak tholos ve tepesinde taş vazo.",
+        "A 39.1 m front carved into the red sandstone: a columned portico and pediment below, and above a round tholos crowned by a stone urn between the halves of a broken pediment.",
       ),
       spot(
-        [60, 16, 50],
-        "Kaya Tiyatrosu",
-        "The Rock-cut Theatre",
-        "4.000 seyirci kapasiteli, dağın yamacına oyulmuş antik tiyatro.",
-        "Carved entirely into the solid mountain sandstone, seating over 4,000 spectators.",
+        [80, 22, -63.5],
+        "Ed-Deir (Manastır)",
+        "Ad Deir (The Monastery)",
+        "47 metre yüksekliğinde ve 48 metre genişliğindeki kaya cephesi; ana odaya 8 metrelik bir kapı açılır.",
+        "A rock-cut front 47 m high and 48 m wide; a door 8 m high opens into its main chamber.",
+      ),
+      spot(
+        [60, 10, 50],
+        "Tiyatro",
+        "The Theatre",
+        "Dağın yamacına oyulmuş tiyatronun yaklaşık 8.500 kişi aldığı söylenir.",
+        "Cut into the mountainside, the theatre was said to hold around 8,500 people.",
       ),
       spot(
         [-70, 12, 70],
         "Büyük Tapınak",
         "The Great Temple",
-        "Nebati krallarının törensel kabul ve tapınma için kullandığı anıtsal külliye.",
-        "The monumental Nabataean temple complex used for royal ceremonial gatherings.",
+        "Kent merkezindeki anıtsal Nebati tapınak yapısı.",
+        "The monumental Nabataean temple in the city centre.",
       ),
     ],
     sources: [
       {
         key: "wiki-petra-khazneh",
-        title: l("Wikipedia: Al-Khazneh", "Wikipedia: Petra"),
+        title: l("Wikipedia: Al-Khazneh", "Wikipedia: Al-Khazneh"),
         url: "https://en.wikipedia.org/wiki/Al-Khazneh",
       },
       {
-        key: "wiki-petra-theatre",
-        title: l("Wikipedia: Petra Theatre", "Wikipedia: Petra"),
+        key: "wiki-petra-deir",
+        title: l("Wikipedia: Ed-Deir", "Wikipedia: Ad Deir"),
+        url: "https://en.wikipedia.org/wiki/Ed-Deir,_Petra",
+      },
+      {
+        key: "wiki-petra",
+        title: l("Wikipedia: Petra", "Wikipedia: Petra"),
         url: "https://en.wikipedia.org/wiki/Petra",
+        context: true,
       },
     ],
     model: {
@@ -4277,25 +4301,23 @@ export const reconstructions: Reconstruction[] = [
       places: [
         {
           spec: {
-            kind: "roman-facade",
-            facadeWidth: 25,
-            facadeHeight: 39,
-            lowerColumns: 6,
-            steps: 3,
-            doors: 1,
-            porchDepth: 4,
-            hallWidth: 20,
-            hallDepth: 10,
-            apseWidth: 6,
-            nicheHeight: 4,
-            wallHeight: 16,
-            lowerOrderHeight: 20,
-            upperColumns: 6,
-            columnDiameter: 1.1,
-            inscribed: false,
+            kind: "nabataean-facade",
+            facadeHeight: 39.1,
+            facadeWidth: 25.3,
+            doorHeight: 6,
+            style: "khazneh",
           },
           at: [-60, -40],
-          rotate: 180,
+        },
+        {
+          spec: {
+            kind: "nabataean-facade",
+            facadeHeight: 47,
+            facadeWidth: 48,
+            doorHeight: 8,
+            style: "deir",
+          },
+          at: [80, -60],
         },
         {
           spec: {
@@ -4344,7 +4366,7 @@ export const reconstructions: Reconstruction[] = [
         [-120, 0, 120, 0, 8],
       ],
       hill: { angle: 180, distance: 150, height: 180, radius: 120 },
-      viewpoint: { at: [0, 70], look: [-60, 20, -40] },
+      viewpoint: { at: [-50, -110], look: [-60, 20, -40] },
     },
   },
   {
@@ -6844,27 +6866,24 @@ export const reconstructions: Reconstruction[] = [
     period: l("MÖ 7. - 6. yüzyıl", "7th - 6th century BC"),
     measures: [
       {
-        value: 14,
+        value: 15,
         unit: "m",
-        label: l("İştar Kapısı: anıtsal yükseklik", "Ishtar Gate: height"),
-        source: "wiki-babylon",
+        label: l("İştar Kapısı: yükseklik", "Ishtar Gate: height"),
+        source: "wiki-ishtar",
       },
       {
-        value: 46,
+        value: 54,
         unit: "m",
-        label: l("Güney Sarayı ve Taht Odası: cephe genişliği", "Southern Palace: facade width"),
-        source: "wiki-babylon",
-      },
-      {
-        value: 22,
-        unit: "m",
-        label: l("Marduk Tapınağı: cephe genişliği", "Temple of Marduk: facade width"),
-        source: "wiki-babylon",
+        label: l(
+          "Etemenanki: tahmini yükseklik (bir araştırmaya göre)",
+          "Etemenanki: estimated height (one study)",
+        ),
+        source: "wiki-etemenanki",
       },
     ],
     uncertainty: l(
-      "İştar Kapısı ve tören yolu kazılardan tam bilinir; Etemenanki Zigguratı'nın üst katları tablet kayıtlarına dayanır.",
-      "The Ishtar Gate and Processional Way are fully excavated; the upper ziggurat terraces follow cuneiform tablets.",
+      "İştar Kapısı'nın 15 metrelik yüksekliği kaynaktandır. Etemenanki'nin yüksekliği tartışmalıdır: Esagila tableti 91 metre ve yedi kat verir, Fenollós ve arkadaşları yaklaşık 54 metre önerir; model 54 metreyi izler. Taban ve kat ölçüleri, saray, Fırat'ın genişliği ve yatağının kentteki yeri, surlar ve evler tahmindir. Asma Bahçeler'in varlığı kanıtlanmadığı için modelde yoktur.",
+      "The Ishtar Gate's 15 m height is from a source. Etemenanki's height is disputed: the Esagila tablet gives 91 m and seven stages, Fenollós and colleagues suggest about 54 m; the model follows the 54 m. The base and stage dimensions, the palace, the width of the Euphrates and its course through the city, the walls and the houses are inferred. The Hanging Gardens are left out, as their existence is unproven.",
     ),
     hotspots: [
       spot(
@@ -6878,8 +6897,8 @@ export const reconstructions: Reconstruction[] = [
         [0, 54.5, 15],
         "Etemenanki Zigguratı ve Marduk Tapınağı",
         "Etemenanki Ziggurat and Marduk Temple",
-        "7 katlı mavi sırlı kulesiyle göğün ve yerin temelini birleştiren devasa Babil kulesi.",
-        "The 7-tiered ziggurat crowned with the lapis-lazuli glazed sanctuary of Marduk.",
+        'Adı "göğün ve yerin temelinin evi" anlamına gelen ziggurat; tepesinde Marduk\'un tapınağı vardı.',
+        'The ziggurat whose name means "house of the foundation of heaven and earth", with Marduk\'s temple on its top.',
       ),
       spot(
         [80, 5, -40],
@@ -6891,9 +6910,20 @@ export const reconstructions: Reconstruction[] = [
     ],
     sources: [
       {
+        key: "wiki-ishtar",
+        title: l("Wikipedia: İştar Kapısı", "Wikipedia: Ishtar Gate"),
+        url: "https://en.wikipedia.org/wiki/Ishtar_Gate",
+      },
+      {
+        key: "wiki-etemenanki",
+        title: l("Wikipedia: Etemenanki", "Wikipedia: Etemenanki"),
+        url: "https://en.wikipedia.org/wiki/Etemenanki",
+      },
+      {
         key: "wiki-babylon",
-        title: l("Wikipedia: Babylon", "Wikipedia: Babylon"),
+        title: l("Wikipedia: Babil", "Wikipedia: Babylon"),
         url: "https://en.wikipedia.org/wiki/Babylon",
+        context: true,
       },
     ],
     model: {
@@ -6914,7 +6944,7 @@ export const reconstructions: Reconstruction[] = [
             shrineHeight: 10,
             glazedBlue: true,
             processionalGate: true,
-            gateHeight: 14,
+            gateHeight: 15,
             palaceWidth: 46,
           },
           at: [0, 15],
@@ -6939,6 +6969,8 @@ export const reconstructions: Reconstruction[] = [
         gateWidth: 12,
         material: "sand",
       },
+      // The Euphrates (its Shatt al-Hillah branch) runs through the city.
+      river: { at: -190, width: 70 },
       streets: [
         [-45, -60, 45, -60, 6],
         [-65, -60, -65, 35, 6],
@@ -7457,7 +7489,7 @@ export const reconstructions: Reconstruction[] = [
     model: {
       kind: "city",
       radius: 380,
-      fabric: { style: "levant" },
+      fabric: { style: "vijayanagara" },
       places: [
         {
           spec: {
@@ -7513,45 +7545,48 @@ export const reconstructions: Reconstruction[] = [
     period: l("12. yüzyıl", "12th century"),
     measures: [
       {
-        value: 28,
+        value: 65,
         unit: "m",
-        label: l("Meru Dağı Nilüfer Kuleleri: cephe genişliği", "Five Lotus Towers: facade width"),
+        label: l("Merkez kule: yerden yükseklik", "Central tower: height above the ground"),
         source: "wiki-angkor-wat",
       },
       {
-        value: 16,
+        value: 1024,
         unit: "m",
-        label: l("Batı Giriş Gopurası: yükseklik", "West Entrance Gopura: height"),
+        label: l("Dış sur: uzunluk (1.024 × 802 m)", "Outer wall: length (1,024 × 802 m)"),
         source: "wiki-angkor-wat",
       },
       {
-        value: 48,
+        value: 4.5,
         unit: "m",
-        label: l(
-          "Süt Denizi Kabartma Galerisi: cephe genişliği",
-          "Bas-Relief Gallery: facade width",
-        ),
+        label: l("Dış sur: yükseklik", "Outer wall: height"),
+        source: "wiki-angkor-wat",
+      },
+      {
+        value: 190,
+        unit: "m",
+        label: l("Hendek: genişlik", "Moat: width"),
         source: "wiki-angkor-wat",
       },
     ],
     uncertainty: l(
-      "Beş kule ve taş hendek aksı günümüze sağlam ulaşmıştır; kule doruklarındaki altın varak kaplamalar tahmindir.",
-      "The five towers and moat causeway stand firm; gilded bronze finials on tower pinnacles are conjectural.",
+      "Merkez kulenin yüksekliği, dış surun ölçüleri (1.024 × 802 × 4,5 m), surun önündeki 30 metrelik açık alan ve 190 metrelik hendek kaynaktandır. Teras ve galeri ölçüleri, kule biçimleri, surdaki kapı ve köşe kuleleri ile hendek geçidinin genişliği tahmindir.",
+      "The central tower's height, the outer wall (1,024 × 802 × 4.5 m), the 30 m of open ground before it and the 190 m moat are from a source. The terrace and gallery dimensions, the tower forms, the gates and corner towers of the wall and the width of the causeway over the moat are inferred.",
     ),
     hotspots: [
       spot(
         [0, 71, 20],
         "Meru Dağı Beş Nilüfer Kulesi (Quincunx)",
         "The Five Lotus Towers",
-        "Hindu evreninin merkezini simgeleyen 65 metre yüksekliğindeki anıtsal prasat kuleleri grubu.",
-        "The soaring quincunx of lotus bud towers symbolizing the sacred peaks of Mount Meru.",
+        "Merkezdeki kule yerden 65 metre yükselir; beş kule Meru Dağı'nın doruklarını simgeler.",
+        "The central tower rises 65 m above the ground; the five towers stand for the peaks of Mount Meru.",
       ),
       spot(
         [0, 4, -40],
         "Naga Yılanlı Taş Köprü ve Kutsal Su Hendeği",
         "The Naga Causeway and Sacred Moat",
-        "190 metrelik kutsal hendek üzerinden ana tapınağa bağlanan yedi başlı yılan balustradlı taş köprü.",
-        "The monumental sandstone causeway crossing the sacred 190-metre-wide moat flanked by multi-headed Nagas.",
+        "Tapınağın önünde yılan (naga) korkuluklu taş yol; kompleks 190 metre genişliğinde bir hendekle çevrilidir.",
+        "The stone way before the temple, with naga balustrades; the whole complex is ringed by a moat 190 m wide.",
       ),
       spot(
         [35, 11, 20],
@@ -7570,7 +7605,7 @@ export const reconstructions: Reconstruction[] = [
     ],
     model: {
       kind: "city",
-      radius: 400,
+      radius: 760,
       fabric: { style: "khmer" },
       places: [
         {
@@ -7589,16 +7624,18 @@ export const reconstructions: Reconstruction[] = [
           at: [0, 20],
         },
       ],
+      // The temple faces west (here -z), so the long east-west side runs along z.
       walls: {
-        length: 950,
-        width: 850,
-        height: 8.5,
+        length: 802,
+        width: 1024,
+        height: 4.5,
         thickness: 3.2,
-        towers: 16,
+        towers: 4,
         gates: 4,
         gateWidth: 12,
         material: "conglomerate",
       },
+      moat: { width: 190, apron: 30, causewayWidth: 12 },
       streets: [
         [-55, -55, 55, -55, 6],
         [-60, -55, -60, 45, 6],
@@ -7612,44 +7649,29 @@ export const reconstructions: Reconstruction[] = [
     structure: l("Kent planı", "The City Plan"),
     title: l("Bayon (Angkor Thom)", "Bayon (Angkor Thom)"),
     blurb: l(
-      "Gülümseyen taş yüzlerin kutsal kenti: 216 Gülen Yüz Kulesi, dış tarihsel galeri ve Zafer Kapısı.",
-      "The temple of stone smiles: 216 Serene Face Towers, outer narrative gallery and Victory Gate.",
+      "Angkor Thom'un merkezindeki tapınak: gülümseyen dev taş yüzlü kuleler, kabartmalı dış galeri ve kentin güney kapısı.",
+      "The temple at the heart of Angkor Thom: towers of giant smiling stone faces, the outer relief gallery and the city's south gate.",
     ),
     period: l("12. - 13. yüzyıl", "12th - 13th century"),
     measures: [
       {
-        value: 24,
+        value: 43,
         unit: "m",
-        label: l(
-          "216 Gülen Yüz Kulesi Tapınağı: cephe genişliği",
-          "Face Towers Temple: facade width",
-        ),
-        source: "wiki-bayon",
-      },
-      {
-        value: 44,
-        unit: "m",
-        label: l("Dış Galeri Kabartma Cephesi: genişlik", "Outer Relief Gallery: width"),
-        source: "wiki-bayon",
-      },
-      {
-        value: 15,
-        unit: "m",
-        label: l("Angkor Thom Güney Kapısı: yükseklik", "South Gate: height"),
+        label: l("Merkez kule: yerden yükseklik", "Central tower: height above the ground"),
         source: "wiki-bayon",
       },
     ],
     uncertainty: l(
-      "Taş yüz kuleleri ve kabartma duvarları bütünüyle ayaktadır; tapınak ahşap pavyon çatıları tahmindir.",
-      "The face towers and bas-relief walls stand intact; wooden shrine pavilions are conjectural.",
+      "Merkez kulenin 43 metrelik yüksekliği kaynaktandır. Bayon'da bir zamanlar 49 kule vardı (bugün 37); modeldeki kule ve yüz sayısı, teras, galeri ve kapı ölçüleri temsilîdir. Yüz sayısı kaynakta da kesin değildir (yaklaşık 200).",
+      "The central tower's 43 m is from a source. The Bayon once had 49 towers (37 today); the number of towers and faces in the model and the terrace, gallery and gate dimensions are representative. The number of faces is uncertain in the source too (about 200).",
     ),
     hotspots: [
       spot(
         [4, 38, 15],
-        "216 Gülen Yüz Kulesi",
-        "The 216 Face Towers",
-        "54 kulede yükselen, her yöne bilgece tebessüm eden devasa bodhisattva Avalokiteshvara yüzleri.",
-        "The 54 sanctuary towers bearing 216 colossal smiling faces of compassionate Avalokiteshvara.",
+        "Yüz kuleleri",
+        "The face towers",
+        "Kulelerden dört yöne bakan dev taş yüzler; sayıları yaklaşık 200'dür. Merkez kule yerden 43 metre yükselir.",
+        "Giant stone faces looking out to the four directions from the towers, about 200 of them; the central tower rises 43 m above the ground.",
       ),
       spot(
         [25, 6, -5],
@@ -7663,7 +7685,7 @@ export const reconstructions: Reconstruction[] = [
         "Angkor Thom Güney Kapısı ve Naga Köprüsü",
         "The South Gate of Angkor Thom",
         "Tanrılar ve iblislerin taşıdığı kutsal yılan köprüsüyle korunan anıtsal giriş kapısı.",
-        "The monumental gateway framed by the famous avenue of 54 devas and asuras pulling the serpent.",
+        "The monumental gateway, approached over a causeway lined with gods and demons holding the serpent.",
       ),
     ],
     sources: [
@@ -8568,6 +8590,18 @@ export const reconstructions: Reconstruction[] = [
         label: l("Parthenon Dor sütunları: yükseklik", "The Parthenon Doric columns: height"),
         source: "wiki-akropolis-parthenon",
       },
+      {
+        value: 6,
+        unit: "count",
+        label: l("Propylaia: Dor cephesindeki sütunlar", "Propylaea: columns of the Doric front"),
+        source: "wiki-akropolis-propylaea",
+      },
+      {
+        value: 5,
+        unit: "count",
+        label: l("Propylaia: iç duvardaki kapı sayısı", "Propylaea: doorways in the cross-wall"),
+        source: "wiki-akropolis-propylaea",
+      },
     ],
     uncertainty: l(
       "Parthenon ve Erechtheion'un Pentelikon mermeri kaideleri ve sütunları yerindedir; ahşap kasetli tavanlar ve heykeltıraşlık frizleri arkeolojik çizimlerden rekonstrükte edilmiştir.",
@@ -8589,11 +8623,11 @@ export const reconstructions: Reconstruction[] = [
         "Asymmetrical Ionic temple enshrining sacred olive and salt spring, immortalised by its Porch of the Maidens.",
       ),
       spot(
-        [-65, 10, 0],
-        "Propylaia Anıtsal Giriş Kapısı",
-        "The Propylaea Gateway",
-        "Mnesikles tarafından tasarlanan, akropolise çıkan Panathenaia bayramı alaylarını karşılayan anıtsal mermer kapı.",
-        "Monumental marble gateway designed by Mnesikles, framing the Panathenaic procession entering the sacred rock.",
+        [-89, 6, 0],
+        "Propylaia",
+        "The Propylaea",
+        "Akropolis'in anıtsal girişi: iki yanı altışar sütunlu Dor salonu, beş kapılı iç duvar, İon sütunları arasından geçen yol ve batıya uzanan iki kanat.",
+        "The monumental entrance of the Acropolis: a Doric hall with six columns on each front, a cross-wall with five doorways, the way up between Ionic columns, and two wings projecting west.",
       ),
     ],
     sources: [
@@ -8610,15 +8644,16 @@ export const reconstructions: Reconstruction[] = [
       },
       {
         key: "wiki-akropolis-propylaea",
-        title: l("Acropolis of Athens: Propylaea", "Acropolis of Athens: Propylaea"),
-        url: "https://en.wikipedia.org/wiki/Propylaea",
-        context: true,
+        title: l(
+          "Wikipedia: Propylaia (Atina Akropolisi)",
+          "Wikipedia: Propylaea (Acropolis of Athens)",
+        ),
+        url: "https://en.wikipedia.org/wiki/Propylaea_(Acropolis_of_Athens)",
       },
     ],
     model: {
       kind: "city",
       radius: 360,
-      fabric: { style: "greek" },
       places: [
         {
           spec: {
@@ -8665,30 +8700,26 @@ export const reconstructions: Reconstruction[] = [
         },
         {
           spec: {
-            kind: "roman-gate",
-            variant: "arch",
-            openings: 1,
-            archSpan: 8,
-            archHeight: 10,
-            totalHeight: 13,
-            entablatureHeight: 3,
-            columnHeight: 8,
-            columnDiameter: 1.2,
-            columnsPerFace: 4,
-            pierWidth: 8,
-            depth: 15,
+            kind: "propylaia",
+            frontColumns: 6,
+            doorways: 5,
+            wingColumns: 3,
+            hallWidth: 18,
+            hallDepth: 24,
+            columnHeight: 8.8,
           },
-          at: [-65, 0],
+          at: [-75, 0],
           rotate: 90,
         },
       ],
+      // The circuit of the rock itself, not a town wall: no houses within.
       walls: {
-        length: 800,
-        width: 700,
+        length: 300,
+        width: 160,
         height: 10,
         thickness: 3.5,
-        towers: 8,
-        gates: 2,
+        towers: 2,
+        gates: 1,
         gateWidth: 12,
       },
       streets: [[-26, 0, 18, 0, 6]],
@@ -8783,7 +8814,7 @@ export const reconstructions: Reconstruction[] = [
             kind: "roman-theatre",
             caveaDiameter: 114,
             orchestraDiameter: 20,
-            scaenaeHeight: 12,
+            scaenaeHeight: 8,
             seatTread: 0.75,
             seatRise: 0.42,
             podiumHeight: 1.2,
@@ -8791,13 +8822,15 @@ export const reconstructions: Reconstruction[] = [
             stairways: 23,
             lowerRows: 34,
             upperRows: 21,
+            // A Greek theatre: laid into the hillside, the full round orchestra
+            // before a two-storeyed skene; no outer wall or gallery.
             character: {
               stone: "limestone",
               screen: "plain",
-              storeys: 1,
-              topGallery: true,
-              ground: "plain",
-              facade: "wall",
+              storeys: 2,
+              topGallery: false,
+              ground: "hillside",
+              facade: "none",
             },
           },
           at: [80, 50],
@@ -13034,80 +13067,73 @@ export const reconstructions: Reconstruction[] = [
     structure: l("İmparatorluk kent planı", "The Imperial City Plan"),
     title: l("Chang'an (Xi'an)", "Chang'an (Xi'an)"),
     blurb: l(
-      "İpek Yolu'nun başlangıcı dünyanın ilk 1 milyonluk metropolü: ızgara planlı caddeler, dev şehir surları, Daming Sarayı ve Pagodalar.",
-      "The starting point of the Silk Road and the world's first metropolis of one million: grid avenues, Daming Palace and defensive gates.",
+      "İpek Yolu'nun doğu ucundaki Tang başkenti: ızgara planlı mahalleler, kent surları, Daming Sarayı ve Büyük Yaban Kazı Pagodası.",
+      "The Tang capital at the eastern end of the Silk Road: walled wards on a grid, the city walls, the Daming Palace and the Giant Wild Goose Pagoda.",
     ),
     period: l("MÖ 202 – MS 904", "202 BC – 904 AD"),
     measures: [
       {
-        value: 67,
+        value: 64.1,
         unit: "m",
         label: l(
-          "Daming Sarayı (Hanyuan Taht Salonu): cephe genişliği",
-          "Daming Palace (Hanyuan Audience Hall): facade width",
+          "Büyük Yaban Kazı Pagodası: kaidesiyle yükseklik",
+          "Giant Wild Goose Pagoda: height with its base",
+        ),
+        source: "wiki-wild-goose",
+      },
+      {
+        value: 15,
+        unit: "m",
+        label: l(
+          "Hanyuan Salonu'nun yükseltilmiş platformu: yükseklik",
+          "Hanyuan Hall's raised platform: height",
         ),
         source: "wiki-xian-hanyuan",
       },
-      {
-        value: 16,
-        unit: "m",
-        label: l(
-          "Danfeng Anıtsal Saray Kapısı: toplam yükseklik",
-          "Danfeng Monumental Palace Gate: total height",
-        ),
-        source: "wiki-xian-danfeng",
-      },
-      {
-        value: 60,
-        unit: "m",
-        label: l(
-          "Daming Saray Tören Avlusu ve Revakları: avlu genişliği",
-          "Daming Palace Ceremonial Courtyard: courtyard width",
-        ),
-        source: "wiki-xian-court",
-      },
     ],
     uncertainty: l(
-      "Hanyuan Taht Salonu'nun devasa teras platformu ve Danfeng Kapısı temelleri arkeolojik kazılarda korunmuştur; ahşap üst yapı ve kiremit çatılar Tang mimari kılavuzlarına dayanır.",
-      "The massive rammed-earth terrace of Hanyuan Hall and Danfeng Gate stone bases survive in situ; the timber bracket superstructures follow Tang Dynasty architectural treatises.",
+      "Hanyuan Salonu'nun platformu (yaklaşık 15 m yüksek; kaynakta 200 × 100 m) ve Danfeng Kapısı'nın beş kapısı kaynaktandır; salonların ve kapının genişlik, derinlik ve yükseklikleri, ahşap üst yapı ve çatılar tahmindir. Büyük Yaban Kazı Pagodası'nın kat sayısı ve yüksekliği kaynaktandır; taban genişliği ve kent planındaki yeri temsilîdir.",
+      "The Hanyuan Hall platform (about 15 m high; 200 × 100 m in the source) and the Danfeng Gate's five doorways are from a source; the widths, depths and heights of the halls and the gate, their timber superstructure and roofs are inferred. The Giant Wild Goose Pagoda's storeys and height are from a source; its base width and its place on the plan are representative.",
     ),
     hotspots: [
+      spot(
+        [85, 20, 52],
+        "Büyük Yaban Kazı Pagodası",
+        "Giant Wild Goose Pagoda",
+        "Yedi katlı tuğla Budist pagodası; kaidesiyle 64,1 metre. İlk yapıldığında beş katlıydı.",
+        "A seven-storey brick Buddhist pagoda, 64.1 m high with its base; it was first built with five storeys.",
+      ),
       spot(
         [-40, 19, 30],
         "Daming Sarayı Hanyuan Taht Salonu",
         "Daming Palace Hanyuan Audience Hall",
-        "Tang imparatorlarının yeni yıl törenleri ve yabancı elçileri kabul ettiği, 15 metre yükseltilmiş teras üzerinde 67 metre genişliğinde görkemli ahşap taht salonu.",
-        "The primary audience hall of the Tang Empire, elevated on a multi-tiered platform commanding the grand imperial axis.",
+        "Daming Sarayı'nın ana tören salonu; yaklaşık 15 metre yüksekliğindeki bir platformun üstünde durur.",
+        "The chief ceremonial hall of the Daming Palace, standing on a platform about 15 m high.",
       ),
       spot(
         [70, 11.3, -30],
         "Daming Saray Avlusu ve Tören Meydanı",
         "Daming Palace Ceremonial Courtyard",
-        "Binlerce saray muhafızı ve bürokratın toplandığı, çift katlı kırmızı lakeli ahşap revaklarla çevrili 60 metrelik imparatorluk avlusu.",
-        "The vast ceremonial courtyard flanked by double-tier vermilion-lacquered colonnades where imperial state functions took place.",
+        "Saray törenlerinin yapıldığı, ahşap revaklarla çevrili avlu.",
+        "The courtyard of the palace ceremonies, ringed by timber galleries.",
       ),
       spot(
         [0, 17.3, -75],
         "Danfeng Anıtsal Saray Kapısı",
         "Danfeng Monumental Palace Gate",
-        "Daming Sarayı'nın güney ana girişi: beş kapı açıklığı ve çift katlı nöbet kuleleriyle kentin en görkemli imparatorluk kapı binası.",
-        "The five-portal grand southern entrance gate of Daming Palace flanked by fortified watchtowers.",
+        "Daming Sarayı'nın güney ana girişi; beş kapı açıklığı vardı.",
+        "The main southern gate of the Daming Palace, with five doorways.",
       ),
     ],
     sources: [
       {
+        key: "wiki-wild-goose",
+        title: l("Wikipedia: Büyük Yaban Kazı Pagodası", "Wikipedia: Giant Wild Goose Pagoda"),
+        url: "https://en.wikipedia.org/wiki/Giant_Wild_Goose_Pagoda",
+      },
+      {
         key: "wiki-xian-hanyuan",
-        title: l("Daming Palace: Hanyuan Hall", "Daming Palace: Hanyuan Hall"),
-        url: "https://en.wikipedia.org/wiki/Daming_Palace",
-      },
-      {
-        key: "wiki-xian-danfeng",
-        title: l("Danfeng Gate, Xi'an", "Danfeng Gate, Xi'an"),
-        url: "https://en.wikipedia.org/wiki/Daming_Palace",
-      },
-      {
-        key: "wiki-xian-court",
-        title: l("Daming Palace Imperial Courtyard", "Daming Palace Imperial Courtyard"),
+        title: l("Wikipedia: Daming Sarayı", "Wikipedia: Daming Palace"),
         url: "https://en.wikipedia.org/wiki/Daming_Palace",
       },
       {
@@ -13130,8 +13156,8 @@ export const reconstructions: Reconstruction[] = [
             kind: "asian-hall",
             width: 67,
             depth: 32,
-            totalHeight: 19,
-            podiumHeight: 3.5,
+            totalHeight: 32,
+            podiumHeight: 15,
             columnsX: 11,
             columnsZ: 5,
             columnHeight: 6.5,
@@ -13172,6 +13198,10 @@ export const reconstructions: Reconstruction[] = [
             finial: "chiwen",
           },
           at: [0, -75],
+        },
+        {
+          spec: { kind: "pagoda", storeys: 7, totalHeight: 64.1, baseWidth: 25, build: "brick" },
+          at: [85, 65],
         },
       ],
       walls: {
@@ -13365,6 +13395,12 @@ export const reconstructions: Reconstruction[] = [
     period: l("MS 710 – MS 784", "710 AD – 784 AD"),
     measures: [
       {
+        value: 34,
+        unit: "m",
+        label: l("Yakushi-ji Doğu Pagodası: yükseklik", "Yakushi-ji East Pagoda: height"),
+        source: "wiki-yakushiji",
+      },
+      {
         value: 44,
         unit: "m",
         label: l(
@@ -13374,65 +13410,67 @@ export const reconstructions: Reconstruction[] = [
         source: "wiki-nara-daigokuden",
       },
       {
-        value: 18,
+        value: 27,
         unit: "m",
-        label: l(
-          "Suzakumon (Heijō Sarayı Güney Kapısı): toplam yükseklik",
-          "Suzakumon Monumental South Gate: total height",
-        ),
-        source: "wiki-nara-suzakumon",
+        label: l("Daigokuden: yükseklik", "Daigokuden: height"),
+        source: "wiki-nara-daigokuden",
       },
       {
-        value: 36,
+        value: 25,
         unit: "m",
-        label: l(
-          "To-in Doğu Saray Bahçesi ve Köşkü: avlu genişliği",
-          "To-in Imperial East Palace Garden: courtyard width",
-        ),
-        source: "wiki-nara-toin",
+        label: l("Suzakumon: genişlik (10 × 25 m)", "Suzakumon: width (10 × 25 m)"),
+        source: "wiki-nara-daigokuden",
+      },
+      {
+        value: 22,
+        unit: "m",
+        label: l("Suzakumon: yükseklik", "Suzakumon: height"),
+        source: "wiki-nara-daigokuden",
       },
     ],
     uncertainty: l(
-      "Daigokuden Taht Salonu ve Suzakumon kapısı orijinal sütun kaideleri üzerinde titizlikle yeniden inşa edilmiştir; To-in bahçe köşkleri kazı planlarını izler.",
-      "The Daigokuden hall and Suzakumon gate have been reconstructed on the excavated 8th-century stone bases; the To-in gardens follow archaeological landscape surveys.",
+      "Daigokuden'in (20 × 44 × 27 m) ve Suzakumon'un (10 × 25 × 22 m) ölçüleri kaynaktandır; sütun sayıları, çatı biçimleri ve To-in köşkünün ölçüleri tahmindir. Yakushi-ji Doğu Pagodası'nın yüksekliği ve kat sayısı kaynaktandır; taban genişliği ve kent planındaki yeri temsilîdir.",
+      "The dimensions of the Daigokuden (20 × 44 × 27 m) and the Suzakumon (10 × 25 × 22 m) are from a source; the column counts, roof forms and the size of the To-in pavilion are inferred. The Yakushi-ji East Pagoda's height and storeys are from a source; its base width and place on the plan are representative.",
     ),
     hotspots: [
+      spot(
+        [75, 3, 55.5],
+        "Yakushi-ji Doğu Pagodası",
+        "Yakushi-ji East Pagoda",
+        "34 metrelik ahşap pagoda: üç katlıdır, ama katlar arasındaki ara çatılar yüzünden altı katlı görünür.",
+        "A 34 m timber pagoda of three storeys that looks like six because of the pent roofs between them.",
+      ),
       spot(
         [-40, 21, 30],
         "Daigokuden (Büyük Seyirci Taht Salonu)",
         "Daigokuden (Great Audience Hall)",
-        "İmparatorun tahta çıkma törenleri ve diplomatik kabullerin yapıldığı, 44 metre genişliğinde iki katlı görkemli ahşap imparatorluk salonu.",
-        "The supreme imperial audience hall of ancient Japan, surmounted by soaring hipped-and-gabled ceramic roofs with golden shibi ornaments.",
+        "Sarayın en büyük yapısı: 44 metre genişliğinde, 20 metre derinliğinde ve 27 metre yüksekliğinde tören salonu.",
+        "The largest building of the palace: a ceremonial hall 44 m wide, 20 m deep and 27 m high.",
       ),
       spot(
         [60, 9.3, -25],
         "To-in Doğu Saray Bahçesi ve Köşkü",
         "To-in Imperial East Palace Garden",
-        "İmparatorluk ailesinin şiir dinletileri ve ziyafetler düzenlediği, gölet etrafında zarif ahşap revaklarla çevrili bahçe köşkü.",
-        "The tranquil imperial garden pavilion featuring landscaped ponds, wooden verandahs and ceremonial banquet halls.",
+        "Kıvrımlı bir göletin çevresine dizilmiş yapılardan biri; bahçe 100 × 80 metrelik bir alanı kaplar.",
+        "One of the buildings set round a curving pond; the garden covers an area of 100 × 80 m.",
       ),
       spot(
-        [0, 18.3, -75],
+        [0, 8, -81],
         "Suzakumon (Heijō Sarayı Güney Kapısı)",
         "Suzakumon Main Gate of Heijō Palace",
-        "84 metre genişliğindeki Suzaku Bulvarı'na bakan, iki katlı kırmızı sütunlu ve kiremit çatılı anıtsal imparatorluk saray kapısı.",
-        "The monumental double-roofed gateway facing the grand 84-metre-wide Suzaku boulevard entering the palace precinct.",
+        "Sarayın güney kapısı; yaklaşık 75 metre genişliğindeki Suzaku Caddesi'ne açılır. Muhtemelen iki katlıydı.",
+        "The south gate of the palace, opening onto the Suzaku avenue, about 75 m wide. It was probably two-storeyed.",
       ),
     ],
     sources: [
       {
+        key: "wiki-yakushiji",
+        title: l("Wikipedia: Yakushi-ji", "Wikipedia: Yakushi-ji"),
+        url: "https://en.wikipedia.org/wiki/Yakushi-ji",
+      },
+      {
         key: "wiki-nara-daigokuden",
-        title: l("Daigokuden, Heijō Palace", "Daigokuden, Heijō Palace"),
-        url: "https://en.wikipedia.org/wiki/Heij%C5%8D_Palace",
-      },
-      {
-        key: "wiki-nara-suzakumon",
-        title: l("Suzakumon, Heijō Palace", "Suzakumon, Heijō Palace"),
-        url: "https://en.wikipedia.org/wiki/Suzakumon",
-      },
-      {
-        key: "wiki-nara-toin",
-        title: l("To-in Imperial Garden, Nara", "To-in Imperial Garden, Nara"),
+        title: l("Wikipedia: Heijō Sarayı", "Wikipedia: Heijō Palace"),
         url: "https://en.wikipedia.org/wiki/Heij%C5%8D_Palace",
       },
       {
@@ -13452,7 +13490,7 @@ export const reconstructions: Reconstruction[] = [
             kind: "asian-hall",
             width: 44,
             depth: 20,
-            totalHeight: 20,
+            totalHeight: 27,
             podiumHeight: 2.8,
             columnsX: 9,
             columnsZ: 5,
@@ -13485,7 +13523,7 @@ export const reconstructions: Reconstruction[] = [
             kind: "asian-hall",
             width: 25,
             depth: 10,
-            totalHeight: 18,
+            totalHeight: 22,
             podiumHeight: 1.5,
             columnsX: 5,
             columnsZ: 2,
@@ -13495,6 +13533,17 @@ export const reconstructions: Reconstruction[] = [
             finial: "shibi",
           },
           at: [0, -75],
+        },
+        {
+          spec: {
+            kind: "pagoda",
+            storeys: 3,
+            totalHeight: 34,
+            baseWidth: 7.5,
+            build: "timber",
+            pentRoofs: true,
+          },
+          at: [75, 60],
         },
       ],
       walls: {
@@ -13526,75 +13575,83 @@ export const reconstructions: Reconstruction[] = [
     period: l("MS 794 – MS 1185", "794 AD – 1185 AD"),
     measures: [
       {
-        value: 70,
+        value: 54.8,
+        unit: "m",
+        label: l("Tō-ji pagodası: yükseklik", "Tō-ji pagoda: height"),
+        source: "wiki-toji",
+      },
+      {
+        value: 52,
         unit: "m",
         label: l(
-          "Chodoin (Büyük Devlet Konseyi Kompleksi): avlu genişliği",
-          "Chodoin (State Council Compound): courtyard width",
+          "Chōdō-in'in Daigokuden'i: doğu-batı uzunluğu",
+          "Daigokuden of the Chōdō-in: east to west",
         ),
         source: "wiki-kyoto-chodoin",
       },
       {
-        value: 20,
+        value: 30,
         unit: "m",
-        label: l(
-          "Rajomon (Büyük Güney Şehir Kapısı): toplam yükseklik",
-          "Rajomon Monumental South City Gate: total height",
-        ),
-        source: "wiki-kyoto-rajomon",
+        label: l("Shishinden: doğu-batı uzunluğu", "Shishinden: east to west"),
+        source: "wiki-kyoto-chodoin",
       },
       {
-        value: 33,
+        value: 25,
         unit: "m",
-        label: l(
-          "Shishinden (İmparatorluk Taht Sarayı): cephe genişliği",
-          "Shishinden (Imperial Throne Hall): facade width",
-        ),
-        source: "wiki-kyoto-shishinden",
+        label: l("Shishinden: kuzey-güney uzunluğu", "Shishinden: north to south"),
+        source: "wiki-kyoto-chodoin",
       },
     ],
     uncertainty: l(
-      "Daidairi imparatorluk sarayı ve Rajomon kapısı günümüzde yer altında temel izleri olarak mevcuttur; modeller Heian dönemi saray parşömenlerine ve Heian Jingu rekonstrüksiyonuna dayanır.",
-      "The original Daidairi halls and Rajomon survive as buried archaeological foundations; the reconstruction follows Heian court picture scrolls and the 1895 Heian Shrine replica.",
+      "Chōdō-in'in Daigokuden'i (52 × 20 m) ve Shishinden (30 × 25 m) kaynaktandır; yükseklikler, sütun sayıları ve Rajōmon'un ölçüleri tahmindir (Rajōmon 980'de yıkıldı ve yeniden yapılmadı). Tō-ji pagodasının yüksekliği ve kat sayısı bugünkü yapıdan (kaynaklı); taban genişliği ve yeri temsilîdir.",
+      "The Daigokuden of the Chōdō-in (52 × 20 m) and the Shishinden (30 × 25 m) are from a source; heights, column counts and the dimensions of the Rajōmon are inferred (the Rajōmon fell in 980 and was never rebuilt). The Tō-ji pagoda's height and storeys are those of the present building (sourced); its base width and place are representative.",
     ),
     hotspots: [
       spot(
+        [75, 4, -80.5],
+        "Tō-ji Pagodası",
+        "Tō-ji Pagoda",
+        "Beş katlı ahşap pagoda; 54,8 metreyle Japonya'nın en yüksek ahşap kulesi. Bugünkü yapı sonradan yeniden kurulmuştur.",
+        "The five-storey timber pagoda, at 54.8 m the tallest wooden tower in Japan; the present building is a later rebuilding.",
+      ),
+      spot(
         [-60, 11.3, 45],
-        "Chodoin (Büyük Devlet Konseyi Kompleksi)",
-        "Chodoin State Council Compound",
-        "İmparatorluk bakanlıkları ve tören salonlarını barındıran, 70 metre genişliğinde iki katlı kırmızı sütunlu revaklarla çevrili tören avlusu.",
-        "The great administrative quadrangle of Heian Japan, fronted by vermilion galleries where eight imperial ministries convened.",
+        "Chōdō-in Daigokuden'i",
+        "Daigokuden of the Chōdō-in",
+        "Devlet törenlerinin yapıldığı on iki salonlu Chōdō-in'in ana yapısı; doğu-batı yaklaşık 52 metre.",
+        "The main building of the Chōdō-in, the twelve-hall compound of state ceremonies; about 52 m east to west.",
       ),
       spot(
         [45, 17, -20],
         "Shishinden (İmparatorluk Taht Sarayı)",
         "Shishinden Throne Hall",
-        "Klasik Shinden-zukuri tarzında selvi kabuğu çatıyla örtülü, imparatorluk tahtı Takamikura'yı barındıran 33 metre cepheli anıt saray.",
-        "The premier ceremonial palace hall crowned with cypress-bark thatch, housing the sacred chrysantemum throne of Japan.",
+        "İç saraydaki tören salonu; yaklaşık 30 × 25 metre.",
+        "The ceremonial hall of the inner palace, about 30 × 25 m.",
       ),
       spot(
         [0, 20.3, -75],
         "Rajomon (Büyük Güney Şehir Kapısı)",
         "Rajomon Great South Gate",
-        "Heian-kyō'nun güney sınırını belirleyen, Suzaku Bulvarı'nın başlangıcındaki efsanevi iki katlı anıtsal ahşap şehir kapısı.",
-        "The legendary monumental southern bastion of Kyoto towering over the entrance to the imperial capital.",
+        "Suzaku Caddesi'nin güney ucundaki büyük kent kapısı; 980'de yıkıldı ve yeniden yapılmadı.",
+        "The great gate at the south end of the Suzaku avenue; it fell in 980 and was never rebuilt.",
       ),
     ],
     sources: [
       {
+        key: "wiki-toji",
+        title: l("Wikipedia: Tō-ji", "Wikipedia: Tō-ji"),
+        url: "https://en.wikipedia.org/wiki/T%C5%8D-ji",
+      },
+      {
         key: "wiki-kyoto-chodoin",
-        title: l("Chodoin of Heian-kyō", "Chodoin of Heian-kyō"),
+        title: l("Wikipedia: Heian Sarayı", "Wikipedia: Heian Palace"),
         url: "https://en.wikipedia.org/wiki/Heian_Palace",
       },
       {
-        key: "wiki-kyoto-rajomon",
-        title: l("Rajomon Gate, Kyoto", "Rajomon Gate, Kyoto"),
-        url: "https://en.wikipedia.org/wiki/Rashomon",
-      },
-      {
-        key: "wiki-kyoto-shishinden",
-        title: l("Shishinden, Kyoto Imperial Palace", "Shishinden, Kyoto Imperial Palace"),
-        url: "https://en.wikipedia.org/wiki/Kyoto_Imperial_Palace",
+        key: "wiki-kyoto-heiankyo",
+        title: l("Wikipedia: Heian-kyō", "Wikipedia: Heian-kyō"),
+        url: "https://en.wikipedia.org/wiki/Heian-ky%C5%8D",
+        context: true,
       },
       {
         key: "wiki-kyoto-heian",
@@ -13611,8 +13668,8 @@ export const reconstructions: Reconstruction[] = [
         {
           spec: {
             kind: "asian-hall",
-            width: 70,
-            depth: 18,
+            width: 52,
+            depth: 20,
             totalHeight: 11,
             podiumHeight: 1.5,
             columnsX: 15,
@@ -13627,8 +13684,8 @@ export const reconstructions: Reconstruction[] = [
         {
           spec: {
             kind: "asian-hall",
-            width: 33,
-            depth: 18,
+            width: 30,
+            depth: 25,
             totalHeight: 16,
             podiumHeight: 2.2,
             columnsX: 7,
@@ -13655,6 +13712,10 @@ export const reconstructions: Reconstruction[] = [
             finial: "shibi",
           },
           at: [0, -75],
+        },
+        {
+          spec: { kind: "pagoda", storeys: 5, totalHeight: 54.8, baseWidth: 9.5, build: "timber" },
+          at: [75, -75],
         },
       ],
       walls: {

@@ -14,7 +14,6 @@ export const BAKED_SITES: readonly string[] = [
   "aspendos-tiyatrosu",
   "assos-athena-tapinagi",
   "ayasofya-ana-kubbe",
-  "babil-kenti",
   "catalhoyuk-dogu-hoyugu",
   "celsus-kutuphanesi",
   "didyma-apollon-tapinagi",

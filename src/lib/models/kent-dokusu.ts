@@ -62,7 +62,8 @@ export type FabricStyle =
   | "andean"
   | "chimu"
   | "chinese"
-  | "japanese";
+  | "japanese"
+  | "vijayanagara";
 
 export type FabricSpec = {
   style: FabricStyle;
@@ -107,6 +108,7 @@ const STYLE: Record<
   chimu: { layout: "cluster", block: 26, lane: 4, size: [9, 13], houses: 130 },
   chinese: { layout: "grid", block: 36, lane: 7, size: [14, 18], houses: 120 },
   japanese: { layout: "grid", block: 30, lane: 6, size: [10, 14], houses: 130 },
+  vijayanagara: { layout: "grid", block: 28, lane: 6, size: [9, 12], houses: 140 },
 };
 
 /** A small deterministic generator, so a city is laid out the same every time. */
@@ -357,6 +359,23 @@ function flatRoofed(
   return parts;
 }
 
+/**
+ * Vijayanagara: granite walls under a flat roof, and along the street front a
+ * verandah of square granite posts under a lean-to of tiles, as the pillared
+ * bazaar streets of Hampi still show.
+ */
+function vijayanagara(p: Plot): Part[] {
+  const parts = flatRoofed(p, "granite", "stone", 3.4, { parapet: true, window: true });
+  const front = -p.d / 2 - 1.4;
+  for (const x of [-p.w * 0.4, -p.w * 0.13, p.w * 0.13, p.w * 0.4])
+    parts.push(box("granite", [x, 0, front], [0.4, 2.7, 0.4]));
+  parts.push(box("granite", [0, 2.7, front + 0.6], [p.w, 0.3, 1.8]));
+  parts.push(box("terracotta", [0, 3.0, front + 0.7], [p.w + 0.2, 0.18, 2.0]));
+  // The plinth the verandah stands on.
+  parts.push(box("granite", [0, 0, front + 0.6], [p.w, 0.25, 2.0]));
+  return parts;
+}
+
 function persian(p: Plot): Part[] {
   const parts = flatRoofed(p, "sand", "timber", 3.6, { parapet: true, court: true });
   // A timber porch (talar) on the front.
@@ -483,6 +502,7 @@ const BUILD: Record<FabricStyle, (p: Plot) => Part[]> = {
   chimu: (p) => flatRoofed(p, "sand", "conglomerate", 3.6, { parapet: true, court: true }),
   chinese,
   japanese,
+  vijayanagara,
 };
 
 /** The houses of a city, each built and then turned and moved onto its plot. */

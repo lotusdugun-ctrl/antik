@@ -1721,21 +1721,11 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.0,
   },
   "emerita-augusta-kenti": {
-    add: [
-      PEOPLE(1, ["chatter", "laugh"]),
-      STEPS(["steps-stone"], 0.8),
-      SWIFTS(0.8),
-      CRICKETS(0.8),
-    ],
+    add: [PEOPLE(1, ["chatter", "laugh"]), STEPS(["steps-stone"], 0.8), SWIFTS(0.8), CRICKETS(0.8)],
     density: 1.1,
   },
   "italica-kenti": {
-    add: [
-      PEOPLE(1, ["shout", "chatter"]),
-      STEPS(["steps-stone"], 0.8),
-      CRICKETS(0.9),
-      DONKEY(0.7),
-    ],
+    add: [PEOPLE(1, ["shout", "chatter"]), STEPS(["steps-stone"], 0.8), CRICKETS(0.9), DONKEY(0.7)],
     density: 1.1,
   },
   "delfi-kenti": {
@@ -1757,54 +1747,27 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.1,
   },
   "iskenderiye-kenti": {
-    add: [
-      ...HARBOUR(1.0),
-      PEOPLE(1.2, ["chatter", "shout", "laugh"]),
-      GUSTS(0.8),
-    ],
+    add: [...HARBOUR(1.0), PEOPLE(1.2, ["chatter", "shout", "laugh"]), GUSTS(0.8)],
     density: 1.3,
   },
   "karnak-kenti": {
-    add: [
-      PEOPLE(0.9, ["chant", "chatter"]),
-      GUSTS(0.7),
-      RAPTORS(0.8, ["hoopoe", "partridge"]),
-    ],
+    add: [PEOPLE(0.9, ["chant", "chatter"]), GUSTS(0.7), RAPTORS(0.8, ["hoopoe", "partridge"])],
     density: 1.0,
   },
   "petra-kenti": {
-    add: [
-      GUSTS(1.1),
-      DONKEY(0.9),
-      STEPS(["steps-gravel"], 0.8),
-      GOATS(0.7),
-    ],
+    add: [GUSTS(1.1), DONKEY(0.9), STEPS(["steps-gravel"], 0.8), GOATS(0.7)],
     density: 1.0,
   },
   "ceras-kenti": {
-    add: [
-      PEOPLE(1, ["chatter", "laugh"]),
-      STEPS(["steps-stone"], 0.8),
-      CRICKETS(0.8),
-      DONKEY(0.7),
-    ],
+    add: [PEOPLE(1, ["chatter", "laugh"]), STEPS(["steps-stone"], 0.8), CRICKETS(0.8), DONKEY(0.7)],
     density: 1.1,
   },
   "baalbek-kenti": {
-    add: [
-      GUSTS(1.0),
-      PEOPLE(1, ["chant", "chatter"]),
-      WORK(["hammer", "chisel"], 0.7),
-      GOATS(0.7),
-    ],
+    add: [GUSTS(1.0), PEOPLE(1, ["chant", "chatter"]), WORK(["hammer", "chisel"], 0.7), GOATS(0.7)],
     density: 1.0,
   },
   "biblos-kenti": {
-    add: [
-      ...HARBOUR(1.0),
-      PEOPLE(1, ["chatter", "shout"]),
-      STEPS(["steps-stone"], 0.8),
-    ],
+    add: [...HARBOUR(1.0), PEOPLE(1, ["chatter", "shout"]), STEPS(["steps-stone"], 0.8)],
     density: 1.1,
   },
   "herculaneum-kenti": {
@@ -1852,48 +1815,23 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.2,
   },
   "el-cem-kenti": {
-    add: [
-      GUSTS(1.1),
-      PEOPLE(1.2, ["shout", "laugh"]),
-      STEPS(["steps-stone"], 1.0),
-      CRICKETS(0.8),
-    ],
+    add: [GUSTS(1.1), PEOPLE(1.2, ["shout", "laugh"]), STEPS(["steps-stone"], 1.0), CRICKETS(0.8)],
     density: 1.1,
   },
   "timgad-kenti": {
-    add: [
-      GUSTS(1.0),
-      PEOPLE(1.0, ["chatter"]),
-      STEPS(["steps-stone"], 0.9),
-      WORK(["chisel"], 0.6),
-    ],
+    add: [GUSTS(1.0), PEOPLE(1.0, ["chatter"]), STEPS(["steps-stone"], 0.9), WORK(["chisel"], 0.6)],
     density: 1.0,
   },
   "djemila-kenti": {
-    add: [
-      GUSTS(1.2),
-      GOATS(0.9),
-      RAPTORS(0.8, ["partridge"]),
-      STEPS(["steps-gravel"], 0.7),
-    ],
+    add: [GUSTS(1.2), GOATS(0.9), RAPTORS(0.8, ["partridge"]), STEPS(["steps-gravel"], 0.7)],
     density: 0.9,
   },
   "volubilis-kenti": {
-    add: [
-      GUSTS(0.9),
-      SWIFTS(1.0),
-      PEOPLE(0.9, ["chatter"]),
-      STEPS(["steps-stone"], 0.8),
-    ],
+    add: [GUSTS(0.9), SWIFTS(1.0), PEOPLE(0.9, ["chatter"]), STEPS(["steps-stone"], 0.8)],
     density: 1.0,
   },
   "liksus-kenti": {
-    add: [
-      ...HARBOUR(1.0),
-      GUSTS(1.1),
-      SONGBIRDS(0.9, ["gull"]),
-      WORK(["hammer"], 0.5),
-    ],
+    add: [...HARBOUR(1.0), GUSTS(1.1), SONGBIRDS(0.9, ["gull"]), WORK(["hammer"], 0.5)],
     density: 1.0,
   },
   "leptis-magna-kenti": {
@@ -1925,12 +1863,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.1,
   },
   "bosra-kenti": {
-    add: [
-      GUSTS(1.0),
-      PEOPLE(1.1, ["chatter"]),
-      STEPS(["steps-stone"], 1.0),
-      WORK(["chisel"], 0.6),
-    ],
+    add: [GUSTS(1.0), PEOPLE(1.1, ["chatter"]), STEPS(["steps-stone"], 1.0), WORK(["chisel"], 0.6)],
     density: 1.0,
   },
   "babil-kenti": {
@@ -1944,38 +1877,19 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.2,
   },
   "ur-kenti": {
-    add: [
-      GUSTS(1.2),
-      PEOPLE(0.8, ["chatter"]),
-      STEPS(["steps-gravel"], 0.8),
-      CRICKETS(0.7),
-    ],
+    add: [GUSTS(1.2), PEOPLE(0.8, ["chatter"]), STEPS(["steps-gravel"], 0.8), CRICKETS(0.7)],
     density: 0.9,
   },
   "persepolis-kenti": {
-    add: [
-      GUSTS(1.3),
-      PEOPLE(1.0, ["chatter"]),
-      STEPS(["steps-stone"], 1.0),
-      WORK(["chisel"], 0.8),
-    ],
+    add: [GUSTS(1.3), PEOPLE(1.0, ["chatter"]), STEPS(["steps-stone"], 1.0), WORK(["chisel"], 0.8)],
     density: 1.05,
   },
   "pasargad-kenti": {
-    add: [
-      GUSTS(1.1),
-      SONGBIRDS(0.9, ["lark", "dove"]),
-      STEPS(["steps-stone"], 0.7),
-    ],
+    add: [GUSTS(1.1), SONGBIRDS(0.9, ["lark", "dove"]), STEPS(["steps-stone"], 0.7)],
     density: 0.85,
   },
   "mohencodaro-kenti": {
-    add: [
-      GUSTS(1.0),
-      PEOPLE(1.1, ["chatter"]),
-      STEPS(["steps-gravel"], 0.9),
-      WORK(["grind"], 0.6),
-    ],
+    add: [GUSTS(1.0), PEOPLE(1.1, ["chatter"]), STEPS(["steps-gravel"], 0.9), WORK(["grind"], 0.6)],
     density: 1.0,
   },
   "hampi-kenti": {
@@ -2028,17 +1942,13 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
       GUSTS(1.4),
       RAPTORS(1.1, ["partridge"]),
       STEPS(["steps-stone"], 0.8),
-      GOATS(0.7),
+      // No goats in the Andes before the Spanish: people at work on the terraces.
+      PEOPLE(0.7, ["chatter"]),
     ],
     density: 0.9,
   },
   "can-can-kenti": {
-    add: [
-      ...HARBOUR(1.1),
-      GUSTS(1.2),
-      SONGBIRDS(0.9, ["gull"]),
-      STEPS(["steps-gravel"], 0.8),
-    ],
+    add: [...HARBOUR(1.1), GUSTS(1.2), SONGBIRDS(0.9, ["gull"]), STEPS(["steps-gravel"], 0.8)],
     density: 1.0,
   },
   "ostia-antica-kenti": {
@@ -2060,12 +1970,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 0.92,
   },
   "akropolis-atena-kenti": {
-    add: [
-      GUSTS(1.2),
-      SWIFTS(1.1),
-      PEOPLE(1.2, ["chatter", "laugh"]),
-      STEPS(["steps-stone"], 0.95),
-    ],
+    add: [GUSTS(1.2), SWIFTS(1.1), PEOPLE(1.2, ["chatter", "laugh"]), STEPS(["steps-stone"], 0.95)],
     density: 1.18,
   },
   "epidavros-kenti": {
@@ -2105,12 +2010,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 0.94,
   },
   "amman-kale-kenti": {
-    add: [
-      GUSTS(1.3),
-      SWIFTS(0.9),
-      PEOPLE(1.0, ["chatter", "shout"]),
-      STEPS(["steps-stone"], 0.85),
-    ],
+    add: [GUSTS(1.3), SWIFTS(0.9), PEOPLE(1.0, ["chatter", "shout"]), STEPS(["steps-stone"], 0.85)],
     density: 1.02,
   },
   "anjar-kenti": {
@@ -2141,21 +2041,11 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.08,
   },
   "segovia-kenti": {
-    add: [
-      GUSTS(1.25),
-      SWIFTS(1.2),
-      STEPS(["steps-stone"], 0.9),
-      PEOPLE(0.95, ["chatter"]),
-    ],
+    add: [GUSTS(1.25), SWIFTS(1.2), STEPS(["steps-stone"], 0.9), PEOPLE(0.95, ["chatter"])],
     density: 1.04,
   },
   "pont-du-gard-kenti": {
-    add: [
-      FROGS(0.85),
-      SONGBIRDS(1.1, ["blackbird"]),
-      STEPS(["steps-gravel"], 0.75),
-      GUSTS(0.8),
-    ],
+    add: [FROGS(0.85), SONGBIRDS(1.1, ["blackbird"]), STEPS(["steps-gravel"], 0.75), GUSTS(0.8)],
     density: 0.86,
   },
   "vaison-la-romaine-kenti": {
@@ -2195,12 +2085,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 0.97,
   },
   "evora-roma-kenti": {
-    add: [
-      GUSTS(1.05),
-      SWIFTS(0.95),
-      STEPS(["steps-stone"], 0.85),
-      GOATS(0.65),
-    ],
+    add: [GUSTS(1.05), SWIFTS(0.95), STEPS(["steps-stone"], 0.85), GOATS(0.65)],
     density: 0.89,
   },
   "salona-kenti": {
@@ -2267,21 +2152,11 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 0.95,
   },
   "heraclea-lyncestis-kenti": {
-    add: [
-      GUSTS(1.0),
-      SONGBIRDS(1.0, ["blackbird"]),
-      STEPS(["steps-stone"], 0.8),
-      CRICKETS(0.8),
-    ],
+    add: [GUSTS(1.0), SONGBIRDS(1.0, ["blackbird"]), STEPS(["steps-stone"], 0.8), CRICKETS(0.8)],
     density: 0.93,
   },
   "kourion-kenti": {
-    add: [
-      ...HARBOUR(0.65),
-      GUSTS(1.25),
-      SONGBIRDS(0.9, ["gull"]),
-      STEPS(["steps-stone"], 0.8),
-    ],
+    add: [...HARBOUR(0.65), GUSTS(1.25), SONGBIRDS(0.9, ["gull"]), STEPS(["steps-stone"], 0.8)],
     density: 1.01,
   },
   "salamis-kibris-kenti": {
@@ -2303,12 +2178,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.21,
   },
   "beit-shean-kenti": {
-    add: [
-      CRICKETS(0.95),
-      DONKEY(0.7),
-      PEOPLE(1.0, ["chatter"]),
-      STEPS(["steps-stone"], 0.85),
-    ],
+    add: [CRICKETS(0.95), DONKEY(0.7), PEOPLE(1.0, ["chatter"]), STEPS(["steps-stone"], 0.85)],
     density: 0.99,
   },
   "xian-changan-kenti": {
@@ -2330,12 +2200,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.17,
   },
   "nara-heijo-kenti": {
-    add: [
-      SONGBIRDS(1.15, ["dove"]),
-      STEPS(["steps-gravel"], 0.85),
-      CRICKETS(0.9),
-      GUSTS(0.85),
-    ],
+    add: [SONGBIRDS(1.15, ["dove"]), STEPS(["steps-gravel"], 0.85), CRICKETS(0.9), GUSTS(0.85)],
     density: 0.84,
   },
   "kyoto-heian-kenti": {
@@ -2345,7 +2210,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
       PEOPLE(0.9, ["chatter"]),
       CRICKETS(0.85),
     ],
-    density: 0.90,
+    density: 0.9,
   },
   "tikal-kenti": {
     add: [
@@ -2357,12 +2222,7 @@ const FLAVOUR: Record<string, { add: Happening[]; beds?: Bed[]; density?: number
     density: 1.025,
   },
   "antigua-quirigua-kenti": {
-    add: [
-      FROGS(0.95),
-      SONGBIRDS(1.25, ["beeeater"]),
-      GUSTS(1.0),
-      STEPS(["steps-gravel"], 0.75),
-    ],
+    add: [FROGS(0.95), SONGBIRDS(1.25, ["beeeater"]), GUSTS(1.0), STEPS(["steps-gravel"], 0.75)],
     density: 0.83,
   },
   "copan-kenti": {

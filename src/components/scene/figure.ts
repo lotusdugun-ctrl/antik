@@ -115,6 +115,15 @@ const BANDED: ReadonlySet<Era> = new Set([
   "hittite",
   "bronze-age",
   "medieval",
+  "egyptian",
+  "mesopotamian",
+  "achaemenid",
+  "indus",
+  "vijayanagara",
+  "khmer",
+  "andean",
+  "chinese",
+  "japanese",
 ]);
 
 export function figureKit(THREE: ThreeModule, kit: Kit, era: Era) {

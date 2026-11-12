@@ -1,5 +1,8 @@
 import { incaCitadelParts, incaCitadelWalkStart } from "@/lib/models/inka";
 import { mayaBallcourtParts, mayaBallcourtWalkStart } from "@/lib/models/maya";
+import { pagodaParts, pagodaWalkStart } from "@/lib/models/pagoda";
+import { nabataeanFacadeParts, nabataeanFacadeWalkStart } from "@/lib/models/nabataean";
+import { propylaiaParts, propylaiaWalkStart } from "@/lib/models/propylaia";
 import { distanceTo, waterOf } from "./landscape-plan";
 import type { RockFace } from "./models/rockface";
 import {
@@ -8333,6 +8336,14 @@ export function cityPlots(spec: CitySpec): Plot[] {
     z2,
     half: w / 2 + 3,
   }));
+  if (spec.river)
+    corridors.push({
+      x1: spec.river.at,
+      z1: -spec.radius,
+      x2: spec.river.at,
+      z2: spec.radius,
+      half: spec.river.width / 2 + 6,
+    });
   // Inside the circuit with a lane along the wall; with no walls, a square
   // round the monuments.
   const area = spec.walls
@@ -8360,6 +8371,21 @@ export function cityParts(spec: CitySpec): Part[] {
   const far: Part[] = [];
   for (const place of others) far.push(...placedParts(place));
   if (spec.walls) far.push(...cityWallParts(spec.walls));
+  if (spec.river) {
+    far.push(box("water", [spec.river.at, -0.6, 0], [spec.river.width, 0.6, spec.radius * 2]));
+  }
+  if (spec.walls && spec.moat) {
+    // Four arms of open water round the walls, and a stone way across the front one.
+    const { width: mw, apron, causewayWidth } = spec.moat;
+    const hx = spec.walls.length / 2 + apron;
+    const hz = spec.walls.width / 2 + apron;
+    const outX = 2 * (hx + mw);
+    for (const side of [-1, 1]) {
+      far.push(box("water", [0, -0.6, side * (hz + mw / 2)], [outX, 0.6, mw]));
+      far.push(box("water", [side * (hx + mw / 2), -0.6, 0], [mw, 0.6, 2 * hz]));
+    }
+    far.push(box("stone", [0, 0, -(hz + mw / 2)], [causewayWidth, 0.8, mw + 4]));
+  }
   for (const [x1, z1, x2, z2, width] of spec.streets ?? [])
     far.push(...cityStreetParts(x1, z1, x2, z2, width));
 
@@ -8505,6 +8531,12 @@ function buildParts(spec: ModelSpec): Part[] {
       return incaCitadelParts(spec);
     case "maya-ballcourt":
       return mayaBallcourtParts(spec);
+    case "pagoda":
+      return pagodaParts(spec);
+    case "nabataean-facade":
+      return nabataeanFacadeParts(spec);
+    case "propylaia":
+      return propylaiaParts(spec);
     case "ziggurat":
       return zigguratParts(spec);
     case "egyptian-hypostyle":
@@ -8658,6 +8690,12 @@ export function walkStartFor(spec: ModelSpec): WalkStart {
       return incaCitadelWalkStart(spec);
     case "maya-ballcourt":
       return mayaBallcourtWalkStart(spec);
+    case "pagoda":
+      return pagodaWalkStart(spec);
+    case "nabataean-facade":
+      return nabataeanFacadeWalkStart(spec);
+    case "propylaia":
+      return propylaiaWalkStart(spec);
     case "ziggurat":
       return zigguratWalkStart(spec);
     case "egyptian-hypostyle":

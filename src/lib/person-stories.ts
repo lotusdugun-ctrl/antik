@@ -1,5 +1,17 @@
 import type { Lang, Localized } from "@/lib/i18n";
 import type { Action, Era, Person } from "@/lib/scene-life";
+import {
+  ACHAEMENID,
+  ANDEAN,
+  CHINESE,
+  EGYPTIAN,
+  INDUS,
+  JAPANESE,
+  KHMER,
+  MESOAMERICAN,
+  MESOPOTAMIAN,
+  VIJAYANAGARA,
+} from "@/lib/world-stories";
 
 /**
  * What the people of a model say when they are tapped.
@@ -3721,6 +3733,16 @@ const BY_ERA = {
   ottoman: OTTOMAN,
   armenian: ARMENIAN,
   medieval: ARMENIAN,
+  egyptian: EGYPTIAN,
+  mesopotamian: MESOPOTAMIAN,
+  achaemenid: ACHAEMENID,
+  indus: INDUS,
+  vijayanagara: VIJAYANAGARA,
+  khmer: KHMER,
+  mesoamerican: MESOAMERICAN,
+  andean: ANDEAN,
+  chinese: CHINESE,
+  japanese: JAPANESE,
 } satisfies Record<string, Pool>;
 
 type MissingEras = Exclude<Era, keyof typeof BY_ERA>;

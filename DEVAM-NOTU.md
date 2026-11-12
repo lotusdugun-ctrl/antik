@@ -2,7 +2,52 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## PİŞİRME BİTTİ + MACHU PICCHU VE CHICHEN ITZA YENİDEN (12 Kasım 2026 gece, Claude) — EN GÜNCEL, BURADAN BAŞLA
+## KALAN İŞLER: LAMA, ANGKOR HENDEĞİ, ÖLÇÜ DOĞRULAMA, BABİL FIRAT (12 Kasım 2026, Claude) — EN GÜNCEL, BURADAN BAŞLA
+
+Aşağıdaki "Dünya kentlerinde kültür temizliği" bölümüyle birlikte **tek gönderim: GONDER-52.bat**. Ardından **BABIL-PISIR.bat** (Babil geometrisi değişti), bitince **GONDER-53.bat** (yeni pişmiş Babil + listeye geri ekleme).
+
+1. **Lama:** `Species`'e `llama` (scene/life.ts gövdesi: uzun dik boyun, yün). And kentlerinde paylaşılan sahnelerden gelen eşek/keçi lamaya dönüşür; Machu Picchu meydanında lama. Machu Picchu ses ortamından keçi sesi çıkarıldı. (Görsel olarak henüz bakılmadı — canlıda bir göz atılmalı.)
+2. **Çalgılar:** Pers, İndus, Vijayanagara, Khmer, Amerika, Çin ve Japon sahnelerinde aulos/lir yerine el davulu (`NO_AULOS`). Mısır ve Mezopotamya'da kalır (o kültürlerde de vardı).
+3. **Hampi:** yeni ev stili `vijayanagara` (granit, düz dam, granit direkli verandalı çarşı evleri).
+4. **Angkor Wat:** `CitySpec.moat` (sur dışında hendek + önde taş geçit). Dış sur 1.024 × 802 × 4,5 m, 30 m açık alan, 190 m hendek, merkez kule 65 m (Wikipedia). Uydurma 28/16/48 m ölçüleri kaldırıldı. Kent yarıçapı 760.
+5. **Bayon:** "216 yüz kulesi / 54 kule" hatası düzeltildi (yaklaşık 200 yüz; bir zamanlar 49 kule, bugün 37; merkez kule 43 m).
+6. **Çin/Japon ölçüleri kaynakla düzeltildi:** Chang'an — Hanyuan platformu 15 m (salon artık 15 m'lik platform üstünde); uydurma 67/16/60 m ölçüleri ve "1 milyonluk ilk metropol" iddiası kaldırıldı. Nara — Daigokuden 20 × 44 × 27 m, Suzakumon 10 × 25 × 22 m, Suzaku caddesi 75 m (84 değil); To-in 36 m kaldırıldı. Kyoto — Chōdō-in Daigokuden 52 × 20 m, Shishinden 30 × 25 m; kaynaksız Rajōmon 20 m kaldırıldı.
+7. **Pompeii metinleri:** "Capitolium MS 2. yüzyılda Lucius Iulius Collatinus tarafından" ve "amfitiyatro MS 70" gibi yanlışlar düzeltildi (Capitolium ve basilika MÖ 2. yüzyıl; amfitiyatro MÖ 70 dolayı, 135 × 104 m, ~20.000 kişi). Kaynaksız Capitolium 6 sütun ve basilika 34 m ölçüleri kaldırıldı; Türkçe yazım hataları düzeltildi. Geometri değişmedi, Pompeii için pişirme gerekmez.
+8. **Babil:** İştar Kapısı 15 m (14 değil); Etemenanki 54 m (Fenollós ve ark. tahmini; Esagila tableti 91 m der — belirsizlik notunda). Kenti ikiye bölen Fırat kolu eklendi (`CitySpec.river`, x = −190, 70 m; tahmin). Uydurma 46/22 m ölçüleri kaldırıldı. Asma Bahçeler varlığı kanıtlanmadığı için eklenmedi. **Babil `baked-sites.ts`'ten çıkarıldı**; BABIL-PISIR sonrası PISIR-WEB listeye geri yazar.
+9. Epidavros'un 2 katlı skenesindeki heykeller (Yunan-Roma) `scans.ts` listesine eklendi.
+10. **Doğrulama (bulut):** tsc 0; landscape/scene-life dışı 780/780; scene-life 16/16 (yavaş yürüyüş testi hariç; değişen kentler süzülerek temiz). Angkor ekran görüntüsüyle kontrol edildi.
+
+**Sıradaki işler:**
+- Lamaya canlıda bak (boyun açısı `neckRise: 1.3`).
+- Kalan dünya kentlerinin (Mısır, Pers, Mezopotamya, Maya, Tiwanaku, Chan Chan, Roma kentleri) ölçüleri de büyük olasılıkla doğrulanmamış; tek tek kaynakla kontrol edilmeli.
+- Angkor'un khmer-temple içindeki küçük ön hendeği artık fazlalık; kaldırılabilir.
+- Pompeii forumu (pişirme gerektirir).
+
+---
+
+## DÜNYA KENTLERİNDE KÜLTÜR TEMİZLİĞİ (12 Kasım 2026, Claude) — önceki
+
+Kod yine bulut kopyasında yazılıp test edildi, dosyalar doğrudan `src/` altına yazıldı. Gönderim bir üstteki bölümle birlikte **GONDER-52.bat** ile. Pişmiş modellere dokunulmadı (hiçbiri değişen kentlerden değil), yeniden pişirme gerekmez.
+
+1. **Heykel taramaları:** `scans.ts`'ten Mezopotamya, Pers, Hint, Khmer, Çin, Japon, Mısır ve Amerika kentlerinin (25 kayıt) Yunan-Roma heykel listeleri kaldırıldı; bu sayfalarda tarama galerisi artık çıkmaz. (Taramalar zaten modelde değil, yalnızca galerideydi.)
+2. **Giysi ve konuşmalar (yeni Era'lar):** `scene-life.ts`'e 10 yeni dönem: egyptian, mesopotamian, achaemenid, indus, vijayanagara, khmer, mesoamerican, andean, chinese, japanese. `WORLD_WEAR` tablosu + `worldDress()` her kültürün kesimini/renklerini/başlığını/sakal oranını verir (rahip beyaz cüppe, Mısır rahibi tıraşlı, Pers keçe başlık, Çin/Japon siyah başlık, And dokuma desenli tunik vb.; Yunan zırhı yalnız Çin/Japon askerinde). `ERA` tablosunda 25 dünya kenti eşlendi; daha önce hepsi `roman`dı. Tıklanınca söyledikleri yeni `src/lib/world-stories.ts`'te (tr/en/de/ru; kişi adı, tarih, sayı yok). `figure.ts`: bu dönemlerde Yunan meander yerine düz şerit (Mezoamerika hariç).
+   - Amerika kentlerinde (mesoamerican/andean) at, öküz, keçi, eşek ve araba yok (`nativeOnly`); yalnız köpek kalır. **Lama/alpaka modeli yok — eklenmeli.**
+   - Hâlâ kalan küçük uyumsuzluk: bazı dünya sahnelerinde müzisyen aulos (Yunan çift kavalı) taşıyor, bazı ortak prop'lar (amfora vb.) Akdenizli. `dunya-modelleri-life.ts` gözden geçirilmeli.
+3. **Pagodalar** (yeni tür `pagoda`, `src/lib/models/pagoda.ts`): Chang'an'a Büyük Yaban Kazı Pagodası (tuğla, 7 kat, 64,1 m), Nara'ya Yakushi-ji Doğu Pagodası (ahşap, 3 kat + ara çatılar, 34 m), Kyoto'ya Tō-ji (ahşap, 5 kat, 54,8 m). Ölçüler Wikipedia; taban genişliği ve yerleri tahmin.
+4. **Petra:** Roma cephesi yerine yeni tür `nabataean-facade` (`src/lib/models/nabataean.ts`): kayaya oyulmuş, altta sütunlu revak, üstte tholos ve kırık alınlık. Hazine 39,1 × 25,3 m; yeni Ed-Deir (Manastır) 47 × 48 m, kapı 8 m. Tiyatroya ait kaynaksız 45 m / 4.000 kişi kaldırıldı ("yaklaşık 8.500 kişi aldığı söylenir", Petra maddesi bağlam kaynağı).
+5. **Akropolis:** Roma takı yerine yeni tür `propylaia` (`src/lib/models/propylaia.ts`): iki yanı 6'şar Dor sütunlu salon, 5 kapılı iç duvar, İon sütunlu geçit, 3'er sütunlu iki kanat (sayılar kaynaklı). Akropolis'ten ev dokusu kaldırıldı, 800 m'lik kent suru kayalığı çevreleyen 300 × 160 m'lik sura indirildi (tahmin).
+6. **Delfi ve Epidavros tiyatroları** Yunan karakterinde: yamaca oyulu, dış duvar/galeri yok, alçak sahne (Epidavros sahnesi 12 → 8 m, 2 katlı skene). Not: `sweep` (at nalı) denenince yazıt harfleri ve yüz çakışması çıktı; kullanılmadı. Delfi orkestrası 18 → 17,5 m (kaynaksızdı).
+7. **Doğrulama (bulut):** tsc 0 hata; landscape ve scene-life dışı 780/780; scene-life 16/16 (yavaş yürüyüş testi hariç; değişen kentler süzülerek ayrıca temiz). Pagoda, Petra, Propylaia ekran görüntüsüyle kontrol edildi.
+
+**Sıradaki işler:**
+- Lama modeli (And kentleri) ve dünya sahnelerindeki Yunan çalgı/prop'ları.
+- Hampi ev dokusu hâlâ `levant`; Güney Hint stili yok.
+- Kalan imza yapılar: Angkor hendek suyu, Babil Fırat ve Asma Bahçeler (yeniden pişirme gerekir), Pompeii forumu (pişirme gerekir).
+- Çin/Japon kayıtlarındaki eski ölçüler (Hanyuan 67 m, Danfeng 16 m, Daigokuden 44 m, Rajomon 20 m vb.) kaynakla doğrulanmadı; birçoğu Machu Picchu'daki gibi uydurma olabilir. Tüm dünya kentlerinin ölçüleri tek tek kontrol edilmeli.
+
+---
+
+## PİŞİRME BİTTİ + MACHU PICCHU VE CHICHEN ITZA YENİDEN (12 Kasım 2026 gece, Claude) — önceki
 
 **Not:** Bu oturumda kullanıcının bilgisayarında komut çalıştırılamadı (yalnızca dosya okuma/yazma). Kod bulutta `github.com/lotusdugun-ctrl/antik` (herkese açık) klonlanarak yazıldı ve test edildi; değişen dosyalar doğrudan `src/` altına yazıldı. **GONDER-51.bat** hepsini gönderir.
 

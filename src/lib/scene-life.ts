@@ -1,5 +1,8 @@
 import { incaCitadelLife } from "@/lib/models/inka";
 import { mayaBallcourtLife } from "@/lib/models/maya";
+import { pagodaLife } from "@/lib/models/pagoda";
+import { nabataeanFacadeLife } from "@/lib/models/nabataean";
+import { propylaiaLife } from "@/lib/models/propylaia";
 import { TEXTS, type EpigraphicText } from "@/lib/epigraphy";
 import { inscription } from "@/lib/reconstruction-detail";
 import {
@@ -104,7 +107,32 @@ export type Era =
   /** An Orthodox monastery of the Pontic mountains: monks, lay brothers, pilgrims. */
   | "byzantine"
   /** Ottoman Istanbul and Edirne in the 16th century: kaftans and turbans. */
-  | "ottoman";
+  | "ottoman"
+  /*
+   * The world beyond Greece and Rome, one era to each culture the cities
+   * belong to, so nobody at Karnak or Machu Picchu walks about in a Greek
+   * mantle saying Roman things.
+   */
+  /** New Kingdom Egypt: white linen, kilts and sheath dresses, shaven priests. */
+  | "egyptian"
+  /** Babylon and Ur: long fringed wool robes, the men bearded. */
+  | "mesopotamian"
+  /** Achaemenid Persia: the sleeved coat and trousers, the felt cap. */
+  | "achaemenid"
+  /** The Indus cities of the Bronze Age. */
+  | "indus"
+  /** Vijayanagara, the city of Hampi. */
+  | "vijayanagara"
+  /** Angkor under the Khmer kings. */
+  | "khmer"
+  /** Teotihuacan and the Maya cities: cotton mantles, loincloths, huipils. */
+  | "mesoamerican"
+  /** The Andes: Tiwanaku, Chimú Chan Chan and the Inca: the woven tunic. */
+  | "andean"
+  /** Tang China: long robes, the black cloth cap. */
+  | "chinese"
+  /** Nara and Heian Japan. */
+  | "japanese";
 
 /**
  * The garment, as the renderer builds it.
@@ -448,7 +476,9 @@ export type Species =
   | "donkey"
   | "gazelle"
   /** The caravans of the Silk Road came into Ani on the backs of camels. */
-  | "camel";
+  | "camel"
+  /** The pack animal and wool of the Andes: long upright neck, banana ears. */
+  | "llama";
 
 /**
  * An animal. Horses for the races, the white ox garlanded for the altar,
@@ -623,6 +653,16 @@ const MEN_HAIR: Record<Era, HairStyle[]> = {
   medieval: ["short", "long", "curls"],
   byzantine: ["short", "curls", "long"],
   ottoman: ["short", "short", "long"],
+  egyptian: ["short", "short", "long"],
+  mesopotamian: ["long", "curls", "long"],
+  achaemenid: ["curls", "long", "curls"],
+  indus: ["tied", "long", "short"],
+  vijayanagara: ["tied", "long", "short"],
+  khmer: ["tied", "short", "long"],
+  mesoamerican: ["long", "tied", "short"],
+  andean: ["short", "long", "short"],
+  chinese: ["tied", "tied", "short"],
+  japanese: ["tied", "tied", "short"],
 };
 
 /** Beards by period: the Antonine full beard, the philosopher's long one, the pointed Persian. */
@@ -638,7 +678,225 @@ const BEARDS: Record<Era, BeardStyle[]> = {
   medieval: ["pointed", "short", "long"],
   byzantine: ["long", "long", "short"],
   ottoman: ["long", "short", "pointed"],
+  egyptian: ["stubble", "short"],
+  mesopotamian: ["long", "long", "short"],
+  achaemenid: ["long", "pointed", "short"],
+  indus: ["short", "long", "stubble"],
+  vijayanagara: ["short", "stubble"],
+  khmer: ["stubble", "short"],
+  mesoamerican: ["stubble"],
+  andean: ["stubble"],
+  chinese: ["long", "short", "pointed"],
+  japanese: ["short", "pointed", "stubble"],
 };
+
+/**
+ * How each culture beyond the Greek and Roman dressed, broadly: the cloth,
+ * the cut, what the head carried, how often a man wore a beard. Priests go
+ * in a white gown (which is how the story cards know them), soldiers in the
+ * people's own cut with their own headgear, not a hoplite's bronze.
+ */
+type WorldWear = {
+  men: Garment[];
+  women: Garment[];
+  cloth: number[];
+  /** Hats or bands men wear, and how often. */
+  menHead?: [Headwear, number];
+  womenHead?: [Headwear, number];
+  womenHair: HairStyle[];
+  beard: number;
+  /** A woven pattern on the main cloth, and how often. */
+  pattern?: [Pattern, number];
+  priestHead?: Headwear;
+  priestBald?: boolean;
+  soldier: { garment: Garment; headwear?: Headwear; main: number[] };
+  jewels: number;
+};
+
+const WORLD_WEAR: Partial<Record<Era, WorldWear>> = {
+  egyptian: {
+    men: ["tunic", "exomis", "tunic"],
+    women: ["robe"],
+    cloth: [DYE.linen, DYE.linen, 0xeee4cc, DYE.oat],
+    womenHair: ["fall", "fall", "bun"],
+    womenHead: ["fillet", 0.3],
+    beard: 0.05,
+    priestBald: true,
+    soldier: { garment: "tunic", main: [DYE.linen, DYE.oat] },
+    jewels: 0.8,
+  },
+  mesopotamian: {
+    men: ["robe", "robe", "tunic"],
+    women: ["robe"],
+    cloth: [DYE.wool, DYE.oat, DYE.madder, DYE.woad, DYE.ochre, DYE.brown],
+    menHead: ["fillet", 0.35],
+    womenHair: ["bun", "fall", "crown"],
+    womenHead: ["veil", 0.25],
+    beard: 0.85,
+    pattern: ["stripes", 0.35],
+    priestHead: "fillet",
+    soldier: { garment: "tunic", headwear: "conical", main: [DYE.wool, DYE.oat] },
+    jewels: 0.6,
+  },
+  achaemenid: {
+    men: ["persian", "persian", "robe"],
+    women: ["robe"],
+    cloth: [DYE.madder, DYE.woad, DYE.weld, DYE.purple, DYE.wool, DYE.green],
+    menHead: ["phrygian", 0.55],
+    womenHair: ["fall", "bun"],
+    womenHead: ["veil", 0.35],
+    beard: 0.9,
+    pattern: ["dots", 0.25],
+    priestHead: "phrygian",
+    soldier: { garment: "persian", headwear: "fillet", main: [DYE.madder, DYE.weld, DYE.woad] },
+    jewels: 0.6,
+  },
+  indus: {
+    men: ["robe", "tunic", "exomis"],
+    women: ["robe", "tunic"],
+    cloth: [DYE.linen, DYE.oat, DYE.madder, DYE.wool, DYE.ochre],
+    menHead: ["fillet", 0.3],
+    womenHair: ["bun", "fall", "crown"],
+    beard: 0.6,
+    pattern: ["dots", 0.2],
+    priestHead: "fillet",
+    soldier: { garment: "tunic", main: [DYE.oat, DYE.wool] },
+    jewels: 0.9,
+  },
+  vijayanagara: {
+    men: ["tunic", "exomis", "tunic"],
+    women: ["robe"],
+    cloth: [DYE.white, DYE.linen, DYE.madder, DYE.weld, DYE.green, DYE.woad, DYE.purple],
+    menHead: ["turban", 0.6],
+    womenHair: ["bun", "fall"],
+    beard: 0.35,
+    pattern: ["stripes", 0.25],
+    soldier: { garment: "tunic", headwear: "turban", main: [DYE.madder, DYE.wool] },
+    jewels: 0.9,
+  },
+  khmer: {
+    men: ["exomis", "tunic"],
+    women: ["robe"],
+    cloth: [DYE.madder, DYE.weld, DYE.green, DYE.linen, DYE.ochre, DYE.woad],
+    womenHair: ["bun", "crown"],
+    beard: 0.1,
+    pattern: ["checks", 0.2],
+    soldier: { garment: "exomis", main: [DYE.madder, DYE.ochre] },
+    jewels: 0.8,
+  },
+  mesoamerican: {
+    men: ["exomis", "tunic", "exomis"],
+    women: ["robe"],
+    cloth: [DYE.linen, DYE.white, DYE.madder, DYE.woad, DYE.weld, DYE.green],
+    menHead: ["fillet", 0.4],
+    womenHair: ["fall", "bun", "crown"],
+    beard: 0.03,
+    pattern: ["stripes", 0.3],
+    priestHead: "fillet",
+    soldier: { garment: "tunic", headwear: "fillet", main: [DYE.white, DYE.linen] },
+    jewels: 0.8,
+  },
+  andean: {
+    men: ["tunic"],
+    women: ["robe"],
+    cloth: [DYE.madder, DYE.weld, DYE.woad, DYE.brown, DYE.black, DYE.oat],
+    menHead: ["fillet", 0.45],
+    womenHead: ["kerchief", 0.3],
+    womenHair: ["fall", "fall", "bun"],
+    beard: 0.03,
+    pattern: ["checks", 0.45],
+    priestHead: "fillet",
+    soldier: { garment: "tunic", headwear: "conical", main: [DYE.madder, DYE.black] },
+    jewels: 0.5,
+  },
+  chinese: {
+    men: ["robe", "robe", "tunic"],
+    women: ["robe"],
+    cloth: [DYE.woad, DYE.madder, DYE.green, DYE.weld, DYE.purple, DYE.grey, DYE.wool],
+    menHead: ["skullcap", 0.8],
+    womenHair: ["bun", "crown", "bun"],
+    beard: 0.55,
+    priestHead: "hood",
+    soldier: { garment: "armour", headwear: "helmet", main: [0x6b5a44, 0x8a6a48] },
+    jewels: 0.6,
+  },
+  japanese: {
+    men: ["robe", "robe", "tunic"],
+    women: ["robe"],
+    cloth: [DYE.woad, DYE.madder, DYE.green, DYE.purple, DYE.grey, DYE.weld, DYE.wool],
+    menHead: ["skullcap", 0.75],
+    womenHair: ["fall", "fall", "bun"],
+    beard: 0.3,
+    priestHead: "hood",
+    soldier: { garment: "armour", headwear: "helmet", main: [0x5e4430, 0x6b4a30] },
+    jewels: 0.3,
+  },
+};
+
+function worldDress(
+  rand: Rand,
+  wear: WorldWear,
+  role: Role,
+  isFemale: boolean,
+  base: { skin: number; hair: number; female: boolean; beard: boolean },
+): Look {
+  const roll = (n: number) => rand() < n;
+  if (role === "priest" || role === "priestess") {
+    const female = role === "priestess";
+    return {
+      ...base,
+      female,
+      garment: "robe",
+      main: DYE.white,
+      trim: pick(rand, wear.cloth),
+      beard: !female && !wear.priestBald && roll(wear.beard),
+      ...(wear.priestHead && !female ? { headwear: wear.priestHead } : {}),
+      ...(wear.priestBald && !female ? { bald: true } : {}),
+      ...(female ? { hairStyle: pick(rand, wear.womenHair), jewels: true } : {}),
+    };
+  }
+  if (role === "soldier") {
+    return {
+      ...base,
+      female: false,
+      garment: wear.soldier.garment,
+      main: pick(rand, wear.soldier.main),
+      trim: pick(rand, wear.cloth),
+      beard: roll(wear.beard),
+      ...(wear.soldier.headwear ? { headwear: wear.soldier.headwear } : {}),
+    };
+  }
+  const female = role === "worker" || role === "athlete" ? false : isFemale;
+  // Never pure white for lay people: a white gown is a priest's.
+  const cloth = wear.cloth.filter((c) => c !== DYE.white);
+  const main = role === "worker" ? pick(rand, WORK_CLOTH) : pick(rand, cloth);
+  const trim = pick(rand, cloth);
+  const patterned = wear.pattern && role !== "worker" && roll(wear.pattern[1]);
+  if (female) {
+    const head = wear.womenHead && roll(wear.womenHead[1]) ? wear.womenHead[0] : undefined;
+    return {
+      ...base,
+      female: true,
+      garment: pick(rand, wear.women),
+      main,
+      trim,
+      ...(head ? { headwear: head } : { hairStyle: pick(rand, wear.womenHair) }),
+      ...(patterned ? { pattern: wear.pattern![0] } : {}),
+      jewels: roll(wear.jewels),
+    };
+  }
+  const head = wear.menHead && roll(wear.menHead[1]) ? wear.menHead[0] : undefined;
+  return {
+    ...base,
+    female: false,
+    garment: role === "child" ? "tunic" : pick(rand, wear.men),
+    main,
+    trim,
+    beard: role !== "child" && roll(wear.beard),
+    ...(head && role !== "child" ? { headwear: head } : {}),
+    ...(patterned ? { pattern: wear.pattern![0] } : {}),
+  };
+}
 
 const LEATHERS = [0x6b4a30, 0x7a5a3c, 0x5e4430, 0x8a6a48];
 
@@ -791,6 +1049,9 @@ function baseDress(rand: Rand, era: Era, role: Role, female?: boolean): Look {
   const skin = pick(rand, SKIN);
   const hair = rand() < 0.12 && role !== "child" ? HAIR[5]! : pick(rand, HAIR.slice(0, 5));
   const base = { skin, hair, female: isFemale, beard: false } as const;
+
+  const world = WORLD_WEAR[era];
+  if (world) return worldDress(rand, world, role, isFemale, base);
 
   if (era === "neolithic") {
     return {
@@ -1947,6 +2208,7 @@ const COATS: Record<Species, number[]> = {
   donkey: [0x8a8070, 0x6e6458, 0x9a8e7c],
   gazelle: [0xc49a62, 0xb88a52],
   camel: [0xb08a5a, 0x9a7a52, 0xc4a070],
+  llama: [0xeae2d2, 0x8a5a3a, 0x5a3e2a, 0xc8a882, 0x3a2e24],
 };
 
 /** An animal of the scene, its coat picked from what that kind comes in. */
@@ -4364,6 +4626,32 @@ const ERA: Record<string, Era> = {
   "divrigi-ulu-camii": "ottoman",
   "arslantepe-saray": "bronze-age",
   "laodikeia-bati-tiyatrosu": "roman",
+  // The world cities beyond Greece and Rome.
+  "karnak-kenti": "egyptian",
+  "luksor-kenti-kenti": "egyptian",
+  "ebu-simbel-kenti": "egyptian",
+  "babil-kenti": "mesopotamian",
+  "ur-kenti": "mesopotamian",
+  "persepolis-kenti": "achaemenid",
+  "pasargad-kenti": "achaemenid",
+  "mohencodaro-kenti": "indus",
+  "hampi-kenti": "vijayanagara",
+  "angkor-vat-kenti": "khmer",
+  "bayon-kenti": "khmer",
+  "teotihuacan-kenti": "mesoamerican",
+  "cisen-itza-kenti": "mesoamerican",
+  "tikal-kenti": "mesoamerican",
+  "antigua-quirigua-kenti": "mesoamerican",
+  "copan-kenti": "mesoamerican",
+  "el-puente-kenti": "mesoamerican",
+  "macu-picu-kenti": "andean",
+  "can-can-kenti": "andean",
+  "tiwanaku-kenti": "andean",
+  "pumapunku-kenti": "andean",
+  "xian-changan-kenti": "chinese",
+  "luoyang-kenti": "chinese",
+  "nara-heijo-kenti": "japanese",
+  "kyoto-heian-kenti": "japanese",
 };
 
 /** The scene for one reconstruction. */
@@ -4372,7 +4660,63 @@ export function lifeFor(item: Reconstruction): SceneLife {
 }
 
 function sceneFor(item: Reconstruction): SceneLife {
-  return lifeOfSpec(item.model, ERA[item.id] ?? "roman", item.id);
+  return nativeOnly(lifeOfSpec(item.model, ERA[item.id] ?? "roman", item.id));
+}
+
+/**
+ * The Americas before 1492 had no horse, ox, goat, sheep or donkey, and no
+ * wheeled vehicle at work: only the dog goes about there, and in the Andes
+ * the llama; no chariot runs. A donkey or goat a shared scene puts in the
+ * Andes becomes a llama.
+ */
+const NATIVE: Partial<Record<Era, ReadonlySet<Species>>> = {
+  mesoamerican: new Set<Species>(["dog"]),
+  andean: new Set<Species>(["dog", "llama"]),
+};
+
+/**
+ * The Greek double pipe is Greek (and Egyptian, and Mesopotamian): elsewhere
+ * a musician plays a hand drum instead.
+ */
+const NO_AULOS: ReadonlySet<Era> = new Set<Era>([
+  "achaemenid",
+  "indus",
+  "vijayanagara",
+  "khmer",
+  "mesoamerican",
+  "andean",
+  "chinese",
+  "japanese",
+]);
+
+function nativeOnly(scene: SceneLife): SceneLife {
+  const life = NO_AULOS.has(scene.era)
+    ? {
+        ...scene,
+        people: scene.people.map((p) =>
+          p.carry === "aulos" || p.carry === "lyre"
+            ? (() => {
+                const { carry: _gone, ...rest } = p;
+                void _gone;
+                return { ...rest, carryLeft: "drum" as const };
+              })()
+            : p,
+        ),
+      }
+    : scene;
+  const native = NATIVE[life.era];
+  if (!native) return life;
+  return {
+    ...life,
+    animals: life.animals
+      .map((a) =>
+        native.has("llama") && (a.species === "donkey" || a.species === "goat")
+          ? { ...a, species: "llama" as const, colour: COATS.llama[a.phase > 0.5 ? 0 : 3]! }
+          : a,
+      )
+      .filter((a) => native.has(a.species)),
+    chariots: [],
+  };
 }
 
 /**
@@ -4455,6 +4799,12 @@ function lifeOfSpec(spec: Reconstruction["model"], era: Era, id: string): SceneL
       return incaCitadelLife(spec, era);
     case "maya-ballcourt":
       return mayaBallcourtLife(spec, era);
+    case "pagoda":
+      return pagodaLife(spec, era);
+    case "nabataean-facade":
+      return nabataeanFacadeLife(spec, era);
+    case "propylaia":
+      return propylaiaLife(spec, era);
     case "ziggurat":
       return zigguratLife(spec, era);
     case "egyptian-hypostyle":

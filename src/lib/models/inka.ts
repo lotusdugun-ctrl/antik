@@ -247,7 +247,7 @@ export function incaCitadelLife(spec: IncaCitadelSpec, era: Era): SceneLife {
   cast.group([-10, top, 40], 2, 0.7);
 
   // Llamas led along the plaza.
-  animal(b, "donkey", [6, top, 30], 0, "walk", {
+  animal(b, "llama", [6, top, 30], 0, "walk", {
     route: [
       [6, top, 30],
       [6, top, -20],
