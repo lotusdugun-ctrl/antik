@@ -2,7 +2,16 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## PİŞMİŞ 17 GLB MODELİNDEN GÖMÜLÜ BULUT PARÇALARI TEMİZLENDİ (12 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+## 17 GLB MODELİNDE IŞIK HARİTASI UV (TEXCOORD_1) DÜZELTİLDİ & SW ÖNBELLEK GÜNCELLENDİ (12 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+
+1. **Kök Neden (Simsiyah Görünüm):** Önceki bulut temizliğinde çalıştırılan `prune()` işlemi, malzeme tarafından doğrudan referans edilmediği için GLB içindeki `TEXCOORD_1` (ikinci UV kanalı — `baked-scene.ts`'te `t.channel = 1` ile ışık haritalarını okuyan kanal) özniteliğini silmişti. Bu da ışık haritası kullanan yapılarda tüm yüzeylerin `(0,0)` siyah kenar pikseline düşmesine yol açıyordu.
+2. **Düzeltme:** `4f25abc~1` (temizleme öncesi ham GLB'ler) üzerinden 17 GLB'nin tamamı `prune()` **olmadan** yalnızca bulut primitifleri ve materyalleri çıkarılıp `gltfpack -kn -km -ke -kv -vp 16 -vtf -vpf -cc` ile yeniden paketlendi; hepsinde `TEXCOORD_1` korunduğu ve bulut kalmadığı doğrulandı.
+3. **Service Worker:** Kullanıcı cihazlarındaki eski önbelleği temizlemek için `public/sw.js` önbellek sürümü `antik-tr-v4`'e yükseltildi.
+4. **Devam Eden Arka Plan İşi:** `scripts\glb\pisir-web.ps1` ile en önemli 10 dünya kenti (`akropolis-atena-kenti`, `petra-kenti`, `karnak-kenti`, `persepolis-kenti`, `angkor-vat-kenti`, `macu-picu-kenti`, `cisen-itza-kenti`, `teotihuacan-kenti`, `ebu-simbel-kenti`, `iskenderiye-kenti`) arka planda pişirilmeye devam ediyor (`hd-out\pisir-onemliler.log`).
+
+---
+
+## PİŞMİŞ 17 GLB MODELİNDEN GÖMÜLÜ BULUT PARÇALARI TEMİZLENDİ (12 Kasım 2026, Antigravity) — önceki
 
 Babil ve diğer bazı pişmiş modellerde bulutun hâlâ görünmesinin nedeni tespit edilip giderildi:
 
