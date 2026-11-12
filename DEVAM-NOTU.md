@@ -2,7 +2,21 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## EN ÖNEMLİ 10 DÜNYA KENTİ PİŞİRİLDİ (13 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+## BABİL VE 4 DÜNYA KENTİ BULUTSUZ YENİDEN PİŞİRİLDİ (13 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+
+1. **Kök Neden:** `babil-kenti` ve önceki bulutlu sahneyle pişirilmiş diğer 4 dünya kentinde, eski dev bulut mesh'lerinin gölgesi doğrudan `*-near-clear.jpg` ışık haritalarına işlendiği için merkez yapılar (Etemenanki Zigguratı, Güney Sarayı vb.) siyah görünüyordu.
+2. **Yeniden Pişirilen 5 Kent (`Biten: 5, Hatali: 0`):**
+   - `babil-kenti`
+   - `pompeii-kenti`
+   - `eboracum-kenti`
+   - `nimes-kenti`
+   - `trier-kenti`
+3. **Service Worker:** Eski önbelleğin temizlenmesi için `public/sw.js` sürümü `antik-tr-v5`'e yükseltildi.
+4. **Gönderim:** `GONDER-57.bat` ile `origin/main`'e gönderildi.
+
+---
+
+## EN ÖNEMLİ 10 DÜNYA KENTİ PİŞİRİLDİ (13 Kasım 2026, Antigravity) — önceki
 
 1. **Pişirilen 10 Dünya Kenti (`Biten: 10, Hatali: 0`):**
    - `akropolis-atena-kenti`

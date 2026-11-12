@@ -9,7 +9,7 @@
  * server-rendered, so there is no single shell document to fall back on —
  * each route has its own HTML and has to be cached under its own URL.
  */
-const CACHE = "antik-tr-v4";
+const CACHE = "antik-tr-v5";
 const APP_SHELL = ["/", "/manifest.webmanifest"];
 
 /** Where a precache job reports back to, so the UI can show real progress. */
