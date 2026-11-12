@@ -2,7 +2,25 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## BABİL VE DÜNYA KENTLERİNDEKİ DEV BULUT ÇÖZÜLDÜ, ANGKOR ÇİFT HENDEK TEMİZLİĞİ (12 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+## PİŞMİŞ 17 GLB MODELİNDEN GÖMÜLÜ BULUT PARÇALARI TEMİZLENDİ (12 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+
+Babil ve diğer bazı pişmiş modellerde bulutun hâlâ görünmesinin nedeni tespit edilip giderildi:
+
+1. **Kök Neden:** Eski dışa aktarım sırasında bulut küreleri sahne merkezinde kaldığı için 17 adet pişmiş `.glb` dosyasının (`babil-kenti`, `pompeii-kenti`, `eboracum-kenti`, `nimes-kenti`, `trier-kenti` ve 12 Türkiye yapısı) içine doğrudan geometri ve materyal (`alphaMode: BLEND`, `baseColorFactor: [1,1,1,0.6]`, dokusuz) olarak gömülmüştü.
+2. **Yapılan İşlem:** `@gltf-transform/core` + `prune()` + `gltfpack -kn -km -ke -kv -vp 16 -vtf -vpf -cc` ile bu 17 `.glb` dosyasının içindeki bulut mesh'leri ve materyalleri doğrudan çıkarıldı:
+   - Dünya kentleri (5): `babil-kenti`, `eboracum-kenti`, `nimes-kenti`, `pompeii-kenti`, `trier-kenti`
+   - Türkiye yapıları (12): `aizanoi-zeus-tapinagi`, `artemis-tapinagi`, `assos-athena-tapinagi`, `catalhoyuk-dogu-hoyugu`, `didyma-apollon-tapinagi`, `efes-hadrianus-tapinagi`, `letoon-leto-tapinagi`, `magnesia-artemis-tapinagi`, `pergamon-trajan-tapinagi`, `priene-athena-tapinagi`, `sardes-artemis-tapinagi`, `side-apollon-tapinagi`
+3. **Doğrulama:** Tüm 50 pişmiş `.glb` dosyası yeniden tarandı; hiçbirinde gömülü bulut materyali/parçası kalmadığı doğrulandı.
+4. **Model Sayısı Özeti:** Toplam **131** 3D model var; **50**'si pişmiş (`public/baked/`), **81**'i pişmemiş.
+5. **Gönderim:** **`GONDER-55.bat`** hazırlandı ve `origin/main`'e gönderildi.
+
+**Sıradaki işler:**
+- Canlı sitede (`https://antik-kentler-tawny.vercel.app/`) Babil ve Pompeii'de gömülü bulutun tamamen gittiğini kontrol et.
+- Pişmemiş 81 modelin pişirilmesi (boyut/depo planıyla birlikte) veya dünya kentleri ölçü doğrulamaları (Mısır, Pers, Mezopotamya, Maya, And).
+
+---
+
+## BABİL VE DÜNYA KENTLERİNDEKİ DEV BULUT ÇÖZÜLDÜ, ANGKOR ÇİFT HENDEK TEMİZLİĞİ (12 Kasım 2026, Antigravity) — önceki
 
 Bu oturumda Babil'deki devasa beyaz bulut kütlesi (ve Türkiye dışı tüm dünya kentlerinde görülen aynı sorun) tamamen giderildi, Angkor Wat'taki mükerrer hendek kaldırıldı ve tüm testler doğrulanarak **GONDER-54.bat** hazırlandı.
 
