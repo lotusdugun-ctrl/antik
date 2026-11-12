@@ -1,0 +1,18 @@
+{
+ "model": "petra-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "petra-kenti-near": "petra-kenti-near-clear.jpg",
+  "petra-kenti-ground": "petra-kenti-ground-clear.jpg",
+  "petra-kenti-terrain": "petra-kenti-terrain-clear.jpg",
+  "petra-kenti-detail": null,
+  "petra-kenti-flora": null
+ },
+ "terrain": "petra-kenti-terrain",
+ "plants": 274,
+ "azim": 179.1623470457217,
+ "files": [
+  "petra-kenti-baked.glb"
+ ]
+}

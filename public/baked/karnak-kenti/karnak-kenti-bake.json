@@ -1,0 +1,18 @@
+{
+ "model": "karnak-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "karnak-kenti-near": "karnak-kenti-near-clear.jpg",
+  "karnak-kenti-ground": "karnak-kenti-ground-clear.jpg",
+  "karnak-kenti-terrain": "karnak-kenti-terrain-clear.jpg",
+  "karnak-kenti-detail": null,
+  "karnak-kenti-flora": null
+ },
+ "terrain": "karnak-kenti-terrain",
+ "plants": 313,
+ "azim": 179.1623470457217,
+ "files": [
+  "karnak-kenti-baked.glb"
+ ]
+}

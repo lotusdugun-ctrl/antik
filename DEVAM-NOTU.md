@@ -1,8 +1,28 @@
-# Antik Türkiye: devam notu (12 Kasım 2026)
+# Antik Türkiye: devam notu (12–13 Kasım 2026)
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## 17 GLB MODELİNDE IŞIK HARİTASI UV (TEXCOORD_1) DÜZELTİLDİ & SW ÖNBELLEK GÜNCELLENDİ (12 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+## EN ÖNEMLİ 10 DÜNYA KENTİ PİŞİRİLDİ (13 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+
+1. **Pişirilen 10 Dünya Kenti (`Biten: 10, Hatali: 0`):**
+   - `akropolis-atena-kenti`
+   - `petra-kenti`
+   - `karnak-kenti`
+   - `persepolis-kenti`
+   - `angkor-vat-kenti`
+   - `macu-picu-kenti`
+   - `cisen-itza-kenti`
+   - `teotihuacan-kenti`
+   - `ebu-simbel-kenti`
+   - `iskenderiye-kenti`
+2. **Güncel Sayım:** Pişmiş model sayısı **50 → 60**'a çıktı (`src/lib/baked-sites.ts`), kalan pişmemiş model sayısı **71**.
+3. **Doğrulama:** `bunx tsc --noEmit` temiz, `scripts/glb/recon-dev-patch.diff` geri alınmış durumda.
+4. **Gönderim:** `GONDER-56.bat` ile `origin/main`'e gönderildi.
+5. **Sıradaki Adım (Devam Ediyor):** Eski bulut gölgesi ışık haritasına işlemiş olan `babil-kenti`, `pompeii-kenti`, `eboracum-kenti`, `nimes-kenti`, `trier-kenti` kentleri bulutsuz güncel kodla yeniden pişiriliyor.
+
+---
+
+## 17 GLB MODELİNDE IŞIK HARİTASI UV (TEXCOORD_1) DÜZELTİLDİ & SW ÖNBELLEK GÜNCELLENDİ (12 Kasım 2026, Antigravity) — önceki
 
 1. **Kök Neden (Simsiyah Görünüm):** Önceki bulut temizliğinde çalıştırılan `prune()` işlemi, malzeme tarafından doğrudan referans edilmediği için GLB içindeki `TEXCOORD_1` (ikinci UV kanalı — `baked-scene.ts`'te `t.channel = 1` ile ışık haritalarını okuyan kanal) özniteliğini silmişti. Bu da ışık haritası kullanan yapılarda tüm yüzeylerin `(0,0)` siyah kenar pikseline düşmesine yol açıyordu.
 2. **Düzeltme:** `4f25abc~1` (temizleme öncesi ham GLB'ler) üzerinden 17 GLB'nin tamamı `prune()` **olmadan** yalnızca bulut primitifleri ve materyalleri çıkarılıp `gltfpack -kn -km -ke -kv -vp 16 -vtf -vpf -cc` ile yeniden paketlendi; hepsinde `TEXCOORD_1` korunduğu ve bulut kalmadığı doğrulandı.

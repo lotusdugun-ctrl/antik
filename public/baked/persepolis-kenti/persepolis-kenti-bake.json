@@ -1,0 +1,18 @@
+{
+ "model": "persepolis-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "persepolis-kenti-near": "persepolis-kenti-near-clear.jpg",
+  "persepolis-kenti-ground": "persepolis-kenti-ground-clear.jpg",
+  "persepolis-kenti-terrain": "persepolis-kenti-terrain-clear.jpg",
+  "persepolis-kenti-detail": null,
+  "persepolis-kenti-flora": null
+ },
+ "terrain": "persepolis-kenti-terrain",
+ "plants": 514,
+ "azim": 179.1623470457217,
+ "files": [
+  "persepolis-kenti-baked.glb"
+ ]
+}

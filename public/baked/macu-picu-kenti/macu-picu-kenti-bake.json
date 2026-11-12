@@ -1,0 +1,18 @@
+{
+ "model": "macu-picu-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "macu-picu-kenti-near": "macu-picu-kenti-near-clear.jpg",
+  "macu-picu-kenti-ground": "macu-picu-kenti-ground-clear.jpg",
+  "macu-picu-kenti-terrain": "macu-picu-kenti-terrain-clear.jpg",
+  "macu-picu-kenti-detail": null,
+  "macu-picu-kenti-flora": null
+ },
+ "terrain": "macu-picu-kenti-terrain",
+ "plants": 474,
+ "azim": 179.1623470457217,
+ "files": [
+  "macu-picu-kenti-baked.glb"
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "model": "akropolis-atena-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "akropolis-atena-kenti-near": "akropolis-atena-kenti-near-clear.jpg",
+  "akropolis-atena-kenti-ground": "akropolis-atena-kenti-ground-clear.jpg",
+  "akropolis-atena-kenti-terrain": "akropolis-atena-kenti-terrain-clear.jpg",
+  "akropolis-atena-kenti-detail": null,
+  "akropolis-atena-kenti-flora": null
+ },
+ "terrain": "akropolis-atena-kenti-terrain",
+ "plants": 441,
+ "azim": 179.1623470457217,
+ "files": [
+  "akropolis-atena-kenti-baked.glb"
+ ]
+}

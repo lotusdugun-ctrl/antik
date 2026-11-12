@@ -1,0 +1,18 @@
+{
+ "model": "ebu-simbel-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "ebu-simbel-kenti-near": "ebu-simbel-kenti-near-clear.jpg",
+  "ebu-simbel-kenti-ground": "ebu-simbel-kenti-ground-clear.jpg",
+  "ebu-simbel-kenti-terrain": "ebu-simbel-kenti-terrain-clear.jpg",
+  "ebu-simbel-kenti-detail": null,
+  "ebu-simbel-kenti-flora": null
+ },
+ "terrain": "ebu-simbel-kenti-terrain",
+ "plants": 96,
+ "azim": 179.16234704572173,
+ "files": [
+  "ebu-simbel-kenti-baked.glb"
+ ]
+}

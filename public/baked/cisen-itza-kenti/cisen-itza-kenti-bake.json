@@ -1,0 +1,18 @@
+{
+ "model": "cisen-itza-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "cisen-itza-kenti-near": "cisen-itza-kenti-near-clear.jpg",
+  "cisen-itza-kenti-ground": "cisen-itza-kenti-ground-clear.jpg",
+  "cisen-itza-kenti-terrain": "cisen-itza-kenti-terrain-clear.jpg",
+  "cisen-itza-kenti-detail": null,
+  "cisen-itza-kenti-flora": null
+ },
+ "terrain": "cisen-itza-kenti-terrain",
+ "plants": 394,
+ "azim": 179.16234704572173,
+ "files": [
+  "cisen-itza-kenti-baked.glb"
+ ]
+}

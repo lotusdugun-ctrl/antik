@@ -1,0 +1,18 @@
+{
+ "model": "iskenderiye-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "iskenderiye-kenti-near": "iskenderiye-kenti-near-clear.jpg",
+  "iskenderiye-kenti-ground": "iskenderiye-kenti-ground-clear.jpg",
+  "iskenderiye-kenti-terrain": "iskenderiye-kenti-terrain-clear.jpg",
+  "iskenderiye-kenti-detail": null,
+  "iskenderiye-kenti-flora": null
+ },
+ "terrain": "iskenderiye-kenti-terrain",
+ "plants": 602,
+ "azim": 179.16234704572176,
+ "files": [
+  "iskenderiye-kenti-baked.glb"
+ ]
+}

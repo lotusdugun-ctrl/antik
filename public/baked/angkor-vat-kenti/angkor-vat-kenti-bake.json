@@ -1,0 +1,18 @@
+{
+ "model": "angkor-vat-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "angkor-vat-kenti-near": "angkor-vat-kenti-near-clear.jpg",
+  "angkor-vat-kenti-ground": "angkor-vat-kenti-ground-clear.jpg",
+  "angkor-vat-kenti-terrain": "angkor-vat-kenti-terrain-clear.jpg",
+  "angkor-vat-kenti-detail": null,
+  "angkor-vat-kenti-flora": null
+ },
+ "terrain": "angkor-vat-kenti-terrain",
+ "plants": 419,
+ "azim": 179.16234704572173,
+ "files": [
+  "angkor-vat-kenti-baked.glb"
+ ]
+}

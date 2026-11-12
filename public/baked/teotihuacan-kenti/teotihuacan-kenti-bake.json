@@ -1,0 +1,18 @@
+{
+ "model": "teotihuacan-kenti",
+ "preset": "clear",
+ "scale": 2,
+ "maps": {
+  "teotihuacan-kenti-near": "teotihuacan-kenti-near-clear.jpg",
+  "teotihuacan-kenti-ground": "teotihuacan-kenti-ground-clear.jpg",
+  "teotihuacan-kenti-terrain": "teotihuacan-kenti-terrain-clear.jpg",
+  "teotihuacan-kenti-detail": null,
+  "teotihuacan-kenti-flora": null
+ },
+ "terrain": "teotihuacan-kenti-terrain",
+ "plants": 499,
+ "azim": 179.16234704572173,
+ "files": [
+  "teotihuacan-kenti-baked.glb"
+ ]
+}
