@@ -17,6 +17,7 @@ import { ORBIT_FOV, walkFov } from "@/lib/walk-view";
 import { waterOf } from "@/lib/landscape-plan";
 import { buildLettering, isPlate } from "./scene/lettering";
 import type { BakedHandle } from "@/lib/baked-scene";
+import { buildCloudDome } from "./scene/cloud-dome";
 import type { LifeHandle } from "./scene/life";
 import { HIDDEN_LAYER, batchMeshes, type MeshBatch } from "./scene/batch";
 import {
@@ -4404,50 +4405,12 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
       scene.add(stars);
 
       /*
-       * Clouds, and the birds that work them: a few flattened puffs drifting
-       * round the model and a small flock circling over the seating. Both fade
-       * out at night — the scene is to be lit, not decorated — and both are
-       * built from the measured building's own scale, so a stadium seats birds
-       * in proportion the way it seats its audience.
+       * Clouds: realistic sky-dome cloud layer drifting behind everything,
+       * fading out at night. Geometry puffs are not spawned so cities and
+       * monuments are never obscured by giant 3D cloud meshes.
        */
-      const cloudMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        roughness: 1,
-        metalness: 0,
-        transparent: true,
-        opacity: 0.6,
-      });
-      const cloudPuff = new THREE.SphereGeometry(1, 12, 9);
-      const clouds: {
-        group: THREE_NS.Group;
-        radius: number;
-        speed: number;
-        phase: number;
-        altitude: number;
-      }[] = [];
-      for (let c = 0; c < 5; c += 1) {
-        const group = new THREE.Group();
-        const puffs = 3 + Math.floor(Math.random() * 4);
-        for (let i = 0; i < puffs; i += 1) {
-          const puff = new THREE.Mesh(cloudPuff, cloudMaterial);
-          const s = span * (0.045 + Math.random() * 0.05);
-          puff.scale.set(s * 1.9, s * 0.5, s);
-          puff.position.set(
-            (Math.random() - 0.5) * s * 2.4,
-            (Math.random() - 0.5) * s * 0.9,
-            (Math.random() - 0.5) * s * 1.6,
-          );
-          group.add(puff);
-        }
-        scene.add(group);
-        clouds.push({
-          group,
-          radius: span * (0.7 + Math.random() * 0.5),
-          speed: 0.01 + Math.random() * 0.015,
-          phase: Math.random() * Math.PI * 2,
-          altitude: centre.y + span * (0.85 + Math.random() * 0.4),
-        });
-      }
+      const skyClouds = buildCloudDome(THREE);
+      scene.add(skyClouds.dome);
 
       // A gull in plan, flattened; the flapping is a roll about the body axis.
       const birdShape = new THREE.Shape();
@@ -4608,8 +4571,8 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
          */
         renderer.toneMappingExposure = liveAtmos.exposure * (biome === "mountain" ? 0.86 : 1);
         starMaterial.opacity = liveAtmos.starOpacity;
-        cloudMaterial.color.set(liveAtmos.cloudColor);
-        cloudMaterial.opacity = liveAtmos.cloudOpacity;
+        skyClouds.setColor(liveAtmos.cloudColor);
+        skyClouds.setOpacity(liveAtmos.cloudOpacity);
         birdMaterial.opacity = liveAtmos.birdOpacity;
         if (bakedHandle) {
           // relative to the light the model was baked in, as the country is to the day's
@@ -4629,7 +4592,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           const k = (ratio.r + ratio.g + ratio.b) / 3;
           const tint = new THREE.Color(k, k, k).lerp(ratio, 0.35);
           tint.setRGB(Math.min(tint.r, 1.15), Math.min(tint.g, 1.15), Math.min(tint.b, 1.15));
-          bakedHandle.setLight(tint, cloudMaterial.color, cloudMaterial.opacity);
+          bakedHandle.setLight(tint, liveAtmos.cloudColor, liveAtmos.cloudOpacity);
         }
       };
 
@@ -4637,7 +4600,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
       if (baked) {
         void import("@/lib/baked-scene")
           .then(({ applyBaked }) =>
-            applyBaked(THREE, scene, baked, lifeHandle?.group ?? null, anisotropy, cloudMaterial),
+            applyBaked(THREE, scene, baked, lifeHandle?.group ?? null, anisotropy),
           )
           .then((handle) => {
             if (disposed) handle.dispose();
@@ -4694,10 +4657,10 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
       // out of a model export the way they would drop out of a section drawing.
       const decorations = [
         skyGroup,
+        skyClouds.dome,
         lifeGroup,
         stars,
         landscape.group,
-        ...clouds.map((c) => c.group),
         ...flock.map((f) => f.group),
         weather.group,
       ];
@@ -6068,15 +6031,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
           applyLive();
         }
         // The flocks' circles come out of time, not out of vectors, so no two
-        // birds ever collide or pause, and the clouds drift with the place.
-        for (const cloud of clouds) {
-          const a = now * cloud.speed + cloud.phase;
-          cloud.group.position.set(
-            centre.x + Math.cos(a) * cloud.radius,
-            cloud.altitude + Math.sin(now * 0.3 + cloud.phase) * span * 0.02,
-            centre.z + Math.sin(a) * cloud.radius,
-          );
-        }
+        // birds ever collide or pause.
         for (const bird of flock) {
           const a = now * bird.speed + bird.phase;
           bird.group.position.set(
@@ -6675,8 +6630,7 @@ normal = normalize(mix(normal, nonPerturbedNormal, smoothstep(25.0, 140.0, lengt
         skyDome.material.dispose();
         starGeometry.dispose();
         starMaterial.dispose();
-        cloudPuff.dispose();
-        cloudMaterial.dispose();
+        skyClouds.dispose();
         birdGeometry.dispose();
         birdMaterial.dispose();
         apron.dispose();

@@ -2,7 +2,34 @@
 
 Yeni sohbette şunu yaz: "C:\Users\caner\antik\DEVAM-NOTU.md dosyasını oku ve devam et."
 
-## KALAN İŞLER: LAMA, ANGKOR HENDEĞİ, ÖLÇÜ DOĞRULAMA, BABİL FIRAT (12 Kasım 2026, Claude) — EN GÜNCEL, BURADAN BAŞLA
+## BABİL VE DÜNYA KENTLERİNDEKİ DEV BULUT ÇÖZÜLDÜ, ANGKOR ÇİFT HENDEK TEMİZLİĞİ (12 Kasım 2026, Antigravity) — EN GÜNCEL, BURADAN BAŞLA
+
+Bu oturumda Babil'deki devasa beyaz bulut kütlesi (ve Türkiye dışı tüm dünya kentlerinde görülen aynı sorun) tamamen giderildi, Angkor Wat'taki mükerrer hendek kaldırıldı ve tüm testler doğrulanarak **GONDER-54.bat** hazırlandı.
+
+1. **Babil ve Dünya Kentlerindeki Dev Bulut Kütlesi Çözüldü:**
+   - **Sorunun Nedeni:** `Reconstruction3DInner.tsx` içinde ilk geliştirme aşamasından kalan 5 öbekli düşük poligonlu 3D küre mesh'leri (`THREE.SphereGeometry(1, 12, 9)`) bulunuyordu. Küçük Türkiye tapınaklarında (`span: 25 m`) fark edilmeyen bu küreler, kent modellerinde (`span: 800 m`) `span` oranında ölçeklenerek 100-150 metre genişliğinde devasa beyaz poligon bloklarına dönüşüyordu. Yörünge kamerasının görüş çizgisine veya tam kentin ortasına oturarak Etemenanki, İştar Kapısı ve sarayları perde gibi kapatıyordu. Türkiye modelleri pişmiş modeller (`applyBaked`) yüklendiğinde eski kodla gizlendiği için Türkiye'de görünmüyordu; ancak henüz pişmemiş 35 dünya kentinde ve Babil yüklenirken kullanıcının karşısına bu dev bulutlar çıkıyordu.
+   - **Çözüm:** `src/components/scene/cloud-dome.ts` modülü oluşturuldu. Binaların üzerine veya kameranın önüne düşen tüm 3D küre mesh'leri tamamen kaldırıldı. Yerine ufukta ve gök kubbesinde gerçekçi, hafifçe sürüklenen FBM gürültülü `sky-clouds` katmanı bağlandı. Binalarla veya kamerayla asla çakışmaz, binaları kapatmaz.
+   - `src/lib/baked-scene.ts` içindeki yinelenen bulut kubbesi ve eski top bulut gizleme mantığı temizlendi.
+2. **Angkor Wat Çift Hendek Temizliği:**
+   - Angkor Wat dış suruna (1.024 × 802 m) 190 m'lik devasa hendek ve 12 m genişliğinde taş geçit (`CitySpec.moat`) bağlandıktan sonra içteki `khmer-temple` modeli (`khmerTempleParts`) içinde kalan 24 metrelik sembolik su kutusu (`box("water", ...)`) kaldırıldı. Tapınak basamakları önüne Naga korkuluklu geniş kumtaşı tören yolu ve teras bağlandı.
+3. **Petra Yürüyüş Başlangıcı (Landscape Testi):**
+   - Petra'da dağ silindiri AABB kutusu ile çakışan başlangıç noktası sütunlu cadde aksına (`[0, -90]`) taşındı. `landscape.test.ts` testi %100 temiz geçti.
+4. **Doğrulama ve Test Sonuçları:**
+   - `bunx tsc --noEmit` -> 0 hata.
+   - `bun test src/lib/__tests__/landscape.test.ts` -> 6 pass, 0 fail.
+   - `bun test src/lib/__tests__/reconstructions.test.ts` -> 36 pass, 0 fail.
+   - `bun test src/lib/__tests__/scene-life.test.ts` -> 17 pass, 0 fail.
+5. **Gönderim:**
+   - Kullanıcı Windows terminalinde **`GONDER-54.bat`** çalıştırarak `origin/main`'e push yapacak.
+
+**Sıradaki işler:**
+- Canlı sitede (`https://antik-kentler-tawny.vercel.app/`) Babil, Angkor Wat ve Petra'yı kontrol et.
+- Kalan dünya kentlerinin (Mısır, Pers, Mezopotamya, Maya, Tiwanaku, Chan Chan, Roma kentleri) ölçülerini kaynaklarla teyit etmeye devam et.
+- Pompeii forum alanı ve çevre yapılarını zenginleştir; pişirme gerektirirse `POMPEII-HD.bat` veya `pisir-web.ps1 pompeii-kenti` hazırla.
+
+---
+
+## KALAN İŞLER: LAMA, ANGKOR HENDEĞİ, ÖLÇÜ DOĞRULAMA, BABİL FIRAT (12 Kasım 2026, Claude) — önceki
 
 Aşağıdaki "Dünya kentlerinde kültür temizliği" bölümüyle birlikte **tek gönderim: GONDER-52.bat**. Ardından **BABIL-PISIR.bat** (Babil geometrisi değişti), bitince **GONDER-53.bat** (yeni pişmiş Babil + listeye geri ekleme).
 

@@ -4366,7 +4366,7 @@ export const reconstructions: Reconstruction[] = [
         [-120, 0, 120, 0, 8],
       ],
       hill: { angle: 180, distance: 150, height: 180, radius: 120 },
-      viewpoint: { at: [-50, -110], look: [-60, 20, -40] },
+      viewpoint: { at: [0, -90], look: [-60, 20, -40] },
     },
   },
   {

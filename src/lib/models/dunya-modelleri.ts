@@ -1212,20 +1212,18 @@ export function khmerTempleParts(spec: KhmerTempleSpec): Part[] {
     }),
   );
 
-  // Sacred Water Moat in front of the temple complex:
-  const moatW = W + 40;
-  const moatL = 24;
-  const moatZ = -D / 2 - spec.causewayLength / 2 - 4;
-  parts.push(box("water", [0, -0.6, moatZ], [moatW, 0.6, moatL]));
-
   // Monumental Sandstone Causeway with Naga Serpent Balustrades:
-  const bridgeW = 8.4;
-  parts.push(box("granite", [0, 0, moatZ], [bridgeW, 0.8, moatL + 6]));
+  // (The 190 m wide sacred water moat rings the outer city enclosure in CitySpec.moat;
+  // here the grand ceremonial causeway leads from the gopura gate to the sanctuary)
+  const causewayW = 8.4;
+  const causewayL = 24;
+  const causewayZ = -D / 2 - spec.causewayLength / 2 - 4;
+  parts.push(box("granite", [0, 0, causewayZ], [causewayW, 0.8, causewayL + 6]));
   // Multi-headed Naga serpent balustrades on left and right:
   for (const side of [-1, 1]) {
-    parts.push(box("stoneDark", [side * 3.8, 0.81, moatZ], [0.5, 0.9, moatL + 6]));
+    parts.push(box("stoneDark", [side * 3.8, 0.81, causewayZ], [0.5, 0.9, causewayL + 6]));
     // Rearing 7-headed Naga hood at the causeway head:
-    parts.push(box("stoneDark", [side * 3.8, 0.81, moatZ - moatL / 2 - 2], [0.8, 2.5, 0.8]));
+    parts.push(box("stoneDark", [side * 3.8, 0.81, causewayZ - causewayL / 2 - 2], [0.8, 2.5, 0.8]));
   }
 
   /* ---- 1. Stepped Concentric Sandstone & Laterite Enclosures ---- */
